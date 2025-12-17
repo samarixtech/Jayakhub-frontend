@@ -8,6 +8,7 @@ import { ReduxProvider } from "@/components/ReduxProvider";
 import { cookies } from "next/headers";
 import { CLCProvider } from "./context/CLCContext.tsx";
 import { Toaster } from "react-hot-toast";
+import { Metadata } from "next";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -23,6 +24,11 @@ interface RootLayoutProps {
   children: ReactNode;
   params?: Promise<{ locale?: string; country?: string }>;
 }
+export const metadata: Metadata = {
+  title: "Jahak Hub",
+  description: "Iraq's premier Food Delivery Platform",
+};
+
 
 export default async function RootLayout({
   children,
