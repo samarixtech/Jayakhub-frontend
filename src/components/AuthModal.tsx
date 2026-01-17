@@ -1,19 +1,19 @@
 "use client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useRef, useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
-// import axios from "axios";
 import api from "./services/api";
-import { toast } from "react-hot-toast"; // ⬅️ Toast import
+import { toast } from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
+import { FaApple } from "react-icons/fa";
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: "login" | "signup";
   switchMode: (mode: "login" | "signup") => void;
-  onLoginSuccess: () => void; // <--- ADDED: Callback for successful login
+  onLoginSuccess: () => void;
 }
 
 export default function AuthModal({
@@ -21,10 +21,9 @@ export default function AuthModal({
   onClose,
   mode,
   switchMode,
-  onLoginSuccess, // <--- ACCEPTED AS PROP
+  onLoginSuccess,
 }: AuthModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
@@ -48,67 +47,47 @@ export default function AuthModal({
         onClose();
       }
     };
-
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
-
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen, onClose]);
+
+  const handleSocialAuth = (provider: "google" | "apple") => {
+    // Logic for Social Auth goes here (e.g., window.location.href = `${API_URL}/auth/${provider}`)
+    toast.loading(`Connecting to ${provider}...`);
+  };
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     if (mode === "signup") {
-      // REGISTER
       const payload = { email, password, role: "user", phone };
-
       try {
         const response = await api.post("/auth/register", payload);
-        console.log("Registration successful:", response.data);
-
-        toast.success("Registration successful! You can now log in."); // ⬅️ Toast
-
+        toast.success("Registration successful! You can now log in.");
         switchMode("login");
       } catch (error: any) {
-        if (error.response) {
-          toast.error(
-            error.response.data.message ||
-              "Registration failed. Email may already be in use."
-          ); // ⬅️ Toast
-        } else {
-          toast.error("Network error. Please try again."); // ⬅️ Toast
-        }
+        toast.error(error.response?.data?.message || "Registration failed.");
       } finally {
         setLoading(false);
       }
     } else {
-      // LOGIN
       const payload = { email, password, role: "user" };
-
       try {
         const response = await api.post("/auth/login", payload);
-        console.log("Login successful:", response.data);
-
-        const { accessToken, refreshToken, user }: any = response.data;
-
-        sessionStorage.setItem("authToken", accessToken);
+        const { accessToken, refreshToken, user }: any = response.user;
+        sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
         sessionStorage.setItem("user", JSON.stringify(user));
-
-        toast.success(`Welcome back, ${user.email || "User"}!`); // ⬅️ Toast
-
-        onLoginSuccess(); // <--- CRITICAL: Notify Header of success
+        toast.success(`Welcome back, ${user.email || "User"}!`);
+        onLoginSuccess();
         onClose();
       } catch (error: any) {
-        if (error.response) {
-          toast.error(error.response.data.message || "Invalid credentials."); // ⬅️ Toast
-        } else {
-          toast.error("Network error. Please try again."); // ⬅️ Toast
-        }
+        toast.error(error.response?.data?.message || "Invalid credentials.");
       } finally {
         setLoading(false);
       }
@@ -127,52 +106,76 @@ export default function AuthModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
           />
 
           <motion.div className="fixed inset-0 z-60 flex items-center justify-center p-4">
             <motion.div
               ref={modalRef}
-              className="relative w-full max-w-md p-8 rounded-3xl bg-[#E8F4F1]/30 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-[#E8F4F1]/20"
+              className="relative w-full max-w-md p-8 rounded-3xl bg-[#E8F4F1] shadow-2xl border border-white/20 overflow-y-auto max-h-[90vh]"
               initial={{ opacity: 0, scale: 0.85, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.85, y: 20 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
             >
               <button
                 onClick={onClose}
-                className="absolute right-5 top-5 p-2 rounded-full hover:bg-[#E8F4F1]/20 transition duration-200"
+                className="absolute right-5 top-5 p-2 rounded-full hover:bg-black/5 transition duration-200"
               >
-                <X className="w-6 h-6 text-gray-800 hover:text-[#B6932F]" />
+                <X className="w-6 h-6 text-gray-800" />
               </button>
 
-              <div className="text-center mb-8">
+              <div className="text-center mb-6">
                 <h2 className="text-3xl font-extrabold text-[#0B5D4E]">
                   {title}
                 </h2>
-                <p className="text-gray-700 mt-2">{subtitle}</p>
+                <p className="text-gray-600 mt-2">{subtitle}</p>
               </div>
 
-              <form onSubmit={handleAuthSubmit} className="space-y-5">
+              {/* SOCIAL BUTTONS */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <button
+                  onClick={() => handleSocialAuth("google")}
+                  className="flex items-center justify-center gap-2 py-3 border border-gray-300 rounded-xl bg-white hover:bg-gray-50 transition font-medium text-gray-700"
+                >
+                  <FcGoogle className="text-xl" /> Google
+                </button>
+                <button
+                  onClick={() => handleSocialAuth("apple")}
+                  className="flex items-center justify-center gap-2 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition font-medium"
+                >
+                  <FaApple className="text-xl" /> Apple
+                </button>
+              </div>
+
+              {/* SEPARATOR */}
+              <div className="relative mb-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-[#E8F4F1] text-gray-500 uppercase">
+                    Or with email
+                  </span>
+                </div>
+              </div>
+
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
                 <input
                   type="email"
                   placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full p-4 rounded-xl border border-[#E8F4F1]/30 bg-[#E8F4F1]/30 backdrop-blur-md 
-                 focus:ring-2 focus:ring-[#0B5D4E] outline-none placeholder-gray-500 transition"
+                  className="w-full p-4 rounded-xl border border-gray-300 bg-white focus:ring-2 focus:ring-[#0B5D4E] outline-none transition"
                 />
 
                 {mode === "signup" && (
                   <input
                     type="tel"
-                    placeholder="Phone Number (e.g., 9876543210)"
+                    placeholder="Phone Number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     required
-                    className="w-full p-4 rounded-xl border border-[#E8F4F1]/30 bg-[#E8F4F1]/30 backdrop-blur-md 
-                 focus:ring-2 focus:ring-[#0B5D4E] outline-none placeholder-gray-500 transition"
+                    className="w-full p-4 rounded-xl border border-gray-300 bg-white focus:ring-2 focus:ring-[#0B5D4E] outline-none transition"
                   />
                 )}
 
@@ -183,26 +186,22 @@ export default function AuthModal({
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={8}
-                  className="w-full p-4 rounded-xl border border-[#E8F4F1]/30 bg-[#E8F4F1]/30 backdrop-blur-md 
-                 focus:ring-2 focus:ring-[#0B5D4E] outline-none placeholder-gray-500 transition"
+                  className="w-full p-4 rounded-xl border border-gray-300 bg-white focus:ring-2 focus:ring-[#0B5D4E] outline-none transition"
                 />
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 bg-[#0B5D4E] text-[#E8F4F1] font-bold rounded-xl shadow-lg 
-                     hover:shadow-xl hover:bg-[#002a47] transition duration-300 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 bg-[#0B5D4E] text-white font-bold rounded-xl shadow-md hover:bg-[#084838] transition duration-300 text-lg disabled:opacity-50"
                 >
                   {loading
-                    ? mode === "login"
-                      ? "Logging In..."
-                      : "Signing Up..."
+                    ? "Processing..."
                     : mode === "login"
                     ? "Log In"
                     : "Create Account"}
                 </button>
 
-                <p className="text-sm text-center text-gray-700 mt-2">
+                <p className="text-sm text-center text-gray-700 mt-4">
                   {mode === "login" ? (
                     <>
                       {t("newAccount")}{" "}

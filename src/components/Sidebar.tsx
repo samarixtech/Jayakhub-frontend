@@ -34,6 +34,7 @@ const navItems = [
     name: "Payment History",
     href: "/dashboard/paymentHistory",
     icon: BarChart,
+    // hasPermission:'view.history'
   },
   {
     name: "Change Password",

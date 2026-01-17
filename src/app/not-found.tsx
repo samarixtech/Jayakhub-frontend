@@ -7,10 +7,10 @@ import { motion } from "framer-motion";
 
 const NotFoundPage = () => {
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-[#e0f4ff] via-[#E8F4F1] to-[#caf0f8] overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 bg-linear-to-br from-[#e0f4ff] via-[#E8F4F1] to-[#caf0f8] overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute top-[-8rem] left-[-8rem] w-[20rem] h-[20rem] bg-[radial-gradient(circle,_#61a5c250,_transparent_70%)] rounded-full blur-3xl animate-pulse-slow"></div>
-      <div className="absolute bottom-[-8rem] right-[-8rem] w-[20rem] h-[20rem] bg-[radial-gradient(circle,_#0B5D4E50,_transparent_70%)] rounded-full blur-3xl animate-pulse-slow"></div>
+      <div className="absolute -top-32 -left-32 w-[20rem] h-80 bg-[radial-gradient(circle,#61a5c250,transparent_70%)] rounded-full blur-3xl animate-pulse-slow"></div>
+      <div className="absolute -bottom-32 -right-32 w-[20rem] h-80 bg-[radial-gradient(circle,#0B5D4E50,transparent_70%)] rounded-full blur-3xl animate-pulse-slow"></div>
 
       {/* Food Illustration */}
       <motion.div
@@ -35,7 +35,7 @@ const NotFoundPage = () => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="text-[6rem] md:text-[8rem] font-extrabold leading-none bg-gradient-to-r from-[#0B5D4E] via-[#2a6f97] to-[#61a5c2] bg-clip-text text-transparent animate-gradient-move"
+        className="text-[6rem] md:text-[8rem] font-extrabold leading-none bg-linear-to-r from-[#0B5D4E] via-[#2a6f97] to-[#61a5c2] bg-clip-text text-transparent animate-gradient-move"
       >
         404
       </motion.h1>

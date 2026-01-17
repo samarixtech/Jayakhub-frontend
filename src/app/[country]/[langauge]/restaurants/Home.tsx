@@ -1,5 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { useCLC } from "@/app/context/CLCContext.tsx";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import image from "./../../../../../public/EngLogo (2).png";
 import arabicLogo from "./../../../../../public/ArbicLogo (2).png";
@@ -112,7 +113,7 @@ const Home: React.FC = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://192.168.100.29:5000/api/v1/restaurants/location/by-location?lat=${lat}&lng=${lng}`
+          `http://192.168.100.9:5000/api/v1/restaurants/location/by-location?lat=${lat}&lng=${lng}`
         );
 
         if (!response.ok) {
@@ -162,7 +163,7 @@ const Home: React.FC = () => {
       {/* Banner */}
       <div className="relative bg-[#0B5D4E] rounded-lg p-6 mb-10 flex flex-col md:flex-row items-center shadow-md gap-6 md:gap-0">
         <div className="text-center md:text-left max-w-md">
-          <h2 className="text-2xl md:text-3xl font-bold mb-3 text-yellow-500 leading-snug">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3 text-zinc-200 leading-snug">
             Sign up for free delivery on your first order
           </h2>
 
@@ -229,6 +230,7 @@ const Home: React.FC = () => {
         <div className="text-center py-12">
           <img
             src="/empty-food.svg"
+            alt="food image"
             className="w-32 h-32 mx-auto mb-4 opacity-70"
           />
           <p className="text-gray-600 text-lg font-medium">
@@ -310,7 +312,7 @@ interface RestaurantCardProps {
 
 const RestaurantCard: React.FC<RestaurantCardProps> = ({
   restaurant,
-  currency,
+  // currency,
   language,
 }) => {
   // Format restaurant hours for display

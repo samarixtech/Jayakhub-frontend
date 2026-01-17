@@ -9,9 +9,8 @@ const CountryLanguagePage = async ({ params }: CountryLanguagePageProps) => {
 
   return (
     <div className="">
-
-        <Banner />
-        <Footer/>
+      <Banner />
+      <Footer />
       {/* <h1>
         Country: {country}, Language: {language}
       </h1> */}

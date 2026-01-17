@@ -267,7 +267,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
   // const tLanguage = useTranslations("language.dropdown");
   const tProfile = useTranslations("profile");
   const [currentAddress, setCurrentAddress] = useState("Detecting location...");
-  const { country, language, dir } = useLocale();
+  const { country, language } = useLocale();
   const router = useRouter();
 
   // -------- Auth State --------
@@ -508,7 +508,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
         {tProfile("link.dashboard")}
       </Link>
       <Link
-        href={`/${country.toLowerCase()}/${language.toLowerCase()}/account-settings`}
+        href={`/${country.toLowerCase()}/${language?.toLowerCase()}/account-settings`}
         // MODIFIED: Use green hover background
         className="flex items-center p-3 text-gray-700 hover:bg-[#FFF9EE] rounded-lg transition"
       >
@@ -516,7 +516,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
         {tProfile("link.accountSettings")}
       </Link>
       <Link
-        href={`/${country.toLowerCase()}/${language.toLowerCase()}/myorders`}
+        href={`/${country.toLowerCase()}/${language?.toLowerCase()}/myorders`}
         // MODIFIED: Use green hover background
         className="flex items-center p-3 text-gray-700 hover:bg-[#FFF9EE] rounded-lg transition"
       >
@@ -585,18 +585,18 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
               <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
                 {!isLoggedIn ? (
                   <>
-                    <button
-                      onClick={openLogin}
-                      className="hidden sm:block px-3 py-1.5 border border-[#0B5D4E] text-[#0B5D4E] font-semibold rounded-md hover:bg-[#FFF9EE] transition duration-150 text-sm shrink-0"
+                    <Link
+                      href={`/${country?.toLocaleLowerCase()}/${language?.toLocaleLowerCase()}/login`}
+                      className="hidden sm:block px-4 py-2 border border-[#0B5D4E] text-[#0B5D4E] font-bold rounded-lg hover:bg-[#FFF9EE] transition text-sm"
                     >
                       {tHeader("auth.login")}
-                    </button>
-                    <button
-                      onClick={openSignup}
-                      className="hidden sm:block px-3 py-1.5 bg-[#0B5D4E] text-[#E8F4F1] font-semibold rounded-md hover:bg-[#084838] transition duration-150 text-sm shrink-0"
+                    </Link>
+                    <Link
+                      href={`/${country?.toLocaleLowerCase()}/${language?.toLocaleLowerCase()}/register`}
+                      className="hidden sm:block px-4 py-2 bg-[#0B5D4E] text-[#E8F4F1] font-bold rounded-lg hover:bg-[#084838] transition text-sm"
                     >
                       {tHeader("auth.signup")}
-                    </button>
+                    </Link>
                   </>
                 ) : (
                   <ProfileDropdown profileContent={profileContent} />

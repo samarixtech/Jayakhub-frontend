@@ -31,6 +31,7 @@ const HomePage: React.FC = () => {
     } else if (storedLocale) {
       // Subsequent visits → set locale from storage
       const parsedLocale = JSON.parse(storedLocale);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocale(parsedLocale);
 
       // Update URL to /country/language (without triggering a full reload)

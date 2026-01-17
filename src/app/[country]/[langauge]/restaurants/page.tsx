@@ -4,12 +4,12 @@ import React, { useEffect } from "react";
 import Header from "./Header";
 import SidebarFilters from "./SidebarFilters";
 import Home from "./Home";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { CLCProvider, useCLC } from "@/app/context/CLCContext.tsx";
 
 const IndexPageContent: React.FC = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const params = useParams();
   const { setCLC } = useCLC();
 
@@ -29,13 +29,14 @@ const IndexPageContent: React.FC = () => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params?.country, params?.language]);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <Header />
 
-      <div className="w-full mx-auto px-4 sm:px-4 lg:px-4 py-8 md:pt-[80px] pt-[30px]">
+      <div className="w-full mx-auto px-4 sm:px-4 lg:px-4 py-8 md:pt-20 pt-[30px]">
         <div className="flex flex-col lg:flex-row gap-8  pt-20 ">
           <div className="w-full lg:w-1/4 sticky top-24 self-start z-30">
             <SidebarFilters />

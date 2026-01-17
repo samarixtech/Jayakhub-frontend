@@ -25,10 +25,9 @@ interface RootLayoutProps {
   params?: Promise<{ locale?: string; country?: string }>;
 }
 export const metadata: Metadata = {
-  title: "Jahak Hub",
+  title: "Jayak Hub",
   description: "Iraq's premier Food Delivery Platform",
 };
-
 
 export default async function RootLayout({
   children,

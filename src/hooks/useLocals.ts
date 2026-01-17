@@ -87,7 +87,7 @@ export default function useLocale(): Locale {
 
       try {
         const res = await axios.get<IPApiData>(
-          "http://192.168.100.29:5000/api/countries/by-ip",
+          "http://192.168.100.9:5000/api/countries/by-ip",
           {
             timeout: 10000,
           }
@@ -164,7 +164,11 @@ export default function useLocale(): Locale {
           // ---------- Auto Language ----------
           // const autoLang = countryToLanguage[resp.language_code];
 
-          setLanguage(resp.language_code);
+          if (!resp.language_code) {
+            setLanguage("en");
+          } else {
+            setLanguage(resp.language_code);
+          }
           // console.log("🌐 Auto-selected language:", autoLang);
 
           // ---------- RTL / LTR ----------
@@ -205,6 +209,7 @@ export default function useLocale(): Locale {
     error,
   });
 
+  console.log("location data:", country, language || "undefined");
   return {
     country,
     countryCode,
