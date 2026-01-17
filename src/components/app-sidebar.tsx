@@ -32,6 +32,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useLocale from "@/hooks/useLocals";
 
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -60,6 +61,8 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  const { country, language } = useLocale();
+  const getLocalizedHref = (path: string) => `/${country}/${language}${path}`;
 
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200">
@@ -85,6 +88,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
               {navItems.map((item) => {
+                const localizedHref = getLocalizedHref(item.href);
                 const isActive = pathname === item.href;
                 return (
                   <SidebarMenuItem key={item.name}>
@@ -94,12 +98,12 @@ export function AppSidebar() {
                       isActive={isActive}
                       className={`h-11 w-full rounded-xl transition-all duration-200 ${
                         isActive
-                          ? "!bg-[#0B5D4E] !text-white shadow-md"
+                          ? "bg-[#0B5D4E]! text-white! shadow-md"
                           : "text-gray-600 hover:bg-white/50"
                       }`}
                     >
                       <Link
-                        href={item.href}
+                        href={localizedHref}
                         className="flex items-center w-full"
                       >
                         <div
