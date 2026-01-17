@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import ScrollCards from "@/components/ScrollCards";
 import { useTranslations } from "next-intl";
-import Navbar from "@/components/Navbar";
+// import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { easeOut } from "framer-motion";
 
@@ -48,18 +48,16 @@ const TrustCardSoft = ({ icon: Icon, iconColor, title, subtitle }: any) => (
 
 const Page = () => {
   const t = useTranslations("Home");
-  const statGradient = "from-yellow-400 via-green-400 to-teal-400"; 
+  const statGradient = "from-yellow-400 via-green-400 to-teal-400";
 
-
-
-const fadeInUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.2, duration: 0.8, ease: easeOut },
-  }),
-};
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: (i: number = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.2, duration: 0.8, ease: easeOut },
+    }),
+  };
 
   const primaryyellow = "#0B5D4E"; // Dark yellow for main accent (Primary)
   const secondaryyellow = "#B6932F "; // Mid yellow for features/stats (Secondary)
@@ -96,7 +94,6 @@ const fadeInUp = {
     },
   ];
 
-
   const benefitKeys = [
     "benefit_1",
     "benefit_2",
@@ -106,91 +103,90 @@ const fadeInUp = {
     "benefit_6",
   ];
 
-
   return (
     <>
       {/* <Navbar /> */}
       <div className={`min-h-screen ${softNeutralBg}`}>
         {/* Hero Section */}
-     <section className="relative overflow-hidden h-screen md:h-[95vh]">
-      {/* Background Image with parallax effect */}
-      <motion.div
-        className="absolute inset-0 bg-cover bg-center z-0"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1600&q=80')",
-        }}
-        initial={{ scale: 1.1 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.5 }}
-      ></motion.div>
+        <section className="relative overflow-hidden h-screen md:h-[95vh]">
+          {/* Background Image with parallax effect */}
+          <motion.div
+            className="absolute inset-0 bg-cover bg-center z-0"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1600&q=80')",
+            }}
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.5 }}
+          ></motion.div>
 
-      {/* Soft overlay layers */}
-      <div className="absolute inset-0 bg-[#2C2C2C]/30 z-10"></div>
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,...')] opacity-40 z-20"></div>
+          {/* Soft overlay layers */}
+          <div className="absolute inset-0 bg-[#2C2C2C]/30 z-10"></div>
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,...')] opacity-40 z-20"></div>
 
-      {/* Content */}
-      <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40 text-center flex flex-col items-center justify-center text-[#E8F4F1]">
-        <motion.h1
-          className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight"
-          variants={fadeInUp}
-          initial="hidden"
-          animate="visible"
-          custom={0}
-        >
-          {t("hero_title_p1")}
-          <span
-            className={`block bg-gradient-to-r ${statGradient} bg-clip-text text-transparent`}
-          >
-            {t("hero_title_p2")}
-          </span>
-        </motion.h1>
+          {/* Content */}
+          <div className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-40 text-center flex flex-col items-center justify-center text-[#E8F4F1]">
+            <motion.h1
+              className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight"
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              custom={0}
+            >
+              {t("hero_title_p1")}
+              <span
+                className={`block bg-gradient-to-r ${statGradient} bg-clip-text text-transparent`}
+              >
+                {t("hero_title_p2")}
+              </span>
+            </motion.h1>
 
-        <motion.p
-          className="text-lg md:text-2xl mb-10 max-w-3xl"
-          variants={fadeInUp}
-          initial="hidden"
-          animate="visible"
-          custom={1}
-        >
-          {t("hero_subtitle")}
-        </motion.p>
+            <motion.p
+              className="text-lg md:text-2xl mb-10 max-w-3xl"
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              custom={1}
+            >
+              {t("hero_subtitle")}
+            </motion.p>
 
-        <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center"
-          variants={fadeInUp}
-          initial="hidden"
-          animate="visible"
-          custom={2}
-        >
-          {/* Primary Button */}
-          <button className="group px-8 py-4 font-semibold rounded-xl bg-[#B6932F] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center space-x-2">
-            <span>{t("hero_cta_explore")}</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              custom={2}
+            >
+              {/* Primary Button */}
+              <button className="group px-8 py-4 font-semibold rounded-xl bg-[#B6932F] transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center space-x-2">
+                <span>{t("hero_cta_explore")}</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
 
-          {/* Secondary Button */}
-          <button className="px-8 py-4 bg-transparent border-2 border-[#E8F4F1] text-[#E8F4F1] font-semibold rounded-xl hover:bg-[#E8F4F1]/10 transition-all duration-300 backdrop-blur-sm">
-            {t("hero_cta_demo")}
-          </button>
-        </motion.div>
-      </div>
+              {/* Secondary Button */}
+              <button className="px-8 py-4 bg-transparent border-2 border-[#E8F4F1] text-[#E8F4F1] font-semibold rounded-xl hover:bg-[#E8F4F1]/10 transition-all duration-300 backdrop-blur-sm">
+                {t("hero_cta_demo")}
+              </button>
+            </motion.div>
+          </div>
 
-      {/* Wave Divider */}
-      <div className="absolute bottom-0 left-0 right-0 z-20">
-        <svg
-          viewBox="0 0 1440 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-[80px] md:h-[120px]"
-        >
-          <path
-            d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-            fill="rgb(249, 250, 251)"
-          />
-        </svg>
-      </div>
-    </section>
+          {/* Wave Divider */}
+          <div className="absolute bottom-0 left-0 right-0 z-20">
+            <svg
+              viewBox="0 0 1440 120"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-full h-[80px] md:h-[120px]"
+            >
+              <path
+                d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
+                fill="rgb(249, 250, 251)"
+              />
+            </svg>
+          </div>
+        </section>
         <ScrollCards />
         <section className={`py-10 ${softSectionBg}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

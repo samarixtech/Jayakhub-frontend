@@ -1,3 +1,4 @@
+// [country] > [language] > page.tsx
 import Banner from "@/app/banner/page";
 import Footer from "@/components/Footer";
 interface CountryLanguagePageProps {

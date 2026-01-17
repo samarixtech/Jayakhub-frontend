@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Header from "./Header";
-import SidebarFilters from "./SidebarFilters";
-import Home from "./Home";
+import Header from "../../../../components/restaurants/Header";
+import SidebarFilters from "../../../../components/restaurants/SidebarFilters";
+import Home from "../../../../components/restaurants/Home";
 import { useParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { CLCProvider, useCLC } from "@/app/context/CLCContext.tsx";
