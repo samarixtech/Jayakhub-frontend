@@ -5,6 +5,8 @@
 @import "tw-animate-css";
 @import "tailwind-scrollbar-hide/v4";
 
+@custom-variant dark (&:is(.dark *));
+
 /* ---------------------------------------
    SOFT UI VARIABLES (LIGHT MODE)
 ----------------------------------------- */
@@ -32,6 +34,14 @@
 
   --soft-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
   --soft-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
 /* ---------------------------------------
@@ -58,6 +68,14 @@
 
   --soft-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   --soft-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
 /* ---------------------------------------
@@ -158,8 +176,9 @@
    SCROLL (WORKS BUT HIDDEN)
 ----------------------------------------- */
 
-html, body {
-  overflow: auto !important;     /* Scroll enabled */
+html,
+body {
+  overflow: auto !important; /* Scroll enabled */
 }
 
 /* Hide scrollbar (Chrome, Safari, Edge) */
@@ -176,38 +195,71 @@ html, body {
    ANIMATIONS
 ----------------------------------------- */
 @keyframes fadeSlide {
-  0% { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-.animate-fadeSlide { animation: fadeSlide 0.3s ease-out; }
+.animate-fadeSlide {
+  animation: fadeSlide 0.3s ease-out;
+}
 
 @keyframes floatGentle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
-.animate-float { animation: floatGentle 4s ease-in-out infinite; }
+.animate-float {
+  animation: floatGentle 4s ease-in-out infinite;
+}
 
 @keyframes scaleIn {
-  0% { opacity: 0; transform: scale(0.96); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
-.animate-scaleIn { animation: scaleIn 0.25s ease-out; }
+.animate-scaleIn {
+  animation: scaleIn 0.25s ease-out;
+}
 
 /* ---------------------------------------
    DRAWER SLIDE ANIMATION
 ----------------------------------------- */
 @keyframes slideInLeft {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
-.animate-slideInLeft { animation: slideInLeft 0.28s ease-out; }
+.animate-slideInLeft {
+  animation: slideInLeft 0.28s ease-out;
+}
 
 /* ---------------------------------------
    SHIMMER EFFECT
 ----------------------------------------- */
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 .animate-shimmer {
   animation: shimmer 1.8s infinite linear;
@@ -222,32 +274,108 @@ body {
   padding: 0;
 }
 
-html[dir="ltr"] { direction: ltr; text-align: left; }
-html[dir="rtl"] { direction: rtl; text-align: right; }
+html[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
+}
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
 
-html[dir="ltr"] .ml-auto { margin-left: auto; }
-html[dir="ltr"] .mr-auto { margin-right: auto; }
+html[dir="ltr"] .ml-auto {
+  margin-left: auto;
+}
+html[dir="ltr"] .mr-auto {
+  margin-right: auto;
+}
 
-html[dir="rtl"] .ml-auto { margin-right: auto; }
-html[dir="rtl"] .mr-auto { margin-left: auto; }
+html[dir="rtl"] .ml-auto {
+  margin-right: auto;
+}
+html[dir="rtl"] .mr-auto {
+  margin-left: auto;
+}
 
-html[dir="ltr"] .float-left { float: left; }
-html[dir="ltr"] .float-right { float: right; }
+html[dir="ltr"] .float-left {
+  float: left;
+}
+html[dir="ltr"] .float-right {
+  float: right;
+}
 
-html[dir="rtl"] .float-left { float: right; }
-html[dir="rtl"] .float-right { float: left; }
+html[dir="rtl"] .float-left {
+  float: right;
+}
+html[dir="rtl"] .float-right {
+  float: left;
+}
 
-html[dir="ltr"] .text-left { text-align: left; }
-html[dir="ltr"] .text-right { text-align: right; }
+html[dir="ltr"] .text-left {
+  text-align: left;
+}
+html[dir="ltr"] .text-right {
+  text-align: right;
+}
 
-html[dir="rtl"] .text-left { text-align: right; }
-html[dir="rtl"] .text-right { text-align: left; }
+html[dir="rtl"] .text-left {
+  text-align: right;
+}
+html[dir="rtl"] .text-right {
+  text-align: left;
+}
 
-body.ltr { direction: ltr; text-align: left; }
-body.rtl { direction: rtl; text-align: right; }
+body.ltr {
+  direction: ltr;
+  text-align: left;
+}
+body.rtl {
+  direction: rtl;
+  text-align: right;
+}
 
-.sidebar { float: left; }
-body.rtl .sidebar { float: right; }
+.sidebar {
+  float: left;
+}
+body.rtl .sidebar {
+  float: right;
+}
 
-.ltr-padding { padding-left: 16px; }
-.rtl-padding { padding-right: 16px; }
+.ltr-padding {
+  padding-left: 16px;
+}
+.rtl-padding {
+  padding-right: 16px;
+}
+
+/* ... scroll down to your @theme section ... */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  /* Critical Sidebar Mappings */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+@layer base {
+  * {
+    /* Now 'border-border' and 'outline-ring' will work! */
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

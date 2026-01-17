@@ -5,7 +5,6 @@ import {
   Clock,
   Star,
   TrendingUp,
-  Users,
   DollarSign,
   Package,
   ChevronRight,

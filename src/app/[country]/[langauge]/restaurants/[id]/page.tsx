@@ -12,7 +12,7 @@ import CartSidebar from "@/components/CartSidebar";
 import HorizontalScroller from "@/components/HorizontalScroller";
 import ProductModal from "@/components/ProductModal";
 import SimilarRestaurantsSection from "@/components/SimilarRestaurant";
-import Header from "../Header";
+import Header from "../../../../../components/restaurants/Header";
 
 import { Search, Plus, Clock, ShoppingBag } from "lucide-react";
 import { useCLC } from "@/app/context/CLCContext.tsx";
@@ -256,7 +256,7 @@ export default function RestaurantPage() {
     return section.items.filter(
       (i) =>
         i.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        i.description.toLowerCase().includes(searchTerm.toLowerCase())
+        i.description.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [activeTab, searchTerm]);
 

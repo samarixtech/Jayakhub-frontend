@@ -2,8 +2,8 @@
 import { useCLC } from "@/app/context/CLCContext.tsx";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import image from "./../../../../../public/EngLogo (2).png";
-import arabicLogo from "./../../../../../public/ArbicLogo (2).png";
+import image from "../../../public/EngLogo (2).png";
+import arabicLogo from "../../../public/ArbicLogo (2).png";
 import Image from "next/image";
 import { useAutoLocation } from "@/hooks/useAutoLocation";
 import GPSLoader from "@/components/ui/restaurants/GpsLoader";
@@ -113,7 +113,7 @@ const Home: React.FC = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://192.168.100.9:5000/api/v1/restaurants/location/by-location?lat=${lat}&lng=${lng}`
+          `http://192.168.100.9:5000/api/v1/restaurants/location/by-location?lat=${lat}&lng=${lng}`,
         );
 
         if (!response.ok) {
@@ -253,7 +253,7 @@ const Home: React.FC = () => {
               }}
               onClick={() =>
                 router.push(
-                  `/${country}/${language}/restaurants/${restaurant.nameEn}`
+                  `/${country}/${language}/restaurants/${restaurant.nameEn}`,
                 )
               }
               className="cursor-pointer"
@@ -336,7 +336,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
     const created = new Date(createdAt);
     const now = new Date();
     const diffInHours = Math.floor(
-      (now.getTime() - created.getTime()) / (1000 * 60 * 60)
+      (now.getTime() - created.getTime()) / (1000 * 60 * 60),
     );
 
     if (diffInHours < 24) {

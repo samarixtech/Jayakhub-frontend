@@ -11,8 +11,8 @@ import { RootState } from "@/redux/store/store";
 import CartDrawer from "@/components/CartDrawer";
 import AuthModal from "@/components/AuthModal";
 import useLocale from "@/hooks/useLocals";
-import image from "./../../../../../public/EngLogo (2).png";
-import arabicLogo from "./../../../../../public/ArbicLogo (2).png";
+import image from "../../../public/EngLogo (2).png";
+import arabicLogo from "../../../public/ArbicLogo (2).png";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
@@ -318,7 +318,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
   };
 
   const totalItems = useSelector((state: RootState) =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0)
+    state.cart.items.reduce((sum, item) => sum + item.quantity, 0),
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -403,7 +403,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
 
         try {
           const res = await fetch(
-            `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
+            `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`,
           );
 
           const data = await res.json();
@@ -439,7 +439,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
       (err) => {
         setCurrentAddress("Location permission deny ho gayi");
         setLoading(false);
-      }
+      },
     );
   };
 
@@ -516,7 +516,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
         {tProfile("link.accountSettings")}
       </Link>
       <Link
-        href={`/${country.toLowerCase()}/${language?.toLowerCase()}/myorders`}
+        href={`/myorders`}
         // MODIFIED: Use green hover background
         className="flex items-center p-3 text-gray-700 hover:bg-[#FFF9EE] rounded-lg transition"
       >
@@ -583,7 +583,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
                 />
               </div>
               <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
-                {!isLoggedIn ? (
+                {/* {!isLoggedIn ? (
                   <>
                     <Link
                       href={`/${country?.toLocaleLowerCase()}/${language?.toLocaleLowerCase()}/login`}
@@ -600,7 +600,8 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
                   </>
                 ) : (
                   <ProfileDropdown profileContent={profileContent} />
-                )}
+                )} */}
+                <ProfileDropdown profileContent={profileContent} />
 
                 {/* Language Dropdown (Kept it small) */}
                 <div className="hidden sm:block">

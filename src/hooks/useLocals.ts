@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 interface CountryInfo {
@@ -90,7 +91,7 @@ export default function useLocale(): Locale {
           "http://192.168.100.9:5000/api/countries/by-ip",
           {
             timeout: 10000,
-          }
+          },
         );
 
         // // FOR IRAQ
@@ -140,6 +141,11 @@ export default function useLocale(): Locale {
         // };
 
         const resp = res.data?.country;
+        const countryVal = resp?.name || "Pakistan"; // Example
+        const langVal = resp?.language_code || "en";
+
+        Cookies.set("USER_COUNTRY", countryVal.toLowerCase(), { expires: 365 });
+        Cookies.set("NEXT_LOCALE", langVal.toLowerCase(), { expires: 365 });
         if (resp) {
           // setIP(resp?.query || null);
           setCountry(resp?.name || "");
