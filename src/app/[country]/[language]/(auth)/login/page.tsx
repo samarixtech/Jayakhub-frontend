@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import api from "@/components/services/api";
@@ -11,36 +10,63 @@ import { toast } from "react-hot-toast";
 import useLocale from "@/hooks/useLocals";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import LocalizedLink from "@/components/navigation/LocalizedLink";
+import { ArrowLeft } from "lucide-react";
 
-function GoogleLoginButton({ loading, setLoading, country, language }: any) {
+interface GoogleLoginButtonProps {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+  country: string;
+  language: string;
+}
+
+interface GoogleUserInfo {
+  email: string;
+  name: string;
+  picture: string;
+  sub: string;
+}
+
+function GoogleLoginButton({
+  loading,
+  setLoading,
+  country,
+  language,
+}: GoogleLoginButtonProps) {
   const router = useRouter();
 
   const handleGoogleSuccess = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       setLoading(true);
       try {
-        const userInfo = await axios.get(
+        const userInfo = await axios.get<GoogleUserInfo>(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
           },
         );
 
-        const { email, name, picture }: any = userInfo.data;
+        const userData = userInfo.data;
+        const email = userData.email || "";
+        const name = userData.name || "";
+        const picture = userData.picture || "";
 
-        // Use your google-login or google-register endpoint
-        const response = await api.post("/google-login", {
+        const response = await api.post("/google-auth", {
           email,
+          name,
+          picture,
+          role: "customer",
           token: tokenResponse.access_token,
         });
 
-        if (response.data.meta.status === 200) {
+        const responseData = response.data as { meta: { status: number } };
+        if (responseData.meta.status === 200) {
           toast.success("Login Successful!");
           router.push(
             `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`,
           );
         }
-      } catch (error: any) {
+      } catch (error) {
         toast.error("Google authentication failed.");
         console.error(error);
       } finally {
@@ -62,13 +88,28 @@ function GoogleLoginButton({ loading, setLoading, country, language }: any) {
   );
 }
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+interface ApiResponse {
+  meta: {
+    status: number;
+    message?: string;
+  };
+  data: {
+    identifier: string;
+    message?: string;
+  };
+}
+
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
-  const t = useTranslations("authModal");
   const router = useRouter();
   const { country, language } = useLocale();
 
@@ -81,27 +122,35 @@ export default function LoginPage() {
         password: formData.password,
       });
 
-      // Check for status 200 and the specific message from your backend
-      if (response.data.meta.status === 200) {
-        const { identifier, message } = response.data.data;
+      const responseData = response.data as ApiResponse;
 
-        // 1. Store the email in sessionStorage as requested
+      if (responseData.meta.status === 200) {
+        const { identifier, message } = responseData.data;
+
         sessionStorage.setItem("pendingVerificationEmail", identifier);
 
-        // 2. Show success message from backend
         toast.success(message || "OTP sent!");
 
-        // 3. Redirect to the verify-otp page with the email in the query params
         router.push(
           `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
         );
       }
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.data?.message ||
-          error.response?.data?.meta?.message ||
-          "Login failed. Please check your credentials.",
-      );
+    } catch (error: unknown) {
+      const apiError = error as {
+        response?: {
+          data?: {
+            data?: { message?: string };
+            meta?: { message?: string };
+          };
+        };
+      };
+
+      const errorMessage =
+        apiError.response?.data?.data?.message ||
+        apiError.response?.data?.meta?.message ||
+        "Login failed. Please check your credentials.";
+
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -114,7 +163,10 @@ export default function LoginPage() {
       <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
         {/* LEFT PANEL */}
         <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
-          <div className="p-12">
+          <LocalizedLink href={"/restaurants"} className="m-5">
+            <ArrowLeft />
+          </LocalizedLink>
+          <div className="p-10">
             <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
               Welcome <br /> Back!
             </h1>
@@ -182,6 +234,7 @@ export default function LoginPage() {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 required
+                value={formData.email}
               />
               <div className="space-y-1">
                 <input
@@ -192,11 +245,11 @@ export default function LoginPage() {
                     setFormData({ ...formData, password: e.target.value })
                   }
                   required
+                  value={formData.password}
                 />
                 <div className="flex justify-end">
                   <Link
                     href={`/${country?.toLowerCase()}/${language?.toLowerCase()}/forget-password`}
-                    // size="sm"
                     className="text-xs text-gray-400 hover:text-[#0B5D4E]"
                   >
                     Forgot Password?
@@ -214,7 +267,7 @@ export default function LoginPage() {
             </form>
 
             <p className="mt-6 text-center text-sm text-gray-600">
-              Don't have an account?{" "}
+              Don`t have an account?{" "}
               <Link
                 href="/register"
                 className="text-[#0B5D4E] font-bold hover:underline"
