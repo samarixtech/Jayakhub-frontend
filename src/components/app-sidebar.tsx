@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -32,7 +31,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useLocale from "@/hooks/useLocals";
+import LocalizedLink from "./navigation/LocalizedLink";
 
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -61,8 +60,6 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
-  const { country, language } = useLocale();
-  const getLocalizedHref = (path: string) => `/${country}/${language}${path}`;
 
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200">
@@ -88,7 +85,6 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
               {navItems.map((item) => {
-                const localizedHref = getLocalizedHref(item.href);
                 const isActive = pathname === item.href;
                 return (
                   <SidebarMenuItem key={item.name}>
@@ -102,8 +98,8 @@ export function AppSidebar() {
                           : "text-gray-600 hover:bg-white/50"
                       }`}
                     >
-                      <Link
-                        href={localizedHref}
+                      <LocalizedLink
+                        href={item.href}
                         className="flex items-center w-full"
                       >
                         <div
@@ -127,7 +123,7 @@ export function AppSidebar() {
                             {item.name}
                           </span>
                         )}
-                      </Link>
+                      </LocalizedLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

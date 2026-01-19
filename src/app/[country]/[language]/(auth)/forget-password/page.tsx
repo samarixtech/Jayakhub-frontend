@@ -24,27 +24,23 @@ export default function ForgotPasswordPage() {
     setLoading(true);
     try {
       const response = await api.post("/forgot-password", {
-        email: email,
+        identifier: email, // Changed to 'identifier' to match standard auth patterns
       });
 
-      if (
-        response.data.meta.status === 200 ||
-        response.data.meta.message === "success"
-      ) {
-        // Store email so the Verify page knows who we are verifying
+      if (response.data?.meta?.status === 200 || response.status === 200) {
+        // 1. Store email
         sessionStorage.setItem("pendingVerificationEmail", email);
+        // 2. Set intent so Verify page knows to redirect to /change-password
+        sessionStorage.setItem("verificationIntent", "forgot-password");
 
         toast.success("Reset code sent to your email!");
 
-        // Redirect to the same verify-otp page
-        const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?mode=reset`;
+        const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp`;
         router.push(verifyPath);
       }
     } catch (error: any) {
       toast.error(
-        error.response?.data?.data?.message ||
-          error.response?.data?.meta?.message ||
-          "Failed to send reset code",
+        error.response?.data?.meta?.message || "Failed to send reset code",
       );
     } finally {
       setLoading(false);
@@ -53,7 +49,6 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
-      {/* LEFT PANEL */}
       <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
         <div className="p-12">
           <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
@@ -78,7 +73,6 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
       <div className="flex items-center justify-center p-6">
         <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-10">
           <h2 className="text-3xl font-bold text-[#0B5D4E] mb-2">
