@@ -12,8 +12,28 @@ import useLocale from "@/hooks/useLocals";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
+import LocalizedLink from "@/components/navigation/LocalizedLink";
 
-function GoogleSignupButton({ loading, setLoading, country, language }: any) {
+interface GoogleUserInfo {
+  email: string;
+  name: string;
+  picture: string;
+  sub: string;
+}
+
+interface GoogleSignupButtonProps {
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+  country: string;
+  language: string;
+}
+
+function GoogleSignupButton({
+  loading,
+  setLoading,
+  country,
+  language,
+}: GoogleSignupButtonProps) {
   const router = useRouter();
 
   const handleGoogleSuccess = useGoogleLogin({
@@ -21,17 +41,20 @@ function GoogleSignupButton({ loading, setLoading, country, language }: any) {
       setLoading(true);
       try {
         // 1. Get User Info from Google using the access_token
-        const userInfo = await axios.get(
+        const userInfo = await axios.get<GoogleUserInfo>(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
           },
         );
 
-        const { email, name, picture }: any = userInfo.data;
+        const userData = userInfo.data;
+        const email = userData.email || "";
+        const name = userData.name || "";
+        const picture = userData.picture || "";
 
         // 2. Send data to your backend
-        const response = await api.post("/google-register", {
+        const response = await api.post("/google-auth", {
           email,
           name,
           picture,
@@ -39,16 +62,17 @@ function GoogleSignupButton({ loading, setLoading, country, language }: any) {
           role: "customer",
         });
 
+        const responseData = response.data as { meta: { status: number } };
         if (
-          response.data.meta.status === 201 ||
-          response.data.meta.status === 200
+          responseData.meta.status === 201 ||
+          responseData.meta.status === 200
         ) {
           toast.success("Google Login Successful!");
           router.push(
             `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`,
           );
         }
-      } catch (error: any) {
+      } catch (error) {
         toast.error("Google authentication failed.");
         console.error(error);
       } finally {
@@ -70,8 +94,26 @@ function GoogleSignupButton({ loading, setLoading, country, language }: any) {
   );
 }
 
+interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+}
+
+interface RegisterApiResponse {
+  meta: {
+    status: number;
+    message?: string;
+  };
+  data: {
+    email: string;
+    message?: string;
+  };
+}
+
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     name: "",
     email: "",
     password: "",
@@ -91,38 +133,51 @@ export default function RegisterPage() {
         role: "customer",
       });
 
+      const responseData = response.data as RegisterApiResponse;
+
       if (
-        response.data.meta.status === 201 ||
-        response.data.meta.message === "success"
+        responseData.meta.status === 201 ||
+        responseData.meta.message === "success"
       ) {
-        const identifier = response.data.data.email;
+        const identifier = responseData.data.email;
         sessionStorage.setItem("pendingVerificationEmail", identifier);
-        toast.success(response.data.data.message || "OTP sent!");
+        toast.success(responseData.data.message || "OTP sent!");
 
         router.push(
           `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
         );
       }
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.data?.message ||
-          error.response?.data?.meta?.message ||
-          "Signup failed",
-      );
+    } catch (error: unknown) {
+      const apiError = error as {
+        response?: {
+          data?: {
+            data?: { message?: string };
+            meta?: { message?: string };
+          };
+        };
+      };
+
+      const errorMessage =
+        apiError.response?.data?.data?.message ||
+        apiError.response?.data?.meta?.message ||
+        "Login failed. Please check your credentials.";
+
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    // Wrap the component with the Provider
     <GoogleOAuthProvider
       clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
     >
       <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
         {/* LEFT PANEL */}
         <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
-          <ArrowLeft className="m-5" />
+          <LocalizedLink href={"/restaurants"} className="m-5">
+            <ArrowLeft />
+          </LocalizedLink>
           <div className="p-10">
             <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
               Join Us Today!
@@ -189,6 +244,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 required
+                value={formData.name}
               />
               <input
                 type="email"
@@ -198,6 +254,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, email: e.target.value })
                 }
                 required
+                value={formData.email}
               />
               <input
                 type="tel"
@@ -207,6 +264,7 @@ export default function RegisterPage() {
                   setFormData({ ...formData, phone: e.target.value })
                 }
                 required
+                value={formData.phone}
               />
               <input
                 type="password"
@@ -217,6 +275,7 @@ export default function RegisterPage() {
                 }
                 required
                 minLength={8}
+                value={formData.password}
               />
               <button
                 type="submit"

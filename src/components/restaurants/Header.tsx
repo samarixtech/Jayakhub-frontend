@@ -584,7 +584,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
                 />
               </div>
               <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
-                {/* {!isLoggedIn ? (
+                {!isLoggedIn ? (
                   <>
                     <Link
                       href={`/${country?.toLocaleLowerCase()}/${language?.toLocaleLowerCase()}/login`}
@@ -601,8 +601,8 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
                   </>
                 ) : (
                   <ProfileDropdown profileContent={profileContent} />
-                )} */}
-                <ProfileDropdown profileContent={profileContent} />
+                )}
+                {/* <ProfileDropdown profileContent={profileContent} /> */}
 
                 {/* Language Dropdown (Kept it small) */}
                 <div className="hidden sm:block">
