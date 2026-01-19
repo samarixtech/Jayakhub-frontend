@@ -12,14 +12,13 @@ import useLocale from "@/hooks/useLocals";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
-function GoogleSignupButton({ loading, setLoading, country, language }: any) {
+function GoogleLoginButton({ loading, setLoading, country, language }: any) {
   const router = useRouter();
 
   const handleGoogleSuccess = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       setLoading(true);
       try {
-        // 1. Get User Info from Google using the access_token
         const userInfo = await axios.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
@@ -29,20 +28,14 @@ function GoogleSignupButton({ loading, setLoading, country, language }: any) {
 
         const { email, name, picture }: any = userInfo.data;
 
-        // 2. Send data to your backend
-        const response = await api.post("/google-register", {
+        // Use your google-login or google-register endpoint
+        const response = await api.post("/google-login", {
           email,
-          name,
-          picture,
           token: tokenResponse.access_token,
-          role: "customer",
         });
 
-        if (
-          response.data.meta.status === 201 ||
-          response.data.meta.status === 200
-        ) {
-          toast.success("Google Login Successful!");
+        if (response.data.meta.status === 200) {
+          toast.success("Login Successful!");
           router.push(
             `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`,
           );
@@ -69,35 +62,36 @@ function GoogleSignupButton({ loading, setLoading, country, language }: any) {
   );
 }
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
-    phone: "",
   });
   const [loading, setLoading] = useState(false);
   const t = useTranslations("authModal");
   const router = useRouter();
   const { country, language } = useLocale();
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await api.post("/register", {
-        ...formData,
-        role: "customer",
+      const response = await api.post("/login", {
+        identifier: formData.email,
+        password: formData.password,
       });
 
-      if (
-        response.data.meta.status === 201 ||
-        response.data.meta.message === "success"
-      ) {
-        const identifier = response.data.data.email;
-        sessionStorage.setItem("pendingVerificationEmail", identifier);
-        toast.success(response.data.data.message || "OTP sent!");
+      // Check for status 200 and the specific message from your backend
+      if (response.data.meta.status === 200) {
+        const { identifier, message } = response.data.data;
 
+        // 1. Store the email in sessionStorage as requested
+        sessionStorage.setItem("pendingVerificationEmail", identifier);
+
+        // 2. Show success message from backend
+        toast.success(message || "OTP sent!");
+
+        // 3. Redirect to the verify-otp page with the email in the query params
         router.push(
           `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
         );
@@ -106,7 +100,7 @@ export default function RegisterPage() {
       toast.error(
         error.response?.data?.data?.message ||
           error.response?.data?.meta?.message ||
-          "Signup failed",
+          "Login failed. Please check your credentials.",
       );
     } finally {
       setLoading(false);
@@ -114,25 +108,26 @@ export default function RegisterPage() {
   };
 
   return (
-    // Wrap the component with the Provider
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
+    <GoogleOAuthProvider
+      clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
+    >
       <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
         {/* LEFT PANEL */}
         <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
           <div className="p-12">
             <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
-              Join Us <br /> Today!
+              Welcome <br /> Back!
             </h1>
             <div className="h-1.5 w-20 bg-emerald-400 mb-6"></div>
             <p className="text-lg text-emerald-100/80 max-w-sm leading-relaxed">
-              Create an account to experience our premium services and free
-              delivery.
+              Login to access your account, track orders, and enjoy our premium
+              services.
             </p>
           </div>
           <div className="relative w-full h-[40%] mt-auto">
             <Image
               src="/Chef.png"
-              alt="Registration Illustration"
+              alt="Login Illustration"
               fill
               style={{ objectFit: "contain", objectPosition: "bottom" }}
               className="w-full h-full"
@@ -146,14 +141,16 @@ export default function RegisterPage() {
           <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8 md:p-10">
             <div className="mb-6">
               <h2 className="text-3xl font-bold text-[#0B5D4E]">
-                {t("createAccount")}
+                Login to Account
               </h2>
-              <p className="text-sm text-gray-500 mt-2">{t("freeDelivery")}</p>
+              <p className="text-sm text-gray-500 mt-2">
+                Enter your details to continue
+              </p>
             </div>
 
             {/* Social Buttons */}
             <div className="grid grid-cols-2 gap-4 mb-6">
-              <GoogleSignupButton
+              <GoogleLoginButton
                 loading={loading}
                 setLoading={setLoading}
                 country={country}
@@ -172,20 +169,11 @@ export default function RegisterPage() {
                 <div className="w-full border-t border-gray-100"></div>
               </div>
               <span className="relative px-4 bg-white text-[11px] text-gray-400 uppercase font-black tracking-widest">
-                Or register with email
+                Or login with email
               </span>
             </div>
 
-            <form onSubmit={handleSignup} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
-              />
+            <form onSubmit={handleLogin} className="space-y-4">
               <input
                 type="email"
                 placeholder="Email Address"
@@ -195,41 +183,43 @@ export default function RegisterPage() {
                 }
                 required
               />
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                required
-              />
-              <input
-                type="password"
-                placeholder="Password (Min 8 characters)"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                required
-                minLength={8}
-              />
+              <div className="space-y-1">
+                <input
+                  type="password"
+                  placeholder="Password"
+                  className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                  required
+                />
+                <div className="flex justify-end">
+                  <Link
+                    href={`/${country?.toLowerCase()}/${language?.toLowerCase()}/forget-password`}
+                    // size="sm"
+                    className="text-xs text-gray-400 hover:text-[#0B5D4E]"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-4 bg-[#0B5D4E] text-white text-lg font-bold rounded-xl shadow-xl hover:bg-[#084838] transition transform active:scale-[0.99] disabled:opacity-50 mt-2"
               >
-                {loading ? "Processing..." : "Create Account"}
+                {loading ? "Logging in..." : "Login"}
               </button>
             </form>
 
             <p className="mt-6 text-center text-sm text-gray-600">
-              {t("existingAccount")}{" "}
+              Don't have an account?{" "}
               <Link
-                href="/login"
+                href="/register"
                 className="text-[#0B5D4E] font-bold hover:underline"
               >
-                {t("login")}
+                Create Account
               </Link>
             </p>
           </div>

@@ -15,6 +15,7 @@ import image from "../../../public/EngLogo (2).png";
 import arabicLogo from "../../../public/ArbicLogo (2).png";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import LocalizedLink from "../navigation/LocalizedLink";
 
 interface UserData {
   id: string;
@@ -499,14 +500,14 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
         </p>
       </div>
       <hr className="border-[#FFF9EE]" />
-      <Link
+      <LocalizedLink
         href="/dashboard"
         // MODIFIED: Use green hover background
         className="flex items-center p-3 text-gray-700 hover:bg-[#FFF9EE] rounded-lg transition"
       >
         <BarChart className="w-5 h-5 mr-3" />
         {tProfile("link.dashboard")}
-      </Link>
+      </LocalizedLink>
       <Link
         href={`/${country.toLowerCase()}/${language?.toLowerCase()}/account-settings`}
         // MODIFIED: Use green hover background
@@ -583,7 +584,7 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
                 />
               </div>
               <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
-                {!isLoggedIn ? (
+                {/* {!isLoggedIn ? (
                   <>
                     <Link
                       href={`/${country?.toLocaleLowerCase()}/${language?.toLocaleLowerCase()}/login`}
@@ -600,7 +601,8 @@ const IFDPHeader: React.FC<IFDPHeaderProps> = () => {
                   </>
                 ) : (
                   <ProfileDropdown profileContent={profileContent} />
-                )}
+                )} */}
+                <ProfileDropdown profileContent={profileContent} />
 
                 {/* Language Dropdown (Kept it small) */}
                 <div className="hidden sm:block">

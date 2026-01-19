@@ -6,15 +6,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import api from "@/components/services/api";
-import useLocale from "@/hooks/useLocals"; // Import locale hook
+import useLocale from "@/hooks/useLocals";
 
 export default function VerifyCodePage() {
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
+  const [timer, setTimer] = useState(60); // TIMER STATE
+  const [isResending, setIsResending] = useState(false);
   const router = useRouter();
 
-  // Get locale data for consistent routing
   const { country, language } = useLocale();
 
   useEffect(() => {
@@ -26,6 +27,17 @@ export default function VerifyCodePage() {
       router.push("/register");
     }
   }, [router]);
+
+  // TIMER LOGIC
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timer]);
 
   const handleChange = (value: string, index: number) => {
     if (!/^[0-9]?$/.test(value)) return;
@@ -40,14 +52,50 @@ export default function VerifyCodePage() {
     }
   };
 
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    if (e.key === "Backspace") {
+      if (!code[index] && index > 0) {
+        const prevInput = document.getElementById(`otp-${index - 1}`);
+        prevInput?.focus();
+      }
+    }
+
+    if (e.key === "Enter") {
+      handleVerify();
+    }
+  };
+
+  const handleResend = async () => {
+    if (timer > 0 || !email) return;
+
+    setIsResending(true);
+    try {
+      const response = await api.post("/resend-otp", {
+        identifier: email,
+      });
+
+      if (response.status === 200 || response.data?.meta?.status === 200) {
+        toast.success("Verification code resent!");
+        setTimer(60); // RESET TIMER
+      }
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.meta?.message || "Failed to resend code",
+      );
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   const handleVerify = async () => {
     const otpString = code.join("");
-
     if (otpString.length < 6) {
       toast.error("Please enter the full 6-digit code");
       return;
     }
-
     if (!email) {
       toast.error("Email identifier missing");
       return;
@@ -55,29 +103,31 @@ export default function VerifyCodePage() {
 
     setLoading(true);
     try {
+      // Check if this is a password reset flow
+      const intent = sessionStorage.getItem("verificationIntent");
+
+      if (intent === "forgot-password") {
+        // For forgot-password, we just store the OTP and move to change-password
+        // because the /reset-password API requires the OTP as part of the payload.
+        sessionStorage.setItem("pendingOTP", otpString);
+        const changePassPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/new-password`;
+        router.push(changePassPath);
+        return;
+      }
+
+      // Normal Registration Flow
       const response = await api.post("/verify-otp", {
         identifier: email,
         otp: otpString,
       });
-
-      // API success check
       if (response.status === 200 || response.data?.meta?.status === 200) {
         toast.success("Account verified successfully!");
-
-        // 1. Clear session storage
         sessionStorage.removeItem("pendingVerificationEmail");
-
-        // 2. REDIRECT TO DASHBOARD
-        // Using the same localized path structure as your Register page
         const dashboardPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`;
         router.push(dashboardPath);
       }
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.data?.message ||
-          error.response?.data?.meta?.message ||
-          "Verification failed",
-      );
+      toast.error(error.response?.data?.meta?.message || "Verification failed");
     } finally {
       setLoading(false);
     }
@@ -133,6 +183,8 @@ export default function VerifyCodePage() {
                 inputMode="numeric"
                 maxLength={1}
                 value={digit}
+                autoFocus={index === 0}
+                onKeyDown={(e) => handleKeyDown(e, index)}
                 onChange={(e) => handleChange(e.target.value, index)}
                 className="w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#0B5D4E] focus:ring-4 focus:ring-[#0B5D4E]/10 outline-none transition-all"
               />
@@ -148,9 +200,15 @@ export default function VerifyCodePage() {
           </button>
 
           <div className="text-center mt-8 space-y-3">
-            <button className="text-sm text-gray-500 hover:text-[#0B5D4E] transition font-medium">
+            <button
+              onClick={handleResend}
+              disabled={timer > 0 || isResending}
+              className="text-sm text-gray-500 hover:text-[#0B5D4E] transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               Didn&apos;t receive the code?{" "}
-              <span className="text-[#0B5D4E] font-bold">Resend Code</span>
+              <span className="text-[#0B5D4E] font-bold">
+                {timer > 0 ? `Resend in ${timer}s` : "Resend Code"}
+              </span>
             </button>
             <div>
               <Link
