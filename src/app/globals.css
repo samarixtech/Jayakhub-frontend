@@ -14,6 +14,8 @@
   --radius: 0.8rem;
 
   --background: #f6f7f8;
+  --emerald-bg: #0b5d4e;
+  --emerald-bg-hover: #094c40;
   --foreground: #2c2c2c;
 
   --card: #ffffff;
@@ -28,9 +30,15 @@
   --accent: #fff9ee;
   --accent-foreground: #6b5b3e;
 
-  --border: #e6e6e6;
-  --input: #dcdcdc;
-  --ring: rgba(11, 93, 78, 0.35);
+  --border: #e6e6e6; /* Keeping global border for general use, close to gray-200 */
+  --input: #dcdcdc; /* Old input border var? kept for compat */
+  --input-bg: #f9fafb; /* Gray-50 from Auth pages */
+  --ring: rgba(
+    11,
+    93,
+    78,
+    0.15
+  ); /* Softened ring to match Auth feel (10-20%) */
 
   --soft-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
   --soft-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
@@ -65,6 +73,7 @@
 
   --border: rgba(255, 255, 255, 0.15);
   --input: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(255, 255, 255, 0.05);
 
   --soft-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   --soft-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
@@ -113,17 +122,19 @@
 ----------------------------------------- */
 .input {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 0.8rem 1rem; /* Slightly reduced padding to match standard height */
+  height: 3.5rem; /* Match h-14 (56px) from Auth pages */
   border-radius: var(--radius);
-  font-size: 0.9rem;
-  background: var(--secondary);
-  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  background: var(--input-bg);
+  border: 1px solid var(--border); /* Default border handled by base, but ensuring specificity */
   color: var(--foreground);
   transition: 0.2s ease;
 }
 .input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--ring);
+  box-shadow: 0 0 0 4px var(--ring); /* Slightly larger ring, softer opacity */
+  outline: none;
 }
 
 /* ---------------------------------------
@@ -352,6 +363,8 @@ body.rtl .sidebar {
 
 @theme inline {
   --color-background: var(--background);
+  --color-emerald-bg: var(--emerald-bg);
+  --color-emerald-bg-hover: var(--emerald-bg-hover);
   --color-foreground: var(--foreground);
   --color-border: var(--border);
   --color-input: var(--input);

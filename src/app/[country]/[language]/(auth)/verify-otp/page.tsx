@@ -1,21 +1,28 @@
 "use client";
-
-import Image from "next/image";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 import api from "@/components/services/api";
 import useLocale from "@/hooks/useLocals";
+import { ApiResponse, ApiError } from "@/types/types";
+import { Button } from "@/components/ui/button";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
+import LocalizedLink from "@/components/navigation/LocalizedLink";
 
 export default function VerifyCodePage() {
-  const [code, setCode] = useState<string[]>(Array(6).fill(""));
+  const [otpValue, setOtpValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string | null>(null);
-  const [timer, setTimer] = useState(60); // TIMER STATE
+  const [timer, setTimer] = useState(60);
   const [isResending, setIsResending] = useState(false);
   const router = useRouter();
-
   const { country, language } = useLocale();
 
   useEffect(() => {
@@ -27,7 +34,6 @@ export default function VerifyCodePage() {
       router.push("/register");
     }
   }, [router]);
-
   // TIMER LOGIC
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -39,60 +45,31 @@ export default function VerifyCodePage() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleChange = (value: string, index: number) => {
-    if (!/^[0-9]?$/.test(value)) return;
-
-    const newCode = [...code];
-    newCode[index] = value;
-    setCode(newCode);
-
-    if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-${index + 1}`);
-      nextInput?.focus();
-    }
-  };
-
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    if (e.key === "Backspace") {
-      if (!code[index] && index > 0) {
-        const prevInput = document.getElementById(`otp-${index - 1}`);
-        prevInput?.focus();
-      }
-    }
-
-    if (e.key === "Enter") {
-      handleVerify();
-    }
-  };
-
+  // RESEND LOGIC
   const handleResend = async () => {
     if (timer > 0 || !email) return;
-
     setIsResending(true);
     try {
-      const response = await api.post("/resend-otp", {
+      const response = await api.post<ApiResponse>("/resend-otp", {
         identifier: email,
       });
-
       if (response.status === 200 || response.data?.meta?.status === 200) {
         toast.success("Verification code resent!");
-        setTimer(60); // RESET TIMER
+        setTimer(60);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
       toast.error(
-        error.response?.data?.meta?.message || "Failed to resend code",
+        apiError.response?.data?.meta?.message || "Failed to resend.",
       );
     } finally {
       setIsResending(false);
     }
   };
 
+  // VERIFY LOGIC
   const handleVerify = async () => {
-    const otpString = code.join("");
-    if (otpString.length < 6) {
+    if (otpValue.length < 6) {
       toast.error("Please enter the full 6-digit code");
       return;
     }
@@ -103,124 +80,125 @@ export default function VerifyCodePage() {
 
     setLoading(true);
     try {
-      // Check if this is a password reset flow
       const intent = sessionStorage.getItem("verificationIntent");
 
       if (intent === "forgot-password") {
-        // For forgot-password, we just store the OTP and move to change-password
-        // because the /reset-password API requires the OTP as part of the payload.
-        sessionStorage.setItem("pendingOTP", otpString);
-        const changePassPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/new-password`;
-        router.push(changePassPath);
+        sessionStorage.setItem("pendingOTP", otpValue);
+        router.push(
+          `/${country?.toLowerCase()}/${language?.toLowerCase()}/new-password`,
+        );
         return;
       }
 
-      // Normal Registration Flow
-      const response = await api.post("/verify-otp", {
+      const response = await api.post<ApiResponse>("/verify-otp", {
         identifier: email,
-        otp: otpString,
+        otp: otpValue,
       });
       if (response.status === 200 || response.data?.meta?.status === 200) {
         toast.success("Account verified successfully!");
         sessionStorage.removeItem("pendingVerificationEmail");
-        const dashboardPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`;
-        router.push(dashboardPath);
+        router.push(
+          `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`,
+        );
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.meta?.message || "Verification failed");
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      toast.error(
+        apiError.response?.data?.meta?.message || "Verification failed",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
-      {/* LEFT PANEL */}
-      <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
-        <div className="p-12">
-          <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
-            Secure <br /> Access
-          </h1>
-          <div className="h-1.5 w-20 bg-emerald-400 mb-6"></div>
-          <p className="text-lg text-emerald-100/80 max-w-sm leading-relaxed">
-            One more step to keep your account safe.
-            <br />
-            Please enter the verification code sent to: <br />
-            <span className="font-bold text-white underline decoration-emerald-400 underline-offset-4">
-              {email || "your email"}
-            </span>
-          </p>
-        </div>
+    <Card className="border-none shadow-none bg-transparent overflow-hidden m-0 p-0">
+      <CardHeader className="px-0 pt-0 mb-8 text-center">
+        <Typography
+          variant="h2"
+          className="text-emerald-bg border-none p-0 m-0"
+        >
+          Verify Code
+        </Typography>
+        <Typography variant="muted" className="mt-2">
+          Enter the 6-digit code sent to your device
+        </Typography>
+      </CardHeader>
 
-        <div className="relative w-full h-[45%] mt-auto">
-          <Image
-            src="/Chef.png"
-            alt="Secure Access Illustration"
-            fill
-            style={{ objectFit: "contain", objectPosition: "bottom" }}
-            className="w-full h-full"
-            priority
-          />
-        </div>
-      </div>
-
-      {/* RIGHT PANEL */}
-      <div className="flex items-center justify-center p-6">
-        <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-10">
-          <h2 className="text-3xl font-bold text-[#0B5D4E] mb-2">
-            Verify Code
-          </h2>
-          <p className="text-sm text-gray-500 mb-8">
-            Enter the 6-digit code sent to your device
-          </p>
-
-          <div className="flex gap-2 sm:gap-3 justify-between mb-8">
-            {code.map((digit, index) => (
-              <input
-                key={index}
-                id={`otp-${index}`}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                autoFocus={index === 0}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onChange={(e) => handleChange(e.target.value, index)}
-                className="w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-[#0B5D4E] focus:ring-4 focus:ring-[#0B5D4E]/10 outline-none transition-all"
+      <CardContent className="px-0">
+        <div className="flex flex-col items-center space-y-8">
+          <InputOTP
+            maxLength={6}
+            value={otpValue}
+            onChange={(value) => setOtpValue(value)}
+            onComplete={handleVerify}
+          >
+            <InputOTPGroup className="gap-2 sm:gap-3 font-bold">
+              <InputOTPSlot
+                index={0}
+                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
               />
-            ))}
-          </div>
+              <InputOTPSlot
+                index={1}
+                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
+              />
+              <InputOTPSlot
+                index={2}
+                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
+              />
+              <InputOTPSlot
+                index={3}
+                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
+              />
+              <InputOTPSlot
+                index={4}
+                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
+              />
+              <InputOTPSlot
+                index={5}
+                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
+              />
+            </InputOTPGroup>
+          </InputOTP>
 
-          <button
+          <Button
             onClick={handleVerify}
             disabled={loading}
-            className="w-full h-14 bg-[#0B5D4E] text-white rounded-xl text-lg font-bold shadow-lg hover:bg-[#094C40] transition-all active:scale-[0.98] disabled:opacity-50"
+            className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold shadow-lg hover:bg-emerald-bg-hover transition-all active:scale-[0.98] disabled:opacity-50"
           >
-            {loading ? "Verifying..." : "Verify & Proceed"}
-          </button>
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Verifying...
+              </>
+            ) : (
+              "Verify & Proceed"
+            )}
+          </Button>
 
-          <div className="text-center mt-8 space-y-3">
+          <div className="text-center space-y-4">
             <button
               onClick={handleResend}
               disabled={timer > 0 || isResending}
-              className="text-sm text-gray-500 hover:text-[#0B5D4E] transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="block w-full text-sm text-gray-500 hover:text-emerald-bg transition font-medium disabled:opacity-50"
             >
               Didn&apos;t receive the code?{" "}
-              <span className="text-[#0B5D4E] font-bold">
+              <span className="text-emerald-bg font-bold cursor-pointer hover:underline">
                 {timer > 0 ? `Resend in ${timer}s` : "Resend Code"}
               </span>
             </button>
-            <div>
-              <Link
-                href="/login"
-                className="text-sm text-gray-400 hover:text-[#0B5D4E] transition"
+
+            <LocalizedLink href="/login" className="block">
+              <Typography
+                variant="small"
+                className="text-gray-400 hover:text-emerald-bg transition underline decoration-gray-200 underline-offset-4"
               >
-                Back to <span className="font-semibold underline">Login</span>
-              </Link>
-            </div>
+                Back to Login
+              </Typography>
+            </LocalizedLink>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

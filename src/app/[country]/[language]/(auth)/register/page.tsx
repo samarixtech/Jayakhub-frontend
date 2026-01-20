@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import { useTranslations } from "next-intl";
@@ -10,30 +9,20 @@ import api from "@/components/services/api";
 import { toast } from "react-hot-toast";
 import useLocale from "@/hooks/useLocals";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
-import { ArrowLeft } from "lucide-react";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
-
-interface GoogleUserInfo {
-  email: string;
-  name: string;
-  picture: string;
-  sub: string;
-}
-
-interface GoogleSignupButtonProps {
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
-  country: string;
-  language: string;
-}
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { GoogleUserInfo, GoogleButtonProps } from "@/types/types";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@radix-ui/react-separator";
+import { Input } from "@/components/ui/input";
 
 function GoogleSignupButton({
   loading,
   setLoading,
   country,
   language,
-}: GoogleSignupButtonProps) {
+}: GoogleButtonProps) {
   const router = useRouter();
 
   const handleGoogleSuccess = useGoogleLogin({
@@ -120,6 +109,7 @@ export default function RegisterPage() {
     phone: "",
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const t = useTranslations("authModal");
   const router = useRouter();
   const { country, language } = useLocale();
@@ -172,132 +162,133 @@ export default function RegisterPage() {
     <GoogleOAuthProvider
       clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
     >
-      <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
-        {/* LEFT PANEL */}
-        <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
-          <LocalizedLink href={"/restaurants"} className="m-5">
-            <ArrowLeft />
-          </LocalizedLink>
-          <div className="p-10">
-            <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
-              Join Us Today!
-            </h1>
-            <div className="h-1.5 w-20 bg-emerald-400 mb-6"></div>
-            <p className="text-lg text-emerald-100/80 max-w-sm leading-relaxed">
-              Create an account to experience our premium services and free
-              delivery.
-            </p>
-          </div>
-          <div className="relative w-full h-[40%] mt-auto">
-            <Image
-              src="/Chef.png"
-              alt="Registration Illustration"
-              fill
-              style={{ objectFit: "contain", objectPosition: "bottom" }}
-              className="w-full h-full"
-              priority
+      <Card className="border-none shadow-none bg-transparent overflow-hidden m-0 p-0">
+        {" "}
+        <CardHeader className="px-0 pt-0 text-center">
+          <Typography
+            variant="h2"
+            className="text-emerald-bg border-none p-0 m-0"
+          >
+            {t("createAccount")}
+          </Typography>
+          <Typography variant="muted" className="mt-2">
+            {t("freeDelivery")}
+          </Typography>
+        </CardHeader>
+        <CardContent className="px-0">
+          {/* Social Buttons */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <GoogleSignupButton
+              loading={loading}
+              setLoading={setLoading}
+              country={country}
+              language={language}
             />
+            <Button
+              type="button"
+              className="flex items-center justify-center gap-3 h-12 bg-black text-white rounded-xl hover:bg-gray-800 transition font-semibold text-sm"
+            >
+              <FaApple className="text-xl" /> Apple
+            </Button>
           </div>
-        </div>
 
-        {/* RIGHT PANEL */}
-        <div className="flex items-center justify-center p-4 md:p-8">
-          <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8 md:p-10">
-            <div className="mb-6">
-              <h2 className="text-3xl font-bold text-[#0B5D4E]">
-                {t("createAccount")}
-              </h2>
-              <p className="text-sm text-gray-500 mt-2">{t("freeDelivery")}</p>
+          {/* Divider */}
+          <div className="relative mb-6 text-center">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full border-gray-100" />
             </div>
-
-            {/* Social Buttons */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <GoogleSignupButton
-                loading={loading}
-                setLoading={setLoading}
-                country={country}
-                language={language}
-              />
-              <button
-                type="button"
-                className="flex items-center justify-center gap-3 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition font-semibold text-sm"
+            <div className="relative flex justify-center uppercase">
+              <Typography
+                as="span"
+                className="bg-white px-4 text-[11px] text-gray-400 font-black tracking-widest"
               >
-                <FaApple className="text-xl" /> Apple
-              </button>
-            </div>
-
-            <div className="relative mb-6 text-center">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-100"></div>
-              </div>
-              <span className="relative px-4 bg-white text-[11px] text-gray-400 uppercase font-black tracking-widest">
                 Or register with email
-              </span>
+              </Typography>
             </div>
+          </div>
 
-            <form onSubmit={handleSignup} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
-                value={formData.name}
-              />
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                required
-                value={formData.email}
-              />
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                required
-                value={formData.phone}
-              />
-              <input
-                type="password"
-                placeholder="Password (Min 8 characters)"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
+          {/* Registration Form */}
+          <form onSubmit={handleSignup} className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Full Name"
+              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+              value={formData.name}
+            />
+            <Input
+              type="email"
+              placeholder="Email Address"
+              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              required
+              value={formData.email}
+            />
+            <Input
+              type="tel"
+              placeholder="Phone Number"
+              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              required
+              value={formData.phone}
+            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
                 required
-                minLength={8}
                 value={formData.password}
               />
               <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-[#0B5D4E] text-white text-lg font-bold rounded-xl shadow-xl hover:bg-[#084838] transition transform active:scale-[0.99] disabled:opacity-50 mt-2"
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg transition-colors"
               >
-                {loading ? "Processing..." : "Create Account"}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
-            </form>
+            </div>
 
-            <p className="mt-6 text-center text-sm text-gray-600">
-              {t("existingAccount")}{" "}
-              <Link
-                href="/login"
-                className="text-[#0B5D4E] font-bold hover:underline"
-              >
-                {t("login")}
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full h-14 bg-emerald-bg text-white text-lg font-bold rounded-xl shadow-xl hover:bg-emerald-bg-hover transition transform active:scale-[0.99] disabled:opacity-50 mt-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Create Account"
+              )}
+            </Button>
+          </form>
+
+          <Typography
+            variant="small"
+            className="mt-6 text-center text-gray-600"
+          >
+            {t("existingAccount")}{" "}
+            <Link
+              href="/login"
+              className="text-emerald-bg font-bold hover:underline"
+            >
+              {t("login")}
+            </Link>
+          </Typography>
+        </CardContent>
+      </Card>
     </GoogleOAuthProvider>
   );
 }
