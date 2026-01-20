@@ -1,12 +1,17 @@
 "use client";
-
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import api from "@/components/services/api";
 import useLocale from "@/hooks/useLocals";
+import { ApiResponse, ApiError } from "@/types/types";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { Typography } from "@/components/ui/typography";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Label } from "@radix-ui/react-label";
+import { Input } from "@/components/ui/input";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -23,8 +28,8 @@ export default function ForgotPasswordPage() {
 
     setLoading(true);
     try {
-      const response = await api.post("/forgot-password", {
-        identifier: email, // Changed to 'identifier' to match standard auth patterns
+      const response = await api.post<ApiResponse>("/forgot-password", {
+        identifier: email,
       });
 
       if (response.data?.meta?.status === 200 || response.status === 200) {
@@ -38,88 +43,73 @@ export default function ForgotPasswordPage() {
         const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp`;
         router.push(verifyPath);
       }
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.meta?.message || "Failed to send reset code",
-      );
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.meta?.message ||
+        "Reset failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
-      <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
-        <div className="p-12">
-          <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
-            Forgot <br /> Password?
-          </h1>
-          <div className="h-1.5 w-20 bg-emerald-400 mb-6"></div>
-          <p className="text-lg text-emerald-100/80 max-w-sm leading-relaxed">
-            Don&apos;t worry! It happens. Please enter the email associated with
-            your account.
-          </p>
-        </div>
+    <Card className="border-none shadow-none bg-transparent">
+      <CardHeader className="px-0 pt-0 text-center">
+        <Typography variant="h2" className="text-emerald-bg border-none mb-2">
+          Reset Password
+        </Typography>
 
-        <div className="relative w-full h-[45%] mt-auto">
-          <Image
-            src="/Chef.png"
-            alt="Forgot Password Illustration"
-            fill
-            style={{ objectFit: "contain", objectPosition: "bottom" }}
-            className="w-full h-full"
-            priority
-          />
-        </div>
-      </div>
+        <Typography variant="muted">
+          We will send a 6-digit verification code to your email to reset your
+          password.
+        </Typography>
+      </CardHeader>
 
-      <div className="flex items-center justify-center p-6">
-        <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-10">
-          <h2 className="text-3xl font-bold text-[#0B5D4E] mb-2">
-            Reset Password
-          </h2>
-          <p className="text-sm text-gray-500 mb-8">
-            We will send a 6-digit verification code to your email to reset your
-            password.
-          </p>
+      <CardContent className="px-0">
+        <form onSubmit={handleResetRequest} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-gray-600 ml-1">
+              Email Address
+            </Label>
 
-          <form onSubmit={handleResetRequest} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-600 ml-1">
-                Email Address
-              </label>
-              <input
-                type="email"
-                placeholder="example@mail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
-              />
-            </div>
+            <Input
+              id="email"
+              type="email"
+              placeholder="example@mail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+            />
+          </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-14 bg-[#0B5D4E] text-white rounded-xl text-lg font-bold shadow-lg hover:bg-[#094C40] transition-all active:scale-[0.98] disabled:opacity-50"
-            >
-              {loading ? "Sending Code..." : "Send Reset Code"}
-            </button>
-          </form>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-lg font-bold rounded-xl"
+          >
+            {loading ? (
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            ) : (
+              "Send Reset Code"
+            )}
+          </Button>
+        </form>
 
-          <div className="text-center mt-8">
+        <div className="text-center mt-8">
+          <Typography variant="small" className="text-gray-400">
+            Remember your password?{" "}
             <Link
               href="/login"
-              className="text-sm text-gray-400 hover:text-[#0B5D4E] transition"
+              className="font-semibold underline text-emerald-bg"
             >
-              Remember your password?{" "}
-              <span className="font-semibold underline text-[#0B5D4E]">
-                Login
-              </span>
+              Login
             </Link>
-          </div>
+          </Typography>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

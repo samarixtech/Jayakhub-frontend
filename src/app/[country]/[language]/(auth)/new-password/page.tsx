@@ -1,11 +1,14 @@
 "use client";
-
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import api from "@/components/services/api";
+import { ApiResponse, ApiError } from "@/types/types";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function ChangePasswordPage() {
   const [password, setPassword] = useState("");
@@ -36,7 +39,7 @@ export default function ChangePasswordPage() {
       const email = sessionStorage.getItem("pendingVerificationEmail");
       const otp = sessionStorage.getItem("pendingOTP");
 
-      const response = await api.post("/reset-password", {
+      const response = await api.post<ApiResponse>("/reset-password", {
         identifier: email,
         otp: otp,
         newPassword: password,
@@ -47,94 +50,87 @@ export default function ChangePasswordPage() {
         sessionStorage.clear();
         router.push("/login");
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.meta?.message || "Reset failed");
+    } catch (error: unknown) {
+      const apiError = error as ApiError;
+      const errorMessage =
+        apiError.response?.data?.meta?.message ||
+        "Reset failed. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
-      <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
-        <div className="p-12">
-          <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
-            Secure <br /> Update
-          </h1>
-          <div className="h-1.5 w-20 bg-emerald-400 mb-6"></div>
-          <p className="text-lg text-emerald-100/80 max-w-sm">
-            Please choose a strong new password to keep your account safe.
-          </p>
-        </div>
-        <div className="relative w-full h-[45%] mt-auto">
-          <Image
-            src="/Chef.png"
-            alt="Illustration"
-            fill
-            style={{ objectFit: "contain", objectPosition: "bottom" }}
-            priority
-          />
-        </div>
-      </div>
+    <Card className="border-none shadow-none bg-transparent overflow-hidden m-0 p-0">
+      <CardHeader className="px-0 pt-0 mb-6 text-center">
+        <Typography
+          variant="h2"
+          className="text-emerald-bg border-none p-0 m-0"
+        >
+          New Password
+        </Typography>
+        <Typography variant="muted" className="mt-2">
+          Enter your new security credentials
+        </Typography>
+      </CardHeader>
 
-      <div className="flex items-center justify-center p-6">
-        <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-10">
-          <h2 className="text-3xl font-bold text-[#0B5D4E] mb-2">
-            New Password
-          </h2>
-          <p className="text-sm text-gray-500 mb-8">
-            Enter your new security credentials
-          </p>
-
-          <form onSubmit={handleChangePassword} className="space-y-4">
-            {/* NEW PASSWORD FIELD */}
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-4 pr-12 rounded-xl border border-gray-100 bg-gray-50 focus:border-[#0B5D4E] outline-none transition-all"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#0B5D4E] transition-colors"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
-            {/* CONFIRM PASSWORD FIELD */}
-            <div className="relative">
-              <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm New Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                className="w-full p-4 pr-12 rounded-xl border border-gray-100 bg-gray-50 focus:border-[#0B5D4E] outline-none transition-all"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#0B5D4E] transition-colors"
-              >
-                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
+      <CardContent className="px-0">
+        <form onSubmit={handleChangePassword} className="space-y-4">
+          {/* NEW PASSWORD */}
+          <div className="relative">
+            <Input
+              type={showPassword ? "text" : "password"}
+              placeholder="New Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition-all"
+            />
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full h-14 bg-[#0B5D4E] text-white rounded-xl text-lg font-bold shadow-lg hover:bg-[#094C40] transition-all disabled:opacity-50"
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg transition-colors"
             >
-              {loading ? "Updating..." : "Update Password"}
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
-          </form>
-        </div>
-      </div>
-    </div>
+          </div>
+
+          {/* CONFIRM PASSWORD */}
+          <div className="relative">
+            <Input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm New Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition-all"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg transition-colors"
+            >
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold shadow-lg hover:bg-emerald-bg-hover transition-all active:scale-[0.99] disabled:opacity-50"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Updating...
+              </>
+            ) : (
+              "Update Password"
+            )}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,38 +1,35 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import api from "@/components/services/api";
 import { toast } from "react-hot-toast";
 import useLocale from "@/hooks/useLocals";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { GoogleButtonProps, GoogleUserInfo } from "@/types/types";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@radix-ui/react-separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
-import { ArrowLeft } from "lucide-react";
-
-interface GoogleLoginButtonProps {
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
-  country: string;
-  language: string;
-}
-
-interface GoogleUserInfo {
-  email: string;
-  name: string;
-  picture: string;
-  sub: string;
-}
 
 function GoogleLoginButton({
   loading,
   setLoading,
   country,
   language,
-}: GoogleLoginButtonProps) {
+}: GoogleButtonProps) {
   const router = useRouter();
 
   const handleGoogleSuccess = useGoogleLogin({
@@ -77,14 +74,15 @@ function GoogleLoginButton({
   });
 
   return (
-    <button
+    <Button
+      variant="outline"
       type="button"
       onClick={() => handleGoogleSuccess()}
       disabled={loading}
-      className="flex items-center justify-center gap-3 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition font-semibold text-gray-700 text-sm disabled:opacity-50"
+      className="w-full h-12 gap-3 rounded-xl border-gray-200 cursor-pointer"
     >
       <FcGoogle className="text-xl" /> Google
-    </button>
+    </Button>
   );
 }
 
@@ -111,6 +109,7 @@ export default function LoginPage() {
   });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const { country, language } = useLocale();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -160,124 +159,124 @@ export default function LoginPage() {
     <GoogleOAuthProvider
       clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
     >
-      <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
-        {/* LEFT PANEL */}
-        <div className="hidden md:flex bg-[#0B5D4E] text-white flex-col justify-between overflow-hidden">
-          <LocalizedLink href={"/restaurants"} className="m-5">
-            <ArrowLeft />
-          </LocalizedLink>
-          <div className="p-10">
-            <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
-              Welcome <br /> Back!
-            </h1>
-            <div className="h-1.5 w-20 bg-emerald-400 mb-6"></div>
-            <p className="text-lg text-emerald-100/80 max-w-sm leading-relaxed">
-              Login to access your account, track orders, and enjoy our premium
-              services.
-            </p>
-          </div>
-          <div className="relative w-full h-[40%] mt-auto">
-            <Image
-              src="/Chef.png"
-              alt="Login Illustration"
-              fill
-              style={{ objectFit: "contain", objectPosition: "bottom" }}
-              className="w-full h-full"
-              priority
+      <Card className="border-none shadow-none bg-transparent">
+        <CardHeader className="px-0 pt-0 text-center">
+          <CardTitle className="text-3xl font-bold text-emerald-bg">
+            Login to Account
+          </CardTitle>
+          <CardDescription className="text-sm text-gray-500">
+            Enter your details to continue
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="px-0">
+          {/* Social Logins */}
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <GoogleLoginButton
+              loading={loading}
+              setLoading={setLoading}
+              country={country}
+              language={language}
             />
+            <Button
+              type="button"
+              className="h-12 bg-black hover:bg-gray-800 text-white gap-3 rounded-xl"
+            >
+              <FaApple className="text-xl" /> Apple
+            </Button>
           </div>
-        </div>
 
-        {/* RIGHT PANEL */}
-        <div className="flex items-center justify-center p-4 md:p-8">
-          <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8 md:p-10">
-            <div className="mb-6">
-              <h2 className="text-3xl font-bold text-[#0B5D4E]">
-                Login to Account
-              </h2>
-              <p className="text-sm text-gray-500 mt-2">
-                Enter your details to continue
-              </p>
+          {/* Divider */}
+          <div className="relative mb-8">
+            <div className="absolute inset-0 flex items-center">
+              <Separator />
             </div>
-
-            {/* Social Buttons */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <GoogleLoginButton
-                loading={loading}
-                setLoading={setLoading}
-                country={country}
-                language={language}
-              />
-              <button
-                type="button"
-                className="flex items-center justify-center gap-3 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition font-semibold text-sm"
-              >
-                <FaApple className="text-xl" /> Apple
-              </button>
-            </div>
-
-            <div className="relative mb-6 text-center">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-100"></div>
-              </div>
-              <span className="relative px-4 bg-white text-[11px] text-gray-400 uppercase font-black tracking-widest">
+            <div className="relative flex justify-center uppercase">
+              <span className="bg-white px-4 text-[11px] font-black tracking-widest text-gray-400">
                 Or login with email
               </span>
             </div>
+          </div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-              <input
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="sr-only">
+                Email
+              </Label>
+              <Input
+                id="email"
                 type="email"
                 placeholder="Email Address"
-                className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
+                className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
                 required
-                value={formData.email}
               />
-              <div className="space-y-1">
-                <input
-                  type="password"
+            </div>
+
+            <div className="space-y-1">
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 focus:bg-white focus:ring-4 focus:ring-[#0B5D4E]/10 focus:border-[#0B5D4E] outline-none transition text-base"
+                  className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                  value={formData.password}
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
                   required
-                  value={formData.password}
                 />
-                <div className="flex justify-end">
-                  <Link
-                    href={`/${country?.toLowerCase()}/${language?.toLowerCase()}/forget-password`}
-                    className="text-xs text-gray-400 hover:text-[#0B5D4E]"
-                  >
-                    Forgot Password?
-                  </Link>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
+              <div className="flex justify-end">
+                <LocalizedLink
+                  href={`/forget-password`}
+                  className="text-xs text-gray-400 hover:text-emerald-bg transition-colors"
+                >
+                  Forgot Password?
+                </LocalizedLink>
+              </div>
+            </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-[#0B5D4E] text-white text-lg font-bold rounded-xl shadow-xl hover:bg-[#084838] transition transform active:scale-[0.99] disabled:opacity-50 mt-2"
-              >
-                {loading ? "Logging in..." : "Login"}
-              </button>
-            </form>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
+            </Button>
+          </form>
 
-            <p className="mt-6 text-center text-sm text-gray-600">
-              Don`t have an account?{" "}
-              <Link
-                href="/register"
-                className="text-[#0B5D4E] font-bold hover:underline"
-              >
-                Create Account
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
+          <Typography
+            variant="small"
+            className="mt-6 text-center text-gray-600"
+          >
+            Don&apos;t have an account?{" "}
+            <LocalizedLink
+              href="/register"
+              className="text-emerald-bg font-bold hover:underline"
+            >
+              Create Account
+            </LocalizedLink>
+          </Typography>
+        </CardContent>
+      </Card>
     </GoogleOAuthProvider>
   );
 }
