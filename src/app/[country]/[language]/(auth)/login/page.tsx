@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,44 @@ import {
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
+import { loginAction } from "@/app/actions/auth/auth";
+import { useFormState } from "react-dom";
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+// FOR /GOOGLE-AUTH
+interface GoogleAuthResponse {
+  meta: {
+    status: number;
+    message: string;
+  };
+  data: {
+    status: string;
+    message: string;
+    accessToken: string;
+    refreshToken: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      avatar: string;
+      role: string;
+    };
+  };
+}
+
+// app/actions/auth/auth.ts
+export interface ActionState {
+  success: boolean;
+  message?: string;
+  data?: {
+    meta: { status: number; message?: string };
+    data: { identifier: string; message?: string };
+  };
+}
 
 function GoogleLoginButton({
   loading,
@@ -44,24 +82,35 @@ function GoogleLoginButton({
         );
 
         const userData = userInfo.data;
-        const email = userData.email || "";
-        const name = userData.name || "";
-        const picture = userData.picture || "";
 
         const response = await api.post("/google-auth", {
-          email,
-          name,
-          picture,
+          email: userData.email || "",
+          name: userData.name || "",
+          picture: userData.picture || "",
           role: "customer",
           token: tokenResponse.access_token,
         });
 
-        const responseData = response.data as { meta: { status: number } };
-        if (responseData.meta.status === 200) {
+        const responseBody = response.data as GoogleAuthResponse;
+
+        if (
+          responseBody.meta.status === 200 &&
+          responseBody.data?.accessToken
+        ) {
+          const token = responseBody.data.accessToken;
+          const userRole = responseBody.data.user?.role;
+
+          sessionStorage.setItem("token", token);
+          if (userRole) {
+            sessionStorage.setItem("role", userRole);
+          }
+
           toast.success("Login Successful!");
           router.push(
-            `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`,
+            `/${country?.toLowerCase()}/${language?.toLowerCase()}/customer/dashboard`,
           );
+        } else {
+          toast.error("Authentication failed: No access token received.");
         }
       } catch (error) {
         toast.error("Google authentication failed.");
@@ -86,22 +135,6 @@ function GoogleLoginButton({
   );
 }
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-interface ApiResponse {
-  meta: {
-    status: number;
-    message?: string;
-  };
-  data: {
-    identifier: string;
-    message?: string;
-  };
-}
-
 export default function LoginPage() {
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
@@ -111,49 +144,33 @@ export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const { country, language } = useLocale();
+  const [state, formAction] = useFormState(loginAction, null);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await api.post("/login", {
-        identifier: formData.email,
-        password: formData.password,
-      });
+  useEffect(() => {
+    if (!state) return;
 
-      const responseData = response.data as ApiResponse;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(false);
 
-      if (responseData.meta.status === 200) {
-        const { identifier, message } = responseData.data;
-
-        sessionStorage.setItem("pendingVerificationEmail", identifier);
-
-        toast.success(message || "OTP sent!");
-
-        router.push(
-          `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
-        );
-      }
-    } catch (error: unknown) {
-      const apiError = error as {
-        response?: {
-          data?: {
-            data?: { message?: string };
-            meta?: { message?: string };
-          };
-        };
-      };
-
-      const errorMessage =
-        apiError.response?.data?.data?.message ||
-        apiError.response?.data?.meta?.message ||
-        "Login failed. Please check your credentials.";
-
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+    if (!state.success) {
+      toast.error(state.message || "Login failed");
+      return;
     }
-  };
+
+    if (!state.data?.data) {
+      toast.error("An unexpected error occurred. Please try again.");
+      return;
+    }
+
+    const { identifier, message } = state.data.data;
+
+    sessionStorage.setItem("pendingVerificationEmail", identifier);
+    toast.success(message || "OTP sent!");
+
+    router.push(
+      `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
+    );
+  }, [state, router, country, language]);
 
   return (
     <GoogleOAuthProvider
@@ -199,13 +216,14 @@ export default function LoginPage() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form action={formAction} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email" className="sr-only">
                 Email
               </Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="Email Address"
                 className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
@@ -220,6 +238,7 @@ export default function LoginPage() {
             <div className="space-y-1">
               <div className="relative">
                 <Input
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
