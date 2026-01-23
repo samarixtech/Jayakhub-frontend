@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import api from "@/components/services/api";
 import { toast } from "react-hot-toast";
@@ -16,6 +15,30 @@ import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-separator";
 import { Input } from "@/components/ui/input";
+import LocalizedLink from "@/components/navigation/LocalizedLink";
+import axios from "axios";
+import { useFormState } from "react-dom";
+import { registerAction } from "@/app/actions/auth/auth";
+
+interface GoogleAuthResponse {
+  meta: {
+    status: number;
+    message: string;
+  };
+  data: {
+    status: string;
+    message: string;
+    accessToken: string;
+    refreshToken: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      avatar: string;
+      role: string;
+    };
+  };
+}
 
 function GoogleSignupButton({
   loading,
@@ -29,7 +52,6 @@ function GoogleSignupButton({
     onSuccess: async (tokenResponse) => {
       setLoading(true);
       try {
-        // 1. Get User Info from Google using the access_token
         const userInfo = await axios.get<GoogleUserInfo>(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
@@ -38,28 +60,37 @@ function GoogleSignupButton({
         );
 
         const userData = userInfo.data;
-        const email = userData.email || "";
-        const name = userData.name || "";
-        const picture = userData.picture || "";
 
-        // 2. Send data to your backend
         const response = await api.post("/google-auth", {
-          email,
-          name,
-          picture,
+          email: userData.email || "",
+          name: userData.name || "",
+          picture: userData.picture || "",
           token: tokenResponse.access_token,
           role: "customer",
         });
 
-        const responseData = response.data as { meta: { status: number } };
+        const responseBody = response.data as GoogleAuthResponse;
+
         if (
-          responseData.meta.status === 201 ||
-          responseData.meta.status === 200
+          (responseBody.meta.status === 201 ||
+            responseBody.meta.status === 200) &&
+          responseBody.data?.accessToken
         ) {
+          const token = responseBody.data.accessToken;
+          const userRole = responseBody.data.user?.role;
+
+          sessionStorage.setItem("token", token);
+          if (userRole) {
+            sessionStorage.setItem("role", userRole);
+          }
+
           toast.success("Google Login Successful!");
+
           router.push(
             `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`,
           );
+        } else {
+          toast.error("Auth failed: No access token received from server.");
         }
       } catch (error) {
         toast.error("Google authentication failed.");
@@ -83,80 +114,33 @@ function GoogleSignupButton({
   );
 }
 
-interface RegisterFormData {
-  name: string;
-  email: string;
-  password: string;
-  phone: string;
-}
-
-interface RegisterApiResponse {
-  meta: {
-    status: number;
-    message?: string;
-  };
-  data: {
-    email: string;
-    message?: string;
-  };
-}
-
 export default function RegisterPage() {
-  const [formData, setFormData] = useState<RegisterFormData>({
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
-  });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const t = useTranslations("authModal");
   const router = useRouter();
   const { country, language } = useLocale();
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await api.post("/register", {
-        ...formData,
-        role: "customer",
-      });
+  const [state, formAction] = useFormState(registerAction, null);
 
-      const responseData = response.data as RegisterApiResponse;
+  useEffect(() => {
+    if (!state) return;
 
-      if (
-        responseData.meta.status === 201 ||
-        responseData.meta.message === "success"
-      ) {
-        const identifier = responseData.data.email;
-        sessionStorage.setItem("pendingVerificationEmail", identifier);
-        toast.success(responseData.data.message || "OTP sent!");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLoading(false);
 
-        router.push(
-          `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
-        );
-      }
-    } catch (error: unknown) {
-      const apiError = error as {
-        response?: {
-          data?: {
-            data?: { message?: string };
-            meta?: { message?: string };
-          };
-        };
-      };
+    if (state.success && state.data) {
+      const identifier = state.data.email;
+      sessionStorage.setItem("pendingVerificationEmail", identifier);
+      toast.success(state.message || "OTP sent!");
 
-      const errorMessage =
-        apiError.response?.data?.data?.message ||
-        apiError.response?.data?.meta?.message ||
-        "Login failed. Please check your credentials.";
-
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
+      router.push(
+        `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
+      );
+    } else if (!state.success) {
+      toast.error(state.message || "Registration failed");
     }
-  };
+  }, [state, router, country, language]);
 
   return (
     <GoogleOAuthProvider
@@ -208,52 +192,47 @@ export default function RegisterPage() {
           </div>
 
           {/* Registration Form */}
-          <form onSubmit={handleSignup} className="space-y-4">
+          <form
+            action={(formData) => {
+              setLoading(true);
+              formAction(formData);
+            }}
+            className="space-y-4"
+          >
             <Input
+              name="name"
               type="text"
               placeholder="Full Name"
-              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
               required
-              value={formData.name}
+              className="h-14 rounded-xl"
             />
             <Input
+              name="email"
               type="email"
               placeholder="Email Address"
-              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
               required
-              value={formData.email}
+              className="h-14 rounded-xl"
             />
             <Input
+              name="phone"
               type="tel"
               placeholder="Phone Number"
-              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
               required
-              value={formData.phone}
+              className="h-14 rounded-xl"
             />
+
             <div className="relative">
               <Input
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:bg-white focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg outline-none transition text-base"
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
                 required
-                value={formData.password}
+                className="h-14 pr-12 rounded-xl"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -262,7 +241,7 @@ export default function RegisterPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-14 bg-emerald-bg text-white text-lg font-bold rounded-xl shadow-xl hover:bg-emerald-bg-hover transition transform active:scale-[0.99] disabled:opacity-50 mt-2"
+              className="w-full h-14 bg-emerald-bg text-white text-lg font-bold rounded-xl"
             >
               {loading ? (
                 <>
@@ -277,15 +256,15 @@ export default function RegisterPage() {
 
           <Typography
             variant="small"
-            className="mt-6 text-center text-gray-600"
+            className="mt-6 text-center text-gray-600 pb-0.5"
           >
             {t("existingAccount")}{" "}
-            <Link
+            <LocalizedLink
               href="/login"
               className="text-emerald-bg font-bold hover:underline"
             >
               {t("login")}
-            </Link>
+            </LocalizedLink>
           </Typography>
         </CardContent>
       </Card>

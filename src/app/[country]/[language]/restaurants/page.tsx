@@ -1,15 +1,13 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Header from "../../../../components/restaurants/Header";
+import RestaurantHeader from "@/components/restaurants/Header";
 import SidebarFilters from "../../../../components/restaurants/SidebarFilters";
-import Home from "../../../../components/restaurants/Home";
 import { useParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { CLCProvider, useCLC } from "@/app/context/CLCContext.tsx";
 
 const IndexPageContent: React.FC = () => {
-  // const router = useRouter();
   const params = useParams();
   const { setCLC } = useCLC();
 
@@ -34,7 +32,7 @@ const IndexPageContent: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <Header />
+      <RestaurantHeader />
 
       <div className="w-full mx-auto px-4 sm:px-4 lg:px-4 py-8 md:pt-20 pt-[30px]">
         <div className="flex flex-col lg:flex-row gap-8  pt-20 ">
@@ -43,7 +41,7 @@ const IndexPageContent: React.FC = () => {
           </div>
 
           <div className="w-full lg:max-w-6xl ">
-            <Home />
+            <p>All Restaurant Home</p>
           </div>
         </div>
       </div>

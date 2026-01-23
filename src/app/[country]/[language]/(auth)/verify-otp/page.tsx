@@ -1,11 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import api from "@/components/services/api";
 import useLocale from "@/hooks/useLocals";
-import { ApiResponse, ApiError } from "@/types/types";
+import { resendOtpAction, verifyOtpAction } from "@/app/actions/auth/auth";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -18,23 +17,26 @@ import LocalizedLink from "@/components/navigation/LocalizedLink";
 
 export default function VerifyCodePage() {
   const [otpValue, setOtpValue] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [isVerifying, startVerifyTransition] = useTransition();
+  const [isResending, startResendTransition] = useTransition();
   const [email, setEmail] = useState<string | null>(null);
   const [timer, setTimer] = useState(60);
-  const [isResending, setIsResending] = useState(false);
+
   const router = useRouter();
   const { country, language } = useLocale();
 
   useEffect(() => {
     const storedEmail = sessionStorage.getItem("pendingVerificationEmail");
     if (storedEmail) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEmail(storedEmail);
     } else {
-      toast.error("No verification email found. Please register again.");
-      router.push("/register");
+      toast.error("No verification email found. Redirecting...");
+      router.push(`/${country}/${language}/register`);
     }
-  }, [router]);
-  // TIMER LOGIC
+  }, [router, country, language]);
+
+  // Countdown Timer Logic
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (timer > 0) {
@@ -45,83 +47,71 @@ export default function VerifyCodePage() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // RESEND LOGIC
-  const handleResend = async () => {
+  // Resend Handler
+  const handleResend = () => {
     if (timer > 0 || !email) return;
-    setIsResending(true);
-    try {
-      const response = await api.post<ApiResponse>("/resend-otp", {
-        identifier: email,
-      });
-      if (response.status === 200 || response.data?.meta?.status === 200) {
-        toast.success("Verification code resent!");
+
+    startResendTransition(async () => {
+      const result = await resendOtpAction(email);
+      if (result.success) {
+        toast.success(result.message || "Code resent!");
         setTimer(60);
+      } else {
+        toast.error(result.message || "Failed to resend code");
       }
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      toast.error(
-        apiError.response?.data?.meta?.message || "Failed to resend.",
-      );
-    } finally {
-      setIsResending(false);
-    }
+    });
   };
 
-  // VERIFY LOGIC
-  const handleVerify = async () => {
+  // Verification Handler
+  const handleVerify = () => {
     if (otpValue.length < 6) {
       toast.error("Please enter the full 6-digit code");
       return;
     }
-    if (!email) {
-      toast.error("Email identifier missing");
-      return;
-    }
+    if (!email) return;
 
-    setLoading(true);
-    try {
-      const intent = sessionStorage.getItem("verificationIntent");
+    startVerifyTransition(async () => {
+      const result = await verifyOtpAction({ email, otp: otpValue });
 
-      if (intent === "forgot-password") {
-        sessionStorage.setItem("pendingOTP", otpValue);
-        router.push(
-          `/${country?.toLowerCase()}/${language?.toLowerCase()}/new-password`,
-        );
-        return;
-      }
+      if (result.success) {
+        // Handle "Forgot Password" flow vs "Registration" flow
+        const intent = sessionStorage.getItem("verificationIntent");
+        if (intent === "forgot-password") {
+          sessionStorage.setItem("pendingOTP", otpValue);
+          router.push(
+            `/${country?.toLowerCase()}/${language?.toLowerCase()}/new-password`,
+          );
+          return;
+        }
 
-      const response = await api.post<ApiResponse>("/verify-otp", {
-        identifier: email,
-        otp: otpValue,
-      });
-      if (response.status === 200 || response.data?.meta?.status === 200) {
-        toast.success("Account verified successfully!");
+        // Store Session Data on Success
+        if (result.data?.accessToken) {
+          sessionStorage.setItem("token", result.data.accessToken);
+        }
+        if (result.data?.user?.role) {
+          sessionStorage.setItem("role", result.data.user.role);
+        }
+
+        toast.success(result.message || "Account verified!");
         sessionStorage.removeItem("pendingVerificationEmail");
         router.push(
-          `/${country?.toLowerCase()}/${language?.toLowerCase()}/dashboard`,
+          `/${country?.toLowerCase()}/${language?.toLowerCase()}/customer/dashboard`,
         );
+      } else {
+        toast.error(result.message || "Verification failed");
+        setOtpValue(""); // Clear OTP on error
       }
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
-      toast.error(
-        apiError.response?.data?.meta?.message || "Verification failed",
-      );
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return (
-    <Card className="border-none shadow-none bg-transparent overflow-hidden m-0 p-0">
+    <Card className="border-none shadow-none bg-transparent m-0 p-0">
       <CardHeader className="px-0 pt-0 mb-8 text-center">
-        <Typography
-          variant="h2"
-          className="text-emerald-bg border-none p-0 m-0"
-        >
+        <Typography variant="h2" className="text-emerald-bg">
           Verify Code
         </Typography>
         <Typography variant="muted" className="mt-2">
-          Enter the 6-digit code sent to your device
+          Enter the 6-digit code sent to <strong>{email}</strong>
         </Typography>
       </CardHeader>
 
@@ -132,41 +122,25 @@ export default function VerifyCodePage() {
             value={otpValue}
             onChange={(value) => setOtpValue(value)}
             onComplete={handleVerify}
+            disabled={isVerifying}
           >
             <InputOTPGroup className="gap-2 sm:gap-3 font-bold">
-              <InputOTPSlot
-                index={0}
-                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
-              />
-              <InputOTPSlot
-                index={1}
-                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
-              />
-              <InputOTPSlot
-                index={2}
-                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
-              />
-              <InputOTPSlot
-                index={3}
-                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
-              />
-              <InputOTPSlot
-                index={4}
-                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
-              />
-              <InputOTPSlot
-                index={5}
-                className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
-              />
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <InputOTPSlot
+                  key={index}
+                  index={index}
+                  className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
+                />
+              ))}
             </InputOTPGroup>
           </InputOTP>
 
           <Button
             onClick={handleVerify}
-            disabled={loading}
-            className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold shadow-lg hover:bg-emerald-bg-hover transition-all active:scale-[0.98] disabled:opacity-50"
+            disabled={isVerifying || otpValue.length < 6}
+            className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white rounded-xl text-lg font-bold shadow-lg transition-all active:scale-[0.98]"
           >
-            {loading ? (
+            {isVerifying ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Verifying...
@@ -184,14 +158,18 @@ export default function VerifyCodePage() {
             >
               Didn&apos;t receive the code?{" "}
               <span className="text-emerald-bg font-bold cursor-pointer hover:underline">
-                {timer > 0 ? `Resend in ${timer}s` : "Resend Code"}
+                {isResending
+                  ? "Resending..."
+                  : timer > 0
+                    ? `Resend in ${timer}s`
+                    : "Resend Code"}
               </span>
             </button>
 
             <LocalizedLink href="/login" className="block">
               <Typography
                 variant="small"
-                className="text-gray-400 hover:text-emerald-bg transition underline decoration-gray-200 underline-offset-4"
+                className="text-gray-400 hover:text-emerald-bg transition underline underline-offset-4"
               >
                 Back to Login
               </Typography>
