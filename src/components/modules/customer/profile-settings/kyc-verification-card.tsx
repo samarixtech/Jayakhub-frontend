@@ -14,11 +14,11 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { toast } from "react-hot-toast";
 import {
   uploadKycAction,
   getKycStatus,
 } from "@/app/actions/customer/userprofile";
+import { useServerAction } from "@/hooks/use-server-action";
 
 interface KycRecord {
   documentType: string;
@@ -28,12 +28,29 @@ interface KycRecord {
 
 export default function IdentityVerificationCard() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const [kycData, setKycData] = useState<KycRecord[]>([]);
-  const [fetching, setFetching] = useState(true);
   const [activeTypeId, setActiveTypeId] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+
+  // Status Fetcher
+  // For GET requests we can just use the action directly or use the hook
+  // But useServerAction is good for ensuring loading states etc.
+  const { execute: fetchStatus, isPending: fetching } = useServerAction(getKycStatus, {
+     onSuccess: (data: any) => setKycData(data)
+  });
+
+  // Upload Action
+  const { execute: uploadFile, isPending: isUploading } = useServerAction(uploadKycAction, {
+      onSuccess: () => {
+          resetSelection();
+          fetchStatus(); // Refresh status
+      }
+  });
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchStatus();
+  }, []);
 
   const documents = [
     {
@@ -56,21 +73,6 @@ export default function IdentityVerificationCard() {
     },
   ];
 
-  // Fetch KYC status on mount
-  const fetchStatus = async () => {
-    setFetching(true);
-    const result = await getKycStatus();
-    if (result.success) {
-      setKycData(result.data);
-    }
-    setFetching(false);
-  };
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchStatus();
-  }, []);
-
   const handleSelectClick = (typeId: string) => {
     setActiveTypeId(typeId);
     fileInputRef.current?.click();
@@ -87,26 +89,15 @@ export default function IdentityVerificationCard() {
 
   const handleFinalUpload = async () => {
     if (!selectedFile || !activeTypeId) return;
-    setIsUploading(true);
     const formData = new FormData();
     formData.append("documentType", activeTypeId);
     formData.append("documentFile", selectedFile);
-
-    const result = await uploadKycAction(formData);
-    if (result.success) {
-      toast.success(result.message || "Document uploaded successfully");
-      resetSelection();
-      fetchStatus(); // Refresh the list
-    } else {
-      toast.error(result.message || "Upload failed");
-      setIsUploading(false);
-    }
+    uploadFile(formData);
   };
 
   const resetSelection = () => {
     setSelectedFile(null);
     setActiveTypeId(null);
-    setIsUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -176,7 +167,7 @@ export default function IdentityVerificationCard() {
 
   return (
     <Card className="rounded-3xl p-8 border-none shadow-sm bg-white overflow-hidden">
-      <CardHeader>
+      <CardHeader className="px-0 pt-0 pb-6">
         <CardTitle className="text-lg font-bold text-gray-900">
           Identity Verification
         </CardTitle>
@@ -212,7 +203,7 @@ export default function IdentityVerificationCard() {
                       {isSelected ? (
                         <span className="text-blue-600 flex items-center gap-1">
                           <CheckCircle2 size={12} />{" "}
-                          {selectedFile.name.slice(0, 15)}...
+                          {selectedFile?.name.slice(0, 15)}...
                         </span>
                       ) : (
                         item.desc
