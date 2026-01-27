@@ -1,56 +1,61 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import useLocale from "@/hooks/useLocals";
 import { resetPasswordAction } from "@/app/actions/auth/auth";
+import { resetPasswordSchema, ResetPasswordInput } from "@/lib/validators/auth";
+import { useServerAction } from "@/hooks/use-server-action";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 
 export default function NewPasswordView() {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
   const { country, language } = useLocale();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<ResetPasswordInput>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: {
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
+  const { execute, isPending } = useServerAction(resetPasswordAction, {
+    onSuccess: () => {
+      sessionStorage.clear();
+      router.push(`/${country}/${language}/login`);
+    },
+  });
 
+  useEffect(() => {
     const email = sessionStorage.getItem("pendingVerificationEmail");
     const otp = sessionStorage.getItem("pendingOTP");
 
     if (!email || !otp) {
       toast.error("Session expired. Please start over.");
       router.push(`/${country}/${language}/forgot-password`);
-      return;
     }
+  }, [country, language, router]);
 
-    startTransition(async () => {
-      // Pass the values to the server action
-      const result = await resetPasswordAction({
-        password: password,
-      });
-
-      if (result.success) {
-        toast.success(result.message);
-        sessionStorage.clear();
-        router.push(`/${country}/${language}/login`);
-      } else {
-        toast.error(result.message);
-      }
-    });
+  const onSubmit = (data: ResetPasswordInput) => {
+    execute(data);
   };
 
   return (
@@ -64,60 +69,79 @@ export default function NewPasswordView() {
         </Typography>
       </CardHeader>
       <CardContent className="px-0">
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="relative">
-            <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="New Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              disabled={isPending}
-              className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                <FormItem>
+                    <div className="relative">
+                    <FormControl>
+                        <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="New Password"
+                        className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                        {...field}
+                        />
+                    </FormControl>
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                        tabIndex={-1}
+                    >
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                    </div>
+                    <FormMessage />
+                </FormItem>
+                )}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
 
-          <div className="relative">
-            <Input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              name="identifier"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              disabled={isPending}
-              className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+            <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                <FormItem>
+                    <div className="relative">
+                    <FormControl>
+                        <Input
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm New Password"
+                        className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                        {...field}
+                        />
+                    </FormControl>
+                    <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                        tabIndex={-1}
+                    >
+                        {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                    </div>
+                    <FormMessage />
+                </FormItem>
+                )}
             />
-            <button
-              type="button"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-            >
-              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
 
-          <Button
-            type="submit"
-            disabled={isPending}
-            className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold"
-          >
-            {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Updating...
-              </>
-            ) : (
-              "Update Password"
-            )}
-          </Button>
-        </form>
+            <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold"
+            >
+                {isPending ? (
+                <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Updating...
+                </>
+                ) : (
+                "Update Password"
+                )}
+            </Button>
+            </form>
+        </Form>
       </CardContent>
     </Card>
   );

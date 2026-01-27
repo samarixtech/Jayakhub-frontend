@@ -26,6 +26,7 @@ export default function VerifyOtpView() {
   const router = useRouter();
   const { country, language } = useLocale();
 
+  // CHECK THAT IF VERIFICATION EMAIL IS STORED IN SESSION STORAGE (IF NOT, REDIRECT TO REGISTER)
   useEffect(() => {
     const storedEmail = sessionStorage.getItem("pendingVerificationEmail");
     if (storedEmail) {

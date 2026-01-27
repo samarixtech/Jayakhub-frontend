@@ -1,15 +1,20 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaApple } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import useLocale from "@/hooks/useLocals";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+import useLocale from "@/hooks/useLocals";
+import { loginAction } from "@/app/actions/auth/auth";
+import { loginSchema, LoginInput } from "@/lib/validators/auth";
+import { useServerAction } from "@/hooks/use-server-action";
+
 import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
+import { Separator } from "@/components/ui/separator"; 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -17,62 +22,51 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
-import { loginAction } from "@/app/actions/auth/auth";
-import { useFormState } from "react-dom";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
 
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-// app/actions/auth/auth.ts
-export interface ActionState {
-  success: boolean;
-  message?: string;
-  data?: {
-    meta: { status: number; message?: string };
-    data: { identifier: string; message?: string };
-  };
-}
-
 export default function LoginView() {
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const { country, language } = useLocale();
-  const [state, formAction] = useFormState(loginAction, null);
 
-  useEffect(() => {
-    if (!state) return;
+  // 1. Setup Form with Zod
+  const form = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(false);
+  // 2. Setup Server Action Hook
+  const { execute, isPending } = useServerAction(loginAction, {
+    onSuccess: (data: any) => {
+        // useServerAction passes response.data directly
+        if (data?.identifier) {
+            const { identifier } = data;
+            sessionStorage.setItem("pendingVerificationEmail", identifier);
+            router.push(
+                `/${country?.toLowerCase() || 'pakistan'}/${language?.toLowerCase() || 'en'}/verify-otp?email=${encodeURIComponent(identifier)}`
+            );
+        } else {
+             // Fallback or direct login success?
+        }
+    },
+  });
 
-    if (!state.success) {
-      toast.error(state.message || "Login failed");
-      return;
-    }
-
-    if (!state.data?.data) {
-      toast.error("An unexpected error occurred. Please try again.");
-      return;
-    }
-
-    const { identifier, message } = state.data.data;
-
-    sessionStorage.setItem("pendingVerificationEmail", identifier);
-    toast.success(message || "OTP sent!");
-
-    router.push(
-      `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
-    );
-  }, [state, router, country, language]);
+  function onSubmit(data: LoginInput) {
+    execute(data);
+  }
 
   return (
     <GoogleOAuthProvider
@@ -92,8 +86,8 @@ export default function LoginView() {
           {/* Social Logins */}
           <div className="grid grid-cols-2 gap-4 mb-8">
             <GoogleAuthButton
-              loading={loading}
-              setLoading={setLoading}
+              loading={isPending}
+              setLoading={() => {}} // Hook handles loading, avoiding manual set
               country={country}
               language={language}
             />
@@ -117,72 +111,81 @@ export default function LoginView() {
             </div>
           </div>
 
-          {/* Form */}
-          <form action={formAction} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="sr-only">
-                Email
-              </Label>
-              <Input
-                id="email"
+          {/* Shadcn Form */}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+              <FormField
+                control={form.control}
                 name="email"
-                type="email"
-                placeholder="Email Address"
-                className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                required
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Email Address"
+                        className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="space-y-1">
-              <div className="relative">
-                <Input
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
+              <div className="space-y-1">
+                 <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="relative">
+                            <FormControl>
+                            <Input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Password"
+                                className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                                {...field}
+                            />
+                            </FormControl>
+                            <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg"
+                            tabIndex={-1}
+                            >
+                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                <div className="flex justify-end mt-1">
+                  <LocalizedLink
+                    href={`/forget-password`}
+                    className="text-xs text-gray-400 hover:text-emerald-bg transition-colors"
+                  >
+                    Forgot Password?
+                  </LocalizedLink>
+                </div>
               </div>
-              <div className="flex justify-end">
-                <LocalizedLink
-                  href={`/forget-password`}
-                  className="text-xs text-gray-400 hover:text-emerald-bg transition-colors"
-                >
-                  Forgot Password?
-                </LocalizedLink>
-              </div>
-            </div>
 
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
-                </>
-              ) : (
-                "Login"
-              )}
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Logging in...
+                  </>
+                ) : (
+                  "Login"
+                )}
+              </Button>
+            </form>
+          </Form>
 
           <Typography
             variant="small"

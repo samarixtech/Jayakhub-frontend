@@ -1,56 +1,82 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaApple } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import useLocale from "@/hooks/useLocals";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Typography } from "@/components/ui/typography";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@radix-ui/react-separator";
-import { Input } from "@/components/ui/input";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
-import { useFormState } from "react-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+import useLocale from "@/hooks/useLocals";
 import { registerAction } from "@/app/actions/auth/auth";
+import { registerSchema, RegisterInput } from "@/lib/validators/auth";
+import { useServerAction } from "@/hooks/use-server-action";
+
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator"; 
+import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Typography } from "@/components/ui/typography";
+import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
 
 export default function CustomerRegisterView() {
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const t = useTranslations("authModal");
   const router = useRouter();
   const { country, language } = useLocale();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [state, formAction] = useFormState(registerAction, null);
+  // 1. Setup Form
+  const form = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-  useEffect(() => {
-    if (!state) return;
+  // 2. Setup Server Action
+  const { execute, isPending } = useServerAction(registerAction, {
+    onSuccess: (data: any) => {
+      // Data contains email/message usually? 
+      // Based on original logic: state.data.email is the identifier
+      const identifier = data?.email || form.getValues("email");
+      
+      if (identifier) {
+        sessionStorage.setItem("pendingVerificationEmail", identifier);
+        router.push(
+            `/${country?.toLowerCase() || 'pakistan'}/${language?.toLowerCase() || 'en'}/verify-otp?email=${encodeURIComponent(identifier)}`
+        );
+      }
+    },
+  });
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(false);
-
-    if (state.success && state.data) {
-      const identifier = state.data.email;
-      sessionStorage.setItem("pendingVerificationEmail", identifier);
-      toast.success(state.message || "OTP sent!");
-
-      router.push(
-        `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp?email=${encodeURIComponent(identifier)}`,
-      );
-    } else if (!state.success) {
-      toast.error(state.message || "Registration failed");
-    }
-  }, [state, router, country, language]);
+  function onSubmit(data: RegisterInput) {
+    execute(data);
+  }
 
   return (
     <GoogleOAuthProvider
       clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
     >
       <Card className="border-none shadow-none bg-transparent overflow-hidden m-0 p-0">
-        {" "}
         <CardHeader className="px-0 pt-0 text-center">
           <Typography
             variant="h2"
@@ -67,8 +93,8 @@ export default function CustomerRegisterView() {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <GoogleAuthButton
               role="customer"
-              loading={loading}
-              setLoading={setLoading}
+              loading={isPending}
+              setLoading={() => {}}
               country={country}
               language={language}
             />
@@ -95,68 +121,132 @@ export default function CustomerRegisterView() {
             </div>
           </div>
 
-          {/* Registration Form */}
-          <form
-            action={(formData) => {
-              setLoading(true);
-              formAction(formData);
-            }}
-            className="space-y-4"
-          >
-            <Input
-              name="name"
-              type="text"
-              placeholder="Full Name"
-              required
-              className="h-14 rounded-xl"
-            />
-            <Input
-              name="email"
-              type="email"
-              placeholder="Email Address"
-              required
-              className="h-14 rounded-xl"
-            />
-            <Input
-              name="phone"
-              type="tel"
-              placeholder="Phone Number"
-              required
-              className="h-14 rounded-xl"
-            />
-
-            <div className="relative">
-              <Input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                required
-                className="h-14 pr-12 rounded-xl"
+          {/* Shadcn Form */}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Full Name"
+                        className="h-14 rounded-xl"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
 
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full h-14 bg-emerald-bg text-white text-lg font-bold rounded-xl"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                "Create Account"
-              )}
-            </Button>
-          </form>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Email Address"
+                        className="h-14 rounded-xl"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Phone Number"
+                        className="h-14 rounded-xl"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          className="h-14 pr-12 rounded-xl"
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                        tabIndex={-1}
+                      >
+                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                     <div className="relative">
+                      <FormControl>
+                        <Input
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm Password"
+                          className="h-14 pr-12 rounded-xl"
+                          {...field}
+                        />
+                      </FormControl>
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                        tabIndex={-1}
+                      >
+                         {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full h-14 bg-emerald-bg text-white text-lg font-bold rounded-xl"
+              >
+                {isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  "Create Account"
+                )}
+              </Button>
+            </form>
+          </Form>
 
           <Typography
             variant="small"
