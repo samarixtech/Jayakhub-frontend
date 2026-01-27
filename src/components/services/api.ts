@@ -1,4 +1,5 @@
 import axios from "axios";
+import { cookies } from "next/headers";
 
 const API_BASE_URL = "http://192.168.100.9:5000/api/v1";
 
@@ -75,4 +76,32 @@ api.interceptors.response.use(
   },
 );
 
+api.interceptors.request.use(
+  async (config) => {
+    let token: string | undefined;
+
+    if (typeof window !== "undefined") {
+      // 1. CLIENT SIDE: Read from document.cookie
+      const match = document.cookie.match(new RegExp("(^| )token=([^;]+)"));
+      token = match ? decodeURIComponent(match[2]) : undefined;
+    } else {
+      // 2. SERVER SIDE: Dynamically import next/headers
+      // This prevents the bundler from leaking server code to the client
+      try {
+        const { cookies } = await import("next/headers");
+        const cookieStore = await cookies();
+        token = cookieStore.get("token")?.value;
+      } catch (e) {
+        console.error("Failed to read cookies on server:", e);
+      }
+    }
+
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 export default api;
