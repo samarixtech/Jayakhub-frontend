@@ -4,11 +4,11 @@ import { ArrowLeft } from "lucide-react";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { usePathname } from "next/navigation";
 
-interface AuthLayoutProps {
+export default function AuthLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function AuthLayout({ children }: AuthLayoutProps) {
+}) {
   const pathname = usePathname();
 
   // Dynamic content based on the current route
@@ -55,6 +55,18 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         description:
           "Don't worry! It happens. Please enter the email associated with your account.",
         showBack: false,
+      };
+    }
+    if (pathname.includes("/restaurant-register")) {
+      return {
+        title: (
+          <>
+            Grow Your <br /> Business
+          </>
+        ),
+        description:
+          "Join our network of top-rated restaurants and start reaching thousands of new customers today.",
+        showBack: true,
       };
     }
     // Default/New Password
