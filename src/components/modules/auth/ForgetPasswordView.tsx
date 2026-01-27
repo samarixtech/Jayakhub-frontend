@@ -1,43 +1,52 @@
 "use client";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import useLocale from "@/hooks/useLocals";
 import { forgotPasswordAction } from "@/app/actions/auth/auth";
-import { useFormState } from "react-dom";
+import { forgotPasswordSchema, ForgotPasswordInput } from "@/lib/validators/auth";
+import { useServerAction } from "@/hooks/use-server-action";
+
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 
 export default function ForgotPasswordView() {
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { country, language } = useLocale();
-  const [state, formAction] = useFormState(forgotPasswordAction, null);
 
-  useEffect(() => {
-    if (!state) return;
+  const form = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(false);
+  const { execute, isPending } = useServerAction(forgotPasswordAction, {
+    onSuccess: (data: any) => {
+        if (data?.email) {
+            sessionStorage.setItem("pendingVerificationEmail", data.email);
+            sessionStorage.setItem("verificationIntent", "forgot-password");
+            const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp`;
+            router.push(verifyPath);
+        }
+    },
+  });
 
-    if (state.success && state.data) {
-      sessionStorage.setItem("pendingVerificationEmail", state.data.email);
-
-      sessionStorage.setItem("verificationIntent", "forgot-password");
-
-      toast.success(state.message || "Reset code sent!");
-
-      const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp`;
-      router.push(verifyPath);
-    } else if (!state.success) {
-      toast.error(state.message || "Reset failed. Please try again.");
-    }
-  }, [state, router, country, language]);
+  const onSubmit = (data: ForgotPasswordInput) => {
+    execute(data);
+  };
 
   return (
     <Card className="border-none shadow-none bg-transparent">
@@ -53,40 +62,45 @@ export default function ForgotPasswordView() {
       </CardHeader>
 
       <CardContent className="px-0">
-        <form
-          action={(formData) => {
-            setLoading(true);
-            formAction(formData);
-          }}
-          className="space-y-6"
-        >
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-gray-600 ml-1">
-              Email Address
-            </Label>
-
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="example@mail.com"
-              required
-              className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+        <Form {...form}>
+            <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+            >
+            <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel className="text-gray-600 ml-1">Email Address</FormLabel>
+                    <FormControl>
+                    <Input
+                        placeholder="example@mail.com"
+                        className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
             />
-          </div>
 
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
-          >
-            {loading ? (
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            ) : (
-              "Send Reset Code"
-            )}
-          </Button>
-        </form>
+            <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
+            >
+                {isPending ? (
+                <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Sending...
+                </>
+                ) : (
+                "Send Reset Code"
+                )}
+            </Button>
+            </form>
+        </Form>
 
         <div className="text-center mt-8">
           <Typography variant="small" className="text-gray-600">

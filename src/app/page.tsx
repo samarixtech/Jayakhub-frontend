@@ -1,67 +1,54 @@
-"use client";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import useLocale from "@/hooks/useLocals";
-import Banner from "@/app/banner/page";
-
-const HomePage: React.FC = () => {
-  const router = useRouter();
-  const { country, language, loading } = useLocale();
-  const [initialized, setInitialized] = useState(false);
-  const [locale, setLocale] = useState<{
+interface DetectApiResponse {
+  data: {
     country: string;
+    code: string;
     language: string;
-  } | null>(null);
+    isActive: boolean;
+  };
+}
 
-  useEffect(() => {
-    if (loading) return;
+export default async function HomePage() {
+  const cookieStore = cookies();
+  const countryCookie = (await cookieStore).get("USER_COUNTRY")?.value;
+  const langCookie = (await cookieStore).get("NEXT_LOCALE")?.value;
 
-    const storedLocale = sessionStorage.getItem("homepage_locale");
-    if (!storedLocale && country && language) {
-      // First visit → redirect to /country/language/restaurants
-      sessionStorage.setItem(
-        "homepage_locale",
-        JSON.stringify({ country, language })
-      );
-      sessionStorage.setItem("homepage_redirected", "true");
-      router.replace(
-        `/${country.toLowerCase()}/${language.toLowerCase()}/restaurants`
-      );
-    } else if (storedLocale) {
-      // Subsequent visits → set locale from storage
-      const parsedLocale = JSON.parse(storedLocale);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLocale(parsedLocale);
+  let country = "pakistan";
+  let language = "en";
 
-      // Update URL to /country/language (without triggering a full reload)
-      const newPath = `/${parsedLocale.country.toLowerCase()}/${parsedLocale.language.toLowerCase()}/restaurants`;
-      if (window.location.pathname === "/") {
-        router.replace(newPath);
+  // 1. Try Cookies first
+  if (countryCookie && langCookie) {
+    country = countryCookie.toLowerCase();
+    language = langCookie.toLowerCase();
+  } else {
+    // 2. Try API if no cookies
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000); // 2s timeout
+
+      const res = await fetch("http://192.168.100.9:5000/api/v1/detect", {
+        signal: controller.signal,
+        cache: "no-store",
+      });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const json = (await res.json()) as DetectApiResponse;
+        if (json.data && json.data.isActive) {
+          country = json.data.code.toLowerCase();
+          language = (json.data.language || "en").toLowerCase();
+        }
       }
-
-      setInitialized(true);
-    } else if (country && language) {
-      // Fallback if storage is empty
-      setLocale({ country, language });
-      const newPath = `/${country.toLowerCase()}/${language.toLowerCase()}/restaurants`;
-      if (window.location.pathname === "/") {
-        router.replace(newPath);
-      }
-      setInitialized(true);
+    } catch (error) {
+       // Ignore error, fallback will be used
+       console.error("Locale detection failed, using fallback:", error);
     }
-  }, [loading, country, language, router]);
+  }
 
-  if (!initialized) return null; // prevent flicker
-
-  return (
-    <div>
-      {/* <Banner /> */}
-      {/* <p>
-        Current Country: {locale?.country}, Language: {locale?.language}
-      </p> */}
-    </div>
-  );
-};
-
-export default HomePage;
+  console.log("DEBUG: HomePage Redirecting to:", `/${country}/${language}/restaurants`);
+  
+  // 3. Redirect
+  redirect(`/${country}/${language}/restaurants`);
+}

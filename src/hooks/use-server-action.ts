@@ -2,36 +2,46 @@
 
 import { useState, useTransition } from "react";
 import { toast } from "react-hot-toast";
+import { ActionResponse } from "@/lib/utils/response-handler";
 
-type ActionFn<T, R> = (payload: T) => Promise<R>;
+type ServerAction<TInput, TResponse> = (input: TInput) => Promise<ActionResponse<TResponse>>;
 
-export function useServerAction<
-  T,
-  R extends { success: boolean; message: string },
->(
-  action: ActionFn<T, R>,
-  options?: {
-    onSuccess?: (data: R) => void;
-    onError?: (error: R) => void;
-  },
+interface UseServerActionOptions<TResponse> {
+  onSuccess?: (data?: TResponse) => void;
+  onError?: (message: string) => void;
+}
+
+export function useServerAction<TInput, TResponse>(
+  action: ServerAction<TInput, TResponse>,
+  options: UseServerActionOptions<TResponse> = {}
 ) {
   const [isPending, startTransition] = useTransition();
-  const [result, setResult] = useState<R | null>(null);
+  const [result, setResult] = useState<ActionResponse<TResponse> | null>(null);
 
-  const execute = async (payload: T) => {
+  const execute = async (input: TInput) => {
     startTransition(async () => {
-      const res = await action(payload);
-      setResult(res);
+      try {
+        const response = await action(input);
+        setResult(response);
 
-      if (res.success) {
-        if (res.message) toast.success(res.message);
-        options?.onSuccess?.(res);
-      } else {
-        toast.error(res.message);
-        options?.onError?.(res);
+        if (response.success) {
+          toast.success(response.message);
+          options.onSuccess?.(response.data);
+        } else {
+          toast.error(response.message);
+          options.onError?.(response.message);
+        }
+      } catch (error) {
+        const msg = "An unexpected error occurred";
+        toast.error(msg);
+        options.onError?.(msg);
       }
     });
   };
 
-  return { execute, isPending, result };
+  return {
+    execute,
+    isPending,
+    result,
+  };
 }

@@ -10,50 +10,65 @@ import axios from "axios";
 import { googleAuthAction } from "@/app/actions/auth/auth";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
 import { Loader2 } from "lucide-react";
+import { useServerAction } from "@/hooks/use-server-action";
 
 export function GoogleAuthButton({
   country,
   language,
   loading,
   setLoading,
+  role,
 }: any) {
   const router = useRouter();
 
+  const { execute, isPending } = useServerAction(googleAuthAction, {
+    onSuccess: (data: any) => {
+       if (data?.role) {
+          const targetSubPath = ROLE_REDIRECT_MAP[data.role as UserRole];
+          const finalUrl = `/${country.toLowerCase()}/${language.toLowerCase()}${targetSubPath}`;
+          router.push(finalUrl);
+       }
+    },
+    onError: () => {
+        // Optional custom error handling if needed, defaults to toast from hook
+    }
+  });
+
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      setLoading(true);
+      // Logic: 
+      // 1. Fetch user profile from Google using the token
+      // 2. Pass profile + token to server action
+      
+      // Since this part involves a GET request to google, we might need a separate try/catch 
+      // or we can wrap this in a transition. However, axios call is external. 
+      // We can use isPending from hook to show loading state effectively if we call execute.
+      
+      // Let's rely on setloading if provided or use isPending if possible.
+      // But props might be controlling loading state of parent form too? 
+      // Actually, loading/setLoading are passed props. We should respect them or check usage.
+      // In Refactored Parent components, we passed `setLoading={() => {}}` (empty) because we relied on `isPending`.
+      // So relying on `isPending` here is safer for the new code.
+      
       try {
-        // 1. Fetch user profile from Google
-        const { data: userInfo } = await axios.get(
+        const { data: userInfo } = await axios.get<any>(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
             headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
           },
         );
 
-        // 2. Call the Server Action (sets cookies and returns the backend role)
-        const result = await googleAuthAction({
+        execute({
           email: userInfo.email,
           name: userInfo.name,
           picture: userInfo.picture,
           token: tokenResponse.access_token,
+          role: role, 
         });
 
-        if (result.success && result.role) {
-          toast.success("Login Successful!");
-
-          // 3. Dynamic redirection based on the role returned by your backend
-          const targetSubPath = ROLE_REDIRECT_MAP[result.role as UserRole];
-          const finalUrl = `/${country.toLowerCase()}/${language.toLowerCase()}${targetSubPath}`;
-
-          router.push(finalUrl);
-        } else {
-          toast.error(result.message || "Authentication failed");
-        }
       } catch (error) {
         toast.error("Google authentication failed.");
-      } finally {
-        setLoading(false);
+        console.error(error);
       }
     },
     onError: () => toast.error("Google Login Failed"),
@@ -64,10 +79,10 @@ export function GoogleAuthButton({
       variant="outline"
       type="button"
       onClick={() => login()}
-      disabled={loading}
+      disabled={loading || isPending}
       className="w-full h-12 gap-3 rounded-xl border-gray-200"
     >
-      {loading ? (
+      {loading || isPending ? (
         <Loader2 className="animate-spin" />
       ) : (
         <FcGoogle className="text-xl" />
