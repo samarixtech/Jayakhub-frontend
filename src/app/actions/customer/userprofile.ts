@@ -1,183 +1,134 @@
 "use server";
 import api from "@/components/services/api";
 import { revalidatePath } from "next/cache";
+import {
+  updateProfileSchema,
+  changePasswordSchema,
+  addCardSchema,
+  ChangePasswordInput,
+  AddCardInput
+} from "@/lib/validators/profile";
+import { validateSchema } from "@/lib/validators/validator";
+import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
-// GET USER PROFILE ACTION
-export async function getProfile() {
-  try {
-    const response = await api.get("/me");
-    return { success: true, data: response.data.data };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.response?.data?.meta?.message || "Failed to fetch profile",
-    };
-  }
+// ==================== GET USER PROFILE ====================
+export async function getProfile(): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.get("/me"),
+    "Profile fetched successfully"
+  );
 }
 
-// UPDATE USER PROFILE ACTION
-export async function updateProfileAction(formData: FormData) {
-  try {
-    // We send the formData directly so Axios sets the correct 'multipart/form-data' boundary
-    const response = await api.put("/update-profile", formData);
+// ==================== UPDATE USER PROFILE ====================
+// Note: Handling FormData for file uploads. 
+// We can manually extract and validate or pass directly. 
+export async function updateProfileAction(formData: FormData): Promise<ActionResponse> {
+    // 1. Manually validate text fields if needed, or trust backend.
+    // Let's do a basic check on what we can.
+    const payload = {
+        name: formData.get("name") as string,
+        lastName: formData.get("lastName") as string,
+        phone: formData.get("phone") as string,
+    }
+    
+    // We can validate partial payload
+    const validation = validateSchema(updateProfileSchema.omit({ avatar: true }), payload);
+    if (!validation.success) {
+         return { success: false, message: "Validation Validation failed", errors: validation.errors };
+    }
 
-    revalidatePath("/");
-    return {
-      success: true,
-      data: response.data.data,
-      message: response.data.meta.message,
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.response?.data?.meta?.message || "Update failed",
-    };
-  }
+  return responseHandler(
+    async () => api.put("/update-profile", formData),
+    "Profile updated successfully",
+    (data) => {
+        revalidatePath("/");
+        return data; 
+    }
+  );
 }
 
-// CHANGE PASSWORD ACTION
-export async function changePasswordAction(payload: {
-  oldPassword: string;
-  newPassword: string;
-}) {
-  try {
-    // Standard PUT/POST request with JSON payload
-    const response = await api.put("/change-password", payload);
-
-    revalidatePath("/");
-
-    return {
-      success: true,
-      data: response.data.data,
-      message: response.data.meta?.message || "Password updated successfully",
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message:
-        error.response?.data?.meta?.message || "Failed to update password",
-    };
+// ==================== CHANGE PASSWORD ====================
+export async function changePasswordAction(data: ChangePasswordInput): Promise<ActionResponse> {
+  const validation = validateSchema(changePasswordSchema, data);
+  if (!validation.success) {
+    return { success: false, message: "Validation failed", errors: validation.errors };
   }
+
+  return responseHandler(
+    async () => api.put("/change-password", { 
+        oldPassword: data.oldPassword, 
+        newPassword: data.newPassword 
+    }),
+    "Password updated successfully",
+    (result) => {
+        revalidatePath("/");
+        return result;
+    }
+  );
 }
 
-// UPLOAD KYC ACTION
-export async function uploadKycAction(formData: FormData) {
-  try {
-    // The payload contains documentType and documentFile
-    const response = await api.post("/kyc", formData);
-
-    revalidatePath("/");
-
-    return {
-      success: true,
-      data: response.data.data,
-      message: response.data.meta?.message || "Document uploaded successfully",
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.response?.data?.meta?.message || "Upload failed",
-    };
-  }
+// ==================== UPLOAD KYC ====================
+export async function uploadKycAction(formData: FormData): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.post("/kyc", formData),
+    "Document uploaded successfully",
+    (data) => {
+        revalidatePath("/");
+        return data;
+    }
+  );
 }
 
-// GET KYC STATUS ACTION
-export async function getKycStatus() {
-  try {
-    const response = await api.get("/kyc/me");
-    return { success: true, data: response.data.data };
-  } catch (error: any) {
-    return {
-      success: false,
-      message:
-        error.response?.data?.meta?.message || "Failed to fetch KYC status",
-    };
-  }
+// ==================== GET KYC STATUS ====================
+export async function getKycStatus(): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.get("/kyc/me"),
+    "KYC status fetched"
+  );
 }
 
-// ADD CARD ACTION
-export async function addCardAction(payload: {
-  cardholderName: string;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-  isDefault: boolean;
-  cardType: string;
-}) {
-  try {
-    const response = await api.post("/cards", payload);
-
-    revalidatePath("/");
-    return {
-      success: true,
-      message: response.data.meta?.message || "Card saved successfully",
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.response?.data?.meta?.message || "Failed to save card",
-    };
+// ==================== ADD CARD ====================
+export async function addCardAction(data: AddCardInput): Promise<ActionResponse> {
+  const validation = validateSchema(addCardSchema, data);
+  if (!validation.success) {
+    return { success: false, message: "Validation failed", errors: validation.errors };
   }
+
+  return responseHandler(
+    async () => api.post("/cards", data),
+    "Card saved successfully",
+    () => revalidatePath("/")
+  );
 }
 
-// GET ALL CARDS ACTION
-export async function getMyCardsAction() {
-  try {
-    const response = await api.get("/cards/me");
-    return {
-      success: true,
-      data: response.data.data, // This is the array of cards
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.response?.data?.meta?.message || "Failed to fetch cards",
-      data: [],
-    };
-  }
+// ==================== GET ALL CARDS ====================
+export async function getMyCardsAction(): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.get("/cards/me"),
+    "Cards fetched successfully"
+  );
 }
 
-// UPDATE CARD ACTION
-export async function updateCardAction(
-  id: string,
-  payload: {
-    cardholderName: string;
-    cardNumber: string;
-    expiryDate: string;
-    cvv: string;
-    isDefault: boolean;
-    cardType: string;
-  },
-) {
-  try {
-    const response = await api.put(`/cards/${id}`, payload);
-    revalidatePath("/");
-    return {
-      success: true,
-      message: response.data.meta?.message || "Card updated successfully",
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.response?.data?.meta?.message || "Failed to update card",
-    };
-  }
+// ==================== UPDATE CARD ====================
+export async function updateCardAction(id: string, data: AddCardInput): Promise<ActionResponse> {
+   const validation = validateSchema(addCardSchema, data);
+   if (!validation.success) {
+     return { success: false, message: "Validation failed", errors: validation.errors };
+   }
+
+  return responseHandler(
+    async () => api.put(`/cards/${id}`, data),
+    "Card updated successfully",
+    () => revalidatePath("/")
+  );
 }
 
-// DELETE CARD ACTION
-export async function deleteCardAction(id: string) {
-  try {
-    const response = await api.delete(`/cards/${id}`);
-
-    revalidatePath("/");
-    return {
-      success: true,
-      message: response.data.meta?.message || "Card deleted successfully",
-    };
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.response?.data?.meta?.message || "Failed to delete card",
-    };
-  }
+// ==================== DELETE CARD ====================
+export async function deleteCardAction(id: string): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.delete(`/cards/${id}`),
+    "Card deleted successfully",
+    () => revalidatePath("/")
+  );
 }
+

@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Lock, Loader2 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,56 +15,34 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "react-hot-toast";
 import { changePasswordAction } from "@/app/actions/customer/userprofile";
-
-const passwordSchema = z
-  .object({
-    oldPassword: z.string().min(1, "Current password is required"),
-    newPassword: z
-      .string()
-      .min(8, "New password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { useServerAction } from "@/hooks/use-server-action";
+import { changePasswordSchema, ChangePasswordInput } from "@/lib/validators/profile";
 
 export default function SecuritySettingsCard() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const form = useForm<z.infer<typeof passwordSchema>>({
-    resolver: zodResolver(passwordSchema),
+  const form = useForm<ChangePasswordInput>({
+    resolver: zodResolver(changePasswordSchema),
     defaultValues: { oldPassword: "", newPassword: "", confirmPassword: "" },
   });
 
-  async function onSubmit(values: z.infer<typeof passwordSchema>) {
-    setIsLoading(true);
-
-    const result = await changePasswordAction({
-      oldPassword: values.oldPassword,
-      newPassword: values.newPassword,
-    });
-
-    if (result.success) {
-      toast(result.message || "Password Updated Sucess");
+  const { execute, isPending } = useServerAction(changePasswordAction, {
+    onSuccess: () => {
       form.reset();
-    } else {
-      toast(result.message || "Failed to Update");
-    }
+    },
+  });
 
-    setIsLoading(false);
-  }
+  const onSubmit = (values: ChangePasswordInput) => {
+    execute(values);
+  };
 
   return (
     <Card className="rounded-3xl p-8 border-none shadow-sm bg-white overflow-hidden">
-      <CardHeader>
+      <CardHeader className="px-0 pt-0 pb-6">
         <CardTitle className="text-lg font-bold text-gray-900">
           Security Settings
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-0">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-6">
@@ -148,10 +124,10 @@ export default function SecuritySettingsCard() {
             <div className="flex justify-end pt-4">
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isPending}
                 className="rounded-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white px-8 h-12 font-bold min-w-[180px]"
               >
-                {isLoading ? (
+                {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Updating...
