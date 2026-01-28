@@ -19,7 +19,7 @@ import {
 import {
   ownerInfoSchema,
   OwnerInfoInput,
-} from "@/lib/validators/restaurant-onboarding";
+} from "@/lib/schemas/restaurant-onboarding";
 import { saveOwnerInfoAction } from "@/app/actions/restaurant/onboarding";
 import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";

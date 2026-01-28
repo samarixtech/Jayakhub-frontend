@@ -1,15 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import useLocale from "@/hooks/useLocals";
 import { resetPasswordAction } from "@/app/actions/auth/auth";
-import { resetPasswordSchema, ResetPasswordInput } from "@/lib/validators/auth";
+import { resetPasswordSchema, ResetPasswordInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Input } from "@/components/ui/input";
@@ -21,6 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useZodForm } from "@/hooks/use-zod-form";
 
 export default function NewPasswordView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -29,8 +27,7 @@ export default function NewPasswordView() {
   const router = useRouter();
   const { country, language } = useLocale();
 
-  const form = useForm<ResetPasswordInput>({
-    resolver: zodResolver(resetPasswordSchema),
+  const form = useZodForm(resetPasswordSchema, {
     defaultValues: {
       password: "",
       confirmPassword: "",

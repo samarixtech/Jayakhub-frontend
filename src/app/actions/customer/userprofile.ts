@@ -6,98 +6,113 @@ import {
   changePasswordSchema,
   addCardSchema,
   ChangePasswordInput,
-  AddCardInput
-} from "@/lib/validators/profile";
-import { validateSchema } from "@/lib/validators/validator";
+  AddCardInput,
+} from "@/lib/schemas/profile";
+import { validateSchema } from "@/lib/validator";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
 // ==================== GET USER PROFILE ====================
 export async function getProfile(): Promise<ActionResponse> {
   return responseHandler(
     async () => api.get("/me"),
-    "Profile fetched successfully"
+    "Profile fetched successfully",
   );
 }
 
 // ==================== UPDATE USER PROFILE ====================
-// Note: Handling FormData for file uploads. 
-// We can manually extract and validate or pass directly. 
-export async function updateProfileAction(formData: FormData): Promise<ActionResponse> {
-    // 1. Manually validate text fields if needed, or trust backend.
-    // Let's do a basic check on what we can.
-    const payload = {
-        name: formData.get("name") as string,
-        lastName: formData.get("lastName") as string,
-        phone: formData.get("phone") as string,
-    }
-    
-    // We can validate partial payload
-    const validation = validateSchema(updateProfileSchema.omit({ avatar: true }), payload);
-    if (!validation.success) {
-         return { success: false, message: "Validation Validation failed", errors: validation.errors };
-    }
+export async function updateProfileAction(
+  formData: FormData,
+): Promise<ActionResponse> {
+  const payload = {
+    name: formData.get("name") as string,
+    lastName: formData.get("lastName") as string,
+    phone: formData.get("phone") as string,
+  };
+  const validation = validateSchema(
+    updateProfileSchema.omit({ avatar: true }),
+    payload,
+  );
+  if (!validation.success) {
+    return {
+      success: false,
+      message: "Validation Validation failed",
+      errors: validation.errors,
+    };
+  }
 
   return responseHandler(
     async () => api.put("/update-profile", formData),
     "Profile updated successfully",
     (data) => {
-        revalidatePath("/");
-        return data; 
-    }
+      revalidatePath("/");
+      return data;
+    },
   );
 }
 
 // ==================== CHANGE PASSWORD ====================
-export async function changePasswordAction(data: ChangePasswordInput): Promise<ActionResponse> {
+export async function changePasswordAction(
+  data: ChangePasswordInput,
+): Promise<ActionResponse> {
   const validation = validateSchema(changePasswordSchema, data);
   if (!validation.success) {
-    return { success: false, message: "Validation failed", errors: validation.errors };
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
   }
 
   return responseHandler(
-    async () => api.put("/change-password", { 
-        oldPassword: data.oldPassword, 
-        newPassword: data.newPassword 
-    }),
+    async () =>
+      api.put("/change-password", {
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword,
+      }),
     "Password updated successfully",
     (result) => {
-        revalidatePath("/");
-        return result;
-    }
+      revalidatePath("/");
+      return result;
+    },
   );
 }
 
 // ==================== UPLOAD KYC ====================
-export async function uploadKycAction(formData: FormData): Promise<ActionResponse> {
+export async function uploadKycAction(
+  formData: FormData,
+): Promise<ActionResponse> {
   return responseHandler(
     async () => api.post("/kyc", formData),
     "Document uploaded successfully",
     (data) => {
-        revalidatePath("/");
-        return data;
-    }
+      revalidatePath("/");
+      return data;
+    },
   );
 }
 
 // ==================== GET KYC STATUS ====================
 export async function getKycStatus(): Promise<ActionResponse> {
-  return responseHandler(
-    async () => api.get("/kyc/me"),
-    "KYC status fetched"
-  );
+  return responseHandler(async () => api.get("/kyc/me"), "KYC status fetched");
 }
 
 // ==================== ADD CARD ====================
-export async function addCardAction(data: AddCardInput): Promise<ActionResponse> {
+export async function addCardAction(
+  data: AddCardInput,
+): Promise<ActionResponse> {
   const validation = validateSchema(addCardSchema, data);
   if (!validation.success) {
-    return { success: false, message: "Validation failed", errors: validation.errors };
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
   }
 
   return responseHandler(
     async () => api.post("/cards", data),
     "Card saved successfully",
-    () => revalidatePath("/")
+    () => revalidatePath("/"),
   );
 }
 
@@ -105,21 +120,28 @@ export async function addCardAction(data: AddCardInput): Promise<ActionResponse>
 export async function getMyCardsAction(): Promise<ActionResponse> {
   return responseHandler(
     async () => api.get("/cards/me"),
-    "Cards fetched successfully"
+    "Cards fetched successfully",
   );
 }
 
 // ==================== UPDATE CARD ====================
-export async function updateCardAction(id: string, data: AddCardInput): Promise<ActionResponse> {
-   const validation = validateSchema(addCardSchema, data);
-   if (!validation.success) {
-     return { success: false, message: "Validation failed", errors: validation.errors };
-   }
+export async function updateCardAction(
+  id: string,
+  data: AddCardInput,
+): Promise<ActionResponse> {
+  const validation = validateSchema(addCardSchema, data);
+  if (!validation.success) {
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
+  }
 
   return responseHandler(
     async () => api.put(`/cards/${id}`, data),
     "Card updated successfully",
-    () => revalidatePath("/")
+    () => revalidatePath("/"),
   );
 }
 
@@ -128,7 +150,6 @@ export async function deleteCardAction(id: string): Promise<ActionResponse> {
   return responseHandler(
     async () => api.delete(`/cards/${id}`),
     "Card deleted successfully",
-    () => revalidatePath("/")
+    () => revalidatePath("/"),
   );
 }
-

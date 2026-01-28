@@ -10,8 +10,8 @@ import {
   RegisterInput,
   ForgotPasswordInput,
   ResetPasswordInput
-} from "@/lib/validators/auth";
-import { validateSchema } from "@/lib/validators/validator";
+} from "@/lib/schemas/auth";
+import { validateSchema } from "@/lib/validator";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
 // ==================== LOGIN ACTION ====================
@@ -128,8 +128,6 @@ export async function registerRestaurantAction(data: RegisterInput & { role?: st
 }
 
 // ==================== GOOGLE AUTH ACTION ====================
-// app/actions/auth/auth.ts
-
 export async function googleAuthAction(payload: {
   email: string;
   name: string;

@@ -70,7 +70,7 @@ export default function ProfileSidebar({
             {profile.role?.name}
           </Badge>
         </div>
-        {/* Stats Section */}
+        {/* STATS SECTION */}
         <div className="w-full mt-12 space-y-4 px-4">
           <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center">
             <span className="text-sm font-semibold text-gray-600">

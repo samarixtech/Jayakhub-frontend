@@ -10,7 +10,7 @@ import { Typography } from "@/components/ui/typography";
 import { completeOnboardingAction } from "@/app/actions/restaurant/onboarding";
 import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";
-import { KycInput } from "@/lib/validators/restaurant-onboarding";
+import { KycInput } from "@/lib/schemas/restaurant-onboarding";
 
 const DOCUMENTS = [
   {

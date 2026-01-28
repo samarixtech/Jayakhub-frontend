@@ -1,9 +1,5 @@
 "use client";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Lock, Loader2 } from "lucide-react";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,11 +13,14 @@ import {
 } from "@/components/ui/form";
 import { changePasswordAction } from "@/app/actions/customer/userprofile";
 import { useServerAction } from "@/hooks/use-server-action";
-import { changePasswordSchema, ChangePasswordInput } from "@/lib/validators/profile";
+import {
+  changePasswordSchema,
+  ChangePasswordInput,
+} from "@/lib/schemas/profile";
+import { useZodForm } from "@/hooks/use-zod-form";
 
 export default function SecuritySettingsCard() {
-  const form = useForm<ChangePasswordInput>({
-    resolver: zodResolver(changePasswordSchema),
+  const form = useZodForm<ChangePasswordInput>(changePasswordSchema, {
     defaultValues: { oldPassword: "", newPassword: "", confirmPassword: "" },
   });
 

@@ -38,7 +38,7 @@ export default function VerifyOtpView() {
     }
   }, [router, country, language]);
 
-  // Countdown Timer Logic
+  // COUNTDOWN TIMER
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (timer > 0) {
@@ -49,7 +49,7 @@ export default function VerifyOtpView() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  // Resend Handler
+  // RESEND OTP HANDLER
   const handleResend = () => {
     if (timer > 0 || !email) return;
 
@@ -64,7 +64,7 @@ export default function VerifyOtpView() {
     });
   };
 
-  // Verification Handler
+  // OTP VERIFICATION HANDLER
   const handleVerify = () => {
     if (otpValue.length < 6) {
       toast.error("Please enter the full 6-digit code");
@@ -76,7 +76,7 @@ export default function VerifyOtpView() {
       const result = await verifyOtpAction({ email, otp: otpValue });
 
       if (result.success) {
-        // Handle "Forgot Password" flow vs "Registration" flow
+        // HANDLE "Forgot Password" FLOW VS "Registration" FLOW
         const intent = sessionStorage.getItem("verificationIntent");
         if (intent === "forgot-password") {
           sessionStorage.setItem("pendingOTP", otpValue);
@@ -99,17 +99,16 @@ export default function VerifyOtpView() {
           return;
         }
 
-        // 3. Finalize and Redirect
+        // FINALIZE AND REDIRECT
         toast.success(result.message || "Account verified!");
         sessionStorage.removeItem("pendingVerificationEmail");
 
-        // This will result in: /pakistan/en/restaurant/dashboard or /pakistan/en/customer/dashboard
         const finalUrl = `/${country.toLowerCase()}/${language.toLowerCase()}${targetSubPath}`;
 
         router.replace(finalUrl);
       } else {
         toast.error(result.message || "Verification failed");
-        setOtpValue(""); // Clear OTP on error
+        setOtpValue(""); // CLEAR OTP ON ERROR
       }
     });
   };

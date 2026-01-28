@@ -1,10 +1,9 @@
 "use client";
-
 import { useState, useTransition } from "react";
 import { toast } from "react-hot-toast";
 import { ActionResponse } from "@/lib/utils/response-handler";
 
-type ServerAction<TInput, TResponse> = (input: TInput) => Promise<ActionResponse<TResponse>>;
+type ServerAction<TInput, TResponse> = ((input: TInput) => Promise<ActionResponse<TResponse>>) | (() => Promise<ActionResponse<TResponse>>);
 
 interface UseServerActionOptions<TResponse> {
   onSuccess?: (data?: TResponse) => void;
@@ -18,10 +17,10 @@ export function useServerAction<TInput, TResponse>(
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<ActionResponse<TResponse> | null>(null);
 
-  const execute = async (input: TInput) => {
+  const execute = async (input?: TInput) => {
     startTransition(async () => {
       try {
-        const response = await action(input);
+        const response = await (action as any)(input);
         setResult(response);
 
         if (response.success) {

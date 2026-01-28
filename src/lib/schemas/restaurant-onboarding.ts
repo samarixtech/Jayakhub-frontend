@@ -39,10 +39,28 @@ export const scheduleSchema = z.object({
 
 export type ScheduleInput = z.infer<typeof scheduleSchema>;
 
+// Step 4: License
+export const licenseSchema = z.object({
+  licenseNumber: z.string().min(3, "License number is required"),
+  licenseFile: z
+    .any()
+    .refine(
+      (file) => file instanceof File || file instanceof Blob,
+      "License document is required",
+    ),
+});
+
+export type LicenseInput = z.infer<typeof licenseSchema>;
+
 // Step 4: KYC
 export const kycSchema = z.object({
   documentType: z.enum(["national_id", "driving_license", "passport"]),
-  documentFile: z.any().refine((file) => file instanceof File || file instanceof Blob, "Document file is required"),
+  documentFile: z
+    .any()
+    .refine(
+      (file) => file instanceof File || file instanceof Blob,
+      "Document file is required",
+    ),
 });
 
 export type KycInput = z.infer<typeof kycSchema>;

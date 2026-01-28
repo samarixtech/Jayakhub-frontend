@@ -43,7 +43,7 @@ export default function ProfileHeader({
 
         <Button
           onClick={onSave}
-          disabled={isPending || saveDisabled} // Disabled if pending OR no changes
+          disabled={isPending || saveDisabled} // DISABLED IF PENDING OR NO CHANGES IN PROFILE
           className={`rounded-full h-11 px-6 shadow-sm text-white ${
             saveDisabled
               ? "bg-gray-300 cursor-not-allowed"

@@ -11,7 +11,7 @@ export default function AuthLayout({
 }) {
   const pathname = usePathname();
 
-  // Dynamic content based on the current route
+  // DYNAMIC CONTENT BASED ON CURRENT ROUTE
   const getBrandingContent = () => {
     if (pathname.includes("/login")) {
       return {
@@ -69,7 +69,7 @@ export default function AuthLayout({
         showBack: true,
       };
     }
-    // Default/New Password
+    // DEFAULT/NEW PASSWORD
     return {
       title: (
         <>
@@ -86,7 +86,7 @@ export default function AuthLayout({
 
   return (
     <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
-      {/* LEFT PANEL: Branding & Illustration */}
+      {/* LEFT PANEL BRANDING AND ILLUSTRATON */}
       <div className="hidden md:flex bg-emerald-bg text-white flex-col justify-between overflow-hidden relative">
         {content.showBack && (
           <LocalizedLink href="/restaurants" className="m-5 inline-block w-fit">
@@ -116,7 +116,7 @@ export default function AuthLayout({
         </div>
       </div>
 
-      {/* RIGHT PANEL: Form Content */}
+      {/* RIGHT PANEL FORM CONTENT */}
       <div className="flex items-center justify-center p-4 md:p-8 overflow-y-auto">
         <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 md:p-10">
           {children}

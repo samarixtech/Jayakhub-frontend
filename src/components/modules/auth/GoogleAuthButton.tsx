@@ -1,6 +1,4 @@
-// components/auth/GoogleAuthButton.tsx
 "use client";
-
 import { useGoogleLogin } from "@react-oauth/google";
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "@/components/ui/button";
@@ -16,7 +14,6 @@ export function GoogleAuthButton({
   country,
   language,
   loading,
-  setLoading,
   role,
 }: any) {
   const router = useRouter();
@@ -36,20 +33,6 @@ export function GoogleAuthButton({
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      // Logic: 
-      // 1. Fetch user profile from Google using the token
-      // 2. Pass profile + token to server action
-      
-      // Since this part involves a GET request to google, we might need a separate try/catch 
-      // or we can wrap this in a transition. However, axios call is external. 
-      // We can use isPending from hook to show loading state effectively if we call execute.
-      
-      // Let's rely on setloading if provided or use isPending if possible.
-      // But props might be controlling loading state of parent form too? 
-      // Actually, loading/setLoading are passed props. We should respect them or check usage.
-      // In Refactored Parent components, we passed `setLoading={() => {}}` (empty) because we relied on `isPending`.
-      // So relying on `isPending` here is safer for the new code.
-      
       try {
         const { data: userInfo } = await axios.get<any>(
           "https://www.googleapis.com/oauth2/v3/userinfo",
