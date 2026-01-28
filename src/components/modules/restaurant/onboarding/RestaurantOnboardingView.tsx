@@ -8,31 +8,55 @@ import { StepperProgress } from "./StepperProgress";
 import StepOwnerInfo from "./steps/StepOwnerInfoView";
 import StepRestaurantInfo from "./steps/StepRestaurantInfoView";
 import StepSchedule from "./steps/StepScheduleView";
-import StepLicense from "./steps/StepLicenseView";
 import StepKyc from "./steps/StepKycView";
-import { OnboardingProvider, useOnboarding } from "./OnboardingContext";
+import StepLicenseView from "./steps/StepLicenseView";
 
 function RestaurantOnboardingContent() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const { logoPreview } = useOnboarding();
+  const [currentStep, setCurrentStep] = useState(1); // 1 == initial form step
+
+  // State for Images
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 5));
+
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+  // --- Image Handlers ---
+  const handleLogoUpload = (file: File) => {
+    const objectUrl = URL.createObjectURL(file);
+    setLogoPreview(objectUrl);
+  };
+  const handleRemoveLogo = () => setLogoPreview(null);
+
+  const handleBannerUpload = (file: File) => {
+    const objectUrl = URL.createObjectURL(file);
+    setBannerPreview(objectUrl);
+  };
+  const handleRemoveBanner = () => setBannerPreview(null);
+
+  const handleLicenseUpload = (file: File) => {
+    setLicenseFile(file);
+  };
+  const handleRemoveLicense = () => setLicenseFile(null);
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <StepOwnerInfo />;
+        console.log("RenderStep 1: Passing nextStep", nextStep);
+        return <StepOwnerInfo onNext={nextStep} onBack={prevStep} />;
       case 2:
-        return <StepRestaurantInfo />;
+        return <StepRestaurantInfo onNext={nextStep} onBack={prevStep} />;
       case 3:
-        return <StepSchedule />;
+        return <StepLicenseView onNext={nextStep} onBack={prevStep} />;
       case 4:
-        return <StepLicense />;
+        return <StepSchedule onNext={nextStep} onBack={prevStep} />;
       case 5:
-        return <StepKyc />;
+        return <StepKyc onBack={prevStep} />; // Last step redirects
+
       default:
-        return <StepOwnerInfo />;
+        return <StepOwnerInfo onNext={nextStep} onBack={prevStep} />;
     }
   };
 
@@ -42,37 +66,15 @@ function RestaurantOnboardingContent() {
         <OnboardingHeader logoPreview={logoPreview} />
         <StepperProgress currentStep={currentStep} />
 
-        <CardContent className="p-0">
-          {renderStep()}
-
-          {/* Action Buttons */}
-          <div className="mt-8 flex items-center justify-between border-t border-gray-50 pt-6">
-            {currentStep > 1 ? (
-              <Button
-                onClick={prevStep}
-                variant="ghost"
-                className="text-gray-400 font-bold hover:bg-transparent"
-              >
-                Back
-              </Button>
-            ) : (
-              <div />
-            )}
-
-            <div className="flex gap-4 items-center">
-              <Button
-                onClick={nextStep}
-                className="bg-[#346853] text-white px-8 h-12 rounded-xl font-bold hover:bg-[#2a5443] shadow-lg shadow-emerald-900/10 transition-all active:scale-95"
-              >
-                {currentStep === 5 ? "Complete Setup" : "Continue"}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
+        <CardContent className="p-0 mt-8">{renderStep()}</CardContent>
       </Card>
     </div>
   );
 }
+
+// Ensure OnboardingProvider is imported if used, otherwise remove it or define it.
+// Assuming OnboardingProvider is from ./OnboardingContext based on earlier context.
+import { OnboardingProvider } from "./OnboardingContext";
 
 export default function RestaurantOnboarding() {
   return (

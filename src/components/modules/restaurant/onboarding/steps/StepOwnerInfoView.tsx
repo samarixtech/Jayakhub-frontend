@@ -21,10 +21,18 @@ import {
   OwnerInfoInput,
 } from "@/lib/schemas/restaurant-onboarding";
 import { saveOwnerInfoAction } from "@/app/actions/restaurant/onboarding";
+import { getProfile } from "@/app/actions/customer/userprofile";
 import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";
+import { useEffect } from "react";
 
-export default function StepOwnerInfoView() {
+import { WizardStepProps } from "../types";
+
+export default function StepOwnerInfoView(props: WizardStepProps) {
+  const { onNext } = props;
+  console.log("StepOwnerInfo Rendered. Props:", props);
+  console.log("onNext type:", typeof onNext);
+
   const router = useRouter();
   const { country, language } = useLocale();
 
@@ -36,10 +44,29 @@ export default function StepOwnerInfoView() {
     },
   });
 
+  // Fetch Profile on Mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const res = await getProfile();
+      if (res.success && res.data) {
+        const { name, lastName, phone } = res.data;
+        const fullName = [name, lastName].filter(Boolean).join(" ");
+        form.setValue("ownerName", fullName);
+        form.setValue("ownerPhone", phone || "");
+      }
+    };
+    fetchProfile();
+  }, [form]);
+
   const { execute, isPending } = useServerAction(saveOwnerInfoAction, {
     onSuccess: () => {
+      console.log("StepOwnerInfo: onSuccess triggered. Calling onNext");
       toast.success("Owner info saved!");
-      router.push(`/${country}/${language}/restaurant/onboarding/step-restaurant-info`);
+      if (onNext) {
+        onNext();
+      } else {
+        console.error("StepOwnerInfo: onNext prop is missing!");
+      }
     },
   });
 
@@ -101,9 +128,9 @@ export default function StepOwnerInfoView() {
                   </FormControl>
                   <div className="flex justify-between items-start">
                     <FormMessage />
-                     <Typography className="text-[10px] text-gray-400">
-                        We will send important updates to this number.
-                     </Typography>
+                    <Typography className="text-[10px] text-gray-400">
+                      We will send important updates to this number.
+                    </Typography>
                   </div>
                 </FormItem>
               )}
@@ -111,13 +138,13 @@ export default function StepOwnerInfoView() {
           </div>
 
           <div className="flex justify-end pt-4 border-t border-gray-50">
-             <Button
-                type="submit"
-                disabled={isPending}
-                className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
-              >
-                {isPending ? "Saving..." : "Continue"}
-              </Button>
+            <Button
+              type="submit"
+              disabled={isPending || form.formState.isSubmitting}
+              className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
+            >
+              {isPending ? "Saving..." : "Next Step"}
+            </Button>
           </div>
         </form>
       </Form>
