@@ -31,7 +31,7 @@ const DAYS = [
 
 import { WizardStepProps } from "../types";
 
-export default function StepScheduleView({ onNext, onBack }: WizardStepProps) {
+export default function StepScheduleView() {
   const router = useRouter();
   const { country, language } = useLocale();
 
@@ -53,7 +53,7 @@ export default function StepScheduleView({ onNext, onBack }: WizardStepProps) {
   const { execute, isPending } = useServerAction(saveScheduleAction, {
     onSuccess: () => {
       toast.success("Schedule saved!");
-      onNext();
+      router.push(`/${country}/${language}/restaurant/onboarding/step-kyc`);
     },
   });
 
@@ -135,7 +135,11 @@ export default function StepScheduleView({ onNext, onBack }: WizardStepProps) {
             <Button
               type="button"
               variant="ghost"
-              onClick={onBack}
+              onClick={() =>
+                router.push(
+                  `/${country}/${language}/restaurant/onboarding/step-license`,
+                )
+              }
               className="text-gray-400 font-bold hover:bg-transparent"
             >
               Back

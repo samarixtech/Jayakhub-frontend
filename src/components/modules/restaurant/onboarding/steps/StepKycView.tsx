@@ -10,15 +10,16 @@ import {
   BookOpen,
   Info,
   CheckCircle,
-  FileText,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { uploadRestaurantKycAction } from "@/app/actions/restaurant/onboarding";
+import { getKycStatus } from "@/app/actions/customer/userprofile";
 import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";
 import { KycInput } from "@/lib/schemas/restaurant-onboarding";
+import { useEffect } from "react";
 
 const DOCUMENTS = [
   {
@@ -49,7 +50,7 @@ const DOCUMENTS = [
 
 import { WizardStepProps } from "../types";
 
-export default function StepKycView({ onBack }: WizardStepProps) {
+export default function StepKycView() {
   const router = useRouter();
   const { country, language } = useLocale();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -68,8 +69,43 @@ export default function StepKycView({ onBack }: WizardStepProps) {
     },
   });
 
+  /* import { getKycStatus } from "@/app/actions/customer/userprofile"; */
+  /* import { useEffect } from "react"; */
+
+  const [existingKyc, setExistingKyc] = useState<{
+    id: string;
+    documentType: string;
+    documentFile: string;
+    status: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchKyc = async () => {
+      // Fetch KYC status
+      const res = await getKycStatus();
+      if (res.success && Array.isArray(res.data)) {
+        // Find if any of our supported types exist
+        const supportedTypes = DOCUMENTS.map((d) => d.id);
+        const existingDoc = res.data.find((doc: any) =>
+          supportedTypes.includes(doc.documentType),
+        );
+
+        if (existingDoc) {
+          setExistingKyc(existingDoc);
+          setSelectedType(existingDoc.documentType);
+          // We don't have a File object, but we have the URL.
+          // We'll rely on existingKyc logic for UI and submission.
+          toast.success("Existing KYC document found");
+        }
+      }
+    };
+    fetchKyc();
+  }, []);
+
   const handleUploadClick = (typeId: string) => {
     setSelectedType(typeId);
+    // If clicking a different type, we might clear existingKyc if it doesn't match,
+    // OR just allow overwriting.
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
       fileInputRef.current.click();
@@ -87,6 +123,17 @@ export default function StepKycView({ onBack }: WizardStepProps) {
   };
 
   const handleComplete = () => {
+    // If currently selected type matches existingKyc and no new file, proceed.
+    if (
+      existingKyc &&
+      selectedType === existingKyc.documentType &&
+      !selectedFile
+    ) {
+      toast.success("Using existing KYC document");
+      router.push(`/${country}/${language}/restaurant/dashboard`);
+      return;
+    }
+
     if (!selectedFile || !selectedType) {
       toast.error("Please upload a document to proceed");
       return;
@@ -94,7 +141,8 @@ export default function StepKycView({ onBack }: WizardStepProps) {
 
     const formData = new FormData();
     // User requested to send the specific type key (e.g. government_id)
-    formData.append(selectedType, selectedFile);
+    formData.append("documentType", selectedType);
+    formData.append("documentFile", selectedFile);
 
     execute(formData);
   };
@@ -123,7 +171,9 @@ export default function StepKycView({ onBack }: WizardStepProps) {
       {/* Document List */}
       <div className="space-y-3">
         {DOCUMENTS.map((doc) => {
-          const isSelected = selectedType === doc.id && selectedFile;
+          const isSelected =
+            selectedType === doc.id &&
+            (selectedFile || existingKyc?.documentType === doc.id);
 
           return (
             <div
@@ -145,7 +195,15 @@ export default function StepKycView({ onBack }: WizardStepProps) {
                     {doc.title}
                   </Typography>
                   <Typography className="text-xs text-slate-400">
-                    {isSelected ? selectedFile?.name : doc.description}
+                    {isSelected
+                      ? selectedFile?.name ||
+                        (existingKyc?.documentType === doc.id
+                          ? existingKyc.documentFile.split("/").pop()
+                          : doc.description)
+                      : existingKyc?.documentType === doc.id
+                        ? "Existing: " +
+                          existingKyc.documentFile.split("/").pop()
+                        : doc.description}
                   </Typography>
                 </div>
               </div>
@@ -188,7 +246,11 @@ export default function StepKycView({ onBack }: WizardStepProps) {
         <Button
           type="button"
           variant="ghost"
-          onClick={() => router.back()}
+          onClick={() =>
+            router.push(
+              `/${country}/${language}/restaurant/onboarding/step-schedule`,
+            )
+          }
           className="text-gray-400 font-bold hover:bg-transparent"
         >
           Back
@@ -196,7 +258,11 @@ export default function StepKycView({ onBack }: WizardStepProps) {
 
         <Button
           onClick={handleComplete}
-          disabled={isPending || !selectedFile}
+          disabled={
+            isPending ||
+            (!selectedFile &&
+              !(existingKyc && selectedType === existingKyc.documentType))
+          }
           className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
         >
           {isPending ? "Proccessing..." : "Complete Setup"}

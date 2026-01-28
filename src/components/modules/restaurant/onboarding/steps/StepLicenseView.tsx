@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileText, Upload, AlertCircle, X } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import useLocale from "@/hooks/useLocals";
 
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
@@ -16,6 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { uploadRestaurantKycAction } from "@/app/actions/restaurant/onboarding";
+import { getKycStatus } from "@/app/actions/customer/userprofile";
+import { useEffect } from "react";
 import { useServerAction } from "@/hooks/use-server-action";
 import {
   licenseSchema,
@@ -23,12 +27,22 @@ import {
 } from "@/lib/schemas/restaurant-onboarding";
 import { WizardStepProps } from "../types";
 
-export default function StepLicenseView({ onNext, onBack }: WizardStepProps) {
+export default function StepLicenseView() {
+  const router = useRouter(); // Use useRouter from next/navigation
+  const { country, language } = useLocale();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
 
   const form = useForm<LicenseInput>({
-    resolver: zodResolver(licenseSchema),
+    resolver: async (data, context, options) => {
+      // Custom logic: if existingLicense is present, licenseFile is optional.
+      // Otherwise use standard schema.
+      if (existingLicense && !data.licenseFile) {
+        return { values: data, errors: {} };
+      }
+      return zodResolver(licenseSchema)(data, context, options);
+    },
     defaultValues: {
       licenseFile: undefined,
     },
@@ -37,7 +51,9 @@ export default function StepLicenseView({ onNext, onBack }: WizardStepProps) {
   const { execute, isPending } = useServerAction(uploadRestaurantKycAction, {
     onSuccess: () => {
       toast.success("License uploaded!");
-      onNext();
+      router.push(
+        `/${country}/${language}/restaurant/onboarding/step-schedule`,
+      );
     },
     onError: (err) => {
       toast.error(err || "Failed to upload license");
@@ -61,13 +77,54 @@ export default function StepLicenseView({ onNext, onBack }: WizardStepProps) {
     }
   };
 
+  /* import { getKycStatus } from "@/app/actions/customer/userprofile"; */
+  // Need to add import above.
+
+  const [existingLicense, setExistingLicense] = useState<{
+    id: string;
+    documentFile: string;
+    status: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchLicense = async () => {
+      // Assuming getKycStatus is available and imported
+      // We will add the import in a subsequent edit or assume it's there
+      const res = await getKycStatus();
+      if (res.success && Array.isArray(res.data)) {
+        const licenseDoc = res.data.find(
+          (doc: any) => doc.documentType === "food_license",
+        );
+        if (licenseDoc) {
+          setExistingLicense(licenseDoc);
+          setFilePreview(
+            licenseDoc.documentFile.split("/").pop() || "Existing License",
+          );
+          // If we want to allow re-upload, we keep the form empty but show the preview.
+          // Or we can technically "validate" this step as done if needed.
+        }
+      }
+    };
+    fetchLicense();
+  }, []);
+
   const handleRemoveFile = () => {
     form.setValue("licenseFile", undefined);
     setFilePreview(null);
+    setExistingLicense(null); // Clear existing license view on remove
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const onSubmit = (data: LicenseInput) => {
+    // If user hasn't selected a new file but we have an existing verified/pending one, just proceed.
+    if (!data.licenseFile && existingLicense) {
+      toast.success("Using existing license");
+      router.push(
+        `/${country}/${language}/restaurant/onboarding/step-schedule`,
+      );
+      return;
+    }
+
     const formData = new FormData();
     formData.append("documentType", "food_license");
     formData.append("documentFile", data.licenseFile);
@@ -185,7 +242,11 @@ export default function StepLicenseView({ onNext, onBack }: WizardStepProps) {
             <Button
               type="button"
               variant="ghost"
-              onClick={onBack}
+              onClick={() =>
+                router.push(
+                  `/${country}/${language}/restaurant/onboarding/step-restaurant-info`,
+                )
+              }
               className="text-gray-400 font-bold hover:bg-transparent"
             >
               Back

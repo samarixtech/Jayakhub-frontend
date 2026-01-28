@@ -28,11 +28,7 @@ import { useEffect } from "react";
 
 import { WizardStepProps } from "../types";
 
-export default function StepOwnerInfoView(props: WizardStepProps) {
-  const { onNext } = props;
-  console.log("StepOwnerInfo Rendered. Props:", props);
-  console.log("onNext type:", typeof onNext);
-
+export default function StepOwnerInfoView() {
   const router = useRouter();
   const { country, language } = useLocale();
 
@@ -60,13 +56,10 @@ export default function StepOwnerInfoView(props: WizardStepProps) {
 
   const { execute, isPending } = useServerAction(saveOwnerInfoAction, {
     onSuccess: () => {
-      console.log("StepOwnerInfo: onSuccess triggered. Calling onNext");
       toast.success("Owner info saved!");
-      if (onNext) {
-        onNext();
-      } else {
-        console.error("StepOwnerInfo: onNext prop is missing!");
-      }
+      router.push(
+        `/${country}/${language}/restaurant/onboarding/step-restaurant-info`,
+      );
     },
   });
 

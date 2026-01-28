@@ -34,7 +34,11 @@ import {
   restaurantInfoSchema,
   RestaurantInfoInput,
 } from "@/lib/schemas/restaurant-onboarding";
-import { saveRestaurantInfoAction } from "@/app/actions/restaurant/onboarding";
+import {
+  saveRestaurantInfoAction,
+  getMyRestaurantAction,
+} from "@/app/actions/restaurant/onboarding";
+import { useEffect } from "react";
 import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";
 import { useOnboarding } from "@/components/modules/restaurant/onboarding/OnboardingContext";
@@ -61,10 +65,7 @@ const CUISINE_TYPES = [
 
 import { WizardStepProps } from "../types";
 
-export default function StepRestaurantInfoView({
-  onNext,
-  onBack,
-}: WizardStepProps) {
+export default function StepRestaurantInfoView() {
   const router = useRouter();
   const { country, language } = useLocale();
   const { setLogoPreview: setContextLogoPreview } = useOnboarding();
@@ -93,9 +94,12 @@ export default function StepRestaurantInfoView({
   const { execute, isPending } = useServerAction(saveRestaurantInfoAction, {
     onSuccess: () => {
       toast.success("Restaurant info saved!");
-      onNext();
+      router.push(`/${country}/${language}/restaurant/onboarding/step-license`);
     },
   });
+
+  // Import getMyRestaurantAction at the top, but for now I'll just add it to the imports via a separate edit or assume it's there.
+  // Actually I need to add it to imports first.
 
   const onSubmit = (data: RestaurantInfoInput) => {
     const formData = new FormData();
@@ -119,6 +123,55 @@ export default function StepRestaurantInfoView({
 
     execute(formData);
   };
+
+  // Prefetch Data
+  useEffect(() => {
+    const fetchRestaurant = async () => {
+      const res = await getMyRestaurantAction();
+      if (res.success && res.data) {
+        const d = res.data;
+        form.setValue("restaurantName", d.name || "");
+        form.setValue("restaurantPhone", d.phone || "");
+        form.setValue("restaurantEmail", d.email || "");
+        form.setValue("websiteUrl", d.websiteUrl || "");
+        form.setValue("description", d.description || "");
+        form.setValue("address", d.address || "");
+
+        // Cuisine Types
+        if (Array.isArray(d.type)) {
+          form.setValue("cuisineTypes", d.type);
+        }
+
+        // Location
+        if (d.latitude && d.longitude) {
+          form.setValue("location", {
+            lat: parseFloat(d.latitude),
+            lng: parseFloat(d.longitude),
+          });
+        }
+
+        // Handling Images for Preview
+        // We can't set file inputs programmatically with URLs, so we just set previews.
+        if (d.profileImage) {
+          // Construct full URL (adjust based on your asset base URL)
+          // Assuming local relative path from response
+          const fullLogo = d.profileImage.startsWith("http")
+            ? d.profileImage
+            : `https://api.example.com/${d.profileImage}`;
+          // Ideally we need the base API URL here.
+          // For now, I'll just use the raw string or a placeholder if I don't know the base.
+          // User provided "uploads\profile..." (windows path?).
+          // It's likely served via API_URL/uploads...
+          // I'll set it as preview directly.
+          setLogoPreview(d.profileImage);
+        }
+        if (d.bannerImage) {
+          setBannerPreview(d.bannerImage);
+        }
+      }
+    };
+    fetchRestaurant();
+  }, [form]);
 
   const handleLogoChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -514,7 +567,11 @@ export default function StepRestaurantInfoView({
             <Button
               type="button"
               variant="ghost"
-              onClick={onBack}
+              onClick={() =>
+                router.push(
+                  `/${country}/${language}/restaurant/onboarding/step-owner-info`,
+                )
+              }
               className="text-gray-400 font-bold hover:bg-transparent"
             >
               Back

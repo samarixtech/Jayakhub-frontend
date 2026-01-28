@@ -14,7 +14,21 @@ import {
   ScheduleInput,
   KycInput,
 } from "@/lib/schemas/restaurant-onboarding";
+import { cookies } from "next/headers";
 
+// ==================== STEP 2 PREFETCH RESTAURANT DETAILS ====================
+export async function getMyRestaurantAction(): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.get("/my-restaurant"),
+    "Restaurant details fetched",
+    async (data) => {
+      if (data?.id) {
+        (await cookies()).set("restaurantId", data.id);
+      }
+      return data;
+    },
+  );
+}
 // Helper to mock successful API response
 const mockSuccess = (data: any = {}) => ({
   meta: { status: 200, message: "Saved successfully" },
@@ -127,12 +141,12 @@ export async function saveRestaurantInfoAction(
   // We also validte input locally before sending, to save a request if invalid.
   // Re-construct obj for Zod
   const validationObj: any = {
-    restaurantName: name,
-    restaurantPhone: phone,
-    restaurantEmail: email,
-    websiteUrl: websiteUrl,
-    description: description,
-    address: address,
+    restaurantName: name || "",
+    restaurantPhone: phone || "",
+    restaurantEmail: email || "",
+    websiteUrl: websiteUrl || "",
+    description: description || "",
+    address: address || "",
     cuisineTypes: cuisineTypesJson ? JSON.parse(cuisineTypesJson) : [],
     location:
       lat && lng
@@ -168,11 +182,57 @@ export async function saveScheduleAction(
     };
   }
 
-  return responseHandler(async () => {
-    // MOCK API CALL
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    return mockSuccess();
-  }, "Schedule saved successfully");
+  // 1. Get Restaurant ID from Cookies
+  const cookieStore = await cookies();
+  const restaurantId = cookieStore.get("restaurantId")?.value || "";
+
+  if (!restaurantId) {
+    console.error("Restaurant ID not found in cookies.");
+    return {
+      success: false,
+      message:
+        "Restaurant ID missing. Please refresh or go back to Restaurant Info step.",
+    };
+  }
+
+  // 2. Transform Data
+  const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+  ];
+
+  const schedules = days.map((day) => {
+    const dayData = (data as any)[day];
+    const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
+
+    // Ensure payload matches instructions
+    return {
+      dayOfWeek: dayCapitalized,
+      openTime: dayData.openTime || "09:00",
+      closeTime: dayData.closeTime || "22:00",
+      isClosed: !dayData.isOpen, // UI says 'isOpen', payload might want 'isClosed'
+    };
+  });
+
+  const payload = {
+    restaurantId: restaurantId, // This might be empty if we couldn't find it
+    schedules: schedules,
+  };
+
+  console.log(
+    "DEBUG: saveScheduleAction Payload:",
+    JSON.stringify(payload, null, 2),
+  );
+
+  return responseHandler(
+    async () => api.post("/schedule/create", payload),
+    "Schedule saved successfully",
+  );
 }
 
 // ==================== STEP 4: KYC ====================
