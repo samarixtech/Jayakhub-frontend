@@ -23,13 +23,25 @@ const OnboardingLayoutContent = ({
   let currentStep = 1;
   if (pathname.includes("step-owner-info")) currentStep = 1;
   else if (pathname.includes("step-restaurant-info")) currentStep = 2;
-  else if (pathname.includes("step-schedule")) currentStep = 3;
-  else if (pathname.includes("step-license")) currentStep = 4;
+  else if (pathname.includes("step-license")) currentStep = 3;
+  else if (pathname.includes("step-schedule")) currentStep = 4;
   else if (pathname.includes("step-kyc")) currentStep = 5;
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] p-6 flex flex-col items-center justify-center">
-      <Card className="w-full max-w-3xl border-none shadow-sm rounded-[32px] bg-white overflow-hidden p-8 sm:p-12">
+      <div className="w-full max-w-4xl mb-8 text-center">
+        <Typography
+          variant="h2"
+          className="text-[28px] font-black text-[#111827]"
+        >
+          Complete Profile
+        </Typography>
+        <Typography className="text-gray-500 text-base mt-1">
+          Please finish setting up your restaurant to start accepting orders.
+        </Typography>
+      </div>
+
+      <Card className="w-full max-w-4xl border-none shadow-xl shadow-gray-200/50 rounded-[40px] bg-white overflow-hidden p-8 md:p-12">
         <OnboardingHeader logoPreview={logoPreview} />
         <StepperProgress currentStep={currentStep} />
 

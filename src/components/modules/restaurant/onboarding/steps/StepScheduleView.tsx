@@ -29,12 +29,14 @@ const DAYS = [
   "Sunday",
 ];
 
-export default function StepScheduleView() {
+import { WizardStepProps } from "../types";
+
+export default function StepScheduleView({ onNext, onBack }: WizardStepProps) {
   const router = useRouter();
   const { country, language } = useLocale();
 
   const form = useForm<ScheduleInput>({
-    resolver: zodResolver(scheduleSchema),
+    resolver: zodResolver(scheduleSchema) as any,
     defaultValues: DAYS.reduce(
       (acc, day) => ({
         ...acc,
@@ -51,12 +53,12 @@ export default function StepScheduleView() {
   const { execute, isPending } = useServerAction(saveScheduleAction, {
     onSuccess: () => {
       toast.success("Schedule saved!");
-      router.push(`/${country}/${language}/restaurant/onboarding/step-license`);
+      onNext();
     },
   });
 
-  const onSubmit = (data: ScheduleInput) => {
-    execute(data);
+  const onSubmit = (data: any) => {
+    execute(data as ScheduleInput);
   };
 
   return (
@@ -83,7 +85,7 @@ export default function StepScheduleView() {
                   <div className="flex items-center gap-3">
                     <FormField
                       control={form.control}
-                      name={`${dayKey}.openTime`}
+                      name={`${dayKey}.openTime` as any}
                       render={({ field }) => (
                         <FormControl>
                           <Input
@@ -99,7 +101,7 @@ export default function StepScheduleView() {
 
                     <FormField
                       control={form.control}
-                      name={`${dayKey}.closeTime`}
+                      name={`${dayKey}.closeTime` as any}
                       render={({ field }) => (
                         <FormControl>
                           <Input
@@ -114,7 +116,7 @@ export default function StepScheduleView() {
 
                   <FormField
                     control={form.control}
-                    name={`${dayKey}.isOpen`}
+                    name={`${dayKey}.isOpen` as any}
                     render={({ field }) => (
                       <FormControl>
                         <Switch
@@ -133,7 +135,7 @@ export default function StepScheduleView() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() => router.back()}
+              onClick={onBack}
               className="text-gray-400 font-bold hover:bg-transparent"
             >
               Back
@@ -144,7 +146,7 @@ export default function StepScheduleView() {
               disabled={isPending}
               className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
             >
-              {isPending ? "Saving..." : "Continue"}
+              {isPending ? "Saving..." : "Next Step"}
             </Button>
           </div>
         </form>

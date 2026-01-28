@@ -1,10 +1,5 @@
-import { redirect } from "next/navigation";
+import RestaurantOnboarding from "@/components/modules/restaurant/onboarding/RestaurantOnboardingView";
 
-export default async function OnboardingPage({
-  params,
-}: {
-  params: Promise<{ country: string; language: string }>;
-}) {
-  const { country, language } = await params;
-  redirect(`/${country}/${language}/restaurant/onboarding/step-owner-info`);
+export default function OnboardingPage() {
+  return <RestaurantOnboarding />;
 }
