@@ -1,7 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { CreditCard, HelpCircle, Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
@@ -22,6 +20,7 @@ import {
   addCardAction,
   updateCardAction,
 } from "@/app/actions/customer/userprofile";
+import { useZodForm } from "@/hooks/use-zod-form";
 
 const formatCardNumber = (v: string) =>
   v
@@ -47,7 +46,7 @@ const cardSchema = z.object({
 interface AddCardFormProps {
   onSuccess: () => void;
   onCancel?: () => void;
-  card?: any; // If present, form is in "Edit Mode"
+  card?: any;
 }
 
 export function AddCardForm({ onSuccess, onCancel, card }: AddCardFormProps) {
@@ -56,8 +55,7 @@ export function AddCardForm({ onSuccess, onCancel, card }: AddCardFormProps) {
     card?.cardType || "unknown",
   );
 
-  const form = useForm<z.infer<typeof cardSchema>>({
-    resolver: zodResolver(cardSchema),
+  const form = useZodForm(cardSchema, {
     defaultValues: {
       cardNumber: card?.cardNumber || "",
       expiryDate: card?.expiryDate || "",

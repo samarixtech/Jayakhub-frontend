@@ -32,14 +32,11 @@ export default function IdentityVerificationCard() {
   const [activeTypeId, setActiveTypeId] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  // Status Fetcher
-  // For GET requests we can just use the action directly or use the hook
-  // But useServerAction is good for ensuring loading states etc.
   const { execute: fetchStatus, isPending: fetching } = useServerAction(getKycStatus, {
      onSuccess: (data: any) => setKycData(data)
   });
 
-  // Upload Action
+  // UPLOAD KYC ACTION
   const { execute: uploadFile, isPending: isUploading } = useServerAction(uploadKycAction, {
       onSuccess: () => {
           resetSelection();
@@ -48,10 +45,10 @@ export default function IdentityVerificationCard() {
   });
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchStatus();
   }, []);
 
+  // DOCUMENTS
   const documents = [
     {
       id: "government_id",
@@ -101,7 +98,7 @@ export default function IdentityVerificationCard() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // Helper to render Status or Upload Button
+  // RENDER ACTION AREA
   const renderActionArea = (item: (typeof documents)[0]) => {
     const existingDoc = kycData.find((d) => d.documentType === item.id);
     const isSelected = activeTypeId === item.id && selectedFile;

@@ -3,14 +3,12 @@ import { useState } from "react";
 import { FaApple } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import useLocale from "@/hooks/useLocals";
 import { registerAction } from "@/app/actions/auth/auth";
-import { registerSchema, RegisterInput } from "@/lib/validators/auth";
+import { registerSchema, RegisterInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
 
 import { Button } from "@/components/ui/button";
@@ -26,12 +24,12 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
+import { useZodForm } from "@/hooks/use-zod-form";
 
 export default function CustomerRegisterView() {
   const t = useTranslations("authModal");
@@ -40,9 +38,8 @@ export default function CustomerRegisterView() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // 1. Setup Form
-  const form = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+  // 1 SETUP FORM WITH ZOD
+  const form = useZodForm(registerSchema, {
     defaultValues: {
       name: "",
       email: "",
@@ -52,11 +49,9 @@ export default function CustomerRegisterView() {
     },
   });
 
-  // 2. Setup Server Action
+  // 2 SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(registerAction, {
     onSuccess: (data: any) => {
-      // Data contains email/message usually? 
-      // Based on original logic: state.data.email is the identifier
       const identifier = data?.email || form.getValues("email");
       
       if (identifier) {
@@ -89,7 +84,7 @@ export default function CustomerRegisterView() {
           </Typography>
         </CardHeader>
         <CardContent className="px-0">
-          {/* Social Buttons */}
+          {/* SOCIAL BUTTONS */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <GoogleAuthButton
               role="customer"
@@ -106,7 +101,7 @@ export default function CustomerRegisterView() {
             </Button>
           </div>
 
-          {/* Divider */}
+          {/* DIVIDER */}
           <div className="relative mb-6 text-center">
             <div className="absolute inset-0 flex items-center">
               <Separator className="w-full border-gray-100" />
@@ -121,7 +116,7 @@ export default function CustomerRegisterView() {
             </div>
           </div>
 
-          {/* Shadcn Form */}
+          {/* FORM */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField

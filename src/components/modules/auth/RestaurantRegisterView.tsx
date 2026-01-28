@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import useLocale from "@/hooks/useLocals";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
@@ -13,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { registerRestaurantAction } from "@/app/actions/auth/auth";
-import { registerSchema, RegisterInput } from "@/lib/validators/auth";
+import { registerSchema, RegisterInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Separator } from "@/components/ui/separator";
@@ -26,6 +24,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useZodForm } from "@/hooks/use-zod-form";
 
 export default function RestaurantRegisterView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -35,9 +34,8 @@ export default function RestaurantRegisterView() {
   const router = useRouter();
   const { country, language } = useLocale();
 
-  // 1. Setup Form
-  const form = useForm<RegisterInput>({
-    resolver: zodResolver(registerSchema),
+  // 1 SETUP FORM WITH ZOD
+  const form = useZodForm(registerSchema, {
     defaultValues: {
       name: "",
       email: "",
@@ -47,7 +45,7 @@ export default function RestaurantRegisterView() {
     },
   });
 
-  // 2. Setup Server Action
+  // 2 SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(registerRestaurantAction, {
     onSuccess: (data: any) => {
       const identifier = data?.email || form.getValues("email");
@@ -82,7 +80,7 @@ export default function RestaurantRegisterView() {
         </CardHeader>
 
         <CardContent className="px-0">
-          {/* Social Buttons */}
+          {/* SOCIAL LOGINS */}
           <div className="grid grid-cols-2 gap-4 mb-6">
             <GoogleAuthButton
               loading={isPending}
@@ -99,7 +97,7 @@ export default function RestaurantRegisterView() {
             </Button>
           </div>
 
-          {/* Divider */}
+          {/* DIVIDER */}
           <div className="relative mb-6 text-center">
             <div className="absolute inset-0 flex items-center">
               <Separator className="w-full border-gray-100" />

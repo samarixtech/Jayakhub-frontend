@@ -28,7 +28,7 @@ import {
 import {
   restaurantInfoSchema,
   RestaurantInfoInput,
-} from "@/lib/validators/restaurant-onboarding";
+} from "@/lib/schemas/restaurant-onboarding";
 import { saveRestaurantInfoAction } from "@/app/actions/restaurant/onboarding";
 import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";

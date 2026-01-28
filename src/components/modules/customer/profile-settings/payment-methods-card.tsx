@@ -14,7 +14,7 @@ const PaymentMethodsCard = () => {
     const fetchDefaultCard = async () => {
       const result = await getMyCardsAction();
       if (result.success && result.data) {
-        // Find the card where isDefault is true
+        // FIND DEFAULT CARD
         const foundDefault = result.data.find(
           (card: any) => card.isDefault === true,
         );
@@ -39,7 +39,6 @@ const PaymentMethodsCard = () => {
         </div>
         <LocalizedLink href="/customer/wallet">
           {" "}
-          {/* Adjust link to your wallet page */}
           <Button
             variant="outline"
             className="rounded-xl px-5 border-gray-200 text-xs font-bold cursor-pointer"

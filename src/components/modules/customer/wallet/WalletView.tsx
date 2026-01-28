@@ -1,18 +1,28 @@
 "use client";
-import { Plus, Trash2, Edit2, Loader2, AlertTriangle } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Loader2,
+  AlertTriangle,
+  CreditCard,
+} from "lucide-react";
+import { toast } from "react-hot-toast";
+
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalModal } from "@/components/common/GlobalModal";
-import { useState, useEffect } from "react";
+
 import { AddCardForm } from "./add-card-form";
 import {
   deleteCardAction,
   getMyCardsAction,
 } from "@/app/actions/customer/userprofile";
-import toast from "react-hot-toast";
 
-// Helper: Dynamic Card Styling based on Brand
+// CARD STYLES (COLORS)
 const getCardStyles = (type: string) => {
   const brand = type?.toLowerCase();
   switch (brand) {
@@ -22,11 +32,14 @@ const getCardStyles = (type: string) => {
       return "bg-gradient-to-br from-[#2b2b2b] via-[#202020] to-[#eb001b]";
     case "diners-club":
       return "bg-gradient-to-br from-[#004a97] to-[#007ad4]";
+    case "amex":
+      return "bg-gradient-to-br from-[#2E7D32] to-[#1B5E20]";
     default:
       return "bg-gradient-to-br from-gray-700 to-gray-900";
   }
 };
 
+// CARD LOGO
 const CardLogo = ({ type }: { type: string }) => {
   const brand = type?.toLowerCase();
   if (brand === "visa")
@@ -44,13 +57,13 @@ const CardLogo = ({ type }: { type: string }) => {
     );
   return (
     <span className="text-white/80 font-bold uppercase text-[10px] tracking-widest">
-      {type || "Unknown"}
+      {type || "Card"}
     </span>
   );
 };
 
 const EmvChip = () => (
-  <div className="h-8 w-11 rounded-md bg-linear-to-br from-yellow-100/50 to-yellow-400/50 border border-white/20 relative overflow-hidden flex flex-col justify-between py-1 px-1">
+  <div className="h-8 w-11 rounded-md bg-gradient-to-br from-yellow-100/50 to-yellow-400/50 border border-white/20 relative overflow-hidden flex flex-col justify-between py-1 px-1 shadow-sm">
     <div className="w-full h-px bg-black/20" />
     <div className="w-full h-px bg-black/20" />
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-black/20" />
@@ -58,29 +71,151 @@ const EmvChip = () => (
   </div>
 );
 
+// PAYMENT CARD COMPONENT
+const PaymentCard = ({
+  card,
+  onEdit,
+  onDelete,
+}: {
+  card: any;
+  onEdit: (card: any) => void;
+  onDelete: (card: any) => void;
+}) => {
+  return (
+    <div className="space-y-4 w-full max-w-[380px] group">
+      {/* Visual Card */}
+      <div
+        className={`relative aspect-[1.586/1] w-full rounded-2xl p-6 text-white shadow-xl transition-transform duration-300 hover:scale-[1.02] ${getCardStyles(
+          card.cardType,
+        )} flex flex-col justify-between overflow-hidden`}
+      >
+        <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none" />
+
+        {/* Header */}
+        <div className="flex justify-between items-start relative z-10">
+          <EmvChip />
+          {card.isDefault && (
+            <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-md font-medium tracking-wider px-2 py-0.5 text-[10px] shadow-sm">
+              DEFAULT
+            </Badge>
+          )}
+        </div>
+
+        {/* Number */}
+        <div className="relative z-10 mt-4">
+          <div className="flex items-center gap-3 text-xl sm:text-2xl font-mono tracking-widest opacity-90 drop-shadow-md">
+            <span>••••</span>
+            <span>••••</span>
+            <span>••••</span>
+            <span>{card.cardNumber?.slice(-4) || "0000"}</span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-between items-end relative z-10">
+          <div className="flex gap-6">
+            <div>
+              <p className="text-[8px] font-bold text-white/70 tracking-widest uppercase mb-0.5">
+                Card Holder
+              </p>
+              <p className="font-bold tracking-widest text-xs uppercase line-clamp-1 max-w-[120px]">
+                {card.cardholderName || "NAME"}
+              </p>
+            </div>
+            <div>
+              <p className="text-[8px] font-bold text-white/70 tracking-widest uppercase mb-0.5">
+                Expires
+              </p>
+              <p className="font-bold tracking-widest text-xs">
+                {card.expiryDate || "MM/YY"}
+              </p>
+            </div>
+          </div>
+          <CardLogo type={card.cardType} />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <Button
+          onClick={() => onEdit(card)}
+          variant="outline"
+          size="sm"
+          className="flex-1 rounded-xl h-9 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-xs transition-colors shadow-sm"
+        >
+          <Edit2 className="h-3.5 w-3.5 mr-2 text-gray-500" /> Edit
+        </Button>
+        <Button
+          onClick={() => onDelete(card)}
+          variant="ghost"
+          size="sm"
+          className="flex-1 rounded-xl h-9 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs transition-colors"
+        >
+          <Trash2 className="h-3.5 w-3.5 mr-2" /> Remove
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const CardSkeleton = () => (
+  <div className="space-y-4 w-full max-w-[380px]">
+    <Skeleton className="aspect-[1.586/1] w-full rounded-2xl" />
+    <div className="flex gap-3">
+      <Skeleton className="h-9 flex-1 rounded-xl" />
+      <Skeleton className="h-9 flex-1 rounded-xl" />
+    </div>
+  </div>
+);
+
+const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
+  <div className="col-span-full flex flex-col items-center justify-center py-20 px-4 border-2 border-dashed border-gray-100 rounded-3xl bg-gray-50/30">
+    <div className="h-16 w-16 bg-white rounded-full shadow-sm border border-gray-100 flex items-center justify-center mb-4">
+      <CreditCard className="h-8 w-8 text-emerald-600/50" />
+    </div>
+    <h3 className="text-lg font-bold text-gray-900 mb-1">No cards added yet</h3>
+    <p className="text-sm text-gray-500 max-w-xs text-center mb-6">
+      Add a payment method to make secure transactions and checkout faster.
+    </p>
+    <Button
+      onClick={onAdd}
+      className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8 py-2 font-bold shadow-lg shadow-emerald-600/20"
+    >
+      Add Your First Card
+    </Button>
+  </div>
+);
+
+// MAIN COMPONENT
 export default function WalletView() {
-  // Modal States
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  // Data States
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [cards, setCards] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // FETCH CARDS
   const fetchCards = async () => {
-    setIsLoading(true);
-    const result = await getMyCardsAction();
-    if (result.success) setCards(result.data);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const result = await getMyCardsAction();
+      if (result.success) {
+        setCards(result.data || []);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch cards");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchCards();
   }, []);
 
-  // --- Form Handlers ---
   const handleEdit = (card: any) => {
     setSelectedCard(card);
     setIsFormModalOpen(true);
@@ -91,7 +226,6 @@ export default function WalletView() {
     setIsFormModalOpen(true);
   };
 
-  // --- Delete Handlers ---
   const openDeleteConfirm = (card: any) => {
     setSelectedCard(card);
     setIsDeleteModalOpen(true);
@@ -114,9 +248,9 @@ export default function WalletView() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* HEADER & ADD CARD MODAL */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pr-10">
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <Typography
             variant="h2"
@@ -125,22 +259,21 @@ export default function WalletView() {
             Payment Methods
           </Typography>
           <Typography variant="p" className="text-gray-500 text-sm mt-1">
-            Manage your stored payment cards
+            Manage your payment methods and billing information.
           </Typography>
         </div>
 
         <GlobalModal
           open={isFormModalOpen}
           onOpenChange={setIsFormModalOpen}
-          title={
-            selectedCard ? "Edit Payment Method" : "Add New Payment Method"
-          }
+          title={selectedCard ? "Edit Card" : "Add New Card"}
           trigger={
             <Button
               onClick={handleAdd}
-              className="bg-emerald-700 hover:bg-emerald-800 text-white rounded-full py-6 px-8 font-bold flex gap-2"
+              disabled={isLoading}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full h-11 px-6 font-bold shadow-lg shadow-emerald-600/20 active:scale-95 transition-all"
             >
-              <Plus size={20} /> Add New Card
+              <Plus size={18} className="mr-2" /> Add New Card
             </Button>
           }
         >
@@ -155,27 +288,62 @@ export default function WalletView() {
         </GlobalModal>
       </div>
 
-      {/* DELETE CONFIRMATION MODAL */}
+      {/* CONTENT */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {isLoading ? (
+          <>
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+          </>
+        ) : cards.length > 0 ? (
+          cards.map((card) => (
+            <PaymentCard
+              key={card.id}
+              card={card}
+              onEdit={handleEdit}
+              onDelete={openDeleteConfirm}
+            />
+          ))
+        ) : (
+          <EmptyState onAdd={handleAdd} />
+        )}
+      </div>
+
+      {/* DELETE DIALOG */}
       <GlobalModal
         open={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
-        title="Remove Card"
+        title="Remove Payment Method"
         description="Are you sure you want to remove this card? This action cannot be undone."
-        trigger={<span className="hidden" />} // Controlled modal, trigger not needed visually
+        trigger={<span className="hidden" />}
       >
-        <div className="flex flex-col items-center gap-6 py-4">
-          <div className="h-16 w-16 bg-red-50 rounded-full flex items-center justify-center">
-            <AlertTriangle className="h-8 w-8 text-red-500" />
+        <div className="flex flex-col items-center gap-6 py-2">
+          <div className="h-14 w-14 bg-red-50 rounded-full flex items-center justify-center">
+            <AlertTriangle className="h-7 w-7 text-red-500" />
           </div>
 
           <div className="w-full space-y-3">
+            {selectedCard && (
+              <div className="bg-gray-50 rounded-xl p-3 flex items-center justify-between border border-gray-100 mb-4">
+                <span className="text-xs font-bold text-gray-500 uppercase">
+                  {selectedCard.cardType}
+                </span>
+                <span className="text-sm font-mono font-medium text-gray-900">
+                  •••• {selectedCard.cardNumber?.slice(-4)}
+                </span>
+              </div>
+            )}
+
             <Button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="w-full h-14 rounded-full bg-red-500 hover:bg-red-600 text-white font-bold transition-all"
+              className="w-full h-12 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold transition-all shadow-md shadow-red-500/20"
             >
               {isDeleting ? (
-                <Loader2 className="animate-spin mr-2" />
+                <>
+                  <Loader2 className="animate-spin mr-2 h-4 w-4" /> Removing...
+                </>
               ) : (
                 "Yes, Remove Card"
               )}
@@ -184,98 +352,13 @@ export default function WalletView() {
               variant="ghost"
               onClick={() => setIsDeleteModalOpen(false)}
               disabled={isDeleting}
-              className="w-full h-12 rounded-full text-gray-500 font-bold"
+              className="w-full h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50"
             >
               Cancel
             </Button>
           </div>
         </div>
       </GlobalModal>
-
-      {/* CARDS LISTING */}
-      {isLoading ? (
-        <div className="flex h-40 items-center justify-center">
-          <Loader2 className="animate-spin text-emerald-600" size={32} />
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-10">
-          {cards.length > 0 ? (
-            cards.map((card) => (
-              <div key={card.id} className="space-y-6 w-full max-w-[380px]">
-                {/* Visual Card Component */}
-                <div
-                  className={`relative aspect-[1.586/1] w-full rounded-2xl p-6 text-white shadow-xl ${getCardStyles(
-                    card.cardType,
-                  )} flex flex-col justify-between overflow-hidden group`}
-                >
-                  <div className="absolute inset-0 opacity-10 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none" />
-                  <div className="flex justify-between items-start relative z-10">
-                    <EmvChip />
-                    {card.isDefault && (
-                      <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-md font-light tracking-wider px-3 py-1 text-sm">
-                        DEFAULT
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="relative z-10 mt-2">
-                    <div className="flex items-center gap-3 text-xl sm:text-2xl font-mono tracking-widest opacity-90">
-                      <span>****</span>
-                      <span>****</span>
-                      <span>****</span>
-                      <span>{card.cardNumber.slice(-4)}</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-end relative z-10">
-                    <div className="flex gap-6">
-                      <div>
-                        <p className="text-[8px] font-bold text-white/60 tracking-widest uppercase mb-0.5">
-                          Card Holder
-                        </p>
-                        <p className="font-bold tracking-widest text-xs uppercase line-clamp-1">
-                          {card.cardholderName}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[8px] font-bold text-white/60 tracking-widest uppercase mb-0.5">
-                          Expires
-                        </p>
-                        <p className="font-bold tracking-widest text-xs">
-                          {card.expiryDate}
-                        </p>
-                      </div>
-                    </div>
-                    <CardLogo type={card.cardType} />
-                  </div>
-                </div>
-
-                {/* Card Actions */}
-                <div className="flex items-center gap-3">
-                  <Button
-                    onClick={() => handleEdit(card)}
-                    variant="outline"
-                    className="flex-1 rounded-xl h-10 border-gray-100 bg-white font-bold text-xs shadow-sm hover:bg-gray-50 transition-colors"
-                  >
-                    <Edit2 className="h-3.5 w-3.5 mr-2" /> Edit
-                  </Button>
-                  <Button
-                    onClick={() => openDeleteConfirm(card)}
-                    variant="ghost"
-                    className="flex-1 rounded-xl h-10 bg-red-50 hover:bg-red-100 text-red-500 font-bold text-xs transition-colors"
-                  >
-                    <Trash2 className="h-3.5 w-3.5 mr-2" /> Remove
-                  </Button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="w-full py-20 text-center border-2 border-dashed border-gray-100 rounded-3xl">
-              <Typography className="text-gray-400">
-                No payment methods found.
-              </Typography>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

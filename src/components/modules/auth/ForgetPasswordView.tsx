@@ -1,11 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import useLocale from "@/hooks/useLocals";
 import { forgotPasswordAction } from "@/app/actions/auth/auth";
-import { forgotPasswordSchema, ForgotPasswordInput } from "@/lib/validators/auth";
+import { forgotPasswordSchema, ForgotPasswordInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
 
 import { Button } from "@/components/ui/button";
@@ -21,13 +19,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
+import { useZodForm } from "@/hooks/use-zod-form";
 
 export default function ForgotPasswordView() {
   const router = useRouter();
   const { country, language } = useLocale();
 
-  const form = useForm<ForgotPasswordInput>({
-    resolver: zodResolver(forgotPasswordSchema),
+  const form = useZodForm(forgotPasswordSchema, {
     defaultValues: {
       email: "",
     },

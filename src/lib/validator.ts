@@ -11,6 +11,6 @@ export function validateSchema<T>(schema: z.Schema<T>, data: unknown): Validatio
     return { success: true, data: result.data };
   }
 
-  const errors = result.error.errors.map((err) => err.message);
+  const errors = result.error.errors.map((err: { message: any; }) => err.message);
   return { success: false, errors };
 }

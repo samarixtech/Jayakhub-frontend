@@ -2,16 +2,12 @@
 import { useState } from "react";
 import { FaApple } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
 import useLocale from "@/hooks/useLocals";
 import { loginAction } from "@/app/actions/auth/auth";
-import { loginSchema, LoginInput } from "@/lib/validators/auth";
+import { loginSchema, LoginInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
-
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator"; 
 import { Input } from "@/components/ui/input";
@@ -33,25 +29,25 @@ import {
 import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
+import { useZodForm } from "@/hooks/use-zod-form";
 
 export default function LoginView() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const { country, language } = useLocale();
 
-  // 1. Setup Form with Zod
-  const form = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
+  // 1 SETUP FORM WITH ZOD
+  const form = useZodForm(loginSchema, {
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  // 2. Setup Server Action Hook
+  // 2. SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(loginAction, {
     onSuccess: (data: any) => {
-        // useServerAction passes response.data directly
+        
         if (data?.identifier) {
             const { identifier } = data;
             sessionStorage.setItem("pendingVerificationEmail", identifier);
@@ -83,7 +79,7 @@ export default function LoginView() {
         </CardHeader>
 
         <CardContent className="px-0">
-          {/* Social Logins */}
+          {/* SOCIAL LOGINS */}
           <div className="grid grid-cols-2 gap-4 mb-8">
             <GoogleAuthButton
               loading={isPending}
@@ -99,7 +95,7 @@ export default function LoginView() {
             </Button>
           </div>
 
-          {/* Divider */}
+          {/* DIVIDER */}
           <div className="relative mb-8">
             <div className="absolute inset-0 flex items-center">
               <Separator />
@@ -111,7 +107,7 @@ export default function LoginView() {
             </div>
           </div>
 
-          {/* Shadcn Form */}
+          {/* FORM*/}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
               <FormField
