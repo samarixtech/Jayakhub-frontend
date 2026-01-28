@@ -34,8 +34,8 @@ const RestaurantHeader = () => {
   );
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 p-4 shrink-0">
-      <nav className="max-w-7xl mx-auto flex items-center justify-between bg-emerald-bg h-20 px-6 rounded-full shadow-lg gap-4">
+    <header className="fixed top-0 left-0 w-full z-50 shrink-0">
+      <nav className="w-full flex items-center justify-between bg-emerald-bg h-20 px-6 md:px-12 shadow-lg gap-4">
         {/* 1. Logo Section */}
         <div className="flex items-center gap-4 shrink-0">
           <LocalizedLink href="/home">
