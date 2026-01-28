@@ -30,7 +30,6 @@ export default function StepLicenseView({ onNext, onBack }: WizardStepProps) {
   const form = useForm<LicenseInput>({
     resolver: zodResolver(licenseSchema),
     defaultValues: {
-      licenseNumber: "",
       licenseFile: undefined,
     },
   });
@@ -70,11 +69,8 @@ export default function StepLicenseView({ onNext, onBack }: WizardStepProps) {
 
   const onSubmit = (data: LicenseInput) => {
     const formData = new FormData();
-    formData.append("licenseNumber", data.licenseNumber);
-    // Backend expects specific key? The action is generic 'uploadRestaurantKycAction'.
-    // It iterates over formData. So we can send 'sharia_license' or 'business_license'.
-    // Let's assume 'business_license' for now based on context, or just 'license'.
-    formData.append("business_license", data.licenseFile);
+    formData.append("documentType", "food_license");
+    formData.append("documentFile", data.licenseFile);
 
     execute(formData);
   };
@@ -94,25 +90,6 @@ export default function StepLicenseView({ onNext, onBack }: WizardStepProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* License Number Input - Optional but good for valid form */}
-          <FormField
-            control={form.control}
-            name="licenseNumber"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <label className="text-[10px] font-bold uppercase text-gray-400">
-                  License Number
-                </label>
-                <FormControl>
-                  <input
-                    className="flex h-12 w-full rounded-xl border border-gray-100 bg-gray-50/50 px-4 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    placeholder="Enter license number..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           {/* File Upload Area */}
           <FormField

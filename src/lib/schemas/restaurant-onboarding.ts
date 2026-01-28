@@ -15,16 +15,18 @@ export const restaurantInfoSchema = z.object({
   restaurantEmail: z.string().email("Invalid email address"),
   websiteUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  
-  cuisineTypes: z.array(z.string()).min(1, "Select at least one cuisine type"),
-  
-  address: z.string().min(5, "Address is required"),
-  location: z.object({
-    lat: z.number(),
-    lng: z.number(),
-  }).optional(),
 
-  logo: z.any().optional(), 
+  cuisineTypes: z.array(z.string()).min(1, "Select at least one cuisine type"),
+
+  address: z.string().min(5, "Address is required"),
+  location: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+    })
+    .optional(),
+
+  logo: z.any().optional(),
   banner: z.any().optional(),
 });
 
@@ -51,7 +53,7 @@ export type ScheduleInput = z.infer<typeof scheduleSchema>;
 
 // Step 4: License
 export const licenseSchema = z.object({
-  licenseNumber: z.string().min(3, "License number is required"),
+  // licenseNumber removed as per request
   licenseFile: z
     .any()
     .refine(
