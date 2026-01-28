@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import RestaurantHeader from "@/components/restaurants/Header";
-import SidebarFilters from "../../../../components/restaurants/SidebarFilters";
 import { useParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { CLCProvider, useCLC } from "@/app/context/CLCContext.tsx";
@@ -36,10 +35,6 @@ const IndexPageContent: React.FC = () => {
 
       <div className="w-full mx-auto px-4 sm:px-4 lg:px-4 py-8 md:pt-20 pt-[30px]">
         <div className="flex flex-col lg:flex-row gap-8  pt-20 ">
-          <div className="w-full lg:w-1/4 sticky top-24 self-start z-30">
-            <SidebarFilters />
-          </div>
-
           <div className="w-full lg:max-w-6xl ">
             <p>All Restaurant Home</p>
           </div>
