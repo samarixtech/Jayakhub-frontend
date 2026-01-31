@@ -1,5 +1,5 @@
-import CustomerDashboardLayout from "@/components/modules/customer/layout/CustomerDashboardLayout";
+import RestaurantDashboardLayout from "@/components/modules/restaurant/layout/RestaurantDashboardLayout";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <CustomerDashboardLayout>{children}</CustomerDashboardLayout>;
+  return <RestaurantDashboardLayout>{children}</RestaurantDashboardLayout>;
 }
