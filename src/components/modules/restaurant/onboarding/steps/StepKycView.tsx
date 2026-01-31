@@ -1,272 +1,382 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import {
-  Upload,
-  CreditCard,
-  Car,
-  BookOpen,
-  Info,
-  CheckCircle,
-} from "lucide-react";
+import { Upload, FileText, CheckCircle, Info, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
-import { uploadRestaurantKycAction } from "@/app/actions/restaurant/onboarding";
-import { getKycStatus } from "@/app/actions/customer/userprofile";
-import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";
-import { KycInput } from "@/lib/schemas/restaurant-onboarding";
-import { useEffect } from "react";
+import { useOnboarding } from "@/components/modules/restaurant/onboarding/OnboardingContext";
 
-const DOCUMENTS = [
+// Document Types Configuration
+const KYC_TYPES = [
   {
-    id: "government_id",
-    title: "Government ID",
-    description: "National ID Card",
-    icon: CreditCard,
-    iconBg: "bg-slate-100",
-    iconColor: "text-slate-600",
-  },
-  {
-    id: "driving_license",
-    title: "Driving License",
-    description: "Valid Driver's License",
-    icon: Car,
-    iconBg: "bg-blue-50",
-    iconColor: "text-blue-500",
+    id: "id_card",
+    label: "ID Card",
+    description: "Upload your ID Card",
+    sub: "Please upload a clear photo of the front and back of your Government ID.",
   },
   {
     id: "passport",
-    title: "Passport",
-    description: "International Passport",
-    icon: BookOpen,
-    iconBg: "bg-orange-50",
-    iconColor: "text-orange-500",
+    label: "Passport",
+    description: "Upload your Passport",
+    sub: "Please upload the data page of your valid Passport.",
   },
-] as const;
+  {
+    id: "driving_license",
+    label: "Driving License",
+    description: "Upload your Driving License",
+    sub: "Please upload a clear photo of your valid Driving License.",
+  },
+];
 
-import { WizardStepProps } from "../types";
+const DOC_TYPES = [
+  {
+    id: "food_license",
+    label: "Food License",
+    description: "Upload Food License",
+    sub: "Upload your valid food operating license or health permit.",
+  },
+  {
+    id: "tax_certificate",
+    label: "Tax Certificate",
+    description: "Upload Tax Certificate",
+    sub: "Upload your valid business tax registration certificate.",
+  },
+];
 
 export default function StepKycView() {
   const router = useRouter();
   const { country, language } = useLocale();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { prevStep } = useOnboarding();
 
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // State
+  const [kycType, setKycType] = useState("id_card");
+  const [docType, setDocType] = useState("food_license");
 
-  const { execute, isPending } = useServerAction(uploadRestaurantKycAction, {
-    onSuccess: () => {
-      toast.success("Verification documents submitted!");
-      // Redirect to dashboard
-      router.push(`/${country}/${language}/restaurant/dashboard`);
-    },
-    onError: (err) => {
-      toast.error(err || "Failed to submit documents");
-    },
-  });
+  const [kycFile, setKycFile] = useState<File | null>(null);
+  const [docFile, setDocFile] = useState<File | null>(null);
 
-  /* import { getKycStatus } from "@/app/actions/customer/userprofile"; */
-  /* import { useEffect } from "react"; */
+  // Persisted names for static mode
+  const [savedKycName, setSavedKycName] = useState<string | null>(null);
+  const [savedDocName, setSavedDocName] = useState<string | null>(null);
 
-  const [existingKyc, setExistingKyc] = useState<{
-    id: string;
-    documentType: string;
-    documentFile: string;
-    status: string;
-  } | null>(null);
+  const kycInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
 
+  // Load saved metadata
   useEffect(() => {
-    const fetchKyc = async () => {
-      // Fetch KYC status
-      const res = await getKycStatus();
-      if (res.success && Array.isArray(res.data)) {
-        // Find if any of our supported types exist
-        const supportedTypes = DOCUMENTS.map((d) => d.id);
-        const existingDoc = res.data.find((doc: any) =>
-          supportedTypes.includes(doc.documentType),
-        );
+    const savedKyc = localStorage.getItem("onboarding_kyc_name");
+    const savedDoc = localStorage.getItem("onboarding_doc_name");
+    const savedKycType = localStorage.getItem("onboarding_kyc_type");
+    const savedDocType = localStorage.getItem("onboarding_doc_type");
 
-        if (existingDoc) {
-          setExistingKyc(existingDoc);
-          setSelectedType(existingDoc.documentType);
-          // We don't have a File object, but we have the URL.
-          // We'll rely on existingKyc logic for UI and submission.
-          toast.success("Existing KYC document found");
-        }
-      }
-    };
-    fetchKyc();
+    if (savedKyc) setSavedKycName(savedKyc);
+    if (savedDoc) setSavedDocName(savedDoc);
+    if (savedKycType) setKycType(savedKycType);
+    if (savedDocType) setDocType(savedDocType);
   }, []);
 
-  const handleUploadClick = (typeId: string) => {
-    setSelectedType(typeId);
-    // If clicking a different type, we might clear existingKyc if it doesn't match,
-    // OR just allow overwriting.
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-      fileInputRef.current.click();
+  // Handlers
+  const handleKycFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      const file = e.target.files[0];
+      setKycFile(file);
+      setSavedKycName(file.name);
+      localStorage.setItem("onboarding_kyc_name", file.name);
+      toast.success("Identity document attached");
     }
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
-      toast.success("Document attached");
-    } else {
-      // If cancelled and no file previously, reset type
-      if (!selectedFile) setSelectedType(null);
+  const handleDocFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) {
+      const file = e.target.files[0];
+      setDocFile(file);
+      setSavedDocName(file.name);
+      localStorage.setItem("onboarding_doc_name", file.name);
+      toast.success("Business document attached");
     }
+  };
+
+  const removeKycFile = () => {
+    setKycFile(null);
+    setSavedKycName(null);
+    localStorage.removeItem("onboarding_kyc_name");
+    if (kycInputRef.current) kycInputRef.current.value = "";
+  };
+
+  const removeDocFile = () => {
+    setDocFile(null);
+    setSavedDocName(null);
+    localStorage.removeItem("onboarding_doc_name");
+    if (docInputRef.current) docInputRef.current.value = "";
   };
 
   const handleComplete = () => {
-    // If currently selected type matches existingKyc and no new file, proceed.
-    if (
-      existingKyc &&
-      selectedType === existingKyc.documentType &&
-      !selectedFile
-    ) {
-      toast.success("Using existing KYC document");
-      router.push(`/${country}/${language}/restaurant/dashboard`);
+    const hasKyc = kycFile || savedKycName;
+    const hasDoc = docFile || savedDocName;
+
+    if (!hasKyc || !hasDoc) {
+      toast.error("Please upload both identity and business documents.");
       return;
     }
 
-    if (!selectedFile || !selectedType) {
-      toast.error("Please upload a document to proceed");
-      return;
-    }
+    console.log("Static Mode: Submitting All Documents", {
+      kyc: { type: kycType, file: kycFile?.name || savedKycName },
+      doc: { type: docType, file: docFile?.name || savedDocName },
+    });
 
-    const formData = new FormData();
-    // User requested to send the specific type key (e.g. government_id)
-    formData.append("documentType", selectedType);
-    formData.append("documentFile", selectedFile);
+    // Save metadata
+    localStorage.setItem("onboarding_kyc_completed", "true");
+    localStorage.setItem("onboarding_kyc_type", kycType);
+    localStorage.setItem("onboarding_doc_type", docType);
 
-    execute(formData);
+    toast.success("Verification documents submitted! (Static)");
+    router.push(
+      `/${country}/${language}/restaurant/onboarding/step-bank-details`,
+    );
   };
+
+  const activeKyc = KYC_TYPES.find((t) => t.id === kycType)!;
+  const activeDoc = DOC_TYPES.find((t) => t.id === docType)!;
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-        accept="image/*,.pdf"
-      />
-
-      {/* Header Section */}
-      <div className="space-y-1">
-        <Typography variant={"h4"} className="font-bold text-gray-900">
-          Identity Verification
+      <div>
+        <Typography variant="h3" className="text-xl font-bold text-[#111827]">
+          Upload Documents
         </Typography>
-        <Typography className="text-sm text-slate-500">
-          Please upload one of the following documents to verify your business
-          identity.
+        <Typography className="text-gray-500 mt-1">
+          Verify your identity and business to start selling.
         </Typography>
       </div>
 
-      {/* Document List */}
-      <div className="space-y-3">
-        {DOCUMENTS.map((doc) => {
-          const isSelected =
-            selectedType === doc.id &&
-            (selectedFile || existingKyc?.documentType === doc.id);
-
-          return (
-            <div
-              key={doc.id}
-              className={`flex items-center justify-between p-5 bg-white border rounded-2xl shadow-sm transition-all ${isSelected ? "border-emerald-500 ring-1 ring-emerald-500 bg-emerald-50/10" : "border-slate-100 hover:border-emerald-100"}`}
-            >
-              <div className="flex items-center gap-4">
-                <div
-                  className={`h-12 w-12 rounded-xl flex items-center justify-center ${doc.iconBg}`}
-                >
-                  {isSelected ? (
-                    <CheckCircle className="h-6 w-6 text-emerald-600" />
-                  ) : (
-                    <doc.icon className={`h-6 w-6 ${doc.iconColor}`} />
-                  )}
-                </div>
-                <div>
-                  <Typography className="font-bold text-slate-900">
-                    {doc.title}
-                  </Typography>
-                  <Typography className="text-xs text-slate-400">
-                    {isSelected
-                      ? selectedFile?.name ||
-                        (existingKyc?.documentType === doc.id
-                          ? existingKyc.documentFile.split("/").pop()
-                          : doc.description)
-                      : existingKyc?.documentType === doc.id
-                        ? "Existing: " +
-                          existingKyc.documentFile.split("/").pop()
-                        : doc.description}
-                  </Typography>
-                </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* --- SECTION 1: OWNER IDENTITY --- */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-[#346853] text-white flex items-center justify-center text-xs font-bold">
+                1
               </div>
-
-              {isSelected ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleUploadClick(doc.id)}
-                  className="text-emerald-600 font-bold hover:bg-emerald-50"
-                >
-                  Change
-                </Button>
-              ) : (
-                <Button
-                  variant="outline"
-                  onClick={() => handleUploadClick(doc.id)}
-                  className="border-slate-200 text-slate-700 font-bold px-6 h-10 rounded-xl hover:bg-slate-50 gap-2"
-                >
-                  <Upload className="h-4 w-4" />
-                  Upload
-                </Button>
-              )}
+              <Typography
+                variant="h4"
+                className="font-bold text-gray-900 text-base"
+              >
+                Owner Identity (KYC)
+              </Typography>
             </div>
-          );
-        })}
+            <Typography className="text-xs text-gray-400 cursor-pointer underline">
+              Why is this needed?
+            </Typography>
+          </div>
+
+          {/* Custom Tabs */}
+          <div className="bg-gray-50 p-1 rounded-xl flex gap-1">
+            {KYC_TYPES.map((type) => (
+              <button
+                key={type.id}
+                type="button"
+                onClick={() => setKycType(type.id)}
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                  kycType === type.id
+                    ? "bg-white text-[#346853] shadow-sm"
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
+              >
+                {type.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Upload Area */}
+          <div className="border border-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-white shadow-sm min-h-[320px]">
+            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4 text-blue-500">
+              <FileText className="w-8 h-8" />
+            </div>
+
+            <Typography className="font-bold text-gray-900 mb-2">
+              {activeKyc.description}
+            </Typography>
+            <Typography className="text-xs text-gray-400 max-w-[200px] mb-6">
+              {activeKyc.sub}
+            </Typography>
+
+            {kycFile || savedKycName ? (
+              <div className="w-full bg-blue-50 rounded-xl p-3 flex items-center justify-between">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <CheckCircle className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                  <span className="text-sm font-medium text-blue-700 truncate">
+                    {kycFile?.name || savedKycName}
+                  </span>
+                </div>
+                <button
+                  onClick={removeKycFile}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => kycInputRef.current?.click()}
+                className="rounded-xl border-gray-200 text-gray-700 font-bold hover:bg-gray-50"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Choose File
+              </Button>
+            )}
+
+            <input
+              type="file"
+              ref={kycInputRef}
+              className="hidden"
+              accept="image/*,.pdf"
+              onChange={handleKycFileChange}
+            />
+
+            <div className="flex gap-2 mt-8">
+              <span className="px-3 py-1 bg-gray-50 rounded-full text-[10px] text-gray-500 font-medium">
+                No glare
+              </span>
+              <span className="px-3 py-1 bg-gray-50 rounded-full text-[10px] text-gray-500 font-medium">
+                High quality
+              </span>
+              <span className="px-3 py-1 bg-gray-50 rounded-full text-[10px] text-gray-500 font-medium">
+                Valid expiry
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* --- SECTION 2: RESTAURANT DOCUMENTS --- */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-[#346853] text-white flex items-center justify-center text-xs font-bold">
+                2
+              </div>
+              <Typography
+                variant="h4"
+                className="font-bold text-gray-900 text-base"
+              >
+                Restaurant Documents
+              </Typography>
+            </div>
+            <span className="px-2 py-1 bg-gray-100 text-[10px] font-bold text-gray-500 rounded-md uppercase tracking-wider">
+              Select One
+            </span>
+          </div>
+
+          {/* Custom Tabs */}
+          <div className="bg-gray-50 p-1 rounded-xl flex gap-1">
+            {DOC_TYPES.map((type) => (
+              <button
+                key={type.id}
+                type="button"
+                onClick={() => setDocType(type.id)}
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                  docType === type.id
+                    ? "bg-white text-[#346853] shadow-sm"
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
+              >
+                {type.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Upload Area */}
+          <div className="border border-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-white shadow-sm min-h-[320px]">
+            <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mb-4 text-emerald-500">
+              <FileText className="w-8 h-8" />
+            </div>
+
+            <Typography className="font-bold text-gray-900 mb-2">
+              {activeDoc.description}
+            </Typography>
+            <Typography className="text-xs text-gray-400 max-w-[200px] mb-6">
+              {activeDoc.sub}
+            </Typography>
+
+            {docFile || savedDocName ? (
+              <div className="w-full bg-emerald-50 rounded-xl p-3 flex items-center justify-between">
+                <div className="flex items-center gap-3 overflow-hidden">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                  <span className="text-sm font-medium text-emerald-700 truncate">
+                    {docFile?.name || savedDocName}
+                  </span>
+                </div>
+                <button
+                  onClick={removeDocFile}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => docInputRef.current?.click()}
+                className="rounded-xl border-gray-200 text-gray-700 font-bold hover:bg-gray-50"
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                Choose File
+              </Button>
+            )}
+
+            <input
+              type="file"
+              ref={docInputRef}
+              className="hidden"
+              accept="image/*,.pdf"
+              onChange={handleDocFileChange}
+            />
+
+            <div className="flex gap-2 mt-8">
+              <span className="px-3 py-1 bg-gray-50 rounded-full text-[10px] text-gray-500 font-medium">
+                Official Doc
+              </span>
+              <span className="px-3 py-1 bg-gray-50 rounded-full text-[10px] text-gray-500 font-medium">
+                Valid Date
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Footer Info Box */}
-      <div className="bg-emerald-50/50 border border-emerald-50 p-5 rounded-2xl flex gap-3 items-start mt-8">
-        <Info className="h-5 w-5 text-emerald-600 mt-0.5" />
-        <Typography className="text-sm text-emerald-800 leading-relaxed">
-          By clicking <span className="font-bold">"Complete Setup"</span>, you
-          agree to our Partner Terms & Conditions and Privacy Policy. Your
-          restaurant will be reviewed within 24 hours.
-        </Typography>
-      </div>
-
-      <div className="flex justify-between items-center pt-4 border-t border-gray-50">
+      <div className="flex justify-between items-center pt-4 border-t border-gray-50 mt-8">
         <Button
           type="button"
           variant="ghost"
-          onClick={() =>
-            router.push(
-              `/${country}/${language}/restaurant/onboarding/step-schedule`,
-            )
-          }
+          onClick={() => {
+            prevStep();
+            router.back();
+          }}
           className="text-gray-400 font-bold hover:bg-transparent"
         >
           Back
         </Button>
 
-        <Button
-          onClick={handleComplete}
-          disabled={
-            isPending ||
-            (!selectedFile &&
-              !(existingKyc && selectedType === existingKyc.documentType))
-          }
-          className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
-        >
-          {isPending ? "Proccessing..." : "Complete Setup"}
-        </Button>
+        <div className="flex items-center gap-4">
+          <Typography className="text-sm font-medium text-gray-500">
+            Step 05 of 06
+          </Typography>
+          <Button
+            onClick={handleComplete}
+            disabled={
+              (!kycFile && !savedKycName) || (!docFile && !savedDocName)
+            }
+            className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
+          >
+            Next Step
+          </Button>
+        </div>
       </div>
     </div>
   );

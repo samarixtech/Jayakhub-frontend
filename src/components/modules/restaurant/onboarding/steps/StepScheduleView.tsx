@@ -1,8 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
@@ -15,8 +16,6 @@ import {
   scheduleSchema,
   ScheduleInput,
 } from "@/lib/schemas/restaurant-onboarding";
-import { saveScheduleAction } from "@/app/actions/restaurant/onboarding";
-import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";
 
 const DAYS = [
@@ -29,11 +28,12 @@ const DAYS = [
   "Sunday",
 ];
 
-import { WizardStepProps } from "../types";
+import { useOnboarding } from "@/components/modules/restaurant/onboarding/OnboardingContext";
 
 export default function StepScheduleView() {
-  const router = useRouter();
   const { country, language } = useLocale();
+  const router = useRouter();
+  const { nextStep, prevStep } = useOnboarding();
 
   const form = useForm<ScheduleInput>({
     resolver: zodResolver(scheduleSchema) as any,
@@ -50,15 +50,23 @@ export default function StepScheduleView() {
     ),
   });
 
-  const { execute, isPending } = useServerAction(saveScheduleAction, {
-    onSuccess: () => {
-      toast.success("Schedule saved!");
-      router.push(`/${country}/${language}/restaurant/onboarding/step-kyc`);
-    },
-  });
+  // Load data
+  useEffect(() => {
+    const savedData = localStorage.getItem("onboarding_schedule_info");
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        form.reset(parsed);
+      } catch (e) {}
+    }
+  }, [form]);
 
   const onSubmit = (data: any) => {
-    execute(data as ScheduleInput);
+    console.log("Static Mode: Saving Schedule", data);
+    localStorage.setItem("onboarding_schedule_info", JSON.stringify(data));
+    toast.success("Schedule saved! (Static)");
+    nextStep();
+    router.push(`/${country}/${language}/restaurant/onboarding/step-kyc`);
   };
 
   return (
@@ -135,23 +143,27 @@ export default function StepScheduleView() {
             <Button
               type="button"
               variant="ghost"
-              onClick={() =>
-                router.push(
-                  `/${country}/${language}/restaurant/onboarding/step-license`,
-                )
-              }
+              onClick={() => {
+                prevStep();
+                router.back();
+              }}
               className="text-gray-400 font-bold hover:bg-transparent"
             >
               Back
             </Button>
 
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
-            >
-              {isPending ? "Saving..." : "Next Step"}
-            </Button>
+            <div className="flex items-center gap-4">
+              <Typography className="text-sm font-medium text-gray-500">
+                Step 04 of 06
+              </Typography>
+              <Button
+                type="submit"
+                disabled={false}
+                className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
+              >
+                Next Step
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

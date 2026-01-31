@@ -9,7 +9,9 @@ import StepOwnerInfo from "./steps/StepOwnerInfoView";
 import StepRestaurantInfo from "./steps/StepRestaurantInfoView";
 import StepSchedule from "./steps/StepScheduleView";
 import StepKyc from "./steps/StepKycView";
-import StepLicenseView from "./steps/StepLicenseView";
+
+import StepBrandAssetsView from "./steps/StepBrandAssetsView";
+import StepBankDetailsView from "./steps/StepBankDetailsView";
 
 function RestaurantOnboardingContent() {
   const [currentStep, setCurrentStep] = useState(1); // 1 == initial form step
@@ -44,19 +46,19 @@ function RestaurantOnboardingContent() {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        console.log("RenderStep 1: Passing nextStep", nextStep);
-        return <StepOwnerInfo onNext={nextStep} onBack={prevStep} />;
+        return <StepOwnerInfo />;
       case 2:
-        return <StepRestaurantInfo onNext={nextStep} onBack={prevStep} />;
+        return <StepRestaurantInfo />;
       case 3:
-        return <StepLicenseView onNext={nextStep} onBack={prevStep} />;
+        return <StepBrandAssetsView />;
       case 4:
-        return <StepSchedule onNext={nextStep} onBack={prevStep} />;
+        return <StepSchedule />;
       case 5:
-        return <StepKyc onBack={prevStep} />; // Last step redirects
-
+        return <StepKyc />;
+      case 6:
+        return <StepBankDetailsView />;
       default:
-        return <StepOwnerInfo onNext={nextStep} onBack={prevStep} />;
+        return <StepOwnerInfo />;
     }
   };
 
@@ -69,17 +71,5 @@ function RestaurantOnboardingContent() {
         <CardContent className="p-0 mt-8">{renderStep()}</CardContent>
       </Card>
     </div>
-  );
-}
-
-// Ensure OnboardingProvider is imported if used, otherwise remove it or define it.
-// Assuming OnboardingProvider is from ./OnboardingContext based on earlier context.
-import { OnboardingProvider } from "./OnboardingContext";
-
-export default function RestaurantOnboarding() {
-  return (
-    <OnboardingProvider>
-      <RestaurantOnboardingContent />
-    </OnboardingProvider>
   );
 }

@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
+import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 
 export default function VerifyOtpView() {
   const [otpValue, setOtpValue] = useState("");
@@ -103,7 +104,38 @@ export default function VerifyOtpView() {
         toast.success(result.message || "Account verified!");
         sessionStorage.removeItem("pendingVerificationEmail");
 
-        const finalUrl = `/${country.toLowerCase()}/${language.toLowerCase()}${targetSubPath}`;
+        const targetCountry = country || "pakistan";
+        const targetLang = language || "en";
+
+        // If restaurant owner, check status before redirecting
+        if (role === "restaurant_owner") {
+          try {
+            // We rely on the cookie set by verifyOtpAction being available for this next request
+            // In many cases this works immediately in the same flow, or we might need a small delay/reload context
+            // But typically for server actions in Next.js, cookies set in one action are available in next action if same context
+            const statusRes = await getRestaurantStatusAction();
+            if (statusRes.success && statusRes.data?.status === "active") {
+              router.replace(
+                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
+              );
+              return;
+            }
+            // Fallback to status page if not active or error
+            router.replace(
+              `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+            );
+            return;
+          } catch (err) {
+            console.error("Status check failed", err);
+            // Fallback to status page
+            router.replace(
+              `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+            );
+            return;
+          }
+        }
+
+        const finalUrl = `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}${targetSubPath}`;
 
         router.replace(finalUrl);
       } else {

@@ -6,7 +6,6 @@ export default async function RestaurantDashboardPage({
   params: Promise<{ country: string; language: string }>;
 }) {
   const { country, language } = await params;
-  // TODO: Add logic to check if onboarding is complete. 
-  // For now, matching previous behavior which showed validation, we redirect to onboarding.
+  // TODO: Add logic to check if onboarding is complete.
   redirect(`/${country}/${language}/restaurant/onboarding`);
 }

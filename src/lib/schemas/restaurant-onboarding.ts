@@ -32,6 +32,14 @@ export const restaurantInfoSchema = z.object({
 
 export type RestaurantInfoInput = z.infer<typeof restaurantInfoSchema>;
 
+// Step 3: Brand Assets
+export const brandAssetsSchema = z.object({
+  logo: z.any().optional(),
+  banner: z.any().optional(),
+});
+
+export type BrandAssetsInput = z.infer<typeof brandAssetsSchema>;
+
 // Step 3: Schedule
 const dayScheduleSchema = z.object({
   isOpen: z.boolean().default(true),
@@ -76,3 +84,36 @@ export const kycSchema = z.object({
 });
 
 export type KycInput = z.infer<typeof kycSchema>;
+
+// Step 6: Bank Details
+export const bankDetailsSchema = z.object({
+  accountTitle: z.string().min(3, "Account Title is required"),
+  bankName: z.string().min(1, "Select a bank"),
+  accountType: z.string().min(1, "Select account type"),
+  iban: z.string().min(23, "IBAN must be at least 23 characters"),
+});
+
+export type BankDetailsInput = z.infer<typeof bankDetailsSchema>;
+
+// Step 7: Final Registration API Payload for /onboarding/register
+export const restaurantRegistrationSchema = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  phone: z.string(),
+  address: z.string(),
+  latitude: z.number(),
+  longitude: z.number(),
+  type: z.string(),
+  schedules: z.string(), // Sending as JSON string to avoid backend parsing error
+  kycDocuments: z.string(), // Sending as JSON string
+  Ownerphone: z.string(),
+  ownerName: z.string(),
+  accountHolderName: z.string(),
+  accountType: z.string(), // Using this field for account type as per payload example
+  bankName: z.string(),
+  iban: z.string(),
+});
+
+export type RestaurantRegistrationInput = z.infer<
+  typeof restaurantRegistrationSchema
+>;

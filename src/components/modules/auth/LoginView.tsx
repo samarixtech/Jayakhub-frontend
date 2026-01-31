@@ -9,7 +9,7 @@ import { loginAction } from "@/app/actions/auth/auth";
 import { loginSchema, LoginInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator"; 
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/form";
 import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
+import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
+import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
 import { useZodForm } from "@/hooks/use-zod-form";
 
@@ -47,16 +49,46 @@ export default function LoginView() {
   // 2. SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(loginAction, {
     onSuccess: (data: any) => {
-        
-        if (data?.identifier) {
-            const { identifier } = data;
-            sessionStorage.setItem("pendingVerificationEmail", identifier);
-            router.push(
-                `/${country?.toLowerCase() || 'pakistan'}/${language?.toLowerCase() || 'en'}/verify-otp?email=${encodeURIComponent(identifier)}`
-            );
-        } else {
-             // Fallback or direct login success?
+      if (data?.identifier) {
+        const { identifier } = data;
+        sessionStorage.setItem("pendingVerificationEmail", identifier);
+        router.push(
+          `/${country?.toLowerCase() || "pakistan"}/${language?.toLowerCase() || "en"}/verify-otp?email=${encodeURIComponent(identifier)}`,
+        );
+      } else if (data?.data?.user?.role || data?.user?.role) {
+        // Direct login success
+        const role = (data.data?.user?.role || data.user?.role) as UserRole;
+
+        const targetCountry = country || "pakistan";
+        const targetLang = language || "en";
+
+        if (role === "restaurant_owner") {
+          getRestaurantStatusAction()
+            .then((statusRes) => {
+              if (statusRes.success && statusRes.data?.status === "active") {
+                router.push(
+                  `/${targetCountry}/${targetLang}/restaurant/dashboard`,
+                );
+              } else {
+                router.push(
+                  `/${targetCountry}/${targetLang}/restaurant/status`,
+                );
+              }
+            })
+            .catch((err) => {
+              router.push(`/${targetCountry}/${targetLang}/restaurant/status`);
+            });
+          return;
         }
+
+        const targetSubPath = ROLE_REDIRECT_MAP[role];
+
+        if (targetSubPath) {
+          router.push(`/${targetCountry}/${targetLang}${targetSubPath}`);
+        } else {
+          router.push(`/${targetCountry}/${targetLang}/dashboard`);
+        }
+      }
     },
   });
 
@@ -129,33 +161,37 @@ export default function LoginView() {
               />
 
               <div className="space-y-1">
-                 <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="relative">
-                            <FormControl>
-                            <Input
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Password"
-                                className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
-                                {...field}
-                            />
-                            </FormControl>
-                            <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg"
-                            tabIndex={-1}
-                            >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                            </button>
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="relative">
+                        <FormControl>
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                            {...field}
+                          />
+                        </FormControl>
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg"
+                          tabIndex={-1}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={20} />
+                          ) : (
+                            <Eye size={20} />
+                          )}
+                        </button>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="flex justify-end mt-1">
                   <LocalizedLink
                     href={`/forget-password`}

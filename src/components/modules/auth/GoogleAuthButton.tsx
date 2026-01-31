@@ -6,29 +6,50 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { googleAuthAction } from "@/app/actions/auth/auth";
+import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
 import { Loader2 } from "lucide-react";
 import { useServerAction } from "@/hooks/use-server-action";
-
-export function GoogleAuthButton({
-  country,
-  language,
-  loading,
-  role,
-}: any) {
+export function GoogleAuthButton({ country, language, loading, role }: any) {
   const router = useRouter();
 
   const { execute, isPending } = useServerAction(googleAuthAction, {
     onSuccess: (data: any) => {
-       if (data?.role) {
-          const targetSubPath = ROLE_REDIRECT_MAP[data.role as UserRole];
-          const finalUrl = `/${country.toLowerCase()}/${language.toLowerCase()}${targetSubPath}`;
-          router.push(finalUrl);
-       }
+      if (data?.role) {
+        const targetCountry = country || "pakistan";
+        const targetLang = language || "en";
+
+        if (data.role === "restaurant_owner") {
+          // Check status
+          getRestaurantStatusAction()
+            .then((statusRes) => {
+              if (statusRes.success && statusRes.data?.status === "active") {
+                router.push(
+                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
+                );
+              } else {
+                router.push(
+                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+                );
+              }
+            })
+            .catch((err) => {
+              console.error("Status check failed", err);
+              router.push(
+                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+              );
+            });
+          return;
+        }
+
+        const targetSubPath = ROLE_REDIRECT_MAP[data.role as UserRole];
+        const finalUrl = `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}${targetSubPath}`;
+        router.push(finalUrl);
+      }
     },
     onError: () => {
-        // Optional custom error handling if needed, defaults to toast from hook
-    }
+      // Optional custom error handling if needed, defaults to toast from hook
+    },
   });
 
   const login = useGoogleLogin({
@@ -46,9 +67,8 @@ export function GoogleAuthButton({
           name: userInfo.name,
           picture: userInfo.picture,
           token: tokenResponse.access_token,
-          role: role, 
+          role: role,
         });
-
       } catch (error) {
         toast.error("Google authentication failed.");
         console.error(error);
@@ -63,7 +83,7 @@ export function GoogleAuthButton({
       type="button"
       onClick={() => login()}
       disabled={loading || isPending}
-      className="w-full h-12 gap-3 rounded-xl border-gray-200"
+      className="w-full h-12 gap-3 rounded-xl border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-black"
     >
       {loading || isPending ? (
         <Loader2 className="animate-spin" />

@@ -23,9 +23,11 @@ const OnboardingLayoutContent = ({
   let currentStep = 1;
   if (pathname.includes("step-owner-info")) currentStep = 1;
   else if (pathname.includes("step-restaurant-info")) currentStep = 2;
-  else if (pathname.includes("step-license")) currentStep = 3;
+  else if (pathname.includes("step-brand-assets")) currentStep = 3;
   else if (pathname.includes("step-schedule")) currentStep = 4;
   else if (pathname.includes("step-kyc")) currentStep = 5;
+  else if (pathname.includes("step-bank-details")) currentStep = 6;
+  else if (pathname.includes("step-review")) currentStep = 7;
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] p-6 flex flex-col items-center justify-center">

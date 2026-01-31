@@ -1,8 +1,6 @@
 import axios from "axios";
-import { cookies } from "next/headers";
 
 const API_BASE_URL = "http://192.168.100.9:5000/api/v1";
-
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000, // Timeout after 10 seconds
