@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RestaurantHeader from "@/components/restaurants/Header";
 import { useParams } from "next/navigation";
 import { getCookie } from "cookies-next";
@@ -17,56 +17,10 @@ import DiscoveryRestaurantCard, {
 import PromoBanner from "@/components/modules/discovery/PromoBanner";
 import ShopCard from "@/components/modules/discovery/ShopCard";
 
-// Mock Data
-const POPULAR_RESTAURANTS: RestaurantProps[] = [
-  {
-    id: "1",
-    name: "The Burger Joint",
-    image: "/images/food/burger.jpg", // Placeholder
-    rating: 4.5,
-    priceLevel: "$",
-    cuisine: "Burgers, American",
-    deliveryTime: "20-30 mins",
-    deliveryFee: 0,
-    discount: "50% OFF",
-    isFavorite: true,
-  },
-  {
-    id: "2",
-    name: "Pizza Paradise",
-    image: "/images/food/pizza.jpg",
-    rating: 4.2,
-    priceLevel: "$$",
-    cuisine: "Italian, Pizza",
-    deliveryTime: "15-25 mins",
-    deliveryFee: 0.99,
-    discount: "Buy 1 Get 1",
-    isFavorite: true,
-  },
-  {
-    id: "3",
-    name: "Sushi Zen Express",
-    image: "/images/food/sushi.jpg",
-    rating: 4.8,
-    priceLevel: "$$$",
-    cuisine: "Japanese",
-    deliveryTime: "30-45 mins",
-    deliveryFee: 2.49,
-    isFavorite: true,
-  },
-  {
-    id: "4",
-    name: "Green Salad Co.",
-    image: "/images/food/salad.jpg",
-    rating: 4.6,
-    priceLevel: "$",
-    cuisine: "Healthy, Salad",
-    deliveryTime: "15-20 mins",
-    deliveryFee: 0,
-    isFavorite: true,
-  },
-];
+import { useServerAction } from "@/hooks/use-server-action";
+import { getAllRestaurantsAction } from "@/app/actions/public/restaurants";
 
+// Mock Data
 const SHOPS = [
   {
     id: "s1",
@@ -100,55 +54,46 @@ const SHOPS = [
   },
 ];
 
-const MORE_RESTAURANTS: RestaurantProps[] = [
-  {
-    id: "5",
-    name: "Taco Town",
-    image: "/images/food/tacos.jpg",
-    rating: 4.3,
-    priceLevel: "$",
-    cuisine: "Mexican, Street Food",
-    deliveryTime: "15-20 mins",
-    deliveryFee: 1.2,
-    discount: "HOT DEAL",
-  },
-  {
-    id: "6",
-    name: "Donut Dream",
-    image: "/images/food/donuts.jpg",
-    rating: 4.9,
-    priceLevel: "$",
-    cuisine: "Sweets, Bakery",
-    deliveryTime: "10-15 mins",
-    deliveryFee: 0,
-    discount: "30% OFF",
-  },
-  {
-    id: "7",
-    name: "Dim Sum House",
-    image: "/images/food/dimsum.jpg",
-    rating: 4.7,
-    priceLevel: "$$",
-    cuisine: "Chinese",
-    deliveryTime: "35-45 mins",
-    deliveryFee: 1.49,
-    discount: "Free Gift",
-  },
-  {
-    id: "8",
-    name: "Pasta Palace",
-    image: "/images/food/pasta.jpg",
-    rating: 4.4,
-    priceLevel: "$$",
-    cuisine: "Italian, Pasta",
-    deliveryTime: "25-30 mins",
-    deliveryFee: 2.49,
-  },
-];
-
 const IndexPageContent: React.FC = () => {
   const params = useParams();
   const { setCLC } = useCLC();
+  const [restaurants, setRestaurants] = useState<RestaurantProps[]>([]);
+
+  const { execute: fetchRestaurants, isPending } = useServerAction(
+    getAllRestaurantsAction,
+    {
+      suppressSuccessToast: true,
+      onSuccess: (data: any) => {
+        const list = Array.isArray(data) ? data : data?.data || [];
+
+        const mapped = list.map((item: any) => ({
+          id: item.id || "",
+          name: item.name || "Unknown",
+          image:
+            item.bannerImage || item.profileImage || "/images/food/burger.jpg",
+          rating: 4.5,
+          priceLevel: "$$",
+          cuisine: Array.isArray(item.type)
+            ? item.type.join(", ")
+            : item.type || "General",
+          deliveryTime: "30-45 mins",
+          deliveryFee: 0,
+          discount: undefined,
+          isFavorite: false,
+        }));
+
+        setRestaurants(mapped);
+      },
+      onError: (err) => {
+        console.error("Failed to fetch restaurants:", err);
+      },
+    },
+  );
+
+  useEffect(() => {
+    fetchRestaurants();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const fetchData = () => {
@@ -183,14 +128,36 @@ const IndexPageContent: React.FC = () => {
         {/* 3. Filters */}
         <FilterBar />
 
-        {/* 4. Popular Restaurants */}
+        {/* 4. Popular Restaurants (Now Dynamic) */}
         <section className="mb-10">
           <SectionHeader title="Popular Restaurants" />
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-            {POPULAR_RESTAURANTS.map((restaurant) => (
-              <DiscoveryRestaurantCard key={restaurant.id} data={restaurant} />
-            ))}
-          </div>
+
+          {isPending ? (
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+              {/* Skeleton Loaders (inline for simplicity) */}
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="min-w-[320px] h-[300px] bg-gray-200 rounded-2xl animate-pulse"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+              {restaurants.length > 0 ? (
+                restaurants.map((restaurant) => (
+                  <DiscoveryRestaurantCard
+                    key={restaurant.id}
+                    data={restaurant}
+                  />
+                ))
+              ) : (
+                <div className="text-gray-500 w-full text-center py-10">
+                  No restaurants found.
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* 5. Promo Banner */}
@@ -209,15 +176,18 @@ const IndexPageContent: React.FC = () => {
           </div>
         </section>
 
-        {/* 7. More for You */}
-        <section className="mb-10">
+        {/* 7. More for You - Reusing fetched restaurants for now */}
+        {/* <section className="mb-10">
           <SectionHeader title="More for You" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {MORE_RESTAURANTS.map((restaurant) => (
-              <DiscoveryRestaurantCard key={restaurant.id} data={restaurant} />
+            {restaurants.slice(0, 8).map((restaurant) => (
+              <DiscoveryRestaurantCard
+                key={`more-${restaurant.id}`}
+                data={restaurant}
+              />
             ))}
           </div>
-        </section>
+        </section> */}
       </main>
     </div>
   );

@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/collapsible";
 import Image from "next/image";
 
+// TODO: add role based secure navigation items
 // Navigation Items Structure
 const NAV_SECTIONS = [
   {

@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 const HeroBanner = () => {
   return (
     <div className="relative w-full h-[300px] md:h-[400px] rounded-[30px] overflow-hidden bg-black text-white">
-      {/* Background Image Placeholder - In real app, use next/image or background-image */}
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-70"
-        style={{ backgroundImage: "url('/images/hero-food.jpg')" }} // Placeholder path
+        className="absolute inset-0 bg-cover bg-center opacity-80"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1627461985459-51600559fffe?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+        }} // Placeholder path
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
 

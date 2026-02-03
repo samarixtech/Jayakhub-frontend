@@ -3,16 +3,19 @@ import { useState, useTransition } from "react";
 import { toast } from "react-hot-toast";
 import { ActionResponse } from "@/lib/utils/response-handler";
 
-type ServerAction<TInput, TResponse> = ((input: TInput) => Promise<ActionResponse<TResponse>>) | (() => Promise<ActionResponse<TResponse>>);
+type ServerAction<TInput, TResponse> =
+  | ((input: TInput) => Promise<ActionResponse<TResponse>>)
+  | (() => Promise<ActionResponse<TResponse>>);
 
 interface UseServerActionOptions<TResponse> {
   onSuccess?: (data?: TResponse) => void;
   onError?: (message: string) => void;
+  suppressSuccessToast?: boolean;
 }
 
 export function useServerAction<TInput, TResponse>(
   action: ServerAction<TInput, TResponse>,
-  options: UseServerActionOptions<TResponse> = {}
+  options: UseServerActionOptions<TResponse> = {},
 ) {
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<ActionResponse<TResponse> | null>(null);
@@ -24,7 +27,9 @@ export function useServerAction<TInput, TResponse>(
         setResult(response);
 
         if (response.success) {
-          toast.success(response.message);
+          if (!options.suppressSuccessToast) {
+            toast.success(response.message);
+          }
           options.onSuccess?.(response.data);
         } else {
           toast.error(response.message);

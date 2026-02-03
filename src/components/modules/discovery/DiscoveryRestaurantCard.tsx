@@ -21,7 +21,7 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
       {/* Image Container */}
       <div className="relative h-48 w-full rounded-2xl overflow-hidden shadow-sm">
         <img
-          src={data.image}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${data.image}`}
           alt={data.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
