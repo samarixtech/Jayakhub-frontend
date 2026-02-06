@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MapPin, LocateFixed, Loader2, Search, Check } from "lucide-react";
+import { MapPin, LocateFixed, Loader2,  Check, ChevronDown } from "lucide-react";
 import { useJsApiLoader } from "@react-google-maps/api";
 import {
   Popover,
@@ -7,7 +7,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { getUserAddresses } from "@/app/actions/customer/address";
 import { cn } from "@/lib/utils";
@@ -112,12 +111,13 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center w-full h-11 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4"
+          className="flex items-center justify-start min-w-[180px] max-w-sm h-11 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4"
         >
           <MapPin className="w-5 h-5 text-emerald-bg shrink-0" />
-          <span className="text-sm font-semibold truncate max-w-[200px]">
+          <span className="text-sm font-semibold truncate flex-1 text-left">
             {currentAddress}
           </span>
+          <ChevronDown className="w-4 h-4 text-gray-400 shrink-0 ml-1" />
         </Button>
       </PopoverTrigger>
 

@@ -13,6 +13,7 @@ import { countryCurrencyMap } from "@/app/utils/country";
 import CountrySelector from "./ui/CountrySelector";
 import image from "./../../public/ArbicLogo (2).png";
 import image2 from "./../../public/EngLogo (2).png";
+import LocalizedLink from "./navigation/LocalizedLink";
 
 interface Language {
   code: string;
@@ -95,7 +96,7 @@ const Navbar: React.FC = () => {
 
       const remainingSegments =
         pathSegments.length >= 2 &&
-        languages.some((l) => l.code === pathSegments[1].toLowerCase())
+          languages.some((l) => l.code === pathSegments[1].toLowerCase())
           ? pathSegments.slice(2)
           : pathSegments;
 
@@ -269,7 +270,7 @@ const Navbar: React.FC = () => {
     { label: t("about"), to: "/about" },
     { label: t("services"), to: "/services" },
     { label: t("contact"), to: "/contact" },
-    { label: t("newsroom"), to: "/newsroom" },
+    { label: t("newsroom"), to: "/blogs" },
     { label: t("partners"), to: "/partners" },
   ];
 
@@ -278,20 +279,20 @@ const Navbar: React.FC = () => {
       <nav className="bg-[#0B5D4E] h-20 flex items-center justify-center"></nav>
     );
   }
-    const isArabic = activeLangState.code === "ar";
+  const isArabic = activeLangState.code === "ar";
 
   return (
     <nav className="bg-[#0B5D4E] shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto  lg:px-6">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link href={getNewPath(selectedCountry.code, activeLangState.code)}>
-      <Image
-        src={isArabic ? image : image2} 
-        alt="Logo"
-        width={270}
-      />
-    </Link>
+          <LocalizedLink href="/home">
+            <Image
+              src={isArabic ? image : image2}
+              alt="Logo"
+              width={270}
+            />
+          </LocalizedLink>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
@@ -317,9 +318,8 @@ const Navbar: React.FC = () => {
                   </span>
                   <ChevronDown
                     size={16}
-                    className={`text-[#0B5D4E] transition-transform duration-200 ${
-                      isDesktopLangOpen ? "rotate-180" : ""
-                    }`}
+                    className={`text-[#0B5D4E] transition-transform duration-200 ${isDesktopLangOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
@@ -329,11 +329,10 @@ const Navbar: React.FC = () => {
                       <button
                         key={lng.code}
                         onClick={() => changeLanguage(lng.code)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
-                          activeLangState.code === lng.code
+                        className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${activeLangState.code === lng.code
                             ? "bg-[#0B5D4E] text-white font-semibold"
                             : "hover:bg-[#0B5D4E] hover:text-white "
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-xl">{lng.flag}</span>
@@ -378,17 +377,15 @@ const Navbar: React.FC = () => {
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 bg-[#2C2C2C]/50 z-40 ${
-              isClosing ? "animate-fade-out-fast" : "animate-fade-in-fast"
-            }`}
+            className={`fixed inset-0 bg-[#2C2C2C]/50 z-40 ${isClosing ? "animate-fade-out-fast" : "animate-fade-in-fast"
+              }`}
             onClick={handleCloseMobileMenu}
           ></div>
 
           {/* Sidebar */}
           <div
-            className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-linear-to-b from-[#0B5D4E] to-[#0B5D4E] text-[#E8F4F1] z-50 shadow-2xl overflow-y-auto ${
-              isClosing ? "animate-slide-out-right" : "animate-slide-in-right"
-            }`}
+            className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-linear-to-b from-[#0B5D4E] to-[#0B5D4E] text-[#E8F4F1] z-50 shadow-2xl overflow-y-auto ${isClosing ? "animate-slide-out-right" : "animate-slide-in-right"
+              }`}
           >
             <div className="flex justify-between items-center p-4 border-b border-[#E8F4F1]/20">
               <h2 className="text-lg font-semibold">Menu</h2>
@@ -430,9 +427,8 @@ const Navbar: React.FC = () => {
                     </span>
                   </div>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${
-                      isMobileLangDropdownOpen ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${isMobileLangDropdownOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
@@ -444,11 +440,10 @@ const Navbar: React.FC = () => {
                         onClick={() => changeLanguage(lng.code)}
                         className={`
           w-full flex items-center justify-between px-3 py-2 transition-colors
-          ${
-            currentLocaleState === lng.code
-              ? "bg-[#0B5D4E] text-white" // active item
-              : "hover:bg-[#0B5D4E] hover:text-white text-[#2C2C2C]" // normal item
-          }
+          ${currentLocaleState === lng.code
+                            ? "bg-[#0B5D4E] text-white" // active item
+                            : "hover:bg-[#0B5D4E] hover:text-white text-[#2C2C2C]" // normal item
+                          }
         `}
                       >
                         <div className="flex items-center space-x-2">
@@ -489,9 +484,8 @@ const Navbar: React.FC = () => {
                     </span>
                   </div>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${
-                      isCountryDropdownOpen ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${isCountryDropdownOpen ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
@@ -501,11 +495,10 @@ const Navbar: React.FC = () => {
                       <button
                         key={country.code}
                         onClick={() => handleCountrySelect(country)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-black hover:bg-[#0B5D4E] transition-colors ${
-                          selectedCountry.code === country.code
+                        className={`w-full flex items-center justify-between px-3 py-2 text-black hover:bg-[#0B5D4E] transition-colors ${selectedCountry.code === country.code
                             ? "bg-[#0B5D4E] text-white font-semibold"
                             : "hover:bg-[#0B5D4E] hover:text-white "
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center space-x-2">
                           <span className="text-lg">{country.flag}</span>

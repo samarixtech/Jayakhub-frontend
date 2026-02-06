@@ -165,21 +165,21 @@ export default function MenuItemsView() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {STATS.map((stat, idx) => (
           <Card
             key={idx}
-            className="p-4 flex items-center gap-4 border-none shadow-sm"
+            className="p-4 flex flex-col sm:flex-row items-center sm:items-center gap-3 sm:gap-4 border-none shadow-sm h-full"
           >
             <div
-              className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bgColor}`}
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 ${stat.bgColor}`}
             >
-              <stat.icon className={`w-6 h-6 ${stat.color}`} />
+              <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
             </div>
-            <div>
+            <div className="flex flex-col items-center sm:items-start justify-center min-w-0 w-full sm:w-auto">
               <Typography
                 variant="h3"
-                className="font-bold text-gray-900 text-2xl"
+                className="font-bold text-gray-900 text-xl sm:text-2xl leading-none mb-1 text-center sm:text-left"
               >
                 {/* Simple stat calculation based on loaded items for now */}
                 {stat.label === "Total Items"
@@ -192,7 +192,7 @@ export default function MenuItemsView() {
               </Typography>
               <Typography
                 variant="p"
-                className="text-gray-500 text-xs font-medium uppercase tracking-wide"
+                className="text-gray-500 text-[10px] sm:text-xs font-medium uppercase tracking-wide truncate text-center sm:text-left w-full"
               >
                 {stat.label}
               </Typography>
@@ -202,207 +202,209 @@ export default function MenuItemsView() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
-          <div className="relative min-w-[200px] mr-2">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
-              placeholder="Search items..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-white border-gray-200 h-10 shadow-sm rounded-lg"
-            />
-          </div>
+      <div className="flex flex-col sm:flex-row gap-4">
+        {/* Search Input - Full width on mobile */}
+        <div className="relative w-full sm:w-[250px] shrink-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Input
+            placeholder="Search items..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 bg-white border-gray-200 h-10 shadow-sm rounded-lg w-full"
+          />
+        </div>
 
-          <div className="flex items-center gap-2">
-            {dynamicFilters.map((filter) => (
-              <Badge
-                key={filter.label}
-                variant={
-                  selectedCategory === filter.label ? "default" : "outline"
-                }
-                onClick={() => setSelectedCategory(filter.label)}
-                className={`h-9 px-4 rounded-full cursor-pointer transition-colors ${
+        {/* Filter Badges - Wrapping on mobile */}
+        <div className="flex flex-wrap items-center gap-2">
+          {dynamicFilters.map((filter) => (
+            <Badge
+              key={filter.label}
+              variant={
+                selectedCategory === filter.label ? "default" : "outline"
+              }
+              onClick={() => setSelectedCategory(filter.label)}
+              className={`h-9 px-4 rounded-full cursor-pointer transition-colors whitespace-nowrap ${
+                selectedCategory === filter.label
+                  ? "bg-emerald-bg hover:bg-emerald-bg-hover text-white border-transparent"
+                  : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900"
+              }`}
+            >
+              {filter.label}
+              <span
+                className={`ml-2 text-xs opacity-80 ${
                   selectedCategory === filter.label
-                    ? "bg-emerald-bg hover:bg-emerald-bg-hover text-white border-transparent"
-                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900"
+                    ? "text-white"
+                    : "text-gray-400"
                 }`}
               >
-                {filter.label}
-                <span
-                  className={`ml-2 text-xs opacity-80 ${
-                    selectedCategory === filter.label
-                      ? "text-white"
-                      : "text-gray-400"
-                  }`}
-                >
-                  {filter.count}
-                </span>
-              </Badge>
-            ))}
-          </div>
+                {filter.count}
+              </span>
+            </Badge>
+          ))}
         </div>
       </div>
 
       {/* Data Table */}
       <Card className="border-none shadow-sm overflow-hidden bg-white">
-        <Table>
-          <TableHeader className="bg-gray-50/50">
-            <TableRow className="border-gray-100 hover:bg-transparent">
-              <TableHead className="font-semibold text-gray-500 text-xs uppercase w-[300px]">
-                Item
-              </TableHead>
-              <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
-                Category
-              </TableHead>
-              <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right">
-                Price
-              </TableHead>
-              <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
-                Status
-              </TableHead>
-              <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right">
-                Actions
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isPending ? (
-              // Skeleton Loader
-              [...Array(5)].map((_, i) => (
-                <TableRow key={i} className="animate-pulse">
-                  <TableCell className="py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-lg bg-gray-200" />
-                      <div className="space-y-2">
-                        <div className="h-4 w-32 bg-gray-200 rounded" />
-                        <div className="h-3 w-48 bg-gray-100 rounded" />
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <div className="h-6 w-20 bg-gray-100 rounded-md mx-auto" />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="h-5 w-12 bg-gray-100 rounded ml-auto" />
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <div className="h-5 w-10 bg-gray-200 rounded-full mx-auto" />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <div className="h-8 w-8 bg-gray-100 rounded-lg" />
-                      <div className="h-8 w-8 bg-gray-100 rounded-lg" />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : filteredItems.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={5}
-                  className="h-24 text-center text-gray-500"
-                >
-                  No items found. Click "Add New Item" to create one.
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-gray-50/50">
+              <TableRow className="border-gray-100 hover:bg-transparent">
+                <TableHead className="font-semibold text-gray-500 text-xs uppercase w-[300px]">
+                  Item
+                </TableHead>
+                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
+                  Category
+                </TableHead>
+                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right">
+                  Price
+                </TableHead>
+                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
+                  Status
+                </TableHead>
+                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right">
+                  Actions
+                </TableHead>
               </TableRow>
-            ) : (
-              filteredItems.map((item) => {
-                const rawImage = item.itemImage || item.image;
-                const imageUrl = rawImage
-                  ? rawImage.startsWith("http")
-                    ? rawImage
-                    : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${rawImage}`
-                  : null;
-                console.log("Image Debug:", {
-                  original: rawImage,
-                  constructed: imageUrl,
-                  baseUrl: process.env.NEXT_PUBLIC_IMAGE_BASE_URL,
-                });
-
-                return (
-                  <TableRow
-                    key={item.id || item._id}
-                    className="border-gray-50 hover:bg-gray-50/50 group"
-                  >
-                    {/* Item Column */}
+            </TableHeader>
+            <TableBody>
+              {isPending ? (
+                // Skeleton Loader
+                [...Array(5)].map((_, i) => (
+                  <TableRow key={i} className="animate-pulse">
                     <TableCell className="py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
-                          {imageUrl ? (
-                            <img
-                              src={imageUrl}
-                              alt={item.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <ImageIcon className="w-6 h-6 text-gray-400" />
-                          )}
-                        </div>
-                        <div>
-                          <Typography className="font-medium text-gray-900">
-                            {item.name}
-                          </Typography>
-                          <Typography className="text-gray-400 text-xs line-clamp-1">
-                            {item.description}
-                          </Typography>
+                        <div className="w-12 h-12 rounded-lg bg-gray-200" />
+                        <div className="space-y-2">
+                          <div className="h-4 w-32 bg-gray-200 rounded" />
+                          <div className="h-3 w-48 bg-gray-100 rounded" />
                         </div>
                       </div>
                     </TableCell>
-
-                    {/* Category Column */}
                     <TableCell className="text-center">
-                      <Badge
-                        variant="outline"
-                        className="font-semibold rounded-md border text-[10px] px-2 py-0.5 shadow-none uppercase bg-white border-gray-200 text-gray-700"
-                      >
-                        {item.category}
-                      </Badge>
+                      <div className="h-6 w-20 bg-gray-100 rounded-md mx-auto" />
                     </TableCell>
-
-                    {/* Price Column */}
-                    <TableCell className="text-right font-medium text-gray-700 font-mono">
-                      ${item.basePrice}
-                    </TableCell>
-
-                    {/* Status Column */}
-                    <TableCell className="text-center">
-                      <Switch
-                        checked={item.isAvailable}
-                        className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-200"
-                      />
-                    </TableCell>
-
-                    {/* Actions Column */}
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <LocalizedLink
-                          href={`/restaurant/menu/items/${item.id || item._id}`}
-                        >
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                        </LocalizedLink>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setDeleteId(item.id || item._id)}
-                          className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                      <div className="h-5 w-12 bg-gray-100 rounded ml-auto" />
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="h-5 w-10 bg-gray-200 rounded-full mx-auto" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <div className="h-8 w-8 bg-gray-100 rounded-lg" />
+                        <div className="h-8 w-8 bg-gray-100 rounded-lg" />
                       </div>
                     </TableCell>
                   </TableRow>
-                );
-              })
-            )}
-          </TableBody>
-        </Table>
+                ))
+              ) : filteredItems.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="h-24 text-center text-gray-500"
+                  >
+                    No items found. Click "Add New Item" to create one.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredItems.map((item) => {
+                  const rawImage = item.itemImage || item.image;
+                  const imageUrl = rawImage
+                    ? rawImage.startsWith("http")
+                      ? rawImage
+                      : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${rawImage}`
+                    : null;
+                  console.log("Image Debug:", {
+                    original: rawImage,
+                    constructed: imageUrl,
+                    baseUrl: process.env.NEXT_PUBLIC_IMAGE_BASE_URL,
+                  });
+
+                  return (
+                    <TableRow
+                      key={item.id || item._id}
+                      className="border-gray-50 hover:bg-gray-50/50 group"
+                    >
+                      {/* Item Column */}
+                      <TableCell className="py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
+                            {imageUrl ? (
+                              <img
+                                src={imageUrl}
+                                alt={item.name}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <ImageIcon className="w-6 h-6 text-gray-400" />
+                            )}
+                          </div>
+                          <div>
+                            <Typography className="font-medium text-gray-900">
+                              {item.name}
+                            </Typography>
+                            <Typography className="text-gray-400 text-xs line-clamp-1">
+                              {item.description}
+                            </Typography>
+                          </div>
+                        </div>
+                      </TableCell>
+
+                      {/* Category Column */}
+                      <TableCell className="text-center">
+                        <Badge
+                          variant="outline"
+                          className="font-semibold rounded-md border text-[10px] px-2 py-0.5 shadow-none uppercase bg-white border-gray-200 text-gray-700"
+                        >
+                          {item.category}
+                        </Badge>
+                      </TableCell>
+
+                      {/* Price Column */}
+                      <TableCell className="text-right font-medium text-gray-700 font-mono">
+                        ${item.basePrice}
+                      </TableCell>
+
+                      {/* Status Column */}
+                      <TableCell className="text-center">
+                        <Switch
+                          checked={item.isAvailable}
+                          className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-200"
+                        />
+                      </TableCell>
+
+                      {/* Actions Column */}
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <LocalizedLink
+                            href={`/restaurant/menu/items/${item.id || item._id}`}
+                          >
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </Button>
+                          </LocalizedLink>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeleteId(item.id || item._id)}
+                            className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </Card>
 
       {/* Delete Confirmation Modal */}

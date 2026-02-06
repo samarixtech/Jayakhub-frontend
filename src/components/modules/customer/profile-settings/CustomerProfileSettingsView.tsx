@@ -76,27 +76,39 @@ export default function CustomerProfileSettingsView() {
     });
   };
 
-  // LOADER IF NO PROFILE
   if (!profile)
     return (
-      <div className="p-20 text-center">
-        <Loader2 className="animate-spin mx-auto" />
+      <div className="flex min-h-screen w-full items-center justify-center">
+        <Loader2 className="animate-spin text-gray-500" size={32} />
       </div>
     );
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-5">
-      <div className="max-w-full mx-auto">
-        <ProfileHeader
-          isPending={isPending}
-          onSave={handleSave}
-          onCancel={handleCancel}
-          showCancel={hasChanges}
-          saveDisabled={!hasChanges}
-        />
+    /**
+     * FIX: 
+     * 1. Remove 'flex-1' and 'flex-row' from the outermost wrapper.
+     * 2. Ensure 'w-full' and 'mx-auto' are used on the content container.
+     * 3. 'px-4 md:px-6 lg:px-8' ensures symmetrical padding that grows with screen size.
+     */
+    <div className="min-h-screen w-full bg-[#F9FAFB]">
+      <div className="max-w-[1400px] mx-auto px-4 py-6 md:px-6 lg:px-8 md:py-10">
+        
+        {/* Header Section */}
+        <div className="mb-6 md:mb-8">
+          <ProfileHeader
+            isPending={isPending}
+            onSave={handleSave}
+            onCancel={handleCancel}
+            showCancel={hasChanges}
+            saveDisabled={!hasChanges}
+          />
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <aside className="lg:col-span-4 space-y-6">
+        {/* Responsive Grid System */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+          
+          {/* Sidebar Area */}
+          <aside className="lg:col-span-4 w-full">
             <ProfileSidebar
               profile={profile}
               onAvatarChange={(file: SetStateAction<File | null>) =>
@@ -105,12 +117,14 @@ export default function CustomerProfileSettingsView() {
             />
           </aside>
 
-          <main className="lg:col-span-8 space-y-6">
+          {/* Main Content Area */}
+          <main className="lg:col-span-8 space-y-6 w-full">
             <PersonalInfoCard profile={profile} setProfile={setProfile} />
             <PaymentMethodsCard />
             <IdentityVerificationCard />
             <SecuritySettingsCard />
           </main>
+
         </div>
       </div>
     </div>
