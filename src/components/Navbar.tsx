@@ -11,6 +11,7 @@ import { useRouter, usePathname, useParams } from "next/navigation";
 import { setCookie, getCookie } from "cookies-next";
 import { countryCurrencyMap } from "@/app/utils/country";
 import CountrySelector from "./ui/CountrySelector";
+import ReactCountryFlag from "react-country-flag";
 import image from "./../../public/ArbicLogo (2).png";
 import image2 from "./../../public/EngLogo (2).png";
 import LocalizedLink from "./navigation/LocalizedLink";
@@ -19,6 +20,7 @@ interface Language {
   code: string;
   name: string;
   flag: string;
+  countryCode: string;
   dir: "ltr" | "rtl";
 }
 
@@ -30,8 +32,8 @@ interface Country {
 }
 
 const languages: Language[] = [
-  { code: "en", name: "English", flag: "🇺🇸", dir: "ltr" },
-  { code: "ar", name: "العربية", flag: "🇮🇶", dir: "rtl" },
+  { code: "en", name: "English", flag: "🇺🇸", countryCode: "US", dir: "ltr" },
+  { code: "ar", name: "العربية", flag: "🇮🇶", countryCode: "IQ", dir: "rtl" },
 ];
 
 const getDefaultCountryData = (code: string): Country => {
@@ -310,11 +312,24 @@ const Navbar: React.FC = () => {
               <div ref={desktopLangRef} className="relative">
                 <button
                   onClick={() => setIsDesktopLangOpen(!isDesktopLangOpen)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-md border border-[#D5AF33] bg-[#FFF9EE]  text-[#2C2C2C]  hover:bg-[#0B5D4E] hover:text-white  transition-all shadow-sm"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#FFF9EE]  text-[#2C2C2C]  hover:bg-[#0B5D4E] hover:text-white  transition-all shadow-sm"
                 >
-                  <Globe size={18} className="text-[#0B5D4E]" />
-                  <span className="flex items-center gap-1 font-semibold">
-                    {activeLangState.code.toUpperCase()}
+                  <span className="flex items-center justify-center shrink-0 w-[30px] h-[30px]">
+                    <ReactCountryFlag
+                      countryCode={activeLangState.countryCode.toUpperCase()}
+                      svg
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        objectFit: "cover",
+                        display: "block",
+                        borderRadius: "50%",
+                      }}
+                      title={activeLangState.name}
+                    />
+                  </span>
+                  <span className="font-semibold">
+                    {activeLangState.name}
                   </span>
                   <ChevronDown
                     size={16}
@@ -330,18 +345,29 @@ const Navbar: React.FC = () => {
                         key={lng.code}
                         onClick={() => changeLanguage(lng.code)}
                         className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${activeLangState.code === lng.code
-                            ? "bg-[#0B5D4E] text-white font-semibold"
-                            : "hover:bg-[#0B5D4E] hover:text-white "
+                          ? "bg-[#0B5D4E] text-white font-semibold"
+                          : "hover:bg-[#0B5D4E] hover:text-white "
                           }`}
                       >
                         <div className="flex items-center gap-2">
-                          <span className="text-xl">{lng.flag}</span>
+                          <ReactCountryFlag
+                            countryCode={lng.countryCode.toUpperCase()}
+                            svg
+                            style={{
+                              width: "30px",
+                              height: "30px",
+                              objectFit: "cover",
+                              display: "block",
+                              borderRadius: "50%",
+                            }}
+                            title={lng.name}
+                          />
                           <span className="text-sm font-medium">
                             {lng.name}
                           </span>
                         </div>
                         {activeLangState.code === lng.code && (
-                          <Check size={16} className="text-[#0B5D4E]" />
+                          <Check size={16} className="text-[#D5AF33]" />
                         )}
                       </button>
                     ))}
@@ -420,8 +446,20 @@ const Navbar: React.FC = () => {
                   className="w-full flex items-center justify-between px-3 py-3 rounded-lg bg-[#E8F4F1]/10 hover:bg-[#E8F4F1]/20 border border-[#E8F4F1]/20 transition-all duration-200"
                 >
                   <div className="flex items-center space-x-2">
-                    <Globe className="w-4 h-4 text-[#E8F4F1]" />
-                    <span className="text-lg">{activeLangState.flag}</span>
+                    <div className="flex items-center justify-center shrink-0 w-[2em] h-[1.5em] overflow-hidden">
+                      <ReactCountryFlag
+                        countryCode={activeLangState.countryCode.toUpperCase()}
+                        svg
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "fill",
+                          display: "block",
+                        }}
+                        aria-label={activeLangState.name}
+                        title={activeLangState.name}
+                      />
+                    </div>
                     <span className="text-sm font-medium text-[#E8F4F1]">
                       {activeLangState.name}
                     </span>
@@ -447,7 +485,18 @@ const Navbar: React.FC = () => {
         `}
                       >
                         <div className="flex items-center space-x-2">
-                          <span className="text-lg">{lng.flag}</span>
+                          <span className="text-lg">
+                            <ReactCountryFlag
+                              countryCode={lng.countryCode.toUpperCase()}
+                              svg
+                              style={{
+                                width: "24px",
+                                height: "18px",
+                                display: "block",
+                              }}
+                              title={lng.name}
+                            />
+                          </span>
                           <span
                             className={`
             text-sm font-medium
@@ -476,9 +525,24 @@ const Navbar: React.FC = () => {
                   className="w-full flex items-center justify-between px-3 py-3 rounded-lg bg-[#E8F4F1]/10 hover:bg-[#E8F4F1]/20 border border-[#E8F4F1]/20 transition-all duration-200"
                 >
                   <div className="flex items-center space-x-2">
-                    <span className="text-lg">
-                      {selectedCountry.flag || "🌐"}
-                    </span>
+                    <div className="flex items-center justify-center shrink-0 w-[2em] h-[1.5em] overflow-hidden">
+                      {selectedCountry ? (
+                        <ReactCountryFlag
+                          countryCode={selectedCountry.code.toUpperCase()}
+                          svg
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "fill",
+                            display: "block",
+                          }}
+                          aria-label={selectedCountry.name}
+                          title={selectedCountry.name}
+                        />
+                      ) : (
+                        "🌐"
+                      )}
+                    </div>
                     <span className="text-sm font-medium text-[#E8F4F1]">
                       {selectedCountry.name}
                     </span>
@@ -496,16 +560,28 @@ const Navbar: React.FC = () => {
                         key={country.code}
                         onClick={() => handleCountrySelect(country)}
                         className={`w-full flex items-center justify-between px-3 py-2 text-black hover:bg-[#0B5D4E] transition-colors ${selectedCountry.code === country.code
-                            ? "bg-[#0B5D4E] text-white font-semibold"
-                            : "hover:bg-[#0B5D4E] hover:text-white "
+                          ? "bg-[#0B5D4E] text-white font-semibold"
+                          : "hover:bg-[#0B5D4E] hover:text-white "
                           }`}
                       >
                         <div className="flex items-center space-x-2">
-                          <span className="text-lg">{country.flag}</span>
+                          <span className="flex items-center justify-center shrink-0 w-[2em] h-[1.5em] overflow-hidden">
+                            <ReactCountryFlag
+                              countryCode={country.code.toUpperCase()}
+                              svg
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "fill",
+                                display: "block",
+                              }}
+                              title={country.name}
+                            />
+                          </span>
                           <span className="text-sm">{country.name} </span>
                         </div>
                         {selectedCountry.code === country.code && (
-                          <Check size={16} className="text-[#0B5D4E]" />
+                          <Check size={16} className="text-[#D5AF33]" />
                         )}
                       </button>
                     ))}

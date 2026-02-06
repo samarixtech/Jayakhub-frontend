@@ -25,7 +25,6 @@ export default function About() {
   return (
     <div className="bg-white">
       {/* ===== HERO SECTION ===== */}
-      {/* ===== HERO SECTION ===== */}
       <section ref={heroRef} className="bg-primary pt-20 pb-34 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 overflow-hidden">
