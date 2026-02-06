@@ -90,10 +90,28 @@ const NAV_SECTIONS = [
   },
 ];
 
+import { logoutAction } from "@/app/actions/auth/auth";
+import { deleteCookie } from "cookies-next";
+import useLocale from "@/hooks/useLocals";
+
+// ... imports ...
+
 export function RestaurantSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  const { country, language } = useLocale();
+
+  const handleLogout = async () => {
+    try {
+      await logoutAction();
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+    deleteCookie("token");
+    deleteCookie("role");
+    window.location.href = `/${country}/${language}/login`;
+  };
 
   return (
     <Sidebar
@@ -219,7 +237,10 @@ export function RestaurantSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton className="hover:bg-red-500/20 text-red-300 hover:text-red-200 h-11">
+            <SidebarMenuButton
+              onClick={handleLogout}
+              className="hover:bg-red-500/20 text-red-300 hover:text-red-200 h-11 cursor-pointer"
+            >
               <LogOut className="w-5 h-5" />
               <span>Logout</span>
             </SidebarMenuButton>

@@ -9,7 +9,7 @@ import {
   LoginInput,
   RegisterInput,
   ForgotPasswordInput,
-  ResetPasswordInput
+  ResetPasswordInput,
 } from "@/lib/schemas/auth";
 import { validateSchema } from "@/lib/validator";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
@@ -18,19 +18,28 @@ import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 export async function loginAction(data: LoginInput): Promise<ActionResponse> {
   const validation = validateSchema(loginSchema, data);
   if (!validation.success) {
-    return { success: false, message: "Validation failed", errors: validation.errors };
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
   }
 
   return responseHandler(
-    async () => api.post("/login", { identifier: data.email, password: data.password }),
-    "Login successful"
+    async () =>
+      api.post("/login", { identifier: data.email, password: data.password }),
+    "Login successful",
   );
 }
 
 // ==================== VERIFY OTP ACTION ====================
-export async function verifyOtpAction(payload: { email: string; otp: string }): Promise<ActionResponse> {
+export async function verifyOtpAction(payload: {
+  email: string;
+  otp: string;
+}): Promise<ActionResponse> {
   return responseHandler(
-    async () => api.post("/verify-otp", { identifier: payload.email, otp: payload.otp }),
+    async () =>
+      api.post("/verify-otp", { identifier: payload.email, otp: payload.otp }),
     "Verification successful",
     async (data: any) => {
       // Side effect: Set Cookies
@@ -49,7 +58,7 @@ export async function verifyOtpAction(payload: { email: string; otp: string }): 
         }
       }
       return data;
-    }
+    },
   );
 }
 
@@ -57,73 +66,99 @@ export async function verifyOtpAction(payload: { email: string; otp: string }): 
 export async function resendOtpAction(email: string): Promise<ActionResponse> {
   return responseHandler(
     async () => api.post("/resend-otp", { identifier: email }),
-    "OTP resent successfully"
+    "OTP resent successfully",
   );
 }
 
 // ==================== REGISTER ACTION ====================
-export async function registerAction(data: RegisterInput): Promise<ActionResponse> {
+export async function registerAction(
+  data: RegisterInput,
+): Promise<ActionResponse> {
   const validation = validateSchema(registerSchema, data);
   if (!validation.success) {
-    return { success: false, message: "Validation failed", errors: validation.errors };
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
   }
 
   return responseHandler(
-    async () => api.post("/register", {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      phone: data.phone,
-      role: "customer",
-    }),
-    "Registration successful"
+    async () =>
+      api.post("/register", {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        role: "customer",
+      }),
+    "Registration successful",
   );
 }
 
 // ==================== FORGOT PASSWORD ACTION ====================
-export async function forgotPasswordAction(data: ForgotPasswordInput): Promise<ActionResponse> {
+export async function forgotPasswordAction(
+  data: ForgotPasswordInput,
+): Promise<ActionResponse> {
   const validation = validateSchema(forgotPasswordSchema, data);
   if (!validation.success) {
-    return { success: false, message: "Validation failed", errors: validation.errors };
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
   }
 
   return responseHandler(
     async () => api.post("/forgot-password", { identifier: data.email }),
     "Reset code sent!",
-    () => ({ email: data.email }) // Pass back email for next step
+    () => ({ email: data.email }), // Pass back email for next step
   );
 }
 
 // ==================== RESET PASSWORD ACTION ====================
-export async function resetPasswordAction(data: ResetPasswordInput): Promise<ActionResponse> {
+export async function resetPasswordAction(
+  data: ResetPasswordInput,
+): Promise<ActionResponse> {
   const validation = validateSchema(resetPasswordSchema, data);
   if (!validation.success) {
-    return { success: false, message: "Validation failed", errors: validation.errors };
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
   }
 
   return responseHandler(
     async () => api.post("/set-new-password", { password: data.password }),
-    "Password updated successfully!"
+    "Password updated successfully!",
   );
 }
 
 // ==================== RESTAURANT REGISTER ACTION ====================
-export async function registerRestaurantAction(data: RegisterInput & { role?: string }): Promise<ActionResponse> {
+export async function registerRestaurantAction(
+  data: RegisterInput & { role?: string },
+): Promise<ActionResponse> {
   // Reuse register schema for basic fields, or define a new one if needed
   const validation = validateSchema(registerSchema, data);
   if (!validation.success) {
-    return { success: false, message: "Validation failed", errors: validation.errors };
+    return {
+      success: false,
+      message: "Validation failed",
+      errors: validation.errors,
+    };
   }
 
   return responseHandler(
-    async () => api.post("/register", {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      phone: data.phone,
-      role: "restaurant_owner",
-    }),
-    "Restaurant registration successful"
+    async () =>
+      api.post("/register", {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        phone: data.phone,
+        role: "restaurant_owner",
+      }),
+    "Restaurant registration successful",
   );
 }
 
@@ -136,32 +171,49 @@ export async function googleAuthAction(payload: {
   role?: string; // This is already here, let's make sure it's used
 }): Promise<ActionResponse> {
   return responseHandler(
-    async () => api.post("/google-auth", {
-      email: payload.email,
-      name: payload.name,
-      picture: payload.picture,
-      token: payload.token,
-      role: payload.role, // Explicitly ensure this is sent to your backend
-    }),
+    async () =>
+      api.post("/google-auth", {
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture,
+        token: payload.token,
+        role: payload.role, // Explicitly ensure this is sent to your backend
+      }),
     "Auth Successful",
     async (data: any) => {
-        const { accessToken, user } = data;
-        // The backend should return the actual assigned role
-        const assignedRole = user?.role || payload.role; 
+      const { accessToken, user } = data;
+      // The backend should return the actual assigned role
+      const assignedRole = user?.role || payload.role;
 
-        if (accessToken && assignedRole) {
-            const cookieStore = await cookies();
-            cookieStore.set("token", accessToken, {
-              httpOnly: true,
-              secure: process.env.NODE_ENV === "production",
-              sameSite: "lax",
-              path: "/",
-            });
-            cookieStore.set("role", assignedRole, { path: "/" });
-            
-            return { role: assignedRole };
-        }
-        return data; 
-    }
+      if (accessToken && assignedRole) {
+        const cookieStore = await cookies();
+        cookieStore.set("token", accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+        });
+        cookieStore.set("role", assignedRole, { path: "/" });
+
+        return { role: assignedRole };
+      }
+      return data;
+    },
+  );
+}
+
+// ==================== LOGOUT ACTION ====================
+export async function logoutAction(): Promise<ActionResponse> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  return responseHandler(
+    async () => api.post("/logout", { refreshToken: token }),
+    "Logged out successfully",
+    async (data) => {
+      cookieStore.delete("token");
+      cookieStore.delete("role");
+      return data;
+    },
   );
 }

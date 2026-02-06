@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getProfile } from "@/app/actions/customer/userprofile";
+import { logoutAction } from "@/app/actions/auth/auth";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { FiShoppingBag, FiSearch } from "react-icons/fi";
@@ -27,7 +29,24 @@ const RestaurantHeader = () => {
 
   const [currentAddress, setCurrentAddress] = useState("New York, NY");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      // Check if token exists (optional optimization to avoid call if definitely logged out)
+      // For now, we just try to fetch. getProfile handles auth internally via API client.
+      const response = await getProfile();
+      if (response.success && response.data) {
+        setIsLoggedIn(true);
+        setUser(response.data);
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const totalItems = useSelector((state: RootState) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0),
@@ -76,22 +95,21 @@ const RestaurantHeader = () => {
           </div>
 
           {/* Cart Button with Shadcn styling */}
-          <Button
-            onClick={() => setIsDrawerOpen(true)}
-            variant="secondary"
-            size="icon"
-            className="relative h-10 w-10 rounded-full bg-white text-emerald-900 hover:bg-gray-100 shadow-sm"
-          >
-            <FiShoppingBag className="w-5 h-5" />
+          <div className="relative">
+            <Button
+              onClick={() => setIsDrawerOpen(true)}
+              variant="secondary"
+              size="icon"
+              className="h-10 w-10 rounded-full bg-white text-emerald-900 hover:bg-gray-100 shadow-sm overflow-visible"
+            >
+              <FiShoppingBag className="w-5 h-5" />
+            </Button>
             {totalItems > 0 && (
-              <Badge
-                variant="destructive"
-                className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full border-2 border-emerald-bg"
-              >
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full bg-red-500 text-white pointer-events-none">
                 {totalItems > 9 ? "9+" : totalItems}
               </Badge>
             )}
-          </Button>
+          </div>
 
           {!isLoggedIn ? (
             <Button
@@ -105,17 +123,23 @@ const RestaurantHeader = () => {
             <div className="flex items-center pl-3 ml-1 gap-3">
               <div className="text-right hidden sm:block">
                 <p className="text-white font-bold text-sm leading-none">
-                  John Doe
+                  {user?.name || "User"}
                 </p>
                 <p className="text-white/70 text-[10px] uppercase tracking-widest font-medium mt-1">
-                  Administrator
+                  {user?.role?.name || "Customer"}
                 </p>
               </div>
               <UserProfile
-                user={{ email: "user@example.com" }}
+                user={user}
                 country={country}
                 language={language}
-              />
+                onLogout={async () => {
+                  await logoutAction();
+                  setIsLoggedIn(false);
+                  setUser(null);
+                  window.location.href = `/${country}/${language}/login`;
+                }}
+              />{" "}
             </div>
           )}
         </div>

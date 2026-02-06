@@ -1,7 +1,7 @@
-import CustomerBillingView from "@/components/modules/customer/billing/CustomerBillingView";
+import CustomerPaymentHistoryView from "@/components/modules/customer/payment-history/CustomerPaymentHistoryView";
 
 const page = () => {
-  return <CustomerBillingView />;
+  return <CustomerPaymentHistoryView />;
 };
 
 export default page;

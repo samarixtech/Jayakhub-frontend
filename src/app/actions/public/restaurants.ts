@@ -11,3 +11,17 @@ export async function getAllRestaurantsAction(): Promise<ActionResponse> {
     },
   );
 }
+
+export async function getRestaurantBySlugAction(
+  slug: string,
+): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.get(`/detail-with-menu/${slug}`),
+    "Restaurant fetched successfully",
+    async (data) => {
+      console.log(data);
+
+      return data;
+    },
+  );
+}

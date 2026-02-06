@@ -6,7 +6,7 @@ import { Bike, MapPin } from "lucide-react";
 import { RootState } from "@/redux/store/store";
 import CheckoutAddress from "@/components/checkout/CheckoutAddress";
 import CheckoutPayment from "@/components/checkout/CheckoutPayment";
-import OrderSummary from "@/components/checkout/OrderSummary";
+import OrderSummary from "@/components/modules/checkout/OrderSummary";
 
 import { useRouter } from "next/navigation";
 import Header from "../../components/restaurants/Header";

@@ -1,9 +1,13 @@
+"use client";
+
 import React from "react";
 import { Heart, Star, Clock, Bike } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useRouter, useParams } from "next/navigation";
 
 export interface RestaurantProps {
   id: string;
+  slug: string;
   name: string;
   image: string;
   rating: number;
@@ -16,8 +20,22 @@ export interface RestaurantProps {
 }
 
 const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
+  const router = useRouter();
+  const params = useParams();
+  const country = params?.country;
+  const language = params?.language;
+
+  const handleClick = () => {
+    if (country && language && data.slug) {
+      router.push(`/${country}/${language}/restaurants/${data.slug}`);
+    }
+  };
+
   return (
-    <div className="group min-w-[320px] w-[320px] cursor-pointer">
+    <div
+      onClick={handleClick}
+      className="group min-w-[320px] w-[320px] cursor-pointer"
+    >
       {/* Image Container */}
       <div className="relative h-48 w-full rounded-2xl overflow-hidden shadow-sm">
         <img
@@ -34,7 +52,10 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
         )}
 
         {/* Favorite Button */}
-        <button className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur-md rounded-full hover:bg-white transition-colors">
+        <button
+          onClick={(e) => e.stopPropagation()}
+          className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur-md rounded-full hover:bg-white transition-colors"
+        >
           <Heart
             className={`h-4 w-4 ${data.isFavorite ? "fill-red-500 text-red-500" : "text-gray-700"}`}
           />

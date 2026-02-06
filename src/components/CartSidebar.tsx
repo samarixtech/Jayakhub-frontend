@@ -13,7 +13,7 @@ import {
   ShoppingBasket,
 } from "lucide-react";
 import { CartItem } from "@/types/menu";
-import { useCLC } from "@/app/context/CLCContext.tsx";
+import { useCLC } from "@/app/context/CLCContext";
 
 interface CartSidebarProps {
   onCheckout: () => void;
@@ -34,7 +34,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout }) => {
   // --- Calculations ---
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
   const deliveryFee = isDelivery ? 129 : 0;
   const tax = subtotal * 0.05;
@@ -166,12 +166,6 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout }) => {
                   <Plus size={12} />
                 </button>
               </div>
-              <button
-                onClick={() => handleUpdateQuantity(item.id, 0)}
-                className="mt-1 text-red-500 hover:text-red-700 p-0.5 transition"
-              >
-                <Trash2 size={14} />
-              </button>
             </div>
           </div>
         ))}

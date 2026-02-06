@@ -1,14 +1,16 @@
-import React from 'react';
-import { SimilarRestaurant } from '@/types/menu';
-import { Star, Clock } from 'lucide-react';
-import { useCLC } from '@/app/context/CLCContext.tsx';
+import React from "react";
+import { SimilarRestaurant } from "@/types/menu";
+import { Star, Clock } from "lucide-react";
+import { useCLC } from "@/app/context/CLCContext";
 
 interface SimilarRestaurantCardProps {
   restaurant: SimilarRestaurant;
 }
 
-const SimilarRestaurantCard: React.FC<SimilarRestaurantCardProps> = ({ restaurant }) => {
-  const { currency } = useCLC(); 
+const SimilarRestaurantCard: React.FC<SimilarRestaurantCardProps> = ({
+  restaurant,
+}) => {
+  const { currency } = useCLC();
 
   return (
     <a
@@ -31,13 +33,17 @@ const SimilarRestaurantCard: React.FC<SimilarRestaurantCardProps> = ({ restauran
 
       {/* Details */}
       <div className="p-3">
-        <h3 className="text-lg font-bold text-gray-900 truncate">{restaurant.name}</h3>
+        <h3 className="text-lg font-bold text-gray-900 truncate">
+          {restaurant.name}
+        </h3>
 
         {/* Stats Row */}
         <div className="flex items-center space-x-3 mt-1 text-sm text-gray-600">
           <div className="flex items-center">
             <Star size={14} className="text-yellow-500 fill-yellow-500 mr-1" />
-            <span className="font-semibold">{restaurant.rating.toFixed(1)}</span>
+            <span className="font-semibold">
+              {restaurant.rating.toFixed(1)}
+            </span>
             <span className="text-xs ml-1">({restaurant.ratingCount}+)</span>
           </div>
 
@@ -50,7 +56,9 @@ const SimilarRestaurantCard: React.FC<SimilarRestaurantCardProps> = ({ restauran
         </div>
 
         {/* Cuisine and Fee */}
-        <p className="text-xs text-gray-500 mt-1 truncate">{restaurant.cuisine.join(' • ')}</p>
+        <p className="text-xs text-gray-500 mt-1 truncate">
+          {restaurant.cuisine.join(" • ")}
+        </p>
         <p className="text-sm font-semibold text-gray-800 mt-1">
           {currency} {restaurant.deliveryFee.toLocaleString()} Delivery Fee
         </p>

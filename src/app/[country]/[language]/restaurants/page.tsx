@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import RestaurantHeader from "@/components/restaurants/Header";
 import { useParams } from "next/navigation";
 import { getCookie } from "cookies-next";
-import { CLCProvider, useCLC } from "@/app/context/CLCContext.tsx";
+import { CLCProvider, useCLC } from "@/app/context/CLCContext";
 
 // Discovery Components
 import HeroBanner from "@/components/modules/discovery/HeroBanner";
@@ -68,6 +68,7 @@ const IndexPageContent: React.FC = () => {
 
         const mapped = list.map((item: any) => ({
           id: item.id || "",
+          slug: item.slug || item.id || "",
           name: item.name || "Unknown",
           image:
             item.bannerImage || item.profileImage || "/images/food/burger.jpg",

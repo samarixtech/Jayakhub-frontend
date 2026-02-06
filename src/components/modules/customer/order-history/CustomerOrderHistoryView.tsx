@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileDown, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -51,10 +51,59 @@ const PAST_ORDERS = [
 ];
 
 export default function CustomerOrderHistory() {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeFilters, setActiveFilters] = useState<string[]>([
     "All Statuses",
     "Last 30 Days",
   ]);
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const { getAllOrders } = await import("@/app/actions/customer/order");
+        const res = await getAllOrders();
+        if (res.success && Array.isArray(res.data)) {
+          setOrders(res.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch orders", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchOrders();
+  }, []);
+
+  // Filter Logic (Mock implementation for now as API returns all)
+  const filteredOrders = orders.filter((order) => {
+    if (activeFilters.includes("All Statuses")) return true;
+    // Add real filtering logic here if needed
+    return true;
+  });
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentOrders = filteredOrders.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  if (loading) {
+    return <div className="p-10 text-center">Loading orders...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] p-5">
@@ -189,135 +238,153 @@ export default function CustomerOrderHistory() {
 
           {/* Main Content */}
           <main className="lg:col-span-9 space-y-4">
-            {PAST_ORDERS.map((order) => (
-              <Card
-                key={order.id}
-                className={`border-none rounded-2xl transition-all hover:shadow-md overflow-hidden p-0 ${
-                  order.status === "Cancelled" ? "bg-red-100/50" : "bg-white"
-                }`}
-              >
-                <CardContent className="p-4 flex items-center">
-                  <div className="relative w-14 h-14 shrink-0 mr-5">
-                    <Image
-                      src={order.image}
-                      alt={order.restaurant}
-                      fill
-                      className="rounded-xl object-cover"
-                      sizes="56px"
-                    />
-                  </div>
+            {currentOrders.map((order) => {
+              // Image Handling
+              const firstItemImage =
+                order.items && order.items.length > 0
+                  ? order.items[0].image
+                  : null;
+              const imageUrl = firstItemImage
+                ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${firstItemImage.replace(/\\/g, "/")}`
+                : null;
 
-                  <div className="flex-1 grid grid-cols-1 md:grid-cols-12 items-center gap-2">
-                    {/* Restaurant Info */}
-                    <div className="md:col-span-4">
-                      <Typography
-                        variant="h3"
-                        className="font-bold text-gray-900 text-sm "
-                      >
-                        {order.restaurant}
-                      </Typography>
-
-                      <Typography
-                        variant="p"
-                        className="text-[11px] text-gray-400 mt-0.5 font-medium"
-                      >
-                        {order.id} • {order.date}
-                      </Typography>
-                    </div>
-
-                    {/* Order Items */}
-                    <div className="md:col-span-3 text-xs text-gray-500 line-clamp-1 font-medium pr-2">
-                      {order.items}
-                    </div>
-
-                    {/* Actions & Status */}
-                    <div className="md:col-span-5 flex items-center justify-end gap-5">
-                      <Badge
-                        className={`rounded-full px-3 py-0.5 flex items-center gap-1.5 border-none font-bold text-[9px] tracking-wide uppercase ${
-                          order.status === "Delivered"
-                            ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                            : "bg-red-100 text-red-600 hover:bg-red-100"
-                        }`}
-                      >
-                        <span className="text-[10px]">
-                          {order.status === "Delivered" ? "✓" : "✕"}
-                        </span>
-                        {order.status}
-                      </Badge>
-
-                      <span className="font-black text-gray-900 text-sm min-w-[60px] text-right">
-                        ${order.total}
-                      </span>
-
-                      {order.status === "Delivered" ? (
-                        <Button className="rounded-full bg-emerald-bg hover:bg-emerald-bg-hover text-white h-9 px-4 text-[11px] font-bold gap-2 border-none transition-colors">
-                          <RefreshCw size={14} /> Reorder
-                        </Button>
+              return (
+                <Card
+                  key={order.orderId}
+                  className={`border-none rounded-2xl transition-all hover:shadow-md overflow-hidden p-0 ${
+                    order.status === "cancelled" ? "bg-red-100/50" : "bg-white"
+                  }`}
+                >
+                  <CardContent className="p-4 flex items-center">
+                    <div className="relative w-14 h-14 shrink-0 mr-5 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt="Order Item"
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
-                        <Button
-                          variant="outline"
-                          className="rounded-full border-gray-200 text-gray-700 bg-white hover:bg-gray-50 h-9 px-6 text-[11px] font-bold transition-all"
-                        >
-                          Help
-                        </Button>
+                        <span className="font-bold text-gray-400 text-xs">
+                          IMG
+                        </span>
                       )}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
 
-            {/* Pagination */}
-            <div className="flex flex-col md:flex-row items-center justify-between pt-8">
-              <Typography
-                variant="p"
-                className="text-sm font-medium text-gray-400 mb-4 md:mb-0"
-              >
-                Showing 1-3 of 24 orders
-              </Typography>
+                    <div className="flex-1 grid grid-cols-1 md:grid-cols-12 items-center gap-2">
+                      {/* Order Info */}
+                      <div className="md:col-span-4">
+                        <Typography
+                          variant="h3"
+                          className="font-bold text-gray-900 text-sm "
+                        >
+                          Order #{order.orderId.substring(0, 8)}...
+                        </Typography>
 
-              <Pagination className="mx-0 w-auto">
-                <PaginationContent className="gap-2">
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      className="text-gray-400 hover:bg-transparent hover:text-gray-600 border-none p-2"
-                    />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      href="#"
-                      isActive
-                      className="w-9 h-9 rounded-full bg-emerald-bg text-white font-bold hover:bg-[#1B4332] hover:text-white border-none"
-                    >
-                      1
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      href="#"
-                      className="w-9 h-9 rounded-full text-gray-600 font-bold hover:bg-gray-100 border-none"
-                    >
-                      2
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      href="#"
-                      className="w-9 h-9 rounded-full text-gray-600 font-bold hover:bg-gray-100 border-none"
-                    >
-                      3
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      className="text-gray-400 hover:bg-transparent hover:text-gray-600 border-none p-2"
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
+                        <Typography
+                          variant="p"
+                          className="text-[11px] text-gray-400 mt-0.5 font-medium"
+                        >
+                          {order.orderDate} • {order.orderTime}
+                        </Typography>
+                      </div>
+
+                      {/* Order Items Summary */}
+                      <div className="md:col-span-3 text-xs text-gray-500 line-clamp-1 font-medium pr-2">
+                        {order.items
+                          .map((i: any) => `${i.quantity}x ${i.name}`)
+                          .join(", ")}
+                      </div>
+
+                      {/* Actions & Status */}
+                      <div className="md:col-span-5 flex items-center justify-end gap-5">
+                        <Badge
+                          className={`rounded-full px-3 py-0.5 flex items-center gap-1.5 border-none font-bold text-[9px] tracking-wide uppercase ${
+                            order.status === "delivered" ||
+                            order.status === "paid"
+                              ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                              : order.status === "pending"
+                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-100"
+                          }`}
+                        >
+                          <span className="text-[10px]">
+                            {order.status === "delivered" ? "✓" : "•"}
+                          </span>
+                          {order.status}
+                        </Badge>
+
+                        <span className="font-black text-gray-900 text-sm min-w-[60px] text-right">
+                          ${Number(order.totalAmount).toFixed(2)}
+                        </span>
+
+                        {order.status === "delivered" ? (
+                          <Button className="rounded-full bg-emerald-bg hover:bg-emerald-bg-hover text-white h-9 px-4 text-[11px] font-bold gap-2 border-none transition-colors">
+                            <RefreshCw size={14} /> Reorder
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="outline"
+                            className="rounded-full border-gray-200 text-gray-700 bg-white hover:bg-gray-50 h-9 px-6 text-[11px] font-bold transition-all"
+                          >
+                            Help
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex flex-col md:flex-row items-center justify-between pt-8">
+                <Typography
+                  variant="p"
+                  className="text-sm font-medium text-gray-400 mb-4 md:mb-0"
+                >
+                  Showing {startIndex + 1}-
+                  {Math.min(startIndex + itemsPerPage, filteredOrders.length)}{" "}
+                  of {filteredOrders.length} orders
+                </Typography>
+
+                <Pagination className="mx-0 w-auto">
+                  <PaginationContent className="gap-2">
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        className={`text-gray-400 border-none p-2 cursor-pointer ${currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-transparent hover:text-gray-600"}`}
+                      />
+                    </PaginationItem>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            onClick={() => handlePageChange(page)}
+                            isActive={currentPage === page}
+                            className={`w-9 h-9 rounded-full font-bold border-none cursor-pointer ${
+                              currentPage === page
+                                ? "bg-emerald-bg text-white hover:bg-[#1B4332] hover:text-white"
+                                : "text-gray-600 hover:bg-gray-100"
+                            }`}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ),
+                    )}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        className={`text-gray-400 border-none p-2 cursor-pointer ${currentPage === totalPages ? "pointer-events-none opacity-50" : "hover:bg-transparent hover:text-gray-600"}`}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
           </main>
         </div>
       </div>
