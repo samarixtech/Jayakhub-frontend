@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/immutability */
 "use client";
-import React from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { setCookie } from "cookies-next";
 import { Globe, Check, ChevronDown } from "lucide-react";

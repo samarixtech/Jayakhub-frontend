@@ -92,19 +92,19 @@ export default function GlobalTable<T>({
           <TableBody>
             {loading ? (
               Array.from({ length: 5 }).map((_, rowIndex) => (
-                <TableRow key={rowIndex}>
+                <TableRow key={rowIndex} className="border-none">
                   {columns.map((_, colIndex) => (
-                    <TableCell key={colIndex}>
+                    <TableCell key={colIndex} className="border-none">
                       <Skeleton className="h-6 w-full rounded-md" />
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : data.length === 0 ? (
-              <TableRow>
+              <TableRow className="border-none">
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center py-10 text-gray-500"
+                  className="text-center py-10 text-gray-500 border-none"
                 >
                   {emptyMessage}
                 </TableCell>
@@ -114,14 +114,17 @@ export default function GlobalTable<T>({
                 <TableRow
                   key={rowIndex}
                   onClick={() => onRowClick && onRowClick(item)}
-                  className={`transition-colors ${
+                  className={`transition-colors border-none ${
                     onRowClick
                       ? "cursor-pointer hover:bg-gray-50/50"
                       : "hover:bg-gray-50/50"
                   }`}
                 >
                   {columns.map((col, colIndex) => (
-                    <TableCell key={colIndex} className={col.className || ""}>
+                    <TableCell
+                      key={colIndex}
+                      className={col.className || "border-none"}
+                    >
                       {col.cell
                         ? col.cell(item)
                         : col.accessorKey
@@ -137,7 +140,7 @@ export default function GlobalTable<T>({
       </div>
 
       {paginationParams && paginationParams.totalPages > 1 && (
-        <div className="p-4 border-t border-gray-100 flex justify-end">
+        <div className="p-4 flex justify-end">
           <Pagination className="mx-0 w-auto">
             <PaginationContent className="gap-2">
               <PaginationItem>

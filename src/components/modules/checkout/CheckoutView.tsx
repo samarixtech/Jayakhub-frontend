@@ -97,6 +97,8 @@ const CheckoutView = () => {
       fullAddress,
       discount: 0.0,
       totalAmount,
+      latitude: selectedAddress.latitude,
+      longitude: selectedAddress.longitude,
     };
 
     try {

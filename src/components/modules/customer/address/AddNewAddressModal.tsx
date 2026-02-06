@@ -71,6 +71,7 @@ export default function AddNewAddressModal({
 
   const [center, setCenter] = useState(defaultCenter);
   const [markerPosition, setMarkerPosition] = useState(defaultCenter);
+  const isMapInteraction = React.useRef(false);
 
   // Google Maps State
   const { isLoaded, loadError } = useJsApiLoader({
@@ -135,6 +136,56 @@ export default function AddNewAddressModal({
   const onUnmount = useCallback(() => {
     setMap(null);
   }, []);
+
+  // Forward Geocoding (Address -> Coordinates)
+  useEffect(() => {
+    if (isMapInteraction.current) {
+      isMapInteraction.current = false;
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      if (
+        !window.google ||
+        !window.google.maps ||
+        (!formData.street && !formData.city)
+      )
+        return;
+
+      const addressComponents = [
+        formData.street,
+        formData.city,
+        formData.state,
+        formData.zip,
+        formData.country,
+      ]
+        .filter(Boolean)
+        .join(", ");
+
+      if (!addressComponents) return;
+
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ address: addressComponents }, (results, status) => {
+        if (status === "OK" && results && results[0]) {
+          const location = results[0].geometry.location;
+          const pos = { lat: location.lat(), lng: location.lng() };
+          setCenter(pos);
+          setMarkerPosition(pos);
+          // Don't pan here if you want to avoid jumping while typing,
+          // but panning is usually expected.
+          // map?.panTo(pos);
+        }
+      });
+    }, 1000); // 1-second debounce
+
+    return () => clearTimeout(timer);
+  }, [
+    formData.street,
+    formData.city,
+    formData.state,
+    formData.zip,
+    formData.country,
+  ]);
 
   // Reverse Geocoding
   const reverseGeocode = useCallback((lat: number, lng: number) => {
@@ -214,6 +265,8 @@ export default function AddNewAddressModal({
         const newPos = { lat, lng };
         setMarkerPosition(newPos);
         setCenter(newPos); // Optional: pan to click
+
+        isMapInteraction.current = true; // Set flag to prevent forward geocode loop
         reverseGeocode(lat, lng);
       }
     },
@@ -232,6 +285,7 @@ export default function AddNewAddressModal({
           setCenter(pos);
           setMarkerPosition(pos);
           map?.panTo(pos);
+          isMapInteraction.current = true; // Treated as map interaction
           reverseGeocode(pos.lat, pos.lng);
           toast.success("Location found!", { id: toastId });
         },

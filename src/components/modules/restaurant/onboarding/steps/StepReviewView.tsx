@@ -150,6 +150,7 @@ export default function StepReviewView() {
       email: data.restaurant?.restaurantEmail || "",
       phone: data.restaurant?.restaurantPhone || "",
       address: data.restaurant?.address || "",
+      country: data.restaurant?.country || "",
       latitude: data.restaurant?.location?.lat || 0,
       longitude: data.restaurant?.location?.lng || 0,
       type: (data.restaurant?.cuisineTypes || []).join(","),

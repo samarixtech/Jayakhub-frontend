@@ -110,26 +110,40 @@ export default function VerifyOtpView() {
         // If restaurant owner, check status before redirecting
         if (role === "restaurant_owner") {
           try {
-            // We rely on the cookie set by verifyOtpAction being available for this next request
-            // In many cases this works immediately in the same flow, or we might need a small delay/reload context
-            // But typically for server actions in Next.js, cookies set in one action are available in next action if same context
             const statusRes = await getRestaurantStatusAction();
-            if (statusRes.success && statusRes.data?.status === "active") {
+
+            // Check if restaurant exists and has data
+            if (statusRes.success && statusRes.data) {
+              const status = statusRes.data.status;
+
+              if (status === "active") {
+                router.replace(
+                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
+                );
+              } else if (status === "pending" || status === "rejected") {
+                router.replace(
+                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+                );
+              } else {
+                // Draft or any other status -> Onboarding
+                router.replace(
+                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
+                );
+              }
+            } else {
+              // No restaurant data found -> Onboarding
               router.replace(
-                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
+                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
               );
-              return;
             }
-            // Fallback to status page if not active or error
-            router.replace(
-              `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
-            );
             return;
           } catch (err) {
             console.error("Status check failed", err);
-            // Fallback to status page
+            // On error (network/etc), safer to go to onboarding or status?
+            // If it failed, maybe we can't determine status.
+            // But usually this means not found if API throws on 404.
             router.replace(
-              `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+              `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
             );
             return;
           }

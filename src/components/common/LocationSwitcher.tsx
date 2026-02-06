@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MapPin, LocateFixed, Loader2,  Check, ChevronDown } from "lucide-react";
+import { MapPin, LocateFixed, Loader2, Check, ChevronDown } from "lucide-react";
 import { useJsApiLoader } from "@react-google-maps/api";
 import {
   Popover,

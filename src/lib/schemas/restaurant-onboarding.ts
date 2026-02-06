@@ -17,7 +17,7 @@ export const restaurantInfoSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
 
   cuisineTypes: z.array(z.string()).min(1, "Select at least one cuisine type"),
-
+  country: z.string().min(1, "Country is required"),
   address: z.string().min(5, "Address is required"),
   location: z
     .object({
