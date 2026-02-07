@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Clock, Mail, Rocket, XCircle, Loader2 } from "lucide-react";
@@ -9,6 +8,7 @@ import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import { useServerAction } from "@/hooks/use-server-action";
 import useLocale from "@/hooks/useLocals";
 
+// Timeline steps for the status view
 const TIMELINE_STEPS = [
   {
     title: "Application Submitted",

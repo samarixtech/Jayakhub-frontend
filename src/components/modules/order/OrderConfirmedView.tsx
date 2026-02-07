@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
@@ -14,7 +13,7 @@ export default function OrderConfirmedView() {
   const dispatch = useDispatch<AppDispatch>();
   const { country, language, id } = params;
 
-  // Clear cart on mount (handles Stripe redirect success)
+  // Clear cart on mount when order successfully placed
   useEffect(() => {
     dispatch(clearCart());
   }, [dispatch]);
@@ -35,8 +34,8 @@ export default function OrderConfirmedView() {
         </h1>
         <p className="text-gray-500 mb-1">
           Your order{" "}
-          <span className="font-bold text-gray-900">#JKH-{id || "88291"}</span>{" "}
-          is confirmed.
+          <span className="font-bold text-gray-900">{id || "88291"}</span> is
+          confirmed.
         </p>
         <p className="text-gray-500 mb-8">Sit tight, good food is coming!</p>
 
