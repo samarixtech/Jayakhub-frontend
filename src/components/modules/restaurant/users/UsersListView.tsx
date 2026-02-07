@@ -69,7 +69,7 @@ export default function UsersListView() {
         setDeleteId(null);
         fetchUsers(); // Refresh list
       },
-      onError: (err) => toast.error(err.message || "Failed to delete user"),
+      onError: (err) => toast.error(err || "Failed to delete user"),
     },
   );
 

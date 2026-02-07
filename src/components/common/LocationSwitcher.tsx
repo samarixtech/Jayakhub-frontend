@@ -50,7 +50,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
     setFetchingAddresses(true);
     try {
       const response = await getUserAddresses();
-      if (response && response.data) {
+      if (response?.data) {
         setAddresses(response.data);
       }
     } catch (error) {

@@ -1,12 +1,15 @@
 "use server";
-import api from "@/components/services/api";
+import { serverApi } from "@/components/services/api";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
 import { cookies } from "next/headers";
 
 export async function getRestaurantStatusAction(): Promise<ActionResponse> {
   return responseHandler(
-    async () => api.get("/my-restaurant"),
+    async () => {
+      const api = await serverApi();
+      return api.get("/my-restaurant");
+    },
     "Restaurant status fetched successfully",
     async (data: any) => {
       if (data?.id) {

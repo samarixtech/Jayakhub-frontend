@@ -1,28 +1,31 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.100.9:5000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000, // Timeout after 10 seconds
+  timeout: 10000,
 });
 
-// Interceptor to attach token (client-only)
+// Helper function to get token from document.cookie (client-side only)
+function getClientToken(): string | null {
+  if (typeof window === "undefined") return null;
+  const match = document.cookie.match(new RegExp("(^| )token=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+// Interceptor to attach token from cookies (client-side)
 api.interceptors.request.use(
   (config) => {
-    if (!config.headers) {
-      config.headers = {};
-    }
-
-    // ⚠️ Only access sessionStorage if in browser
+    // On client side, read token from document.cookie
     if (typeof window !== "undefined") {
-      const token = sessionStorage.getItem("accessToken");
-
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      const token = getClientToken();
+      if (token && config.headers) {
+        config.headers["Authorization"] = `Bearer ${token}`;
       }
     }
 
-    if (config.data instanceof FormData) {
+    // Handle FormData content type
+    if (config.data instanceof FormData && config.headers) {
       config.headers["Content-Type"] = "multipart/form-data";
     }
 
@@ -39,10 +42,6 @@ api.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           console.error("Unauthorized request. Redirecting to login...");
-          if (typeof window !== "undefined") {
-            localStorage.removeItem("token");
-            // window.location.href = "/login";
-          }
           break;
         case 403:
           console.error(
@@ -74,32 +73,38 @@ api.interceptors.response.use(
   },
 );
 
-api.interceptors.request.use(
-  async (config) => {
-    let token: string | undefined;
+// Helper function to get token for server-side (Next.js cookies)
+export async function getServerToken(): Promise<string | null> {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    return cookieStore.get("token")?.value || null;
+  } catch {
+    return null;
+  }
+}
 
-    if (typeof window !== "undefined") {
-      // 1. CLIENT SIDE: Read from document.cookie
-      const match = document.cookie.match(new RegExp("(^| )token=([^;]+)"));
-      token = match ? decodeURIComponent(match[2]) : undefined;
-    } else {
-      // 2. SERVER SIDE: Dynamically import next/headers
-      // This prevents the bundler from leaking server code to the client
-      try {
-        const { cookies } = await import("next/headers");
-        const cookieStore = await cookies();
-        token = cookieStore.get("token")?.value;
-      } catch (e) {
-        console.error("Failed to read cookies on server:", e);
+// Server-side API wrapper that auto-attaches token from cookies
+export async function serverApi() {
+  const token = await getServerToken();
+
+  const instance = axios.create({
+    baseURL: API_BASE_URL,
+    timeout: 10000,
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response) {
+        console.error("API Error:", error.response.status, error.response.data);
       }
-    }
+      return Promise.reject(error);
+    },
+  );
 
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  return instance;
+}
 
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
 export default api;

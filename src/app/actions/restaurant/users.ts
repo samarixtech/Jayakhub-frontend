@@ -1,6 +1,6 @@
 "use server";
 
-import api from "@/components/services/api";
+import { serverApi } from "@/components/services/api";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
@@ -26,8 +26,10 @@ export async function createRestaurantUserAction(
 
   // API expects payload + restaurantId
   return responseHandler(
-    async () =>
-      api.post("/create-restaurant-user", { ...payload, restaurantId }),
+    async () => {
+      const api = await serverApi();
+      return api.post("/create-restaurant-user", { ...payload, restaurantId });
+    },
     "User created successfully",
     async (data) => {
       revalidatePath("/restaurant/users");
@@ -45,7 +47,10 @@ export async function getRestaurantUsersAction(): Promise<ActionResponse> {
   }
 
   return responseHandler(
-    async () => api.get("/get-user-restaurant", { data: { restaurantId } }),
+    async () => {
+      const api = await serverApi();
+      return api.get("/get-user-restaurant", { params: { restaurantId } });
+    },
     "Users fetched successfully",
     async (data) => data,
   );
@@ -72,11 +77,13 @@ export async function updateRestaurantUserAction(
   }
 
   return responseHandler(
-    async () =>
-      api.put(`/update-restaurant-user/${payload.id}`, {
+    async () => {
+      const api = await serverApi();
+      return api.put(`/update-restaurant-user/${payload.id}`, {
         ...payload,
         restaurantId,
-      }),
+      });
+    },
     "User updated successfully",
     async (data) => {
       revalidatePath("/restaurant/users");
@@ -96,7 +103,10 @@ export async function getRestaurantUserByIdAction(
   }
 
   return responseHandler(
-    async () => api.get(`/get-restaurant-user/${id}`),
+    async () => {
+      const api = await serverApi();
+      return api.get(`/get-restaurant-user/${id}`);
+    },
     "User fetched successfully",
     async (data) => data,
   );
@@ -113,7 +123,10 @@ export async function deleteRestaurantUserAction(
   }
 
   return responseHandler(
-    async () => api.delete(`/delete-restaurant-user/${id}`),
+    async () => {
+      const api = await serverApi();
+      return api.delete(`/delete-restaurant-user/${id}`);
+    },
     "User deleted successfully",
     async (data) => {
       revalidatePath("/restaurant/users");

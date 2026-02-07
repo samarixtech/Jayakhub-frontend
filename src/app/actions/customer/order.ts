@@ -1,6 +1,6 @@
 "use server";
 
-import api from "@/components/services/api";
+import { serverApi } from "@/components/services/api";
 
 interface CreateOrderPayload {
   paymentMethod: "stripe" | "cod";
@@ -20,6 +20,7 @@ interface CreateOrderPayload {
 
 export async function createOrderAction(payload: CreateOrderPayload) {
   try {
+    const api = await serverApi();
     const response = await api.post("/create-checkout-session", payload);
     return response.data;
   } catch (error: any) {
@@ -32,6 +33,7 @@ export async function createOrderAction(payload: CreateOrderPayload) {
 
 export async function getCurrentOrder() {
   try {
+    const api = await serverApi();
     const response = await api.get("/current-order");
     return { success: true, data: response.data };
   } catch (error: any) {
@@ -44,6 +46,7 @@ export async function getCurrentOrder() {
 
 export async function getAllOrders() {
   try {
+    const api = await serverApi();
     const response = await api.get("/all-orders");
     return { success: true, data: response.data };
   } catch (error: any) {

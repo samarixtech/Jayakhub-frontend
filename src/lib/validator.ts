@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export type ValidationResult<T> =
   | { success: true; data: T }
-  | { success: false; errors: string[] }; // Simple array of strings for now, or detailed object
+  | { success: false; errors: string[] };
 
 export function validateSchema<T>(
   schema: z.Schema<T>,
@@ -14,19 +14,18 @@ export function validateSchema<T>(
     return { success: true, data: result.data };
   }
 
-  if (!result.success) {
-    const zodError = result.error;
-    if (!zodError || !zodError.errors) {
-      console.error(
-        "Validation failed with unexpected error structure:",
-        zodError,
-      );
-      return {
-        success: false,
-        errors: ["Validation failed with unexpected error"],
-      };
-    }
-    const errors = zodError.errors.map((err) => err.message);
-    return { success: false, errors };
+  // result.success is false at this point
+  const zodError = result.error;
+  if (!zodError || !zodError.issues) {
+    console.error(
+      "Validation failed with unexpected error structure:",
+      zodError,
+    );
+    return {
+      success: false,
+      errors: ["Validation failed with unexpected error"],
+    };
   }
+  const errors = zodError.issues.map((err: z.ZodIssue) => err.message);
+  return { success: false, errors };
 }
