@@ -20,23 +20,39 @@ export function GoogleAuthButton({ country, language, loading, role }: any) {
         const targetLang = language || "en";
 
         if (data.role === "restaurant_owner") {
-          // Check status
+          // Check restaurant status before redirecting
           getRestaurantStatusAction()
             .then((statusRes) => {
-              if (statusRes.success && statusRes.data?.status === "active") {
-                router.push(
-                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
-                );
+              // Check if restaurant exists and has data
+              if (statusRes.success && statusRes.data) {
+                const status = statusRes.data.status;
+
+                if (status === "active") {
+                  router.push(
+                    `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
+                  );
+                } else if (status === "pending" || status === "rejected") {
+                  router.push(
+                    `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+                  );
+                } else {
+                  // Draft or any other status -> Onboarding
+                  router.push(
+                    `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
+                  );
+                }
               } else {
+                // No restaurant data found -> Onboarding
                 router.push(
-                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
                 );
               }
             })
             .catch((err) => {
               console.error("Status check failed", err);
+              // On error (likely no restaurant found) -> Onboarding
               router.push(
-                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
+                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
               );
             });
           return;

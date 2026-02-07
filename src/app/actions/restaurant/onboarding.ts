@@ -20,6 +20,9 @@ export async function registerRestaurantOnboardingAction(
       },
     });
 
+    console.log("Server Action Response:", response);
+    console.log(formData);
+
     return {
       success: true,
       message: "Application Submitted Successfully!",

@@ -61,7 +61,7 @@ export async function getVariantGroupsAction(): Promise<ActionResponse> {
   return responseHandler(
     async () => {
       const api = await serverApi();
-      return api.get(`/all-variant`, { params: { restaurantId } });
+      return api.get(`/all-variant/${restaurantId}`);
     },
     "Variants fetched successfully",
     async (data) => data,
@@ -272,7 +272,7 @@ export async function getMenuItemsAction(): Promise<ActionResponse> {
   return responseHandler(
     async () => {
       const api = await serverApi();
-      return api.get("/menu", { params: { restaurantId } });
+      return api.get(`/item-menu/${restaurantId}`);
     },
     "Menu fetched successfully",
     async (data) => data,

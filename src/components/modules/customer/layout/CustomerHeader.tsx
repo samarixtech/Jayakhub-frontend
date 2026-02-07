@@ -3,6 +3,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Typography } from "@/components/ui/typography";
 import { Separator } from "@radix-ui/react-separator";
 import { ChevronDown, MapPin } from "lucide-react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { useState, useEffect } from "react";
 import { getProfile } from "@/app/actions/customer/userprofile";
@@ -14,6 +15,9 @@ import LocationSwitcher from "@/components/common/LocationSwitcher";
 
 function CustomerHeader() {
   const { country, language } = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<any>(null);
   const [currentAddress, setCurrentAddress] = useState("New York, NY");
 
@@ -27,6 +31,13 @@ function CustomerHeader() {
     fetchProfile();
   }, []);
 
+  const handleLocationChange = (lat: number, lng: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("lat", lat.toString());
+    params.set("lng", lng.toString());
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <header className="p-4 flex shrink-0 items-center">
       <div className="flex w-full items-center justify-between bg-[#346853] h-16 px-6 rounded-3xl shadow-lg">
@@ -39,6 +50,8 @@ function CustomerHeader() {
           <LocationSwitcher
             currentAddress={currentAddress}
             onAddressChange={setCurrentAddress}
+            isLoggedIn={!!user}
+            onLocationChange={handleLocationChange}
           />
         </div>
 

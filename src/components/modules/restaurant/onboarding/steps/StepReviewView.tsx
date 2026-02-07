@@ -154,6 +154,10 @@ export default function StepReviewView() {
     formData.append("latitude", String(data.restaurant?.location?.lat || 0));
     formData.append("longitude", String(data.restaurant?.location?.lng || 0));
     formData.append("type", (data.restaurant?.cuisineTypes || []).join(","));
+    formData.append("description", data.restaurant?.description || "");
+    if (data.restaurant?.websiteUrl) {
+      formData.append("websiteUrl", data.restaurant.websiteUrl);
+    }
     formData.append("schedules", JSON.stringify(schedules));
     formData.append("kycDocuments", JSON.stringify(kycDocuments));
     formData.append("Ownerphone", data.owner?.ownerPhone || "");
@@ -163,7 +167,6 @@ export default function StepReviewView() {
     formData.append("bankName", data.bank?.bankName || "");
     formData.append("iban", data.bank?.iban || "");
 
-    // Append actual File objects (not base64)
     if (logoFile) {
       formData.append("profileImage", logoFile);
     }
