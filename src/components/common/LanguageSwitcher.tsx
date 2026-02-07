@@ -2,8 +2,9 @@
 "use client";
 import { useRouter, usePathname } from "next/navigation";
 import { setCookie } from "cookies-next";
-import { Globe, Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
+import ReactCountryFlag from "react-country-flag";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,13 +16,13 @@ import { Button } from "@/components/ui/button";
 interface Language {
   code: string;
   name: string;
-  flag: string;
+  countryCode: string;
   dir: "ltr" | "rtl";
 }
 
 const languages: Language[] = [
-  { code: "en", name: "English", flag: "🇺🇸", dir: "ltr" },
-  { code: "ar", name: "العربية", flag: "🇮🇶", dir: "rtl" },
+  { code: "en", name: "English", countryCode: "US", dir: "ltr" },
+  { code: "ar", name: "العربية", countryCode: "IQ", dir: "rtl" },
 ];
 
 const LanguageSwitcher = () => {
@@ -61,7 +62,21 @@ const LanguageSwitcher = () => {
             className="bg-white border-none hover:bg-gray-50 text-gray-700 px-4 py-5 rounded-full gap-2 h-11"
           >
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-emerald-bg group-hover:rotate-12 transition-transform duration-300" />
+              <div className="w-5 h-5 rounded-full overflow-hidden relative">
+                <ReactCountryFlag
+                  countryCode={activeLang.countryCode}
+                  svg
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                  title={activeLang.name}
+                />
+              </div>
               <span className="font-bold tracking-wide text-xs md:text-sm">
                 {activeLang.code.toUpperCase()}
               </span>
@@ -85,15 +100,28 @@ const LanguageSwitcher = () => {
             onClick={() => changeLanguage(l.code)}
             className={`
               relative flex items-center justify-between px-3 py-2.5 mb-1 cursor-pointer rounded-lg transition-all duration-200
-              ${
-                l.code === activeLang.code
-                  ? "bg-emerald-bg/10 text-emerald-bg font-semibold"
-                  : "hover:bg-gray-100 text-gray-600 font-medium"
+              ${l.code === activeLang.code
+                ? "bg-emerald-bg/10 text-emerald-bg font-semibold"
+                : "hover:bg-gray-100 text-gray-600 font-medium"
               }
             `}
           >
             <div className="flex items-center gap-3">
-              <span className="text-lg leading-none">{l.flag}</span>
+              <div className="w-5 h-5 rounded-full overflow-hidden relative">
+                <ReactCountryFlag
+                  countryCode={l.countryCode}
+                  svg
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                  }}
+                  title={l.name}
+                />
+              </div>
               <span className="text-sm">{l.name}</span>
             </div>
 

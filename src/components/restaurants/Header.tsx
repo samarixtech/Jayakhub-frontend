@@ -64,8 +64,7 @@ const RestaurantHeader = () => {
             <Image
               src={language === "ar" ? arabicLogo : engLogo}
               alt="Logo"
-              width={140}
-              height={50}
+              width={270}
               className="object-contain"
               priority
             />
@@ -73,8 +72,8 @@ const RestaurantHeader = () => {
         </div>
 
         {/* 2. Middle Section: Location & Search */}
-        <div className="flex flex-1 items-center gap-3 max-w-2xl">
-          <div className="hidden md:block shrink-0">
+        <div className="flex flex-1 items-center gap-3 max-w-2xl lg:max-w-none">
+          <div className="hidden md:block shrink-0 lg:pr-10">
             <LocationSwitcher
               currentAddress={currentAddress}
               onAddressChange={setCurrentAddress}
@@ -85,7 +84,7 @@ const RestaurantHeader = () => {
             />
           </div>
 
-          <div className="relative flex-1 hidden lg:block">
+          <div className="relative flex-1 hidden lg:block max-w-[500px]">
             <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
               className="w-full bg-white rounded-full border-none h-10 pl-10 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-500 text-sm"
