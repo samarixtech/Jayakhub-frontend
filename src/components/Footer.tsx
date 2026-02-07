@@ -1,142 +1,147 @@
 "use client";
-import { Send, MapPin, Phone, MessageSquare } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+} from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
-
-const primaryyellow = "#0B5D4E";
-const secondaryyellow = "#2a6f97";
-const tertiaryyellow = "#61a5c2";
-
-const FooterLink = ({ href, children }: any) => (
-  <a
-    href={href}
-    className="text-gray-400 hover:text-[#E8F4F1] transition-colors duration-200 block text-base mb-3"
-  >
-    {children}
-  </a>
-);
-
-const FooterSection = ({ title, children }: any) => (
-  <div>
-    <h4 className="text-xl font-bold text-[#E8F4F1] mb-6 border-b border-[#E8F4F1]/10 pb-2">
-      {title}
-    </h4>
-    <nav className="list-none mb-10">{children}</nav>
-  </div>
-);
+import image2 from "./../../public/EngLogo (2).png"; // Adjust path as needed based on project structure
 
 const Footer = () => {
   const t = useTranslations("Footer");
 
-  return (
-    <footer
-      className={`bg-[${primaryyellow}] text-[#E8F4F1] pt-16 pb-8 border-t border-[#0B5D4E]/20`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 border-b border-[#E8F4F1]/20 pb-12">
-          {/* BRAND */}
-          <div className="col-span-2 md:col-span-2 pr-8">
-            <h3 className="text-3xl font-extrabold mb-4 flex items-center">
-              <span className={`text-[${tertiaryyellow}] mr-2`}>
-                {t("brand.accent")}
-              </span>
-              <span className="text-[#E8F4F1]">{t("brand.main")}</span>
-            </h3>
+  const socialLinks = [
+    { icon: Facebook, href: "#" },
+    { icon: Instagram, href: "#" },
+    { icon: Twitter, href: "#" },
+    { icon: Linkedin, href: "#" },
+  ];
 
-            <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-              {t("brand.description")}
+  const companyLinks = [
+    { label: "About Us", href: "/about" },
+    { label: "Careers", href: "/careers" },
+    { label: "Blog", href: "/blog" },
+    { label: "Press", href: "/press" },
+  ];
+
+  const supportLinks = [
+    { label: "Help Center", href: "/help" },
+    { label: "Safety", href: "/safety" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
+  ];
+
+  const partnerLinks = [
+    { label: "For Drivers", href: "/drivers" },
+    { label: "For Restaurants", href: "/restaurants" },
+    { label: "For Business", href: "/business" },
+  ];
+
+  return (
+    <footer className="bg-primary text-white py-12 border-t border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12 items-start">
+          {/* BRAND COLUMN (Span 2 columns on large screens) */}
+          <div className="col-span-2 lg:col-span-2 space-y-4">
+            <div className="flex items-start -ml-6 -mt-8 mb-[-1rem]">
+              <Image
+                src={image2}
+                alt="Jayak Hub Logo"
+                width={260}
+                className="object-contain"
+                style={{ maxWidth: "none" }} // Ensure it doesn't shrink
+              />
+            </div>
+
+            <p className="text-[#FFFFFF80] text-sm leading-relaxed max-w-sm">
+              Connecting you with the best restaurants in Iraq. Fast, reliable
+              delivery right to your doorstep.
             </p>
 
-            <div className="flex space-x-4">
-              <a
-                className={`p-3 rounded-full bg-[#E8F4F1]/10 hover:bg-[${tertiaryyellow}]`}
-              >
-                <Send className="w-5 h-5 text-[#E8F4F1]" />
-              </a>
+            <div className="space-y-3 text-sm text-[#FFFFFF80]">
+              <div className="flex items-center space-x-3">
+                <Mail className="w-4 h-4" />
+                <span>hello@jayakhub.iq</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Phone className="w-4 h-4" />
+                <span>+964 123 456 7890</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <MapPin className="w-4 h-4" />
+                <span>Baghdad, Iraq</span>
+              </div>
+            </div>
 
-              <a
-                className={`p-3 rounded-full bg-[#E8F4F1]/10 hover:bg-[${tertiaryyellow}]`}
-              >
-                <MapPin className="w-5 h-5 text-[#E8F4F1]" />
-              </a>
-
-              <a
-                className={`p-3 rounded-full bg-[#E8F4F1]/10 hover:bg-[${tertiaryyellow}]`}
-              >
-                <Phone className="w-5 h-5 text-[#E8F4F1]" />
-              </a>
+            <div className="flex space-x-3 pt-2">
+              {socialLinks.map((social, index) => (
+                <Link
+                  key={index}
+                  href={social.href}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                >
+                  <social.icon className="w-5 h-5 text-white" />
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* QUICK LINKS */}
-          <FooterSection title={t("quick_links.title")}>
-            <FooterLink href="/about">{t("quick_links.about")}</FooterLink>
-            <FooterLink href="/features">
-              {t("quick_links.features")}
-            </FooterLink>
-            <FooterLink href="/privacyPolicy">
-              {t("quick_links.privacy")}
-            </FooterLink>
-            <FooterLink href="/press">{t("quick_links.press")}</FooterLink>
-          </FooterSection>
+          {/* COMPANY COLUMN */}
+          <div className="mt-4 col-span-1">
+            <h3 className="font-bold text-lg mb-4 text-white">Company</h3>
+            <ul className="space-y-3 text-sm text-[#FFFFFF80]">
+              {companyLinks.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="hover:text-white transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          {/* SOLUTIONS */}
-          <FooterSection title={t("solutions.title")}>
-            <FooterLink href="/enterprise">
-              {t("solutions.enterprise")}
-            </FooterLink>
-            <FooterLink href="/partner-network">
-              {t("solutions.partner")}
-            </FooterLink>
-            <FooterLink href="/api">{t("solutions.api")}</FooterLink>
-            <FooterLink href="/logistics">
-              {t("solutions.logistics")}
-            </FooterLink>
-          </FooterSection>
+          {/* SUPPORT COLUMN */}
+          <div className="mt-4 col-span-1">
+            <h3 className="font-bold text-lg mb-4 text-white">Support</h3>
+            <ul className="space-y-3 text-sm text-[#FFFFFF80]">
+              {supportLinks.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="hover:text-white transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          {/* SUPPORT */}
-          <FooterSection title={t("support.title")}>
-            <div className="flex items-center mb-3">
-              <Phone className={`w-5 h-5 text-[${tertiaryyellow}] mr-3`} />
-              <span>
-                <a href="tel:+1 (469) 422-5944" className="text-[#E8F4F1]">
-                  {t("support.phone")}
-                </a>
-              </span>
-            </div>
-
-            <div className="flex items-center mb-3">
-              <Send className={`w-5 h-5 text-[${tertiaryyellow}] mr-3`} />
-              <span>
-                <a href="mailto:jayakhub@info.com" className="text-[#E8F4F1]">
-                  {t("support.email")}
-                </a>
-              </span>
-            </div>
-
-            <div className="mt-5">
-              <Link
-                href="/contact"
-                className={`inline-flex items-center px-5 py-2 text-sm font-semibold rounded-full bg-[${secondaryyellow}] hover:bg-[${tertiaryyellow}]`}
-              >
-                <MessageSquare className="w-4 h-4 mr-2" />
-                {t("support.live_chat")}
-              </Link>
-            </div>
-          </FooterSection>
+          {/* PARTNERS COLUMN */}
+          <div className="mt-4 col-span-1">
+            <h3 className="font-bold text-lg mb-4 text-white">Partners</h3>
+            <ul className="space-y-3 text-sm text-[#FFFFFF80]">
+              {partnerLinks.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="hover:text-white transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        {/* BOTTOM */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 text-sm text-gray-400">
-          <p>
-            &copy; {new Date().getFullYear()} {t("bottom.copyright")}
-          </p>
-
-          <div className="flex space-x-6">
-            <Link href="/privacyPolicy">{t("bottom.privacy")}</Link>
-            <Link href="/terms">{t("bottom.terms")}</Link>
-            <Link href="/cookies">{t("bottom.cookies")}</Link>
+        {/* BOTTOM BAR */}
+        <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-[#FFFFFF80]">
+          <p className="text-[#FFFFFF80]">© 2026 Jayak Hub. All rights reserved.</p>
+          <div className="flex space-x-6 mt-4 md:mt-0">
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/cookies" className="hover:text-white transition-colors">Cookies</Link>
           </div>
         </div>
       </div>
