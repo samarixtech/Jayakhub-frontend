@@ -66,7 +66,7 @@ export default function StepBankDetailsView() {
       try {
         const parsed = JSON.parse(savedData);
         form.reset(parsed);
-      } catch (e) {}
+      } catch (e) { }
     }
   }, [form]);
 
@@ -233,7 +233,7 @@ export default function StepBankDetailsView() {
             </div>
           </div>
 
-          <div className="flex justify-between items-center pt-4 border-t border-gray-50">
+          <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <Button
               type="button"
               variant="ghost"
@@ -241,18 +241,18 @@ export default function StepBankDetailsView() {
                 prevStep();
                 router.back();
               }}
-              className="text-gray-400 font-bold hover:bg-transparent"
+              className="w-full sm:w-auto text-gray-400 font-bold hover:bg-transparent"
             >
               Back
             </Button>
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
               <Typography className="text-sm font-medium text-gray-500">
                 Step 06 of 07
               </Typography>
               <Button
                 type="submit"
-                className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
+                className="w-full sm:w-auto bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
               >
                 Next Step
               </Button>

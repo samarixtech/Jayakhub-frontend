@@ -173,7 +173,7 @@ export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {
             />
           </div>
 
-          <div className="flex justify-between items-center pt-4 border-t border-gray-50">
+          <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <Typography className="text-sm font-medium text-gray-500">
               Step 01 of 06
             </Typography>
@@ -181,7 +181,7 @@ export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {
               type="submit"
               onClick={() => console.log("Next Step Button Clicked")}
               disabled={false}
-              className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
+              className="w-full sm:w-auto bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
             >
               Next Step
             </Button>
