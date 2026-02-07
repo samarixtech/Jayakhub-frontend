@@ -81,7 +81,7 @@ export default function UserFormView({
       onSuccess: () => {
         router.push("/restaurant/users");
       },
-      onError: (err) => toast.error(err.message || "Failed to create user"),
+      onError: (err) => toast.error(err || "Failed to create user"),
     },
   );
 
@@ -92,7 +92,7 @@ export default function UserFormView({
       onSuccess: () => {
         router.push("/restaurant/users");
       },
-      onError: (err) => toast.error(err.message || "Failed to update user"),
+      onError: (err) => toast.error(err || "Failed to update user"),
     },
   );
 

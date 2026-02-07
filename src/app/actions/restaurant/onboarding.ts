@@ -1,30 +1,36 @@
 "use server";
 
-import api from "@/components/services/api";
-import {
-  restaurantRegistrationSchema,
-  RestaurantRegistrationInput,
-} from "@/lib/schemas/restaurant-onboarding";
-import { validateSchema } from "@/lib/validator";
-import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
+import { serverApi } from "@/components/services/api";
+import { ActionResponse } from "@/lib/utils/response-handler";
 
 export async function registerRestaurantOnboardingAction(
-  data: RestaurantRegistrationInput,
+  formData: FormData,
 ): Promise<ActionResponse> {
-  console.log("Server Action Received Data:", JSON.stringify(data, null, 2));
-  const validation = validateSchema(restaurantRegistrationSchema, data);
-  console.log("Onboarding Data:", data || "undefined");
+  try {
+    // Log form data keys for debugging
+    console.log(
+      "Server Action Received FormData keys:",
+      Array.from(formData.keys()),
+    );
 
-  if (!validation.success) {
+    const api = await serverApi();
+    const response = await api.post("/onboarding/register", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return {
+      success: true,
+      message: "Application Submitted Successfully!",
+      data: response.data,
+    };
+  } catch (error: any) {
+    console.error("Onboarding Error:", error?.response?.data || error.message);
     return {
       success: false,
-      message: "Validation failed",
-      errors: validation.errors,
+      message: error?.response?.data?.message || "Failed to submit application",
+      errors: error?.response?.data?.errors || [],
     };
   }
-
-  return responseHandler(
-    async () => api.post("/onboarding/register", data),
-    "Application Submitted Successfully!",
-  );
 }

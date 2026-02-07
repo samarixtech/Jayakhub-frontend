@@ -506,6 +506,19 @@ const CheckoutView = () => {
             <div className="lg:col-span-4">
               <div className="sticky top-8">
                 <OrderSummary
+                  subtotal={cart.reduce(
+                    (sum, item) => sum + item.price * item.quantity,
+                    0,
+                  )}
+                  deliveryFee={10}
+                  tax={0}
+                  total={
+                    cart.reduce(
+                      (sum, item) => sum + item.price * item.quantity,
+                      0,
+                    ) + 10
+                  }
+                  cartItems={cart}
                   onPlaceOrder={handlePlaceOrder}
                   isPlacingOrder={isPlacingOrder}
                 />

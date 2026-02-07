@@ -97,11 +97,10 @@ const IndexPageContent: React.FC = () => {
     const lng = searchParams.get("lng");
 
     if (lat && lng) {
-      fetchRestaurants(parseFloat(lat), parseFloat(lng));
+      fetchRestaurants({ lat: parseFloat(lat), lng: parseFloat(lng) });
     } else {
-      fetchRestaurants();
+      fetchRestaurants({});
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   useEffect(() => {

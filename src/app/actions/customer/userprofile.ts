@@ -1,5 +1,5 @@
 "use server";
-import api from "@/components/services/api";
+import { serverApi } from "@/components/services/api";
 import { revalidatePath } from "next/cache";
 import {
   updateProfileSchema,
@@ -13,10 +13,10 @@ import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
 // ==================== GET USER PROFILE ====================
 export async function getProfile(): Promise<ActionResponse> {
-  return responseHandler(
-    async () => api.get("/me"),
-    "Profile fetched successfully",
-  );
+  return responseHandler(async () => {
+    const api = await serverApi();
+    return api.get("/me");
+  }, "Profile fetched successfully");
 }
 
 // ==================== UPDATE USER PROFILE ====================
@@ -41,7 +41,10 @@ export async function updateProfileAction(
   }
 
   return responseHandler(
-    async () => api.put("/update-profile", formData),
+    async () => {
+      const api = await serverApi();
+      return api.put("/update-profile", formData);
+    },
     "Profile updated successfully",
     (data) => {
       revalidatePath("/");
@@ -64,11 +67,13 @@ export async function changePasswordAction(
   }
 
   return responseHandler(
-    async () =>
-      api.put("/change-password", {
+    async () => {
+      const api = await serverApi();
+      return api.put("/change-password", {
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
-      }),
+      });
+    },
     "Password updated successfully",
     (result) => {
       revalidatePath("/");
@@ -82,7 +87,10 @@ export async function uploadKycAction(
   formData: FormData,
 ): Promise<ActionResponse> {
   return responseHandler(
-    async () => api.post("/kyc", formData),
+    async () => {
+      const api = await serverApi();
+      return api.post("/kyc", formData);
+    },
     "Document uploaded successfully",
     (data) => {
       revalidatePath("/");
@@ -93,7 +101,10 @@ export async function uploadKycAction(
 
 // ==================== GET KYC STATUS ====================
 export async function getKycStatus(): Promise<ActionResponse> {
-  return responseHandler(async () => api.get("/kyc/me"), "KYC status fetched");
+  return responseHandler(async () => {
+    const api = await serverApi();
+    return api.get("/kyc/me");
+  }, "KYC status fetched");
 }
 
 // ==================== ADD CARD ====================
@@ -110,7 +121,10 @@ export async function addCardAction(
   }
 
   return responseHandler(
-    async () => api.post("/cards", data),
+    async () => {
+      const api = await serverApi();
+      return api.post("/cards", data);
+    },
     "Card saved successfully",
     () => revalidatePath("/"),
   );
@@ -118,10 +132,10 @@ export async function addCardAction(
 
 // ==================== GET ALL CARDS ====================
 export async function getMyCardsAction(): Promise<ActionResponse> {
-  return responseHandler(
-    async () => api.get("/cards/me"),
-    "Cards fetched successfully",
-  );
+  return responseHandler(async () => {
+    const api = await serverApi();
+    return api.get("/cards/me");
+  }, "Cards fetched successfully");
 }
 
 // ==================== UPDATE CARD ====================
@@ -139,7 +153,10 @@ export async function updateCardAction(
   }
 
   return responseHandler(
-    async () => api.put(`/cards/${id}`, data),
+    async () => {
+      const api = await serverApi();
+      return api.put(`/cards/${id}`, data);
+    },
     "Card updated successfully",
     () => revalidatePath("/"),
   );
@@ -148,7 +165,10 @@ export async function updateCardAction(
 // ==================== DELETE CARD ====================
 export async function deleteCardAction(id: string): Promise<ActionResponse> {
   return responseHandler(
-    async () => api.delete(`/cards/${id}`),
+    async () => {
+      const api = await serverApi();
+      return api.delete(`/cards/${id}`);
+    },
     "Card deleted successfully",
     () => revalidatePath("/"),
   );

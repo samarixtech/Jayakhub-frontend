@@ -117,7 +117,7 @@ export default function MenuItemsView() {
         setDeleteId(null);
         fetchMenu(); // Refresh list
       },
-      onError: (err) => toast.error(err.message || "Failed to delete item"),
+      onError: (err) => toast.error(err || "Failed to delete item"),
     },
   );
 

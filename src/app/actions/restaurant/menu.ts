@@ -1,6 +1,6 @@
 "use server";
 
-import api from "@/components/services/api";
+import { serverApi } from "@/components/services/api";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
@@ -35,7 +35,10 @@ export async function createVariantGroupAction(
   };
 
   return responseHandler(
-    async () => api.post("/add-variant", apiPayload),
+    async () => {
+      const api = await serverApi();
+      return api.post("/add-variant", apiPayload);
+    },
     "Variant group created successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/variants");
@@ -56,7 +59,10 @@ export async function getVariantGroupsAction(): Promise<ActionResponse> {
   }
 
   return responseHandler(
-    async () => api.get(`/all-variant`, { data: { restaurantId } }),
+    async () => {
+      const api = await serverApi();
+      return api.get(`/all-variant`, { params: { restaurantId } });
+    },
     "Variants fetched successfully",
     async (data) => data,
   );
@@ -78,7 +84,10 @@ export async function updateVariantGroupAction(
   }
 
   return responseHandler(
-    async () => api.put("/update-variant", { ...payload, restaurantId }),
+    async () => {
+      const api = await serverApi();
+      return api.put("/update-variant", { ...payload, restaurantId });
+    },
     "Variant group updated successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/variants");
@@ -98,7 +107,10 @@ export async function deleteVariantGroupAction(
   }
 
   return responseHandler(
-    async () => api.delete(`/delete-group/${id}`),
+    async () => {
+      const api = await serverApi();
+      return api.delete(`/delete-group/${id}`);
+    },
     "Variant group deleted successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/variants");
@@ -124,11 +136,13 @@ export async function addCategoryAction(
   }
 
   return responseHandler(
-    async () =>
-      api.post("/add-category", {
+    async () => {
+      const api = await serverApi();
+      return api.post("/add-category", {
         restaurantId,
         categoryName: payload.categoryName,
-      }),
+      });
+    },
     "Category created successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/categories");
@@ -152,7 +166,10 @@ export async function deleteCategoryAction(
   }
 
   return responseHandler(
-    async () => api.delete(`/delete-category/${id}`),
+    async () => {
+      const api = await serverApi();
+      return api.delete(`/delete-category/${id}`);
+    },
     "Category deleted successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/categories");
@@ -170,7 +187,10 @@ export async function getAllCategoriesAction(): Promise<ActionResponse> {
   }
 
   return responseHandler(
-    async () => api.get(`/allCategory`, { data: { restaurantId } }),
+    async () => {
+      const api = await serverApi();
+      return api.get(`/allCategory`, { params: { restaurantId } });
+    },
     "Categories fetched successfully",
     async (data) => data,
   );
@@ -192,7 +212,10 @@ export async function updateCategoryAction(
   }
 
   return responseHandler(
-    async () => api.put("/update-category", { ...payload, restaurantId }),
+    async () => {
+      const api = await serverApi();
+      return api.put("/update-category", { ...payload, restaurantId });
+    },
     "Category updated successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/categories");
@@ -226,7 +249,10 @@ export async function createItemAction(
   formData.append("restaurantId", restaurantId);
 
   return responseHandler(
-    async () => api.post("/item-add", formData),
+    async () => {
+      const api = await serverApi();
+      return api.post("/item-add", formData);
+    },
     "Item created successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/items");
@@ -244,7 +270,10 @@ export async function getMenuItemsAction(): Promise<ActionResponse> {
   }
 
   return responseHandler(
-    async () => api.get("/menu", { data: { restaurantId } }),
+    async () => {
+      const api = await serverApi();
+      return api.get("/menu", { params: { restaurantId } });
+    },
     "Menu fetched successfully",
     async (data) => data,
   );
@@ -263,7 +292,10 @@ export async function updateItemAction(
   formData.append("restaurantId", restaurantId);
 
   return responseHandler(
-    async () => api.put("/update-item", formData),
+    async () => {
+      const api = await serverApi();
+      return api.put("/update-item", formData);
+    },
     "Item updated successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/items");
@@ -282,7 +314,10 @@ export async function getMenuItemByIdAction(
   }
 
   return responseHandler(
-    async () => api.get(`/menu/${id}`),
+    async () => {
+      const api = await serverApi();
+      return api.get(`/menu/${id}`);
+    },
     "Item fetched successfully",
     async (data) => data,
   );
@@ -299,7 +334,10 @@ export async function deleteMenuItemAction(
   }
 
   return responseHandler(
-    async () => api.delete(`/item-delete/${id}`),
+    async () => {
+      const api = await serverApi();
+      return api.delete(`/item-delete/${id}`);
+    },
     "Item deleted successfully",
     async (data) => {
       revalidatePath("/restaurant/menu/items");

@@ -24,6 +24,9 @@ export default function StepBrandAssetsView() {
     nextStep,
     prevStep: contextPrevStep,
     setLogoPreview: setContextLogoPreview,
+    setBannerPreview: setContextBannerPreview,
+    setLogoFile,
+    setBannerFile,
   } = useOnboarding();
   const router = useRouter();
 
@@ -122,6 +125,7 @@ export default function StepBrandAssetsView() {
         const base64 = await fileToBase64(file);
         setLogoPreview(base64);
         setContextLogoPreview(base64);
+        setLogoFile(file); // Store actual File in context
         form.setValue("logo", file);
       } catch (err) {
         console.error("Error converting logo to base64", err);
@@ -132,6 +136,7 @@ export default function StepBrandAssetsView() {
   const handleRemoveLogo = () => {
     setLogoPreview(null);
     setContextLogoPreview(null);
+    setLogoFile(null);
     form.setValue("logo", undefined);
     if (logoInputRef.current) logoInputRef.current.value = "";
   };
@@ -142,6 +147,8 @@ export default function StepBrandAssetsView() {
       try {
         const base64 = await fileToBase64(file);
         setBannerPreview(base64);
+        setContextBannerPreview(base64);
+        setBannerFile(file); // Store actual File in context
         form.setValue("banner", file);
       } catch (err) {
         console.error("Error converting banner to base64", err);
@@ -151,6 +158,8 @@ export default function StepBrandAssetsView() {
 
   const handleRemoveBanner = () => {
     setBannerPreview(null);
+    setContextBannerPreview(null);
+    setBannerFile(null);
     form.setValue("banner", undefined);
     if (bannerInputRef.current) bannerInputRef.current.value = "";
   };

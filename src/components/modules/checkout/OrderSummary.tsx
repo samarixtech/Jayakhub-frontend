@@ -1,30 +1,37 @@
 "use client";
-
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store/store";
 import { Clock, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
-interface OrderSummaryProps {
-  onPlaceOrder: () => void;
-  isPlacingOrder: boolean;
+interface CartItem {
+  id?: string;
+  cartId?: string;
+  name: string;
+  price: number;
+  basePrice?: number;
+  quantity: number;
+  restaurantName?: string;
+  selectedVariations?: { name: string }[];
 }
 
-const OrderSummary = ({ onPlaceOrder, isPlacingOrder }: OrderSummaryProps) => {
-  const cartItems = useSelector((state: RootState) => state.cart.items);
+interface OrderSummaryProps {
+  subtotal: number;
+  deliveryFee: number;
+  tax: number;
+  total: number;
+  cartItems: CartItem[];
+  onPlaceOrder?: () => void;
+  isPlacingOrder?: boolean;
+}
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + (item.price || item.basePrice || 0) * item.quantity,
-    0,
-  );
-
-  //   TODO: Add real values
-  const deliveryFee = 10.0; // Mock
-
-  const total = subtotal + deliveryFee;
-
+const OrderSummary = ({
+  subtotal,
+  deliveryFee,
+  tax,
+  total,
+  cartItems,
+  onPlaceOrder,
+  isPlacingOrder = false,
+}: OrderSummaryProps) => {
   return (
     <div className="space-y-6">
       {/* Delivery Time Estimate */}
@@ -84,6 +91,10 @@ const OrderSummary = ({ onPlaceOrder, isPlacingOrder }: OrderSummaryProps) => {
           <div className="flex justify-between text-gray-500">
             <span>Delivery Fee</span>
             <span>${deliveryFee.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-gray-500">
+            <span>Tax</span>
+            <span>${tax.toFixed(2)}</span>
           </div>
         </div>
 

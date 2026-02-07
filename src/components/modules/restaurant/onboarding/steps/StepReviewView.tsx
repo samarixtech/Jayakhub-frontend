@@ -23,7 +23,7 @@ import { useServerAction } from "@/hooks/use-server-action";
 export default function StepReviewView() {
   const { country, language } = useLocale();
   const router = useRouter();
-  const { prevStep } = useOnboarding();
+  const { prevStep, logoFile, bannerFile } = useOnboarding();
 
   const [data, setData] = useState<any>({
     owner: null,
@@ -144,30 +144,35 @@ export default function StepReviewView() {
       });
     }
 
-    // Construct Payload
-    const payload = {
-      name: data.restaurant?.restaurantName || "",
-      email: data.restaurant?.restaurantEmail || "",
-      phone: data.restaurant?.restaurantPhone || "",
-      address: data.restaurant?.address || "",
-      country: data.restaurant?.country || "",
-      latitude: data.restaurant?.location?.lat || 0,
-      longitude: data.restaurant?.location?.lng || 0,
-      type: (data.restaurant?.cuisineTypes || []).join(","),
-      schedules: JSON.stringify(schedules),
-      kycDocuments: JSON.stringify(kycDocuments),
-      Ownerphone: data.owner?.ownerPhone || "",
-      ownerName: data.owner?.ownerName || "",
-      accountHolderName: data.bank?.accountTitle || "",
-      accountType: data.bank?.accountType || "",
-      bankName: data.bank?.bankName || "",
-      iban: data.bank?.iban || "",
-      profileImage: data.assets?.logo || "",
-      bannerImage: data.assets?.banner || "",
-    };
+    // Build FormData instead of JSON payload
+    const formData = new FormData();
+    formData.append("name", data.restaurant?.restaurantName || "");
+    formData.append("email", data.restaurant?.restaurantEmail || "");
+    formData.append("phone", data.restaurant?.restaurantPhone || "");
+    formData.append("address", data.restaurant?.address || "");
+    formData.append("country", data.restaurant?.country || "");
+    formData.append("latitude", String(data.restaurant?.location?.lat || 0));
+    formData.append("longitude", String(data.restaurant?.location?.lng || 0));
+    formData.append("type", (data.restaurant?.cuisineTypes || []).join(","));
+    formData.append("schedules", JSON.stringify(schedules));
+    formData.append("kycDocuments", JSON.stringify(kycDocuments));
+    formData.append("Ownerphone", data.owner?.ownerPhone || "");
+    formData.append("ownerName", data.owner?.ownerName || "");
+    formData.append("accountHolderName", data.bank?.accountTitle || "");
+    formData.append("accountType", data.bank?.accountType || "");
+    formData.append("bankName", data.bank?.bankName || "");
+    formData.append("iban", data.bank?.iban || "");
 
-    console.log("Final Payload:", payload);
-    await execute(payload);
+    // Append actual File objects (not base64)
+    if (logoFile) {
+      formData.append("profileImage", logoFile);
+    }
+    if (bannerFile) {
+      formData.append("bannerImage", bannerFile);
+    }
+
+    console.log("FormData keys:", Array.from(formData.keys()));
+    await execute(formData);
   };
 
   const SectionHeader = ({
