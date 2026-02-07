@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 interface LocationSwitcherProps {
   currentAddress: string;
   onAddressChange: (address: string) => void;
+  onLocationChange?: (lat: number, lng: number) => void;
 }
 
 interface Address {
@@ -30,6 +31,7 @@ interface Address {
 const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   currentAddress,
   onAddressChange,
+  onLocationChange,
 }) => {
   const tLocation = useTranslations("location.dropdown");
   const [loading, setLoading] = useState(false);
@@ -89,7 +91,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
               const address = results[0].formatted_address;
               setDetectedLocation(address);
               onAddressChange(address);
-              // Keep open to show detected location
+              // Pass lat/lng to parent
+              if (onLocationChange) {
+                onLocationChange(latitude, longitude);
+              }
             } else {
               console.error("Geocoder failed: " + status);
               onAddressChange("Address not found");

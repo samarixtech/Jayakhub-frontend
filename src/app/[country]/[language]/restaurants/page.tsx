@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import RestaurantHeader from "@/components/restaurants/Header";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { CLCProvider, useCLC } from "@/app/context/CLCContext";
 
@@ -56,6 +56,7 @@ const SHOPS = [
 
 const IndexPageContent: React.FC = () => {
   const params = useParams();
+  const searchParams = useSearchParams();
   const { setCLC } = useCLC();
   const [restaurants, setRestaurants] = useState<RestaurantProps[]>([]);
 
@@ -92,9 +93,16 @@ const IndexPageContent: React.FC = () => {
   );
 
   useEffect(() => {
-    fetchRestaurants();
+    const lat = searchParams.get("lat");
+    const lng = searchParams.get("lng");
+
+    if (lat && lng) {
+      fetchRestaurants(parseFloat(lat), parseFloat(lng));
+    } else {
+      fetchRestaurants();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchData = () => {

@@ -13,6 +13,8 @@ export async function registerRestaurantOnboardingAction(
 ): Promise<ActionResponse> {
   console.log("Server Action Received Data:", JSON.stringify(data, null, 2));
   const validation = validateSchema(restaurantRegistrationSchema, data);
+  console.log("Onboarding Data:", data || "undefined");
+
   if (!validation.success) {
     return {
       success: false,

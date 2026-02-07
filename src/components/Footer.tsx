@@ -1,7 +1,6 @@
 "use client";
 import { Send, MapPin, Phone, MessageSquare } from "lucide-react";
 import Link from "next/link";
-import ChatWidgetPortal from "./ai/ChatWidgetPortal";
 import { useTranslations } from "next-intl";
 
 const primaryyellow = "#0B5D4E";
@@ -33,8 +32,6 @@ const Footer = () => {
     <footer
       className={`bg-[${primaryyellow}] text-[#E8F4F1] pt-16 pb-8 border-t border-[#0B5D4E]/20`}
     >
-      <ChatWidgetPortal />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* GRID */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-10 border-b border-[#E8F4F1]/20 pb-12">

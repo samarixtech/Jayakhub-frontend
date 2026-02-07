@@ -4,7 +4,6 @@ import { NextIntlClientProvider } from "next-intl";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/components/ReduxProvider";
-// import NavbarHider from "@/components/NavbarHider";
 import { cookies } from "next/headers";
 import { CLCProvider } from "./context/CLCContext";
 import { Toaster } from "react-hot-toast";

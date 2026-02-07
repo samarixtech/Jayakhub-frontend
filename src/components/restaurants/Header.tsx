@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { getProfile } from "@/app/actions/customer/userprofile";
 import { logoutAction } from "@/app/actions/auth/auth";
 import Image from "next/image";
@@ -26,6 +27,8 @@ import arabicLogo from "../../../public/ArbicLogo (2).png";
 
 const RestaurantHeader = () => {
   const { country, language } = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [currentAddress, setCurrentAddress] = useState("New York, NY");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -75,6 +78,10 @@ const RestaurantHeader = () => {
             <LocationSwitcher
               currentAddress={currentAddress}
               onAddressChange={setCurrentAddress}
+              onLocationChange={(lat, lng) => {
+                // Update URL with lat/lng params
+                router.push(`${pathname}?lat=${lat}&lng=${lng}`);
+              }}
             />
           </div>
 

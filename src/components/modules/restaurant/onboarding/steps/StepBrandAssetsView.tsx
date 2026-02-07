@@ -42,12 +42,42 @@ export default function StepBrandAssetsView() {
     },
   });
 
-  // Helper to convert file to Base64
-  const fileToBase64 = (file: File): Promise<string> => {
+  // Helper to compress image
+  const compressImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 1024;
+          const MAX_HEIGHT = 1024;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7); // 70% quality
+          resolve(compressedBase64);
+        };
+        img.onerror = (error) => reject(error);
+      };
       reader.onerror = (error) => reject(error);
     });
   };
@@ -97,7 +127,7 @@ export default function StepBrandAssetsView() {
         "onboarding_brand_assets_previews",
         JSON.stringify(previewsToSave),
       );
-      toast.success("Brand assets saved! (Static)");
+      toast.success("Brand assets saved");
     } catch (e) {
       console.error(
         "Failed to save previews to localStorage (quota exceeded?)",
@@ -119,12 +149,13 @@ export default function StepBrandAssetsView() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       try {
-        const base64 = await fileToBase64(file);
+        const base64 = await compressImage(file);
         setLogoPreview(base64);
         setContextLogoPreview(base64);
         form.setValue("logo", file);
       } catch (err) {
-        console.error("Error converting logo to base64", err);
+        console.error("Error compressing logo", err);
+        toast.error("Failed to process image");
       }
     }
   };
@@ -140,11 +171,12 @@ export default function StepBrandAssetsView() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       try {
-        const base64 = await fileToBase64(file);
+        const base64 = await compressImage(file);
         setBannerPreview(base64);
         form.setValue("banner", file);
       } catch (err) {
-        console.error("Error converting banner to base64", err);
+        console.error("Error compressing banner", err);
+        toast.error("Failed to process image");
       }
     }
   };

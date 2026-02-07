@@ -73,7 +73,7 @@ export default function StepBankDetailsView() {
   const onSubmit = (data: BankDetailsInput) => {
     console.log("Static Mode: Saving Bank Details", data);
     localStorage.setItem("onboarding_bank_details", JSON.stringify(data));
-    toast.success("Bank details saved! (Static)");
+    toast.success("Bank details saved");
 
     // Navigate to Review Step
     router.push(`/${country}/${language}/restaurant/onboarding/step-review`);

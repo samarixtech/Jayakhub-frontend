@@ -64,7 +64,7 @@ export default function StepScheduleView() {
   const onSubmit = (data: any) => {
     console.log("Static Mode: Saving Schedule", data);
     localStorage.setItem("onboarding_schedule_info", JSON.stringify(data));
-    toast.success("Schedule saved! (Static)");
+    toast.success("Schedule saved");
     nextStep();
     router.push(`/${country}/${language}/restaurant/onboarding/step-kyc`);
   };

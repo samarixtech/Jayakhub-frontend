@@ -156,7 +156,7 @@ export default function StepRestaurantInfoView() {
       JSON.stringify(dataToSave),
     );
 
-    toast.success("Restaurant info saved! (Static)");
+    toast.success("Restaurant info saved");
     nextStep();
     router.push(
       `/${country}/${language}/restaurant/onboarding/step-brand-assets`,

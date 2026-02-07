@@ -112,6 +112,8 @@ export const restaurantRegistrationSchema = z.object({
   accountType: z.string(), // Using this field for account type as per payload example
   bankName: z.string(),
   iban: z.string(),
+  profileImage: z.string().optional(),
+  bannerImage: z.string().optional(),
 });
 
 export type RestaurantRegistrationInput = z.infer<

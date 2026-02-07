@@ -73,7 +73,7 @@ export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {
     console.log("Static Mode: Saving Owner Info", data);
     try {
       localStorage.setItem("onboarding_owner_info", JSON.stringify(data));
-      toast.success("Owner info saved! (Static)");
+      toast.success("Owner info saved");
     } catch (e) {
       console.error("LocalStorage Save Error", e);
     }

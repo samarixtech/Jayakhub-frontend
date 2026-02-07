@@ -1,14 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store/store";
+import { clearCart } from "@/redux/slices/cartSlice";
 
 export default function OrderConfirmedView() {
   const params = useParams();
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const { country, language, id } = params;
+
+  // Clear cart on mount (handles Stripe redirect success)
+  useEffect(() => {
+    dispatch(clearCart());
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">

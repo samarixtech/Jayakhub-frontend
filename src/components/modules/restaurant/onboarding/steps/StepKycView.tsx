@@ -133,7 +133,7 @@ export default function StepKycView() {
     localStorage.setItem("onboarding_kyc_type", kycType);
     localStorage.setItem("onboarding_doc_type", docType);
 
-    toast.success("Verification documents submitted! (Static)");
+    toast.success("Verification documents submitted");
     router.push(
       `/${country}/${language}/restaurant/onboarding/step-bank-details`,
     );

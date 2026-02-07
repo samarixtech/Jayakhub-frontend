@@ -162,6 +162,8 @@ export default function StepReviewView() {
       accountType: data.bank?.accountType || "",
       bankName: data.bank?.bankName || "",
       iban: data.bank?.iban || "",
+      profileImage: data.assets?.logo || "",
+      bannerImage: data.assets?.banner || "",
     };
 
     console.log("Final Payload:", payload);
