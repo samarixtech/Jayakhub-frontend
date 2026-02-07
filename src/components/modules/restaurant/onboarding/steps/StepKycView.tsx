@@ -180,11 +180,10 @@ export default function StepKycView() {
                 key={type.id}
                 type="button"
                 onClick={() => setKycType(type.id)}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                  kycType === type.id
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${kycType === type.id
                     ? "bg-white text-[#346853] shadow-sm"
                     : "text-gray-400 hover:text-gray-600"
-                }`}
+                  }`}
               >
                 {type.label}
               </button>
@@ -279,11 +278,10 @@ export default function StepKycView() {
                 key={type.id}
                 type="button"
                 onClick={() => setDocType(type.id)}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                  docType === type.id
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${docType === type.id
                     ? "bg-white text-[#346853] shadow-sm"
                     : "text-gray-400 hover:text-gray-600"
-                }`}
+                  }`}
               >
                 {type.label}
               </button>
@@ -350,7 +348,7 @@ export default function StepKycView() {
         </div>
       </div>
 
-      <div className="flex justify-between items-center pt-4 border-t border-gray-50 mt-8">
+      <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 mt-8 gap-4 sm:gap-0">
         <Button
           type="button"
           variant="ghost"
@@ -358,12 +356,12 @@ export default function StepKycView() {
             prevStep();
             router.back();
           }}
-          className="text-gray-400 font-bold hover:bg-transparent"
+          className="w-full sm:w-auto text-gray-400 font-bold hover:bg-transparent"
         >
           Back
         </Button>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <Typography className="text-sm font-medium text-gray-500">
             Step 05 of 06
           </Typography>
@@ -372,7 +370,7 @@ export default function StepKycView() {
             disabled={
               (!kycFile && !savedKycName) || (!docFile && !savedDocName)
             }
-            className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
+            className="w-full sm:w-auto bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
           >
             Next Step
           </Button>
