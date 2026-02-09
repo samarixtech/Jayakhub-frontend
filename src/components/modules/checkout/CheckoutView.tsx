@@ -24,43 +24,28 @@ import { RootState, AppDispatch } from "@/redux/store/store";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
-
-// Mock Social Icons (replace with actual assets if available)
-const SocialButton = ({
-  icon,
-  text,
-  bg = "bg-white",
-  textCol = "text-gray-900",
-  border = "border-gray-200",
-}: any) => (
-  <button
-    className={`w-full h-12 flex items-center justify-center gap-3 rounded-lg border ${border} ${bg} ${textCol} font-bold text-sm hover:opacity-90 transition-opacity`}
-  >
-    <span>{icon}</span> {text}
-  </button>
-);
+import useLocale from "@/hooks/useLocals";
 
 const CheckoutView = () => {
-  // --- Redux ---
+  //  REDUX
   const dispatch = useDispatch<AppDispatch>();
   const cart = useSelector((state: RootState) => state.cart.items);
   const router = useRouter();
 
-  // --- State ---
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<any>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "cod">(
-    "stripe",
-  ); // Default to stripe
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "cod">("cod"); // Default to cod
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isAddNewAddressModalOpen, setIsAddNewAddressModalOpen] =
     useState(false);
 
-  // --- Actions ---
+  const { country, language } = useLocale();
+
+  // ACTIONS
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       toast.error("Please select a delivery address.");
@@ -110,16 +95,8 @@ const CheckoutView = () => {
           // COD Success
           toast.success("Order placed successfully!");
           dispatch(clearCart());
-          // Redirect to order status page (simulated)
-          // Ideally we'd have the order ID to redirect to /order/[id]
-          // For now, redirecting to home or a generic success page?
-          // User requested: "redirect to order summary page just like given screenshot"
-          // Assuming this means the "Order Journey" page which likely takes an ID.
-          // Let's assume response.data.orderId exists.
           const orderId = res.data?.orderId || "new";
-          router.push(
-            `/${userProfile?.country || "US"}/${userProfile?.language || "en"}/order-confirmation/${orderId}`,
-          );
+          router.push(`/${country}/${language}/order-confirmation/${orderId}`);
         } else {
           // Stripe Success
           if (res.data?.url) {

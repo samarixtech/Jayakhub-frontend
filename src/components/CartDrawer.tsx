@@ -43,7 +43,9 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   };
 
   const handleCheckout = () => {
-    router.push(`/${country}/${language}/checkout`);
+    router.push(
+      `/${country.toLocaleLowerCase()}/${language.toLocaleLowerCase()}/checkout`,
+    );
     onClose();
   };
 

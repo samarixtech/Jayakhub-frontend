@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import api from "@/components/services/api";
 
 /* ---------- API TYPES ---------- */
 
@@ -41,8 +42,8 @@ export default function useLocale(): Locale {
   const [error, setError] = useState<string>();
 
   function applyFallback() {
-    setCountry("Pakistan");
-    setCountryCode("PK");
+    setCountry("pk");
+    setCountryCode("pk");
     setLanguage("en");
     setDir("ltr");
 
@@ -53,10 +54,9 @@ export default function useLocale(): Locale {
   useEffect(() => {
     async function fetchLocale() {
       try {
-        const res = await axios.get<DetectApiResponse>(
-          "http://192.168.100.9:5000/api/v1/detect",
-          { timeout: 10000 },
-        );
+        const res = await api.get<DetectApiResponse>("/detect", {
+          timeout: 10000,
+        });
 
         const data = res.data?.data;
 
@@ -69,7 +69,7 @@ export default function useLocale(): Locale {
           ? "rtl"
           : "ltr";
 
-        setCountry(data.country);
+        setCountry(data.code);
         setCountryCode(data.code);
         setLanguage(lang);
         setDir(direction);

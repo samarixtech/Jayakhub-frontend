@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import { Heart, Star, Clock, Bike } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter, useParams } from "next/navigation";
@@ -50,16 +48,6 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
             {data.discount}
           </Badge>
         )}
-
-        {/* Favorite Button */}
-        <button
-          onClick={(e) => e.stopPropagation()}
-          className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur-md rounded-full hover:bg-white transition-colors"
-        >
-          <Heart
-            className={`h-4 w-4 ${data.isFavorite ? "fill-red-500 text-red-500" : "text-gray-700"}`}
-          />
-        </button>
       </div>
 
       {/* Content */}

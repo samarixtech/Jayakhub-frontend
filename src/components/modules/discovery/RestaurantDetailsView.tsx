@@ -308,15 +308,6 @@ export default function RestaurantDetailsView() {
                 </div>
               </div>
             </div>
-
-            <div className="flex gap-2">
-              <button className="px-4 py-2 bg-gray-100 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-200 transition-colors">
-                Group Order
-              </button>
-              <button className="p-2 bg-gray-100 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors">
-                <Heart className="w-5 h-5" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
