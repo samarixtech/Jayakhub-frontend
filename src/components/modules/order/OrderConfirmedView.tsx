@@ -19,7 +19,7 @@ export default function OrderConfirmedView() {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="w-full flex items-center justify-center p-4 py-12 md:py-20">
       <div className="flex flex-col items-center text-center max-w-md w-full">
         {/* Success Icon */}
         <div className="w-24 h-24 bg-[#346853]/10 rounded-full flex items-center justify-center mb-6">
@@ -53,7 +53,7 @@ export default function OrderConfirmedView() {
             onClick={() => router.push(`/${country}/${language}/restaurants`)}
             className="w-full text-xs font-bold text-gray-500 hover:text-gray-900 hover:bg-transparent"
           >
-            Continue Shopping
+            Continue Order
           </Button>
         </div>
       </div>

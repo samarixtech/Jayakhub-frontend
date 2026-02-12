@@ -6,10 +6,8 @@ import { getProfile } from "@/app/actions/customer/userprofile";
 import { logoutAction } from "@/app/actions/auth/auth";
 import Image from "next/image";
 import { useSelector } from "react-redux";
-import { FiShoppingBag, FiSearch } from "react-icons/fi";
+import { FiShoppingBag, FiSearch, FiSliders } from "react-icons/fi";
 import { RootState } from "@/redux/store/store";
-
-// Components
 import CartDrawer from "@/components/CartDrawer";
 import useLocale from "@/hooks/useLocals";
 import LanguageSwitcher from "../common/LanguageSwitcher";
@@ -58,27 +56,63 @@ const RestaurantHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 shrink-0">
-      <nav className="w-full flex items-center justify-between bg-emerald-bg h-20 px-6 md:px-12 shadow-lg gap-4">
-        {/* 1. Logo Section */}
-        <div className="flex items-center gap-4 shrink-0">
-          <LocalizedLink href="/home">
-            <Image
-              src={language === "ar" ? arabicLogo : engLogo}
-              alt="Logo"
-              width={270}
-              className="object-contain"
-              priority
-            />
-          </LocalizedLink>
-        </div>
+      <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4">
+        {/* ROW 1 (Mobile): Auth (Left) | Logo (Center) | Lang Only (Right) */}{" "}
+        {/* Mobile: Emerald BG + Padding. Desktop: Transparent + No Padding (Flows in Nav) */}
+        <div className="bg-emerald-bg px-4 py-3 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4">
+          {/* LEFT: Auth (Mobile Only) */}
+          <div className="md:hidden">
+            {!isLoggedIn ? (
+              <Button
+                variant="ghost"
+                className="text-white text-xs font-bold h-8 px-2 hover:bg-white/10"
+                asChild
+              >
+                <LocalizedLink href={`/login`}>Login</LocalizedLink>
+              </Button>
+            ) : (
+              <UserProfile
+                user={user}
+                country={country}
+                language={language}
+                onLogout={async () => {
+                  await logoutAction();
+                  setIsLoggedIn(false);
+                  setUser(null);
+                  window.location.href = `/${country}/${language}/login`;
+                }}
+              />
+            )}
+          </div>
 
-        {/* 2. Middle Section: Location & Search */}
-        <div className="flex flex-1 items-center gap-3 max-w-2xl lg:max-w-none">
-          <div className="hidden md:block shrink-0 lg:pr-10">
+          {/* CENTER: Logo */}
+          <div className="flex items-center gap-4 shrink-0">
+            <LocalizedLink href="/restaurants">
+              <Image
+                src={language === "ar" ? arabicLogo : engLogo}
+                alt="Logo"
+                width={150} // Slightly smaller on mobile default
+                className="object-contain w-[150px] md:w-[200px]"
+                priority
+              />
+            </LocalizedLink>
+          </div>
+
+          {/* RIGHT: Lang Only (Cart Moved to Row 2) */}
+          <div className="flex items-center gap-2 md:hidden">
+            <LanguageSwitcher />
+          </div>
+        </div>
+        {/* ROW 2 (Mobile): Location Switcher + Cart */}
+        {/* Mobile: White BG + Padding. Desktop: Transparent + No Padding */}
+        <div className="bg-white px-4 pt-3 pb-1 md:bg-transparent md:p-0 md:mt-0 md:flex md:items-center md:gap-3 flex gap-3">
+          {/* Location Switcher */}
+          <div className="flex-1 md:flex-none md:w-auto shrink-0 overflow-hidden">
             <LocationSwitcher
               currentAddress={currentAddress}
               onAddressChange={setCurrentAddress}
               isLoggedIn={isLoggedIn}
+              className="w-full md:min-w-[180px] md:max-w-sm" // Full width on mobile
               onLocationChange={(lat, lng) => {
                 // Update URL with lat/lng params
                 const params = new URLSearchParams(searchParams.toString());
@@ -89,18 +123,45 @@ const RestaurantHeader = () => {
             />
           </div>
 
-          <div className="relative flex-1 hidden lg:block max-w-[500px]">
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          {/* Cart Button (Mobile Only - Moved to Row 2) */}
+          <div className="relative md:hidden shrink-0">
+            <Button
+              onClick={() => setIsDrawerOpen(true)}
+              variant="secondary"
+              size="icon"
+              className="h-10 w-10 rounded-full bg-white text-emerald-900 hover:bg-gray-100 shadow-sm overflow-visible"
+            >
+              <FiShoppingBag className="w-5 h-5" />
+            </Button>
+            {totalItems > 0 && (
+              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full bg-red-500 text-white pointer-events-none">
+                {totalItems > 9 ? "9+" : totalItems}
+              </Badge>
+            )}
+          </div>
+        </div>
+        {/* ROW 3 (Mobile) / Desktop Search: Search Bar + Filter */}
+        {/* Mobile: White BG + Padding. Desktop: Transparent + No Padding */}
+        <div className="bg-white px-4 pb-3 pt-1 md:bg-transparent md:p-0 md:mt-0 relative flex-1 w-full flex items-center justify-center gap-2">
+          <div className="relative flex-1 md:max-w-xl md:mx-auto">
+            <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
-              className="w-full bg-white rounded-full border-none h-10 pl-10 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-500 text-sm"
+              className="w-full bg-white rounded-full border-none h-11 pl-9 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-500 text-sm shadow-sm"
               placeholder="Search for food..."
               type="search"
             />
           </div>
+          {/* Filter Icon (Mobile Only - usually, but placed here for structure) */}
+          <Button
+            size="icon"
+            variant="secondary"
+            className="md:hidden h-9 w-9 rounded-full bg-white text-emerald-900 shadow-sm"
+          >
+            <FiSliders className="w-4 h-4" />
+          </Button>
         </div>
-
-        {/* 3. Right Section: Language, Cart & Profile */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Desktop Right Section: Language, Cart & Profile (Hidden on Mobile) */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
           <div className="hidden sm:block">
             <LanguageSwitcher />
           </div>

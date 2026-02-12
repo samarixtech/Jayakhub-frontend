@@ -129,8 +129,25 @@ export async function resetPasswordAction(
     };
   }
 
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    return {
+      success: false,
+      message: "Session expired or invalid. Please verify OTP again.",
+    };
+  }
+
   return responseHandler(
-    async () => api.post("/set-new-password", { password: data.password }),
+    async () =>
+      api.post(
+        "/set-new-password",
+        { password: data.password },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      ),
     "Password updated successfully!",
   );
 }

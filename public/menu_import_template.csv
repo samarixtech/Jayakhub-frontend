@@ -1,0 +1,9 @@
+name,image,description,price,dietryType,category,variantGroup,variantOption,variantPrice
+Chicken Biryani,biryani.jpg,Aromatic basmati rice cooked with tender chicken and spices,12.99,Halal,Main Course,Spiciness,Medium,0
+Chicken Biryani,biryani.jpg,Aromatic basmati rice cooked with tender chicken and spices,12.99,Halal,Main Course,Spiciness,Spicy,0
+Hummus,hummus.jpg,Creamy chickpea dip with tahini garlic and olive oil,5.99,Vegan,Appetizers,Portion Size,Small,0
+Hummus,hummus.jpg,Creamy chickpea dip with tahini garlic and olive oil,5.99,Vegan,Appetizers,Portion Size,Large,2.00
+Grilled Salmon,salmon.jpg,Fresh Atlantic salmon grilled to perfection served with vegetables,18.50,Gluten-Free,Seafood,Cooking Style,Well-Done,0
+Grilled Salmon,salmon.jpg,Fresh Atlantic salmon grilled to perfection served with vegetables,18.50,Gluten-Free,Seafood,Cooking Style,Medium-Rare,0
+Chocolate Lava Cake,lava_cake.jpg,Rich chocolate cake with a molten center served with vanilla ice cream,7.50,Vegetarian,Desserts,Toppings,Extra Chocolate Sauce,1.50
+Chocolate Lava Cake,lava_cake.jpg,Rich chocolate cake with a molten center served with vanilla ice cream,7.50,Vegetarian,Desserts,Toppings,Whipped Cream,0.50

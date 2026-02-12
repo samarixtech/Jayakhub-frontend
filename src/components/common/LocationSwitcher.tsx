@@ -16,6 +16,7 @@ interface LocationSwitcherProps {
   onAddressChange: (address: string) => void;
   onLocationChange?: (lat: number, lng: number) => void;
   isLoggedIn?: boolean;
+  className?: string;
 }
 
 interface Address {
@@ -36,6 +37,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   onAddressChange,
   onLocationChange,
   isLoggedIn = false,
+  className,
 }) => {
   const tLocation = useTranslations("location.dropdown");
   const [loading, setLoading] = useState(false);
@@ -120,7 +122,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center justify-start min-w-[180px] max-w-sm h-11 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4"
+          className={cn(
+            "flex items-center justify-start min-w-[180px] max-w-sm h-11 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4",
+            className,
+          )}
         >
           <MapPin className="w-5 h-5 text-emerald-bg shrink-0" />
           <span className="text-sm font-semibold truncate flex-1 text-left">

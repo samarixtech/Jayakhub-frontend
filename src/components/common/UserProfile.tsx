@@ -18,8 +18,10 @@ import LocalizedLink from "@/components/navigation/LocalizedLink";
 
 interface UserNavProps {
   user: {
+    name?: string;
     email: string;
-    image?: string;
+    avatar?: string;
+    image?: string; // Keep for backward compatibility if needed
   } | null;
   onLogout?: () => void;
   country: string;
@@ -33,9 +35,18 @@ const UserProfile: React.FC<UserNavProps> = ({
   language,
 }) => {
   const tProfile = useTranslations("profile");
+  const imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
 
-  // Get initials for Avatar Fallback
-  const initials = user?.email?.substring(0, 2).toUpperCase() || "??";
+  // Construct Avatar URL
+  // If user.avatar exists, prepend base URL. If not, check user.image.
+  const avatarSrc = user?.avatar
+    ? `${imageBaseUrl}${user.avatar}`
+    : user?.image || undefined;
+
+  // Get initials for Avatar Fallback from Name
+  const initials = user?.name
+    ? user.name.charAt(0).toUpperCase()
+    : user?.email?.substring(0, 2).toUpperCase() || "??";
 
   const userNavigationLinks = [
     {
@@ -67,7 +78,7 @@ const UserProfile: React.FC<UserNavProps> = ({
         >
           <Avatar className="h-10 w-10 border-2 border-white shadow-md rounded-full cursor-pointer">
             <AvatarImage
-              src={user?.image}
+              src={avatarSrc}
               alt="Profile"
               className="object-cover"
             />
@@ -92,7 +103,7 @@ const UserProfile: React.FC<UserNavProps> = ({
           <div className="relative z-10 flex items-center gap-4">
             <Avatar className="h-14 w-14 border-4 border-white/20 shadow-lg rounded-full">
               <AvatarImage
-                src={user?.image}
+                src={avatarSrc}
                 alt="Profile"
                 className="object-cover"
               />

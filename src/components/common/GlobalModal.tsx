@@ -35,7 +35,7 @@ export function GlobalModal({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent
         className={cn(
-          "sm:max-w-[480px] rounded-3xl p-10 border-none shadow-2xl bg-white",
+          "sm:max-w-[480px] rounded-2xl p-5 border-none shadow-2xl bg-white",
           className,
         )}
       >

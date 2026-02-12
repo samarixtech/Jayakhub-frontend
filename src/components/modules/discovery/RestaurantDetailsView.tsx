@@ -6,12 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store/store";
 import { addToCart } from "@/redux/slices/cartSlice";
 
-import { MenuItem, CartItem, SimilarRestaurant } from "@/types/menu";
-
 import HorizontalScroller from "@/components/HorizontalScroller";
 import ProductModal from "@/components/ProductModal";
-import SimilarRestaurantsSection from "@/components/SimilarRestaurant";
-import Header from "@/components/restaurants/Header";
 import FloatingCart from "@/components/FloatingCart";
 import CartDrawer from "@/components/CartDrawer";
 import RestaurantSkeleton from "@/components/skeletons/RestaurantSkeleton";
@@ -74,7 +70,7 @@ const FoodCard: React.FC<FoodCardProps> = ({
 }) => {
   const imageUrl = item.image
     ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${item.image.replace(/\\/g, "/")}`
-    : "/images/food/burger.jpg";
+    : "/pizza-palace.jpg";
 
   return (
     <div
@@ -188,7 +184,7 @@ export default function RestaurantDetailsView() {
       name: item.name,
       price: item.basePrice,
       imageUrl: item.image
-        ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${item.image.replace(/\\/g, "/")}`
+        ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${item.image.replace(/\\/g, "/")}`
         : "",
       description: item.description,
       quantity: 1,
@@ -196,10 +192,6 @@ export default function RestaurantDetailsView() {
       restaurantId: restaurant?.id,
     };
     dispatch(addToCart(cartItem));
-  };
-
-  const handleCheckout = () => {
-    router.push(`/${country}/${language}/checkout`);
   };
 
   const menuByCategories = useMemo(() => {
@@ -230,11 +222,11 @@ export default function RestaurantDetailsView() {
 
   const bannerUrl = restaurant?.bannerImage
     ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${restaurant.bannerImage.replace(/\\/g, "/")}`
-    : "/images/restaurant-bg.jpg";
+    : "/pizza-palace.jpg";
 
   const profileUrl = restaurant?.profileImage
     ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${restaurant.profileImage.replace(/\\/g, "/")}`
-    : "/images/food/burger.jpg";
+    : "/pizza-palace.jpg";
 
   const totalCartPrice = cart.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -255,8 +247,6 @@ export default function RestaurantDetailsView() {
 
   return (
     <div className="min-h-screen bg-white font-sans">
-      <Header />
-
       {/* Hero Section */}
       <div className="w-full relative">
         <div className="h-[250px] md:h-[350px] w-full relative overflow-hidden">

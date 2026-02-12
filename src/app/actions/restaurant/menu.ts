@@ -1,9 +1,8 @@
 "use server";
+import { executeRestaurantAction } from "@/lib/utils/execute-restaurant-action";
 
-import { serverApi } from "@/components/services/api";
-import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
-import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { ActionResponse } from "@/lib/utils/response-handler";
+import { BulkImportItem } from "@/types/menu.types";
 
 interface VariantOption {
   name: string;
@@ -15,185 +14,14 @@ interface CreateVariantGroupPayload {
   options: VariantOption[];
 }
 
-export async function createVariantGroupAction(
-  payload: CreateVariantGroupPayload,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return {
-      success: false,
-      message: "Restaurant ID not found. Please log in again.",
-    };
-  }
-
-  const apiPayload = {
-    restaurantId,
-    groupName: payload.groupName,
-    options: payload.options,
-  };
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.post("/add-variant", apiPayload);
-    },
-    "Variant group created successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/variants");
-      return data;
-    },
-  );
-}
-
-export async function getVariantGroupsAction(): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return {
-      success: false,
-      message: "Restaurant ID not found",
-    };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.get(`/all-variant/${restaurantId}`);
-    },
-    "Variants fetched successfully",
-    async (data) => data,
-  );
-}
 interface UpdateVariantGroupPayload {
   id: string;
   groupName: string;
   options: VariantOption[];
 }
 
-export async function updateVariantGroupAction(
-  payload: UpdateVariantGroupPayload,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.put("/update-variant", { ...payload, restaurantId });
-    },
-    "Variant group updated successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/variants");
-      return data;
-    },
-  );
-}
-
-export async function deleteVariantGroupAction(
-  id: string,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.delete(`/delete-group/${id}`);
-    },
-    "Variant group deleted successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/variants");
-      return data;
-    },
-  );
-}
-
-// ==================== KEY CATEGORY ACTIONS ====================
-
 interface AddCategoryPayload {
   categoryName: string;
-}
-
-export async function addCategoryAction(
-  payload: AddCategoryPayload,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.post("/add-category", {
-        restaurantId,
-        categoryName: payload.categoryName,
-      });
-    },
-    "Category created successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/categories");
-      return data;
-    },
-  );
-}
-
-interface DeleteCategoryPayload {
-  id: string;
-}
-
-export async function deleteCategoryAction(
-  id: string,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.delete(`/delete-category/${id}`);
-    },
-    "Category deleted successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/categories");
-      return data;
-    },
-  );
-}
-
-export async function getAllCategoriesAction(): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.get(`/allCategory`, { params: { restaurantId } });
-    },
-    "Categories fetched successfully",
-    async (data) => data,
-  );
 }
 
 interface UpdateCategoryPayload {
@@ -201,147 +29,181 @@ interface UpdateCategoryPayload {
   categoryName: string;
 }
 
+interface BulkImportPayload {
+  items: Omit<BulkImportItem, "itemImage">[];
+  itemImage: string[];
+}
+
+// interface CreateItemPayload {
+//   name: string;
+//   description: string;
+//   basePrice: number | string;
+//   dietaryType: string;
+//   category: string;
+//   variations: { name: string; additionalPrice: number }[];
+//   itemImage?: string;
+// }
+
+// interface DeleteCategoryPayload {
+//   id: string;
+// }
+
+// ==================== VARIATION ACTIONS ====================
+
+export async function createVariantGroupAction(
+  payload: CreateVariantGroupPayload,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.post("/add-variant", {
+        restaurantId,
+        groupName: payload.groupName,
+        options: payload.options,
+      }),
+    "Variant group created successfully",
+    "/restaurant/menu/variants",
+  );
+}
+
+export async function getVariantGroupsAction(): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) => api.get(`/all-variant/${restaurantId}`),
+    "Variants fetched successfully",
+  );
+}
+
+export async function updateVariantGroupAction(
+  payload: UpdateVariantGroupPayload,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.put("/update-variant", { ...payload, restaurantId }),
+    "Variant group updated successfully",
+    "/restaurant/menu/variants",
+  );
+}
+
+export async function deleteVariantGroupAction(
+  id: string,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.delete(`/delete-group/${id}`),
+    "Variant group deleted successfully",
+    "/restaurant/menu/variants",
+  );
+}
+
+// ==================== KEY CATEGORY ACTIONS ====================
+
+export async function addCategoryAction(
+  payload: AddCategoryPayload,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.post("/add-category", {
+        restaurantId,
+        categoryName: payload.categoryName,
+      }),
+    "Category created successfully",
+    "/restaurant/menu/categories",
+  );
+}
+
+export async function deleteCategoryAction(
+  id: string,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.delete(`/delete-category/${id}`),
+    "Category deleted successfully",
+    "/restaurant/menu/categories",
+  );
+}
+
+export async function getAllCategoriesAction(): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.get(`/allCategory`, { params: { restaurantId } }),
+    "Categories fetched successfully",
+  );
+}
+
 export async function updateCategoryAction(
   payload: UpdateCategoryPayload,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.put("/update-category", { ...payload, restaurantId });
-    },
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.put("/update-category", { ...payload, restaurantId }),
     "Category updated successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/categories");
-      return data;
-    },
+    "/restaurant/menu/categories",
   );
 }
 
 // ==================== ITEM ACTIONS ====================
 
-interface CreateItemPayload {
-  name: string;
-  description: string;
-  basePrice: number | string;
-  dietaryType: string;
-  category: string;
-  variations: { name: string; additionalPrice: number }[];
-  itemImage?: string;
-}
-
 export async function createItemAction(
   formData: FormData,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  formData.append("restaurantId", restaurantId);
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
+  return executeRestaurantAction(
+    (api, restaurantId) => {
+      formData.append("restaurantId", restaurantId);
       return api.post("/item-add", formData);
     },
     "Item created successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/items");
-      return data;
-    },
+    "/restaurant/menu/items",
   );
 }
 
 export async function getMenuItemsAction(): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.get(`/item-menu/${restaurantId}`);
-    },
+  return executeRestaurantAction(
+    (api, restaurantId) => api.get(`/item-menu/${restaurantId}`),
     "Menu fetched successfully",
-    async (data) => data,
   );
 }
 
 export async function updateItemAction(
   formData: FormData,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  formData.append("restaurantId", restaurantId);
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
+  return executeRestaurantAction(
+    (api, restaurantId) => {
+      formData.append("restaurantId", restaurantId);
       return api.put("/update-item", formData);
     },
     "Item updated successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/items");
-      return data;
-    },
+    "/restaurant/menu/items",
   );
 }
 export async function getMenuItemByIdAction(
   id: string,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.get(`/menu/${id}`);
-    },
+  return executeRestaurantAction(
+    (api) => api.get(`/menu/${id}`),
     "Item fetched successfully",
-    async (data) => data,
   );
 }
 
 export async function deleteMenuItemAction(
   id: string,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.delete(`/item-delete/${id}`);
-    },
+  return executeRestaurantAction(
+    (api) => api.delete(`/item-delete/${id}`),
     "Item deleted successfully",
-    async (data) => {
-      revalidatePath("/restaurant/menu/items");
-      return data;
-    },
+    "/restaurant/menu/items",
+  );
+}
+
+// ==================== BULK IMPORT ACTIONS ====================
+
+export async function bulkImportItemsAction(
+  payload: BulkImportPayload,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.post("/item-bulk", {
+        restaurantId,
+        items: payload.items,
+        itemImage: payload.itemImage,
+      }),
+    "Items imported successfully",
+    "/restaurant/menu/items",
   );
 }

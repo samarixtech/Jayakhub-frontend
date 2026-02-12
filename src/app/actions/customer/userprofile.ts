@@ -24,9 +24,9 @@ export async function updateProfileAction(
   formData: FormData,
 ): Promise<ActionResponse> {
   const payload = {
-    name: formData.get("name") as string,
-    lastName: formData.get("lastName") as string,
-    phone: formData.get("phone") as string,
+    name: formData.get("name")?.toString() || "",
+    lastName: formData.get("lastName")?.toString() || undefined,
+    phone: formData.get("phone")?.toString() || "",
   };
   const validation = validateSchema(
     updateProfileSchema.omit({ avatar: true }),
@@ -35,7 +35,7 @@ export async function updateProfileAction(
   if (!validation.success) {
     return {
       success: false,
-      message: "Validation Validation failed",
+      message: "Validation failed",
       errors: validation.errors,
     };
   }

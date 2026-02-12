@@ -53,9 +53,23 @@ export default function useLocale(): Locale {
 
   useEffect(() => {
     async function fetchLocale() {
+      // 1. Check Cookies FIRST
+      const existingCountry = Cookies.get("USER_COUNTRY");
+      const existingLang = Cookies.get("NEXT_LOCALE");
+
+      if (existingCountry && existingLang) {
+        setCountry(existingCountry);
+        setCountryCode(existingCountry);
+        setLanguage(existingLang);
+        setDir(RTL_LANGS.includes(existingLang) ? "rtl" : "ltr");
+        setLoading(false);
+        return; // EXIT EARLY - NO API CALL
+      }
+
+      // 2. Only API if Cookies Missing (should be rare due to middleware/root page)
       try {
         const res = await api.get<DetectApiResponse>("/detect", {
-          timeout: 10000,
+          timeout: 5000,
         });
 
         const data = res.data?.data;
@@ -81,14 +95,14 @@ export default function useLocale(): Locale {
           expires: 365,
         });
 
-        console.log("🌍 Locale detected:", {
+        console.log("🌍 Locale detected (Client Fallback):", {
           country: data.country,
           code: data.code,
           language: lang,
           dir: direction,
         });
       } catch (err: any) {
-        console.error("❌ Locale detection failed:", err.message);
+        console.error("❌ Locale detection failed (Client):", err.message);
         setError(err.message);
         applyFallback();
       } finally {

@@ -1,5 +1,5 @@
 "use client";
-import { Heart, Star, Clock, Bike } from "lucide-react";
+import { Star, Clock, Bike } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter, useParams } from "next/navigation";
 
@@ -32,10 +32,10 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
   return (
     <div
       onClick={handleClick}
-      className="group min-w-[320px] w-[320px] cursor-pointer"
+      className="group min-w-[259px] w-[259px] cursor-pointer"
     >
       {/* Image Container */}
-      <div className="relative h-48 w-full rounded-2xl overflow-hidden shadow-sm">
+      <div className="relative h-39 w-full rounded-2xl overflow-hidden shadow-sm">
         <img
           src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${data.image}`}
           alt={data.name}

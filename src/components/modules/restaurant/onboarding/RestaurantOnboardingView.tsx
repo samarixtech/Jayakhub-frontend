@@ -65,11 +65,20 @@ function RestaurantOnboardingContent() {
   return (
     <div className="min-h-screen  p-6 flex flex-col items-center justify-center">
       <Card className="w-full max-w-3xl border-none shadow-sm rounded-[32px] bg-white overflow-hidden p-8 sm:p-12">
-        <OnboardingHeader logoPreview={logoPreview} />
-        <StepperProgress currentStep={currentStep} />
+        <OnboardingHeader
+          logoPreview={logoPreview}
+          onBack={prevStep}
+          showBack={currentStep > 1}
+        />
+        <StepperProgress
+          currentStep={currentStep}
+          onStepClick={setCurrentStep}
+        />
 
         <CardContent className="p-0 mt-8">{renderStep()}</CardContent>
       </Card>
     </div>
   );
 }
+
+export default RestaurantOnboardingContent;

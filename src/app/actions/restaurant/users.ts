@@ -1,9 +1,7 @@
 "use server";
 
-import { serverApi } from "@/components/services/api";
-import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
-import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { executeRestaurantAction } from "@/lib/utils/execute-restaurant-action";
+import { ActionResponse } from "@/lib/utils/response-handler";
 
 interface CreateUserPayload {
   firstName: string;
@@ -12,48 +10,6 @@ interface CreateUserPayload {
   password?: string;
   role: string;
   status: boolean;
-}
-
-export async function createRestaurantUserAction(
-  payload: CreateUserPayload,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  // API expects payload + restaurantId
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.post("/create-restaurant-user", { ...payload, restaurantId });
-    },
-    "User created successfully",
-    async (data) => {
-      revalidatePath("/restaurant/users");
-      return data;
-    },
-  );
-}
-
-export async function getRestaurantUsersAction(): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.get("/get-user-restaurant", { params: { restaurantId } });
-    },
-    "Users fetched successfully",
-    async (data) => data,
-  );
 }
 
 interface UpdateUserPayload {
@@ -66,71 +22,59 @@ interface UpdateUserPayload {
   status: boolean;
 }
 
+// ==================== CREATE RESTAURANT USER ACTIONS ====================
+export async function createRestaurantUserAction(
+  payload: CreateUserPayload,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.post("/create-restaurant-user", { ...payload, restaurantId }),
+    "User created successfully",
+    "/restaurant/users",
+  );
+}
+
+// ==================== GET RESTAURANT USERS ACTIONS ====================
+export async function getRestaurantUsersAction(): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.get("/get-user-restaurant", { params: { restaurantId } }),
+    "Users fetched successfully",
+  );
+}
+
+// ==================== UPDATE RESTAURANT USER ACTIONS ====================
 export async function updateRestaurantUserAction(
   payload: UpdateUserPayload,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.put(`/update-restaurant-user/${payload.id}`, {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.put(`/update-restaurant-user/${payload.id}`, {
         ...payload,
         restaurantId,
-      });
-    },
+      }),
     "User updated successfully",
-    async (data) => {
-      revalidatePath("/restaurant/users");
-      return data;
-    },
+    "/restaurant/users",
   );
 }
 
+// ==================== GET RESTAURANT USER BY ID ACTIONS ====================
 export async function getRestaurantUserByIdAction(
   id: string,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.get(`/get-restaurant-user/${id}`);
-    },
+  return executeRestaurantAction(
+    (api) => api.get(`/get-restaurant-user/${id}`),
     "User fetched successfully",
-    async (data) => data,
   );
 }
 
+// ==================== DELETE RESTAURANT USER ACTIONS ====================
 export async function deleteRestaurantUserAction(
   id: string,
 ): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const restaurantId = cookieStore.get("restaurantId")?.value;
-
-  if (!restaurantId) {
-    return { success: false, message: "Restaurant ID not found" };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.delete(`/delete-restaurant-user/${id}`);
-    },
+  return executeRestaurantAction(
+    (api) => api.delete(`/delete-restaurant-user/${id}`),
     "User deleted successfully",
-    async (data) => {
-      revalidatePath("/restaurant/users");
-      return data;
-    },
+    "/restaurant/users",
   );
 }

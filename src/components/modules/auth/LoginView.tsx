@@ -92,6 +92,8 @@ export default function LoginView() {
     },
   });
 
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
   function onSubmit(data: LoginInput) {
     execute(data);
   }
@@ -100,7 +102,7 @@ export default function LoginView() {
     <GoogleOAuthProvider
       clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
     >
-      <Card className="border-none shadow-none bg-transparent">
+      <Card className="border-none shadow-none bg-transparent py-2">
         <CardHeader className="px-0 pt-0 text-center">
           <CardTitle className="text-3xl font-bold text-emerald-bg">
             Login to Account
@@ -112,12 +114,13 @@ export default function LoginView() {
 
         <CardContent className="px-0">
           {/* SOCIAL LOGINS */}
-          <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-2 gap-4 mb-8 mt-6">
             <GoogleAuthButton
-              loading={isPending}
-              setLoading={() => {}} // Hook handles loading, avoiding manual set
+              loading={isGoogleLoading}
+              setLoading={setIsGoogleLoading}
               country={country}
               language={language}
+              disabled={isPending}
             />
             <Button
               type="button"
@@ -134,14 +137,17 @@ export default function LoginView() {
             </div>
             <div className="relative flex justify-center uppercase">
               <span className="bg-white px-4 text-[11px] font-black tracking-widest text-gray-400">
-                Or login with email
+                Or continue with email
               </span>
             </div>
           </div>
 
           {/* FORM*/}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-5 mx-1"
+            >
               <FormField
                 control={form.control}
                 name="email"
@@ -151,7 +157,7 @@ export default function LoginView() {
                     <FormControl>
                       <Input
                         placeholder="Email Address"
-                        className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                        className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                         {...field}
                       />
                     </FormControl>
@@ -171,7 +177,7 @@ export default function LoginView() {
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
-                            className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                            className="h-13 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                             {...field}
                           />
                         </FormControl>
@@ -182,9 +188,9 @@ export default function LoginView() {
                           tabIndex={-1}
                         >
                           {showPassword ? (
-                            <EyeOff size={20} />
-                          ) : (
                             <Eye size={20} />
+                          ) : (
+                            <EyeOff size={20} />
                           )}
                         </button>
                       </div>
@@ -195,7 +201,7 @@ export default function LoginView() {
                 <div className="flex justify-end mt-1">
                   <LocalizedLink
                     href={`/forget-password`}
-                    className="text-xs text-gray-400 hover:text-emerald-bg transition-colors"
+                    className="text-xs text-gray-400 hover:text-emerald-bg transition-colors font-bold"
                   >
                     Forgot Password?
                   </LocalizedLink>
@@ -205,12 +211,11 @@ export default function LoginView() {
               <Button
                 type="submit"
                 disabled={isPending}
-                className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
+                className="w-full h-13 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
               >
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Logging in...
                   </>
                 ) : (
                   "Login"

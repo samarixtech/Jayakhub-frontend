@@ -1,4 +1,3 @@
-
 "use client";
 
 import Banner from "@/app/banner/page";
@@ -9,16 +8,19 @@ import Dishes from "@/components/modules/public-website/home/Dishes";
 import Download from "@/components/modules/public-website/home/Download";
 import Partnership from "@/components/modules/public-website/home/Partnership";
 
+import AIChatWidget from "@/components/modules/public-website/ai-chat-widget/AIChatWidget";
+
 export default function HomePage() {
   return (
-    <div>
+    <div className="relative">
       {/* <Banner /> */}
       <Hero />
       <HowItWorks />
       <Restaurants />
-      <Dishes/>
-      <Download/>
-      <Partnership/>
+      <Dishes />
+      <Download />
+      <Partnership />
+      <AIChatWidget />
     </div>
   );
 }

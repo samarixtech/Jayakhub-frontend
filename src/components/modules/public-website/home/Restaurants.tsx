@@ -1,92 +1,92 @@
-import { useState, useEffect, useRef } from 'react';
-import { Star, Clock, Flame, ChevronRight, Heart } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { Star, Clock, Flame, ChevronRight, Heart } from "lucide-react";
 
 const categories = [
-  { name: 'All', icon: '🔥' },
-  { name: 'Pizza', icon: '🍕' },
-  { name: 'Burger', icon: '🍔' },
-  { name: 'Sushi', icon: '🍣' },
-  { name: 'Kebab', icon: '🥙' },
-  { name: 'Dessert', icon: '🍰' },
+  { name: "All", icon: "🔥" },
+  { name: "Pizza", icon: "🍕" },
+  { name: "Burger", icon: "🍔" },
+  { name: "Sushi", icon: "🍣" },
+  { name: "Kebab", icon: "🥙" },
+  { name: "Dessert", icon: "🍰" },
 ];
 
 const restaurants = [
   {
     id: 1,
-    name: 'Al-Mansour Grill',
-    cuisines: ['Iraqi', 'Kebab'],
+    name: "Al-Mansour Grill",
+    cuisines: ["Iraqi", "Kebab"],
     rating: 4.9,
     reviews: 1120,
-    time: '25-35 min',
-    delivery: 'Free',
-    image: '/al-mansour.jpg',
-    badge: 'Top Rated',
-    badgeColor: 'bg-primary',
+    time: "25-35 min",
+    delivery: "Free",
+    image: "/al-mansour.jpg",
+    badge: "Top Rated",
+    badgeColor: "bg-primary",
   },
   {
     id: 2,
-    name: 'Baghdad Bites',
-    cuisines: ['Fast Food', 'Burger'],
+    name: "Baghdad Bites",
+    cuisines: ["Fast Food", "Burger"],
     rating: 4.7,
     reviews: 850,
-    time: '20-30 min',
-    delivery: '$1.50',
-    image: '/baghdad-bites.jpg',
-    badge: 'Popular', 
-    badgeColor: 'bg-primary',
+    time: "20-30 min",
+    delivery: "$1.50",
+    image: "/baghdad-bites.jpg",
+    badge: "Popular",
+    badgeColor: "bg-primary",
   },
   {
     id: 3,
-    name: 'Pizza Palace',
-    cuisines: ['Italian', 'Pizza'],
+    name: "Pizza Palace",
+    cuisines: ["Italian", "Pizza"],
     rating: 4.6,
     reviews: 780,
-    time: '30-40 min',
-    delivery: 'Free',
-    image: '/pizza-palace.jpg',
-    badge: '20% OFF',
-    badgeColor: 'bg-primary',
+    time: "30-40 min",
+    delivery: "Free",
+    image: "/pizza-palace.jpg",
+    badge: "20% OFF",
+    badgeColor: "bg-primary",
   },
   {
     id: 4,
-    name: 'Spice Route',
-    cuisines: ['Indian', 'Curry'],
+    name: "Spice Route",
+    cuisines: ["Indian", "Curry"],
     rating: 4.8,
     reviews: 650,
-    time: '35-45 min',
-    delivery: '$2.00',
-    image: '/spice-route.png',
+    time: "35-45 min",
+    delivery: "$2.00",
+    image: "/spice-route.png",
     badge: "Popular",
-    badgeColor: 'bg-primary',
+    badgeColor: "bg-primary",
   },
   {
     id: 5,
-    name: 'Sushi Master',
-    cuisines: ['Japanese', 'Sushi'],
+    name: "Sushi Master",
+    cuisines: ["Japanese", "Sushi"],
     rating: 4.9,
     reviews: 480,
-    time: '25-35 min',
-    delivery: 'Free',
-    image: '/sushi-master.jpg',
-    badge: 'New',
-    badgeColor: 'bg-primary',
+    time: "25-35 min",
+    delivery: "Free",
+    image: "/sushi-master.jpg",
+    badge: "New",
+    badgeColor: "bg-primary",
   },
   {
     id: 6,
-    name: 'Green Garden',
-    cuisines: ['Healthy', 'Salad'],
+    name: "Green Garden",
+    cuisines: ["Healthy", "Salad"],
     rating: 4.5,
     reviews: 420,
-    time: '15-25 min',
-    delivery: '$1.00',
-    image: '/green-garden.png',
+    time: "15-25 min",
+    delivery: "$1.00",
+    image: "/green-garden.png",
     badge: "tasty",
-    badgeColor: 'bg-primary',
+    badgeColor: "bg-primary",
   },
 ];
 
 export default function Restaurants() {
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState("All");
   const [isVisible, setIsVisible] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
   const sectionRef = useRef(null);
@@ -99,7 +99,7 @@ export default function Restaurants() {
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     if (sectionRef.current) {
@@ -110,8 +110,8 @@ export default function Restaurants() {
   }, []);
 
   const toggleFavorite = (id: number) => {
-    setFavorites(prev =>
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
@@ -124,8 +124,9 @@ export default function Restaurants() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Section Header */}
         <div
-          className={`flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-12 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
+          className={`flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-12 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
         >
           <div className="flex-1">
             <span className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:sm font-semibold mb-4">
@@ -139,7 +140,7 @@ export default function Restaurants() {
               Discover the best local restaurants with fast delivery
             </p>
           </div>
-          <button className="mt-6 md:mt-0 inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all text-sm md:text-base">
+          <button className="mt-6 md:mt-0 inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm md:text-base">
             View All
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -147,17 +148,19 @@ export default function Restaurants() {
 
         {/* Category Filter - Added horizontal scroll for mobile */}
         <div
-          className={`flex overflow-x-auto pb-4 md:pb-0 md:flex-wrap gap-3 mb-10 no-scrollbar transition-all duration-700 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
+          className={`flex overflow-x-auto pb-4 md:pb-0 md:flex-wrap gap-3 mb-10 no-scrollbar transition-all duration-700 delay-100 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
         >
           {categories.map((category) => (
             <button
               key={category.name}
               onClick={() => setActiveCategory(category.name)}
-              className={`flex items-center gap-2 px-5 py-2.5 md:py-3 rounded-full font-medium transition-all duration-300 whitespace-nowrap ${activeCategory === category.name
-                ? 'bg-primary text-white shadow-lg shadow-primary/25 scale-105'
-                : 'bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground'
-                }`}
+              className={`flex items-center gap-2 px-5 py-2.5 md:py-3 rounded-full font-medium transition-all duration-300 whitespace-nowrap ${
+                activeCategory === category.name
+                  ? "bg-primary text-white shadow-lg shadow-primary/25 scale-105"
+                  : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
+              }`}
             >
               <span className="text-lg">{category.icon}</span>
               <span className="text-sm md:text-base">{category.name}</span>
@@ -170,8 +173,11 @@ export default function Restaurants() {
           {restaurants.map((restaurant, index) => (
             <div
               key={restaurant.id}
-              className={`group relative bg-white rounded-2xl md:rounded-3xl overflow-hidden border border-[#E2E8F0] hover:border-primary/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
+              className={`group relative bg-white rounded-2xl md:rounded-3xl overflow-hidden border border-[#E2E8F0] hover:border-primary/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
+              }`}
               style={{ transitionDelay: `${(index + 2) * 100}ms` }}
             >
               {/* Image Container */}
@@ -187,7 +193,9 @@ export default function Restaurants() {
 
                 {/* Badge */}
                 {restaurant.badge && (
-                  <div className={`absolute top-3 left-3 md:top-4 md:left-4 ${restaurant.badgeColor} text-white px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold z-10`}>
+                  <div
+                    className={`absolute top-3 left-3 md:top-4 md:left-4 ${restaurant.badgeColor} text-white px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold z-10`}
+                  >
                     {restaurant.badge}
                   </div>
                 )}
@@ -201,10 +209,11 @@ export default function Restaurants() {
                   className="absolute top-3 right-3 md:top-4 md:right-4 w-9 h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 z-10"
                 >
                   <Heart
-                    className={`w-4 h-4 md:w-5 md:h-5 transition-colors ${favorites.includes(restaurant.id)
-                      ? 'text-red-500 fill-red-500'
-                      : 'text-[#64748B]'
-                      }`}
+                    className={`w-4 h-4 md:w-5 md:h-5 transition-colors ${
+                      favorites.includes(restaurant.id)
+                        ? "text-red-500 fill-red-500"
+                        : "text-[#64748B]"
+                    }`}
                   />
                 </button>
 
@@ -212,10 +221,14 @@ export default function Restaurants() {
                 <div className="absolute bottom-3 left-3 right-3 md:bottom-4 md:left-4 md:right-4 flex items-center justify-between md:opacity-0 md:group-hover:opacity-100 transition-all transform md:translate-y-4 md:group-hover:translate-y-0 z-10">
                   <div className="flex items-center gap-1.5 md:gap-2 bg-white/95 backdrop-blur-sm px-2.5 py-1 md:px-3 md:py-1.5 rounded-full shadow-sm">
                     <Clock className="w-3.5 h-3.5 text-primary" />
-                    <span className="text-xs md:text-sm font-semibold text-foreground">{restaurant.time}</span>
+                    <span className="text-xs md:text-sm font-semibold text-foreground">
+                      {restaurant.time}
+                    </span>
                   </div>
                   <div className="bg-primary text-white px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-xs md:text-sm font-bold shadow-md">
-                    {restaurant.delivery === 'Free' ? 'Free' : restaurant.delivery}
+                    {restaurant.delivery === "Free"
+                      ? "Free"
+                      : restaurant.delivery}
                   </div>
                 </div>
               </div>
@@ -240,7 +253,9 @@ export default function Restaurants() {
                 <div className="flex items-center gap-3 md:gap-4">
                   <div className="flex items-center gap-1.5">
                     <Star className="w-4 h-4 md:w-5 md:h-5 text-orange-400 fill-orange-400" />
-                    <span className="font-bold text-sm md:text-base text-foreground">{restaurant.rating}</span>
+                    <span className="font-bold text-sm md:text-base text-foreground">
+                      {restaurant.rating}
+                    </span>
                   </div>
                   <span className="text-xs md:text-sm text-[#94A3B8]">
                     ({restaurant.reviews.toLocaleString()} reviews)

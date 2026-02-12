@@ -15,14 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { Typography } from "@/components/ui/typography";
 import { useServerAction } from "@/hooks/use-server-action";
@@ -33,14 +25,9 @@ import {
 } from "@/app/actions/restaurant/menu";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
+import GlobalTable from "@/components/common/GlobalTable";
+import { AddItemModal } from "./AddItemModal";
 
 // Mock Data for stats
 const STATS = [
@@ -80,6 +67,7 @@ export default function MenuItemsView() {
   const [selectedCategory, setSelectedCategory] = useState("All Items");
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const { execute: fetchCategories } = useServerAction(getAllCategoriesAction, {
     suppressSuccessToast: true,
@@ -156,12 +144,13 @@ export default function MenuItemsView() {
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1400px] mx-auto p-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <LocalizedLink href="/restaurant/menu/items/new">
-          <Button className="bg-emerald-bg hover:bg-emerald-bg-hover text-white gap-2 cursor-pointer">
-            <Plus className="w-4 h-4" />
-            Add New Item
-          </Button>
-        </LocalizedLink>
+        <Button
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-emerald-bg hover:bg-emerald-bg-hover text-white gap-2 cursor-pointer"
+        >
+          <Plus className="w-4 h-4" />
+          Add New Item
+        </Button>
       </div>
 
       {/* Stats Cards */}
@@ -202,8 +191,8 @@ export default function MenuItemsView() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        {/* Search Input - Full width on mobile */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
+        {/* Search Input */}
         <div className="relative w-full sm:w-[250px] shrink-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
@@ -214,8 +203,8 @@ export default function MenuItemsView() {
           />
         </div>
 
-        {/* Filter Badges - Wrapping on mobile */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Filter Badges - Horizontal Scroll */}
+        <div className="flex flex-1 items-center gap-2 overflow-x-auto max-w-full pb-2 sm:pb-0 no-scrollbar w-full sm:w-auto">
           {dynamicFilters.map((filter) => (
             <Badge
               key={filter.label}
@@ -223,7 +212,7 @@ export default function MenuItemsView() {
                 selectedCategory === filter.label ? "default" : "outline"
               }
               onClick={() => setSelectedCategory(filter.label)}
-              className={`h-9 px-4 rounded-full cursor-pointer transition-colors whitespace-nowrap ${
+              className={`h-9 px-4 rounded-full cursor-pointer transition-colors whitespace-nowrap shrink-0 ${
                 selectedCategory === filter.label
                   ? "bg-emerald-bg hover:bg-emerald-bg-hover text-white border-transparent"
                   : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900"
@@ -245,200 +234,125 @@ export default function MenuItemsView() {
       </div>
 
       {/* Data Table */}
-      <Card className="border-none shadow-sm overflow-hidden bg-white">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader className="bg-gray-50/50">
-              <TableRow className="border-gray-100 hover:bg-transparent">
-                <TableHead className="font-semibold text-gray-500 text-xs uppercase w-[300px]">
-                  Item
-                </TableHead>
-                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
-                  Category
-                </TableHead>
-                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right">
-                  Price
-                </TableHead>
-                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
-                  Status
-                </TableHead>
-                <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isPending ? (
-                // Skeleton Loader
-                [...Array(5)].map((_, i) => (
-                  <TableRow key={i} className="animate-pulse">
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-gray-200" />
-                        <div className="space-y-2">
-                          <div className="h-4 w-32 bg-gray-200 rounded" />
-                          <div className="h-3 w-48 bg-gray-100 rounded" />
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="h-6 w-20 bg-gray-100 rounded-md mx-auto" />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="h-5 w-12 bg-gray-100 rounded ml-auto" />
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="h-5 w-10 bg-gray-200 rounded-full mx-auto" />
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <div className="h-8 w-8 bg-gray-100 rounded-lg" />
-                        <div className="h-8 w-8 bg-gray-100 rounded-lg" />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : filteredItems.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={5}
-                    className="h-24 text-center text-gray-500"
-                  >
-                    No items found. Click "Add New Item" to create one.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredItems.map((item) => {
-                  const rawImage = item.itemImage || item.image;
-                  const imageUrl = rawImage
-                    ? rawImage.startsWith("http")
-                      ? rawImage
-                      : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${rawImage}`
-                    : null;
-                  console.log("Image Debug:", {
-                    original: rawImage,
-                    constructed: imageUrl,
-                    baseUrl: process.env.NEXT_PUBLIC_IMAGE_BASE_URL,
-                  });
-
-                  return (
-                    <TableRow
-                      key={item.id || item._id}
-                      className="border-gray-50 hover:bg-gray-50/50 group"
-                    >
-                      {/* Item Column */}
-                      <TableCell className="py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
-                            {imageUrl ? (
-                              <img
-                                src={imageUrl}
-                                alt={item.name}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <ImageIcon className="w-6 h-6 text-gray-400" />
-                            )}
-                          </div>
-                          <div>
-                            <Typography className="font-medium text-gray-900">
-                              {item.name}
-                            </Typography>
-                            <Typography className="text-gray-400 text-xs line-clamp-1">
-                              {item.description}
-                            </Typography>
-                          </div>
-                        </div>
-                      </TableCell>
-
-                      {/* Category Column */}
-                      <TableCell className="text-center">
-                        <Badge
-                          variant="outline"
-                          className="font-semibold rounded-md border text-[10px] px-2 py-0.5 shadow-none uppercase bg-white border-gray-200 text-gray-700"
-                        >
-                          {item.category}
-                        </Badge>
-                      </TableCell>
-
-                      {/* Price Column */}
-                      <TableCell className="text-right font-medium text-gray-700 font-mono">
-                        ${item.basePrice}
-                      </TableCell>
-
-                      {/* Status Column */}
-                      <TableCell className="text-center">
-                        <Switch
-                          checked={item.isAvailable}
-                          className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-200"
+      <Card className="border-none shadow-sm overflow-hidden bg-white p-4">
+        <GlobalTable
+          data={filteredItems}
+          columns={[
+            {
+              header: "Item",
+              accessorKey: "name",
+              cell: (item: any) => {
+                const rawImage = item.itemImage || item.image;
+                const imageUrl = rawImage
+                  ? rawImage.startsWith("http")
+                    ? rawImage
+                    : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${rawImage}`
+                  : null;
+                return (
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
                         />
-                      </TableCell>
-
-                      {/* Actions Column */}
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <LocalizedLink
-                            href={`/restaurant/menu/items/${item.id || item._id}`}
-                          >
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
-                            >
-                              <Edit2 className="w-4 h-4" />
-                            </Button>
-                          </LocalizedLink>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeleteId(item.id || item._id)}
-                            className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                      ) : (
+                        <ImageIcon className="w-6 h-6 text-gray-400" />
+                      )}
+                    </div>
+                    <div>
+                      <Typography className="font-medium text-gray-900">
+                        {item.name}
+                      </Typography>
+                      <Typography className="text-gray-400 text-xs line-clamp-1">
+                        {item.description}
+                      </Typography>
+                    </div>
+                  </div>
+                );
+              },
+            },
+            {
+              header: "Category",
+              accessorKey: "category",
+              cell: (item: any) => (
+                <div className="text-center">
+                  <Badge
+                    variant="outline"
+                    className="font-semibold rounded-md border text-[10px] px-2 py-0.5 shadow-none uppercase bg-white border-gray-200 text-gray-700"
+                  >
+                    {item.category}
+                  </Badge>
+                </div>
+              ),
+            },
+            {
+              header: "Price",
+              accessorKey: "basePrice",
+              cell: (item: any) => (
+                <div className="text-right font-medium text-gray-700 font-mono">
+                  ${item.basePrice}
+                </div>
+              ),
+            },
+            {
+              header: "Status",
+              accessorKey: "isAvailable",
+              cell: (item: any) => (
+                <div className="text-center">
+                  <Switch
+                    checked={item.isAvailable}
+                    className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-200"
+                  />
+                </div>
+              ),
+            },
+            {
+              header: "Actions",
+              cell: (item: any) => (
+                <div className="flex items-center justify-end gap-2">
+                  <LocalizedLink
+                    href={`/restaurant/menu/items/${item.id || item._id}`}
+                  >
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                  </LocalizedLink>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setDeleteId(item.id || item._id)}
+                    className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              ),
+            },
+          ]}
+          loading={isPending}
+          emptyMessage='No items found. Click "Add New Item" to create one.'
+        />
       </Card>
 
-      {/* Delete Confirmation Modal */}
-      <Dialog
+      <DeleteConfirmationModal
         open={!!deleteId}
-        onOpenChange={(open) => !open && setDeleteId(null)}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Item</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this menu item? This action cannot
-              be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeleteId(null)}
-              disabled={isDeleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={confirmDelete}
-              disabled={isDeleting}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              {isDeleting ? "Deleting..." : "Delete"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        onOpenChange={(open: boolean) => !open && setDeleteId(null)}
+        title="Delete Item"
+        onConfirm={confirmDelete}
+        isDeleting={isDeleting}
+      />
+
+      <AddItemModal
+        open={isAddModalOpen}
+        onOpenChange={setIsAddModalOpen}
+        onImportSuccess={() => fetchMenu()}
+      />
     </div>
   );
 }

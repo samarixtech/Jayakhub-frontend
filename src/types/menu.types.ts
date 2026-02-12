@@ -32,3 +32,17 @@ export interface SimilarRestaurant {
   cuisine: string[];
   promoText?: string;
 }
+
+export interface BulkImportItem {
+  name: string;
+  description: string;
+  category: string;
+  dietaryType: string;
+  basePrice: number;
+  isAvailable: boolean;
+  variations: {
+    groupName: string;
+    options: { name: string; price: number }[];
+  }[];
+  itemImage?: string;
+}
