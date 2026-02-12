@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -153,14 +154,12 @@ export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {
                     Contact Phone
                   </label>
                   <FormControl>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        className="pl-12 h-12 bg-gray-50/50 border-gray-100 rounded-xl"
-                        placeholder="+964 000 000 0000"
-                        {...field}
-                      />
-                    </div>
+                    <PhoneInput
+                      placeholder="+964 750 000 0000"
+                      defaultCountry="IQ"
+                      className="h-12 bg-gray-50/50 border-gray-100 rounded-xl"
+                      {...field}
+                    />
                   </FormControl>
                   <div className="flex justify-between items-start">
                     <FormMessage />
@@ -173,10 +172,7 @@ export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {
             />
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
-            <Typography className="text-sm font-medium text-gray-500">
-              Step 01 of 06
-            </Typography>
+          <div className="flex flex-col sm:flex-row justify-end items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <Button
               type="submit"
               onClick={() => console.log("Next Step Button Clicked")}

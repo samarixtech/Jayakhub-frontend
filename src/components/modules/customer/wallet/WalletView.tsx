@@ -107,7 +107,7 @@ const PaymentCard = ({
             <span>••••</span>
             <span>••••</span>
             <span>••••</span>
-            <span>{card.cardNumber?.slice(-4) || "0000"}</span>
+            <span>{card.last4 || "0000"}</span>
           </div>
         </div>
 

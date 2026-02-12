@@ -31,7 +31,7 @@ export async function createOrderAction(payload: CreateOrderPayload) {
   }
 }
 
-export async function getCurrentOrder() {
+export async function getCurrentOrder(orderIdFromUrl: any) {
   try {
     const api = await serverApi();
     const response = await api.get("/current-order");

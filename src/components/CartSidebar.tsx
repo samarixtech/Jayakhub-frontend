@@ -12,7 +12,7 @@ import {
   ChevronUp,
   ShoppingBasket,
 } from "lucide-react";
-import { CartItem } from "@/types/menu";
+import { CartItem } from "@/types/menu.types";
 import { useCLC } from "@/app/context/CLCContext";
 
 interface CartSidebarProps {

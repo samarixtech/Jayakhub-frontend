@@ -37,6 +37,7 @@ import {
 import useLocale from "@/hooks/useLocals";
 import { useOnboarding } from "@/components/modules/restaurant/onboarding/OnboardingContext";
 import RestaurantLocationMap from "./RestaurantLocationMap";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 import { WizardStepProps } from "../types";
 
@@ -205,14 +206,12 @@ export default function StepRestaurantInfoView() {
                     Restaurant Phone
                   </label>
                   <FormControl>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-3.5 h-4 w-4 text-gray-400" />
-                      <Input
-                        placeholder="+964 750 999 8888"
-                        className="pl-12 h-12 bg-gray-50/50 border-gray-100 rounded-xl"
-                        {...field}
-                      />
-                    </div>
+                    <PhoneInput
+                      placeholder="+964 750 999 8888"
+                      defaultCountry="IQ"
+                      className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl bg-gray-50/50 border-gray-100"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -439,23 +438,8 @@ export default function StepRestaurantInfoView() {
             />
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => {
-                prevStep();
-                router.back();
-              }}
-              className="w-full sm:w-auto text-gray-400 font-bold hover:bg-transparent"
-            >
-              Back
-            </Button>
-
+          <div className="flex flex-col-reverse sm:flex-row justify-end items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <Typography className="text-sm font-medium text-gray-500">
-                Step 02 of 06
-              </Typography>
               <Button
                 type="submit"
                 disabled={false}

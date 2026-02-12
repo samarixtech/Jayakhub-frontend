@@ -57,7 +57,7 @@ export default function StepScheduleView() {
       try {
         const parsed = JSON.parse(savedData);
         form.reset(parsed);
-      } catch (e) { }
+      } catch (e) {}
     }
   }, [form]);
 
@@ -139,23 +139,8 @@ export default function StepScheduleView() {
             })}
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => {
-                prevStep();
-                router.back();
-              }}
-              className="w-full sm:w-auto text-gray-400 font-bold hover:bg-transparent"
-            >
-              Back
-            </Button>
-
+          <div className="flex flex-col-reverse sm:flex-row justify-end items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <Typography className="text-sm font-medium text-gray-500">
-                Step 04 of 06
-              </Typography>
               <Button
                 type="submit"
                 disabled={false}

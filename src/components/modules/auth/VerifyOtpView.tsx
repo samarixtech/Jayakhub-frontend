@@ -160,12 +160,12 @@ export default function VerifyOtpView() {
   };
 
   return (
-    <Card className="border-none shadow-none bg-transparent m-0 p-0">
-      <CardHeader className="px-0 pt-0 mb-8 text-center">
+    <Card className="border-none shadow-none bg-transparent m-0 py-2">
+      <CardHeader className="px-0 pt-0 text-center">
         <Typography variant="h2" className="text-emerald-bg">
-          Verify Code
+          Verify OTP
         </Typography>
-        <Typography variant="muted" className="mt-2">
+        <Typography variant="muted" className="mb-4">
           Enter the 6-digit code sent to <strong>{email}</strong>
         </Typography>
       </CardHeader>
@@ -178,13 +178,19 @@ export default function VerifyOtpView() {
             onChange={(value) => setOtpValue(value)}
             onComplete={handleVerify}
             disabled={isVerifying}
+            // Ensure the container itself can be focused
+            containerClassName="group flex items-center has-[:disabled]:opacity-50"
           >
-            <InputOTPGroup className="gap-2 sm:gap-3 font-bold">
-              {[0, 1, 2, 3, 4, 5].map((index) => (
+            <InputOTPGroup className="gap-2 sm:gap-4 font-bold">
+              {/* Use a simple array map, ensuring the Slot receives the index */}
+              {Array.from({ length: 6 }).map((_, index) => (
                 <InputOTPSlot
                   key={index}
                   index={index}
-                  className="w-12 h-14 rounded-xl border-2 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg text-xl"
+                  className="w-10 h-12 sm:w-12 sm:h-14 rounded-xl! border! bg-gray-50 text-xl shadow-sm transition-all
+        ring-offset-background
+        focus:ring-2 focus:ring-emerald-bg focus:ring-offset-2
+        data-[active=true]:border-emerald-bg data-[active=true]:ring-4 data-[active=true]:ring-emerald-bg/10 data-[active=true]:z-20"
                 />
               ))}
             </InputOTPGroup>
@@ -193,40 +199,41 @@ export default function VerifyOtpView() {
           <Button
             onClick={handleVerify}
             disabled={isVerifying || otpValue.length < 6}
-            className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white rounded-xl text-lg font-bold shadow-lg transition-all active:scale-[0.98]"
+            className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white rounded-xl text-lg font-bold shadow-lg transition-all active:scale-[0.98] mb-4"
           >
             {isVerifying ? (
               <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Verifying...
+                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
               </>
             ) : (
               "Verify & Proceed"
             )}
           </Button>
 
-          <div className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-1 text-sm text-gray-500">
+            <span>Didn&apos;t receive the code?</span>
             <button
               onClick={handleResend}
               disabled={timer > 0 || isResending}
-              className="block w-full text-sm text-gray-500 hover:text-emerald-bg transition font-medium disabled:opacity-50"
+              className="font-bold text-emerald-bg hover:underline disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
-              Didn&apos;t receive the code?{" "}
-              <span className="text-emerald-bg font-bold cursor-pointer hover:underline">
-                {isResending
-                  ? "Resending..."
-                  : timer > 0
-                    ? `Resend in ${timer}s`
-                    : "Resend Code"}
-              </span>
+              {isResending
+                ? "Resending..."
+                : timer > 0
+                  ? `Resend in ${timer}s`
+                  : "Resend OTP"}
             </button>
-
-            <LocalizedLink href="/login" className="block">
+          </div>
+          <div className="flex items-center justify-center gap-1">
+            <Typography variant="small" className="text-slate-500 font-medium">
+              Back to
+            </Typography>
+            <LocalizedLink href="/login" className="inline-block">
               <Typography
                 variant="small"
-                className="text-gray-400 hover:text-emerald-bg transition underline underline-offset-4"
+                className="text-emerald-bg font-bold transition-colors hover:opacity-80"
               >
-                Back to Login
+                Log in
               </Typography>
             </LocalizedLink>
           </div>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const HeroBanner = () => {
   return (
-    <div className="relative w-full h-[300px] md:h-[400px] rounded-[30px] overflow-hidden bg-black text-white">
+    <div className="relative w-full h-[300px] md:h-[400px] rounded-[30px] overflow-hidden bg-black text-white mt-5">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-80"
         style={{

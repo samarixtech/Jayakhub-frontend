@@ -1,7 +1,5 @@
 "use client";
-
-import React from "react";
-import { Heart, Star, Clock, Bike } from "lucide-react";
+import { Star, Clock, Bike } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter, useParams } from "next/navigation";
 
@@ -34,10 +32,10 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
   return (
     <div
       onClick={handleClick}
-      className="group min-w-[320px] w-[320px] cursor-pointer"
+      className="group min-w-[259px] w-[259px] cursor-pointer"
     >
       {/* Image Container */}
-      <div className="relative h-48 w-full rounded-2xl overflow-hidden shadow-sm">
+      <div className="relative h-39 w-full rounded-2xl overflow-hidden shadow-sm">
         <img
           src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${data.image}`}
           alt={data.name}
@@ -50,16 +48,6 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
             {data.discount}
           </Badge>
         )}
-
-        {/* Favorite Button */}
-        <button
-          onClick={(e) => e.stopPropagation()}
-          className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur-md rounded-full hover:bg-white transition-colors"
-        >
-          <Heart
-            className={`h-4 w-4 ${data.isFavorite ? "fill-red-500 text-red-500" : "text-gray-700"}`}
-          />
-        </button>
       </div>
 
       {/* Content */}

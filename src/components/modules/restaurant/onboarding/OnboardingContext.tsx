@@ -12,6 +12,11 @@ interface OnboardingContextType {
   setLogoFile: (file: File | null) => void;
   bannerFile: File | null;
   setBannerFile: (file: File | null) => void;
+  // KYC Files
+  kycFile: File | null;
+  setKycFile: (file: File | null) => void;
+  docFile: File | null;
+  setDocFile: (file: File | null) => void;
   // Wizard Navigation
   currentStep: number;
   nextStep: () => void;
@@ -28,6 +33,8 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const [bannerPreview, setBannerPreview] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [kycFile, setKycFile] = useState<File | null>(null);
+  const [docFile, setDocFile] = useState<File | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
 
   const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 7));
@@ -45,6 +52,10 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
         setLogoFile,
         bannerFile,
         setBannerFile,
+        kycFile,
+        setKycFile,
+        docFile,
+        setDocFile,
         currentStep,
         nextStep,
         prevStep,

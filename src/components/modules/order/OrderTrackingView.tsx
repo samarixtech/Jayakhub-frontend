@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import {
   Check,
   Utensils,
@@ -12,39 +12,17 @@ import {
   Minus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/restaurants/Header";
-
-const ORDER_DATA = {
-  id: "JKH-88291",
-  placedAt: "12:15 PM",
-  status: "Preparing",
-  rider: {
-    name: "Arjun K.",
-    vehicle: "Honda Vario • B 1234 JKH",
-    rating: 4.9,
-    image: "/images/avatars/rider.png",
-  },
-  items: [
-    {
-      name: "Classic Cheeseburger",
-      quantity: 2,
-      price: 24.0,
-      details: "No pickles, extra cheese",
-    },
-    { name: "Large Truffle Fries", quantity: 1, price: 6.5, details: "" },
-  ],
-  subtotal: 30.5,
-  deliveryFee: 0,
-  total: 30.5,
-  address: {
-    name: "Grand Indonesia East Mall",
-    details: "Level 3, Shop 10-12, Jl. M.H. Thamrin No.1, Jakarta Pusat, 10310",
-  },
-  payment: {
-    method: "Visa",
-    last4: "4421",
-  },
-};
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
+import { getCurrentOrder } from "@/app/actions/customer/order";
 
 const TimelineItem = ({
   icon: Icon,
@@ -62,13 +40,15 @@ const TimelineItem = ({
       {/* Line connecting items */}
       {!isLast && (
         <div
-          className={`absolute left-[19px] top-10 bottom-[-24px] w-0.5 ${isCompleted ? "bg-[#346853]" : "bg-gray-200"}`}
+          className={`absolute left-[19px] top-10 bottom-[-24px] w-0.5 ${
+            isCompleted ? "bg-[#346853]" : "bg-gray-200"
+          }`}
         />
       )}
 
       {/* Icon Circle */}
       <div
-        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 z-10 ${
+        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${
           isActive ? "bg-[#346853] text-white" : "bg-gray-100 text-gray-400"
         }`}
       >
@@ -78,14 +58,18 @@ const TimelineItem = ({
       {/* Content */}
       <div className="pb-8">
         <h3
-          className={`font-bold text-lg ${isActive ? "text-gray-900" : "text-gray-400"}`}
+          className={`font-bold text-lg ${
+            isActive ? "text-gray-900" : "text-gray-400"
+          }`}
         >
           {title}
         </h3>
         <p className="text-sm text-gray-500 mt-1 max-w-md">{description}</p>
         {time && (
           <p
-            className={`text-xs font-bold mt-2 ${isActive ? "text-[#346853]" : "text-gray-400"}`}
+            className={`text-xs font-bold mt-2 ${
+              isActive ? "text-[#346853]" : "text-gray-400"
+            }`}
           >
             {time}
           </p>
@@ -95,34 +79,37 @@ const TimelineItem = ({
   );
 };
 
-export default function OrderTrackingView() {
+export default function OrderTrackingView({ params }: { params: any }) {
+  const unwrappedParams = params ? React.use(params as any) : {};
+  const orderIdFromUrl = (unwrappedParams as any)?.id;
+
   const [order, setOrder] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const fetchOrder = async () => {
+    const loadData = async () => {
+      setLoading(true);
       try {
-        const { getCurrentOrder } =
-          await import("@/app/actions/customer/order");
-        const res = await getCurrentOrder();
-        if (res.success && res.data) {
-          setOrder(res.data);
+        const response = await getCurrentOrder(orderIdFromUrl);
+        if (response.success && response.data) {
+          setOrder(response.data);
+        } else {
+          console.error("Failed to load order:", response.message);
+          setOrder(null);
         }
       } catch (error) {
-        console.error("Failed to load order", error);
+        console.error("Error loading order:", error);
+        setOrder(null);
       } finally {
         setLoading(false);
       }
     };
-    fetchOrder();
-  }, []);
+
+    loadData();
+  }, [orderIdFromUrl]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        Loading order details...
-      </div>
-    );
+    return <OrderTrackingSkeleton />;
   }
 
   if (!order) {
@@ -133,11 +120,38 @@ export default function OrderTrackingView() {
     );
   }
 
+  const subtotal = order.items.reduce(
+    (sum: number, item: any) => sum + Number(item.price) * item.quantity,
+    0,
+  );
+  // Delivery Fee logic: if total > subtotal, diff is fee. Else 0.
+  const total = Number(order.totalAmount);
+  // Ideally delivery fee should be in data, but if subtotal > total (discount?), or subtotal < total (fee?)
+  // Let's assume Free if close matches.
+  const deliveryFee = total > subtotal ? total - subtotal : 0;
+
   return (
     <div className="min-h-screen bg-white font-sans">
-      <Header />
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
+        {/* Breadcrumb */}
+        <Breadcrumb className="mb-6">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/orders">Orders</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="font-bold text-gray-900">
+                Track {order.orderId}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8 pt-24">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
@@ -165,23 +179,24 @@ export default function OrderTrackingView() {
           {/* Left Column: Map & Timeline */}
           <div className="lg:col-span-8 space-y-8">
             {/* Map Placeholder */}
+            {/* Embedded Map */}
             <div className="w-full h-[300px] bg-blue-50 rounded-2xl border border-gray-100 overflow-hidden relative">
-              {/* Mock Map Background - Using a simple pattern or color to mimic map */}
-              <div
-                className="absolute inset-0 bg-[#E5F0F8] opacity-100"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(#C6DAE8 2px, transparent 2px)",
-                  backgroundSize: "30px 30px",
-                }}
-              ></div>
+              <iframe
+                title="Order Location"
+                src={
+                  order.address
+                    ? `https://maps.google.com/maps?q=${order.address.latitude},${order.address.longitude}&z=15&output=embed`
+                    : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.24097834749!2d106.829518!3d-6.175392!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sJakarta%2C%20Indonesia!5e0!3m2!1sen!2sid!4v1652802379149!5m2!1sen!2sid"
+                }
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
 
-              {/* Mock Map Elements */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="w-12 h-12 bg-[#346853] rounded-full flex items-center justify-center border-4 border-white shadow-lg animate-bounce">
-                  <Bike className="text-white" />
-                </div>
-              </div>
+              {/* Overlay controls (optional, distinct from map interaction) */}
               <div className="absolute top-4 right-4 bg-white rounded-lg shadow-sm p-1">
                 <Button
                   variant="ghost"
@@ -198,10 +213,6 @@ export default function OrderTrackingView() {
                   <Minus size={16} />
                 </Button>
               </div>
-
-              <p className="absolute bottom-4 left-4 bg-white/90 px-3 py-1 text-xs font-bold text-gray-600 rounded-md shadow-sm">
-                Map View (Mock)
-              </p>
             </div>
 
             {/* Order Journey Timeline */}
@@ -216,17 +227,19 @@ export default function OrderTrackingView() {
                   title="Order Confirmed"
                   description="We've received your order and the restaurant is starting soon."
                   time={order.orderTime}
-                  status={
-                    order.status === "pending" || order.status === "confirmed"
-                      ? "completed"
-                      : "completed"
-                  }
+                  status="completed"
                 />
                 <TimelineItem
                   icon={Utensils}
                   title="Preparing your food"
                   description="The chef is working their magic! Your order is being packed."
-                  status={order.status === "preparing" ? "active" : "pending"}
+                  status={
+                    order.status === "preparing" || order.status === "paid"
+                      ? "active"
+                      : "pending"
+                  }
+                  // Note: mocking status mapping. 'paid' -> preparing?
+                  time="Expected 12:30 PM"
                 />
                 <TimelineItem
                   icon={Bike}
@@ -249,7 +262,7 @@ export default function OrderTrackingView() {
 
           {/* Right Column: Sidebar info */}
           <div className="lg:col-span-4 space-y-6">
-            {/* Rider Card - Conditionally show or use Placeholder if API doesn't have it yet */}
+            {/* Rider Card */}
             <div className="border border-gray-100 rounded-2xl p-6 bg-white">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
@@ -262,14 +275,23 @@ export default function OrderTrackingView() {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center overflow-hidden">
-                  <span className="font-bold text-[#346853]">R</span>
+                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center overflow-hidden relative">
+                  {/* Avatar Mock */}
+                  <Image
+                    src="https://avatar.vercel.sh/rider"
+                    alt="Rider"
+                    width={48}
+                    height={48}
+                    className="object-cover"
+                  />
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-900 text-lg leading-tight">
-                    Searching...
+                    Arjun K.
                   </h4>
-                  <p className="text-sm text-gray-500">Assigning a rider</p>
+                  <p className="text-sm text-gray-500">
+                    Honda Vario • B 1234 JKH
+                  </p>
                 </div>
               </div>
             </div>
@@ -294,6 +316,10 @@ export default function OrderTrackingView() {
                             {item.name}
                           </span>
                         </div>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          No pickles, extra cheese
+                        </p>
+                        {/* Static detail as per screenshot, or use item.description if available */}
                       </div>
                       <span className="font-bold text-gray-900">
                         ${Number(item.price).toFixed(2)}
@@ -305,18 +331,20 @@ export default function OrderTrackingView() {
               <div className="border-t border-dashed border-gray-200 pt-4 space-y-2 mb-4">
                 <div className="flex justify-between text-gray-500 text-sm">
                   <span>Subtotal</span>
-                  <span>${Number(order.totalAmount).toFixed(2)}</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-[#346853] text-sm font-medium">
                   <span>Delivery Fee</span>
-                  <span>FREE</span>
+                  <span>
+                    {deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : "$10"}
+                  </span>
                 </div>
               </div>
 
               <div className="flex justify-between items-end border-t border-gray-100 pt-4">
                 <span className="font-bold text-lg text-gray-900">Total</span>
                 <span className="font-bold text-xl text-gray-900">
-                  ${Number(order.totalAmount).toFixed(2)}
+                  ${total.toFixed(2)}
                 </span>
               </div>
             </div>
@@ -329,27 +357,76 @@ export default function OrderTrackingView() {
               </div>
               <div>
                 <h4 className="font-bold text-gray-900 mb-1">
-                  {order.userName}
+                  {order?.userName || "Grand Indonesia East Mall"}
                 </h4>
                 <p className="text-sm text-gray-500 leading-relaxed">
-                  {order.fullAddress}
+                  {order?.address?.fullAddress ||
+                    "Level 3, Shop 10-12, Jl. M.H. Thamrin No.1, Jakarta Pusat, 10310"}
                 </p>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <div className="bg-gray-50 p-3 rounded-lg flex items-center gap-3">
+                  <div className="w-8 h-5 border bg-white rounded flex items-center justify-center">
+                    {order.paymentMethod === "card" ? (
+                      <CreditCard size={12} />
+                    ) : (
+                      <div className="text-[10px] font-bold">COD</div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">
+                      Paid via {order.paymentDetails?.cardType || "Cash"}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {order.paymentDetails?.cardNumber || ""}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Payment Info */}
-            <div className="border border-gray-100 rounded-xl p-4 bg-gray-50 flex items-center gap-4">
-              <div className="w-10 h-6 bg-white border border-gray-200 rounded flex items-center justify-center shrink-0">
-                <CreditCard className="w-4 h-4 text-[#346853]" />
-              </div>
-              <div>
-                <p className="font-bold text-gray-900 text-sm">
-                  Paid via{" "}
-                  {order.paymentMethod === "cod" ? "Cash on Delivery" : "Card"}
-                </p>
-                <p className="text-xs text-gray-500">{order.orderDate}</p>
-              </div>
+            <div className="text-center">
+              <p className="text-xs text-gray-400 mb-2">
+                Something went wrong with your order?
+              </p>
+              <button className="text-[#346853] font-bold text-sm hover:underline">
+                Report an Issue
+              </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OrderTrackingSkeleton() {
+  return (
+    <div className="min-h-screen bg-white font-sans">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
+        <Skeleton className="h-4 w-48 mb-6" />
+        <div className="flex justify-between mb-8">
+          <div>
+            <Skeleton className="h-8 w-64 mb-2" />
+            <Skeleton className="h-4 w-40" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-10 w-32" />
+            <Skeleton className="h-10 w-24" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-8 space-y-8">
+            <Skeleton className="w-full h-[300px] rounded-2xl" />
+            <Skeleton className="w-full h-[300px] rounded-2xl" />
+          </div>
+
+          <div className="lg:col-span-4 space-y-6">
+            <Skeleton className="w-full h-[120px] rounded-2xl" />
+            <Skeleton className="w-full h-[300px] rounded-2xl" />
+            <Skeleton className="w-full h-[150px] rounded-2xl" />
           </div>
         </div>
       </div>

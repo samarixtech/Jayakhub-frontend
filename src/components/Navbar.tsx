@@ -65,10 +65,10 @@ const Navbar: React.FC = () => {
   const params = useParams();
 
   const [currentLocaleState, setCurrentLocaleState] = useState(
-    localeFromNext || "en"
+    localeFromNext || "en",
   );
   const [activeLangState, setActiveLangState] = useState(
-    languages.find((l) => l.code === localeFromNext) || languages[0]
+    languages.find((l) => l.code === localeFromNext) || languages[0],
   );
 
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
@@ -98,7 +98,7 @@ const Navbar: React.FC = () => {
 
       const remainingSegments =
         pathSegments.length >= 2 &&
-          languages.some((l) => l.code === pathSegments[1].toLowerCase())
+        languages.some((l) => l.code === pathSegments[1].toLowerCase())
           ? pathSegments.slice(2)
           : pathSegments;
 
@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
 
       return "/" + fullPath;
     },
-    [pathname]
+    [pathname],
   );
 
   const handleCountrySelect = useCallback(
@@ -143,7 +143,7 @@ const Navbar: React.FC = () => {
       router,
       isMobileMenuOpen,
       handleCloseMobileMenu,
-    ]
+    ],
   );
 
   const changeLanguage = useCallback(
@@ -188,7 +188,7 @@ const Navbar: React.FC = () => {
       handleCloseMobileMenu,
       languages,
       activeLangState,
-    ]
+    ],
   );
 
   useEffect(() => {
@@ -214,7 +214,7 @@ const Navbar: React.FC = () => {
       setCountries(allCountries);
       const initialCountry =
         allCountries.find(
-          (c) => c.code.toLowerCase() === initialCountryCode.toLowerCase()
+          (c) => c.code.toLowerCase() === initialCountryCode.toLowerCase(),
         ) ||
         getDefaultCountryData(initialCountryCode) ||
         allCountries[0];
@@ -289,11 +289,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <LocalizedLink href="/home">
-            <Image
-              src={isArabic ? image : image2}
-              alt="Logo"
-              width={270}
-            />
+            <Image src={isArabic ? image : image2} alt="Logo" width={270} />
           </LocalizedLink>
 
           {/* Desktop Menu */}
@@ -328,13 +324,12 @@ const Navbar: React.FC = () => {
                       title={activeLangState.name}
                     />
                   </span>
-                  <span className="font-semibold">
-                    {activeLangState.name}
-                  </span>
+                  <span className="font-semibold">{activeLangState.name}</span>
                   <ChevronDown
                     size={16}
-                    className={`text-[#0B5D4E] transition-transform duration-200 ${isDesktopLangOpen ? "rotate-180" : ""
-                      }`}
+                    className={`text-[#0B5D4E] transition-transform duration-200 ${
+                      isDesktopLangOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -344,10 +339,11 @@ const Navbar: React.FC = () => {
                       <button
                         key={lng.code}
                         onClick={() => changeLanguage(lng.code)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${activeLangState.code === lng.code
-                          ? "bg-[#0B5D4E] text-white font-semibold"
-                          : "hover:bg-[#0B5D4E] hover:text-white "
-                          }`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-sm transition-colors ${
+                          activeLangState.code === lng.code
+                            ? "bg-[#0B5D4E] text-white font-semibold"
+                            : "hover:bg-[#0B5D4E] hover:text-white "
+                        }`}
                       >
                         <div className="flex items-center gap-2">
                           <ReactCountryFlag
@@ -403,15 +399,17 @@ const Navbar: React.FC = () => {
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 bg-[#2C2C2C]/50 z-40 ${isClosing ? "animate-fade-out-fast" : "animate-fade-in-fast"
-              }`}
+            className={`fixed inset-0 bg-[#2C2C2C]/50 z-40 ${
+              isClosing ? "animate-fade-out-fast" : "animate-fade-in-fast"
+            }`}
             onClick={handleCloseMobileMenu}
           ></div>
 
           {/* Sidebar */}
           <div
-            className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-linear-to-b from-[#0B5D4E] to-[#0B5D4E] text-[#E8F4F1] z-50 shadow-2xl overflow-y-auto ${isClosing ? "animate-slide-out-right" : "animate-slide-in-right"
-              }`}
+            className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-linear-to-b from-[#0B5D4E] to-[#0B5D4E] text-[#E8F4F1] z-50 shadow-2xl overflow-y-auto ${
+              isClosing ? "animate-slide-out-right" : "animate-slide-in-right"
+            }`}
           >
             <div className="flex justify-between items-center p-4 border-b border-[#E8F4F1]/20">
               <h2 className="text-lg font-semibold">Menu</h2>
@@ -465,8 +463,9 @@ const Navbar: React.FC = () => {
                     </span>
                   </div>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${isMobileLangDropdownOpen ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${
+                      isMobileLangDropdownOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -478,10 +477,11 @@ const Navbar: React.FC = () => {
                         onClick={() => changeLanguage(lng.code)}
                         className={`
           w-full flex items-center justify-between px-3 py-2 transition-colors
-          ${currentLocaleState === lng.code
-                            ? "bg-[#0B5D4E] text-white" // active item
-                            : "hover:bg-[#0B5D4E] hover:text-white text-[#2C2C2C]" // normal item
-                          }
+          ${
+            currentLocaleState === lng.code
+              ? "bg-[#0B5D4E] text-white" // active item
+              : "hover:bg-[#0B5D4E] hover:text-white text-[#2C2C2C]" // normal item
+          }
         `}
                       >
                         <div className="flex items-center space-x-2">
@@ -548,8 +548,9 @@ const Navbar: React.FC = () => {
                     </span>
                   </div>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${isCountryDropdownOpen ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 text-[#E8F4F1] transition-transform duration-200 ${
+                      isCountryDropdownOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -559,10 +560,11 @@ const Navbar: React.FC = () => {
                       <button
                         key={country.code}
                         onClick={() => handleCountrySelect(country)}
-                        className={`w-full flex items-center justify-between px-3 py-2 text-black hover:bg-[#0B5D4E] transition-colors ${selectedCountry.code === country.code
-                          ? "bg-[#0B5D4E] text-white font-semibold"
-                          : "hover:bg-[#0B5D4E] hover:text-white "
-                          }`}
+                        className={`w-full flex items-center justify-between px-3 py-2 text-black hover:bg-[#0B5D4E] transition-colors ${
+                          selectedCountry.code === country.code
+                            ? "bg-[#0B5D4E] text-white font-semibold"
+                            : "hover:bg-[#0B5D4E] hover:text-white "
+                        }`}
                       >
                         <div className="flex items-center space-x-2">
                           <span className="flex items-center justify-center shrink-0 w-[2em] h-[1.5em] overflow-hidden">

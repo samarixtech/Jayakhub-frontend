@@ -117,8 +117,8 @@ export default function AuthLayout({
       </div>
 
       {/* RIGHT PANEL FORM CONTENT */}
-      <div className="flex items-center justify-center p-4 md:p-8 overflow-y-auto">
-        <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 md:p-10">
+      <div className="flex items-center justify-center overflow-y-auto">
+        <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-4 md:p-5 md:px-10">
           {children}
         </div>
       </div>

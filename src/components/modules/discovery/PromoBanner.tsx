@@ -6,7 +6,7 @@ const PromoBanner = () => {
   return (
     <div className="w-full bg-[#346853] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 my-8 text-white relative overflow-hidden">
       {/* Texture/Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-white to-transparent" />
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,var(--tw-gradient-stops))] from-white to-transparent" />
 
       <div className="flex items-start gap-4 z-10">
         <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center shrink-0">
@@ -14,9 +14,9 @@ const PromoBanner = () => {
         </div>
         <div>
           <h2 className="text-2xl font-bold mb-1">Subscribe to JayakPro</h2>
-          <p className="text-emerald-100 text-sm max-w-md">
+          <p className="text-emerald-100 text-sm">
             Get unlimited free delivery and 15% extra discount on selected
-            restaurants.
+            restaurants
           </p>
         </div>
       </div>

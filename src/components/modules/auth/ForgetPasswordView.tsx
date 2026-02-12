@@ -33,12 +33,12 @@ export default function ForgotPasswordView() {
 
   const { execute, isPending } = useServerAction(forgotPasswordAction, {
     onSuccess: (data: any) => {
-        if (data?.email) {
-            sessionStorage.setItem("pendingVerificationEmail", data.email);
-            sessionStorage.setItem("verificationIntent", "forgot-password");
-            const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp`;
-            router.push(verifyPath);
-        }
+      if (data?.email) {
+        sessionStorage.setItem("pendingVerificationEmail", data.email);
+        sessionStorage.setItem("verificationIntent", "forgot-password");
+        const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp`;
+        router.push(verifyPath);
+      }
     },
   });
 
@@ -61,43 +61,41 @@ export default function ForgotPasswordView() {
 
       <CardContent className="px-0">
         <Form {...form}>
-            <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6"
-            >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
+              control={form.control}
+              name="email"
+              render={({ field }) => (
                 <FormItem>
-                    <FormLabel className="text-gray-600 ml-1">Email Address</FormLabel>
-                    <FormControl>
+                  <FormLabel className="text-gray-600 ml-1">
+                    Email Address
+                  </FormLabel>
+                  <FormControl>
                     <Input
-                        placeholder="example@mail.com"
-                        className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
-                        {...field}
+                      placeholder="example@mail.com"
+                      className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                      {...field}
                     />
-                    </FormControl>
-                    <FormMessage />
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
-                )}
+              )}
             />
 
             <Button
-                type="submit"
-                disabled={isPending}
-                className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
+              type="submit"
+              disabled={isPending}
+              className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
             >
-                {isPending ? (
+              {isPending ? (
                 <>
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Sending...
+                  <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                 </>
-                ) : (
+              ) : (
                 "Send Reset Code"
-                )}
+              )}
             </Button>
-            </form>
+          </form>
         </Form>
 
         <div className="text-center mt-8">

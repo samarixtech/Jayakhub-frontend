@@ -18,7 +18,7 @@ const SectionHeader = ({
       <h2 className="text-xl font-bold text-gray-900">{title}</h2>
       <Button
         variant="ghost"
-        className="text-[#346853] hover:text-[#2a5443] hover:bg-emerald-50 font-semibold text-sm h-8 px-2"
+        className="text-[#346853] hover:text-[#2a5443] hover:bg-emerald-50 font-bold text-sm h-8 px-2"
         onClick={onAction}
       >
         {actionText} <ChevronRight className="ml-1 h-4 w-4" />

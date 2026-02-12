@@ -13,8 +13,10 @@ import {
   Plus,
 } from "lucide-react";
 import OrderSummary from "@/components/modules/checkout/OrderSummary";
-import Header from "@/components/restaurants/Header";
-import { getProfile } from "@/app/actions/customer/userprofile";
+import {
+  getProfile,
+  getMyCardsAction,
+} from "@/app/actions/customer/userprofile";
 import { getUserAddresses } from "@/app/actions/customer/address";
 import AddNewAddressModal from "@/components/modules/customer/address/AddNewAddressModal";
 import { GlobalModal } from "@/components/common/GlobalModal";
@@ -24,43 +26,40 @@ import { RootState, AppDispatch } from "@/redux/store/store";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
+import useLocale from "@/hooks/useLocals";
 
-// Mock Social Icons (replace with actual assets if available)
-const SocialButton = ({
-  icon,
-  text,
-  bg = "bg-white",
-  textCol = "text-gray-900",
-  border = "border-gray-200",
-}: any) => (
-  <button
-    className={`w-full h-12 flex items-center justify-center gap-3 rounded-lg border ${border} ${bg} ${textCol} font-bold text-sm hover:opacity-90 transition-opacity`}
-  >
-    <span>{icon}</span> {text}
-  </button>
-);
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const CheckoutView = () => {
-  // --- Redux ---
+  //  REDUX
   const dispatch = useDispatch<AppDispatch>();
   const cart = useSelector((state: RootState) => state.cart.items);
   const router = useRouter();
 
-  // --- State ---
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [userProfile, setUserProfile] = useState<any>(null);
   const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+  const [savedCards, setSavedCards] = useState<any[]>([]); // New state for cards
   const [selectedAddress, setSelectedAddress] = useState<any>(null);
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "cod">(
-    "stripe",
-  ); // Default to stripe
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "cod" | string>(
+    "cod",
+  ); // Updated Type
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isAddNewAddressModalOpen, setIsAddNewAddressModalOpen] =
     useState(false);
 
-  // --- Actions ---
+  const { country, language } = useLocale();
+
+  // ACTIONS
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       toast.error("Please select a delivery address.");
@@ -86,7 +85,7 @@ const CheckoutView = () => {
     const totalAmount = subtotal + deliveryFee;
 
     const payload = {
-      paymentMethod,
+      paymentMethod: paymentMethod as any, // Cast to any to allow dynamic string 'pm_...'
       restaurantId,
       items: cart.map((item) => ({
         itemName: item.name,
@@ -110,20 +109,26 @@ const CheckoutView = () => {
           // COD Success
           toast.success("Order placed successfully!");
           dispatch(clearCart());
-          // Redirect to order status page (simulated)
-          // Ideally we'd have the order ID to redirect to /order/[id]
-          // For now, redirecting to home or a generic success page?
-          // User requested: "redirect to order summary page just like given screenshot"
-          // Assuming this means the "Order Journey" page which likely takes an ID.
-          // Let's assume response.data.orderId exists.
           const orderId = res.data?.orderId || "new";
-          router.push(
-            `/${userProfile?.country || "US"}/${userProfile?.language || "en"}/order-confirmation/${orderId}`,
-          );
+          router.push(`/${country}/${language}/order-confirmation/${orderId}`);
         } else {
-          // Stripe Success
+          // Stripe Success (existing or new)
+          // If we sent a pm_id, backend might process immediately (capture)
+          // OR if 'stripe' (new card), it returns a URL.
+          // Let's assume typical behavior: if URL is present, open it.
+          // If successful payment without URL (e.g. saved card), handle success.
+
           if (res.data?.url) {
+            // New Card Flow or 3DS required
             window.open(res.data.url, "_blank");
+          } else if (res.success || res.meta?.status === 200) {
+            // Successful charge with saved card
+            toast.success("Payment successful!");
+            dispatch(clearCart());
+            const orderId = res.data?.orderId || "new";
+            router.push(
+              `/${country}/${language}/order-confirmation/${orderId}`,
+            );
           } else {
             toast.error("Stripe URL not found.");
           }
@@ -161,7 +166,23 @@ const CheckoutView = () => {
     }
   };
 
+  // Fetch Saved Cards
+  const fetchCards = async () => {
+    try {
+      const cardsRes: any = await getMyCardsAction();
+      console.log("Cards Res:", cardsRes);
+      if (cardsRes.success && cardsRes.data) {
+        setSavedCards(cardsRes.data);
+      } else if (cardsRes.meta?.status === 200 && cardsRes.data) {
+        setSavedCards(cardsRes.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch cards", error);
+    }
+  };
+
   // Check auth status and fetch profile & addresses
+
   useEffect(() => {
     const init = async () => {
       // 1. Try to fetch profile to check auth status
@@ -174,6 +195,7 @@ const CheckoutView = () => {
           setUserProfile(profileRes.data);
           // Only fetch addresses if logged in
           await fetchAddresses();
+          await fetchCards();
         } else if (profileRes.meta?.status === 200 && profileRes.data) {
           // Fallback for different structure
           setIsLoggedIn(true);
@@ -198,9 +220,27 @@ const CheckoutView = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      <Header />
-      <div className="py-10 px-4 md:px-8 pt-24">
+      <div className="py-10 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
+          {/* Breadcrumb */}
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/restaurants">Restaurants</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="font-bold text-gray-900">
+                  Checkout
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+
           <h1 className="text-3xl font-bold text-gray-900 mb-8">
             Finalize Your Order
           </h1>
@@ -428,34 +468,116 @@ const CheckoutView = () => {
                       </h3>
                     </div>
                     <div className="space-y-3">
+                      {/* Stripe Option */}
                       <div
                         onClick={() => setPaymentMethod("stripe")}
-                        className={`border p-4 rounded-lg flex items-center justify-between cursor-pointer transition-all ${paymentMethod === "stripe" ? "border-[#346853] bg-[#346853]/5" : "border-gray-200 hover:border-gray-300"}`}
+                        className={`border p-4 rounded-lg cursor-pointer transition-all ${
+                          paymentMethod === "stripe" ||
+                          (typeof paymentMethod === "string" &&
+                            paymentMethod.startsWith("pm_"))
+                            ? "border-[#346853] bg-[#346853]/5"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
                       >
-                        <div className="flex items-center gap-4">
-                          <CreditCard
-                            className={
-                              paymentMethod === "stripe"
-                                ? "text-[#346853]"
-                                : "text-gray-400"
-                            }
-                          />
-                          <div>
-                            <p className="font-bold text-gray-900 text-sm">
-                              Credit Card / Stripe
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              Secure payment via Stripe
-                            </p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <CreditCard
+                              className={
+                                paymentMethod === "stripe" ||
+                                (typeof paymentMethod === "string" &&
+                                  paymentMethod.startsWith("pm_"))
+                                  ? "text-[#346853]"
+                                  : "text-gray-400"
+                              }
+                            />
+                            <div>
+                              <p className="font-bold text-gray-900 text-sm">
+                                Credit Card / Stripe
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                Secure payment via Stripe
+                              </p>
+                            </div>
                           </div>
+                          {(paymentMethod === "stripe" ||
+                            (typeof paymentMethod === "string" &&
+                              paymentMethod.startsWith("pm_"))) && (
+                            <CheckCircle2 className="text-[#346853] fill-[#346853]/20" />
+                          )}
                         </div>
-                        {paymentMethod === "stripe" ? (
-                          <CheckCircle2 className="text-[#346853] fill-[#346853]/20" />
-                        ) : (
-                          <Circle className="text-gray-300" />
+
+                        {/* Saved Cards & New Card Options */}
+                        {(paymentMethod === "stripe" ||
+                          (typeof paymentMethod === "string" &&
+                            paymentMethod.startsWith("pm_"))) && (
+                          <div className="mt-4 pt-4 border-t border-[#346853]/10 animate-in fade-in slide-in-from-top-2 space-y-3">
+                            {/* Option: Pay with New Card */}
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent parent click
+                                setPaymentMethod("stripe");
+                              }}
+                              className={`p-3 rounded-xl border border-dashed flex items-center gap-3 cursor-pointer transition-all group ${
+                                paymentMethod === "stripe"
+                                  ? "border-[#346853] bg-[#346853]/5"
+                                  : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
+                              }`}
+                            >
+                              <div
+                                className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === "stripe" ? "border-[#346853]" : "border-gray-400 group-hover:border-[#346853]"}`}
+                              >
+                                {paymentMethod === "stripe" && (
+                                  <div className="w-2 h-2 rounded-full bg-[#346853]" />
+                                )}
+                              </div>
+                              <span className="font-medium text-sm text-gray-700">
+                                Pay with a new card
+                              </span>
+                            </div>
+
+                            {/* Saved Cards List */}
+                            {savedCards.map((card: any) => (
+                              <div
+                                key={card.id}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPaymentMethod(card.stripePaymentMethodId);
+                                }}
+                                className={`p-3 rounded-xl border border-dashed flex items-center justify-between cursor-pointer transition-all group ${
+                                  paymentMethod === card.stripePaymentMethodId
+                                    ? "border-[#346853] bg-[#346853]/5"
+                                    : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
+                                }`}
+                              >
+                                <div className="flex items-center gap-3">
+                                  <div
+                                    className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === card.stripePaymentMethodId ? "border-[#346853]" : "border-gray-400 group-hover:border-[#346853]"}`}
+                                  >
+                                    {paymentMethod ===
+                                      card.stripePaymentMethodId && (
+                                      <div className="w-2 h-2 rounded-full bg-[#346853]" />
+                                    )}
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="font-medium text-sm text-gray-900 capitalize">
+                                      {card.cardType} •••• {card.last4}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                      Expires {card.expiryDate}
+                                    </span>
+                                  </div>
+                                </div>
+                                <CreditCard
+                                  size={16}
+                                  className="text-gray-400"
+                                />
+                              </div>
+                            ))}
+                          </div>
                         )}
                       </div>
 
+                      {/* COD Option */}
                       <div
                         onClick={() => setPaymentMethod("cod")}
                         className={`border p-4 rounded-lg flex items-center justify-between cursor-pointer transition-all ${paymentMethod === "cod" ? "border-[#346853] bg-[#346853]/5" : "border-gray-200 hover:border-gray-300"}`}

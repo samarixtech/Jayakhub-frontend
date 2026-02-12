@@ -23,7 +23,7 @@ import { useServerAction } from "@/hooks/use-server-action";
 export default function StepReviewView() {
   const { country, language } = useLocale();
   const router = useRouter();
-  const { prevStep, logoFile, bannerFile } = useOnboarding();
+  const { prevStep, logoFile, bannerFile, kycFile, docFile } = useOnboarding();
 
   const [data, setData] = useState<any>({
     owner: null,
@@ -100,6 +100,12 @@ export default function StepReviewView() {
   const handleSubmit = async () => {
     setLoading(true);
     console.log("Preparing Payload from Data:", data);
+    console.log("Files availability:", {
+      logoFile: !!logoFile,
+      bannerFile: !!bannerFile,
+      kycFile: !!kycFile,
+      docFile: !!docFile,
+    });
 
     // Schedules Mapping
     const schedules = Object.entries(data.schedule || {}).map(
@@ -110,6 +116,21 @@ export default function StepReviewView() {
         isClosed: !val.isOpen,
       }),
     );
+
+    // Build FormData instead of JSON payload
+    const formData = new FormData();
+    formData.append("name", data.restaurant?.restaurantName || "");
+    formData.append("email", data.restaurant?.restaurantEmail || "");
+    formData.append("phone", data.restaurant?.restaurantPhone || "");
+    formData.append("address", data.restaurant?.address || "");
+    formData.append("country", data.restaurant?.country || "");
+    formData.append("latitude", String(data.restaurant?.location?.lat || 0));
+    formData.append("longitude", String(data.restaurant?.location?.lng || 0));
+    formData.append("type", (data.restaurant?.cuisineTypes || []).join(","));
+    formData.append("description", data.restaurant?.description || "");
+    if (data.restaurant?.websiteUrl) {
+      formData.append("websiteUrl", data.restaurant.websiteUrl);
+    }
 
     // Backend Enum Mapping
     const mapDocTypeToBackend = (frontendType: string) => {
@@ -130,32 +151,26 @@ export default function StepReviewView() {
     };
 
     // KYC Mapping
-    const kycDocuments = [];
-    if (data.kyc?.kycName) {
-      kycDocuments.push({
-        documentType: mapDocTypeToBackend(data.kyc.kycType || "id_card"),
-        documentFile: data.kyc.kycName,
-      });
+    if (kycFile && data.kyc?.kycType) {
+      formData.append(
+        "documentType",
+        mapDocTypeToBackend(data.kyc.kycType || "id_card"),
+      );
+      formData.append("documentFile", kycFile);
     }
-    if (data.kyc?.docName) {
-      kycDocuments.push({
-        documentType: mapDocTypeToBackend(data.kyc.docType || "food_license"),
-        documentFile: data.kyc.docName,
-      });
+
+    if (docFile && data.kyc?.docType) {
+      formData.append(
+        "documentType",
+        mapDocTypeToBackend(data.kyc.docType || "food_license"),
+      );
+      formData.append("documentFile", docFile);
     }
 
     // Build FormData instead of JSON payload
-    const formData = new FormData();
-    formData.append("name", data.restaurant?.restaurantName || "");
-    formData.append("email", data.restaurant?.restaurantEmail || "");
-    formData.append("phone", data.restaurant?.restaurantPhone || "");
-    formData.append("address", data.restaurant?.address || "");
-    formData.append("country", data.restaurant?.country || "");
-    formData.append("latitude", String(data.restaurant?.location?.lat || 0));
-    formData.append("longitude", String(data.restaurant?.location?.lng || 0));
-    formData.append("type", (data.restaurant?.cuisineTypes || []).join(","));
+    // const formData = new FormData(); // Already initialized above
+    // formData.append("kycDocuments", JSON.stringify(kycDocuments)); // REMOVED per user request
     formData.append("schedules", JSON.stringify(schedules));
-    formData.append("kycDocuments", JSON.stringify(kycDocuments));
     formData.append("Ownerphone", data.owner?.ownerPhone || "");
     formData.append("ownerName", data.owner?.ownerName || "");
     formData.append("accountHolderName", data.bank?.accountTitle || "");
@@ -163,7 +178,6 @@ export default function StepReviewView() {
     formData.append("bankName", data.bank?.bankName || "");
     formData.append("iban", data.bank?.iban || "");
 
-    // Append actual File objects (not base64)
     if (logoFile) {
       formData.append("profileImage", logoFile);
     }

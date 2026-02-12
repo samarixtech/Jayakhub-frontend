@@ -67,77 +67,83 @@ export default function NewPasswordView() {
       </CardHeader>
       <CardContent className="px-0">
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
+              control={form.control}
+              name="password"
+              render={({ field }) => (
                 <FormItem>
-                    <div className="relative">
+                  <div className="relative">
                     <FormControl>
-                        <Input
+                      <Input
                         type={showPassword ? "text" : "password"}
                         placeholder="New Password"
                         className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                         {...field}
-                        />
+                      />
                     </FormControl>
                     <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-                        tabIndex={-1}
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      tabIndex={-1}
                     >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
-                    </div>
-                    <FormMessage />
+                  </div>
+                  <FormMessage />
                 </FormItem>
-                )}
+              )}
             />
 
             <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
                 <FormItem>
-                    <div className="relative">
+                  <div className="relative">
                     <FormControl>
-                        <Input
+                      <Input
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm New Password"
                         className="h-14 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                         {...field}
-                        />
+                      />
                     </FormControl>
                     <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-                        tabIndex={-1}
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                      tabIndex={-1}
                     >
-                        {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      {showConfirmPassword ? (
+                        <EyeOff size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
                     </button>
-                    </div>
-                    <FormMessage />
+                  </div>
+                  <FormMessage />
                 </FormItem>
-                )}
+              )}
             />
 
             <Button
-                type="submit"
-                disabled={isPending}
-                className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold"
+              type="submit"
+              disabled={isPending}
+              className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold"
             >
-                {isPending ? (
+              {isPending ? (
                 <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Updating...
+                  <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                 </>
-                ) : (
+              ) : (
                 "Update Password"
-                )}
+              )}
             </Button>
-            </form>
+          </form>
         </Form>
       </CardContent>
     </Card>

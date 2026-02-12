@@ -336,20 +336,8 @@ export default function StepBrandAssetsView() {
             </div>
           </div>
 
-          <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onBack}
-              className="w-full sm:w-auto text-gray-400 font-bold hover:bg-transparent"
-            >
-              Back
-            </Button>
-
+          <div className="flex flex-col-reverse sm:flex-row justify-end items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <Typography className="text-sm font-medium text-gray-500">
-                Step 03 of 06
-              </Typography>
               <Button
                 type="submit"
                 disabled={false}

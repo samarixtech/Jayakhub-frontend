@@ -19,7 +19,7 @@ import { toast } from "react-hot-toast";
 
 const INITIAL_OPTIONS = [{ name: "", price: "0" }];
 
-import { GlobalModal } from "@/components/common/GlobalModal";
+import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
 
 export default function MenuVariantsView() {
   const [variants, setVariants] = useState<any[]>([]);
@@ -432,31 +432,14 @@ export default function MenuVariantsView() {
         )}
       </div>
 
-      <GlobalModal
+      <DeleteConfirmationModal
         open={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
         title="Delete Variant Group"
         description={`Are you sure you want to delete "${deleteName}"? This action cannot be undone.`}
-        trigger={null}
-      >
-        <div className="flex justify-end gap-3 mt-6">
-          <Button
-            variant="ghost"
-            onClick={() => setIsDeleteModalOpen(false)}
-            disabled={isDeletingVariant}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={confirmDelete}
-            disabled={isDeletingVariant}
-            className="bg-red-500 hover:bg-red-600"
-          >
-            {isDeletingVariant ? "Deleting..." : "Delete Group"}
-          </Button>
-        </div>
-      </GlobalModal>
+        onConfirm={confirmDelete}
+        isDeleting={isDeletingVariant}
+      />
     </div>
   );
 }

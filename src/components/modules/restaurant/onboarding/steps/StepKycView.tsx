@@ -50,14 +50,12 @@ const DOC_TYPES = [
 export default function StepKycView() {
   const router = useRouter();
   const { country, language } = useLocale();
-  const { prevStep } = useOnboarding();
+  const { prevStep, kycFile, setKycFile, docFile, setDocFile } =
+    useOnboarding();
 
   // State
   const [kycType, setKycType] = useState("id_card");
   const [docType, setDocType] = useState("food_license");
-
-  const [kycFile, setKycFile] = useState<File | null>(null);
-  const [docFile, setDocFile] = useState<File | null>(null);
 
   // Persisted names for static mode
   const [savedKycName, setSavedKycName] = useState<string | null>(null);
@@ -180,10 +178,11 @@ export default function StepKycView() {
                 key={type.id}
                 type="button"
                 onClick={() => setKycType(type.id)}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${kycType === type.id
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                  kycType === type.id
                     ? "bg-white text-[#346853] shadow-sm"
                     : "text-gray-400 hover:text-gray-600"
-                  }`}
+                }`}
               >
                 {type.label}
               </button>
@@ -278,10 +277,11 @@ export default function StepKycView() {
                 key={type.id}
                 type="button"
                 onClick={() => setDocType(type.id)}
-                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${docType === type.id
+                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                  docType === type.id
                     ? "bg-white text-[#346853] shadow-sm"
                     : "text-gray-400 hover:text-gray-600"
-                  }`}
+                }`}
               >
                 {type.label}
               </button>
@@ -348,23 +348,8 @@ export default function StepKycView() {
         </div>
       </div>
 
-      <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-4 border-t border-gray-50 mt-8 gap-4 sm:gap-0">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => {
-            prevStep();
-            router.back();
-          }}
-          className="w-full sm:w-auto text-gray-400 font-bold hover:bg-transparent"
-        >
-          Back
-        </Button>
-
+      <div className="flex flex-col-reverse sm:flex-row justify-end items-center pt-4 border-t border-gray-50 mt-8 gap-4 sm:gap-0">
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          <Typography className="text-sm font-medium text-gray-500">
-            Step 05 of 06
-          </Typography>
           <Button
             onClick={handleComplete}
             disabled={

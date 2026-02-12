@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import useLocale from "@/hooks/useLocals";
 import { Card, CardContent } from "@/components/ui/card";
 import { OnboardingHeader } from "@/components/modules/restaurant/onboarding/OnboardingHeader";
 import { StepperProgress } from "@/components/modules/restaurant/onboarding/StepperProgress";
@@ -19,6 +20,9 @@ const OnboardingLayoutContent = ({
   const pathname = usePathname();
   const { logoPreview } = useOnboarding();
 
+  const router = useRouter();
+  const { country, language } = useLocale();
+
   // Determine current step based on pathname
   let currentStep = 1;
   if (pathname.includes("step-owner-info")) currentStep = 1;
@@ -28,6 +32,36 @@ const OnboardingLayoutContent = ({
   else if (pathname.includes("step-kyc")) currentStep = 5;
   else if (pathname.includes("step-bank-details")) currentStep = 6;
   else if (pathname.includes("step-review")) currentStep = 7;
+
+  const handleStepClick = (stepId: number) => {
+    let path = "";
+    switch (stepId) {
+      case 1:
+        path = "step-owner-info";
+        break;
+      case 2:
+        path = "step-restaurant-info";
+        break;
+      case 3:
+        path = "step-brand-assets";
+        break;
+      case 4:
+        path = "step-schedule";
+        break;
+      case 5:
+        path = "step-kyc";
+        break;
+      case 6:
+        path = "step-bank-details";
+        break;
+      case 7:
+        path = "step-review";
+        break;
+      default:
+        return;
+    }
+    router.push(`/${country}/${language}/restaurant/onboarding/${path}`);
+  };
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] p-6 flex flex-col items-center justify-center">
@@ -44,8 +78,15 @@ const OnboardingLayoutContent = ({
       </div>
 
       <Card className="w-full max-w-4xl border-none shadow-xl shadow-gray-200/50 rounded-[40px] bg-white overflow-hidden p-8 md:p-12">
-        <OnboardingHeader logoPreview={logoPreview} />
-        <StepperProgress currentStep={currentStep} />
+        <OnboardingHeader
+          logoPreview={logoPreview}
+          onBack={() => router.back()}
+          showBack={currentStep > 1}
+        />
+        <StepperProgress
+          currentStep={currentStep}
+          onStepClick={handleStepClick}
+        />
 
         <CardContent className="p-0">{children}</CardContent>
       </Card>

@@ -62,7 +62,9 @@ const PaymentMethodsCard = () => {
               <div>
                 <p className="text-sm font-bold text-gray-900 capitalize">
                   {defaultCard.cardType || "Card"} ending in{" "}
-                  {defaultCard.cardNumber.slice(-4)}
+                  {defaultCard.cardNumber
+                    ? defaultCard.cardNumber.slice(-4)
+                    : "••••"}
                 </p>
                 <p className="text-[11px] text-gray-400 font-medium">
                   Expires {defaultCard.expiryDate} • Default

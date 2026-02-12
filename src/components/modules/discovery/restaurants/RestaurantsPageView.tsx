@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import RestaurantHeader from "@/components/restaurants/Header";
 import { useParams, useSearchParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { CLCProvider, useCLC } from "@/app/context/CLCContext";
@@ -25,36 +24,36 @@ const SHOPS = [
   {
     id: "s1",
     name: "Fresh Mart Express",
-    image: "/images/shops/mart.jpg",
+    image: "/al-mansour.jpg",
     deliveryTime: "15-20 mins",
   },
   {
     id: "s2",
     name: "HealthFirst Care",
-    image: "/images/shops/pharma.jpg",
+    image: "/baghdad-bites.jpg",
     deliveryTime: "20-30 mins",
   },
   {
     id: "s3",
     name: "Daily Bakeshop",
-    image: "/images/shops/bakery.jpg",
+    image: "/burger.jpg",
     deliveryTime: "10-15 mins",
   },
   {
     id: "s4",
     name: "Green Leaf Organic",
-    image: "/images/shops/veg.jpg",
+    image: "/green-garden.png",
     deliveryTime: "25-40 mins",
   },
   {
     id: "s5",
     name: "Happy Paws Pet",
-    image: "/images/shops/pet.jpg",
+    image: "/daily-bakeshop.png",
     deliveryTime: "30-45 mins",
   },
 ];
 
-const IndexPageContent: React.FC = () => {
+const AllRestaurantsPage: React.FC = () => {
   const params = useParams();
   const searchParams = useSearchParams();
   const { setCLC } = useCLC();
@@ -71,8 +70,7 @@ const IndexPageContent: React.FC = () => {
           id: item.id || "",
           slug: item.slug || item.id || "",
           name: item.name || "Unknown",
-          image:
-            item.bannerImage || item.profileImage || "/images/food/burger.jpg",
+          image: item.profileImage || item.bannerImage || "/pizza-palace.jpg",
           rating: 4.5,
           priceLevel: "$$",
           cuisine: Array.isArray(item.type)
@@ -122,11 +120,10 @@ const IndexPageContent: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params?.country, params?.language]);
 
+  console.log(restaurants);
   return (
     <div className="min-h-screen bg-gray-50 font-sans pb-20">
-      <RestaurantHeader />
-
-      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pt-[100px] md:pt-[120px]">
+      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* 1. Hero Banner */}
         <HeroBanner />
 
@@ -146,12 +143,12 @@ const IndexPageContent: React.FC = () => {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="min-w-[320px] h-[300px] bg-gray-200 rounded-2xl animate-pulse"
+                  className="min-w-[320px] h-[200px] bg-gray-200 rounded-2xl animate-pulse"
                 />
               ))}
             </div>
           ) : (
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
               {restaurants.length > 0 ? (
                 restaurants.map((restaurant) => (
                   <DiscoveryRestaurantCard
@@ -174,7 +171,7 @@ const IndexPageContent: React.FC = () => {
         {/* 6. Shops Section */}
         <section className="mb-10">
           <SectionHeader
-            title="Shops on JayakHub"
+            title="Shops on Jayak Hub"
             actionText="View all shops"
           />
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
@@ -201,12 +198,12 @@ const IndexPageContent: React.FC = () => {
   );
 };
 
-const IndexPage: React.FC = () => {
+const RestaurantsPageView: React.FC = () => {
   return (
     <CLCProvider>
-      <IndexPageContent />
+      <AllRestaurantsPage />
     </CLCProvider>
   );
 };
 
-export default IndexPage;
+export default RestaurantsPageView;

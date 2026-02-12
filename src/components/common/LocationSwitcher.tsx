@@ -15,6 +15,8 @@ interface LocationSwitcherProps {
   currentAddress: string;
   onAddressChange: (address: string) => void;
   onLocationChange?: (lat: number, lng: number) => void;
+  isLoggedIn?: boolean;
+  className?: string;
 }
 
 interface Address {
@@ -26,12 +28,16 @@ interface Address {
   stateProvince: string;
   zipCode: string;
   country: string;
+  latitude: number | string;
+  longitude: number | string;
 }
 
 const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   currentAddress,
   onAddressChange,
   onLocationChange,
+  isLoggedIn = false,
+  className,
 }) => {
   const tLocation = useTranslations("location.dropdown");
   const [loading, setLoading] = useState(false);
@@ -41,10 +47,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   const [detectedLocation, setDetectedLocation] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && isLoggedIn) {
       fetchAddresses();
     }
-  }, [isOpen]);
+  }, [isOpen, isLoggedIn]);
 
   const fetchAddresses = async () => {
     setFetchingAddresses(true);
@@ -116,7 +122,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className="flex items-center justify-start min-w-[180px] max-w-sm h-11 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4"
+          className={cn(
+            "flex items-center justify-start min-w-[180px] max-w-sm h-11 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4",
+            className,
+          )}
         >
           <MapPin className="w-5 h-5 text-emerald-bg shrink-0" />
           <span className="text-sm font-semibold truncate flex-1 text-left">
@@ -223,6 +232,12 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                     key={addr.id}
                     onClick={() => {
                       onAddressChange(fullAddress);
+                      if (onLocationChange && addr.latitude && addr.longitude) {
+                        onLocationChange(
+                          Number(addr.latitude),
+                          Number(addr.longitude),
+                        );
+                      }
                       setIsOpen(false);
                     }}
                     className={cn(

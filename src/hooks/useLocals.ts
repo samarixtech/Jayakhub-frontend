@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
+import api from "@/components/services/api";
 
 /* ---------- API TYPES ---------- */
 
@@ -41,8 +42,8 @@ export default function useLocale(): Locale {
   const [error, setError] = useState<string>();
 
   function applyFallback() {
-    setCountry("Pakistan");
-    setCountryCode("PK");
+    setCountry("pk");
+    setCountryCode("pk");
     setLanguage("en");
     setDir("ltr");
 
@@ -52,11 +53,24 @@ export default function useLocale(): Locale {
 
   useEffect(() => {
     async function fetchLocale() {
+      // 1. Check Cookies FIRST
+      const existingCountry = Cookies.get("USER_COUNTRY");
+      const existingLang = Cookies.get("NEXT_LOCALE");
+
+      if (existingCountry && existingLang) {
+        setCountry(existingCountry);
+        setCountryCode(existingCountry);
+        setLanguage(existingLang);
+        setDir(RTL_LANGS.includes(existingLang) ? "rtl" : "ltr");
+        setLoading(false);
+        return; // EXIT EARLY - NO API CALL
+      }
+
+      // 2. Only API if Cookies Missing (should be rare due to middleware/root page)
       try {
-        const res = await axios.get<DetectApiResponse>(
-          "http://192.168.100.9:5000/api/v1/detect",
-          { timeout: 10000 },
-        );
+        const res = await api.get<DetectApiResponse>("/detect", {
+          timeout: 5000,
+        });
 
         const data = res.data?.data;
 
@@ -69,7 +83,7 @@ export default function useLocale(): Locale {
           ? "rtl"
           : "ltr";
 
-        setCountry(data.country);
+        setCountry(data.code);
         setCountryCode(data.code);
         setLanguage(lang);
         setDir(direction);
@@ -81,14 +95,14 @@ export default function useLocale(): Locale {
           expires: 365,
         });
 
-        console.log("🌍 Locale detected:", {
+        console.log("🌍 Locale detected (Client Fallback):", {
           country: data.country,
           code: data.code,
           language: lang,
           dir: direction,
         });
       } catch (err: any) {
-        console.error("❌ Locale detection failed:", err.message);
+        console.error("❌ Locale detection failed (Client):", err.message);
         setError(err.message);
         applyFallback();
       } finally {

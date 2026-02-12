@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaApple } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -12,20 +12,19 @@ import { registerSchema, RegisterInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
 
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator"; 
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
@@ -46,22 +45,68 @@ export default function CustomerRegisterView() {
       phone: "",
       password: "",
       confirmPassword: "",
+      terms: false,
     },
   });
+
+  // Restore form data from sessionStorage on mount
+  useEffect(() => {
+    const savedData = sessionStorage.getItem("customer_register_form");
+    if (savedData) {
+      const parsed = JSON.parse(savedData);
+      // specific fields to reset
+      form.reset({
+        ...parsed,
+        password: "",
+        confirmPassword: "",
+      });
+    }
+  }, [form]);
+
+  // Watch form changes and save to sessionStorage with Debounce
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    const subscription = form.watch((value) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const { password, confirmPassword, ...rest } = value;
+        sessionStorage.setItem("customer_register_form", JSON.stringify(rest));
+      }, 1000);
+    });
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeoutId);
+    };
+  }, [form]);
 
   // 2 SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(registerAction, {
     onSuccess: (data: any) => {
       const identifier = data?.email || form.getValues("email");
-      
+
+      // CLEAR STORAGE
+      sessionStorage.removeItem("customer_register_form");
+
       if (identifier) {
         sessionStorage.setItem("pendingVerificationEmail", identifier);
         router.push(
-            `/${country?.toLowerCase() || 'pakistan'}/${language?.toLowerCase() || 'en'}/verify-otp?email=${encodeURIComponent(identifier)}`
+          `/${country?.toLowerCase() || "pakistan"}/${language?.toLowerCase() || "en"}/verify-otp?email=${encodeURIComponent(identifier)}`,
         );
       }
     },
   });
+
+  // Watch password fields for bidirectional validation
+  const password = form.watch("password");
+  const confirmPassword = form.watch("confirmPassword");
+
+  useEffect(() => {
+    if (confirmPassword) {
+      form.trigger("confirmPassword");
+    }
+  }, [password, confirmPassword, form]);
+
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   function onSubmit(data: RegisterInput) {
     execute(data);
@@ -88,10 +133,11 @@ export default function CustomerRegisterView() {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <GoogleAuthButton
               role="customer"
-              loading={isPending}
-              setLoading={() => {}}
+              loading={isGoogleLoading}
+              setLoading={setIsGoogleLoading}
               country={country}
               language={language}
+              disabled={isPending}
             />
             <Button
               type="button"
@@ -118,7 +164,10 @@ export default function CustomerRegisterView() {
 
           {/* FORM */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 mx-1"
+            >
               <FormField
                 control={form.control}
                 name="name"
@@ -127,7 +176,7 @@ export default function CustomerRegisterView() {
                     <FormControl>
                       <Input
                         placeholder="Full Name"
-                        className="h-14 rounded-xl"
+                        className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                         {...field}
                       />
                     </FormControl>
@@ -135,7 +184,6 @@ export default function CustomerRegisterView() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="email"
@@ -144,7 +192,7 @@ export default function CustomerRegisterView() {
                     <FormControl>
                       <Input
                         placeholder="Email Address"
-                        className="h-14 rounded-xl"
+                        className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                         {...field}
                       />
                     </FormControl>
@@ -159,9 +207,11 @@ export default function CustomerRegisterView() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
+                      <PhoneInput
                         placeholder="Phone Number"
-                        className="h-14 rounded-xl"
+                        maxLength={14}
+                        defaultCountry="PK"
+                        className="h-13 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                         {...field}
                       />
                     </FormControl>
@@ -169,7 +219,6 @@ export default function CustomerRegisterView() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="password"
@@ -180,7 +229,7 @@ export default function CustomerRegisterView() {
                         <Input
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
-                          className="h-14 pr-12 rounded-xl"
+                          className="h-13 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                           {...field}
                         />
                       </FormControl>
@@ -190,46 +239,81 @@ export default function CustomerRegisterView() {
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
                         tabIndex={-1}
                       >
-                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? (
+                          <Eye size={18} />
+                        ) : (
+                          <EyeOff size={18} />
+                        )}
                       </button>
                     </div>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                     <div className="relative">
+                    <div className="relative">
                       <FormControl>
                         <Input
                           type={showConfirmPassword ? "text" : "password"}
                           placeholder="Confirm Password"
-                          className="h-14 pr-12 rounded-xl"
+                          className="h-13 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                           {...field}
                         />
                       </FormControl>
                       <button
                         type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
                         tabIndex={-1}
                       >
-                         {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showConfirmPassword ? (
+                          <Eye size={18} />
+                        ) : (
+                          <EyeOff size={18} />
+                        )}
                       </button>
                     </div>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="terms"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 py-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-sm font-normal text-gray-500">
+                        I agree to the{" "}
+                        <LocalizedLink
+                          href="/terms"
+                          className="font-bold text-emerald-bg hover:underline"
+                        >
+                          Terms and Conditions
+                        </LocalizedLink>
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
 
               <Button
                 type="submit"
-                disabled={isPending}
-                className="w-full h-14 bg-emerald-bg text-white text-lg font-bold rounded-xl"
+                disabled={isPending || !form.watch("terms")}
+                className="w-full h-13 bg-emerald-bg text-white text-lg font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
               >
                 {isPending ? (
                   <>

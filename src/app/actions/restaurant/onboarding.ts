@@ -14,11 +14,10 @@ export async function registerRestaurantOnboardingAction(
     );
 
     const api = await serverApi();
-    const response = await api.post("/onboarding/register", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await api.post("/onboarding/register", formData);
+
+    console.log("Server Action Response:", response);
+    console.log(formData);
 
     return {
       success: true,
