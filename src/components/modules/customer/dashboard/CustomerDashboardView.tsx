@@ -98,10 +98,11 @@ export default function OverviewPage() {
           variant="h2"
           className="text-2xl font-black text-gray-900 flex items-center gap-2"
         >
-          Hello, John! 👋
+          Overview
         </Typography>
         <Typography variant="p" className="text-gray-500 text-sm mt-1">
-          Here&apos;s what&apos;s happening with your account today.
+          Welcome back, here&apos;s what&apos;s happening with your account
+          today.
         </Typography>
       </div>
 

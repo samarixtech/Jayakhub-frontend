@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import api from "@/components/services/api";
+import { serverApi } from "@/components/services/api";
 
 interface DetectApiResult {
   country: string;
@@ -43,6 +43,7 @@ export async function detectLocationAction(
     console.log("Server Action: Detecting locale using API helper");
 
     // Using api helper instance
+    const api = await serverApi();
     const res = await api.get<{ data: DetectApiResult }>("/detect");
     const json = res.data;
     const data = json.data;

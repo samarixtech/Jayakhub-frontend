@@ -27,15 +27,15 @@ const getCardStyles = (type: string) => {
   const brand = type?.toLowerCase();
   switch (brand) {
     case "visa":
-      return "bg-gradient-to-br from-[#1a1f71] to-[#070928]";
+      return "bg-linear-to-br from-[#1a1f71] to-[#070928]";
     case "mastercard":
-      return "bg-gradient-to-br from-[#2b2b2b] via-[#202020] to-[#eb001b]";
+      return "bg-linear-to-br from-[#2b2b2b] via-[#202020] to-[#eb001b]";
     case "diners-club":
-      return "bg-gradient-to-br from-[#004a97] to-[#007ad4]";
+      return "bg-linear-to-br from-[#004a97] to-[#007ad4]";
     case "amex":
-      return "bg-gradient-to-br from-[#2E7D32] to-[#1B5E20]";
+      return "bg-linear-to-br from-[#2E7D32] to-[#1B5E20]";
     default:
-      return "bg-gradient-to-br from-gray-700 to-gray-900";
+      return "bg-linear-to-br from-gray-700 to-gray-900";
   }
 };
 
@@ -63,7 +63,7 @@ const CardLogo = ({ type }: { type: string }) => {
 };
 
 const EmvChip = () => (
-  <div className="h-8 w-11 rounded-md bg-gradient-to-br from-yellow-100/50 to-yellow-400/50 border border-white/20 relative overflow-hidden flex flex-col justify-between py-1 px-1 shadow-sm">
+  <div className="h-8 w-11 rounded-md bg-linear-to-br from-yellow-100/50 to-yellow-400/50 border border-white/20 relative overflow-hidden flex flex-col justify-between py-1 px-1 shadow-sm">
     <div className="w-full h-px bg-black/20" />
     <div className="w-full h-px bg-black/20" />
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-black/20" />
@@ -256,7 +256,7 @@ export default function WalletView() {
             variant="h2"
             className="text-2xl font-black text-gray-900"
           >
-            Payment Methods
+            Wallet
           </Typography>
           <Typography variant="p" className="text-gray-500 text-sm mt-1">
             Manage your payment methods and billing information.

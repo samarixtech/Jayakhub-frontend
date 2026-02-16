@@ -4,6 +4,7 @@ export interface ProfileData {
   email: string;
   phone: string;
   description: string;
+  websiteUrl?: string;
   type: string[];
   profileImage: string;
   bannerImage: string;

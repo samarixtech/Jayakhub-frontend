@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FileDown, Plus, RefreshCw } from "lucide-react";
+import { FileDown, Plus, RefreshCw, HelpCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -15,48 +15,58 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
-// Mock Data
-const PAST_ORDERS = [
-  {
-    id: "#ORD-2025-001",
-    restaurant: "Gourmet Garden",
-    image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=300&auto=format&fit=crop",
-    date: "Jan 02, 2025",
-    items: "2x Caesar Salad, 1x Water",
-    total: "24.50",
-    status: "Delivered",
-  },
-  {
-    id: "#ORD-2024-892",
-    restaurant: "Pizza Republic",
-    image:
-      "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=300&auto=format&fit=crop",
-    date: "Dec 28, 2024",
-    items: "1x Pepperoni, 2x Colas",
-    total: "42.00",
-    status: "Delivered",
-  },
-  {
-    id: "#ORD-2024-880",
-    restaurant: "Burger King",
-    image:
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=300&auto=format&fit=crop",
-    date: "Dec 20, 2024",
-    items: "1x Whopper Meal",
-    total: "15.50",
-    status: "Cancelled",
-  },
-];
+// Interface based on the API response provided
+interface OrderItem {
+  name: string;
+  price: string;
+  quantity: number;
+  image: string; // "uploads\item-images\..."
+}
+
+interface PaymentDetails {
+  cardNumber: string;
+  cardType: string;
+  ownerName: string;
+}
+
+interface Order {
+  orderId: string;
+  totalAmount: string;
+  status: string; // "paid", "pending", "cancelled", "delivered"
+  paymentMethod: string;
+  orderDate: string;
+  orderTime: string;
+  paymentDetails: PaymentDetails;
+  items: OrderItem[];
+}
+
+interface OrderSummary {
+  totalSpend: string;
+  totalOrdersCount: number;
+  totalPendingOrders: number;
+}
+
+interface OrdersResponse {
+  summary: OrderSummary;
+  orders: Order[];
+}
 
 export default function CustomerOrderHistory() {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeFilters, setActiveFilters] = useState<string[]>([
-    "All Statuses",
-    "Last 30 Days",
-  ]);
+
+  // Filters
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [dateRange, setDateRange] = useState("30"); // days
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,8 +77,20 @@ export default function CustomerOrderHistory() {
       try {
         const { getAllOrders } = await import("@/app/actions/customer/order");
         const res = await getAllOrders();
-        if (res.success && Array.isArray(res.data)) {
-          setOrders(res.data);
+        // The API returns { success: true, data: { meta: {...}, data: { summary: {...}, orders: [...] } } }
+        // OR { success: true, data: { summary: {...}, orders: [...] } } depending on how axios + server action wraps it.
+        // Based on provided JSON: response.data = { meta: ..., data: { orders: ... } }
+        // So safe check:
+        const responseData = res.data;
+        if (
+          responseData?.data?.orders &&
+          Array.isArray(responseData.data.orders)
+        ) {
+          setOrders(responseData.data.orders);
+        } else if (responseData?.orders && Array.isArray(responseData.orders)) {
+          setOrders(responseData.orders);
+        } else if (Array.isArray(responseData)) {
+          setOrders(responseData);
         }
       } catch (error) {
         console.error("Failed to fetch orders", error);
@@ -79,10 +101,19 @@ export default function CustomerOrderHistory() {
     fetchOrders();
   }, []);
 
-  // Filter Logic (Mock implementation for now as API returns all)
+  // Filter Logic
   const filteredOrders = orders.filter((order) => {
-    if (activeFilters.includes("All Statuses")) return true;
-    // Add real filtering logic here if needed
+    if (statusFilter !== "all") {
+      const status = order.status.toLowerCase();
+      if (
+        statusFilter === "delivered" &&
+        status !== "delivered" &&
+        status !== "paid"
+      )
+        return false;
+      if (statusFilter === "cancelled" && status !== "cancelled") return false;
+    }
+    // Date filtering could be added here if we parse orderDate
     return true;
   });
 
@@ -101,292 +132,291 @@ export default function CustomerOrderHistory() {
     }
   };
 
+  const getImageUrl = (path: string) => {
+    if (!path) return "";
+    if (path.startsWith("http")) return path;
+
+    // Handle Windows backslashes
+    const cleanPath = path.replace(/\\/g, "/");
+
+    // Check if path already starts with /
+    const hasLeadingSlash = cleanPath.startsWith("/");
+
+    // Use NEXT_PUBLIC_BASE_URL or fallback
+    const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
+
+    // Remove trailing slash from base url if present
+    const cleanBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+
+    return hasLeadingSlash
+      ? `${cleanBaseUrl}${cleanPath}`
+      : `${cleanBaseUrl}/${cleanPath}`;
+  };
+
   if (loading) {
-    return <div className="p-10 text-center">Loading orders...</div>;
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <div className="h-12 w-12 rounded-full bg-gray-200"></div>
+          <div className="h-4 w-48 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-5">
-      <div className="max-w-full mx-auto">
+    <div className="min-h-screen bg-[#F9FAFB] p-6">
+      <div className="max-w-5xl mx-auto space-y-8">
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <Typography
               variant="h2"
-              className="text-[#111827] font-bold text-2xl"
+              className="text-[#111827] font-black text-2xl"
             >
-              Order History
+              Orders
             </Typography>
-            <Typography variant="small" className="text-gray-500">
+            <Typography variant="small" className="text-gray-500 mt-1">
               Track your past orders
             </Typography>
           </div>
           <div className="flex gap-3">
             <Button
               variant="outline"
-              className="rounded-full border-gray-200 bg-white text-gray-700 h-11 px-6 hover:bg-gray-50 transition-colors"
+              className="rounded-full border-gray-200 bg-white text-gray-700 h-10 px-4 hover:bg-gray-50 transition-colors text-xs font-bold"
             >
-              <FileDown className="h-4 w-4" /> Export CSV
+              <FileDown className="h-3.5 w-3.5 mr-2" /> Export CSV
             </Button>
-            <Button className="rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-11 px-6 shadow-sm transition-all">
-              <Plus className="h-4 w-4" /> New Order
+            <Button className="rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-10 px-5 shadow-sm transition-all text-xs font-bold">
+              <Plus className="h-3.5 w-3.5 mr-2" /> New Order
             </Button>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Sidebar Filters */}
-          <aside className="lg:col-span-3">
-            <Card className="rounded-3xl border-none shadow-sm overflow-hidden bg-white">
-              <CardHeader className="flex flex-row items-center justify-between pb-6">
-                <CardTitle className="text-base font-bold text-gray-900">
-                  Filters
-                </CardTitle>
-                <Button
-                  onClick={() => setActiveFilters([])}
-                  className="text-emerald-bg text-sm font-medium hover:underline bg-transparent hover:bg-transparent cursor-pointer"
-                >
-                  Reset
-                </Button>
-              </CardHeader>
-              <CardContent className="space-y-8">
-                {/* Status Section */}
-                <div>
-                  <Typography
-                    variant="p"
-                    className="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-4"
-                  >
-                    status
-                  </Typography>
-                  <div className="space-y-4">
-                    {[
-                      "All Statuses",
-                      "Delivered",
-                      "Cancelled",
-                      "In Progress",
-                    ].map((status) => (
-                      <div
-                        key={status}
-                        className="flex items-center space-x-3 group cursor-pointer"
-                      >
-                        <Checkbox
-                          id={status}
-                          checked={activeFilters.includes(status)}
-                          onCheckedChange={(checked) => {
-                            setActiveFilters((prev) =>
-                              checked
-                                ? [...prev, status]
-                                : prev.filter((s) => s !== status),
-                            );
-                          }}
-                          className="border-gray-300 data-[state=checked]:bg-emerald-bg data-[state=checked]:border-emerald-bg"
-                        />
-                        <label
-                          htmlFor={status}
-                          className="text-sm font-semibold text-gray-700 cursor-pointer group-hover:text-black"
-                        >
-                          {status}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+        {/* Filters Bar */}
+        <div className="bg-white rounded-2xl p-2 pl-6 shadow-sm flex flex-col md:flex-row items-center gap-6 overflow-x-auto">
+          <span className="text-sm font-bold text-gray-900 shrink-0">
+            Filters:
+          </span>
 
-                {/* Date Range Section */}
-                <div>
-                  <Typography
-                    variant="p"
-                    className="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-4"
-                  >
-                    Date Range
-                  </Typography>
-                  <div className="space-y-4">
-                    {["Last 30 Days", "Last 3 Months"].map((range) => (
-                      <div
-                        key={range}
-                        className="flex items-center space-x-3 group cursor-pointer"
-                      >
-                        <Checkbox
-                          id={range}
-                          checked={activeFilters.includes(range)}
-                          onCheckedChange={(checked) => {
-                            setActiveFilters((prev) =>
-                              checked
-                                ? [...prev, range]
-                                : prev.filter((s) => s !== range),
-                            );
-                          }}
-                          className="border-gray-300 data-[state=checked]:bg-emerald-bg data-[state=checked]:border-emerald-bg"
-                        />
-                        <label
-                          htmlFor={range}
-                          className="text-sm font-semibold text-gray-700 cursor-pointer group-hover:text-black"
-                        >
-                          {range}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+          <div className="flex items-center gap-6 flex-1">
+            {/* Status Checkboxes - behaving like radio for simplicity or could be multi-select */}
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="filter-all"
+                className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+                checked={statusFilter === "all"}
+                onCheckedChange={() => setStatusFilter("all")}
+              />
+              <label
+                htmlFor="filter-all"
+                className="text-sm font-medium text-gray-700 cursor-pointer select-none"
+              >
+                All
+              </label>
+            </div>
 
-                <Button className="w-full bg-emerald-bg hover:bg-emerald-bg-hover rounded-full h-12 font-bold mt-4 shadow-sm transition-colors">
-                  Apply Filters
-                </Button>
-              </CardContent>
-            </Card>
-          </aside>
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="filter-delivered"
+                className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+                checked={statusFilter === "delivered"}
+                onCheckedChange={() => setStatusFilter("delivered")}
+              />
+              <label
+                htmlFor="filter-delivered"
+                className="text-sm font-medium text-gray-700 cursor-pointer select-none"
+              >
+                Delivered
+              </label>
+            </div>
 
-          {/* Main Content */}
-          <main className="lg:col-span-9 space-y-4">
-            {currentOrders.map((order) => {
-              // Image Handling
-              const firstItemImage =
-                order.items && order.items.length > 0
-                  ? order.items[0].image
-                  : null;
-              const imageUrl = firstItemImage
-                ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${firstItemImage.replace(/\\/g, "/")}`
-                : null;
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="filter-cancelled"
+                className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+                checked={statusFilter === "cancelled"}
+                onCheckedChange={() => setStatusFilter("cancelled")}
+              />
+              <label
+                htmlFor="filter-cancelled"
+                className="text-sm font-medium text-gray-700 cursor-pointer select-none"
+              >
+                Cancelled
+              </label>
+            </div>
+          </div>
 
-              return (
-                <Card
-                  key={order.orderId}
-                  className={`border-none rounded-2xl transition-all hover:shadow-md overflow-hidden p-0 ${
-                    order.status === "cancelled" ? "bg-red-100/50" : "bg-white"
-                  }`}
-                >
-                  <CardContent className="p-4 flex items-center">
-                    <div className="relative w-14 h-14 shrink-0 mr-5 bg-gray-100 rounded-xl flex items-center justify-center overflow-hidden">
-                      {imageUrl ? (
-                        <img
-                          src={imageUrl}
-                          alt="Order Item"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="font-bold text-gray-400 text-xs">
-                          IMG
-                        </span>
-                      )}
-                    </div>
+          <div className="flex items-center gap-2 shrink-0 ml-auto pr-2">
+            <Select value={dateRange} onValueChange={setDateRange}>
+              <SelectTrigger className="w-[140px] h-9 rounded-lg border-gray-200 text-xs font-bold bg-gray-50">
+                <SelectValue placeholder="Date Range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="30">Last 30 Days</SelectItem>
+                <SelectItem value="90">Last 3 Months</SelectItem>
+                <SelectItem value="180">Last 6 Months</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-                    <div className="flex-1 grid grid-cols-1 md:grid-cols-12 items-center gap-2">
-                      {/* Order Info */}
-                      <div className="md:col-span-4">
-                        <Typography
-                          variant="h3"
-                          className="font-bold text-gray-900 text-sm "
-                        >
-                          Order #{order.orderId.substring(0, 8)}...
-                        </Typography>
+        {/* Rows Per Page (Optional mock) */}
+        <div className="flex justify-end items-center gap-2 text-xs text-gray-400 font-medium">
+          <span>Rows per page:</span>
+          <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-100 text-gray-700 font-bold min-w-[40px] text-center">
+            {itemsPerPage}
+          </div>
+        </div>
 
-                        <Typography
-                          variant="p"
-                          className="text-[11px] text-gray-400 mt-0.5 font-medium"
-                        >
-                          {order.orderDate} • {order.orderTime}
-                        </Typography>
-                      </div>
+        {/* Order Cards List */}
+        <div className="space-y-4">
+          {currentOrders.map((order) => {
+            const isCancelled = order.status.toLowerCase() === "cancelled";
+            const firstItem = order.items?.[0];
+            const itemNames = order.items
+              ?.map((i) => `${i.quantity}x ${i.name}`)
+              .join(", ");
+            // Derive Title: Use Restaurant Name if available (it's not in provided JSON), else first item name or generic
+            // Mocking Restaurant Name for visual consistency with screenshot using data cues or fallback
+            const displayTitle = firstItem?.name || "Order";
 
-                      {/* Order Items Summary */}
-                      <div className="md:col-span-3 text-xs text-gray-500 line-clamp-1 font-medium pr-2">
-                        {order.items
-                          .map((i: any) => `${i.quantity}x ${i.name}`)
-                          .join(", ")}
-                      </div>
-
-                      {/* Actions & Status */}
-                      <div className="md:col-span-5 flex items-center justify-end gap-5">
-                        <Badge
-                          className={`rounded-full px-3 py-0.5 flex items-center gap-1.5 border-none font-bold text-[9px] tracking-wide uppercase ${
-                            order.status === "delivered" ||
-                            order.status === "paid"
-                              ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                              : order.status === "pending"
-                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100"
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-100"
-                          }`}
-                        >
-                          <span className="text-[10px]">
-                            {order.status === "delivered" ? "✓" : "•"}
-                          </span>
-                          {order.status}
-                        </Badge>
-
-                        <span className="font-black text-gray-900 text-sm min-w-[60px] text-right">
-                          ${Number(order.totalAmount).toFixed(2)}
-                        </span>
-
-                        {order.status === "delivered" ? (
-                          <Button className="rounded-full bg-emerald-bg hover:bg-emerald-bg-hover text-white h-9 px-4 text-[11px] font-bold gap-2 border-none transition-colors">
-                            <RefreshCw size={14} /> Reorder
-                          </Button>
+            return (
+              <Card
+                key={order.orderId}
+                className={`border-none shadow-sm rounded-3xl overflow-hidden transition-all hover:shadow-md ${isCancelled ? "bg-red-50" : "bg-white"}`}
+              >
+                <CardContent className="p-0">
+                  <div className="flex flex-col md:flex-row items-center p-5 gap-6">
+                    {/* Left: Image & Info */}
+                    <div className="flex items-center gap-4 w-full md:w-[35%]">
+                      <div className="h-16 w-16 shrink-0 rounded-2xl bg-gray-100 overflow-hidden relative">
+                        {/* Using first item image as order thumbnail */}
+                        {firstItem?.image ? (
+                          <Image
+                            src={getImageUrl(firstItem.image)}
+                            alt={firstItem.name}
+                            fill
+                            className="object-cover"
+                          />
                         ) : (
-                          <Button
-                            variant="outline"
-                            className="rounded-full border-gray-200 text-gray-700 bg-white hover:bg-gray-50 h-9 px-6 text-[11px] font-bold transition-all"
-                          >
-                            Help
-                          </Button>
+                          <div className="flex items-center justify-center h-full w-full text-gray-300">
+                            <Search size={20} />
+                          </div>
                         )}
                       </div>
+                      <div>
+                        <h3 className="font-excep font-semibold text-gray-900 text-base leading-tight mb-1 line-clamp-1">
+                          {/* Ideally Restaurant Name here */}
+                          {displayTitle}
+                        </h3>
+                        <p className="text-[11px] text-gray-400 font-medium tracking-wide">
+                          {order.orderId} • {order.orderDate}
+                        </p>
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
 
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex flex-col md:flex-row items-center justify-between pt-8">
-                <Typography
-                  variant="p"
-                  className="text-sm font-medium text-gray-400 mb-4 md:mb-0"
-                >
-                  Showing {startIndex + 1}-
-                  {Math.min(startIndex + itemsPerPage, filteredOrders.length)}{" "}
-                  of {filteredOrders.length} orders
-                </Typography>
+                    {/* Middle: Items Summary */}
+                    <div className="hidden md:block w-[30%]">
+                      <p className="text-xs text-gray-500 font-medium line-clamp-2 leading-relaxed">
+                        {itemNames}
+                      </p>
+                    </div>
 
-                <Pagination className="mx-0 w-auto">
-                  <PaginationContent className="gap-2">
-                    <PaginationItem>
-                      <PaginationPrevious
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        className={`text-gray-400 border-none p-2 cursor-pointer ${currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-transparent hover:text-gray-600"}`}
-                      />
-                    </PaginationItem>
+                    {/* Right: Status & Actions */}
+                    <div className="flex items-center justify-end gap-6 w-full md:w-[35%] ml-auto">
+                      {/* Status Badge */}
+                      <div
+                        className={`
+                                        px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider
+                                        ${
+                                          isCancelled
+                                            ? "bg-red-100 text-red-600"
+                                            : order.status.toLowerCase() ===
+                                                  "delivered" ||
+                                                order.status.toLowerCase() ===
+                                                  "paid"
+                                              ? "bg-emerald-100 text-emerald-700"
+                                              : "bg-yellow-100 text-yellow-700"
+                                        }
+                                    `}
+                      >
+                        {!isCancelled &&
+                          (order.status.toLowerCase() === "delivered" ||
+                            order.status.toLowerCase() === "paid") && (
+                            <span>✓</span>
+                          )}
+                        {isCancelled && <span>✕</span>}
+                        {order.status}
+                      </div>
 
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <PaginationItem key={page}>
-                          <PaginationLink
-                            onClick={() => handlePageChange(page)}
-                            isActive={currentPage === page}
-                            className={`w-9 h-9 rounded-full font-bold border-none cursor-pointer ${
-                              currentPage === page
-                                ? "bg-emerald-bg text-white hover:bg-[#1B4332] hover:text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                            }`}
-                          >
-                            {page}
-                          </PaginationLink>
-                        </PaginationItem>
-                      ),
-                    )}
+                      {/* Price */}
+                      <span className="font-semibold text-gray-900 text-sm w-[60px] text-right">
+                        ${parseFloat(order.totalAmount).toFixed(2)}
+                      </span>
 
-                    <PaginationItem>
-                      <PaginationNext
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        className={`text-gray-400 border-none p-2 cursor-pointer ${currentPage === totalPages ? "pointer-events-none opacity-50" : "hover:bg-transparent hover:text-gray-600"}`}
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            )}
-          </main>
+                      {/* Action Button */}
+                      {isCancelled ? (
+                        <Button
+                          variant="outline"
+                          className="rounded-full h-9 px-5 bg-white border-gray-200 text-gray-600 text-[11px] font-bold hover:bg-gray-50"
+                        >
+                          Help
+                        </Button>
+                      ) : (
+                        <Button className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
+                          <RefreshCw size={12} />
+                          Reorder
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
+
+        {/* Pagination Controls */}
+        {filteredOrders.length > 0 && (
+          <div className="flex justify-center pt-4">
+            <Pagination className="mx-0 w-auto">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className={`cursor-pointer border-none text-gray-400 hover:text-gray-600 hover:bg-transparent ${currentPage === 1 ? "pointer-events-none opacity-30" : ""}`}
+                  />
+                </PaginationItem>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        onClick={() => handlePageChange(page)}
+                        isActive={currentPage === page}
+                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${
+                          currentPage === page
+                            ? "bg-emerald-bg text-white hover:bg-emerald-bg"
+                            : "text-gray-500 hover:bg-gray-100"
+                        }`}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ),
+                )}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    className={`cursor-pointer border-none text-gray-400 hover:text-gray-600 hover:bg-transparent ${currentPage === totalPages ? "pointer-events-none opacity-30" : ""}`}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
     </div>
   );

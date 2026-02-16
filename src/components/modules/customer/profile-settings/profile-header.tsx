@@ -20,8 +20,8 @@ export default function ProfileHeader({
   return (
     <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
       <div>
-        <Typography variant="h2" className="text-[#111827] font-bold text-2xl">
-          My Profile
+        <Typography variant="h2" className="text-[#111827] font-black text-2xl">
+          Profile
         </Typography>
         <Typography variant="small" className="text-gray-500">
           Manage your profile settings

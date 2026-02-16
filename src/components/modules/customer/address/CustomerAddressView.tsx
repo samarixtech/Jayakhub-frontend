@@ -217,9 +217,9 @@ export default function CustomerAddressView() {
           <div>
             <Typography
               variant="h2"
-              className="text-[#1F2937] font-bold text-2xl tracking-tight"
+              className="text-[#1F2937] font-black text-2xl tracking-tight"
             >
-              My Addresses
+              Addresses
             </Typography>
             <Typography variant="p" className="text-gray-500 text-sm mt-1">
               Manage your delivery locations

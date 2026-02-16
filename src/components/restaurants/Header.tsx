@@ -38,11 +38,18 @@ const RestaurantHeader = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await getProfile();
-      if (response.success && response.data) {
-        setIsLoggedIn(true);
-        setUser(response.data);
-      } else {
+      try {
+        const response = await getProfile();
+        if (response.success && response.data) {
+          setIsLoggedIn(true);
+          setUser(response.data);
+        } else {
+          // If 401 or other error, mostly means not logged in
+          setIsLoggedIn(false);
+          setUser(null);
+        }
+      } catch (error) {
+        // Ignore auth errors on public pages
         setIsLoggedIn(false);
         setUser(null);
       }
