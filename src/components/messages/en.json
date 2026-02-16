@@ -364,7 +364,7 @@
     },
     "link": {
       "dashboard": "Dashboard",
-      "accountSettings": "Account Settings",
+      "profileSettings": "Profile Settings",
       "myOrders": "My Orders",
       "logout": "Log Out"
     }
