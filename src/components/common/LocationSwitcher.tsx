@@ -9,8 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { getUserAddresses } from "@/app/actions/customer/address";
+import { useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
-
 interface LocationSwitcherProps {
   currentAddress: string;
   onAddressChange: (address: string) => void;
@@ -40,50 +40,47 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   className,
 }) => {
   const tLocation = useTranslations("location.dropdown");
+  const tCountries = useTranslations("countries");
   const [loading, setLoading] = useState(false);
   const [fetchingAddresses, setFetchingAddresses] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [detectedLocation, setDetectedLocation] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (isOpen && isLoggedIn) {
-      fetchAddresses();
-    }
-  }, [isOpen, isLoggedIn]);
-
-  const fetchAddresses = async () => {
-    setFetchingAddresses(true);
-    try {
-      const response = await getUserAddresses();
-      if (response?.data) {
-        setAddresses(response.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch addresses", error);
-    } finally {
-      setFetchingAddresses(false);
-    }
-  };
-
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
   });
 
+  const params = useParams();
+
+  const getCountryFromUrl = () => {
+    const country = (params.country as string)?.toLowerCase();
+    if (!country) return "Iraq, Baghdad";
+    try {
+      const name = tCountries(country);
+      // If key is missing, next-intl usually returns "countries.code"
+      if (name === `countries.${country}`) return "Iraq, Baghdad";
+      return name;
+    } catch {
+      return "Iraq, Baghdad";
+    }
+  };
+
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
-      onAddressChange("Geolocation not supported");
+      console.error("LocationSwitcher: Geolocation not supported");
+      onAddressChange(getCountryFromUrl());
       return;
     }
 
     if (!isLoaded) {
-      onAddressChange("Maps API not loaded");
+      console.error("LocationSwitcher: Maps API not loaded");
+      onAddressChange(getCountryFromUrl());
       return;
     }
 
     setLoading(true);
-    // onAddressChange("Fetching current location...");
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -103,19 +100,50 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
               }
             } else {
               console.error("Geocoder failed: " + status);
-              onAddressChange("Address not found");
+              onAddressChange(getCountryFromUrl());
             }
             setLoading(false);
           },
         );
       },
       (error) => {
-        console.error("Geolocation error:", error);
-        onAddressChange("Location permission denied");
+        console.error("LocationSwitcher: Geolocation error:", error);
+        // Fallback to URL country on error/denial
+        onAddressChange(getCountryFromUrl());
         setLoading(false);
       },
     );
   };
+
+  const autoDetectRef = React.useRef(false);
+
+  useEffect(() => {
+    if (isLoaded && !autoDetectRef.current) {
+      console.log("LocationSwitcher: Auto-detecting location...");
+      autoDetectRef.current = true;
+      getCurrentLocation();
+    }
+  }, [isLoaded]);
+
+  const fetchAddresses = async () => {
+    setFetchingAddresses(true);
+    try {
+      const response = await getUserAddresses();
+      if (response?.data) {
+        setAddresses(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch addresses", error);
+    } finally {
+      setFetchingAddresses(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && isLoggedIn) {
+      fetchAddresses();
+    }
+  }, [isOpen, isLoggedIn]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -123,7 +151,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
         <Button
           variant="outline"
           className={cn(
-            "flex items-center justify-start min-w-[180px] max-w-sm h-11 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4",
+            "flex items-center justify-start min-w-[180px] max-w-sm h-10 bg-white border-none hover:bg-gray-50 text-gray-700 shadow-sm rounded-full gap-2 px-4",
             className,
           )}
         >

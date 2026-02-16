@@ -10,7 +10,7 @@ export const registerSchema = z
       .string()
       .trim()
       .min(1, "Name is required")
-      .min(4, "Name must be at least 4Z-5 characters"),
+      .min(4, "Name must be at least 4-5 characters"),
     email: z.string().email("Please enter a valid email address"),
     phone: z
       .string()

@@ -29,6 +29,7 @@ import { Typography } from "@/components/ui/typography";
 import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
 import { useZodForm } from "@/hooks/use-zod-form";
+import Link from "next/link";
 
 export default function CustomerRegisterView() {
   const t = useTranslations("authModal");
@@ -297,12 +298,12 @@ export default function CustomerRegisterView() {
                     <div className="space-y-1 leading-none">
                       <FormLabel className="text-sm font-normal text-gray-500">
                         I agree to the{" "}
-                        <LocalizedLink
+                        <Link
                           href="/terms"
                           className="font-bold text-emerald-bg hover:underline"
                         >
                           Terms and Conditions
-                        </LocalizedLink>
+                        </Link>
                       </FormLabel>
                       <FormMessage />
                     </div>
@@ -318,7 +319,6 @@ export default function CustomerRegisterView() {
                 {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing...
                   </>
                 ) : (
                   "Create Account"

@@ -4,60 +4,98 @@ import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { CLCProvider, useCLC } from "@/app/context/CLCContext";
+import { getProfile } from "@/app/actions/customer/userprofile";
+import { logoutAction } from "@/app/actions/auth/auth";
+import {
+  Star,
+  Zap,
+  Leaf,
+  Sparkles,
+  TrendingUp,
+  SlidersHorizontal,
+  X,
+  Award,
+  Sprout,
+} from "lucide-react";
 
 // Discovery Components
 import HeroBanner from "@/components/modules/discovery/HeroBanner";
-import CategoryIcons from "@/components/modules/discovery/CategoryIcons";
-import FilterBar from "@/components/modules/discovery/FilterBar";
 import SectionHeader from "@/components/modules/discovery/SectionHeader";
 import DiscoveryRestaurantCard, {
   RestaurantProps,
 } from "@/components/modules/discovery/DiscoveryRestaurantCard";
-import PromoBanner from "@/components/modules/discovery/PromoBanner";
-import ShopCard from "@/components/modules/discovery/ShopCard";
+import DiscoverySidebar from "@/components/modules/discovery/DiscoverySidebar";
 
 import { useServerAction } from "@/hooks/use-server-action";
 import { getAllRestaurantsAction } from "@/app/actions/public/restaurants";
+import { getCuisineTypesAction } from "@/app/actions/public/cuisines";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { useDiscoveryUI } from "@/app/context/DiscoveryUIContext";
 
-// Mock Data
-const SHOPS = [
-  {
-    id: "s1",
-    name: "Fresh Mart Express",
-    image: "/al-mansour.jpg",
-    deliveryTime: "15-20 mins",
-  },
-  {
-    id: "s2",
-    name: "HealthFirst Care",
-    image: "/baghdad-bites.jpg",
-    deliveryTime: "20-30 mins",
-  },
-  {
-    id: "s3",
-    name: "Daily Bakeshop",
-    image: "/burger.jpg",
-    deliveryTime: "10-15 mins",
-  },
-  {
-    id: "s4",
-    name: "Green Leaf Organic",
-    image: "/green-garden.png",
-    deliveryTime: "25-40 mins",
-  },
-  {
-    id: "s5",
-    name: "Happy Paws Pet",
-    image: "/daily-bakeshop.png",
-    deliveryTime: "30-45 mins",
-  },
+// ==================== CURATED CATEGORIES ====================
+const CURATED_CATEGORIES = [
+  { id: "top_rated", label: "Top Rated", icon: Star },
+  { id: "fastest", label: "Fastest Delivery", icon: Zap },
+  { id: "healthy", label: "Healthy", icon: Leaf },
+  { id: "new", label: "New Arrivals", icon: Sparkles },
+  { id: "trending", label: "Trending", icon: TrendingUp },
+  { id: "best_sellers", label: "Best Sellers", icon: Award },
+  { id: "vegan", label: "Vegan Options", icon: Sprout },
 ];
 
+// ==================== MAIN COMPONENT ====================
 const AllRestaurantsPage: React.FC = () => {
   const params = useParams();
   const searchParams = useSearchParams();
   const { setCLC } = useCLC();
   const [restaurants, setRestaurants] = useState<RestaurantProps[]>([]);
+  const [cuisineTypes, setCuisineTypes] = useState<any[]>([]);
+  const [isCuisinesLoading, setIsCuisinesLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCuisines = async () => {
+      try {
+        const res = await getCuisineTypesAction();
+        if (res?.data) {
+          setCuisineTypes(res.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch cuisines:", error);
+      } finally {
+        setIsCuisinesLoading(false);
+      }
+    };
+    fetchCuisines();
+  }, []);
+
+  // Sidebar state
+  const [selectedSort, setSelectedSort] = useState("recommended");
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
+  const [showAllCuisines, setShowAllCuisines] = useState(false);
+
+  const { isFilterOpen, setIsFilterOpen } = useDiscoveryUI();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const response = await getProfile();
+      if (response.success && response.data) {
+        setIsLoggedIn(true);
+        setUser(response.data);
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const { execute: fetchRestaurants, isPending } = useServerAction(
     getAllRestaurantsAction,
@@ -70,7 +108,7 @@ const AllRestaurantsPage: React.FC = () => {
           id: item.id || "",
           slug: item.slug || item.id || "",
           name: item.name || "Unknown",
-          image: item.profileImage || item.bannerImage || "/pizza-palace.jpg",
+          image: item.profileImage || item.bannerImage,
           rating: 4.5,
           priceLevel: "$$",
           cuisine: Array.isArray(item.type)
@@ -90,14 +128,32 @@ const AllRestaurantsPage: React.FC = () => {
     },
   );
 
+  // Fetch restaurants based on URL params or Silent Auto-Locate
   useEffect(() => {
     const lat = searchParams.get("lat");
     const lng = searchParams.get("lng");
 
     if (lat && lng) {
+      // 1. Explicit params -> fetch explicit
       fetchRestaurants({ lat: parseFloat(lat), lng: parseFloat(lng) });
     } else {
+      // 2. No params -> fetch all (fallback)
       fetchRestaurants({});
+
+      // 3. Silent Auto-Locate (Fetch nearby without changing URL)
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            fetchRestaurants({
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+            });
+          },
+          (err) => {
+            console.warn("Silent auto-locate failed:", err);
+          },
+        );
+      }
     }
   }, [searchParams]);
 
@@ -120,80 +176,194 @@ const AllRestaurantsPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params?.country, params?.language]);
 
-  console.log(restaurants);
+  const handleFilter = (id: string) => {
+    setActiveFilters((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
+    );
+  };
+
+  const handlePrice = (price: string) => {
+    setSelectedPrice((prev) => (prev === price ? null : price));
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 font-sans pb-20">
-      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        {/* 1. Hero Banner */}
-        <HeroBanner />
+    <div className="min-h-screen bg-white font-sans pb-20">
+      {/* Hero Banner - Full Width */}
+      <HeroBanner />
 
-        {/* 2. Category Icons */}
-        <CategoryIcons />
+      {/* Sidebar + Main Content */}
+      <div className="flex gap-8 px-3 sm:px-6 mt-6 items-start relative">
+        {/* ===== LEFT SIDEBAR ===== */}
+        <aside className="w-[240px] shrink-0 hidden lg:block sticky top-[96px] h-[calc(100vh-96px)] overflow-hidden mr-0 sm:mr-5">
+          <div className="h-full overflow-y-auto pr-4 pb-20 scrollbar-hide overscroll-y-contain">
+            <DiscoverySidebar
+              selectedSort={selectedSort}
+              onSortChange={setSelectedSort}
+              activeFilters={activeFilters}
+              onFilterToggle={handleFilter}
+              selectedPrice={selectedPrice}
+              onPriceToggle={handlePrice}
+              showAllCuisines={showAllCuisines}
+              onToggleCuisines={() => setShowAllCuisines(!showAllCuisines)}
+            />
+          </div>
+        </aside>
 
-        {/* 3. Filters */}
-        <FilterBar />
+        {/* ===== MAIN CONTENT ===== */}
+        <div className="flex-1 min-w-0">
+          {/* Popular Restaurants */}
+          <section className="mb-8">
+            <SectionHeader title="Popular Restaurants" />
+            {isPending ? (
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="min-w-[240px] h-[180px] bg-gray-200 rounded-2xl animate-pulse"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
+                {restaurants.length > 0 ? (
+                  restaurants
+                    .slice(0, 5)
+                    .map((restaurant) => (
+                      <DiscoveryRestaurantCard
+                        key={restaurant.id}
+                        data={restaurant}
+                      />
+                    ))
+                ) : (
+                  <div className="text-gray-500 w-full text-center py-10">
+                    No restaurants found.
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
 
-        {/* 4. Popular Restaurants (Now Dynamic) */}
-        <section className="mb-10">
-          <SectionHeader title="Popular Restaurants" />
+          {/* Cuisines Icons Row */}
+          <section className="mb-8">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Cuisines</h3>
+            <div className="flex gap-12 md:gap-6 overflow-x-auto pb-2 pl-3 sm:pl-0 scrollbar-hide">
+              {isCuisinesLoading
+                ? // Skeleton Loading for Cuisines
+                  Array.from({ length: 8 }).map((_, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col items-center gap-2 min-w-[70px] animate-pulse"
+                    >
+                      <div className="w-24 h-24 rounded-full bg-gray-200" />
+                      <div className="w-12 h-3 rounded bg-gray-200" />
+                    </div>
+                  ))
+                : cuisineTypes.map((cat: any, index: number) => (
+                    <button
+                      key={index}
+                      className="flex flex-col items-center gap-2 min-w-[70px] group"
+                    >
+                      <div className="w-23 h-23 rounded-full overflow-hidden border border-gray-100 shadow-sm group-hover:border-emerald-500 transition-colors">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={cat.image}
+                          alt={cat.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      </div>
+                      <span className="text-xs font-medium text-gray-700 group-hover:text-[#346853] transition-colors whitespace-nowrap">
+                        {cat.name}
+                      </span>
+                    </button>
+                  ))}
+            </div>
+          </section>
 
-          {isPending ? (
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-              {/* Skeleton Loaders (inline for simplicity) */}
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="min-w-[320px] h-[200px] bg-gray-200 rounded-2xl animate-pulse"
-                />
+          {/* Restaurant Count */}
+          <div className="mb-2">
+            <h2 className="text-xl font-bold text-gray-900">
+              {restaurants.length} restaurants near you
+            </h2>
+          </div>
+
+          {/* Curated for you */}
+          <section className="mb-8">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">
+              Curated for you
+            </h3>
+            <div className="flex gap-12 md:gap-6 overflow-x-auto pb-2 pl-4.5 sm:pl-0 scrollbar-hide">
+              {CURATED_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  className="flex flex-col items-center gap-2 min-w-[100px] group"
+                >
+                  <div className="w-34 h-31 rounded-2xl bg-gray-100 flex items-center justify-center group-hover:bg-[#E8F5F0] transition-colors">
+                    <cat.icon className="w-6 h-6 text-gray-500 group-hover:text-[#346853] transition-colors" />
+                  </div>
+                  <span className="text-xs font-medium text-gray-600 group-hover:text-[#346853] transition-colors whitespace-nowrap">
+                    {cat.label}
+                  </span>
+                </button>
               ))}
             </div>
-          ) : (
-            <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-              {restaurants.length > 0 ? (
-                restaurants.map((restaurant) => (
-                  <DiscoveryRestaurantCard
-                    key={restaurant.id}
-                    data={restaurant}
+          </section>
+
+          {/* All Restaurants */}
+          <section className="mb-8">
+            <SectionHeader title="All Restaurants" />
+            {isPending ? (
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                {[1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="min-w-[240px] h-[180px] bg-gray-200 rounded-2xl animate-pulse"
                   />
-                ))
-              ) : (
-                <div className="text-gray-500 w-full text-center py-10">
-                  No restaurants found.
-                </div>
-              )}
-            </div>
-          )}
-        </section>
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
+                {restaurants.length > 0 ? (
+                  restaurants
+                    .slice(0, 5)
+                    .map((restaurant) => (
+                      <DiscoveryRestaurantCard
+                        key={restaurant.id}
+                        data={restaurant}
+                      />
+                    ))
+                ) : (
+                  <div className="text-gray-500 w-full text-center py-10">
+                    No restaurants found.
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+      </div>
 
-        {/* 5. Promo Banner */}
-        <PromoBanner />
-
-        {/* 6. Shops Section */}
-        <section className="mb-10">
-          <SectionHeader
-            title="Shops on Jayak Hub"
-            actionText="View all shops"
+      {/* ===== BOTTOM NAVIGATION ===== */}
+      {/* ===== MOBILE FILTER SHEET (BOTTOM) ===== */}
+      <Sheet open={isFilterOpen} onOpenChange={setIsFilterOpen}>
+        <SheetContent
+          side="bottom"
+          className="h-[85vh] overflow-y-auto rounded-t-2xl px-6 pt-6"
+        >
+          <SheetHeader className="mb-6 text-left">
+            <SheetTitle>Filters</SheetTitle>
+          </SheetHeader>
+          <DiscoverySidebar
+            selectedSort={selectedSort}
+            onSortChange={setSelectedSort}
+            activeFilters={activeFilters}
+            onFilterToggle={handleFilter}
+            selectedPrice={selectedPrice}
+            onPriceToggle={handlePrice}
+            showAllCuisines={showAllCuisines}
+            onToggleCuisines={() => setShowAllCuisines(!showAllCuisines)}
           />
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-            {SHOPS.map((shop) => (
-              <ShopCard key={shop.id} data={shop} />
-            ))}
-          </div>
-        </section>
-
-        {/* 7. More for You - Reusing fetched restaurants for now */}
-        {/* <section className="mb-10">
-          <SectionHeader title="More for You" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {restaurants.slice(0, 8).map((restaurant) => (
-              <DiscoveryRestaurantCard
-                key={`more-${restaurant.id}`}
-                data={restaurant}
-              />
-            ))}
-          </div>
-        </section> */}
-      </main>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

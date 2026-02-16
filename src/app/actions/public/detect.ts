@@ -18,7 +18,9 @@ interface DetectResponse {
   fallback?: boolean;
 }
 
-export async function detectLocationAction(): Promise<DetectResponse> {
+export async function detectLocationAction(
+  readOnly: boolean = false,
+): Promise<DetectResponse> {
   const cookieStore = await cookies();
   const existingCountry = cookieStore.get("USER_COUNTRY")?.value;
   const existingLang = cookieStore.get("NEXT_LOCALE")?.value;
@@ -49,24 +51,26 @@ export async function detectLocationAction(): Promise<DetectResponse> {
       const code = data.code.toLowerCase();
       const lang = (data.language || "en").toLowerCase();
 
-      // 3. Set Cookies Securely
-      cookieStore.set("USER_COUNTRY", code, {
-        path: "/",
-        maxAge: 60 * 60 * 24 * 365, // 1 year
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-      });
-      cookieStore.set("NEXT_LOCALE", lang, {
-        path: "/",
-        maxAge: 60 * 60 * 24 * 365,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-      });
-      cookieStore.set("NEXT_CURRENCY", "$", {
-        // Assuming default currency, API might provide it later
-        path: "/",
-        maxAge: 60 * 60 * 24 * 365,
-      });
+      // 3. Set Cookies Securely (Only if not readOnly)
+      if (!readOnly) {
+        cookieStore.set("USER_COUNTRY", code, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365, // 1 year
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+        });
+        cookieStore.set("NEXT_LOCALE", lang, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+        });
+        cookieStore.set("NEXT_CURRENCY", "$", {
+          // Assuming default currency, API might provide it later
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365,
+        });
+      }
 
       return {
         success: true,

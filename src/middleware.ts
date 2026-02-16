@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export function middleware(request: NextRequest) {
+const BASE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://app.jayakhub.com/api/v1";
+
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Exclude static assets and API routes
@@ -14,48 +17,116 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Get Country, Language, and Token from Cookies
-  const country = request.cookies.get("USER_COUNTRY")?.value || "iraq";
-  const language = request.cookies.get("NEXT_LOCALE")?.value || "en";
-  const token = request.cookies.get("token")?.value;
+  // 2. Get Country, Language from Cookies
+  const cookieCountry = request.cookies.get("USER_COUNTRY")?.value;
+  const cookieLanguage = request.cookies.get("NEXT_LOCALE")?.value;
 
-  // 3. Analyze Path Segments
+  let country: string = cookieCountry || "";
+  let language: string = cookieLanguage || "";
+
+  // 3. If cookies are missing, call detect API
+  if (!country || !language) {
+    try {
+      const detectRes = await fetch(`${BASE_URL}/detect`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (detectRes.ok) {
+        const json = await detectRes.json();
+        const data = json?.data;
+        if (data && data.isActive) {
+          country = (data.code || "iq").toLowerCase();
+          language = (data.language || "en").toLowerCase();
+        } else {
+          if (!country) country = "iq";
+          if (!language) language = "en";
+        }
+      } else {
+        if (!country) country = "iq";
+        if (!language) language = "en";
+      }
+    } catch (error) {
+      console.error("Middleware: detect API error:", error);
+      if (!country) country = "iq";
+      if (!language) language = "en";
+    }
+  }
+
+  // 4. Analyze Path Segments
   const pathSegments = pathname.split("/").filter(Boolean);
 
-  // 4. Define Protected Routes
-  // Check if any segment matches 'customer' or 'restaurant' exactly.
-  // This avoids matching 'restaurants' (plural) or 'restaurant-register'.
+  // Auth Protection
+  const token = request.cookies.get("token")?.value;
   const isProtected = pathSegments.some(
     (segment) => segment === "customer" || segment === "restaurant",
   );
 
-  // Exclude specific sub-paths if necessary (though 'restaurant' segment usually implies protected scope)
-  // If there are public routes under /restaurant/, exclude them here.
-  // For now, based on project structure, /restaurant/* is protected.
-
   if (isProtected && !token) {
     const loginUrl = new URL(`/${country}/${language}/login`, request.url);
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.set("USER_COUNTRY", country, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+    });
+    response.cookies.set("NEXT_LOCALE", language, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+    });
+    return response;
   }
 
-  // 5. Check if the URL already has the dynamic segments
-  // This regex checks if path starts with /[string]/[string]/
-  const hasLocalePrefix =
-    pathSegments.length >= 2 &&
-    !["banner", "corporate", "partner"].includes(pathSegments[0]);
+  // Check if the URL already has the valid format /[country]/[language]/...
+  const hasCountry = pathSegments[0]?.length === 2;
+  const hasLanguage = pathSegments[1]?.length === 2;
 
-  if (!hasLocalePrefix && pathname !== "/") {
-    // 6. Silently rewrite to the [country]/[langauge] structure
-    // This keeps the URL in the browser as "/myorders"
+  if (hasCountry && hasLanguage) {
+    // Ensure cookies are synced with URL
+    const response = NextResponse.next();
+    if (pathSegments[0] !== request.cookies.get("USER_COUNTRY")?.value) {
+      response.cookies.set("USER_COUNTRY", pathSegments[0], {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+      });
+    }
+    if (pathSegments[1] !== request.cookies.get("NEXT_LOCALE")?.value) {
+      response.cookies.set("NEXT_LOCALE", pathSegments[1], {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+      });
+    }
+    return response;
+  }
+
+  // 5. Handle Root Path "/"
+  if (pathname === "/") {
     const url = request.nextUrl.clone();
-    url.pathname = `/${country}/${language}${pathname}`;
-    return NextResponse.rewrite(url);
+    url.pathname = `/${country}/${language}/restaurants`;
+    const response = NextResponse.redirect(url);
+    response.cookies.set("USER_COUNTRY", country, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+    });
+    response.cookies.set("NEXT_LOCALE", language, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+    });
+    return response;
   }
 
-  return NextResponse.next();
+  // 6. Handle Paths missing Country/Language (e.g. /restaurants -> /pk/ur/restaurants)
+  const url = request.nextUrl.clone();
+  url.pathname = `/${country}/${language}${pathname}`;
+  const response = NextResponse.redirect(url);
+  response.cookies.set("USER_COUNTRY", country, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+  });
+  response.cookies.set("NEXT_LOCALE", language, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+  });
+  return response;
 }
 
 export const config = {
-  // Matcher ignores specific static folders
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Typography } from "@/components/ui/typography";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
+import Link from "next/link";
 import {
   Select,
   SelectContent,
@@ -133,7 +133,7 @@ export default function UserFormView({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <LocalizedLink href="/restaurant/users">
+          <Link href="/restaurant/users">
             <Button
               variant="ghost"
               size="icon"
@@ -141,17 +141,17 @@ export default function UserFormView({
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-          </LocalizedLink>
+          </Link>
           <Typography variant="h2" className="text-xl font-bold text-gray-800">
             {mode === "add" ? "Add New User" : "Edit User"}
           </Typography>
         </div>
         <div className="flex items-center gap-3">
-          <LocalizedLink href="/restaurant/users">
+          <Link href="/restaurant/users">
             <Button variant="ghost" className="text-gray-500">
               Cancel
             </Button>
-          </LocalizedLink>
+          </Link>
           <Button
             onClick={handleSave}
             className="bg-[#1F4D36] hover:bg-[#183d2b] text-white font-medium"
