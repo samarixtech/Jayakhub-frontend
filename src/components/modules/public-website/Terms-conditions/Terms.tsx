@@ -1,30 +1,34 @@
 import React from 'react';
 import { FileText, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-const sections = [
-    {
-        id: 'contractual-relationship',
-        title: '1. Contractual Relationship',
-        content: `These Terms of Use ("Terms") govern the access or use by you, an individual, from within any country in the world of applications, websites, content, products, and services (the "Services") made available by Jayak Hub.`,
-    },
-    {
-        id: 'the-services',
-        title: '2. The Services',
-        content: `The Services constitute a technology platform that enables users of Jayak Hub's mobile applications or websites provided as part of the Services to arrange and schedule delivery services with independent third party providers of such services, including independent third party logistics providers under agreement with Jayak Hub.`,
-    },
-    {
-        id: 'use-of-services',
-        title: '3. Your Use of the Services',
-        content: `User Accounts. In order to use most aspects of the Services, you must register for and maintain an active personal user Services account ("Account"). You must be at least 18 years of age, or the age of legal majority in your jurisdiction (if different than 18), to obtain an Account.`,
-    },
-    {
-        id: 'payment',
-        title: '4. Payment',
-        content: `You understand that use of the Services may result in charges to you for the services or goods you receive from a Third Party Provider ("Charges"). After you have received services or goods obtained through your use of the Service, Jayak Hub will facilitate your payment of the applicable Charges on behalf of the Third Party Provider as such Third Party Provider's limited payment collection agent.`,
-    },
-];
+
 
 export default function Terms() {
+    const t = useTranslations('Terms');
+
+    const sections = [
+        {
+            id: 'contractual-relationship',
+            title: t('sections.contractual_relationship.title'),
+            content: t('sections.contractual_relationship.content'),
+        },
+        {
+            id: 'the-services',
+            title: t('sections.the_services.title'),
+            content: t('sections.the_services.content'),
+        },
+        {
+            id: 'use-of-services',
+            title: t('sections.use_of_services.title'),
+            content: t('sections.use_of_services.content'),
+        },
+        {
+            id: 'payment',
+            title: t('sections.payment.title'),
+            content: t('sections.payment.content'),
+        },
+    ];
     const scrollToSection = (id: string, e: React.MouseEvent) => {
         e.preventDefault();
         const element = document.getElementById(id);
@@ -56,7 +60,7 @@ export default function Terms() {
                     <nav className="flex items-center text-sm text-white/70 mb-8 space-x-2">
                         <span>Legal</span>
                         <ChevronRight className="w-4 h-4" />
-                        <span className="text-white font-medium">Terms of Service</span>
+                        <span className="text-white font-medium">{t('header.breadcrumbs')}</span>
                     </nav>
 
                     <div className="flex flex-col md:flex-row items-start gap-6">
@@ -64,12 +68,12 @@ export default function Terms() {
                             <FileText className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">Terms of Service</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">{t('header.title')}</h1>
                             <p className="text-white/70 flex items-center gap-2 text-sm">
                                 <span className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center">
                                     <span className="text-[10px] font-serif italic">i</span>
                                 </span>
-                                Last updated: February 16, 2026
+                                {t('header.last_updated')}
                             </p>
                         </div>
                     </div>
@@ -96,7 +100,7 @@ export default function Terms() {
                         style={{ position: 'sticky', top: '100px' }}
                     >
                         <div>
-                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Table of Contents</h2>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">{t('sidebar.toc')}</h2>
                             <nav className="space-y-1">
                                 {sections.map((section) => (
                                     <a
@@ -111,9 +115,9 @@ export default function Terms() {
                             </nav>
 
                             <div className="mt-10 pt-10 border-t border-gray-200">
-                                <p className="text-xs text-gray-400 mb-2">Need assistance?</p>
+                                <p className="text-xs text-gray-400 mb-2">{t('sidebar.need_assistance')}</p>
                                 <a href="/contact" className="text-sm font-bold text-[#1C4A3C] hover:underline">
-                                    Contact Support
+                                    {t('sidebar.contact_support')}
                                 </a>
                             </div>
                         </div>
@@ -124,7 +128,7 @@ export default function Terms() {
                         {/* Alert Box */}
                         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-10">
                             <p className="text-sm text-[#1E40AF] font-medium text-center">
-                                Please read this document carefully. By using our services, you agree to be bound by these terms.
+                                {t('alert')}
                             </p>
                         </div>
 

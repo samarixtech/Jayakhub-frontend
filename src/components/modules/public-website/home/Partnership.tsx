@@ -1,44 +1,46 @@
 import { useEffect, useRef, useState } from 'react';
 import { Bike, Store, ArrowRight, DollarSign, TrendingUp, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-const partnerOptions = [
-  {
-    id: 1,
-    title: 'Become a Driver',
-    subtitle: 'Earn on your schedule',
-    description: 'Make money delivering food with your bike or car. Flexible hours, weekly payouts.',
-    image: '/partner-delivery.jpg',
-    icon: Bike,
-    cta: 'Start Earning',
-    benefits: [
-      { icon: DollarSign, text: 'Earn up to $500/week' },
-      { icon: TrendingUp, text: 'Weekly payouts' },
-      { icon: Users, text: '500+ active drivers' },
-    ],
-    gradient: 'from-primary to-emerald-500',
-  },
-  {
-    id: 2,
-    title: 'Partner Your Restaurant',
-    subtitle: 'Grow your business',
-    description: 'Reach thousands of new customers. Increase sales with our delivery platform.',
-    image: '/partner-restaurant.jpg',
-    icon: Store,
-    cta: 'Join Now',
-    benefits: [
-      { icon: TrendingUp, text: '30% avg. sales increase' },
-      { icon: Users, text: '50K+ active customers' },
-      { icon: DollarSign, text: 'Low commission rates' },
-    ],
-    gradient: 'from-orange-500 to-amber-500',
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function Partner() {
+  const t = useTranslations('Home.partnership');
   const [isVisible, setIsVisible] = useState(false);
   const [, setHoveredCard] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  const partnerOptions = [
+    {
+      id: 1,
+      title: t('driver.title'),
+      subtitle: t('driver.subtitle'),
+      description: t('driver.desc'),
+      image: '/partner-delivery.jpg',
+      icon: Bike,
+      cta: t('driver.cta'),
+      benefits: [
+        { icon: DollarSign, text: t('driver.benefits.earnings') },
+        { icon: TrendingUp, text: t('driver.benefits.payouts') },
+        { icon: Users, text: t('driver.benefits.drivers') },
+      ],
+      gradient: 'from-primary to-emerald-500',
+    },
+    {
+      id: 2,
+      title: t('restaurant.title'),
+      subtitle: t('restaurant.subtitle'),
+      description: t('restaurant.desc'),
+      image: '/partner-restaurant.jpg',
+      icon: Store,
+      cta: t('restaurant.cta'),
+      benefits: [
+        { icon: TrendingUp, text: t('restaurant.benefits.sales') },
+        { icon: Users, text: t('restaurant.benefits.customers') },
+        { icon: DollarSign, text: t('restaurant.benefits.rates') },
+      ],
+      gradient: 'from-orange-500 to-amber-500',
+    },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -76,13 +78,13 @@ export default function Partner() {
               }`}
           >
             <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-white/10">
-              Partner With Us
+              {t('badge')}
             </span>
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Grow With <span className="text-accent-yellow">Jayak Hub</span>
+              {t('title_prefix')} <span className="text-accent-yellow">{t('title_highlight')}</span>
             </h2>
             <p className="text-white/50 max-w-xl mx-auto text-lg">
-              Join our platform and be part of Iraq's fastest-growing food delivery network
+              {t('desc')}
             </p>
           </div>
 
@@ -147,10 +149,10 @@ export default function Partner() {
               }`}
           >
             {[
-              { value: '500+', label: 'Active Drivers' },
-              { value: '15+', label: 'Restaurant Partners' },
-              { value: '50K+', label: 'Monthly Orders' },
-              { value: '8', label: 'Cities Covered' },
+              { value: '500+', label: t('stats.drivers') },
+              { value: '15+', label: t('stats.restaurants') },
+              { value: '50K+', label: t('stats.orders') },
+              { value: '8', label: t('stats.cities') },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-4xl lg:text-5xl font-bold text-white mb-2">{stat.value}</div>

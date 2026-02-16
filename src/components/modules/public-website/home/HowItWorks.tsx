@@ -1,37 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
 import { MapPin, UtensilsCrossed, Bike, ChevronRight } from 'lucide-react';
-
-const steps = [
-  {
-    number: '01',
-    icon: MapPin,
-    title: 'Set Your Location',
-    description: 'Enter your address and discover restaurants delivering to your area.',
-    color: 'from-blue-500 to-cyan-400',
-    bgColor: 'bg-blue-50',
-  },
-  {
-    number: '02',
-    icon: UtensilsCrossed,
-    title: 'Choose Your Food',
-    description: 'Browse menus, read reviews, and pick your perfect meal.',
-    color: 'from-orange-500 to-amber-400',
-    bgColor: 'bg-orange-50',
-  },
-  {
-    number: '03',
-    icon: Bike,
-    title: 'Fast Delivery',
-    description: 'Track your order in real-time and enjoy hot, fresh food.',
-    color: 'from-primary to-emerald-400',
-    bgColor: 'bg-emerald-50',
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export default function HowItWorks() {
+  const t = useTranslations('Home.how_it_works');
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  const steps = [
+    {
+      number: '01',
+      icon: MapPin,
+      title: t('steps.step1.title'),
+      description: t('steps.step1.desc'),
+      color: 'from-blue-500 to-cyan-400',
+      bgColor: 'bg-blue-50',
+    },
+    {
+      number: '02',
+      icon: UtensilsCrossed,
+      title: t('steps.step2.title'),
+      description: t('steps.step2.desc'),
+      color: 'from-orange-500 to-amber-400',
+      bgColor: 'bg-orange-50',
+    },
+    {
+      number: '03',
+      icon: Bike,
+      title: t('steps.step3.title'),
+      description: t('steps.step3.desc'),
+      color: 'from-primary to-emerald-400',
+      bgColor: 'bg-emerald-50',
+    },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -64,13 +66,13 @@ export default function HowItWorks() {
             }`}
         >
           <span className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-4">
-            How It Works
+            {t('badge')}
           </span>
           <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-            Order in <span className="text-primary">3 Easy Steps</span>
+            {t('title_prefix')} <span className="text-primary">{t('title_highlight')}</span>
           </h2>
           <p className="text-[#64748B] max-w-xl mx-auto text-lg">
-            Getting your favorite food delivered has never been easier
+            {t('subtitle')}
           </p>
         </div>
 
@@ -114,7 +116,7 @@ export default function HowItWorks() {
 
                 {/* Learn More */}
                 <button className="flex items-center gap-2 text-primary font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                  Learn More
+                  {t('learn_more')}
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>

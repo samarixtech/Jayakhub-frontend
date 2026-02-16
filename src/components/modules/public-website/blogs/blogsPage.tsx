@@ -2,12 +2,22 @@ import { ArrowRight, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { articles, featuredArticle } from '@/lib/data/blogs';
+import { useTranslations } from 'next-intl';
 
 export default function Newsroom() {
+    const t = useTranslations('Newsroom');
     const params = useParams();
     const { country, language } = params;
 
     const getBlogUrl = (slug: string) => `/${country}/${language}/blogs/${slug}`;
+
+    const categories = [
+        t('categories.all'),
+        t('categories.technology'),
+        t('categories.culture'),
+        t('categories.business'),
+        t('categories.drivers'),
+    ];
 
     return (
         <div className="bg-white">
@@ -32,14 +42,14 @@ export default function Newsroom() {
 
                     {/* Top Label - Size matched to reference code (text-sm) */}
                     <span className="inline-block bg-white/10 text-white/90 text-sm font-semibold px-4 py-2 rounded-full mb-8 border border-white/10">
-                        The Journal
+                        {t('hero.badge')}
                     </span>
 
                     {/* Main Heading - Scaled down to match reference (text-5xl to lg:text-7xl) */}
                     <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-8 flex flex-col items-center">
-                        <span>Thinking</span>
+                        <span>{t('hero.title_p1')}</span>
                         <span className="text-[#fe8c34] relative mt-2 md:mt-0">
-                            Forward
+                            {t('hero.title_highlight')}
                             {/* Custom Underline Curve */}
                             <svg
                                 viewBox="0 0 300 20"
@@ -100,7 +110,7 @@ export default function Newsroom() {
                             </p>
 
                             <div className="flex items-center gap-2 text-foreground font-bold group-hover:gap-4 transition-all">
-                                Read the story <ArrowRight className="w-5 h-5 text-primary" />
+                                {t('featured.read_story')} <ArrowRight className="w-5 h-5 text-primary" />
                             </div>
                         </div>
                     </Link>
@@ -110,7 +120,7 @@ export default function Newsroom() {
             {/* ===== CATEGORY TABS (Visual) ===== */}
             <section className="pt-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto flex gap-8 overflow-x-auto pb-4 border-b border-black/5 no-scrollbar">
-                    {['All Stories', 'Technology', 'Culture', 'Business', 'Drivers'].map((tab, i) => (
+                    {categories.map((tab, i) => (
                         <button
                             key={tab}
                             className={`whitespace-nowrap text-lg font-bold pb-4 border-b-2 transition-colors ${i === 0 ? 'text-foreground border-primary' : 'text-[#94A3B8] border-transparent hover:text-foreground'}`}
@@ -152,7 +162,7 @@ export default function Newsroom() {
 
                                 <div className="mt-auto flex items-center justify-between pt-4 border-t border-black/5">
                                     <span className="text-sm font-semibold text-[#94A3B8]">{article.date}</span>
-                                    <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Read</span>
+                                    <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">{t('article.read')}</span>
                                 </div>
                             </Link>
                         ))}
@@ -160,7 +170,7 @@ export default function Newsroom() {
 
                     <div className="mt-24 text-center">
                         <button className="px-10 py-5 bg-[#F8FAFC] rounded-full font-bold text-foreground hover:bg-[#F1F5F9] transition-colors">
-                            View Archive
+                            {t('archive_btn')}
                         </button>
                     </div>
                 </div>

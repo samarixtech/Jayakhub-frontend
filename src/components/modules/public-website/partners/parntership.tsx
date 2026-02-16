@@ -17,106 +17,101 @@ import {
     LayoutDashboard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
-const stats = [
-    { value: '5,000+', label: 'Restaurant Partners' },
-    { value: '30%', label: 'Avg Revenue Increase' },
-    { value: '1M+', label: 'Orders Delivered' },
-    { value: '4.8★', label: 'Partner Rating' },
-];
 
-const benefits = [
-    {
-        icon: TrendingUp,
-        title: 'Increase Your Revenue',
-        description: 'Reach thousands of new customers and boost your sales by up to 30% with our platform.',
-    },
-    {
-        icon: Users,
-        title: 'Expand Your Reach',
-        description: 'Get discovered by hungry customers in your area looking for great food.',
-    },
-    {
-        icon: LayoutDashboard,
-        title: 'Easy-to-Use Dashboard',
-        description: 'Manage orders, menus, and analytics from one intuitive restaurant portal.',
-    },
-    {
-        icon: BarChart3,
-        title: 'Real-Time Analytics',
-        description: 'Track performance, understand trends, and make data-driven decisions.',
-    },
-    {
-        icon: Clock,
-        title: 'Flexible Hours',
-        description: 'Set your own delivery hours and availability. You\'re in control.',
-    },
-    {
-        icon: HeadphonesIcon,
-        title: 'Dedicated Support',
-        description: '24/7 partner support team ready to help you grow your business.',
-    },
-];
-
-const howItWorks = [
-    {
-        step: 1,
-        title: 'Sign Up',
-        description: 'Fill out our simple registration form and tell us about your restaurant.',
-        image: '/restaurant-1.jpg'
-    },
-    {
-        step: 2,
-        title: 'Get Approved',
-        description: 'Our team reviews your application and gets you onboarded within 48 hours.',
-        image: '/restaurant-2.jpg'
-    },
-    {
-        step: 3,
-        title: 'Set Up Your Menu',
-        description: 'Add your dishes, set prices, and customize your restaurant profile.',
-        image: '/hero-food-main.jpg'
-    },
-    {
-        step: 4,
-        title: 'Start Receiving Orders',
-        description: 'Go live and start accepting orders from customers in your area.',
-        image: '/hero-food-3.png'
-    },
-];
-
-const testimonials = [
-    {
-        quote: 'Joining JayakHub was the best decision for my restaurant. Our delivery orders tripled in the first month!',
-        name: 'Ahmed Hassan',
-        role: 'Owner, Al-Rasheed Restaurant',
-        avatar: 'AH',
-    },
-    {
-        quote: 'The dashboard is incredibly easy to use. I can manage everything from my phone while cooking.',
-        name: 'Sara Al-Mousa',
-        role: 'Chef, Mama\'s Kitchen',
-        avatar: 'SM',
-    },
-    {
-        quote: 'Their support team is amazing. They helped us optimize our menu and increase our average order value.',
-        name: 'Omar Khalil',
-        role: 'Manager, Grill House',
-        avatar: 'OK',
-    },
-];
-
-const pricingFeatures = [
-    'No upfront costs',
-    'Pay only for completed orders',
-    'Free marketing & promotions',
-    'Free tablet for order management',
-    'Weekly payments',
-    'Dedicated account manager',
-];
 
 export default function Partners() {
+    const t = useTranslations('Partners');
     const [isVisible, setIsVisible] = useState(false);
+
+    const stats = [
+        { value: '5,000+', label: t('stats.partners') },
+        { value: '30%', label: t('stats.revenue') },
+        { value: '1M+', label: t('stats.orders') },
+        { value: '4.8★', label: t('stats.rating') },
+    ];
+
+    const benefits = [
+        {
+            icon: TrendingUp,
+            title: t('benefits.items.revenue.title'),
+            description: t('benefits.items.revenue.desc'),
+        },
+        {
+            icon: Users,
+            title: t('benefits.items.reach.title'),
+            description: t('benefits.items.reach.desc'),
+        },
+        {
+            icon: LayoutDashboard,
+            title: t('benefits.items.dashboard.title'),
+            description: t('benefits.items.dashboard.desc'),
+        },
+        {
+            icon: BarChart3,
+            title: t('benefits.items.analytics.title'),
+            description: t('benefits.items.analytics.desc'),
+        },
+        {
+            icon: Clock,
+            title: t('benefits.items.hours.title'),
+            description: t('benefits.items.hours.desc'),
+        },
+        {
+            icon: HeadphonesIcon,
+            title: t('benefits.items.support.title'),
+            description: t('benefits.items.support.desc'),
+        },
+    ];
+
+    const howItWorks = [
+        {
+            step: 1,
+            title: t('how_it_works.steps.signup.title'),
+            description: t('how_it_works.steps.signup.desc'),
+            image: '/restaurant-1.jpg'
+        },
+        {
+            step: 2,
+            title: t('how_it_works.steps.approve.title'),
+            description: t('how_it_works.steps.approve.desc'),
+            image: '/restaurant-2.jpg'
+        },
+        {
+            step: 3,
+            title: t('how_it_works.steps.menu.title'),
+            description: t('how_it_works.steps.menu.desc'),
+            image: '/hero-food-main.jpg'
+        },
+        {
+            step: 4,
+            title: t('how_it_works.steps.orders.title'),
+            description: t('how_it_works.steps.orders.desc'),
+            image: '/hero-food-3.png'
+        },
+    ];
+
+    const testimonials = [
+        {
+            quote: t('testimonials.items.t1.quote'),
+            name: 'Ahmed Hassan',
+            role: t('testimonials.items.t1.role'),
+            avatar: 'AH',
+        },
+        {
+            quote: t('testimonials.items.t2.quote'),
+            name: 'Sara Al-Mousa',
+            role: t('testimonials.items.t2.role'),
+            avatar: 'SM',
+        },
+        {
+            quote: t('testimonials.items.t3.quote'),
+            name: 'Omar Khalil',
+            role: t('testimonials.items.t3.role'),
+            avatar: 'OK',
+        },
+    ];
     const [statsVisible, setStatsVisible] = useState(false);
     const statsRef = useRef<HTMLDivElement>(null);
 
@@ -155,36 +150,35 @@ export default function Partners() {
                         {/* Left Content */}
                         <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-5 py-2 text-sm font-semibold text-white mb-8">
-                                <span className="uppercase tracking-wider text-xs">For Restaurant Owners</span>
+                                <span className="uppercase tracking-wider text-xs">{t('hero.badge')}</span>
                             </div>
 
                             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] mb-8 tracking-tight">
-                                Grow your <br />
-                                restaurant with <br />
+                                {t('hero.title_line1')} <br /> {t('hero.title_line2')} <br />
                                 <span className="text-[#FE8C34] relative inline-block">
-                                    Jayak Hub
+                                    {t('hero.title_highlight')}
                                     <svg className="absolute w-full h-3 -bottom-1 left-0 text-[#FE8C34]" viewBox="0 0 200 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2.00025 6.99997C25.7954 3.73711 96.0963 -1.2294 197.906 5.64571" stroke="currentColor" strokeWidth="3" strokeLinecap="round" /></svg>
                                 </span>
                             </h1>
 
                             <div className="flex flex-col sm:flex-row gap-4 mb-10">
                                 <Button className="bg-white text-[#0B5D4E] hover:bg-white/90 h-14 px-8 rounded-full text-lg font-bold transition-transform hover:scale-105">
-                                    Become a Partner
+                                    {t('hero.buttons.partner')}
                                     <ArrowRight className="ml-2 w-5 h-5" />
                                 </Button>
                                 <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 h-14 px-8 rounded-full text-lg font-semibold bg-transparent">
-                                    Learn More
+                                    {t('hero.buttons.learn_more')}
                                 </Button>
                             </div>
 
                             <div className="flex flex-wrap gap-6 text-sm font-medium text-white/80">
                                 <div className="flex items-center gap-2">
                                     <Check className="w-5 h-5 text-[#F5A623]" />
-                                    <span>30% avg sales boost</span>
+                                    <span>{t('hero.checks.sales')}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Check className="w-5 h-5 text-[#F5A623]" />
-                                    <span>Marketing support included</span>
+                                    <span>{t('hero.checks.marketing')}</span>
                                 </div>
                             </div>
                         </div>
@@ -203,8 +197,8 @@ export default function Partners() {
                                         <TrendingUp className="w-5 h-5 text-[#0B5D4E]" />
                                     </div>
                                     <div>
-                                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Growth</div>
-                                        <div className="text-lg font-bold text-[#0B5D4E]">+30% Sales</div>
+                                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{t('hero.float_badge.growth')}</div>
+                                        <div className="text-lg font-bold text-[#0B5D4E]">{t('hero.float_badge.sales')}</div>
                                     </div>
                                 </div>
                             </div>
@@ -241,8 +235,8 @@ export default function Partners() {
                                 {/* Overlay Gradient */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                                 <div className="absolute bottom-6 left-6 text-white">
-                                    <div className="font-bold text-xl mb-1">Live Analytics</div>
-                                    <div className="text-sm opacity-80">Track orders in real-time</div>
+                                    <div className="font-bold text-xl mb-1">{t('dashboard.image_overlay.title')}</div>
+                                    <div className="text-sm opacity-80">{t('dashboard.image_overlay.subtitle')}</div>
                                 </div>
                             </div>
                             {/* Decorative Element */}
@@ -250,17 +244,17 @@ export default function Partners() {
                         </div>
 
                         <div className="order-1 lg:order-2">
-                            <span className="text-primary font-bold uppercase tracking-wider text-sm mb-2 block">Partner Dashboard</span>
-                            <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6">Built for restaurant owners</h2>
+                            <span className="text-primary font-bold uppercase tracking-wider text-sm mb-2 block">{t('dashboard.badge')}</span>
+                            <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6">{t('dashboard.title')}</h2>
                             <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                                Manage your entire delivery business from a single powerful dashboard. Accept orders, update menus, and track sales effortlessly.
+                                {t('dashboard.desc')}
                             </p>
                             <ul className="space-y-4">
                                 {[
-                                    'Instant order notifications',
-                                    'Menu management tools',
-                                    'Sales & revenue reports',
-                                    'Customer feedback insights'
+                                    t('dashboard.features.notifications'),
+                                    t('dashboard.features.menu'),
+                                    t('dashboard.features.reports'),
+                                    t('dashboard.features.feedback')
                                 ].map((item) => (
                                     <li key={item} className="flex items-center gap-3 text-slate-700 font-medium">
                                         <div className="w-6 h-6 rounded-full bg-accent-orange/20 flex items-center justify-center shrink-0">
@@ -272,7 +266,7 @@ export default function Partners() {
                             </ul>
                             <div className="mt-10">
                                 <Button className="bg-slate-900 text-white hover:bg-slate-800 h-12 px-8 rounded-xl shadow-lg">
-                                    Demo the Dashboard
+                                    {t('dashboard.button')}
                                 </Button>
                             </div>
                         </div>
@@ -286,13 +280,13 @@ export default function Partners() {
                 <div className="max-w-6xl mx-auto">
                     <div className="max-w-2xl mb-16 mx-auto text-center">
                         <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
-                            Why Partner With Us
+                            {t('benefits.badge')}
                         </span>
                         <h2 className="text-4xl sm:text-5xl font-bold text-[#0f172a] mb-4 md:whitespace-nowrap">
-                            Why Partner with <span className="text-primary">JayakHub?</span>
+                            {t('benefits.title_p1')} <span className="text-primary">{t('benefits.title_highlight')}</span>
                         </h2>
                         <p className="text-lg text-[#64748B]">
-                            We provide the tools and support you need to take your restaurant to the next level
+                            {t('benefits.desc')}
                         </p>
                     </div>
 
@@ -318,10 +312,10 @@ export default function Partners() {
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
-                            Get started in 4 steps
+                            {t('how_it_works.title')}
                         </h2>
                         <p className="text-lg text-[#64748B]">
-                            Join thousands of successful restaurant partners today.
+                            {t('how_it_works.desc')}
                         </p>
                     </div>
 
@@ -376,7 +370,7 @@ export default function Partners() {
                     <div className="text-center mb-16">
 
                         <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-4">
-                            Partner Success Stories
+                            {t('testimonials.title')}
                         </h2>
 
                     </div>
@@ -412,19 +406,19 @@ export default function Partners() {
 
                         <div className="relative z-10">
                             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-                                Ready to grow your <br />
-                                <span className="text-accent-yellow">restaurant business?</span>
+                                {t('cta.title_p1')} <br />
+                                <span className="text-accent-yellow">{t('cta.title_highlight')}</span>
                             </h2>
                             <p className="text-white/60 max-w-xl mx-auto mb-10 text-lg">
-                                Join the JayakHub family today and start reaching thousands of hungry customers in your area.
+                                {t('cta.desc')}
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <Button className="bg-white text-primary hover:bg-white/90 px-8 py-6 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-xl">
-                                    Apply Now
+                                    {t('cta.apply')}
                                     <ArrowRight className="w-5 h-5 ml-2" />
                                 </Button>
                                 <Button className="bg-white/10 text-white hover:bg-white/20 px-8 py-6 rounded-full font-semibold text-lg transition-all border border-white/20">
-                                    Contact Sales
+                                    {t('cta.contact')}
                                 </Button>
                             </div>
                         </div>
