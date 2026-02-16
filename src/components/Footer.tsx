@@ -17,10 +17,10 @@ const Footer = () => {
   const t = useTranslations("Footer");
 
   const socialLinks = [
-    { icon: Facebook, href: "#" },
-    { icon: Instagram, href: "#" },
-    { icon: Twitter, href: "#" },
-    { icon: Linkedin, href: "#" },
+    { icon: Facebook, href: "https://www.facebook.com" },
+    { icon: Instagram, href: "https://www.instagram.com" },
+    { icon: Twitter, href: "https://twitter.com" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company" },
   ];
 
   const companyLinks = [
@@ -34,7 +34,7 @@ const Footer = () => {
     { label: "Help Center", href: "/help" },
     { label: "Safety", href: "/safety" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Privacy Policy", href: "/privacyPolicy" },
   ];
 
   const partnerLinks = [
@@ -44,18 +44,17 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-primary text-white py-12 border-t border-white/10">
+    <footer className="bg-primary text-white py-10 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12 items-start">
           {/* BRAND COLUMN (Span 2 columns on large screens) */}
-          <div className="col-span-2 lg:col-span-2 space-y-4">
-            <div className="flex items-start -ml-6 -mt-8 mb-[-1rem]">
+          <div className="col-span-2 lg:col-span-2 space-y-6">
+            <div className="flex items-start">
               <Image
                 src={image2}
                 alt="Jayak Hub Logo"
-                width={260}
-                className="object-contain"
-                style={{ maxWidth: "none" }} // Ensure it doesn't shrink
+                width={200}
+                className="object-contain h-auto"
               />
             </div>
 
@@ -84,7 +83,7 @@ const Footer = () => {
                 <Link
                   key={index}
                   href={social.href}
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                  className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
                 >
                   <social.icon className="w-5 h-5 text-white" />
                 </Link>
@@ -140,7 +139,7 @@ const Footer = () => {
           <p className="text-[#FFFFFF80]">© 2026 Jayak Hub. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/privacyPolicy" className="hover:text-white transition-colors">Privacy</Link>
             <Link href="/cookies" className="hover:text-white transition-colors">Cookies</Link>
           </div>
         </div>

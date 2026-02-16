@@ -1,30 +1,25 @@
 import React from 'react';
-import { FileText, ChevronRight } from 'lucide-react';
+import { Cookie, ChevronRight } from 'lucide-react';
 
 const sections = [
     {
-        id: 'contractual-relationship',
-        title: '1. Contractual Relationship',
-        content: `These Terms of Use ("Terms") govern the access or use by you, an individual, from within any country in the world of applications, websites, content, products, and services (the "Services") made available by Jayak Hub.`,
+        id: 'what-are-cookies',
+        title: '1. What are Cookies?',
+        content: `Cookies are small text files that are sent to or accessed from your web browser or your device's memory. A cookie typically contains the name of the domain (internet location) from which the cookie originated, the "lifetime" of the cookie (i.e., when it expires), and a randomly generated unique number or similar identifier.`,
     },
     {
-        id: 'the-services',
-        title: '2. The Services',
-        content: `The Services constitute a technology platform that enables users of Jayak Hub's mobile applications or websites provided as part of the Services to arrange and schedule delivery services with independent third party providers of such services, including independent third party logistics providers under agreement with Jayak Hub.`,
+        id: 'how-we-use-cookies',
+        title: '2. How We Use Cookies',
+        content: `We use cookies and other tracking technologies for the following purposes: to properly route traffic for effective server load distribution; to speed up page loading lines; to understand how you use our services and to improve your experience.`,
     },
     {
-        id: 'use-of-services',
-        title: '3. Your Use of the Services',
-        content: `User Accounts. In order to use most aspects of the Services, you must register for and maintain an active personal user Services account ("Account"). You must be at least 18 years of age, or the age of legal majority in your jurisdiction (if different than 18), to obtain an Account.`,
-    },
-    {
-        id: 'payment',
-        title: '4. Payment',
-        content: `You understand that use of the Services may result in charges to you for the services or goods you receive from a Third Party Provider ("Charges"). After you have received services or goods obtained through your use of the Service, Jayak Hub will facilitate your payment of the applicable Charges on behalf of the Third Party Provider as such Third Party Provider's limited payment collection agent.`,
+        id: 'your-choices',
+        title: '3. Your Choices',
+        content: `You have the right to choose whether or not to accept cookies. However, they are an important part of how our Services work, so you should be aware that if you choose to refuse or remove cookies, this could affect the availability and functionality of the Services.`,
     },
 ];
 
-export default function Terms() {
+export default function Cookies() {
     const scrollToSection = (id: string, e: React.MouseEvent) => {
         e.preventDefault();
         const element = document.getElementById(id);
@@ -35,7 +30,6 @@ export default function Terms() {
 
     return (
         <div className="bg-white min-h-screen font-sans">
-            {/* Header Section */}
             {/* Header Section */}
             <section className="bg-primary pt-32 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
                 {/* Background elements */}
@@ -56,15 +50,15 @@ export default function Terms() {
                     <nav className="flex items-center text-sm text-white/70 mb-8 space-x-2">
                         <span>Legal</span>
                         <ChevronRight className="w-4 h-4" />
-                        <span className="text-white font-medium">Terms of Service</span>
+                        <span className="text-white font-medium">Cookie Policy</span>
                     </nav>
 
                     <div className="flex flex-col md:flex-row items-start gap-6">
                         <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 backdrop-blur-sm border border-white/10 shadow-lg">
-                            <FileText className="w-8 h-8 text-white" />
+                            <Cookie className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">Terms of Service</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">Cookie Policy</h1>
                             <p className="text-white/70 flex items-center gap-2 text-sm">
                                 <span className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center">
                                     <span className="text-[10px] font-serif italic">i</span>

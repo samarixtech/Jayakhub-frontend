@@ -1,30 +1,30 @@
 import React from 'react';
-import { FileText, ChevronRight } from 'lucide-react';
+import { Shield, ChevronRight } from 'lucide-react';
 
 const sections = [
     {
-        id: 'contractual-relationship',
-        title: '1. Contractual Relationship',
-        content: `These Terms of Use ("Terms") govern the access or use by you, an individual, from within any country in the world of applications, websites, content, products, and services (the "Services") made available by Jayak Hub.`,
+        id: 'info-collection',
+        title: '1. Information We Collect',
+        content: `We collect information you provide directly to us, such as when you create or modify your account, request on-demand services, contact customer support, or otherwise communicate with us. This information may include: name, email, phone number, postal address, profile picture, payment method, items requested (for delivery services), delivery notes, and other information you choose to provide.`,
     },
     {
-        id: 'the-services',
-        title: '2. The Services',
-        content: `The Services constitute a technology platform that enables users of Jayak Hub's mobile applications or websites provided as part of the Services to arrange and schedule delivery services with independent third party providers of such services, including independent third party logistics providers under agreement with Jayak Hub.`,
+        id: 'use-info',
+        title: '2. How We Use Your Information',
+        content: `We use the information we collect to provide, maintain, and improve our services, such as to: facilitate payments, send receipts, provide products and services you request (and send related information), develop new features, provide customer support to Users and Drivers, and send updates and administrative messages.`,
     },
     {
-        id: 'use-of-services',
-        title: '3. Your Use of the Services',
-        content: `User Accounts. In order to use most aspects of the Services, you must register for and maintain an active personal user Services account ("Account"). You must be at least 18 years of age, or the age of legal majority in your jurisdiction (if different than 18), to obtain an Account.`,
+        id: 'sharing',
+        title: '3. Sharing of Information',
+        content: `We may share the information we collect about you as described in this Statement or as described at the time of collection or sharing, including as follows: with Drivers to enable them to provide the Services you request; with third parties to provide you a service you requested through a partnership or promotional offering made by a third party or us; with the general public if you submit content in a public forum.`,
     },
     {
-        id: 'payment',
-        title: '4. Payment',
-        content: `You understand that use of the Services may result in charges to you for the services or goods you receive from a Third Party Provider ("Charges"). After you have received services or goods obtained through your use of the Service, Jayak Hub will facilitate your payment of the applicable Charges on behalf of the Third Party Provider as such Third Party Provider's limited payment collection agent.`,
+        id: 'data-retention',
+        title: '4. Data Retention',
+        content: `We retain user data for as long as necessary for the purposes described above. This means that we retain different categories of data for different periods of time depending on the category of user to whom the data relates, the type of data, and the purposes for which we collected the data.`,
     },
 ];
 
-export default function Terms() {
+export default function PrivacyPolicy() {
     const scrollToSection = (id: string, e: React.MouseEvent) => {
         e.preventDefault();
         const element = document.getElementById(id);
@@ -35,7 +35,6 @@ export default function Terms() {
 
     return (
         <div className="bg-white min-h-screen font-sans">
-            {/* Header Section */}
             {/* Header Section */}
             <section className="bg-primary pt-32 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
                 {/* Background elements */}
@@ -56,15 +55,15 @@ export default function Terms() {
                     <nav className="flex items-center text-sm text-white/70 mb-8 space-x-2">
                         <span>Legal</span>
                         <ChevronRight className="w-4 h-4" />
-                        <span className="text-white font-medium">Terms of Service</span>
+                        <span className="text-white font-medium">Privacy Policy</span>
                     </nav>
 
                     <div className="flex flex-col md:flex-row items-start gap-6">
                         <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center shrink-0 backdrop-blur-sm border border-white/10 shadow-lg">
-                            <FileText className="w-8 h-8 text-white" />
+                            <Shield className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">Terms of Service</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">Privacy Policy</h1>
                             <p className="text-white/70 flex items-center gap-2 text-sm">
                                 <span className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center">
                                     <span className="text-[10px] font-serif italic">i</span>
@@ -91,10 +90,7 @@ export default function Terms() {
                 <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 lg:gap-12 items-start relative">
 
                     {/* Sidebar - Table of Contents */}
-                    <div
-                        className="w-full lg:w-80 bg-gray-50/50 p-8 rounded-[2rem] border border-gray-100 h-fit self-start z-40"
-                        style={{ position: 'sticky', top: '100px' }}
-                    >
+                    <div className="w-full lg:w-80 bg-gray-50/50 p-8 rounded-[2rem] border border-gray-100 sticky top-32 h-fit self-start z-10">
                         <div>
                             <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Table of Contents</h2>
                             <nav className="space-y-1">
