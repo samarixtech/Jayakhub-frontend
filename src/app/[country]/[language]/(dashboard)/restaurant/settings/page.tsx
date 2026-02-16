@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import RestaurantSettingsView from "@/components/modules/restaurant/settings/RestaurantSettingsView";
+import SettingsView from "@/components/modules/restaurant/settings/SettingsView";
 
 export const metadata: Metadata = {
   title: "Settings | Restaurant Dashboard",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function SettingsPage() {
-  return <RestaurantSettingsView />;
+  return <SettingsView />;
 }

@@ -14,7 +14,6 @@ import LanguageSwitcher from "../common/LanguageSwitcher";
 import LocationSwitcher from "../common/LocationSwitcher";
 import UserProfile from "../common/UserProfile";
 import Link from "next/link";
-import { CalendarDays } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +31,7 @@ const RestaurantHeader = () => {
   const searchParams = useSearchParams();
   const { setIsFilterOpen } = useDiscoveryUI();
 
-  const [currentAddress, setCurrentAddress] = useState("New York, NY 10001");
+  const [currentAddress, setCurrentAddress] = useState("Iraq, Baghdad");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { detectLocationAction } from "@/app/actions/public/detect";
 
 export default function DetectLocationClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -30,17 +31,23 @@ export default function DetectLocationClient() {
           setError(result.message || "Detection failed");
           // Fallback anyway after delay?
           setTimeout(() => {
-            router.replace(`/${country}/${language}/restaurants`);
+            const currentParams = searchParams.toString();
+            const url = `/${country}/${language}/restaurants${currentParams ? `?${currentParams}` : ""}`;
+            router.replace(url);
           }, 2000);
           return;
         }
 
-        router.replace(`/${country}/${language}/restaurants`);
+        const currentParams = searchParams.toString();
+        const url = `/${country}/${language}/restaurants${currentParams ? `?${currentParams}` : ""}`;
+        router.replace(url);
       } catch (err) {
         console.error("Client detection error:", err);
         setError("Failed to detect location. Redirecting...");
         setTimeout(() => {
-          router.replace("/pk/en/restaurants");
+          const currentParams = searchParams.toString();
+          const url = `/pk/en/restaurants${currentParams ? `?${currentParams}` : ""}`;
+          router.replace(url);
         }, 1000);
       }
     }
@@ -50,7 +57,7 @@ export default function DetectLocationClient() {
     return () => {
       mounted = false;
     };
-  }, [router]);
+  }, [router, searchParams]);
 
   if (error) {
     return (
