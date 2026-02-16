@@ -1,36 +1,40 @@
 
 import React, { useState } from 'react';
 import { Search, Package, ArrowRight, ChevronDown, ChevronUp, MessageCircle, Mail, CreditCard, User, Shield, Truck, Layers } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // Help categories data
-const categories = [
-    { id: 'orders', name: 'Orders', icon: Package, description: 'Track, cancel, or report issues.' },
-    { id: 'payments', name: 'Payments', icon: CreditCard, description: 'Refunds, methods, and charges.' },
-    { id: 'account', name: 'Account', icon: User, description: 'Profile, login, and settings.' },
-    { id: 'safety', name: 'Safety', icon: Shield, description: 'Standards, reporting, and trust.' },
-    { id: 'delivery', name: 'Delivery', icon: Truck, description: 'Fees, times, and areas.' },
-    { id: 'partnering', name: 'Partnering', icon: Layers, description: 'For restaurants and stores.' },
-];
 
-const faqs = [
-    {
-        id: 'where-is-my-order',
-        question: 'Where is my order?',
-        answer: 'You can track your order in real-time through the "My Orders" section in your account. Alternatively, use the tracking link sent to your email.'
-    },
-    {
-        id: 'can-i-cancel',
-        question: 'Can I cancel my order?',
-        answer: 'Yes, you can cancel your order within 5 minutes of placing it without any charges. After that, cancellation availability depends on the restaurant preparation status.'
-    },
-    {
-        id: 'missing-items',
-        question: 'My order is missing items.',
-        answer: 'We apologize for the inconvenience. Please report the missing items through the "Help" section in your order details page, and we will process a refund or replacement immediately.'
-    }
-];
 
 export default function Help() {
+    const t = useTranslations('Help');
+
+    const categories = [
+        { id: 'orders', name: t('categories.orders.name'), icon: Package, description: t('categories.orders.desc') },
+        { id: 'payments', name: t('categories.payments.name'), icon: CreditCard, description: t('categories.payments.desc') },
+        { id: 'account', name: t('categories.account.name'), icon: User, description: t('categories.account.desc') },
+        { id: 'safety', name: t('categories.safety.name'), icon: Shield, description: t('categories.safety.desc') },
+        { id: 'delivery', name: t('categories.delivery.name'), icon: Truck, description: t('categories.delivery.desc') },
+        { id: 'partnering', name: t('categories.partnering.name'), icon: Layers, description: t('categories.partnering.desc') },
+    ];
+
+    const faqs = [
+        {
+            id: 'where-is-my-order',
+            question: t('faq.items.where_is_my_order.question'),
+            answer: t('faq.items.where_is_my_order.answer')
+        },
+        {
+            id: 'can-i-cancel',
+            question: t('faq.items.can_i_cancel.question'),
+            answer: t('faq.items.can_i_cancel.answer')
+        },
+        {
+            id: 'missing-items',
+            question: t('faq.items.missing_items.question'),
+            answer: t('faq.items.missing_items.answer')
+        }
+    ];
     const [activeCategory, setActiveCategory] = useState('orders');
     const [openFaq, setOpenFaq] = useState<string | null>(null);
 
@@ -60,21 +64,21 @@ export default function Help() {
 
                 <div className="max-w-3xl mx-auto z-10 relative text-center">
                     <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 mb-6">
-                        <span className="text-white text-sm font-medium">Support Center</span>
+                        <span className="text-white text-sm font-medium">{t('hero.badge')}</span>
                     </div>
 
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">How can we help you today?</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">{t('hero.title')}</h1>
 
                     {/* Search Bar */}
                     <div className="relative max-w-2xl mx-auto bg-white rounded-full shadow-xl flex items-center p-2">
                         <Search className="w-5 h-5 text-gray-400 ml-4 mr-3" />
                         <input
                             type="text"
-                            placeholder="Search for articles..."
+                            placeholder={t('hero.search_placeholder')}
                             className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 h-full py-2"
                         />
                         <button className="bg-[#1C4A3C] text-white px-6 py-2.5 rounded-full font-medium hover:bg-[#15382d] transition-colors">
-                            Search
+                            {t('hero.search_button')}
                         </button>
                     </div>
                 </div>
@@ -95,7 +99,7 @@ export default function Help() {
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 -mt-16 relative z-10">
                 {/* Heading for Mobile/Categories */}
                 <div className="mb-6 lg:hidden">
-                    <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-4">Browse Categories</h2>
+                    <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-4">{t('sidebar.title')}</h2>
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-8">
@@ -103,7 +107,7 @@ export default function Help() {
                     {/* Sidebar - Browse Categories */}
                     <aside className="w-full lg:w-80 flex-shrink-0">
                         <div className="lg:sticky lg:top-32 h-fit space-y-2">
-                            <h2 className="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 pl-4">Browse Categories</h2>
+                            <h2 className="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 pl-4">{t('sidebar.title')}</h2>
 
                             <div className="bg-white rounded-2xl overflow-hidden p-2">
                                 {categories.map((category) => (
@@ -146,7 +150,7 @@ export default function Help() {
 
                         {/* FAQ Section */}
                         <div className="space-y-6">
-                            <h3 className="text-lg font-bold text-gray-900">Frequently Asked Questions</h3>
+                            <h3 className="text-lg font-bold text-gray-900">{t('faq.title')}</h3>
 
                             <div className="space-y-4">
                                 {faqs.map((faq) => (
@@ -175,17 +179,17 @@ export default function Help() {
 
                         {/* Contact Support Box */}
                         <div className="bg-gray-50 rounded-[2rem] p-8 md:p-12 text-center">
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Did not find what you were looking for?</h3>
-                            <p className="text-gray-500 mb-8">Our support team is just a click away.</p>
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">{t('contact.title')}</h3>
+                            <p className="text-gray-500 mb-8">{t('contact.subtitle')}</p>
 
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                                 <button className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-[#0B5D4E] hover:text-[#0B5D4E] transition-all shadow-sm w-full sm:w-auto justify-center">
                                     <MessageCircle className="w-5 h-5" />
-                                    Chat with us
+                                    {t('contact.chat')}
                                 </button>
                                 <button className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-[#0B5D4E] hover:text-[#0B5D4E] transition-all shadow-sm w-full sm:w-auto justify-center">
                                     <Mail className="w-5 h-5" />
-                                    Email Support
+                                    {t('contact.email')}
                                 </button>
                             </div>
                         </div>

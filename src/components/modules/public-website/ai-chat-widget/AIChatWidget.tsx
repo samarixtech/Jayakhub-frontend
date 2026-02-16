@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Bot, User, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface Message {
   id: string;
@@ -12,12 +13,13 @@ interface Message {
 }
 
 export default function AIChatWidget() {
+  const t = useTranslations("Home.ai_chat_widget");
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hello! I'm your Samarix AI assistant. How can I help you find the best food today?",
+      text: t('welcome_message'),
       sender: "bot",
       timestamp: new Date(),
     },
@@ -70,7 +72,7 @@ export default function AIChatWidget() {
     setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm currently a demo version. I can't process real orders yet, but I think you'd love our sushi selection!",
+        text: t('demo_response'),
         sender: "bot",
         timestamp: new Date(),
       };
@@ -99,10 +101,10 @@ export default function AIChatWidget() {
                   <Bot size={20} className="text-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">Samarix AI</h3>
+                  <h3 className="font-bold text-sm">{t('bot_name')}</h3>
                   <div className="flex items-center gap-1.5 opacity-80">
                     <span className="w-2 h-2 bg-emerald-300 rounded-full animate-pulse" />
-                    <span className="text-xs">Online</span>
+                    <span className="text-xs">{t('status_online')}</span>
                   </div>
                 </div>
               </div>
@@ -119,30 +121,27 @@ export default function AIChatWidget() {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex ${
-                    msg.sender === "user" ? "justify-end" : "justify-start"
-                  }`}
+                  className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"
+                    }`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-2xl p-3 text-sm shadow-sm ${
-                      msg.sender === "user"
+                    className={`max-w-[80%] rounded-2xl p-3 text-sm shadow-sm ${msg.sender === "user"
                         ? "bg-emerald-bg text-white rounded-br-none"
                         : "bg-white text-gray-800 border border-gray-100 rounded-bl-none"
-                    }`}
+                      }`}
                   >
                     {msg.sender === "bot" && (
                       <div className="flex items-center gap-1.5 mb-1 text-xs text-emerald-bg font-semibold">
                         <Sparkles size={10} />
-                        AI Assistant
+                        {t('assistant_label')}
                       </div>
                     )}
                     {msg.text}
                     <div
-                      className={`text-[10px] mt-1 ${
-                        msg.sender === "user"
+                      className={`text-[10px] mt-1 ${msg.sender === "user"
                           ? "text-emerald-100"
                           : "text-gray-400"
-                      }`}
+                        }`}
                     >
                       {msg.timestamp.toLocaleTimeString([], {
                         hour: "2-digit",
@@ -165,7 +164,7 @@ export default function AIChatWidget() {
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Type a message..."
+                  placeholder={t('input_placeholder')}
                   className="flex-1 bg-transparent border-none outline-none text-sm text-gray-700 placeholder:text-gray-400"
                 />
                 <button
@@ -178,7 +177,7 @@ export default function AIChatWidget() {
               </div>
               <div className="text-center mt-2">
                 <span className="text-[10px] text-gray-400">
-                  Powered by Jayak Hub Models
+                  {t('powered_by')}
                 </span>
               </div>
             </form>
@@ -191,11 +190,10 @@ export default function AIChatWidget() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className={`pointer-events-auto p-4 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${
-          isOpen
+        className={`pointer-events-auto p-4 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${isOpen
             ? "bg-gray-800 text-white rotate-90"
             : "bg-gradient-to-r from-emerald-bg to-teal-600 text-white animate-bounce-subtle"
-        }`}
+          }`}
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={28} />}
       </motion.button>

@@ -1,30 +1,34 @@
 import React from 'react';
 import { Shield, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-const sections = [
-    {
-        id: 'info-collection',
-        title: '1. Information We Collect',
-        content: `We collect information you provide directly to us, such as when you create or modify your account, request on-demand services, contact customer support, or otherwise communicate with us. This information may include: name, email, phone number, postal address, profile picture, payment method, items requested (for delivery services), delivery notes, and other information you choose to provide.`,
-    },
-    {
-        id: 'use-info',
-        title: '2. How We Use Your Information',
-        content: `We use the information we collect to provide, maintain, and improve our services, such as to: facilitate payments, send receipts, provide products and services you request (and send related information), develop new features, provide customer support to Users and Drivers, and send updates and administrative messages.`,
-    },
-    {
-        id: 'sharing',
-        title: '3. Sharing of Information',
-        content: `We may share the information we collect about you as described in this Statement or as described at the time of collection or sharing, including as follows: with Drivers to enable them to provide the Services you request; with third parties to provide you a service you requested through a partnership or promotional offering made by a third party or us; with the general public if you submit content in a public forum.`,
-    },
-    {
-        id: 'data-retention',
-        title: '4. Data Retention',
-        content: `We retain user data for as long as necessary for the purposes described above. This means that we retain different categories of data for different periods of time depending on the category of user to whom the data relates, the type of data, and the purposes for which we collected the data.`,
-    },
-];
+
 
 export default function PrivacyPolicy() {
+    const t = useTranslations('Privacy');
+
+    const sections = [
+        {
+            id: 'info-collection',
+            title: t('sections.info_collection.title'),
+            content: t('sections.info_collection.content'),
+        },
+        {
+            id: 'use-info',
+            title: t('sections.use_info.title'),
+            content: t('sections.use_info.content'),
+        },
+        {
+            id: 'sharing',
+            title: t('sections.sharing.title'),
+            content: t('sections.sharing.content'),
+        },
+        {
+            id: 'data-retention',
+            title: t('sections.data_retention.title'),
+            content: t('sections.data_retention.content'),
+        },
+    ];
     const scrollToSection = (id: string, e: React.MouseEvent) => {
         e.preventDefault();
         const element = document.getElementById(id);
@@ -55,7 +59,7 @@ export default function PrivacyPolicy() {
                     <nav className="flex items-center text-sm text-white/70 mb-8 space-x-2">
                         <span>Legal</span>
                         <ChevronRight className="w-4 h-4" />
-                        <span className="text-white font-medium">Privacy Policy</span>
+                        <span className="text-white font-medium">{t('header.breadcrumbs')}</span>
                     </nav>
 
                     <div className="flex flex-col md:flex-row items-start gap-6">
@@ -63,12 +67,12 @@ export default function PrivacyPolicy() {
                             <Shield className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">Privacy Policy</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">{t('header.title')}</h1>
                             <p className="text-white/70 flex items-center gap-2 text-sm">
                                 <span className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center">
                                     <span className="text-[10px] font-serif italic">i</span>
                                 </span>
-                                Last updated: February 16, 2026
+                                {t('header.last_updated')}
                             </p>
                         </div>
                     </div>
@@ -92,7 +96,7 @@ export default function PrivacyPolicy() {
                     {/* Sidebar - Table of Contents */}
                     <div className="w-full lg:w-80 bg-gray-50/50 p-8 rounded-[2rem] border border-gray-100 sticky top-32 h-fit self-start z-10">
                         <div>
-                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Table of Contents</h2>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">{t('sidebar.toc')}</h2>
                             <nav className="space-y-1">
                                 {sections.map((section) => (
                                     <a
@@ -107,9 +111,9 @@ export default function PrivacyPolicy() {
                             </nav>
 
                             <div className="mt-10 pt-10 border-t border-gray-200">
-                                <p className="text-xs text-gray-400 mb-2">Need assistance?</p>
+                                <p className="text-xs text-gray-400 mb-2">{t('sidebar.need_assistance')}</p>
                                 <a href="/contact" className="text-sm font-bold text-[#1C4A3C] hover:underline">
-                                    Contact Support
+                                    {t('sidebar.contact_support')}
                                 </a>
                             </div>
                         </div>
@@ -120,7 +124,7 @@ export default function PrivacyPolicy() {
                         {/* Alert Box */}
                         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-10">
                             <p className="text-sm text-[#1E40AF] font-medium text-center">
-                                Please read this document carefully. By using our services, you agree to be bound by these terms.
+                                {t('alert')}
                             </p>
                         </div>
 

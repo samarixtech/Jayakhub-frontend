@@ -1,42 +1,46 @@
 
 
 import { ArrowRight, Shield, UserCheck, Activity, Lock, Truck, Smartphone, Check } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 
-const features = [
-    {
-        icon: Shield,
-        title: "Bank-Grade Security",
-        description: "End-to-end encryption for all payments and personal data."
-    },
-    {
-        icon: UserCheck,
-        title: "Verified Partners",
-        description: "Strict background checks for every driver and restaurant."
-    },
-    {
-        icon: Activity,
-        title: "Live Monitoring",
-        description: "Real-time GPS tracking of every order from kitchen to door."
-    },
-    {
-        icon: Lock,
-        title: "Privacy Shield",
-        description: "Masked phone numbers to protect your personal contact info."
-    },
-    {
-        icon: Truck,
-        title: "Zero Contact",
-        description: "Contact-free delivery options available for every order."
-    },
-    {
-        icon: Smartphone,
-        title: "SOS Integration",
-        description: "One-tap emergency assistance directly within the app."
-    }
-];
+
 
 export default function Safety() {
+    const t = useTranslations('Safety');
+
+    const features = [
+        {
+            icon: Shield,
+            title: t('features.security.title'),
+            description: t('features.security.desc')
+        },
+        {
+            icon: UserCheck,
+            title: t('features.verified.title'),
+            description: t('features.verified.desc')
+        },
+        {
+            icon: Activity,
+            title: t('features.monitoring.title'),
+            description: t('features.monitoring.desc')
+        },
+        {
+            icon: Lock,
+            title: t('features.privacy.title'),
+            description: t('features.privacy.desc')
+        },
+        {
+            icon: Truck,
+            title: t('features.zero_contact.title'),
+            description: t('features.zero_contact.desc')
+        },
+        {
+            icon: Smartphone,
+            title: t('features.sos.title'),
+            description: t('features.sos.desc')
+        }
+    ];
     return (
         <div className="bg-[#FAFAFA] min-h-screen font-sans">
             {/* Hero Section (Contact Page Style) */}
@@ -49,13 +53,13 @@ export default function Safety() {
 
                 <div className="max-w-5xl mx-auto text-center relative z-10">
                     <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-5 py-2 text-sm font-semibold text-white mb-8">
-                        <span className="uppercase tracking-wider text-xs">VERIFIED TRUST PLATFORM</span>
+                        <span className="uppercase tracking-wider text-xs">{t('hero.badge')}</span>
                     </div>
 
                     <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-8">
-                        Safety Is Our <br />
+                        {t('hero.title_main')} <br />
                         <span className="text-[#FE8C34] relative inline-block">
-                            Obsession
+                            {t('hero.title_highlight')}
                             {/* Custom Underline Curve */}
                             <svg
                                 viewBox="0 0 300 20"
@@ -121,10 +125,10 @@ export default function Safety() {
                                     <div className="w-6 h-6 bg-[#10B981] rounded-full flex items-center justify-center shrink-0 shadow-sm text-white">
                                         <Check className="w-3.5 h-3.5" strokeWidth={3} />
                                     </div>
-                                    <p className="font-bold text-white text-base">100% Certified</p>
+                                    <p className="font-bold text-white text-base">{t('impact.image_card.certified')}</p>
                                 </div>
                                 <p className="text-sm text-white/80 leading-relaxed pl-1">
-                                    Every rider completes our 5-point safety training module.
+                                    {t('impact.image_card.desc')}
                                 </p>
                             </div>
                         </div>
@@ -132,26 +136,26 @@ export default function Safety() {
 
                     <div className="w-full lg:w-1/2">
                         <div className="inline-block mb-4">
-                            <span className="text-xs font-bold text-[#1C4A3C] uppercase tracking-widest">OUR IMPACT</span>
+                            <span className="text-xs font-bold text-[#1C4A3C] uppercase tracking-widest">{t('impact.badge')}</span>
                         </div>
                         <h2 className="text-4xl lg:text-5xl font-bold text-[#0A2920] mb-6 leading-[1.15]">
-                            Setting the standard for the industry.
+                            {t('impact.title')}
                         </h2>
                         <p className="text-[#6b7280] mb-12 text-lg leading-relaxed">
-                            We don't just follow safety regulations – we create them. Our standards are 2x stricter than local requirements.
+                            {t('impact.desc')}
                         </p>
 
                         <div className="space-y-8">
                             <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                                <span className="text-[#4b5563] font-medium">Incidents per million orders</span>
+                                <span className="text-[#4b5563] font-medium">{t('impact.stats.incidents')}</span>
                                 <span className="text-2xl font-bold text-[#0A2920]">&lt; 0.01%</span>
                             </div>
                             <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                                <span className="text-[#4b5563] font-medium">Rider training hours</span>
+                                <span className="text-[#4b5563] font-medium">{t('impact.stats.training')}</span>
                                 <span className="text-2xl font-bold text-[#0A2920]">45,000+</span>
                             </div>
                             <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                                <span className="text-[#4b5563] font-medium">Safety features developed</span>
+                                <span className="text-[#4b5563] font-medium">{t('impact.stats.features')}</span>
                                 <span className="text-2xl font-bold text-[#0A2920]">12</span>
                             </div>
                         </div>
@@ -169,12 +173,12 @@ export default function Safety() {
                     <div className="absolute bottom-0 right-0 w-[300px] h-[80%] bg-[#1C4A3C]/40 blur-[80px] translate-x-1/2 rounded-full" />
 
                     <div className="relative z-10 max-w-2xl mx-auto">
-                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Community Guidelines</h2>
+                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">{t('community.title')}</h2>
                         <p className="text-white/60 mb-10 text-lg">
-                            Safety is a shared responsibility. We ask everyone in our ecosystem to treat each other with respect, kindness, and patience.
+                            {t('community.desc')}
                         </p>
                         <button className="bg-white text-[#0A2920] px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-all inline-flex items-center gap-2 hover:gap-3">
-                            Read the Guidelines
+                            {t('community.button')}
                             <ArrowRight className="w-5 h-5" />
                         </button>
                     </div>

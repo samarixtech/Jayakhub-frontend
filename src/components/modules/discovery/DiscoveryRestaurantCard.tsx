@@ -17,11 +17,24 @@ export interface RestaurantProps {
   isFavorite?: boolean;
 }
 
-const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
+interface CardProps {
+  data: RestaurantProps;
+  variant?: "default" | "compact";
+  className?: string; // Allow overriding classes
+  fluid?: boolean; // If true, takes full width of container
+}
+
+const DiscoveryRestaurantCard = ({
+  data,
+  variant = "default",
+  className = "",
+  fluid = false,
+}: CardProps) => {
   const router = useRouter();
   const params = useParams();
   const country = params?.country;
   const language = params?.language;
+  const isCompact = variant === "compact";
 
   const handleClick = () => {
     if (country && language && data.slug) {
@@ -29,13 +42,18 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
     }
   };
 
+  const widthClasses = fluid || isCompact ? "w-full min-w-0" : "min-w-[300px] w-[300px]";
+
   return (
     <div
       onClick={handleClick}
-      className="group min-w-[300px] w-[300px] cursor-pointer"
+      className={`group cursor-pointer ${widthClasses} ${className}`}
     >
       {/* Image Container */}
-      <div className="relative h-47 w-full rounded-2xl overflow-hidden shadow-sm">
+      <div
+        className={`relative ${isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
+          } w-full overflow-hidden shadow-sm`}
+      >
         <img
           src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${data.image}`}
           alt={data.name}
@@ -51,9 +69,12 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
       </div>
 
       {/* Content */}
-      <div className="pt-3 space-y-1">
+      <div className={`${isCompact ? "pt-2 space-y-0.5" : "pt-3 space-y-1"}`}>
         <div className="flex justify-between items-start">
-          <h3 className="font-bold text-lg text-gray-900 truncate pr-2">
+          <h3
+            className={`${isCompact ? "text-sm" : "text-lg"
+              } font-bold text-gray-900 truncate pr-2`}
+          >
             {data.name}
           </h3>
           <div className="flex items-center gap-1 bg-green-50 px-1.5 py-0.5 rounded-md self-center">
@@ -75,16 +96,18 @@ const DiscoveryRestaurantCard = ({ data }: { data: RestaurantProps }) => {
             <Clock className="h-4 w-4 text-gray-400" />
             <span>{data.deliveryTime}</span>
           </div>
-          {data.deliveryFee === 0 ? (
-            <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
-              <Bike className="h-4 w-4" />
-              <span>Free Delivery</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 text-gray-500">
-              <Bike className="h-4 w-4 text-gray-400" />
-              <span>${data.deliveryFee} Delivery</span>
-            </div>
+          {!isCompact && (
+            data.deliveryFee === 0 ? (
+              <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
+                <Bike className="h-4 w-4" />
+                <span>Free Delivery</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-gray-500">
+                <Bike className="h-4 w-4 text-gray-400" />
+                <span>${data.deliveryFee} Delivery</span>
+              </div>
+            )
           )}
         </div>
       </div>

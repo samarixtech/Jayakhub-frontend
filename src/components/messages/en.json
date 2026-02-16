@@ -8,12 +8,173 @@
     "partners": "Partners"
   },
   "Home": {
-    "hero_title_p1": "Seamless Global",
-    "hero_title_p2": "Food Delivery Platform",
-    "hero_subtitle": "Empowering businesses worldwide with cutting-edge delivery technology and unmatched reliability",
-    "hero_cta_explore": "Explore Our Platform",
-    "hero_cta_demo": "Watch Demo",
-
+    "hero_badge": "#1 Food Delivery in Iraq",
+    "hero_title_p1": "Craving",
+    "hero_title_highlight": "Something",
+    "hero_title_p2": "Delicious?",
+    "hero_subtitle": "Order from the best restaurants in Baghdad. Fresh, hot food delivered to your door in 30 minutes or less.",
+    "hero_search_placeholder": "Enter delivery address...",
+    "hero_search_btn": "Find Food",
+    "stats": {
+      "customers": {
+        "value": "5K+",
+        "label": "Happy Customers"
+      },
+      "restaurants": {
+        "value": "15+",
+        "label": "Restaurants"
+      },
+      "delivery": {
+        "value": "30min",
+        "label": "Avg Delivery"
+      }
+    },
+    "how_it_works": {
+      "badge": "How It Works",
+      "title_prefix": "Order in",
+      "title_highlight": "3 Easy Steps",
+      "subtitle": "Getting your favorite food delivered has never been easier",
+      "steps": {
+        "step1": {
+          "title": "Set Your Location",
+          "desc": "Enter your address and discover restaurants delivering to your area."
+        },
+        "step2": {
+          "title": "Choose Your Food",
+          "desc": "Browse menus, read reviews, and pick your perfect meal."
+        },
+        "step3": {
+          "title": "Fast Delivery",
+          "desc": "Track your order in real-time and enjoy hot, fresh food."
+        }
+      },
+      "learn_more": "Learn More"
+    },
+    "featured_restaurants": {
+      "badge": "Popular Near You",
+      "title_prefix": "Top Restaurants in",
+      "title_highlight": "Baghdad",
+      "subtitle": "Discover the best local restaurants with fast delivery",
+      "view_all_btn": "View All",
+      "categories": {
+        "All": "All",
+        "Pizza": "Pizza",
+        "Burger": "Burger",
+        "Sushi": "Sushi",
+        "Kebab": "Kebab",
+        "Dessert": "Dessert"
+      },
+      "badges": {
+        "Top Rated": "Top Rated",
+        "Popular": "Popular",
+        "20% OFF": "20% OFF",
+        "New": "New",
+        "tasty": "Tasty"
+      },
+      "delivery": {
+        "Free": "Free"
+      }
+    },
+    "featured_dishes": {
+      "badge": "Trending Now",
+      "title_prefix": "Most",
+      "title_highlight": "Loved",
+      "title_suffix": "Dishes",
+      "subtitle": "Our customers can't get enough of these favorites",
+      "view_menu_btn": "View Full Menu",
+      "quick_view_btn": "Quick View",
+      "tags": {
+        "Bestseller": "Bestseller",
+        "New Arrival": "New Arrival",
+        "15% OFF": "15% OFF",
+        "Spicy": "Spicy"
+      },
+      "items": {
+        "dish1": {
+          "name": "Mixed Grill Platter",
+          "desc": "Lamb, chicken & beef kebabs with rice"
+        },
+        "dish2": {
+          "name": "Gourmet Steak",
+          "desc": "Premium ribeye with seasonal veggies"
+        },
+        "dish3": {
+          "name": "Sausage Feast",
+          "desc": "Assorted sausages with mashed potatoes"
+        },
+        "dish4": {
+          "name": "Hyderabadi Biryani",
+          "desc": "Aromatic rice with tender lamb"
+        }
+      }
+    },
+    "download_app": {
+      "badge": "Download Our App",
+      "title_prefix": "Get Food Delivered",
+      "title_highlight": "Faster",
+      "title_suffix": "on Our App",
+      "desc": "Download the Jayak Hub app for the best experience. Track your orders in real-time, get exclusive deals, and enjoy lightning-fast checkout.",
+      "features": {
+        "checkout": "Lightning-fast checkout",
+        "deals": "Exclusive app-only deals",
+        "tracking": "Real-time order tracking"
+      },
+      "buttons": {
+        "app_store_sub": "Download on the",
+        "app_store_main": "App Store",
+        "google_play_sub": "Get it on",
+        "google_play_main": "Google Play"
+      },
+      "stats": {
+        "rating_label": "Rating",
+        "reviews_label": "reviews",
+        "avg_delivery_label": "Avg delivery",
+        "active_downloads": "Active Downloads"
+      }
+    },
+    "partnership": {
+      "badge": "Partner With Us",
+      "title_prefix": "Grow With",
+      "title_highlight": "Jayak Hub",
+      "desc": "Join our platform and be part of Iraq's fastest-growing food delivery network",
+      "driver": {
+        "title": "Become a Driver",
+        "subtitle": "Earn on your schedule",
+        "desc": "Make money delivering food with your bike or car. Flexible hours, weekly payouts.",
+        "cta": "Start Earning",
+        "benefits": {
+          "earnings": "Earn up to $500/week",
+          "payouts": "Weekly payouts",
+          "drivers": "500+ active drivers"
+        }
+      },
+      "restaurant": {
+        "title": "Partner Your Restaurant",
+        "subtitle": "Grow your business",
+        "desc": "Reach thousands of new customers. Increase sales with our delivery platform.",
+        "cta": "Join Now",
+        "benefits": {
+          "sales": "30% avg. sales increase",
+          "customers": "50K+ active customers",
+          "rates": "Low commission rates"
+        }
+      },
+      "stats": {
+        "drivers": "Active Drivers",
+        "restaurants": "Restaurant Partners",
+        "orders": "Monthly Orders",
+        "cities": "Cities Covered"
+      }
+    },
+    "ai_chat_widget": {
+      "welcome_message": "Hello! I'm your Samarix AI assistant. How can I help you find the best food today?",
+      "demo_response": "I'm currently a demo version. I can't process real orders yet, but I think you'd love our sushi selection!",
+      "bot_name": "Samarix AI",
+      "status_online": "Online",
+      "assistant_label": "AI Assistant",
+      "input_placeholder": "Type a message...",
+      "powered_by": "Powered by Jayak Hub Models"
+    },
     "scroll_cards": {
       "header": {
         "title_accent": "Global",
@@ -54,269 +215,568 @@
         }
       }
     },
-
     "stat_users": "Active Users",
     "stat_partners": "Restaurant Partners",
     "stat_cities": "Cities Covered",
     "stat_deliveries": "Deliveries Completed",
-
     "features_heading": "Why Leading Businesses Choose Us",
     "features_subheading": "Cutting-edge technology meets unparalleled service excellence",
-
     "feature_global_title": "Global Reach",
     "feature_global_desc": "Operating in 50+ countries across 6 continents, connecting millions of users worldwide.",
-
     "feature_fast_title": "Lightning Fast",
     "feature_fast_desc": "Advanced logistics technology ensuring rapid delivery times and real-time tracking.",
-
     "feature_secure_title": "Secure & Reliable",
     "feature_secure_desc": "Enterprise-grade security with 99.9% uptime guaranteed for seamless operations.",
-
     "feature_network_title": "Partner Network",
     "feature_network_desc": "Connected with 100,000+ restaurant partners delivering quality food experiences.",
-
     "benefits_heading": "Enterprise-Grade Solutions",
     "benefits_subheading": "Built for scale, designed for excellence. Our platform delivers everything your business needs to thrive in the competitive food delivery landscape.",
     "benefits_cta_learn": "Learn More",
-
     "benefit_1": "Multi-platform integration capabilities",
     "benefit_2": "Real-time analytics and reporting",
     "benefit_3": "Scalable infrastructure for growth",
     "benefit_4": "24/7 dedicated support team",
     "benefit_5": "Customizable delivery solutions",
     "benefit_6": "Advanced route optimization",
-
     "trust_heading": "Trusted by Industry Leaders",
     "trust_subheading": "Powering growth for businesses worldwide",
-
     "trust_card_1_title": "Industry Recognition",
     "trust_card_1_subtitle": "Awarded Best Delivery Platform 2024",
-
     "trust_card_2_title": "Proven Growth",
     "trust_card_2_subtitle": "300% average partner revenue increase",
-
     "trust_card_3_title": "Secure Platform",
     "trust_card_3_subtitle": "ISO 27001 certified infrastructure",
-
     "corporate_heading": "Feed your team.",
     "corporate_subtitle": "Treat your talented team to their favourite meals. Let them pick! Explore **flexible corporate food delivery options** and tasty employee perks.",
     "corporate_cta": "Explore",
     "corporate_image_label": "Meals for Business"
   },
   "About": {
-    "hero_tagline": "Our Mission",
-    "hero_title_p1": "The Engine Behind",
-    "hero_title_p2": "Global Cuisine",
-    "hero_subtitle": "Connecting every craving to every kitchen, seamlessly, securely, and at lightning speed.",
-    "hero_cta": "See Our Journey",
-
-    "story_title": "Our Origin Story",
-    "story_p1": "Founded in 2018 by a team of logistics experts and food-tech enthusiasts, our company was born out of a simple idea: **food delivery should be seamless, reliable, and truly global.** We noticed the fragmentation in the market and built a platform to bridge that gap.",
-    "story_quote": "We dont just move meals; we connect communities, empower local businesses, and define the future of food logistics.",
-    "story_p2": "Today, were a leading enterprise solution, trusted by thousands of restaurants to handle millions of transactions, continuously innovating to make delivery faster, greener, and more efficient.",
-
-    "values_heading": "Defining Our Culture: Core Values",
-    "values_subheading": "The principles that guide our innovation and our commitment to our partners and users.",
-
-    "value_innovation_title": "Innovation",
-    "value_innovation_desc": "We constantly push the boundaries of logistics technology to deliver smarter solutions.",
-
-    "value_partnership_title": "Partnership",
-    "value_partnership_desc": "Success is mutual. We build strong, transparent relationships with our restaurants and users.",
-
-    "value_excellence_title": "Excellence",
-    "value_excellence_desc": "Striving for the highest quality in service delivery, security, and platform reliability.",
-
-    "value_global_title": "Global Vision",
-    "value_global_desc": "Connecting cultures and cuisines across continents with responsible and scalable growth.",
-
-    "careers_heading": "Build the Future with Us",
-    "careers_subheading": "Explore the culture and benefits that make our company a great place to grow your career.",
-
-    "slider_1_title": "Collaborative Spirit",
-    "slider_1_desc": "Work alongside brilliant minds in a supportive and fun environment where every voice matters. We foster a flat hierarchy where open discussion drives the best ideas, ensuring true product ownership.",
-    "slider_1_button": "Meet the Teams",
-
-    "slider_2_title": "Unstoppable Growth",
-    "slider_2_desc": "Dedicated budget for professional development, training, and internal promotion paths. Your ambition is our roadmap—we invest heavily in our people's future with clear advancement tracks.",
-    "slider_2_button": "Our Career Paths",
-
-    "slider_3_title": "Empowered Innovation",
-    "slider_3_desc": "We encourage daring ideas and provide the resources for you to bring your most ambitious projects to life, backed by a culture that embraces smart risk-taking and learning from failures.",
-    "slider_3_button": "Submit Your Idea",
-
-    "slider_4_title": "True Flexibility",
-    "slider_4_desc": "Enjoy hybrid and remote options that respect your life outside of work, ensuring true work-life balance and prioritizing output over clock-watching. We trust our team.",
-    "slider_4_button": "See Benefits",
-
-    "cta_tagline": "Career Opportunities",
-    "cta_title": "Ready to make an impact?",
-    "cta_subtitle": "Join a dynamic team that values **innovation, excellence, and bold thinking**. We are looking for passionate individuals ready to tackle complex challenges and redefine global delivery. Check out our open positions.",
-    "cta_button": "View Open Roles",
-    "cta_image_label": "Your Next Chapter"
-  },
-
-  "Contact": {
-    "hero_tagline": "Get in Touch",
-    "hero_title_p1": "Let’s",
-    "hero_title_p2": "Connect and Collaborate",
-    "hero_subtitle": "Whether it’s partnerships, media, or collaboration — we’re here to listen and innovate together.",
-
-    "info_heading": "Contact Information",
-    "info_subheading": "Reach out to our team — we’re here to help with partnerships, support, or general inquiries.",
-
-    "card_address_title": "Our Office",
-    "card_address_line1": "320 Decker Suite 100, Irving Texas 75062",
-
-    "card_phone_title": "Call Us",
-    "card_phone_line1": "+1 (469) 422-5944",
-    "card_phone_line2": "Mon - Fri, 9:00 AM - 6:00 PM",
-
-    "card_email_title": "Email",
-    "card_email_line1": "support@jayakhub.com",
-    "card_email_line2": "info@jayakhub.com",
-
-    "form_tagline": "Send us a message",
-    "form_title": "We’d love to hear from you 💬",
-    "form_subtitle": "Whether you have feedback, need help, or are exploring partnership opportunities, just drop us a message and our team will get back to you shortly.",
-    "form_hq_label": "Global Headquarters: Irving Texas 75062",
-
-    "field_name_label": "Name",
-    "field_name_placeholder": "Your Name",
-    "field_email_label": "Email",
-    "field_email_placeholder": "you@example.com",
-    "field_message_label": "Message",
-    "field_message_placeholder": "Write your message...",
-    "form_submit_button": "Send Message",
-
-    "form_submit_alert": "Message submitted! (Form submission logic to be implemented)"
-  },
-
-  "Partners": {
-    "hero_tagline": "Partnership Program",
-    "hero_title_p1": "Power Your Growth",
-    "hero_title_p2": "Together",
-    "hero_subtitle": "Join thousands of businesses thriving on our platform. From restaurants to tech innovators, we are building the future of delivery.",
-    "hero_cta": "Become a Partner",
-
-    "section1_title": "Access your partner dashboard anytime",
-    "section1_subtitle": "Monitor performance, track orders, manage your menu, and access real-time analytics. Our intuitive dashboard gives you complete control over your partnership.",
-    "section1_cta1": "Log in to your account",
-    "section1_cta2": "Create an account",
-
-    "section2_title": "Deliver on your schedule, maximize your earnings",
-    "section2_subtitle": "Set your own hours and choose your delivery zones. Whether you want to deliver full-time or part-time, our flexible platform adapts to your lifestyle and helps you earn more.",
-    "section2_cta1": "Get started",
-    "section2_cta2": "Already have an account? Sign in",
-
-    "section3_title": "The platform you know, reimagined for business",
-    "section3_subtitle": "Our Business Platform provides enterprise-grade tools for managing delivery operations at scale. Built for companies of any size, with dedicated support and seamless integrations.",
-    "section3_cta1": "Get started",
-    "section3_cta2": "Check out our solutions",
-
-    "benefits_heading": "Partnership Benefits",
-    "benefits_subheading": "Everything you need to succeed in the delivery ecosystem",
-    "benefit1_title": "Grow Your Business",
-    "benefit1_description": "Access millions of customers and scale your operations with our proven platform",
-    "benefit2_title": "Secure & Reliable",
-    "benefit2_description": "Enterprise-grade security and 99.9% uptime guarantee for your peace of mind",
-    "benefit3_title": "Global Reach",
-    "benefit3_description": "Expand your presence across multiple markets with our international network",
-    "benefit4_title": "Dedicated Support",
-    "benefit4_description": "24/7 partner success team to help you maximize your potential",
-
-    "network_heading": "Our Partner Network",
-    "network_subheading": "Explore businesses thriving on our platform across different industries",
-
-    "filter_all": "All",
-    "filter_restaurants": "Restaurants",
-    "filter_delivery": "Delivery",
-    "filter_technology": "Technology",
-    "filter_retail": "Retail",
-
-    "partners_list": [
-      {
-        "id": 1,
-        "name": "Gourmet Kitchen Co.",
-        "category_key": "filter_restaurants",
-        "logo": "🍽️",
-        "description": "Premium dining experiences delivered to your door",
-        "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop",
-        "stats": { "orders": "50K+", "rating": "4.8" }
-      },
-      {
-        "id": 2,
-        "name": "Swift Logistics",
-        "category_key": "filter_delivery",
-        "logo": "🚚",
-        "description": "Fast and reliable delivery fleet services",
-        "image": "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?w=600&auto=format&fit=crop",
-        "stats": { "orders": "100K+", "rating": "4.9" }
-      },
-      {
-        "id": 3,
-        "name": "TechServe Solutions",
-        "category_key": "filter_technology",
-        "logo": "💻",
-        "description": "Innovative payment and tracking systems",
-        "image": "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&auto=format&fit=crop",
-        "stats": { "orders": "200K+", "rating": "4.7" }
-      },
-      {
-        "id": 4,
-        "name": "Urban Eats",
-        "category_key": "filter_restaurants",
-        "logo": "🍕",
-        "description": "Street food and local favorites network",
-        "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop",
-        "stats": { "orders": "75K+", "rating": "4.6" }
-      },
-      {
-        "id": 5,
-        "name": "Market Fresh",
-        "category_key": "filter_retail",
-        "logo": "🛒",
-        "description": "Grocery and fresh produce partnerships",
-        "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop",
-        "stats": { "orders": "120K+", "rating": "4.8" }
-      },
-      {
-        "id": 6,
-        "name": "CloudFleet",
-        "category_key": "filter_delivery",
-        "logo": "✈️",
-        "description": "Drone and express delivery services",
-        "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop",
-        "stats": { "orders": "90K+", "rating": "4.9" }
-      },
-      {
-        "id": 7,
-        "name": "AppConnect",
-        "category_key": "filter_technology",
-        "logo": "📱",
-        "description": "Mobile integration and API solutions",
-        "image": "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=600&auto=format&fit=crop",
-        "stats": { "orders": "150K+", "rating": "4.7" }
-      },
-      {
-        "id": 8,
-        "name": "Fusion Bistro Network",
-        "category_key": "filter_restaurants",
-        "logo": "🥘",
-        "description": "International cuisine partnership program",
-        "image": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&auto=format&fit=crop",
-        "stats": { "orders": "60K+", "rating": "4.8" }
+    "hero": {
+      "badge": "Our Mission",
+      "title_p1": "The Engine Behind",
+      "title_highlight": "Global Cuisine"
+    },
+    "story": {
+      "badge": "Our Story",
+      "title": "From Baghdad to <br>the world",
+      "p1": "Founded in 2018, JayakHub was born from a simple idea: <strong>food delivery should be seamless, reliable, and accessible to everyone.</strong>",
+      "p2": "We don't just deliver meals. We connect communities, support local restaurants, and bring people together through the food they love.",
+      "p3": "Today, we're trusted by thousands of restaurants and have delivered millions of orders across Iraq."
+    },
+    "stats": {
+      "founded": "Founded",
+      "partners": "Restaurant partners",
+      "orders": "Orders delivered",
+      "cities": "Cities"
+    },
+    "values": {
+      "badge": "What we believe",
+      "title": "Our values",
+      "items": {
+        "make_it_happen": {
+          "title": "Make it happen",
+          "desc": "We move fast and take ownership. If we see a problem, we fix it."
+        },
+        "be_open": {
+          "title": "Be open",
+          "desc": "We communicate honestly and directly. Transparency builds trust."
+        },
+        "think_big": {
+          "title": "Think big",
+          "desc": "We're building something that matters. Every decision should reflect that."
+        },
+        "care_deeply": {
+          "title": "Care deeply",
+          "desc": "About our customers, our partners, our team, and the communities we serve."
+        }
       }
-    ],
-
-    "card_stat_orders": "orders",
-
-    "cta_heading": "Ready to Start Your Journey?",
-    "cta_subheading": "Join our partner network today and unlock unlimited growth potential for your business",
-    "cta_button1": "Apply Now",
-    "cta_button2": "Schedule a Demo"
+    },
+    "ecosystem": {
+      "badge": "For everyone",
+      "title": "Join the ecosystem",
+      "items": {
+        "customers": {
+          "title": "For customers",
+          "desc": "Get your favorite food delivered fast. Track your order in real-time.",
+          "cta": "Order now"
+        },
+        "restaurants": {
+          "title": "For restaurants",
+          "desc": "Reach more customers and grow your business with our platform.",
+          "cta": "Partner with us"
+        },
+        "riders": {
+          "title": "For riders",
+          "desc": "Earn money on your schedule. Be your own boss.",
+          "cta": "Start delivering"
+        }
+      }
+    }
   },
-
+  "Services": {
+    "hero": {
+      "badge": "Our Services",
+      "title_p1": "Delivering Innovation",
+      "title_highlight": "at Every Step"
+    },
+    "stats": {
+      "users": "Active Users",
+      "deliveries": "Deliveries/month",
+      "partners": "Partner Restaurants",
+      "rating": "User Rating"
+    },
+    "platform": {
+      "badge": "Our Platform",
+      "title": "Smarter Solutions for Modern Delivery",
+      "desc": "Empowering logistics with automation and clarity across all touchpoints.",
+      "features": {
+        "seamless_journey": {
+          "title": "Seamless Customer Journey",
+          "desc": "Smooth user flow from login to delivery tracking."
+        },
+        "live_tracking": {
+          "title": "Live Tracking",
+          "desc": "Real-time GPS updates and smart route optimization."
+        },
+        "smart_dashboard": {
+          "title": "Smart Restaurant Dashboard",
+          "desc": "Manage menus, orders, and analytics in one place."
+        },
+        "ai_dispatch": {
+          "title": "AI-Driven Dispatch",
+          "desc": "Reduce delivery time with predictive driver assignments."
+        },
+        "loyalty": {
+          "title": "Loyalty & Rewards",
+          "desc": "Engage users with automatic points and cashback."
+        },
+        "support": {
+          "title": "24/7 Support",
+          "desc": "AI + human support for instant issue resolution."
+        }
+      }
+    },
+    "why_choose": {
+      "badge": "Why Choose Us",
+      "title": "Built for Performance and Trust",
+      "items": {
+        "fast_apis": {
+          "title": "Fast APIs",
+          "desc": "200ms average response time globally."
+        },
+        "uptime": {
+          "title": "99.9% Uptime",
+          "desc": "Redundant servers for seamless experience."
+        },
+        "secure": {
+          "title": "Secure Infrastructure",
+          "desc": "End-to-end encryption and fraud detection."
+        }
+      }
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "title": "Flexible Plans for Every Team",
+      "desc": "Choose the plan that fits your needs and scale your delivery operations effortlessly.",
+      "button": "Choose Plan",
+      "most_popular": "Most Popular",
+      "plans": {
+        "starter": {
+          "name": "Starter",
+          "price": "Free",
+          "period": "",
+          "features": {
+            "f1": "Basic analytics",
+            "f2": "Live tracking",
+            "f3": "Email support"
+          }
+        },
+        "pro": {
+          "name": "Pro",
+          "price": "$49",
+          "period": "/mo",
+          "features": {
+            "f1": "Loyalty system",
+            "f2": "Priority support",
+            "f3": "Advanced dashboard"
+          }
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "price": "Custom",
+          "period": "",
+          "features": {
+            "f1": "Dedicated servers",
+            "f2": "24/7 SLA",
+            "f3": "Custom branding"
+          }
+        }
+      }
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "What Our Clients Say",
+      "desc": "Trusted by thousands of restaurants and logistics partners worldwide.",
+      "items": {
+        "t1": {
+          "quote": "The JAYAK HUB platform streamlined our operations instantly. Super intuitive!",
+          "name": "Alex Johnson",
+          "role": "CEO, QuickBites Inc."
+        },
+        "t2": {
+          "quote": "Incredible speed and uptime. We've never missed a delivery window.",
+          "name": "Maria Gomez",
+          "role": "CFO, Foodie Hub"
+        },
+        "t3": {
+          "quote": "The analytics dashboard is a game-changer for our business decisions.",
+          "name": "Rahul Singh",
+          "role": "Owner, Spice Route"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your <br> Delivery Business?",
+      "desc": "Join the growing community of businesses optimizing their delivery operations with JayakHub.",
+      "button": "Contact Sales"
+    }
+  },
+  "Contact": {
+    "hero": {
+      "badge": "Contact Us",
+      "title_p1": "We'd love to",
+      "title_highlight": "hear from you."
+    },
+    "info": {
+      "title": "Get in touch",
+      "chat": {
+        "title": "Chat to us",
+        "desc": "Our friendly team is here to help."
+      },
+      "visit": {
+        "title": "Visit us",
+        "desc": "Come say hello at our HQ.",
+        "address": "320 Decker Suite 100, Irving Texas 75062"
+      },
+      "call": {
+        "title": "Call us",
+        "desc": "Mon-Fri from 8am to 6pm."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "desc": "Find answers to common questions about delivery, payments, and account management.",
+      "link": "Visit Help Center"
+    },
+    "form": {
+      "title": "Send us a message",
+      "desc": "We usually respond within 24 hours.",
+      "labels": {
+        "name": "Name",
+        "email": "Email",
+        "message": "Message"
+      },
+      "placeholders": {
+        "name": "Your name",
+        "email": "you@company.com",
+        "message": "How can we help?"
+      },
+      "submit_button": "Send Message"
+    }
+  },
+  "Newsroom": {
+    "hero": {
+      "badge": "The Journal",
+      "title_p1": "Thinking",
+      "title_highlight": "Forward"
+    },
+    "featured": {
+      "category": "Technology",
+      "read_story": "Read the story"
+    },
+    "categories": {
+      "all": "All Stories",
+      "technology": "Technology",
+      "culture": "Culture",
+      "business": "Business",
+      "drivers": "Drivers"
+    },
+    "article": {
+      "read": "Read"
+    },
+    "archive_btn": "View Archive"
+  },
+  "Partners": {
+    "hero": {
+      "badge": "For Restaurant Owners",
+      "title_line1": "Grow your",
+      "title_line2": "restaurant with",
+      "title_highlight": "Jayak Hub",
+      "buttons": { "partner": "Become a Partner", "learn_more": "Learn More" },
+      "checks": { "sales": "30% avg sales boost", "marketing": "Marketing support included" },
+      "float_badge": { "growth": "Growth", "sales": "+30% Sales" }
+    },
+    "stats": {
+      "partners": "Restaurant Partners",
+      "revenue": "Avg Revenue Increase",
+      "orders": "Orders Delivered",
+      "rating": "Partner Rating"
+    },
+    "dashboard": {
+      "badge": "Partner Dashboard",
+      "title": "Built for restaurant owners",
+      "desc": "Manage your entire delivery business from a single powerful dashboard. Accept orders, update menus, and track sales effortlessly.",
+      "features": {
+        "notifications": "Instant order notifications",
+        "menu": "Menu management tools",
+        "reports": "Sales & revenue reports",
+        "feedback": "Customer feedback insights"
+      },
+      "button": "Demo the Dashboard",
+      "image_overlay": { "title": "Live Analytics", "subtitle": "Track orders in real-time" }
+    },
+    "benefits": {
+      "badge": "Why Partner With Us",
+      "title_p1": "Why Partner with",
+      "title_highlight": "JayakHub?",
+      "desc": "We provide the tools and support you need to take your restaurant to the next level",
+      "items": {
+        "revenue": { "title": "Increase Your Revenue", "desc": "Reach thousands of new customers and boost your sales by up to 30% with our platform." },
+        "reach": { "title": "Expand Your Reach", "desc": "Get discovered by hungry customers in your area looking for great food." },
+        "dashboard": { "title": "Easy-to-Use Dashboard", "desc": "Manage orders, menus, and analytics from one intuitive restaurant portal." },
+        "analytics": { "title": "Real-Time Analytics", "desc": "Track performance, understand trends, and make data-driven decisions." },
+        "hours": { "title": "Flexible Hours", "desc": "Set your own delivery hours and availability. You're in control." },
+        "support": { "title": "Dedicated Support", "desc": "24/7 partner support team ready to help you grow your business." }
+      }
+    },
+    "how_it_works": {
+      "title": "Get started in 4 steps",
+      "desc": "Join thousands of successful restaurant partners today.",
+      "steps": {
+        "signup": { "title": "Sign Up", "desc": "Fill out our simple registration form and tell us about your restaurant." },
+        "approve": { "title": "Get Approved", "desc": "Our team reviews your application and gets you onboarded within 48 hours." },
+        "menu": { "title": "Set Up Your Menu", "desc": "Add your dishes, set prices, and customize your restaurant profile." },
+        "orders": { "title": "Start Receiving Orders", "desc": "Go live and start accepting orders from customers in your area." }
+      }
+    },
+    "testimonials": {
+      "title": "Partner Success Stories",
+      "items": {
+        "t1": { "quote": "Joining JayakHub was the best decision for my restaurant. Our delivery orders tripled in the first month!", "role": "Owner, Al-Rasheed Restaurant" },
+        "t2": { "quote": "The dashboard is incredibly easy to use. I can manage everything from my phone while cooking.", "role": "Chef, Mama's Kitchen" },
+        "t3": { "quote": "Their support team is amazing. They helped us optimize our menu and increase our average order value.", "role": "Manager, Grill House" }
+      }
+    },
+    "cta": {
+      "title_p1": "Ready to grow your",
+      "title_highlight": "restaurant business?",
+      "desc": "Join the JayakHub family today and start reaching thousands of hungry customers in your area.",
+      "apply": "Apply Now",
+      "contact": "Contact Sales"
+    }
+  },
+  "Terms": {
+    "header": {
+      "title": "Terms of Service",
+      "last_updated": "Last updated: February 16, 2026",
+      "breadcrumbs": "Terms of Service"
+    },
+    "sidebar": {
+      "toc": "Table of Contents",
+      "need_assistance": "Need assistance?",
+      "contact_support": "Contact Support"
+    },
+    "alert": "Please read this document carefully. By using our services, you agree to be bound by these terms.",
+    "sections": {
+      "contractual_relationship": {
+        "title": "1. Contractual Relationship",
+        "content": "These Terms of Use (\"Terms\") govern the access or use by you, an individual, from within any country in the world of applications, websites, content, products, and services (the \"Services\") made available by Jayak Hub."
+      },
+      "the_services": {
+        "title": "2. The Services",
+        "content": "The Services constitute a technology platform that enables users of Jayak Hub's mobile applications or websites provided as part of the Services to arrange and schedule delivery services with independent third party providers of such services, including independent third party logistics providers under agreement with Jayak Hub."
+      },
+      "use_of_services": {
+        "title": "3. Your Use of the Services",
+        "content": "User Accounts. In order to use most aspects of the Services, you must register for and maintain an active personal user Services account (\"Account\"). You must be at least 18 years of age, or the age of legal majority in your jurisdiction (if different than 18), to obtain an Account."
+      },
+      "payment": {
+        "title": "4. Payment",
+        "content": "You understand that use of the Services may result in charges to you for the services or goods you receive from a Third Party Provider (\"Charges\"). After you have received services or goods obtained through your use of the Service, Jayak Hub will facilitate your payment of the applicable Charges on behalf of the Third Party Provider as such Third Party Provider's limited payment collection agent."
+      }
+    }
+  },
+  "Privacy": {
+    "header": {
+      "title": "Privacy Policy",
+      "last_updated": "Last updated: February 16, 2026",
+      "breadcrumbs": "Privacy Policy"
+    },
+    "sidebar": {
+      "toc": "Table of Contents",
+      "need_assistance": "Need assistance?",
+      "contact_support": "Contact Support"
+    },
+    "alert": "Please read this document carefully. By using our services, you agree to be bound by these terms.",
+    "sections": {
+      "info_collection": {
+        "title": "1. Information We Collect",
+        "content": "We collect information you provide directly to us, such as when you create or modify your account, request on-demand services, contact customer support, or otherwise communicate with us. This information may include: name, email, phone number, postal address, profile picture, payment method, items requested (for delivery services), delivery notes, and other information you choose to provide."
+      },
+      "use_info": {
+        "title": "2. How We Use Your Information",
+        "content": "We use the information we collect to provide, maintain, and improve our services, such as to: facilitate payments, send receipts, provide products and services you request (and send related information), develop new features, provide customer support to Users and Drivers, and send updates and administrative messages."
+      },
+      "sharing": {
+        "title": "3. Sharing of Information",
+        "content": "We may share the information we collect about you as described in this Statement or as described at the time of collection or sharing, including as follows: with Drivers to enable them to provide the Services you request; with third parties to provide you a service you requested through a partnership or promotional offering made by a third party or us; with the general public if you submit content in a public forum."
+      },
+      "data_retention": {
+        "title": "4. Data Retention",
+        "content": "We retain user data for as long as necessary for the purposes described above. This means that we retain different categories of data for different periods of time depending on the category of user to whom the data relates, the type of data, and the purposes for which we collected the data."
+      }
+    }
+  },
+  "Cookies": {
+    "header": {
+      "title": "Cookie Policy",
+      "last_updated": "Last updated: February 16, 2026",
+      "breadcrumbs": "Cookie Policy"
+    },
+    "sidebar": {
+      "toc": "Table of Contents",
+      "need_assistance": "Need assistance?",
+      "contact_support": "Contact Support"
+    },
+    "alert": "Please read this document carefully. By using our services, you agree to be bound by these terms.",
+    "sections": {
+      "what_are_cookies": {
+        "title": "1. What are Cookies?",
+        "content": "Cookies are small text files that are sent to or accessed from your web browser or your device's memory. A cookie typically contains the name of the domain (internet location) from which the cookie originated, the \"lifetime\" of the cookie (i.e., when it expires), and a randomly generated unique number or similar identifier."
+      },
+      "how_we_use_cookies": {
+        "title": "2. How We Use Cookies",
+        "content": "We use cookies and other tracking technologies for the following purposes: to properly route traffic for effective server load distribution; to speed up page loading lines; to understand how you use our services and to improve your experience."
+      },
+      "your_choices": {
+        "title": "3. Your Choices",
+        "content": "You have the right to choose whether or not to accept cookies. However, they are an important part of how our Services work, so you should be aware that if you choose to refuse or remove cookies, this could affect the availability and functionality of the Services."
+      }
+    }
+  },
+  "Help": {
+    "hero": {
+      "badge": "Support Center",
+      "title": "How can we help you today?",
+      "search_placeholder": "Search for articles...",
+      "search_button": "Search"
+    },
+    "sidebar": {
+      "title": "Browse Categories"
+    },
+    "categories": {
+      "orders": {
+        "name": "Orders",
+        "desc": "Track, cancel, or report issues."
+      },
+      "payments": {
+        "name": "Payments",
+        "desc": "Refunds, methods, and charges."
+      },
+      "account": {
+        "name": "Account",
+        "desc": "Profile, login, and settings."
+      },
+      "safety": {
+        "name": "Safety",
+        "desc": "Standards, reporting, and trust."
+      },
+      "delivery": {
+        "name": "Delivery",
+        "desc": "Fees, times, and areas."
+      },
+      "partnering": {
+        "name": "Partnering",
+        "desc": "For restaurants and stores."
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "where_is_my_order": {
+          "question": "Where is my order?",
+          "answer": "You can track your order in real-time through the \"My Orders\" section in your account. Alternatively, use the tracking link sent to your email."
+        },
+        "can_i_cancel": {
+          "question": "Can I cancel my order?",
+          "answer": "Yes, you can cancel your order within 5 minutes of placing it without any charges. After that, cancellation availability depends on the restaurant preparation status."
+        },
+        "missing_items": {
+          "question": "My order is missing items.",
+          "answer": "We apologize for the inconvenience. Please report the missing items through the \"Help\" section in your order details page, and we will process a refund or replacement immediately."
+        }
+      }
+    },
+    "contact": {
+      "title": "Did not find what you were looking for?",
+      "subtitle": "Our support team is just a click away.",
+      "chat": "Chat with us",
+      "email": "Email Support"
+    }
+  },
+  "Safety": {
+    "hero": {
+      "badge": "Verified Trust Platform",
+      "title_main": "Safety Is Our",
+      "title_highlight": "Obsession"
+    },
+    "features": {
+      "security": {
+        "title": "Bank-Grade Security",
+        "desc": "End-to-end encryption for all payments and personal data."
+      },
+      "verified": {
+        "title": "Verified Partners",
+        "desc": "Strict background checks for every driver and restaurant."
+      },
+      "monitoring": {
+        "title": "Live Monitoring",
+        "desc": "Real-time GPS tracking of every order from kitchen to door."
+      },
+      "privacy": {
+        "title": "Privacy Shield",
+        "desc": "Masked phone numbers to protect your personal contact info."
+      },
+      "zero_contact": {
+        "title": "Zero Contact",
+        "desc": "Contact-free delivery options available for every order."
+      },
+      "sos": {
+        "title": "SOS Integration",
+        "desc": "One-tap emergency assistance directly within the app."
+      }
+    },
+    "impact": {
+      "image_card": {
+        "certified": "100% Certified",
+        "desc": "Every rider completes our 5-point safety training module."
+      },
+      "badge": "Our Impact",
+      "title": "Setting the standard for the industry.",
+      "desc": "We don't just follow safety regulations – we create them. Our standards are 2x stricter than local requirements.",
+      "stats": {
+        "incidents": "Incidents per million orders",
+        "training": "Rider training hours",
+        "features": "Safety features developed"
+      }
+    },
+    "community": {
+      "title": "Community Guidelines",
+      "desc": "Safety is a shared responsibility. We ask everyone in our ecosystem to treat each other with respect, kindness, and patience.",
+      "button": "Read the Guidelines"
+    }
+  },
   "idfpHeader": {
     "topBar": {
       "appName": "IDFP",
@@ -495,7 +955,6 @@
     "reset": "Reset",
     "apply": "Apply"
   },
-
   "sortBy": {
     "title": "Sort by",
     "relevance": "Relevance",
@@ -503,7 +962,6 @@
     "topRated": "Top Rated",
     "nearest": "Nearest"
   },
-
   "quickFilters": {
     "title": "Quick Filters",
     "trending": "Trending",
@@ -514,7 +972,6 @@
     "pureVeg": "Pure Veg",
     "halal": "Halal"
   },
-
   "offers": {
     "title": "Offers",
     "freeDelivery": "Free Delivery",
@@ -522,11 +979,9 @@
     "voucherAccepted": "Voucher Accepted",
     "bogo": "Buy 1 Get 1"
   },
-
   "rating": {
     "title": "Minimum Rating"
   },
-
   "deliveryTime": {
     "title": "Delivery Time",
     "any": "Any",
@@ -534,11 +989,9 @@
     "30_45": "30-45 mins",
     "45_60": "45-60 mins"
   },
-
   "distance": {
     "title": "Distance (km)"
   },
-
   "cuisines": {
     "title": "Cuisines",
     "searchPlaceholder": "Search...",
@@ -556,7 +1009,6 @@
       "Burgers": "Burgers"
     }
   },
-
   "price": {
     "title": "Price",
     "low": "$",
@@ -594,121 +1046,6 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "cookies": "Cookie Settings"
-    }
-  },
-  "services": {
-    "hero": {
-      "title_part1": "Delivering",
-      "title_highlight": "Innovation",
-      "title_part2": "at Every Step",
-      "subtitle": "JAYAK HUB combines technology, AI, and design to make delivery smarter, faster, and effortless.",
-      "cta": "Get Started Today"
-    },
-
-    "metrics": {
-      "active_users": "Active Users",
-      "deliveries": "Deliveries/month",
-      "partners": "Partner Restaurants",
-      "rating": "User Rating"
-    },
-
-    "core": {
-      "section_title": "Smarter Solutions for Modern Delivery",
-      "section_tag": "Our Platform",
-      "section_desc": "Empowering logistics with automation and clarity across all touchpoints.",
-
-      "customer_journey": {
-        "title": "Seamless Customer Journey",
-        "desc": "Smooth user flow from login to delivery tracking."
-      },
-      "tracking": {
-        "title": "Live Tracking",
-        "desc": "Real-time GPS updates and smart route optimization."
-      },
-      "restaurant_dashboard": {
-        "title": "Smart Restaurant Dashboard",
-        "desc": "Manage menus, orders, and analytics in one place."
-      },
-      "ai_dispatch": {
-        "title": "AI-Driven Dispatch",
-        "desc": "Reduce delivery time with predictive driver assignments."
-      },
-      "loyalty": {
-        "title": "Loyalty & Rewards",
-        "desc": "Engage users with automatic points and cashback."
-      },
-      "support": {
-        "title": "24/7 Support",
-        "desc": "AI + human support for instant issue resolution."
-      }
-    },
-
-    "why_us": {
-      "tag": "Why Choose Us",
-      "title": "Built for Performance and Trust",
-
-      "fast_api": {
-        "title": "Fast APIs",
-        "desc": "200ms average response time globally."
-      },
-      "uptime": {
-        "title": "99.9% Uptime",
-        "desc": "Redundant servers for seamless experience."
-      },
-      "security": {
-        "title": "Secure Infrastructure",
-        "desc": "End-to-end encryption and fraud detection."
-      }
-    },
-
-    "pricing": {
-      "tag": "Pricing",
-      "title": "Flexible Plans for Every Team",
-      "desc": "Choose the plan that fits your needs and scale your delivery operations effortlessly.",
-
-      "starter": {
-        "name": "Starter",
-        "features": ["Basic analytics", "Live tracking", "Email support"]
-      },
-      "pro": {
-        "name": "Pro",
-        "popular": "Most Popular",
-        "features": ["Loyalty system", "Priority support", "Advanced dashboard"]
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "features": ["Dedicated servers", "24/7 SLA", "Custom branding"]
-      },
-
-      "choose_plan": "Choose Plan"
-    },
-
-    "testimonials": {
-      "tag": "Testimonials",
-      "title": "What Our Clients Say",
-      "desc": "Trusted by thousands of restaurants and logistics partners worldwide.",
-
-      "t1": {
-        "quote": "The JAYAK HUB platform streamlined our operations instantly. Super intuitive!",
-        "name": "Alex Johnson",
-        "job": "CEO, QuickBites Inc."
-      },
-      "t2": {
-        "quote": "Incredible speed and uptime. We've never missed a delivery window.",
-        "name": "Maria Gomez",
-        "job": "CFO, Foodie Hub"
-      },
-      "t3": {
-        "quote": "The analytics dashboard is a game-changer for our business decisions.",
-        "name": "Rahul Singh",
-        "job": "Owner, Spice Route"
-      }
-    },
-
-    "cta": {
-      "title": "Ready to Transform Your Delivery Business?",
-      "desc": "Join the growing community of businesses optimizing their delivery operations with IFDP.",
-      "button": "Contact Sales"
     }
   },
   "countries": {

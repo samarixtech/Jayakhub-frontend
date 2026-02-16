@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Star, Plus, Minus, Heart, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 const dishes = [
   {
@@ -54,6 +55,7 @@ const dishes = [
 ];
 
 export default function SpecialDishes() {
+  const t = useTranslations('Home.featured_dishes');
   const [isVisible, setIsVisible] = useState(false);
   const [quantities, setQuantities] = useState<Record<number, number>>({});
   const [favorites, setFavorites] = useState<number[]>([]);
@@ -107,17 +109,17 @@ export default function SpecialDishes() {
           <div>
             <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-white/10">
               <ShoppingBag className="w-4 h-4" />
-              Trending Now
+              {t('badge')}
             </span>
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Most <span className="text-accent-yellow">Loved</span> Dishes
+              {t('title_prefix')} <span className="text-accent-yellow">{t('title_highlight')}</span> {t('title_suffix')}
             </h2>
             <p className="text-white/50 max-w-lg text-lg">
-              Our customers can't get enough of these favorites
+              {t('subtitle')}
             </p>
           </div>
           <Button className="mt-6 lg:mt-0 bg-white text-primary hover:bg-white/90 px-6 py-3 rounded-full font-semibold transition-all hover:scale-105">
-            View Full Menu
+            {t('view_menu_btn')}
           </Button>
         </div>
 
@@ -141,7 +143,7 @@ export default function SpecialDishes() {
                 {/* Tag */}
                 {dish.tag && (
                   <div className={`absolute top-4 left-4 ${dish.tagColor} text-white px-3 py-1 rounded-full text-xs font-bold`}>
-                    {dish.tag}
+                    {t(`tags.${dish.tag}`)}
                   </div>
                 )}
 
@@ -161,7 +163,7 @@ export default function SpecialDishes() {
                 {/* Quick Add Overlay */}
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <Button className="bg-white text-primary hover:bg-white/90 rounded-full px-6 font-semibold transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                    Quick View
+                    {t('quick_view_btn')}
                   </Button>
                 </div>
               </div>
@@ -177,10 +179,10 @@ export default function SpecialDishes() {
 
                 {/* Name & Description */}
                 <h3 className="font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
-                  {dish.name}
+                  {t(`items.dish${dish.id}.name`)}
                 </h3>
                 <p className="text-sm text-[#64748B] mb-4 line-clamp-1">
-                  {dish.description}
+                  {t(`items.dish${dish.id}.desc`)}
                 </p>
 
                 {/* Price & Actions */}

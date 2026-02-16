@@ -1,25 +1,29 @@
 import React from 'react';
 import { Cookie, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
-const sections = [
-    {
-        id: 'what-are-cookies',
-        title: '1. What are Cookies?',
-        content: `Cookies are small text files that are sent to or accessed from your web browser or your device's memory. A cookie typically contains the name of the domain (internet location) from which the cookie originated, the "lifetime" of the cookie (i.e., when it expires), and a randomly generated unique number or similar identifier.`,
-    },
-    {
-        id: 'how-we-use-cookies',
-        title: '2. How We Use Cookies',
-        content: `We use cookies and other tracking technologies for the following purposes: to properly route traffic for effective server load distribution; to speed up page loading lines; to understand how you use our services and to improve your experience.`,
-    },
-    {
-        id: 'your-choices',
-        title: '3. Your Choices',
-        content: `You have the right to choose whether or not to accept cookies. However, they are an important part of how our Services work, so you should be aware that if you choose to refuse or remove cookies, this could affect the availability and functionality of the Services.`,
-    },
-];
+
 
 export default function Cookies() {
+    const t = useTranslations('Cookies');
+
+    const sections = [
+        {
+            id: 'what-are-cookies',
+            title: t('sections.what_are_cookies.title'),
+            content: t('sections.what_are_cookies.content'),
+        },
+        {
+            id: 'how-we-use-cookies',
+            title: t('sections.how_we_use_cookies.title'),
+            content: t('sections.how_we_use_cookies.content'),
+        },
+        {
+            id: 'your-choices',
+            title: t('sections.your_choices.title'),
+            content: t('sections.your_choices.content'),
+        },
+    ];
     const scrollToSection = (id: string, e: React.MouseEvent) => {
         e.preventDefault();
         const element = document.getElementById(id);
@@ -50,7 +54,7 @@ export default function Cookies() {
                     <nav className="flex items-center text-sm text-white/70 mb-8 space-x-2">
                         <span>Legal</span>
                         <ChevronRight className="w-4 h-4" />
-                        <span className="text-white font-medium">Cookie Policy</span>
+                        <span className="text-white font-medium">{t('header.breadcrumbs')}</span>
                     </nav>
 
                     <div className="flex flex-col md:flex-row items-start gap-6">
@@ -58,12 +62,12 @@ export default function Cookies() {
                             <Cookie className="w-8 h-8 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">Cookie Policy</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">{t('header.title')}</h1>
                             <p className="text-white/70 flex items-center gap-2 text-sm">
                                 <span className="w-4 h-4 rounded-full border border-white/30 flex items-center justify-center">
                                     <span className="text-[10px] font-serif italic">i</span>
                                 </span>
-                                Last updated: February 16, 2026
+                                {t('header.last_updated')}
                             </p>
                         </div>
                     </div>
@@ -90,7 +94,7 @@ export default function Cookies() {
                         style={{ position: 'sticky', top: '100px' }}
                     >
                         <div>
-                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Table of Contents</h2>
+                            <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">{t('sidebar.toc')}</h2>
                             <nav className="space-y-1">
                                 {sections.map((section) => (
                                     <a
@@ -105,9 +109,9 @@ export default function Cookies() {
                             </nav>
 
                             <div className="mt-10 pt-10 border-t border-gray-200">
-                                <p className="text-xs text-gray-400 mb-2">Need assistance?</p>
+                                <p className="text-xs text-gray-400 mb-2">{t('sidebar.need_assistance')}</p>
                                 <a href="/contact" className="text-sm font-bold text-[#1C4A3C] hover:underline">
-                                    Contact Support
+                                    {t('sidebar.contact_support')}
                                 </a>
                             </div>
                         </div>
@@ -118,7 +122,7 @@ export default function Cookies() {
                         {/* Alert Box */}
                         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-10">
                             <p className="text-sm text-[#1E40AF] font-medium text-center">
-                                Please read this document carefully. By using our services, you agree to be bound by these terms.
+                                {t('alert')}
                             </p>
                         </div>
 

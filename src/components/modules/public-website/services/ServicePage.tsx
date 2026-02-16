@@ -11,108 +11,121 @@ import {
     Shield,
     Server,
     Check,
-    Star,
     Quote
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-const platformFeatures = [
-    {
-        icon: Smartphone,
-        title: 'Seamless Customer Journey',
-        description: 'Smooth user flow from login to delivery tracking.',
-    },
-    {
-        icon: MapPin,
-        title: 'Live Tracking',
-        description: 'Real-time GPS updates and smart route optimization.',
-    },
-    {
-        icon: LayoutDashboard,
-        title: 'Smart Restaurant Dashboard',
-        description: 'Manage menus, orders, and analytics in one place.',
-    },
-    {
-        icon: Brain,
-        title: 'AI-Driven Dispatch',
-        description: 'Reduce delivery time with predictive driver assignments.',
-    },
-    {
-        icon: Gift,
-        title: 'Loyalty & Rewards',
-        description: 'Engage users with automatic points and cashback.',
-    },
-    {
-        icon: Headphones,
-        title: '24/7 Support',
-        description: 'AI + human support for instant issue resolution.',
-    },
-];
-
-const whyChooseUs = [
-    {
-        icon: Zap,
-        title: 'Fast APIs',
-        description: '200ms average response time globally.',
-    },
-    {
-        icon: Server,
-        title: '99.9% Uptime',
-        description: 'Redundant servers for seamless experience.',
-    },
-    {
-        icon: Shield,
-        title: 'Secure Infrastructure',
-        description: 'End-to-end encryption and fraud detection.',
-    },
-];
-
-const pricingPlans = [
-    {
-        name: 'Starter',
-        price: 'Free',
-        period: '',
-        features: ['Basic analytics', 'Live tracking', 'Email support'],
-        popular: false,
-    },
-    {
-        name: 'Pro',
-        price: '$49',
-        period: '/mo',
-        features: ['Loyalty system', 'Priority support', 'Advanced dashboard'],
-        popular: true,
-    },
-    {
-        name: 'Enterprise',
-        price: 'Custom',
-        period: '',
-        features: ['Dedicated servers', '24/7 SLA', 'Custom branding'],
-        popular: false,
-    },
-];
-
-const testimonials = [
-    {
-        quote: 'The JAYAK HUB platform streamlined our operations instantly. Super intuitive!',
-        name: 'Alex Johnson',
-        role: 'CEO, QuickBites Inc.',
-    },
-    {
-        quote: "Incredible speed and uptime. We've never missed a delivery window.",
-        name: 'Maria Gomez',
-        role: 'CFO, Foodie Hub',
-    },
-    {
-        quote: 'The analytics dashboard is a game-changer for our business decisions.',
-        name: 'Rahul Singh',
-        role: 'Owner, Spice Route',
-    },
-];
+import { useTranslations } from 'next-intl';
 
 export default function Services() {
+    const t = useTranslations('Services');
     const [isVisible, setIsVisible] = useState(false);
     const [statsVisible, setStatsVisible] = useState(false);
     const statsRef = useRef<HTMLDivElement>(null);
+
+    const platformFeatures = [
+        {
+            icon: Smartphone,
+            title: t('platform.features.seamless_journey.title'),
+            description: t('platform.features.seamless_journey.desc'),
+        },
+        {
+            icon: MapPin,
+            title: t('platform.features.live_tracking.title'),
+            description: t('platform.features.live_tracking.desc'),
+        },
+        {
+            icon: LayoutDashboard,
+            title: t('platform.features.smart_dashboard.title'),
+            description: t('platform.features.smart_dashboard.desc'),
+        },
+        {
+            icon: Brain,
+            title: t('platform.features.ai_dispatch.title'),
+            description: t('platform.features.ai_dispatch.desc'),
+        },
+        {
+            icon: Gift,
+            title: t('platform.features.loyalty.title'),
+            description: t('platform.features.loyalty.desc'),
+        },
+        {
+            icon: Headphones,
+            title: t('platform.features.support.title'),
+            description: t('platform.features.support.desc'),
+        },
+    ];
+
+    const whyChooseUs = [
+        {
+            icon: Zap,
+            title: t('why_choose.items.fast_apis.title'),
+            description: t('why_choose.items.fast_apis.desc'),
+        },
+        {
+            icon: Server,
+            title: t('why_choose.items.uptime.title'),
+            description: t('why_choose.items.uptime.desc'),
+        },
+        {
+            icon: Shield,
+            title: t('why_choose.items.secure.title'),
+            description: t('why_choose.items.secure.desc'),
+        },
+    ];
+
+    const pricingPlans = [
+        {
+            name: t('pricing.plans.starter.name'),
+            price: t('pricing.plans.starter.price'),
+            period: t('pricing.plans.starter.period'),
+            features: [
+                t('pricing.plans.starter.features.f1'),
+                t('pricing.plans.starter.features.f2'),
+                t('pricing.plans.starter.features.f3')
+            ],
+            popular: false,
+        },
+        {
+            name: t('pricing.plans.pro.name'),
+            price: t('pricing.plans.pro.price'),
+            period: t('pricing.plans.pro.period'),
+            features: [
+                t('pricing.plans.pro.features.f1'),
+                t('pricing.plans.pro.features.f2'),
+                t('pricing.plans.pro.features.f3')
+            ],
+            popular: true,
+        },
+        {
+            name: t('pricing.plans.enterprise.name'),
+            price: t('pricing.plans.enterprise.price'),
+            period: t('pricing.plans.enterprise.period'),
+            features: [
+                t('pricing.plans.enterprise.features.f1'),
+                t('pricing.plans.enterprise.features.f2'),
+                t('pricing.plans.enterprise.features.f3')
+            ],
+            popular: false,
+        },
+    ];
+
+    const testimonials = [
+        {
+            quote: t('testimonials.items.t1.quote'),
+            name: t('testimonials.items.t1.name'),
+            role: t('testimonials.items.t1.role'),
+        },
+        {
+            quote: t('testimonials.items.t2.quote'),
+            name: t('testimonials.items.t2.name'),
+            role: t('testimonials.items.t2.role'),
+        },
+        {
+            quote: t('testimonials.items.t3.quote'),
+            name: t('testimonials.items.t3.name'),
+            role: t('testimonials.items.t3.role'),
+        },
+    ];
 
     useEffect(() => {
         setIsVisible(true);
@@ -131,7 +144,6 @@ export default function Services() {
     return (
         <div className="bg-white">
             {/* ===== HERO SECTION ===== */}
-            {/* ===== HERO SECTION ===== */}
             <section className="bg-primary pt-20 pb-34 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
                 {/* Background elements */}
                 <div className="absolute inset-0 overflow-hidden">
@@ -149,13 +161,13 @@ export default function Services() {
 
                 <div className="max-w-5xl mx-auto text-center relative">
                     <span className="inline-block bg-white/10 text-white/90 text-sm font-semibold px-4 py-2 rounded-full mb-8 border border-white/10">
-                        Our Services
+                        {t('hero.badge')}
                     </span>
 
                     <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-8 flex flex-col items-center">
-                        <span>Delivering Innovation</span>
+                        <span>{t('hero.title_p1')}</span>
                         <span className="text-[#fe8c34] relative mt-2 md:mt-0">
-                            at Every Step
+                            {t('hero.title_highlight')}
                             {/* Custom Underline Curve */}
                             <svg
                                 viewBox="0 0 300 20"
@@ -189,10 +201,10 @@ export default function Services() {
                 <div className="max-w-6xl mx-auto">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
                         {[
-                            { value: '200K+', label: 'Active Users' },
-                            { value: '120K+', label: 'Deliveries/month' },
-                            { value: '9K+', label: 'Partner Restaurants' },
-                            { value: '4.9★', label: 'User Rating' },
+                            { value: '200K+', label: t('stats.users') },
+                            { value: '120K+', label: t('stats.deliveries') },
+                            { value: '9K+', label: t('stats.partners') },
+                            { value: '4.9★', label: t('stats.rating') },
                         ].map((stat, index) => (
                             <div
                                 key={stat.label}
@@ -214,13 +226,13 @@ export default function Services() {
                 <div className="max-w-6xl mx-auto">
                     <div className="max-w-2xl mb-16">
                         <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
-                            Our Platform
+                            {t('platform.badge')}
                         </span>
                         <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                            Smarter Solutions for Modern Delivery
+                            {t('platform.title')}
                         </h2>
                         <p className="text-lg text-[#64748B]">
-                            Empowering logistics with automation and clarity across all touchpoints.
+                            {t('platform.desc')}
                         </p>
                     </div>
 
@@ -246,10 +258,10 @@ export default function Services() {
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
                         <span className="inline-block bg-accent-yellow/20 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
-                            Why Choose Us
+                            {t('why_choose.badge')}
                         </span>
                         <h2 className="text-4xl sm:text-5xl font-bold text-foreground">
-                            Built for Performance and Trust
+                            {t('why_choose.title')}
                         </h2>
                     </div>
 
@@ -272,13 +284,13 @@ export default function Services() {
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
                         <span className="inline-block bg-white/10 text-white/80 text-sm font-semibold px-4 py-2 rounded-full mb-6 border border-white/10">
-                            Pricing
+                            {t('pricing.badge')}
                         </span>
                         <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-                            Flexible Plans for Every Team
+                            {t('pricing.title')}
                         </h2>
                         <p className="text-white/60 max-w-xl mx-auto">
-                            Choose the plan that fits your needs and scale your delivery operations effortlessly.
+                            {t('pricing.desc')}
                         </p>
                     </div>
 
@@ -293,7 +305,7 @@ export default function Services() {
                             >
                                 {plan.popular && (
                                     <span className="inline-block bg-accent-yellow text-primary text-xs font-bold px-3 py-1 rounded-full mb-4">
-                                        Most Popular
+                                        {t('pricing.most_popular')}
                                     </span>
                                 )}
                                 <h3 className={`text-xl font-bold mb-2 ${plan.popular ? 'text-foreground' : 'text-white'}`}>
@@ -319,7 +331,7 @@ export default function Services() {
                                         : 'bg-white/20 text-white hover:bg-white/30'
                                         }`}
                                 >
-                                    Choose Plan
+                                    {t('pricing.button')}
                                 </Button>
                             </div>
                         ))}
@@ -332,13 +344,13 @@ export default function Services() {
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">
                         <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
-                            Testimonials
+                            {t('testimonials.badge')}
                         </span>
                         <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
-                            What Our Clients Say
+                            {t('testimonials.title')}
                         </h2>
                         <p className="text-[#64748B]">
-                            Trusted by thousands of restaurants and logistics partners worldwide.
+                            {t('testimonials.desc')}
                         </p>
                     </div>
 
@@ -368,17 +380,18 @@ export default function Services() {
 
                         <div className="relative">
                             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-                                Ready to Transform Your <br />
-                                <span className="text-accent-yellow">Delivery Business?</span>
+                                {t.rich('cta.title', {
+                                    br: () => <br />
+                                })}
                             </h2>
                             <p className="text-white/60 max-w-xl mx-auto mb-10 text-lg">
-                                Join the growing community of businesses optimizing their delivery operations with JayakHub.
+                                {t('cta.desc')}
                             </p>
                             <a
                                 href="#"
                                 className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/90 transition-all hover:gap-3"
                             >
-                                Contact Sales
+                                {t('cta.button')}
                                 <ArrowRight className="w-5 h-5" />
                             </a>
                         </div>

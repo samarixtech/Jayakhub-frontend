@@ -6,19 +6,21 @@ import { MapPin, Search, Sparkles, Flame, Clock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from "@/lib/utils";
-
-const STATS = [
-    { value: '5K+', label: 'Happy Customers', icon: Star, color: 'text-[#fdde31]' },
-    { value: '15+', label: 'Restaurants', icon: Flame, color: 'text-[#ff3a44]' },
-    { value: '30min', label: 'Avg Delivery', icon: Clock, color: 'text-[#fb923c]' },
-] as const;
+import { useTranslations } from 'next-intl';
 
 export default function Hero() {
+    const t = useTranslations('Home');
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
         setIsVisible(true);
     }, []);
+
+    const STATS = [
+        { value: t('stats.customers.value'), label: t('stats.customers.label'), icon: Star, color: 'text-[#fdde31]' },
+        { value: t('stats.restaurants.value'), label: t('stats.restaurants.label'), icon: Flame, color: 'text-[#ff3a44]' },
+        { value: t('stats.delivery.value'), label: t('stats.delivery.label'), icon: Clock, color: 'text-[#fb923c]' },
+    ] as const;
 
     // Shared transition class for entrance animations
     const entryTransition = (delay: string) =>
@@ -43,23 +45,23 @@ export default function Hero() {
                     <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
                         <div className={cn("inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10", entryTransition("delay-0"))}>
                             <Sparkles className="w-4 h-4 text-orange-400" />
-                            <span className="text-sm font-medium text-white/90">#1 Food Delivery in Iraq</span>
+                            <span className="text-sm font-medium text-white/90">{t('hero_badge')}</span>
                         </div>
 
                         <h1 className={cn("text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-[1.1] lg:leading-[1.05] tracking-tight", entryTransition("delay-100"))}>
-                            Craving
+                            {t('hero_title_p1')}
                             <span className="relative inline-block mx-2 lg:mx-3 text-[#FE8C34]">
-                                Something
+                                {t('hero_title_highlight')}
                                 <svg className="absolute -bottom-1 lg:-bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none">
                                     <path d="M2 10C50 2 150 2 198 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                                 </svg>
                             </span>
-                            <br className="hidden lg:block"/>
-                            <span className="text-white/90">Delicious?</span>
+                            <br className="hidden lg:block" />
+                            <span className="text-white/90">{t('hero_title_p2')}</span>
                         </h1>
 
                         <p className={cn("text-base sm:text-lg text-white/60 max-w-xl mx-auto lg:mx-0 leading-relaxed", entryTransition("delay-200"))}>
-                            Order from the best restaurants in Baghdad. Fresh, hot food delivered to your door in 30 minutes or less.
+                            {t('hero_subtitle')}
                         </p>
 
                         {/* Search Bar */}
@@ -68,13 +70,13 @@ export default function Hero() {
                                 <div className="flex-1 flex items-center gap-2 sm:gap-3 px-3 sm:px-4">
                                     <MapPin className="w-5 h-5 text-primary shrink-0" />
                                     <Input
-                                        placeholder="Enter delivery address..."
+                                        placeholder={t('hero_search_placeholder')}
                                         className="border-none shadow-none focus-visible:ring-0 text-foreground placeholder:text-muted-foreground h-12 text-sm sm:text-base px-0"
                                     />
                                 </div>
                                 <Button size="lg" className="bg-primary hover:bg-primary-light text-white rounded-xl px-5 sm:px-8 font-semibold transition-transform hover:scale-105 shrink-0">
                                     <Search className="w-5 h-5 sm:mr-2" />
-                                    <span className="hidden sm:inline">Find Food</span>
+                                    <span className="hidden sm:inline">{t('hero_search_btn')}</span>
                                 </Button>
                             </div>
                         </div>
@@ -102,7 +104,7 @@ export default function Hero() {
                             <div className="relative w-full h-full">
                                 <div className="absolute inset-0 bg-primary/30 rounded-full blur-[40px] lg:blur-[60px] animate-pulse" />
                                 <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl animate-float">
-                                    <Image src="/DeliciousFood.png" alt="Featured Dish" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw"/>
+                                    <Image src="/DeliciousFood.png" alt="Featured Dish" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
                                 </div>
                                 {/* Ring adjusted to be tighter (-12px on mobile, -16px desktop) */}
                                 <div className="absolute inset-[-12px] lg:inset-[-16px] border-2 border-dashed border-white/10 rounded-full animate-spin-slow" />
@@ -110,19 +112,19 @@ export default function Hero() {
                         </div>
 
                         {/* Floating Items - Responsive positioning and scaling */}
-                        <FloatingCard 
-                            img="/Falafel.png" title="Falafel" price="$5.99" 
-                            className="scale-90 sm:scale-100 top-0 right-0 sm:top-10 sm:right-10" 
+                        <FloatingCard
+                            img="/Falafel.png" title="Falafel" price="$5.99"
+                            className="scale-90 sm:scale-100 top-0 right-0 sm:top-10 sm:right-10"
                         />
-                        <FloatingCard 
-                            img="/Dolma.png" title="Dolma" price="$8.99" 
-                            className="scale-90 sm:scale-100 bottom-0 left-0 sm:bottom-20 sm:left-10" 
-                            delay="1s" reverse 
+                        <FloatingCard
+                            img="/Dolma.png" title="Dolma" price="$8.99"
+                            className="scale-90 sm:scale-100 bottom-0 left-0 sm:bottom-20 sm:left-10"
+                            delay="1s" reverse
                         />
-                        <FloatingCard 
-                            img="/Tabbouleh.png" title="Tabbouleh" price="$4.99" 
-                            className="scale-90 sm:scale-100 top-1/4 -left-4 sm:top-1/3 sm:-left-5" 
-                            delay="1.5s" 
+                        <FloatingCard
+                            img="/Tabbouleh.png" title="Tabbouleh" price="$4.99"
+                            className="scale-90 sm:scale-100 top-1/4 -left-4 sm:top-1/3 sm:-left-5"
+                            delay="1.5s"
                         />
 
                         {/* Review Badge - Responsive positioning and scaling */}
