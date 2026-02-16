@@ -47,9 +47,17 @@ const LanguageSwitcher = () => {
     document.documentElement.dir = lang.dir;
 
     const newSegments = [...segments];
-    newSegments[1] = newCode;
-
-    router.push("/" + newSegments.join("/"));
+    // If we are at root /, segments might be empty, but we are protected by middleware mainly.
+    // If we are at /[country]/[lang]/..., segments[1] is lang.
+    if (newSegments.length >= 2) {
+      newSegments[1] = newCode;
+      router.push("/" + newSegments.join("/"));
+    } else {
+      // Fallback if something weird happens, though middleware should prevent this
+      router.push(
+        `/${activeLang.countryCode.toLowerCase()}/${newCode}/restaurants`,
+      );
+    }
     router.refresh();
   };
 
@@ -58,8 +66,8 @@ const LanguageSwitcher = () => {
       <DropdownMenuTrigger asChild>
         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
           <Button
-            variant="outline"
-            className="bg-white border-none hover:bg-gray-50 text-gray-700 px-4 py-5 rounded-full gap-2 h-11"
+            variant="ghost"
+            className="bg-none border-none hover:bg-white/10 text-white px-4 py-5 rounded-full gap-2 h-10"
           >
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-full overflow-hidden relative">
@@ -100,9 +108,10 @@ const LanguageSwitcher = () => {
             onClick={() => changeLanguage(l.code)}
             className={`
               relative flex items-center justify-between px-3 py-2.5 mb-1 cursor-pointer rounded-lg transition-all duration-200
-              ${l.code === activeLang.code
-                ? "bg-emerald-bg/10 text-emerald-bg font-semibold"
-                : "hover:bg-gray-100 text-gray-600 font-medium"
+              ${
+                l.code === activeLang.code
+                  ? "bg-emerald-bg/10 text-emerald-bg font-semibold"
+                  : "hover:bg-gray-100 text-gray-600 font-medium"
               }
             `}
           >

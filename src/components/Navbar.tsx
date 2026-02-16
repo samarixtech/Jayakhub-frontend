@@ -14,7 +14,6 @@ import CountrySelector from "./ui/CountrySelector";
 import ReactCountryFlag from "react-country-flag";
 import image from "./../../public/ArbicLogo (2).png";
 import image2 from "./../../public/EngLogo (2).png";
-import LocalizedLink from "./navigation/LocalizedLink";
 
 interface Language {
   code: string;
@@ -32,8 +31,8 @@ interface Country {
 }
 
 const languages: Language[] = [
-  { code: "en", name: "English", flag: "🇺🇸", countryCode: "US", dir: "ltr" },
-  { code: "ar", name: "العربية", flag: "🇮🇶", countryCode: "IQ", dir: "rtl" },
+  { code: "en", name: "en", flag: "🇺🇸", countryCode: "US", dir: "ltr" },
+  { code: "ar", name: "ar", flag: "🇮🇶", countryCode: "IQ", dir: "rtl" },
 ];
 
 const getDefaultCountryData = (code: string): Country => {
@@ -288,9 +287,14 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto  lg:px-6">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <LocalizedLink href="/home">
-            <Image src={isArabic ? image : image2} alt="Logo" width={270} />
-          </LocalizedLink>
+          <Link href="/home">
+            <Image
+              src={isArabic ? image : image2}
+              alt="Logo"
+              width={270}
+              className="w-45 md:w-[250px] h-auto"
+            />
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">

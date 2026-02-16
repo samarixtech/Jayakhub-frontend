@@ -27,7 +27,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Typography } from "@/components/ui/typography";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
+import Link from "next/link";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
@@ -199,12 +199,12 @@ export default function LoginView() {
                   )}
                 />
                 <div className="flex justify-end mt-1">
-                  <LocalizedLink
+                  <Link
                     href={`/forget-password`}
                     className="text-xs text-gray-400 hover:text-emerald-bg transition-colors font-bold"
                   >
                     Forgot Password?
-                  </LocalizedLink>
+                  </Link>
                 </div>
               </div>
 
@@ -229,12 +229,12 @@ export default function LoginView() {
             className="mt-6 text-center text-gray-600"
           >
             Don&apos;t have an account?{" "}
-            <LocalizedLink
+            <Link
               href="/register"
               className="text-emerald-bg font-bold hover:underline"
             >
               Create Account
-            </LocalizedLink>
+            </Link>
           </Typography>
         </CardContent>
       </Card>

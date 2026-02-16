@@ -31,7 +31,7 @@ import {
   SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
+import Link from "next/link";
 import { Typography } from "@/components/ui/typography";
 import {
   Collapsible,
@@ -188,9 +188,9 @@ export function RestaurantSidebar() {
                                     asChild
                                     className={`h-10 pl-12 rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/60 ${isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : ""}`}
                                   >
-                                    <LocalizedLink href={subItem.href}>
+                                    <Link href={subItem.href}>
                                       <span>{subItem.name}</span>
-                                    </LocalizedLink>
+                                    </Link>
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
                               );
@@ -215,10 +215,10 @@ export function RestaurantSidebar() {
                           : "text-sidebar-foreground/80"
                       }`}
                     >
-                      <LocalizedLink href={item.href}>
+                      <Link href={item.href}>
                         <item.icon className="w-5 h-5" />
                         <span>{item.name}</span>
-                      </LocalizedLink>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

@@ -12,15 +12,7 @@ import FloatingCart from "@/components/FloatingCart";
 import CartDrawer from "@/components/CartDrawer";
 import RestaurantSkeleton from "@/components/skeletons/RestaurantSkeleton";
 
-import {
-  Search,
-  Plus,
-  Clock,
-  ShoppingBag,
-  Star,
-  MapPin,
-  Heart,
-} from "lucide-react";
+import { Plus, Clock, Star, MapPin } from "lucide-react";
 import { useCLC } from "@/app/context/CLCContext";
 import { getCookie } from "cookies-next";
 import { useServerAction } from "@/hooks/use-server-action";
@@ -137,6 +129,7 @@ export default function RestaurantDetailsView() {
   const { execute: fetchRestaurant, isPending } = useServerAction(
     getRestaurantBySlugAction,
     {
+      suppressSuccessToast: true,
       onSuccess: (data: any) => {
         if (data) {
           setRestaurant(data.restaurant);
@@ -250,7 +243,7 @@ export default function RestaurantDetailsView() {
       {/* Hero Section */}
       <div className="w-full relative">
         <div className="h-[250px] md:h-[350px] w-full relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-10" />
           <img
             src={bannerUrl}
             alt={restaurant?.name}

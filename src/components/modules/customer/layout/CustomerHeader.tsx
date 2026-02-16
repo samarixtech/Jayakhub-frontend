@@ -15,7 +15,7 @@ import useLocale from "@/hooks/useLocals";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import LocationSwitcher from "@/components/common/LocationSwitcher";
 import UserProfile from "@/components/common/UserProfile";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +30,7 @@ const CustomerHeader = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [currentAddress, setCurrentAddress] = useState("New York, NY");
+  const [currentAddress, setCurrentAddress] = useState("Iraq, Baghdad");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -65,7 +65,7 @@ const CustomerHeader = () => {
                 className="text-white text-xs font-bold h-8 px-2 hover:bg-white/10"
                 asChild
               >
-                <LocalizedLink href={`/login`}>Login</LocalizedLink>
+                <Link href={`/login`}>Login</Link>
               </Button>
             ) : (
               <UserProfile
@@ -83,7 +83,7 @@ const CustomerHeader = () => {
           </div>
 
           <div className="flex items-center gap-4 shrink-0">
-            <LocalizedLink href="/restaurants">
+            <Link href="/restaurants">
               <Image
                 src={language === "ar" ? arabicLogo : engLogo}
                 alt="Logo"
@@ -91,7 +91,7 @@ const CustomerHeader = () => {
                 className="object-contain w-[150px] md:w-[200px]"
                 priority
               />
-            </LocalizedLink>
+            </Link>
 
             {/* Location Switcher NEXT TO LOGO on Desktop */}
             <div className="hidden md:block">
@@ -177,7 +177,7 @@ const CustomerHeader = () => {
               className="text-white text-sm font-bold h-10 px-4 hover:bg-white/10"
               asChild
             >
-              <LocalizedLink href={`/login`}>Login</LocalizedLink>
+              <Link href={`/login`}>Login</Link>
             </Button>
           ) : (
             <div className="flex items-center pl-3 ml-1 gap-3">

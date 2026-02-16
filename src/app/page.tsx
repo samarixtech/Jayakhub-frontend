@@ -3,7 +3,7 @@ import { detectLocationAction } from "@/app/actions/public/detect";
 
 export default async function HomePage() {
   // Use the server action which handles cookies and API call
-  const result = await detectLocationAction();
+  const result = await detectLocationAction(true);
 
   let country = "pk"; // Default fallback
   let language = "en";

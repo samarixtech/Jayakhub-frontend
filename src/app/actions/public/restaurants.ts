@@ -11,12 +11,10 @@ export async function getAllRestaurantsAction(params?: {
   if (lat !== undefined && lng !== undefined) {
     url = `/allResturant?lat=${lat}&lng=${lng}`;
   }
-  // console.log("🍽️ Fetching restaurants with URL:", url );
   return responseHandler(
     async () => api.get(url),
-    "Restaurants fetched successfully",
+    undefined,
     async (data) => {
-      console.log("🍽️ Restaurants response:", data);
       return data;
     },
   );
@@ -27,10 +25,8 @@ export async function getRestaurantBySlugAction(
 ): Promise<ActionResponse> {
   return responseHandler(
     async () => api.get(`/detail-with-menu/${slug}`),
-    "Restaurant fetched successfully",
+    undefined,
     async (data) => {
-      console.log(data);
-
       return data;
     },
   );

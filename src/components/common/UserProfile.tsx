@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
-import LocalizedLink from "@/components/navigation/LocalizedLink";
+import Link from "next/link";
 
 interface UserNavProps {
   user: {
@@ -82,7 +82,7 @@ const UserProfile: React.FC<UserNavProps> = ({
               alt="Profile"
               className="object-cover"
             />
-            <AvatarFallback className="bg-gradient-to-br from-[#346853] to-[#2a5443] text-white font-bold shadow-inner">
+            <AvatarFallback className="bg-linear-to-br from-[#346853] to-[#2a5443] text-white font-bold shadow-inner">
               {initials}
             </AvatarFallback>
           </Avatar>
@@ -95,7 +95,7 @@ const UserProfile: React.FC<UserNavProps> = ({
         forceMount
       >
         {/* Header Section with Gradient */}
-        <div className="bg-gradient-to-r from-[#346853] to-[#244a3b] p-6 text-white relative overflow-hidden">
+        <div className="bg-linear-to-r from-[#346853] to-[#244a3b] p-6 text-white relative overflow-hidden">
           {/* Decorative circles */}
           <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -mr-8 -mt-8 blur-xl pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full -ml-8 -mb-4 blur-xl pointer-events-none"></div>
@@ -130,7 +130,7 @@ const UserProfile: React.FC<UserNavProps> = ({
                 asChild
                 className="p-0 focus:bg-transparent"
               >
-                <LocalizedLink
+                <Link
                   href={link.href}
                   className="flex items-center w-full p-3 rounded-xl hover:bg-gray-50 focus:bg-gray-50 transition-colors group cursor-pointer outline-none"
                 >
@@ -145,7 +145,7 @@ const UserProfile: React.FC<UserNavProps> = ({
                       {link.description}
                     </span>
                   </div>
-                </LocalizedLink>
+                </Link>
               </DropdownMenuItem>
             ))}
           </DropdownMenuGroup>

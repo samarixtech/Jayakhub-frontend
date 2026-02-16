@@ -1,10 +1,17 @@
 import axios from "axios";
+import https from "https";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+const agent = new https.Agent({
+  rejectUnauthorized: process.env.NODE_ENV === "production",
+});
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-});
+  httpsAgent: agent,
+} as any);
 
 // Helper function to get token from document.cookie (client-side only)
 function getClientToken(): string | null {
