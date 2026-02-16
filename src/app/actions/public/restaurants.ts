@@ -1,5 +1,5 @@
 "use server";
-import api from "@/components/services/api";
+import { serverApi } from "@/components/services/api";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
 export async function getAllRestaurantsAction(params?: {
@@ -11,6 +11,7 @@ export async function getAllRestaurantsAction(params?: {
   if (lat !== undefined && lng !== undefined) {
     url = `/allResturant?lat=${lat}&lng=${lng}`;
   }
+  const api = await serverApi();
   return responseHandler(
     async () => api.get(url),
     undefined,
@@ -23,6 +24,7 @@ export async function getAllRestaurantsAction(params?: {
 export async function getRestaurantBySlugAction(
   slug: string,
 ): Promise<ActionResponse> {
+  const api = await serverApi();
   return responseHandler(
     async () => api.get(`/detail-with-menu/${slug}`),
     undefined,

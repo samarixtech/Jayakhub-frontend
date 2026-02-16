@@ -54,7 +54,7 @@ const CustomerHeader = () => {
   );
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 shrink-0">
+    <header className="w-full z-50 shrink-0 relative">
       <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4">
         {/* ROW 1: Auth | Logo + Location (Desktop) | Lang */}
         <div className="bg-emerald-bg px-4 py-3 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4">

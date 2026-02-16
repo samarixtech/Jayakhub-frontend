@@ -104,7 +104,7 @@ export async function serverApi() {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response) {
+      if (error.response && error.response.status !== 401) {
         console.error("API Error:", error.response.status, error.response.data);
       }
       return Promise.reject(error);

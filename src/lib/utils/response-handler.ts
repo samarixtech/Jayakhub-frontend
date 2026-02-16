@@ -41,12 +41,14 @@ export async function responseHandler<T>(
       statusCode: responseData.meta?.status || 200,
     };
   } catch (error: any) {
-    console.error("Action Error Details:", {
-      message: error.message,
-      stack: error.stack,
-      response: error.response?.data,
-      isSyntaxError: error instanceof SyntaxError,
-    });
+    if (error.response?.status !== 401) {
+      console.error("Action Error Details:", {
+        message: error.message,
+        stack: error.stack,
+        response: error.response?.data,
+        isSyntaxError: error instanceof SyntaxError,
+      });
+    }
 
     let message = "Something went wrong. Please try again.";
     let errors: string[] | undefined;
@@ -56,6 +58,14 @@ export async function responseHandler<T>(
       const errData = error.response.data;
       message = errData.meta?.message || errData.message || message;
       statusCode = errData.meta?.status || error.response.status || 500;
+
+      // Suppress 401 error logging for public pages where auth is optional
+      if (statusCode !== 401) {
+        console.error(`[ResponseHandler] Error for URL: ${error.config?.url}`, {
+          statusCode,
+          message,
+        });
+      }
 
       // If there are detailed validation errors in data
       if (errData.data && typeof errData.data.message === "string") {

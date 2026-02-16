@@ -59,9 +59,9 @@ export default function CustomerBillingView() {
           <div>
             <Typography
               variant="h2"
-              className="text-[#1F2937] font-bold text-2xl tracking-tight"
+              className="text-[#1F2937] font-black text-2xl tracking-tight"
             >
-              Payment History
+              Billing
             </Typography>
             <Typography variant="p" className="text-gray-500 text-sm mt-1">
               View your payment transactions and billing
