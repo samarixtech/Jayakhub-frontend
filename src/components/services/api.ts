@@ -9,7 +9,7 @@ const agent = new https.Agent({
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
   httpsAgent: agent,
 } as any);
 
@@ -97,7 +97,7 @@ export async function serverApi() {
 
   const instance = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 10000,
+    timeout: 30000,
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
