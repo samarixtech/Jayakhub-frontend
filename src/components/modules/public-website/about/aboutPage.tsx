@@ -84,7 +84,7 @@ export default function About() {
         <div className="max-w-6xl mx-auto">
           <div className=" rounded-3xl overflow-hidden ">
             <img
-              src="/about.png"
+              src="/new images/engine.png"
               alt="Food delivery"
               className="w-full h-full object-cover"
             />

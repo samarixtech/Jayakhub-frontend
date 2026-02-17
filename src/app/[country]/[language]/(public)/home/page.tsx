@@ -6,7 +6,7 @@ import HowItWorks from "@/components/modules/public-website/home/HowItWorks";
 import Restaurants from "@/components/modules/public-website/home/Restaurants";
 import Dishes from "@/components/modules/public-website/home/Dishes";
 import Download from "@/components/modules/public-website/home/Download";
-import Partnership from "@/components/modules/public-website/home/Partnership";
+import Partnership from "@/components/modules/public-website/home/Partners";
 
 import AIChatWidget from "@/components/modules/public-website/ai-chat-widget/AIChatWidget";
 

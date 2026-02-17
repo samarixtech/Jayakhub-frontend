@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalModal } from "@/components/common/GlobalModal";
+import { WalletSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
 import { AddCardForm } from "./add-card-form";
 import {
@@ -158,15 +159,7 @@ const PaymentCard = ({
   );
 };
 
-const CardSkeleton = () => (
-  <div className="space-y-4 w-full max-w-[380px]">
-    <Skeleton className="aspect-[1.586/1] w-full rounded-2xl" />
-    <div className="flex gap-3">
-      <Skeleton className="h-9 flex-1 rounded-xl" />
-      <Skeleton className="h-9 flex-1 rounded-xl" />
-    </div>
-  </div>
-);
+
 
 const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
   <div className="col-span-full flex flex-col items-center justify-center py-20 px-4 border-2 border-dashed border-gray-100 rounded-3xl bg-gray-50/30">
@@ -247,118 +240,118 @@ export default function WalletView() {
     setIsDeleting(false);
   };
 
+  if (isLoading) {
+    return <WalletSkeleton />;
+  }
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      {/* HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div>
-          <Typography
-            variant="h2"
-            className="text-2xl font-black text-gray-900"
+    <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
+      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 animate-in fade-in duration-500">
+        {/* HEADER */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <Typography
+              variant="h2"
+              className="text-2xl font-black text-gray-900"
+            >
+              Wallet
+            </Typography>
+            <Typography variant="p" className="text-gray-500 text-sm mt-1">
+              Manage your payment methods and billing information.
+            </Typography>
+          </div>
+
+          <GlobalModal
+            open={isFormModalOpen}
+            onOpenChange={setIsFormModalOpen}
+            title={selectedCard ? "Edit Card" : "Add New Card"}
+            trigger={
+              <Button
+                onClick={handleAdd}
+                disabled={isLoading}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full h-11 px-6 font-bold shadow-lg shadow-emerald-600/20 active:scale-95 transition-all"
+              >
+                <Plus size={18} className="mr-2" /> Add New Card
+              </Button>
+            }
           >
-            Wallet
-          </Typography>
-          <Typography variant="p" className="text-gray-500 text-sm mt-1">
-            Manage your payment methods and billing information.
-          </Typography>
+            <AddCardForm
+              card={selectedCard}
+              onSuccess={() => {
+                setIsFormModalOpen(false);
+                fetchCards();
+              }}
+              onCancel={() => setIsFormModalOpen(false)}
+            />
+          </GlobalModal>
         </div>
 
+        {/* CONTENT */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {cards.length > 0 ? (
+            cards.map((card) => (
+              <PaymentCard
+                key={card.id}
+                card={card}
+                onEdit={handleEdit}
+                onDelete={openDeleteConfirm}
+              />
+            ))
+          ) : (
+            <EmptyState onAdd={handleAdd} />
+          )}
+        </div>
+
+        {/* DELETE DIALOG */}
         <GlobalModal
-          open={isFormModalOpen}
-          onOpenChange={setIsFormModalOpen}
-          title={selectedCard ? "Edit Card" : "Add New Card"}
-          trigger={
-            <Button
-              onClick={handleAdd}
-              disabled={isLoading}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full h-11 px-6 font-bold shadow-lg shadow-emerald-600/20 active:scale-95 transition-all"
-            >
-              <Plus size={18} className="mr-2" /> Add New Card
-            </Button>
-          }
+          open={isDeleteModalOpen}
+          onOpenChange={setIsDeleteModalOpen}
+          title="Remove Payment Method"
+          description="Are you sure you want to remove this card? This action cannot be undone."
+          trigger={<span className="hidden" />}
         >
-          <AddCardForm
-            card={selectedCard}
-            onSuccess={() => {
-              setIsFormModalOpen(false);
-              fetchCards();
-            }}
-            onCancel={() => setIsFormModalOpen(false)}
-          />
+          <div className="flex flex-col items-center gap-6 py-2">
+            <div className="h-14 w-14 bg-red-50 rounded-full flex items-center justify-center">
+              <AlertTriangle className="h-7 w-7 text-red-500" />
+            </div>
+
+            <div className="w-full space-y-3">
+              {selectedCard && (
+                <div className="bg-gray-50 rounded-xl p-3 flex items-center justify-between border border-gray-100 mb-4">
+                  <span className="text-xs font-bold text-gray-500 uppercase">
+                    {selectedCard.cardType}
+                  </span>
+                  <span className="text-sm font-mono font-medium text-gray-900">
+                    •••• {selectedCard.cardNumber?.slice(-4)}
+                  </span>
+                </div>
+              )}
+
+              <Button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="w-full h-12 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold transition-all shadow-md shadow-red-500/20"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2 h-4 w-4" /> Removing...
+                  </>
+                ) : (
+                  "Yes, Remove Card"
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setIsDeleteModalOpen(false)}
+                disabled={isDeleting}
+                className="w-full h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </GlobalModal>
       </div>
-
-      {/* CONTENT */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {isLoading ? (
-          <>
-            <CardSkeleton />
-            <CardSkeleton />
-            <CardSkeleton />
-          </>
-        ) : cards.length > 0 ? (
-          cards.map((card) => (
-            <PaymentCard
-              key={card.id}
-              card={card}
-              onEdit={handleEdit}
-              onDelete={openDeleteConfirm}
-            />
-          ))
-        ) : (
-          <EmptyState onAdd={handleAdd} />
-        )}
-      </div>
-
-      {/* DELETE DIALOG */}
-      <GlobalModal
-        open={isDeleteModalOpen}
-        onOpenChange={setIsDeleteModalOpen}
-        title="Remove Payment Method"
-        description="Are you sure you want to remove this card? This action cannot be undone."
-        trigger={<span className="hidden" />}
-      >
-        <div className="flex flex-col items-center gap-6 py-2">
-          <div className="h-14 w-14 bg-red-50 rounded-full flex items-center justify-center">
-            <AlertTriangle className="h-7 w-7 text-red-500" />
-          </div>
-
-          <div className="w-full space-y-3">
-            {selectedCard && (
-              <div className="bg-gray-50 rounded-xl p-3 flex items-center justify-between border border-gray-100 mb-4">
-                <span className="text-xs font-bold text-gray-500 uppercase">
-                  {selectedCard.cardType}
-                </span>
-                <span className="text-sm font-mono font-medium text-gray-900">
-                  •••• {selectedCard.cardNumber?.slice(-4)}
-                </span>
-              </div>
-            )}
-
-            <Button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="w-full h-12 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold transition-all shadow-md shadow-red-500/20"
-            >
-              {isDeleting ? (
-                <>
-                  <Loader2 className="animate-spin mr-2 h-4 w-4" /> Removing...
-                </>
-              ) : (
-                "Yes, Remove Card"
-              )}
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setIsDeleteModalOpen(false)}
-              disabled={isDeleting}
-              className="w-full h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50"
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </GlobalModal>
     </div>
   );
 }
