@@ -16,9 +16,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { generateInvoicePDF } from "@/utils/InvoicePDF";
 
+import { PaymentHistorySkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
+
 export default function CustomerPaymentHistory() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [searchTerm, setSearchTerm] = useState("");
 
   // Pagination State
@@ -42,9 +45,14 @@ export default function CustomerPaymentHistory() {
     fetchOrders();
   }, []);
 
+  if (loading) return <PaymentHistorySkeleton />;
+
   const filteredOrders = orders.filter((order) =>
     order.orderId.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+  // ...
+
+
 
   // Pagination Logic
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
@@ -91,11 +99,10 @@ export default function CustomerPaymentHistory() {
       cell: (order) => (
         <div className="flex items-center gap-2">
           <div
-            className={`p-1.5 rounded-full ${
-              order.status === "paid" || order.status === "delivered"
-                ? "bg-emerald-100 text-emerald-600"
-                : "bg-yellow-100 text-yellow-600"
-            }`}
+            className={`p-1.5 rounded-full ${order.status === "paid" || order.status === "delivered"
+              ? "bg-emerald-100 text-emerald-600"
+              : "bg-yellow-100 text-yellow-600"
+              }`}
           >
             {order.status === "paid" || order.status === "delivered" ? (
               <ArrowUpRight size={14} />
@@ -144,13 +151,12 @@ export default function CustomerPaymentHistory() {
       header: "Status",
       cell: (order) => (
         <Badge
-          className={`rounded-full px-3 font-bold text-[10px] uppercase ${
-            order.status === "delivered" || order.status === "paid"
-              ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none"
-              : order.status === "pending"
-                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none"
-                : "bg-gray-100 text-gray-600 border-none"
-          }`}
+          className={`rounded-full px-3 font-bold text-[10px] uppercase ${order.status === "delivered" || order.status === "paid"
+            ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none"
+            : order.status === "pending"
+              ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-100 border-none"
+              : "bg-gray-100 text-gray-600 border-none"
+            }`}
         >
           {order.status}
         </Badge>
@@ -177,27 +183,27 @@ export default function CustomerPaymentHistory() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-5">
+    <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
           <div>
             <Typography
               variant="h2"
-              className="text-[#111827] font-bold text-2xl"
+              className="text-[#111827] font-bold text-xl md:text-2xl"
             >
               Payment History
             </Typography>
-            <Typography variant="small" className="text-gray-500">
+            <Typography variant="small" className="text-gray-500 text-xs md:text-sm mt-0.5 md:mt-1">
               Manage your transactions and invoices
             </Typography>
           </div>
-          <div className="flex gap-3 w-full md:w-auto">
+          <div className="flex gap-2.5 md:gap-3 w-full sm:w-auto">
             <Button
               variant="outline"
-              className="rounded-full border-gray-200 bg-white"
+              className="flex-1 sm:flex-none rounded-full border-gray-200 bg-white h-9 md:h-10 px-4 text-xs md:text-sm font-medium"
             >
-              <Filter className="h-4 w-4 mr-2" /> Filter
+              <Filter className="h-3.5 w-3.5 md:h-4 md:w-4 mr-2" /> Filter
             </Button>
           </div>
         </header>

@@ -19,6 +19,7 @@ import PaymentMethodsCard from "./payment-methods-card";
 import IdentityVerificationCard from "./kyc-verification-card";
 import SecuritySettingsCard from "./security-settings-card";
 import { ProfileData } from "@/types/customer.types";
+import { ProfileSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
 export default function CustomerProfileSettingsView() {
   const [isPending, startTransition] = useTransition();
@@ -76,12 +77,7 @@ export default function CustomerProfileSettingsView() {
     });
   };
 
-  if (!profile)
-    return (
-      <div className="flex min-h-screen w-full items-center justify-center">
-        <Loader2 className="animate-spin text-gray-500" size={32} />
-      </div>
-    );
+  if (!profile) return <ProfileSkeleton />;
 
   return (
     /**
@@ -91,7 +87,7 @@ export default function CustomerProfileSettingsView() {
      * 3. 'px-4 md:px-6 lg:px-8' ensures symmetrical padding that grows with screen size.
      */
     <div className="min-h-screen w-full bg-[#F9FAFB]">
-      <div className="max-w-[1400px] mx-auto px-4 py-6 md:px-6 lg:px-8 md:py-10">
+      <div className="max-w-[1400px] mx-auto px-0 py-4 md:px-6 lg:px-8 md:py-10">
         {/* Header Section */}
         <div className="mb-6 md:mb-8">
           <ProfileHeader

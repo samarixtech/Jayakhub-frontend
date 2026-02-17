@@ -105,21 +105,23 @@ export default function Safety() {
             </div>
 
             {/* Impact Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
-                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-                    <div className="w-full lg:w-1/2 relative h-[400px] lg:h-[500px]">
+            <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div className="flex flex-col lg:flex-row items-stretch gap-12 lg:gap-20">
+                    <div className="w-full lg:w-1/2 relative">
                         {/* Image with strong shadow */}
-                        <div className="absolute inset-0 rounded-[2.5rem] overflow-hidden shadow-2xl">
+                        {/* Yahan se h-full hata diya gaya hai */}
+                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl">
                             <img
-                                src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=2070&auto=format&fit=crop"
+                                src="/new images/safety.png"
                                 alt="Team hands together"
-                                className="w-full h-full object-cover"
+
+                                className="w-full h-auto object-contain block"
                             />
 
                             {/* Blackish shade at bottom */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                            {/* Impact Overlay Card - Smaller width */}
+                            {/* Impact Overlay Card */}
                             <div className="absolute bottom-6 left-8 w-[280px] bg-white/5 backdrop-blur-xs border border-white/20 p-5 rounded-2xl shadow-lg">
                                 <div className="flex items-center gap-3 mb-2">
                                     <div className="w-6 h-6 bg-[#10B981] rounded-full flex items-center justify-center shrink-0 shadow-sm text-white">
@@ -134,7 +136,7 @@ export default function Safety() {
                         </div>
                     </div>
 
-                    <div className="w-full lg:w-1/2">
+                    <div className="w-full lg:w-1/2 flex flex-col justify-center">
                         <div className="inline-block mb-4">
                             <span className="text-xs font-bold text-[#1C4A3C] uppercase tracking-widest">{t('impact.badge')}</span>
                         </div>

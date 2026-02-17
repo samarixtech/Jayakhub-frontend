@@ -22,6 +22,7 @@ import {
 import { toast } from "react-hot-toast";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { GlobalModal } from "@/components/common/GlobalModal";
+import { AddressesSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
 interface Address {
   id: string;
@@ -209,35 +210,39 @@ export default function CustomerAddressView() {
     },
   ];
 
+  if (loading) {
+    return <AddressesSkeleton />;
+  }
+
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-6">
+    <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
       <div className="max-w-full mx-auto">
         {/* Header Section */}
-        <header className="flex justify-between items-center mb-10">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 md:mb-10 gap-4">
           <div>
             <Typography
               variant="h2"
-              className="text-[#1F2937] font-black text-2xl tracking-tight"
+              className="text-[#1F2937] font-black text-xl md:text-2xl tracking-tight"
             >
               Addresses
             </Typography>
-            <Typography variant="p" className="text-gray-500 text-sm mt-1">
+            <Typography variant="p" className="text-gray-500 text-xs md:text-sm mt-0.5 md:mt-1">
               Manage your delivery locations
             </Typography>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full border-gray-200 bg-white"
+              className="rounded-full border-gray-200 bg-white h-10 w-10 shrink-0"
             >
               <Bell className="h-5 w-5 text-gray-500" />
             </Button>
             <Button
               onClick={handleAddNew}
-              className="rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-11 px-6 shadow-sm transition-all"
+              className="flex-1 sm:flex-none rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-10 md:h-11 px-6 shadow-sm transition-all text-xs md:text-sm font-bold"
             >
-              <Plus className="h-5 w-5" /> Add New
+              <Plus className="h-5 w-5 mr-1" /> Add New
             </Button>
           </div>
         </header>

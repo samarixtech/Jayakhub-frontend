@@ -187,12 +187,12 @@ export default function Partners() {
                         <div className={`relative hidden lg:block transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
                             <div className="relative z-10 rounded-[2.5rem] overflow-hidden border-[6px] border-white/10 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
                                 <img
-                                    src="/partner-hero.jpg"
+                                    src="/new images/grow.png"
                                     alt="Chef in kitchen"
                                     className="w-full h-auto object-cover scale-105"
                                 />
                                 {/* Floating Badge */}
-                                <div className="absolute top-8 right-8 bg-white p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-float">
+                                {/* <div className="absolute top-8 right-8 bg-white p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-float">
                                     <div className="w-10 h-10 rounded-full bg-[#E8F4F1] flex items-center justify-center">
                                         <TrendingUp className="w-5 h-5 text-[#0B5D4E]" />
                                     </div>
@@ -200,7 +200,7 @@ export default function Partners() {
                                         <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{t('hero.float_badge.growth')}</div>
                                         <div className="text-lg font-bold text-[#0B5D4E]">{t('hero.float_badge.sales')}</div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
@@ -231,7 +231,7 @@ export default function Partners() {
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <div className="relative order-2 lg:order-1">
                             <div className="relative z-10 w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white max-w-lg mx-auto lg:max-w-none rotate-1 hover:rotate-0 transition-transform duration-500">
-                                <img src="/partner-image2.jpg" alt="Restaurant Dashboard" className="w-full object-cover" />
+                                <img src="/new images/restaurant-owner.png" alt="Restaurant Dashboard" className="w-full object-cover" />
                                 {/* Overlay Gradient */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                                 <div className="absolute bottom-6 left-6 text-white">

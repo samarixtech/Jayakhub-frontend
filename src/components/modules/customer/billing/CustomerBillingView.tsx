@@ -53,30 +53,30 @@ export default function CustomerBillingView() {
   const [filter, setFilter] = useState("All");
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-5">
+    <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
       <div className="max-w-full mx-auto">
-        <header className="flex justify-between items-center mb-10">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-10 gap-4">
           <div>
             <Typography
               variant="h2"
-              className="text-[#1F2937] font-black text-2xl tracking-tight"
+              className="text-[#1F2937] font-black text-xl md:text-2xl tracking-tight"
             >
               Billing
             </Typography>
-            <Typography variant="p" className="text-gray-500 text-sm mt-1">
+            <Typography variant="p" className="text-gray-500 text-xs md:text-sm mt-0.5 md:mt-1">
               View your payment transactions and billing
             </Typography>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
               variant="outline"
               size="icon"
-              className="rounded-full border-gray-200 bg-white"
+              className="rounded-full border-gray-200 bg-white h-10 w-10 shrink-0"
             >
               <Bell className="h-5 w-5 text-gray-500" />
             </Button>
-            <Button className="rounded-full border border-gray-200 bg-white text-black h-11 px-6">
-              <DownloadIcon className="h-5 w-5" /> Export CSV
+            <Button className="flex-1 sm:flex-none rounded-full border border-gray-200 bg-white text-black h-10 md:h-11 px-6 text-xs md:text-sm font-bold">
+              <DownloadIcon className="h-4 w-4 md:h-5 md:w-5 mr-2" /> Export CSV
             </Button>
           </div>
         </header>
@@ -113,11 +113,10 @@ export default function CustomerBillingView() {
                   key={item}
                   onClick={() => setFilter(item)}
                   variant="ghost"
-                  className={`h-8 px-5 rounded-lg text-xs font-bold transition-all ${
-                    filter === item
-                      ? "bg-white text-emerald-bg shadow-sm"
-                      : "text-gray-400 hover:text-gray-600"
-                  }`}
+                  className={`h-8 px-5 rounded-lg text-xs font-bold transition-all ${filter === item
+                    ? "bg-white text-emerald-bg shadow-sm"
+                    : "text-gray-400 hover:text-gray-600"
+                    }`}
                 >
                   {item}
                 </Button>

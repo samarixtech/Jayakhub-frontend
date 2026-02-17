@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FileDown, Plus, RefreshCw, HelpCircle, Search } from "lucide-react";
+import { FileDown, Plus, RefreshCw, HelpCircle, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { OrdersSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
 // Interface based on the API response provided
 interface OrderItem {
@@ -63,6 +64,7 @@ interface OrdersResponse {
 export default function CustomerOrderHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false); // Mobile filter toggle
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -154,53 +156,55 @@ export default function CustomerOrderHistory() {
   };
 
   if (loading) {
-    return (
-      <div className="flex h-[50vh] items-center justify-center">
-        <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-gray-200"></div>
-          <div className="h-4 w-48 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-    );
+    return <OrdersSkeleton />;
   }
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-6">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
+      <div className="max-w-5xl mx-auto space-y-4 md:space-y-8">
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 md:gap-4">
           <div>
             <Typography
               variant="h2"
-              className="text-[#111827] font-black text-2xl"
+              className="text-[#111827] font-black text-xl md:text-2xl"
             >
               Orders
             </Typography>
-            <Typography variant="small" className="text-gray-500 mt-1">
+            <Typography variant="small" className="text-gray-500 mt-0.5 md:mt-1 text-xs md:text-sm">
               Track your past orders
             </Typography>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2.5 md:gap-3 w-full sm:w-auto">
+            {/* Mobile Filter Toggle */}
             <Button
               variant="outline"
-              className="rounded-full border-gray-200 bg-white text-gray-700 h-10 px-4 hover:bg-gray-50 transition-colors text-xs font-bold"
+              onClick={() => setShowFilters(!showFilters)}
+              className="md:hidden flex-1 sm:flex-none rounded-full border-gray-200 bg-white text-gray-700 h-9 px-3 hover:bg-gray-50 text-[10px] font-bold"
+            >
+              <Filter className="h-3 w-3 mr-1.5" /> Filters
+            </Button>
+
+            <Button
+              variant="outline"
+              className="hidden md:flex rounded-full border-gray-200 bg-white text-gray-700 h-10 px-4 hover:bg-gray-50 transition-colors text-xs font-bold"
             >
               <FileDown className="h-3.5 w-3.5 mr-2" /> Export CSV
             </Button>
-            <Button className="rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-10 px-5 shadow-sm transition-all text-xs font-bold">
-              <Plus className="h-3.5 w-3.5 mr-2" /> New Order
+            <Button className="flex-1 sm:flex-none rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-9 md:h-10 px-4 md:px-5 shadow-sm transition-all text-[10px] md:text-xs font-bold">
+              <Plus className="h-3 md:h-3.5 w-3 md:w-3.5 mr-1.5 md:mr-2" /> New Order
             </Button>
           </div>
         </header>
 
-        {/* Filters Bar */}
-        <div className="bg-white rounded-2xl p-2 pl-6 shadow-sm flex flex-col md:flex-row items-center gap-6 overflow-x-auto">
-          <span className="text-sm font-bold text-gray-900 shrink-0">
+        {/* Filters Bar - Responsive Visibility */}
+        <div className={`${showFilters ? 'flex' : 'hidden'} md:flex flex-col md:flex-row bg-white rounded-2xl p-4 md:p-2 md:pl-6 shadow-sm items-start md:items-center gap-4 md:gap-6 overflow-x-auto transition-all`}>
+          <span className="text-sm font-bold text-gray-900 shrink-0 mb-2 md:mb-0">
             Filters:
           </span>
 
-          <div className="flex items-center gap-6 flex-1">
-            {/* Status Checkboxes - behaving like radio for simplicity or could be multi-select */}
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-4 md:gap-6 flex-1 w-full md:w-auto">
+            {/* Status Checkboxes */}
             <div className="flex items-center gap-2">
               <Checkbox
                 id="filter-all"
@@ -247,9 +251,9 @@ export default function CustomerOrderHistory() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0 ml-auto pr-2">
+          <div className="flex items-center gap-2 shrink-0 md:ml-auto w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-gray-50">
             <Select value={dateRange} onValueChange={setDateRange}>
-              <SelectTrigger className="w-[140px] h-9 rounded-lg border-gray-200 text-xs font-bold bg-gray-50">
+              <SelectTrigger className="w-full md:w-[140px] h-9 rounded-lg border-gray-200 text-xs font-bold bg-gray-50">
                 <SelectValue placeholder="Date Range" />
               </SelectTrigger>
               <SelectContent>
@@ -329,16 +333,15 @@ export default function CustomerOrderHistory() {
                       <div
                         className={`
                                         px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider
-                                        ${
-                                          isCancelled
-                                            ? "bg-red-100 text-red-600"
-                                            : order.status.toLowerCase() ===
-                                                  "delivered" ||
-                                                order.status.toLowerCase() ===
-                                                  "paid"
-                                              ? "bg-emerald-100 text-emerald-700"
-                                              : "bg-yellow-100 text-yellow-700"
-                                        }
+                                        ${isCancelled
+                            ? "bg-red-100 text-red-600"
+                            : order.status.toLowerCase() ===
+                              "delivered" ||
+                              order.status.toLowerCase() ===
+                              "paid"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }
                                     `}
                       >
                         {!isCancelled &&
@@ -395,11 +398,10 @@ export default function CustomerOrderHistory() {
                       <PaginationLink
                         onClick={() => handlePageChange(page)}
                         isActive={currentPage === page}
-                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${
-                          currentPage === page
-                            ? "bg-emerald-bg text-white hover:bg-emerald-bg"
-                            : "text-gray-500 hover:bg-gray-100"
-                        }`}
+                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${currentPage === page
+                          ? "bg-emerald-bg text-white hover:bg-emerald-bg"
+                          : "text-gray-500 hover:bg-gray-100"
+                          }`}
                       >
                         {page}
                       </PaginationLink>
