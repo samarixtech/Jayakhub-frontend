@@ -44,7 +44,7 @@ export function LocationTab({ settings }: { settings: SettingsData | null }) {
             Email Address
           </Label>
           <Input
-            defaultValue={profile?.email || ""}
+            defaultValue={profile?.restaurantEmail || ""}
             className="h-11 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary"
           />
         </div>

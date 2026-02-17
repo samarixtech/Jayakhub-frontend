@@ -13,10 +13,23 @@ import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
 // ==================== GET USER PROFILE ====================
 export async function getProfile(): Promise<ActionResponse> {
-  return responseHandler(async () => {
-    const api = await serverApi();
-    return api.get("/me");
-  }, "Profile fetched successfully");
+  return responseHandler(
+    async () => {
+      const api = await serverApi();
+      return api.get("/me");
+    },
+    "Profile fetched successfully",
+    async (data) => {
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      const role = cookieStore.get("role")?.value;
+
+      if (role && data && typeof data === "object") {
+        return { ...data, role };
+      }
+      return data;
+    },
+  );
 }
 
 // ==================== UPDATE USER PROFILE ====================
