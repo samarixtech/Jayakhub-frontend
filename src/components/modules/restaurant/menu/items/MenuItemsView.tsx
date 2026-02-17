@@ -28,6 +28,7 @@ import { toast } from "react-hot-toast";
 import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
 import GlobalTable from "@/components/common/GlobalTable";
 import { AddItemModal } from "./AddItemModal";
+import Image from "next/image";
 
 // Mock Data for stats
 const STATS = [
@@ -252,7 +253,9 @@ export default function MenuItemsView() {
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
                       {imageUrl ? (
-                        <img
+                        <Image
+                        width={200}
+                        height={200}
                           src={imageUrl}
                           alt={item.name}
                           className="w-full h-full object-cover"

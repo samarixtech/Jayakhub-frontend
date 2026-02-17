@@ -8,6 +8,7 @@ import { X, Plus, Minus, ShoppingBag, Info, Trash2 } from "lucide-react";
 import { AppDispatch, RootState } from "@/redux/store/store";
 import { useRouter } from "next/navigation";
 import { useCLC } from "@/app/context/CLCContext";
+import Image from "next/image";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -106,7 +107,9 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                     <div key={item.id} className="flex gap-4">
                       {/* Item Image */}
                       <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-gray-100">
-                        <img
+                        <Image
+                          width={250}
+                          height={250}
                           src={item.imageUrl || "/images/placeholder-thumb.jpg"}
                           alt={item.name}
                           className="w-full h-full object-cover"

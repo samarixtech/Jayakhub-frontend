@@ -2,6 +2,7 @@
 import { Star, Clock, Bike } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter, useParams } from "next/navigation";
+import Image from "next/image";
 
 export interface RestaurantProps {
   id: string;
@@ -54,7 +55,9 @@ const DiscoveryRestaurantCard = ({
         className={`relative ${isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
           } w-full overflow-hidden shadow-sm`}
       >
-        <img
+        <Image
+          width={250}
+          height={250}
           src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${data.image}`}
           alt={data.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

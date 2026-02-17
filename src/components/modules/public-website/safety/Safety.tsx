@@ -2,7 +2,7 @@
 
 import { ArrowRight, Shield, UserCheck, Activity, Lock, Truck, Smartphone, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-
+import Image from 'next/image';
 
 
 
@@ -111,10 +111,11 @@ export default function Safety() {
                         {/* Image with strong shadow */}
                         {/* Yahan se h-full hata diya gaya hai */}
                         <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl">
-                            <img
-                                src="/new images/safety.png"
+                            <Image
+                                src="/safety.png"
                                 alt="Team hands together"
-
+                                width={250}
+                                height={250}
                                 className="w-full h-auto object-contain block"
                             />
 

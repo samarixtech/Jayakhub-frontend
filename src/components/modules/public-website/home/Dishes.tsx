@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Star, Plus, Minus, Heart, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 const dishes = [
   {
@@ -134,7 +135,9 @@ export default function SpecialDishes() {
             >
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
-                <img
+                <Image
+                  width={250}
+                  height={250}
                   src={dish.image}
                   alt={dish.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

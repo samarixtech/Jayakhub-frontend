@@ -95,7 +95,9 @@ const ArticleCard: React.FC<{ article: typeof articlesData[0] }> = ({ article })
   return (
     <Link href={article.link} className="block group rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
       <div className="relative w-full h-48 md:h-40 overflow-hidden">
-        <img 
+        <Image
+         width={200}
+         height={200}
           src={article.imageUrl} 
           alt={article.title} 
           className="group-hover:scale-105 transition-transform duration-300"

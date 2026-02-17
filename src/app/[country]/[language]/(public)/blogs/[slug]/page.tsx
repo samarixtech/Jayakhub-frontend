@@ -5,6 +5,7 @@ import { ArrowLeft, Clock, Calendar, Share2, Facebook, Twitter, Linkedin } from 
 import { articles, featuredArticle } from "@/lib/data/blogs";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function BlogPostPage() {
     const params = useParams();
@@ -64,7 +65,9 @@ export default function BlogPostPage() {
             {/* ===== FEATURED IMAGE ===== */}
             <div className="w-full h-[400px] sm:h-[500px] lg:h-[600px] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
                 <div className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-sm relative">
-                    <img
+                    <Image
+                        width={250}
+                        height={250}
                         src={post.image}
                         alt={post.title}
                         className="w-full h-full object-cover"
@@ -120,7 +123,7 @@ export default function BlogPostPage() {
                         {relatedArticles.map((article, index) => (
                             <Link href={`/${country}/${language}/blogs/${article.slug}`} key={index} className="group cursor-pointer">
                                 <div className="aspect-[16/10] bg-white rounded-2xl mb-4 border border-[#E2E8F0] overflow-hidden relative">
-                                    <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                    <Image src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                                 </div>
                                 <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">
                                     {article.title}

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 export default function About() {
   const t = useTranslations('About');
@@ -83,8 +84,10 @@ export default function About() {
       <section className="px-4 sm:px-6 lg:px-8 py-20">
         <div className="max-w-6xl mx-auto">
           <div className=" rounded-3xl overflow-hidden ">
-            <img
-              src="/new images/engine.png"
+            <Image
+              width={250}
+              height={250}
+              src="/engine.png"
               alt="Food delivery"
               className="w-full h-full object-cover"
             />
@@ -227,7 +230,9 @@ export default function About() {
             ].map((item) => (
               <div key={item.title} className="group">
                 <div className="aspect-[4/3] rounded-3xl overflow-hidden mb-6 shadow-lg group-hover:shadow-2xl transition-shadow">
-                  <img
+                  <Image
+                    width={250}
+                    height={250}
                     src={item.image}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

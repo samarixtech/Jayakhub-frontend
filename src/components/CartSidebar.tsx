@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { CartItem } from "@/types/menu.types";
 import { useCLC } from "@/app/context/CLCContext";
+import Image from "next/image";
 
 interface CartSidebarProps {
   onCheckout: () => void;
@@ -124,7 +125,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ onCheckout }) => {
         {cart.map((item: CartItem) => (
           <div key={item.id} className="flex items-start justify-between">
             <div className="flex space-x-2 w-full">
-              <img
+              <Image
+                width={250}
+                height={250}
                 src={item.imageUrl || "/images/placeholder-thumb.jpg"}
                 alt={item.name}
                 className="w-12 h-12 object-cover rounded-md"

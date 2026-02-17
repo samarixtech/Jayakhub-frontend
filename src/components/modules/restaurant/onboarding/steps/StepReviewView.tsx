@@ -10,6 +10,7 @@ import {
   Image as ImageIcon,
   Edit,
 } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
@@ -283,7 +284,9 @@ export default function StepReviewView() {
                 Logo
               </Typography>
               {data.assets?.logo ? (
-                <img
+                <Image
+                  width={200}
+                  height={200}
                   src={data.assets.logo}
                   alt="Logo"
                   className="w-24 h-24 object-cover rounded-xl border border-gray-200"
@@ -299,7 +302,9 @@ export default function StepReviewView() {
                 Banner
               </Typography>
               {data.assets?.banner ? (
-                <img
+                <Image
+                  width={200}
+                  height={200}
                   src={data.assets.banner}
                   alt="Banner"
                   className="w-full h-24 object-cover rounded-xl border border-gray-200"

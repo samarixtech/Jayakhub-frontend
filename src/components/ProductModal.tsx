@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, X, Check } from "lucide-react";
+import Image from "next/image";
 
 interface ProductModalProps {
   item: any;
@@ -94,7 +95,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
         {/* Header Image */}
         <div className="relative h-48 w-full">
-          <img
+          <Image
+          width={200}
+          height={200}
             src={item.imageUrl || item.image}
             alt={item.name}
             className="w-full h-full object-cover"

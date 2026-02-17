@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Star, Clock, Flame, ChevronRight, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 const categories = [
   { name: "All", icon: "🔥" },
@@ -180,7 +181,9 @@ export default function Restaurants() {
             >
               {/* Image Container */}
               <div className="relative h-48 md:h-52 lg:h-56 overflow-hidden">
-                <img
+                <Image
+                width={200}
+                height={200}
                   src={restaurant.image}
                   alt={restaurant.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

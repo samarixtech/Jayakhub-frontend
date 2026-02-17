@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { generateInvoicePDF } from "@/utils/InvoicePDF";
+import Image from "next/image";
 
 import { PaymentHistorySkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
@@ -80,7 +81,9 @@ export default function CustomerPaymentHistory() {
         return (
           <div className="h-10 w-10 rounded-lg bg-gray-100 overflow-hidden flex items-center justify-center">
             {imageUrl ? (
-              <img
+              <Image
+                width={250}
+                height={250}
                 src={imageUrl}
                 alt="Item"
                 className="w-full h-full object-cover"
