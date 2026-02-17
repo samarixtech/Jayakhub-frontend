@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import Header from "@/components/restaurants/Header";
+import Header from "@/components/modules/discovery/layout/Header";
 
 export default function CheckoutSkeleton() {
   return (

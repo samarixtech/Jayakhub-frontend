@@ -1,6 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FileDown, Plus, RefreshCw, HelpCircle, Search, Filter } from "lucide-react";
+import {
+  FileDown,
+  Plus,
+  RefreshCw,
+  HelpCircle,
+  Search,
+  Filter,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
@@ -79,20 +86,21 @@ export default function CustomerOrderHistory() {
       try {
         const { getAllOrders } = await import("@/app/actions/customer/order");
         const res = await getAllOrders();
-        // The API returns { success: true, data: { meta: {...}, data: { summary: {...}, orders: [...] } } }
-        // OR { success: true, data: { summary: {...}, orders: [...] } } depending on how axios + server action wraps it.
-        // Based on provided JSON: response.data = { meta: ..., data: { orders: ... } }
-        // So safe check:
-        const responseData = res.data;
-        if (
-          responseData?.data?.orders &&
-          Array.isArray(responseData.data.orders)
-        ) {
-          setOrders(responseData.data.orders);
-        } else if (responseData?.orders && Array.isArray(responseData.orders)) {
-          setOrders(responseData.orders);
-        } else if (Array.isArray(responseData)) {
-          setOrders(responseData);
+        if (res.success) {
+          const responseData = res.data as any;
+          if (
+            responseData?.data?.orders &&
+            Array.isArray(responseData.data.orders)
+          ) {
+            setOrders(responseData.data.orders);
+          } else if (
+            responseData?.orders &&
+            Array.isArray(responseData.orders)
+          ) {
+            setOrders(responseData.orders);
+          } else if (Array.isArray(responseData)) {
+            setOrders(responseData);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch orders", error);
@@ -171,7 +179,10 @@ export default function CustomerOrderHistory() {
             >
               Orders
             </Typography>
-            <Typography variant="small" className="text-gray-500 mt-0.5 md:mt-1 text-xs md:text-sm">
+            <Typography
+              variant="small"
+              className="text-gray-500 mt-0.5 md:mt-1 text-xs md:text-sm"
+            >
               Track your past orders
             </Typography>
           </div>
@@ -192,13 +203,16 @@ export default function CustomerOrderHistory() {
               <FileDown className="h-3.5 w-3.5 mr-2" /> Export CSV
             </Button>
             <Button className="flex-1 sm:flex-none rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-9 md:h-10 px-4 md:px-5 shadow-sm transition-all text-[10px] md:text-xs font-bold">
-              <Plus className="h-3 md:h-3.5 w-3 md:w-3.5 mr-1.5 md:mr-2" /> New Order
+              <Plus className="h-3 md:h-3.5 w-3 md:w-3.5 mr-1.5 md:mr-2" /> New
+              Order
             </Button>
           </div>
         </header>
 
         {/* Filters Bar - Responsive Visibility */}
-        <div className={`${showFilters ? 'flex' : 'hidden'} md:flex flex-col md:flex-row bg-white rounded-2xl p-4 md:p-2 md:pl-6 shadow-sm items-start md:items-center gap-4 md:gap-6 overflow-x-auto transition-all`}>
+        <div
+          className={`${showFilters ? "flex" : "hidden"} md:flex flex-col md:flex-row bg-white rounded-2xl p-4 md:p-2 md:pl-6 shadow-sm items-start md:items-center gap-4 md:gap-6 overflow-x-auto transition-all`}
+        >
           <span className="text-sm font-bold text-gray-900 shrink-0 mb-2 md:mb-0">
             Filters:
           </span>
@@ -256,10 +270,11 @@ export default function CustomerOrderHistory() {
               <SelectTrigger className="w-full md:w-[140px] h-9 rounded-lg border-gray-200 text-xs font-bold bg-gray-50">
                 <SelectValue placeholder="Date Range" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="30">Last 30 Days</SelectItem>
                 <SelectItem value="90">Last 3 Months</SelectItem>
                 <SelectItem value="180">Last 6 Months</SelectItem>
+                <SelectItem value="365">Last Year</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -333,15 +348,16 @@ export default function CustomerOrderHistory() {
                       <div
                         className={`
                                         px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider
-                                        ${isCancelled
-                            ? "bg-red-100 text-red-600"
-                            : order.status.toLowerCase() ===
-                              "delivered" ||
-                              order.status.toLowerCase() ===
-                              "paid"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-yellow-100 text-yellow-700"
-                          }
+                                        ${
+                                          isCancelled
+                                            ? "bg-red-100 text-red-600"
+                                            : order.status.toLowerCase() ===
+                                                  "delivered" ||
+                                                order.status.toLowerCase() ===
+                                                  "paid"
+                                              ? "bg-emerald-100 text-emerald-700"
+                                              : "bg-yellow-100 text-yellow-700"
+                                        }
                                     `}
                       >
                         {!isCancelled &&
@@ -398,10 +414,11 @@ export default function CustomerOrderHistory() {
                       <PaginationLink
                         onClick={() => handlePageChange(page)}
                         isActive={currentPage === page}
-                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${currentPage === page
-                          ? "bg-emerald-bg text-white hover:bg-emerald-bg"
-                          : "text-gray-500 hover:bg-gray-100"
-                          }`}
+                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${
+                          currentPage === page
+                            ? "bg-emerald-bg text-white hover:bg-emerald-bg"
+                            : "text-gray-500 hover:bg-gray-100"
+                        }`}
                       >
                         {page}
                       </PaginationLink>

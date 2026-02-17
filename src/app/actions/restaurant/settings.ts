@@ -53,3 +53,13 @@ export async function updateRestaurantScheduleAction(
     "/restaurant/settings/hours",
   );
 }
+
+// ==================== SET NEW PASSWORD (GOOGLE LOGIN) ====================
+export async function setNewPasswordAction(
+  password: string,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.post("/set-new-password", { password }),
+    "Password set successfully",
+  );
+}

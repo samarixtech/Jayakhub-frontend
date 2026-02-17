@@ -25,11 +25,21 @@ const languages: Language[] = [
   { code: "ar", name: "العربية", countryCode: "IQ", dir: "rtl" },
 ];
 
-const LanguageSwitcher = () => {
+interface LanguageSwitcherProps {
+  variant?: "default" | "sidebar";
+  collapsed?: boolean;
+  className?: string;
+}
+
+const LanguageSwitcher = ({
+  variant = "default",
+  collapsed = false,
+  className,
+}: LanguageSwitcherProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const segments = pathname.split("/").filter(Boolean);
+  const segments = pathname ? pathname.split("/").filter(Boolean) : [];
   const currentLangCode = segments[1] || "en";
   const activeLang =
     languages.find((l) => l.code === currentLangCode) || languages[0];
@@ -47,13 +57,10 @@ const LanguageSwitcher = () => {
     document.documentElement.dir = lang.dir;
 
     const newSegments = [...segments];
-    // If we are at root /, segments might be empty, but we are protected by middleware mainly.
-    // If we are at /[country]/[lang]/..., segments[1] is lang.
     if (newSegments.length >= 2) {
       newSegments[1] = newCode;
       router.push("/" + newSegments.join("/"));
     } else {
-      // Fallback if something weird happens, though middleware should prevent this
       router.push(
         `/${activeLang.countryCode.toLowerCase()}/${newCode}/restaurants`,
       );
@@ -61,16 +68,36 @@ const LanguageSwitcher = () => {
     router.refresh();
   };
 
+  const isSidebar = variant === "sidebar";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className={isSidebar ? "w-full" : ""}
+        >
           <Button
             variant="ghost"
-            className="bg-none border-none hover:bg-white/10 text-white px-4 py-5 rounded-full gap-2 h-10"
+            className={`
+              ${
+                isSidebar
+                  ? "w-full justify-start hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 h-11 px-4"
+                  : "bg-none border-none hover:bg-white/10 text-white px-4 py-5 rounded-full gap-2 h-10"
+              }
+              ${collapsed ? "!size-11 !p-0 justify-center" : ""}
+              ${className}
+            `}
           >
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full overflow-hidden relative">
+            <div
+              className={`flex items-center gap-2 ${collapsed ? "justify-center w-full" : ""}`}
+            >
+              <div
+                className={`rounded-full overflow-hidden relative ${
+                  isSidebar && collapsed ? "w-6 h-6" : "w-5 h-5"
+                }`}
+              >
                 <ReactCountryFlag
                   countryCode={activeLang.countryCode}
                   svg
@@ -85,11 +112,17 @@ const LanguageSwitcher = () => {
                   title={activeLang.name}
                 />
               </div>
-              <span className="font-bold tracking-wide text-xs md:text-sm">
-                {activeLang.code.toUpperCase()}
-              </span>
+              {!collapsed && (
+                <span className="font-bold tracking-wide text-xs md:text-sm">
+                  {isSidebar ? activeLang.name : activeLang.code.toUpperCase()}
+                </span>
+              )}
             </div>
-            <ChevronDown className="w-3 h-3 opacity-50 group-hover:opacity-100 group-data-[state=open]:rotate-180 transition-transform duration-300" />
+            {!collapsed && (
+              <ChevronDown
+                className={`w-3 h-3 opacity-50 group-hover:opacity-100 group-data-[state=open]:rotate-180 transition-transform duration-300 ${isSidebar ? "ml-auto" : ""}`}
+              />
+            )}
           </Button>
         </motion.div>
       </DropdownMenuTrigger>

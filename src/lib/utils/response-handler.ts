@@ -9,7 +9,7 @@ export type ActionResponse<T = any> = {
 export async function responseHandler<T>(
   apiCall: () => Promise<any>,
   successMessage?: string,
-  transformData?: (data: any) => T,
+  transformData?: (data: any) => T | Promise<T>,
 ): Promise<ActionResponse<T>> {
   try {
     const response = await apiCall();

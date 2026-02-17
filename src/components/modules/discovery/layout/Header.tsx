@@ -10,19 +10,19 @@ import { FiShoppingBag } from "react-icons/fi";
 import { RootState } from "@/redux/store/store";
 import CartDrawer from "@/components/CartDrawer";
 import useLocale from "@/hooks/useLocals";
-import LanguageSwitcher from "../common/LanguageSwitcher";
-import LocationSwitcher from "../common/LocationSwitcher";
-import UserProfile from "../common/UserProfile";
+import LanguageSwitcher from "../../../common/LanguageSwitcher";
+import LocationSwitcher from "../../../common/LocationSwitcher";
+import UserProfile from "../../../common/UserProfile";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import RestaurantsBottomNav from "../modules/discovery/restaurants/RestaurantsBottomNav";
+import RestaurantsBottomNav from "../restaurants/RestaurantsBottomNav";
 import { useDiscoveryUI } from "@/app/context/DiscoveryUIContext";
 
 // Assets
-import engLogo from "../../../public/EngLogo (2).png";
-import arabicLogo from "../../../public/ArbicLogo (2).png";
+import engLogo from "../../../../../public/EngLogo (2).png";
+import arabicLogo from "../../../../../public/ArbicLogo (2).png";
 
 const RestaurantHeader = () => {
   const { country, language } = useLocale();

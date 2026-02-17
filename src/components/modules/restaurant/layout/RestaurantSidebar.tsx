@@ -93,6 +93,7 @@ const NAV_SECTIONS = [
 import { logoutAction } from "@/app/actions/auth/auth";
 import { deleteCookie } from "cookies-next";
 import useLocale from "@/hooks/useLocals";
+import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 
 // ... imports ...
 
@@ -228,21 +229,24 @@ export function RestaurantSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="p-4 border-t border-white/10">
-        <SidebarMenu>
+      <SidebarFooter className="p-4 group-data-[collapsible=icon]:!p-0 border-t border-white/10 transition-all duration-300">
+        <SidebarMenu className="group-data-[collapsible=icon]:items-center">
           <SidebarMenuItem>
-            <SidebarMenuButton className="hover:bg-sidebar-accent text-sidebar-foreground/80 h-11">
-              <Languages className="w-5 h-5" />
-              <span>English</span>
-            </SidebarMenuButton>
+            <LanguageSwitcher
+              variant="sidebar"
+              collapsed={isCollapsed}
+              className="w-full group-data-[collapsible=icon]:w-11"
+            />
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleLogout}
-              className="hover:bg-red-500/20 text-red-300 hover:text-red-200 h-11 cursor-pointer"
+              className="hover:bg-red-500/20 text-red-300 hover:text-red-200 h-11 cursor-pointer group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:justify-center"
             >
-              <LogOut className="w-5 h-5" />
-              <span>Logout</span>
+              <LogOut className="w-5 h-5 group-data-[collapsible=icon]:!size-6" />
+              <span className="group-data-[collapsible=icon]:hidden">
+                Logout
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

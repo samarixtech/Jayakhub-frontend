@@ -44,7 +44,11 @@ export async function getCurrentOrder(orderIdFromUrl: any) {
   }
 }
 
-export async function getAllOrders() {
+export async function getAllOrders(): Promise<{
+  success: boolean;
+  data: any;
+  message?: string;
+}> {
   try {
     const api = await serverApi();
     const response = await api.get("/all-orders");
@@ -53,6 +57,7 @@ export async function getAllOrders() {
     return {
       success: false,
       message: error.message || "Failed to fetch orders",
+      data: null,
     };
   }
 }

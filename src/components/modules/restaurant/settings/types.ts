@@ -9,6 +9,9 @@ export interface ProfileData {
   profileImage: string;
   bannerImage: string;
   status: string;
+  ownerEmail?: string;
+  restaurantEmail?: string;
+  verifiedVia?: string;
 }
 
 export interface LocationData {

@@ -27,11 +27,27 @@ interface UserNavProps {
     email: string;
     avatar?: string;
     image?: string;
+    role?: string;
   } | null;
   onLogout?: () => void;
   country: string;
   language: string;
 }
+
+const ROLE_CONFIG = {
+  restaurant_owner: {
+    dashboard: "/restaurant/dashboard",
+    settings: "/restaurant/settings",
+    orders: "/restaurant/orders",
+  },
+  customer: {
+    dashboard: "/customer/dashboard",
+    settings: "/customer/profile-settings",
+    orders: "/customer/order-history",
+  },
+} as const;
+
+type UserRole = keyof typeof ROLE_CONFIG;
 
 const UserProfile: React.FC<UserNavProps> = ({ user, onLogout }) => {
   const tProfile = useTranslations("profile");
@@ -47,34 +63,26 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout }) => {
     ? user.name.charAt(0).toUpperCase()
     : user?.email?.substring(0, 2).toUpperCase() || "??";
 
+  const userRole = (user?.role as UserRole) || "customer";
+  // Default to customer if role is not found in config
+  const routes = ROLE_CONFIG[userRole] || ROLE_CONFIG["customer"];
+
   const menuItems = [
     {
-      href: "/customer/dashboard",
-      label: "Dashboard", // Using hardcoded English as per request logic, or fallback to tProfile key if exists? User said "dashboard, account settings..." in prompt. I'll use keys where possible or just text if minimal.
-      // Actually, existing code used tProfile keys. I should stick to that where possible, but for new items I might need new keys.
-      // Existing keys: link.dashboard, link.profileSettings, link.myOrders, link.logout.
-      // New: Subscription, Help Center.
-      // I'll use English text for new items to be safe if keys don't exist, or just use the English text for all to be consistent if keys are missing.
-      // Given the user specifically listed the items in English, I will use English labels for the new items and keep existing logic if keys exist or just use strings.
-      // Using tProfile for existing, string for new is safest.
+      href: routes.dashboard,
+      label: "Dashboard",
       icon: LayoutDashboard,
     },
-    // {
-    //   href: "/customer/Profile",
-    //   label: "Profile",
-    //   icon: User,
-    // },
     {
-      href: "/customer/profile-settings",
+      href: routes.settings,
       label: tProfile("link.profileSettings"),
       icon: Settings,
     },
     {
-      href: "/customer/order-history",
+      href: routes.orders,
       label: tProfile("link.myOrders"),
       icon: ShoppingBag,
     },
-
     {
       href: "/help",
       label: "Help Center",
@@ -142,7 +150,9 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout }) => {
               >
                 <item.icon className="h-4 w-4 mr-3 text-gray-500 group-hover:text-[#346853] transition-colors" />
                 <span className="font-medium text-sm group-hover:text-gray-900 transition-colors">
-                  {item.label === "Dashboard" ? tProfile("link.dashboard") : item.label}
+                  {item.label === "Dashboard"
+                    ? tProfile("link.dashboard")
+                    : item.label}
                 </span>
                 {item.label === "Subscription" && (
                   <span className="ml-auto text-[10px] bg-[#346853]/10 text-[#346853] px-1.5 py-0.5 rounded font-semibold">

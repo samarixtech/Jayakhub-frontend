@@ -1,13 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  Plus,
-  Trash2,
-  Edit2,
-  Loader2,
-  AlertTriangle,
-  CreditCard,
-} from "lucide-react";
+import { Trash2, Loader2, AlertTriangle, CreditCard } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 import { Typography } from "@/components/ui/typography";
@@ -17,7 +10,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { WalletSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
-import { AddCardForm } from "./add-card-form";
 import {
   deleteCardAction,
   getMyCardsAction,
@@ -75,11 +67,9 @@ const EmvChip = () => (
 // PAYMENT CARD COMPONENT
 const PaymentCard = ({
   card,
-  onEdit,
   onDelete,
 }: {
   card: any;
-  onEdit: (card: any) => void;
   onDelete: (card: any) => void;
 }) => {
   return (
@@ -139,14 +129,6 @@ const PaymentCard = ({
       {/* Actions */}
       <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <Button
-          onClick={() => onEdit(card)}
-          variant="outline"
-          size="sm"
-          className="flex-1 rounded-xl h-9 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-xs transition-colors shadow-sm"
-        >
-          <Edit2 className="h-3.5 w-3.5 mr-2 text-gray-500" /> Edit
-        </Button>
-        <Button
           onClick={() => onDelete(card)}
           variant="ghost"
           size="sm"
@@ -159,29 +141,8 @@ const PaymentCard = ({
   );
 };
 
-
-
-const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
-  <div className="col-span-full flex flex-col items-center justify-center py-20 px-4 border-2 border-dashed border-gray-100 rounded-3xl bg-gray-50/30">
-    <div className="h-16 w-16 bg-white rounded-full shadow-sm border border-gray-100 flex items-center justify-center mb-4">
-      <CreditCard className="h-8 w-8 text-emerald-600/50" />
-    </div>
-    <h3 className="text-lg font-bold text-gray-900 mb-1">No cards added yet</h3>
-    <p className="text-sm text-gray-500 max-w-xs text-center mb-6">
-      Add a payment method to make secure transactions and checkout faster.
-    </p>
-    <Button
-      onClick={onAdd}
-      className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-8 py-2 font-bold shadow-lg shadow-emerald-600/20"
-    >
-      Add Your First Card
-    </Button>
-  </div>
-);
-
 // MAIN COMPONENT
 export default function WalletView() {
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [cards, setCards] = useState<any[]>([]);
@@ -208,16 +169,6 @@ export default function WalletView() {
   useEffect(() => {
     fetchCards();
   }, []);
-
-  const handleEdit = (card: any) => {
-    setSelectedCard(card);
-    setIsFormModalOpen(true);
-  };
-
-  const handleAdd = () => {
-    setSelectedCard(null);
-    setIsFormModalOpen(true);
-  };
 
   const openDeleteConfirm = (card: any) => {
     setSelectedCard(card);
@@ -334,7 +285,8 @@ export default function WalletView() {
               >
                 {isDeleting ? (
                   <>
-                    <Loader2 className="animate-spin mr-2 h-4 w-4" /> Removing...
+                    <Loader2 className="animate-spin mr-2 h-4 w-4" />{" "}
+                    Removing...
                   </>
                 ) : (
                   "Yes, Remove Card"
