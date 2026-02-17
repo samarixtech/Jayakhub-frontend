@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import { FiShoppingBag } from "react-icons/fi";
 import { RootState } from "@/redux/store/store";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 // Components
 import CartDrawer from "@/components/CartDrawer";
@@ -58,6 +59,12 @@ const CustomerHeader = () => {
       <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4">
         {/* ROW 1: Auth | Logo + Location (Desktop) | Lang */}
         <div className="bg-emerald-bg px-4 py-3 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4">
+          {/* MOBILE SIDEBAR TRIGGER */}
+          <div className="md:hidden text-white">
+            <SidebarTrigger className="text-white hover:bg-white/10" />
+          </div>
+
+          {/* Existing Mobile/Desktop Logic for Auth/Logo */}
           <div className="md:hidden">
             {!isLoggedIn ? (
               <Button
