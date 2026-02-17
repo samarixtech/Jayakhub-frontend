@@ -1,6 +1,7 @@
 import { ChevronLeft, Utensils } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface OnboardingHeaderProps {
   logoPreview: string | null;
@@ -28,7 +29,9 @@ export const OnboardingHeader = ({
       )}
       <div className="h-16 w-16 bg-[#346853] rounded-2xl flex items-center justify-center mb-4 overflow-hidden relative shadow-lg shadow-emerald-900/10">
         {logoPreview ? (
-          <img
+          <Image
+            width={200}
+            height={200}
             src={logoPreview}
             alt="Restaurant Logo"
             className="h-full w-full object-cover animate-in zoom-in duration-300"

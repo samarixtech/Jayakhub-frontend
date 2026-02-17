@@ -9,6 +9,7 @@ import { Image as ImageIcon, X, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { Form } from "@/components/ui/form";
+import Image from "next/image";
 
 import {
   brandAssetsSchema,
@@ -178,7 +179,9 @@ export default function StepBrandAssetsView() {
               <div className="border border-dashed border-gray-200 bg-gray-50/50 rounded-2xl p-8 flex flex-col items-center justify-center text-center min-h-[300px] relative overflow-hidden group">
                 {logoPreview ? (
                   <>
-                    <img
+                    <Image
+                      width={200}
+                      height={200}
                       src={logoPreview}
                       alt="Logo"
                       className="absolute inset-0 w-full h-full object-cover"
@@ -259,7 +262,9 @@ export default function StepBrandAssetsView() {
               <div className="border border-dashed border-gray-200 bg-gray-50/50 rounded-2xl p-8 flex flex-col items-center justify-center text-center min-h-[300px] relative overflow-hidden group">
                 {bannerPreview ? (
                   <>
-                    <img
+                    <Image
+                      width={200}
+                      height={200}
                       src={bannerPreview}
                       alt="Banner"
                       className="absolute inset-0 w-full h-full object-cover"

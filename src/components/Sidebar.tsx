@@ -16,6 +16,7 @@ import {
   ChevronDown,
   MapPin,
 } from "lucide-react";
+import Image from "next/image";
 
 const navItems = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -204,7 +205,9 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
                 {/* Avatar color fix */}
                 <div className="w-10 h-10 bg-[#0B5D4E] rounded-full flex items-center justify-center flex-shrink-0">
                   {userData.avatar ? (
-                    <img
+                    <Image
+                      width={250}
+                      height={250}
                       src={userData.avatar}
                       alt={userData.name}
                       className="w-10 h-10 rounded-full"
@@ -254,7 +257,9 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
                     {/* Popup Avatar color fix */}
                     <div className="w-12 h-12 bg-[#0B5D4E] rounded-full flex items-center justify-center flex-shrink-0">
                       {userData.avatar ? (
-                        <img
+                        <Image
+                        width={200}
+                        height={200}
                           src={userData.avatar}
                           alt={userData.name}
                           className="w-12 h-12 rounded-full"

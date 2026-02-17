@@ -2,6 +2,7 @@ import React from "react";
 import { SimilarRestaurant } from "@/types/menu.types";
 import { Star, Clock } from "lucide-react";
 import { useCLC } from "@/app/context/CLCContext";
+import Image from "next/image";
 
 interface SimilarRestaurantCardProps {
   restaurant: SimilarRestaurant;
@@ -19,7 +20,9 @@ const SimilarRestaurantCard: React.FC<SimilarRestaurantCardProps> = ({
     >
       {/* Image and Promo Sticker */}
       <div className="relative h-40">
-        <img
+        <Image
+          width={250}
+          height={250}
           src={restaurant.imageUrl}
           alt={restaurant.name}
           className="w-full h-full object-cover"

@@ -16,7 +16,7 @@ export function NotificationsTab() {
       description: "Play a sound when a new order arrives",
       checked: orderSound,
       onChange: setOrderSound,
-    },
+    }, 
     {
       id: "email-receipts",
       title: "Email Receipts",

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { articles, featuredArticle } from '@/lib/data/blogs';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 export default function Newsroom() {
     const t = useTranslations('Newsroom');
@@ -85,7 +86,9 @@ export default function Newsroom() {
                     <Link href={getBlogUrl(featuredArticle.slug)} className="group grid lg:grid-cols-2 gap-12 items-center">
                         {/* Image Side */}
                         <div className="aspect-[4/3] lg:aspect-square bg-[#F1F5F9] rounded-3xl overflow-hidden relative border border-black/5">
-                            <img
+                            <Image
+                                width={250}
+                                height={250}
                                 src={featuredArticle.image}
                                 alt={featuredArticle.title}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -142,7 +145,9 @@ export default function Newsroom() {
                                 className="group flex flex-col h-full"
                             >
                                 <div className="aspect-[3/2] bg-[#FAFAFA] rounded-2xl overflow-hidden mb-6 border border-black/5 relative">
-                                    <img
+                                    <Image
+                                        width={250}
+                                        height={250}
                                         src={article.image}
                                         alt={article.title}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"

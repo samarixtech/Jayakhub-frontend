@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+
 
 
 
@@ -186,8 +188,10 @@ export default function Partners() {
                         {/* Right Image */}
                         <div className={`relative hidden lg:block transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
                             <div className="relative z-10 rounded-[2.5rem] overflow-hidden border-[6px] border-white/10 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
-                                <img
-                                    src="/new images/grow.png"
+                                <Image
+                                    width={250}
+                                    height={250}
+                                    src="/grow.png"
                                     alt="Chef in kitchen"
                                     className="w-full h-auto object-cover scale-105"
                                 />
@@ -231,7 +235,7 @@ export default function Partners() {
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <div className="relative order-2 lg:order-1">
                             <div className="relative z-10 w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white max-w-lg mx-auto lg:max-w-none rotate-1 hover:rotate-0 transition-transform duration-500">
-                                <img src="/new images/restaurant-owner.png" alt="Restaurant Dashboard" className="w-full object-cover" />
+                                <Image src="/restaurant-owner.png" width={200} height={200} alt="Restaurant Dashboard" className="w-full object-cover" />
                                 {/* Overlay Gradient */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                                 <div className="absolute bottom-6 left-6 text-white">

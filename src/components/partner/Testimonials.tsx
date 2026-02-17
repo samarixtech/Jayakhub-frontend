@@ -1,6 +1,7 @@
 "use client";
 
 import { FaStar } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Testimonials() {
   const testimonials = [
@@ -41,7 +42,9 @@ export default function Testimonials() {
             style={{ animation: `fadeInUp 0.5s ease forwards`, animationDelay: `${i * 0.2}s`, opacity: 0 }}
           >
             <div className="flex flex-col items-center text-center">
-              <img
+              <Image
+                width={200}
+                height={200}
                 src={item.avatar}
                 alt={item.name}
                 className="w-20 h-20 rounded-full mb-4 object-cover border-2 border-[#0B5D4E]"

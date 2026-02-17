@@ -259,7 +259,7 @@
     },
     "story": {
       "badge": "Our Story",
-      "title": "From Baghdad to <br>the world",
+      "title": "From baghdad to the world",
       "p1": "Founded in 2018, JayakHub was born from a simple idea: <strong>food delivery should be seamless, reliable, and accessible to everyone.</strong>",
       "p2": "We don't just deliver meals. We connect communities, support local restaurants, and bring people together through the food they love.",
       "p3": "Today, we're trusted by thousands of restaurants and have delivered millions of orders across Iraq."
@@ -437,16 +437,16 @@
       }
     },
     "cta": {
-      "title": "Ready to Transform Your <br> Delivery Business?",
+      "title": "Ready to Transform Your Delivery Business?",
       "desc": "Join the growing community of businesses optimizing their delivery operations with JayakHub.",
       "button": "Contact Sales"
     }
   },
   "Contact": {
     "hero": {
-      "badge": "Contact Us",
-      "title_p1": "We'd love to",
-      "title_highlight": "hear from you."
+      "badge": "GET IN TOUCH",
+      "title_p1": "We'd Love To",
+      "title_highlight": "Hear From You"
     },
     "info": {
       "title": "Get in touch",
@@ -513,9 +513,18 @@
       "title_line1": "Grow your",
       "title_line2": "restaurant with",
       "title_highlight": "Jayak Hub",
-      "buttons": { "partner": "Become a Partner", "learn_more": "Learn More" },
-      "checks": { "sales": "30% avg sales boost", "marketing": "Marketing support included" },
-      "float_badge": { "growth": "Growth", "sales": "+30% Sales" }
+      "buttons": {
+        "partner": "Become a Partner",
+        "learn_more": "Learn More"
+      },
+      "checks": {
+        "sales": "30% avg sales boost",
+        "marketing": "Marketing support included"
+      },
+      "float_badge": {
+        "growth": "Growth",
+        "sales": "+30% Sales"
+      }
     },
     "stats": {
       "partners": "Restaurant Partners",
@@ -534,7 +543,10 @@
         "feedback": "Customer feedback insights"
       },
       "button": "Demo the Dashboard",
-      "image_overlay": { "title": "Live Analytics", "subtitle": "Track orders in real-time" }
+      "image_overlay": {
+        "title": "Live Analytics",
+        "subtitle": "Track orders in real-time"
+      }
     },
     "benefits": {
       "badge": "Why Partner With Us",
@@ -542,30 +554,69 @@
       "title_highlight": "JayakHub?",
       "desc": "We provide the tools and support you need to take your restaurant to the next level",
       "items": {
-        "revenue": { "title": "Increase Your Revenue", "desc": "Reach thousands of new customers and boost your sales by up to 30% with our platform." },
-        "reach": { "title": "Expand Your Reach", "desc": "Get discovered by hungry customers in your area looking for great food." },
-        "dashboard": { "title": "Easy-to-Use Dashboard", "desc": "Manage orders, menus, and analytics from one intuitive restaurant portal." },
-        "analytics": { "title": "Real-Time Analytics", "desc": "Track performance, understand trends, and make data-driven decisions." },
-        "hours": { "title": "Flexible Hours", "desc": "Set your own delivery hours and availability. You're in control." },
-        "support": { "title": "Dedicated Support", "desc": "24/7 partner support team ready to help you grow your business." }
+        "revenue": {
+          "title": "Increase Your Revenue",
+          "desc": "Reach thousands of new customers and boost your sales by up to 30% with our platform."
+        },
+        "reach": {
+          "title": "Expand Your Reach",
+          "desc": "Get discovered by hungry customers in your area looking for great food."
+        },
+        "dashboard": {
+          "title": "Easy-to-Use Dashboard",
+          "desc": "Manage orders, menus, and analytics from one intuitive restaurant portal."
+        },
+        "analytics": {
+          "title": "Real-Time Analytics",
+          "desc": "Track performance, understand trends, and make data-driven decisions."
+        },
+        "hours": {
+          "title": "Flexible Hours",
+          "desc": "Set your own delivery hours and availability. You're in control."
+        },
+        "support": {
+          "title": "Dedicated Support",
+          "desc": "24/7 partner support team ready to help you grow your business."
+        }
       }
     },
     "how_it_works": {
       "title": "Get started in 4 steps",
       "desc": "Join thousands of successful restaurant partners today.",
       "steps": {
-        "signup": { "title": "Sign Up", "desc": "Fill out our simple registration form and tell us about your restaurant." },
-        "approve": { "title": "Get Approved", "desc": "Our team reviews your application and gets you onboarded within 48 hours." },
-        "menu": { "title": "Set Up Your Menu", "desc": "Add your dishes, set prices, and customize your restaurant profile." },
-        "orders": { "title": "Start Receiving Orders", "desc": "Go live and start accepting orders from customers in your area." }
+        "signup": {
+          "title": "Sign Up",
+          "desc": "Fill out our simple registration form and tell us about your restaurant."
+        },
+        "approve": {
+          "title": "Get Approved",
+          "desc": "Our team reviews your application and gets you onboarded within 48 hours."
+        },
+        "menu": {
+          "title": "Set Up Your Menu",
+          "desc": "Add your dishes, set prices, and customize your restaurant profile."
+        },
+        "orders": {
+          "title": "Start Receiving Orders",
+          "desc": "Go live and start accepting orders from customers in your area."
+        }
       }
     },
     "testimonials": {
       "title": "Partner Success Stories",
       "items": {
-        "t1": { "quote": "Joining JayakHub was the best decision for my restaurant. Our delivery orders tripled in the first month!", "role": "Owner, Al-Rasheed Restaurant" },
-        "t2": { "quote": "The dashboard is incredibly easy to use. I can manage everything from my phone while cooking.", "role": "Chef, Mama's Kitchen" },
-        "t3": { "quote": "Their support team is amazing. They helped us optimize our menu and increase our average order value.", "role": "Manager, Grill House" }
+        "t1": {
+          "quote": "Joining JayakHub was the best decision for my restaurant. Our delivery orders tripled in the first month!",
+          "role": "Owner, Al-Rasheed Restaurant"
+        },
+        "t2": {
+          "quote": "The dashboard is incredibly easy to use. I can manage everything from my phone while cooking.",
+          "role": "Chef, Mama's Kitchen"
+        },
+        "t3": {
+          "quote": "Their support team is amazing. They helped us optimize our menu and increase our average order value.",
+          "role": "Manager, Grill House"
+        }
       }
     },
     "cta": {

@@ -38,6 +38,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useDiscoveryUI } from "@/app/context/DiscoveryUIContext";
+import Image from "next/image";
 
 // ==================== CURATED CATEGORIES ====================
 const CURATED_CATEGORIES = [
@@ -270,7 +271,9 @@ const AllRestaurantsPage: React.FC = () => {
                   >
                     <div className="w-23 h-23 rounded-full overflow-hidden border border-gray-100 shadow-sm group-hover:border-emerald-500 transition-colors">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
+                        width={250}
+                        height={250}
                         src={cat.image}
                         alt={cat.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"

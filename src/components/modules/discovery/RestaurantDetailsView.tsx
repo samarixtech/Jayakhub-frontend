@@ -18,6 +18,7 @@ import { getCookie } from "cookies-next";
 import { useServerAction } from "@/hooks/use-server-action";
 import { getRestaurantBySlugAction } from "@/app/actions/public/restaurants";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 interface RestaurantDetails {
   id: string;
@@ -71,7 +72,9 @@ const FoodCard: React.FC<FoodCardProps> = ({
     >
       {/* Image */}
       <div className="relative w-32 h-32 shrink-0">
-        <img
+        <Image
+          width={250}
+          height={250}
           src={imageUrl}
           alt={item.name}
           className="w-full h-full object-cover"
@@ -244,7 +247,9 @@ export default function RestaurantDetailsView() {
       <div className="w-full relative">
         <div className="h-[250px] md:h-[350px] w-full relative overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-10" />
-          <img
+          <Image
+            width={250}
+            height={250}
             src={bannerUrl}
             alt={restaurant?.name}
             className="w-full h-full object-cover"
@@ -254,7 +259,9 @@ export default function RestaurantDetailsView() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-20 md:-mt-24 mb-8">
           <div className="bg-white rounded-2xl shadow-lg p-4 md:p-6 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
             <div className="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden shadow-md border-2 border-white shrink-0">
-              <img
+              <Image
+                width={250}
+                height={250}
                 src={profileUrl}
                 alt={restaurant?.name}
                 className="w-full h-full object-cover"
