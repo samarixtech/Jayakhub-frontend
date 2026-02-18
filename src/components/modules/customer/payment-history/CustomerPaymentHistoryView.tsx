@@ -19,6 +19,8 @@ import Image from "next/image";
 
 import { PaymentHistorySkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
+import { PaymentHistorySkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
+
 export default function CustomerPaymentHistory() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
