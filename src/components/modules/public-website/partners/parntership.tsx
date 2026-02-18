@@ -17,6 +17,7 @@ import {
     LayoutDashboard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -164,13 +165,13 @@ export default function Partners() {
                             </h1>
 
                             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                                <Button className="bg-white text-[#0B5D4E] hover:bg-white/90 h-14 px-8 rounded-full text-lg font-bold transition-transform hover:scale-105">
+                                <LocalizedLink href="/contact" className="bg-white text-[#0B5D4E] hover:bg-white/90 h-14 px-8 rounded-full text-lg font-bold transition-transform hover:scale-105 flex items-center justify-center">
                                     {t('hero.buttons.partner')}
                                     <ArrowRight className="ml-2 w-5 h-5" />
-                                </Button>
-                                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 h-14 px-8 rounded-full text-lg font-semibold bg-transparent">
+                                </LocalizedLink>
+                                <LocalizedLink href="/contact" className="border border-white/20 text-white hover:bg-white/10 h-14 px-8 rounded-full text-lg font-semibold bg-transparent flex items-center justify-center">
                                     {t('hero.buttons.learn_more')}
-                                </Button>
+                                </LocalizedLink>
                             </div>
 
                             <div className="flex flex-wrap gap-6 text-sm font-medium text-white/80">
@@ -195,16 +196,7 @@ export default function Partners() {
                                     alt="Chef in kitchen"
                                     className="w-full h-auto object-cover scale-105"
                                 />
-                                {/* Floating Badge */}
-                                {/* <div className="absolute top-8 right-8 bg-white p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-float">
-                                    <div className="w-10 h-10 rounded-full bg-[#E8F4F1] flex items-center justify-center">
-                                        <TrendingUp className="w-5 h-5 text-[#0B5D4E]" />
-                                    </div>
-                                    <div>
-                                        <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{t('hero.float_badge.growth')}</div>
-                                        <div className="text-lg font-bold text-[#0B5D4E]">{t('hero.float_badge.sales')}</div>
-                                    </div>
-                                </div> */}
+
                             </div>
                         </div>
                     </div>
@@ -417,13 +409,13 @@ export default function Partners() {
                                 {t('cta.desc')}
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <Button className="bg-white text-primary hover:bg-white/90 px-8 py-6 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-xl">
+                                <LocalizedLink href="/contact" className="bg-white text-primary hover:bg-white/90 px-8 py-6 rounded-full font-semibold text-lg transition-all hover:scale-105 shadow-xl flex items-center justify-center">
                                     {t('cta.apply')}
                                     <ArrowRight className="w-5 h-5 ml-2" />
-                                </Button>
-                                <Button className="bg-white/10 text-white hover:bg-white/20 px-8 py-6 rounded-full font-semibold text-lg transition-all border border-white/20">
+                                </LocalizedLink>
+                                <LocalizedLink href="/contact" className="bg-white/10 text-white hover:bg-white/20 px-8 py-6 rounded-full font-semibold text-lg transition-all border border-white/20 flex items-center justify-center">
                                     {t('cta.contact')}
-                                </Button>
+                                </LocalizedLink>
                             </div>
                         </div>
                     </div>

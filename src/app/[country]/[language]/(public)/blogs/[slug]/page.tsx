@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import { ArrowLeft, Clock, Calendar, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { articles, featuredArticle } from "@/lib/data/blogs";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function BlogPostPage() {
@@ -123,7 +122,7 @@ export default function BlogPostPage() {
                         {relatedArticles.map((article, index) => (
                             <Link href={`/${country}/${language}/blogs/${article.slug}`} key={index} className="group cursor-pointer">
                                 <div className="aspect-[16/10] bg-white rounded-2xl mb-4 border border-[#E2E8F0] overflow-hidden relative">
-                                    <Image src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                                    <Image src={article.image} width={200} height={200} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                                 </div>
                                 <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">
                                     {article.title}

@@ -13,7 +13,7 @@ import {
     Check,
     Quote
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import LocalizedLink from '@/components/navigation/LocalizedLink';
 import { useTranslations } from 'next-intl';
 
 export default function Services() {
@@ -325,14 +325,15 @@ export default function Services() {
                                         </li>
                                     ))}
                                 </ul>
-                                <Button
-                                    className={`w-full py-6 rounded-full font-semibold ${plan.popular
+                                <LocalizedLink
+                                    href="/contact"
+                                    className={`w-full py-6 rounded-full font-semibold flex justify-center items-center ${plan.popular
                                         ? 'bg-primary text-white hover:bg-primary/90'
                                         : 'bg-white/20 text-white hover:bg-white/30'
                                         }`}
                                 >
                                     {t('pricing.button')}
-                                </Button>
+                                </LocalizedLink>
                             </div>
                         ))}
                     </div>
@@ -387,13 +388,13 @@ export default function Services() {
                             <p className="text-white/60 max-w-xl mx-auto mb-10 text-lg">
                                 {t('cta.desc')}
                             </p>
-                            <a
-                                href="#"
+                            <LocalizedLink
+                                href="/contact"
                                 className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/90 transition-all hover:gap-3"
                             >
                                 {t('cta.button')}
                                 <ArrowRight className="w-5 h-5" />
-                            </a>
+                            </LocalizedLink>
                         </div>
                     </div>
                 </div>

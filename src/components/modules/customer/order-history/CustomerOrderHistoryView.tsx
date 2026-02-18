@@ -348,16 +348,15 @@ export default function CustomerOrderHistory() {
                       <div
                         className={`
                                         px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider
-                                        ${
-                                          isCancelled
-                                            ? "bg-red-100 text-red-600"
-                                            : order.status.toLowerCase() ===
-                                                  "delivered" ||
-                                                order.status.toLowerCase() ===
-                                                  "paid"
-                                              ? "bg-emerald-100 text-emerald-700"
-                                              : "bg-yellow-100 text-yellow-700"
-                                        }
+                                        ${isCancelled
+                            ? "bg-red-100 text-red-600"
+                            : order.status.toLowerCase() ===
+                              "delivered" ||
+                              order.status.toLowerCase() ===
+                              "paid"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }
                                     `}
                       >
                         {!isCancelled &&
@@ -414,11 +413,10 @@ export default function CustomerOrderHistory() {
                       <PaginationLink
                         onClick={() => handlePageChange(page)}
                         isActive={currentPage === page}
-                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${
-                          currentPage === page
-                            ? "bg-emerald-bg text-white hover:bg-emerald-bg"
-                            : "text-gray-500 hover:bg-gray-100"
-                        }`}
+                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${currentPage === page
+                          ? "bg-emerald-bg text-white hover:bg-emerald-bg"
+                          : "text-gray-500 hover:bg-gray-100"
+                          }`}
                       >
                         {page}
                       </PaginationLink>

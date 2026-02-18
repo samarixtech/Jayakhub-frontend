@@ -45,7 +45,7 @@ export const articles: BlogPost[] = [
         excerpt: 'From local gems to international chains, see who just joined the Jayak Hub family.',
         date: 'Aug 05, 2025',
         readTime: '3 min read',
-        image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=2070&auto=format&fit=crop',
+        image: '/blog2.avif',
         content: '<p>We are thrilled to welcome over 50 new partners to our growing network...</p>'
 
     },

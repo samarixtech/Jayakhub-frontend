@@ -17,10 +17,10 @@ const Footer = () => {
   const t = useTranslations("Footer");
 
   const socialLinks = [
-    { icon: Facebook, href: "https://www.facebook.com" },
-    { icon: Instagram, href: "https://www.instagram.com" },
-    { icon: Twitter, href: "https://twitter.com" },
-    { icon: Linkedin, href: "https://www.linkedin.com/company" },
+    { icon: Facebook, href: "https://www.facebook.com", target: "_blank" },
+    { icon: Instagram, href: "https://www.instagram.com", target: "_blank" },
+    { icon: Twitter, href: "https://twitter.com", target: "_blank" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company", target: "_blank" },
   ];
 
   const companyLinks = [
@@ -66,11 +66,11 @@ const Footer = () => {
             <div className="space-y-3 text-sm text-[#FFFFFF80]">
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4" />
-                <span>hello@jayakhub.iq</span>
+                <span>info@jayakhub.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4" />
-                <span>+964 123 456 7890</span>
+                <span>+1 (469) 422-5944</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-4 h-4" />
@@ -80,13 +80,16 @@ const Footer = () => {
 
             <div className="flex space-x-3 pt-2">
               {socialLinks.map((social, index) => (
-                <Link
+                <a  // <--- Changed Link to a
                   key={index}
                   href={social.href}
+                  target={social.target} // <--- Add this line
+                  rel="noopener noreferrer"
                   className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
                 >
                   <social.icon className="w-5 h-5 text-white" />
-                </Link>
+                </a>
+
               ))}
             </div>
           </div>

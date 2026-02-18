@@ -167,9 +167,9 @@
       }
     },
     "ai_chat_widget": {
-      "welcome_message": "Hello! I'm your Samarix AI assistant. How can I help you find the best food today?",
+      "welcome_message": "Hello! I'm your Jayak Hub AI assistant. How can I help you find the best food today?",
       "demo_response": "I'm currently a demo version. I can't process real orders yet, but I think you'd love our sushi selection!",
-      "bot_name": "Samarix AI",
+      "bot_name": "Jayak Hub AI",
       "status_online": "Online",
       "assistant_label": "AI Assistant",
       "input_placeholder": "Type a message...",

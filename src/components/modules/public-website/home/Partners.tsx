@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Bike, Store, ArrowRight, DollarSign, TrendingUp, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
@@ -25,6 +25,7 @@ export default function Partner() {
         { icon: Users, text: t('driver.benefits.drivers') },
       ],
       gradient: 'from-primary to-emerald-500',
+      href: '/driver',
     },
     {
       id: 2,
@@ -40,6 +41,7 @@ export default function Partner() {
         { icon: DollarSign, text: t('restaurant.benefits.rates') },
       ],
       gradient: 'from-orange-500 to-amber-500',
+      href: '/partners',
     },
   ];
 
@@ -103,8 +105,8 @@ export default function Partner() {
                 {/* Background Image */}
                 <div className="absolute inset-0">
                   <Image
-                  width={200}
-                  height={200}
+                    width={200}
+                    height={200}
                     src={option.image}
                     alt={option.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -137,10 +139,13 @@ export default function Partner() {
                   </div>
 
                   {/* CTA */}
-                  <Button className="mt-auto w-full sm:w-auto bg-white text-primary hover:bg-white/90 px-8 py-3.5 rounded-xl font-semibold transition-all hover:scale-105 flex items-center justify-center gap-2 group/btn">
+                  <LocalizedLink
+                    href={option.href}
+                    className="mt-auto w-full sm:w-auto bg-white text-primary hover:bg-white/90 px-8 py-3.5 rounded-xl font-semibold transition-all hover:scale-105 flex items-center justify-center gap-2 group/btn"
+                  >
                     {option.cta}
                     <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
+                  </LocalizedLink>
                 </div>
               </div>
             ))}
