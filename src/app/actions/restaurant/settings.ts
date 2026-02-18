@@ -63,3 +63,42 @@ export async function setNewPasswordAction(
     "Password set successfully",
   );
 }
+// ==================== UPDATE RESTAURANT LOCATION ====================
+export async function updateLocationAction(data: {
+  address: string;
+  latitude: number;
+  longitude: number;
+  phone: string;
+}): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.put("/settings/update-request", data),
+    "Location update request submitted successfully",
+  );
+}
+
+// ==================== UPDATE BANK DETAILS ====================
+export async function updateBankDetailsAction(data: {
+  bankName: string;
+  accountHolderName: string;
+  iban: string;
+}): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.put("/settings/update-request", data),
+    "Bank details update request submitted successfully",
+  );
+}
+
+// ==================== UPDATE KYC DOCUMENTS ====================
+export async function updateKycAction(
+  formData: FormData,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) =>
+      api.put("/settings/update-request", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    "Document upload request submitted successfully",
+  );
+}

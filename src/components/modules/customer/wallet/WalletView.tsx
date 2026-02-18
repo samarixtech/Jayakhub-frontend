@@ -1,6 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Trash2, Loader2, AlertTriangle, CreditCard } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  Loader2,
+  AlertTriangle,
+  CreditCard,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 
 import { Typography } from "@/components/ui/typography";
@@ -10,6 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { WalletSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
+import { AddCardForm } from "./add-card-form";
 import {
   deleteCardAction,
   getMyCardsAction,
@@ -67,9 +75,11 @@ const EmvChip = () => (
 // PAYMENT CARD COMPONENT
 const PaymentCard = ({
   card,
+  onEdit,
   onDelete,
 }: {
   card: any;
+  onEdit: (card: any) => void;
   onDelete: (card: any) => void;
 }) => {
   return (
@@ -129,6 +139,14 @@ const PaymentCard = ({
       {/* Actions */}
       <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <Button
+          onClick={() => onEdit(card)}
+          variant="outline"
+          size="sm"
+          className="flex-1 rounded-xl h-9 border-gray-200 bg-white hover:bg-gray-50 font-semibold text-xs transition-colors shadow-sm"
+        >
+          <Edit2 className="h-3.5 w-3.5 mr-2 text-gray-500" /> Edit
+        </Button>
+        <Button
           onClick={() => onDelete(card)}
           variant="ghost"
           size="sm"
@@ -155,6 +173,7 @@ const EmptyState = () => (
 
 // MAIN COMPONENT
 export default function WalletView() {
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [cards, setCards] = useState<any[]>([]);
@@ -181,6 +200,16 @@ export default function WalletView() {
   useEffect(() => {
     fetchCards();
   }, []);
+
+  const handleEdit = (card: any) => {
+    setSelectedCard(card);
+    setIsFormModalOpen(true);
+  };
+
+  const handleAdd = () => {
+    setSelectedCard(null);
+    setIsFormModalOpen(true);
+  };
 
   const openDeleteConfirm = (card: any) => {
     setSelectedCard(card);
@@ -233,6 +262,9 @@ export default function WalletView() {
                 key={card.id}
                 card={card}
                 onDelete={openDeleteConfirm}
+                onEdit={function (card: any): void {
+                  throw new Error("Function not implemented.");
+                }}
               />
             ))
           ) : (

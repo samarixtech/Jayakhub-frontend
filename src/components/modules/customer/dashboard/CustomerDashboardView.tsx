@@ -34,10 +34,21 @@ interface PaymentDetails {
   ownerName: string;
 }
 
+// Enum for Order Status (Matching CustomerOrderHistoryView)
+export enum OrderStatus {
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  PREPARE = "prepare",
+  READY = "ready",
+  OUT_FOR_DELIVERY = "out_of_delivery",
+  DELIVERED = "delivered",
+  REJECTED = "rejected",
+}
+
 interface Order {
   orderId: string;
   totalAmount: string;
-  status: string;
+  OrderStatus: string; // Changed from status to OrderStatus
   paymentMethod: string;
   orderDate: string;
   orderTime: string;
@@ -52,10 +63,30 @@ interface OrderSummary {
 }
 
 const QUICK_ACTIONS = [
-  { label: "Order Food", icon: UtensilsCrossed, color: "text-emerald-600", hrefSuffix: "/restaurants" },
-  { label: "Reorder", icon: RotateCcw, color: "text-blue-500", hrefSuffix: null },
-  { label: "KYC Verify", icon: ShieldCheck, color: "text-amber-600", hrefSuffix: "/customer/profile-settings" },
-  { label: "Payment Methods", icon: CreditCard, color: "text-purple-600", hrefSuffix: "/customer/wallet" },
+  {
+    label: "Order Food",
+    icon: UtensilsCrossed,
+    color: "text-emerald-600",
+    hrefSuffix: "/restaurants",
+  },
+  {
+    label: "Reorder",
+    icon: RotateCcw,
+    color: "text-blue-500",
+    hrefSuffix: null,
+  },
+  {
+    label: "KYC Verify",
+    icon: ShieldCheck,
+    color: "text-amber-600",
+    hrefSuffix: "/customer/profile-settings",
+  },
+  {
+    label: "Payment Methods",
+    icon: CreditCard,
+    color: "text-purple-600",
+    hrefSuffix: "/customer/wallet",
+  },
 ];
 
 export default function OverviewPage() {
@@ -68,14 +99,11 @@ export default function OverviewPage() {
   const [recentOrders, setRecentOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { getAllOrders } = await import("@/app/actions/customer/order");
         const result = await getAllOrders();
-
-
 
         // The API returns { success: true, data: { meta: {...}, data: { summary: {...}, orders: [...] } } }
         // We need to parse this structure correctly.
@@ -90,7 +118,6 @@ export default function OverviewPage() {
         }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
-
       } finally {
         setLoading(false);
       }
@@ -100,11 +127,34 @@ export default function OverviewPage() {
   }, []);
 
   const getStatusColor = (status: string) => {
-    const s = status.toLowerCase();
-    if (s === "paid" || s === "delivered") return { color: "text-emerald-600", bg: "bg-emerald-50" };
-    if (s === "pending") return { color: "text-orange-600", bg: "bg-orange-50" };
-    if (s === "cancelled") return { color: "text-red-600", bg: "bg-red-50" };
-    return { color: "text-gray-600", bg: "bg-gray-50" };
+    const s = status?.toLowerCase();
+    switch (s) {
+      case OrderStatus.DELIVERED:
+        return { color: "text-emerald-600", bg: "bg-emerald-50" };
+      case OrderStatus.REJECTED:
+        return { color: "text-red-600", bg: "bg-red-50" };
+      case OrderStatus.OUT_FOR_DELIVERY:
+        return { color: "text-purple-600", bg: "bg-purple-50" };
+      case OrderStatus.READY:
+        return { color: "text-indigo-600", bg: "bg-indigo-50" };
+      case OrderStatus.PREPARE:
+        return { color: "text-blue-600", bg: "bg-blue-50" };
+      case OrderStatus.ACCEPTED:
+        return { color: "text-blue-500", bg: "bg-blue-50" };
+      case OrderStatus.PENDING:
+      default:
+        return { color: "text-yellow-600", bg: "bg-yellow-50" };
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    const s = status?.toLowerCase();
+    switch (s) {
+      case OrderStatus.OUT_FOR_DELIVERY:
+        return "Out for Delivery";
+      default:
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    }
   };
 
   const STATS = [
@@ -140,8 +190,6 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-8">
-
-
       {/* Welcome Header */}
       <div>
         <Typography
@@ -225,10 +273,16 @@ export default function OverviewPage() {
               </div>
             ) : recentOrders.length > 0 ? (
               recentOrders.map((order) => {
-                const statusStyle = getStatusColor(order.status);
+                const statusStyle = getStatusColor(order.OrderStatus);
                 // Use first item name or fallback
-                const orderName = (order.items && order.items.length > 0) ? order.items[0].name : `Order #${order.orderId.substring(0, 8)}`;
-                const itemCount = (order.items || []).reduce((acc, item) => acc + item.quantity, 0);
+                const orderName =
+                  order.items && order.items.length > 0
+                    ? order.items[0].name
+                    : `Order #${order.orderId.substring(0, 8)}`;
+                const itemCount = (order.items || []).reduce(
+                  (acc, item) => acc + item.quantity,
+                  0,
+                );
 
                 return (
                   <div
@@ -246,7 +300,8 @@ export default function OverviewPage() {
                           {orderName}
                         </Typography>
                         <Typography className="text-xs text-gray-400 font-medium">
-                          {itemCount} {itemCount === 1 ? 'item' : 'items'} • ${order.totalAmount}
+                          {itemCount} {itemCount === 1 ? "item" : "items"} • $
+                          {order.totalAmount}
                         </Typography>
                       </div>
                     </div>
@@ -254,7 +309,7 @@ export default function OverviewPage() {
                       <Badge
                         className={`rounded-full px-3 py-0.5 text-[10px] font-bold border-none ${statusStyle.bg} ${statusStyle.color}`}
                       >
-                        {order.status.toUpperCase()}
+                        {getStatusLabel(order.OrderStatus)}
                       </Badge>
                       <Typography className="text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-tighter">
                         {order.orderDate}, {order.orderTime}
@@ -264,7 +319,9 @@ export default function OverviewPage() {
                 );
               })
             ) : (
-              <div className="text-center text-gray-500 py-4">No recent activity.</div>
+              <div className="text-center text-gray-500 py-4">
+                No recent activity.
+              </div>
             )}
           </CardContent>
         </Card>

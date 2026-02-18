@@ -11,6 +11,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Popover,
   PopoverContent,
@@ -253,9 +254,13 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
       )}
     >
       <MapPin className="w-5 h-5 text-emerald-bg shrink-0" />
-      <span className="text-sm font-semibold truncate flex-1 text-left">
-        {currentAddress}
-      </span>
+      {currentAddress === "Iraq, Baghdad" ? (
+        <Skeleton className="h-6 w-60 bg-white/20 rounded-full" />
+      ) : (
+        <span className="text-sm font-semibold truncate flex-1 text-left">
+          {currentAddress}
+        </span>
+      )}
       <ChevronDown className="w-4 h-4 text-gray-400 shrink-0 ml-1" />
     </Button>
   );

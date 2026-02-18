@@ -72,7 +72,6 @@ export async function detectLocationAction(
           maxAge: 60 * 60 * 24 * 365,
         });
       }
-
       return {
         success: true,
         data: { ...data, code, language: lang },
