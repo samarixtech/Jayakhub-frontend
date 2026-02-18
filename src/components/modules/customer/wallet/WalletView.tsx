@@ -141,6 +141,18 @@ const PaymentCard = ({
   );
 };
 
+const EmptyState = () => (
+  <div className="col-span-full flex flex-col items-center justify-center p-12 text-center bg-white rounded-3xl border border-dashed border-gray-200">
+    <div className="h-16 w-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+      <CreditCard className="h-8 w-8 text-gray-400" />
+    </div>
+    <h3 className="text-lg font-bold text-gray-900 mb-1">No cards added</h3>
+    <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto">
+      Please make a order so your card will automatically be saved .
+    </p>
+  </div>
+);
+
 // MAIN COMPONENT
 export default function WalletView() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -211,30 +223,6 @@ export default function WalletView() {
               Manage your payment methods and billing information.
             </Typography>
           </div>
-
-          <GlobalModal
-            open={isFormModalOpen}
-            onOpenChange={setIsFormModalOpen}
-            title={selectedCard ? "Edit Card" : "Add New Card"}
-            trigger={
-              <Button
-                onClick={handleAdd}
-                disabled={isLoading}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full h-11 px-6 font-bold shadow-lg shadow-emerald-600/20 active:scale-95 transition-all"
-              >
-                <Plus size={18} className="mr-2" /> Add New Card
-              </Button>
-            }
-          >
-            <AddCardForm
-              card={selectedCard}
-              onSuccess={() => {
-                setIsFormModalOpen(false);
-                fetchCards();
-              }}
-              onCancel={() => setIsFormModalOpen(false)}
-            />
-          </GlobalModal>
         </div>
 
         {/* CONTENT */}
@@ -244,12 +232,11 @@ export default function WalletView() {
               <PaymentCard
                 key={card.id}
                 card={card}
-                onEdit={handleEdit}
                 onDelete={openDeleteConfirm}
               />
             ))
           ) : (
-            <EmptyState onAdd={handleAdd} />
+            <EmptyState />
           )}
         </div>
 

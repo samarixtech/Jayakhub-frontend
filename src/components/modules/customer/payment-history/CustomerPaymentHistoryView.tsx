@@ -96,7 +96,7 @@ export default function CustomerPaymentHistory() {
           </div>
         );
       },
-      headerClassName: "w-[80px]",
+      headerClassName: "w-[120px]",
     },
     {
       header: "Transaction ID",
@@ -191,7 +191,7 @@ export default function CustomerPaymentHistory() {
     <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8 gap-4">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-4">
           <div>
             <Typography
               variant="h2"
@@ -215,7 +215,7 @@ export default function CustomerPaymentHistory() {
 
         {/* Transactions Card */}
         <Card className="rounded-3xl border-none shadow-sm overflow-hidden bg-white">
-          <CardHeader className="border-b border-gray-100 pb-4">
+          <CardHeader className="border-none pt-3 pb-0 px-6">
             <CardTitle className="text-lg font-bold text-gray-900">
               All Transactions
             </CardTitle>

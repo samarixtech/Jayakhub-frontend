@@ -12,6 +12,8 @@ import {
   CreditCard,
   ChevronRight,
 } from "lucide-react";
+import Link from "next/link";
+import useLocale from "@/hooks/useLocals";
 import { Typography } from "@/components/ui/typography";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -50,13 +52,14 @@ interface OrderSummary {
 }
 
 const QUICK_ACTIONS = [
-  { label: "Order Food", icon: UtensilsCrossed, color: "text-emerald-600" },
-  { label: "Reorder", icon: RotateCcw, color: "text-blue-500" },
-  { label: "KYC Verify", icon: ShieldCheck, color: "text-amber-600" },
-  { label: "Payment Methods", icon: CreditCard, color: "text-purple-600" },
+  { label: "Order Food", icon: UtensilsCrossed, color: "text-emerald-600", hrefSuffix: "/restaurants" },
+  { label: "Reorder", icon: RotateCcw, color: "text-blue-500", hrefSuffix: null },
+  { label: "KYC Verify", icon: ShieldCheck, color: "text-amber-600", hrefSuffix: "/customer/profile-settings" },
+  { label: "Payment Methods", icon: CreditCard, color: "text-purple-600", hrefSuffix: "/customer/wallet" },
 ];
 
 export default function OverviewPage() {
+  const { country, language } = useLocale();
   const [summary, setSummary] = useState<OrderSummary>({
     totalSpend: "0.00",
     totalOrdersCount: 0,
@@ -64,30 +67,30 @@ export default function OverviewPage() {
   });
   const [recentOrders, setRecentOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
- 
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { getAllOrders } = await import("@/app/actions/customer/order");
         const result = await getAllOrders();
-        
-        
+
+
 
         // The API returns { success: true, data: { meta: {...}, data: { summary: {...}, orders: [...] } } }
         // We need to parse this structure correctly.
         if (result.success && result.data && result.data.data) {
-             const apiData = result.data.data;
-             if (apiData.summary) {
-                 setSummary(apiData.summary);
-             }
-             if (apiData.orders && Array.isArray(apiData.orders)) {
-                 setRecentOrders(apiData.orders);
-             }
+          const apiData = result.data.data;
+          if (apiData.summary) {
+            setSummary(apiData.summary);
+          }
+          if (apiData.orders && Array.isArray(apiData.orders)) {
+            setRecentOrders(apiData.orders);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
-        
+
       } finally {
         setLoading(false);
       }
@@ -137,7 +140,7 @@ export default function OverviewPage() {
 
   return (
     <div className="space-y-8">
- 
+
 
       {/* Welcome Header */}
       <div>
@@ -171,11 +174,11 @@ export default function OverviewPage() {
                   {stat.label}
                 </Typography>
                 {loading ? (
-                    <Skeleton className="h-7 w-24" />
+                  <Skeleton className="h-7 w-24" />
                 ) : (
-                    <Typography className="text-xl font-black text-gray-900 leading-tight">
+                  <Typography className="text-xl font-black text-gray-900 leading-tight">
                     {stat.value}
-                    </Typography>
+                  </Typography>
                 )}
               </div>
             </CardContent>
@@ -194,29 +197,32 @@ export default function OverviewPage() {
             <Button
               variant="link"
               className="text-emerald-600 font-bold text-xs p-0 h-auto"
+              asChild
             >
-              View All
+              <Link href={`/${country}/${language}/customer/order-history`}>
+                View All
+              </Link>
             </Button>
           </CardHeader>
           <CardContent className="px-8 pb-8 space-y-6 mt-4">
             {loading ? (
-               <div className="space-y-6">
+              <div className="space-y-6">
                 {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="flex items-center justify-between">
+                  <div key={i} className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Skeleton className="h-12 w-12 rounded-2xl" />
-                        <div className="space-y-2">
+                      <Skeleton className="h-12 w-12 rounded-2xl" />
+                      <div className="space-y-2">
                         <Skeleton className="h-4 w-32" />
                         <Skeleton className="h-3 w-24" />
-                        </div>
+                      </div>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                        <Skeleton className="h-5 w-20 rounded-full" />
-                        <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-5 w-20 rounded-full" />
+                      <Skeleton className="h-3 w-24" />
                     </div>
-                    </div>
+                  </div>
                 ))}
-               </div>
+              </div>
             ) : recentOrders.length > 0 ? (
               recentOrders.map((order) => {
                 const statusStyle = getStatusColor(order.status);
@@ -258,7 +264,7 @@ export default function OverviewPage() {
                 );
               })
             ) : (
-               <div className="text-center text-gray-500 py-4">No recent activity.</div>
+              <div className="text-center text-gray-500 py-4">No recent activity.</div>
             )}
           </CardContent>
         </Card>
@@ -269,21 +275,44 @@ export default function OverviewPage() {
             Quick Actions
           </Typography>
           <div className="space-y-3">
-            {QUICK_ACTIONS.map((action) => (
-              <Button
-                key={action.label}
-                variant="outline"
-                className="w-full justify-between h-14 px-5 rounded-2xl border-gray-50 bg-white hover:bg-gray-50 group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <action.icon className={`h-5 w-5 ${action.color}`} />
-                  <span className="text-sm font-bold text-gray-700">
-                    {action.label}
-                  </span>
-                </div>
-                <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
-              </Button>
-            ))}
+            {QUICK_ACTIONS.map((action) => {
+              const content = (
+                <>
+                  <div className="flex items-center gap-3">
+                    <action.icon className={`h-5 w-5 ${action.color}`} />
+                    <span className="text-sm font-bold text-gray-700">
+                      {action.label}
+                    </span>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
+                </>
+              );
+
+              if (action.hrefSuffix) {
+                return (
+                  <Button
+                    key={action.label}
+                    variant="outline"
+                    className="w-full justify-between h-14 px-5 rounded-2xl border-gray-50 bg-white hover:bg-gray-50 group transition-all"
+                    asChild
+                  >
+                    <Link href={`/${country}/${language}${action.hrefSuffix}`}>
+                      {content}
+                    </Link>
+                  </Button>
+                );
+              }
+
+              return (
+                <Button
+                  key={action.label}
+                  variant="outline"
+                  className="w-full justify-between h-14 px-5 rounded-2xl border-gray-50 bg-white hover:bg-gray-50 group transition-all"
+                >
+                  {content}
+                </Button>
+              );
+            })}
           </div>
         </Card>
       </div>

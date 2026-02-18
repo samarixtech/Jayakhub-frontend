@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Star, Apple, Play, Zap, Gift, Clock } from 'lucide-react';
+import { Star, Zap, Gift, Clock } from 'lucide-react';
+import { FaApple, FaGooglePlay } from 'react-icons/fa';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
@@ -142,20 +143,30 @@ export default function DownloadApp() {
               className={`flex flex-col sm:flex-row gap-4 transition-all duration-600 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
             >
-              <button className="flex items-center justify-center sm:justify-start gap-3 bg-primary text-white px-6 py-3.5 rounded-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto">
-                <Apple className="w-7 h-7 md:w-8 md:h-8" />
+              <a
+                href="https://apps.apple.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center sm:justify-start gap-3 bg-primary text-white px-6 py-3.5 rounded-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto"
+              >
+                <FaApple className="w-8 h-8 " />
                 <div className="text-left">
-                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">{t('buttons.app_store_sub')}</div>
-                  <div className="text-base md:text-lg font-bold -mt-1">{t('buttons.app_store_main')}</div>
+                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">Download on the</div>
+                  <div className="text-base md:text-lg font-bold -mt-1">App Store</div>
                 </div>
-              </button>
-              <button className="flex items-center justify-center sm:justify-start gap-3 bg-primary text-white px-6 py-3.5 rounded-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto">
-                <Play className="w-7 h-7 md:w-8 md:h-8" fill="currentColor" />
+              </a>
+              <a
+                href="https://play.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center sm:justify-start gap-3 bg-primary text-white px-6 py-3.5 rounded-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto"
+              >
+                <FaGooglePlay className="w-7 h-7 md:w-8 md:h-8" />
                 <div className="text-left">
-                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">{t('buttons.google_play_sub')}</div>
-                  <div className="text-base md:text-lg font-bold -mt-1">{t('buttons.google_play_main')}</div>
+                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">Get it on</div>
+                  <div className="text-base md:text-lg font-bold -mt-1">Google Play</div>
                 </div>
-              </button>
+              </a>
             </div>
 
             {/* Stats - Grid layout for better mobile distribution */}

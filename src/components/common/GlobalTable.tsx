@@ -62,14 +62,14 @@ export default function GlobalTable<T>({
   return (
     <div className="space-y-4">
       {searchParams && (
-        <div className="flex items-center justify-between px-1">
+        <div className="flex items-center justify-between px-6 pt-0">
           <div className="relative w-full md:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder={searchParams.placeholder || "Search..."}
               value={searchParams.searchTerm}
               onChange={(e) => searchParams.onSearchChange(e.target.value)}
-              className="pl-9 bg-white border-gray-200 rounded-full"
+              className="pl-9 bg-white border-gray-200 rounded-xl"
             />
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function GlobalTable<T>({
               {columns.map((col, index) => (
                 <TableHead
                   key={index}
-                  className={`font-semibold text-gray-600 ${col.headerClassName || ""}`}
+                  className={`font-semibold text-gray-600 px-6 ${col.headerClassName || ""}`}
                 >
                   {col.header}
                 </TableHead>
@@ -114,16 +114,15 @@ export default function GlobalTable<T>({
                 <TableRow
                   key={rowIndex}
                   onClick={() => onRowClick && onRowClick(item)}
-                  className={`transition-colors border-none ${
-                    onRowClick
-                      ? "cursor-pointer hover:bg-gray-50/50"
-                      : "hover:bg-gray-50/50"
-                  }`}
+                  className={`transition-colors border-none ${onRowClick
+                    ? "cursor-pointer hover:bg-gray-50/50"
+                    : "hover:bg-gray-50/50"
+                    }`}
                 >
                   {columns.map((col, colIndex) => (
                     <TableCell
                       key={colIndex}
-                      className={col.className || "border-none"}
+                      className={`px-4 border-none ${col.className || ""}`}
                     >
                       {col.cell
                         ? col.cell(item)
@@ -150,11 +149,10 @@ export default function GlobalTable<T>({
                       paginationParams.currentPage - 1,
                     )
                   }
-                  className={`text-gray-400 border-none p-2 cursor-pointer ${
-                    paginationParams.currentPage === 1
-                      ? "pointer-events-none opacity-50"
-                      : "hover:bg-transparent hover:text-gray-600"
-                  }`}
+                  className={`text-gray-400 border-none p-2 cursor-pointer ${paginationParams.currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "hover:bg-transparent hover:text-gray-600"
+                    }`}
                 />
               </PaginationItem>
 
@@ -166,11 +164,10 @@ export default function GlobalTable<T>({
                   <PaginationLink
                     onClick={() => paginationParams.onPageChange(page)}
                     isActive={paginationParams.currentPage === page}
-                    className={`w-9 h-9 rounded-full font-bold border-none cursor-pointer ${
-                      paginationParams.currentPage === page
-                        ? "bg-emerald-bg text-white hover:bg-[#1B4332] hover:text-white"
-                        : "text-gray-600 hover:bg-gray-100"
-                    }`}
+                    className={`w-9 h-9 rounded-full font-bold border-none cursor-pointer ${paginationParams.currentPage === page
+                      ? "bg-emerald-bg text-white hover:bg-[#1B4332] hover:text-white"
+                      : "text-gray-600 hover:bg-gray-100"
+                      }`}
                   >
                     {page}
                   </PaginationLink>
@@ -184,11 +181,10 @@ export default function GlobalTable<T>({
                       paginationParams.currentPage + 1,
                     )
                   }
-                  className={`text-gray-400 border-none p-2 cursor-pointer ${
-                    paginationParams.currentPage === paginationParams.totalPages
-                      ? "pointer-events-none opacity-50"
-                      : "hover:bg-transparent hover:text-gray-600"
-                  }`}
+                  className={`text-gray-400 border-none p-2 cursor-pointer ${paginationParams.currentPage === paginationParams.totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "hover:bg-transparent hover:text-gray-600"
+                    }`}
                 />
               </PaginationItem>
             </PaginationContent>
