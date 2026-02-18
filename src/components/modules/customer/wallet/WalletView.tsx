@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Trash2, Loader2, AlertTriangle, CreditCard } from "lucide-react";
+import { Trash2, Loader2, AlertTriangle, CreditCard, Plus, Pencil } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 import { Typography } from "@/components/ui/typography";
@@ -14,6 +14,7 @@ import {
   deleteCardAction,
   getMyCardsAction,
 } from "@/app/actions/customer/userprofile";
+import { AddCardForm } from "./add-card-form";
 
 // CARD STYLES (COLORS)
 const getCardStyles = (type: string) => {
@@ -67,9 +68,11 @@ const EmvChip = () => (
 // PAYMENT CARD COMPONENT
 const PaymentCard = ({
   card,
+  onEdit,
   onDelete,
 }: {
   card: any;
+  onEdit: (card: any) => void;
   onDelete: (card: any) => void;
 }) => {
   return (
@@ -129,6 +132,14 @@ const PaymentCard = ({
       {/* Actions */}
       <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <Button
+          onClick={() => onEdit(card)}
+          variant="ghost"
+          size="sm"
+          className="flex-1 rounded-xl h-9 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-xs transition-colors"
+        >
+          <Pencil className="h-3.5 w-3.5 mr-2" /> Edit
+        </Button>
+        <Button
           onClick={() => onDelete(card)}
           variant="ghost"
           size="sm"
@@ -141,8 +152,24 @@ const PaymentCard = ({
   );
 };
 
+const EmptyState = ({ onAdd }: { onAdd: () => void }) => (
+  <div className="col-span-full flex flex-col items-center justify-center p-12 text-center bg-white rounded-3xl border border-dashed border-gray-200">
+    <div className="h-16 w-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+      <CreditCard className="h-8 w-8 text-gray-400" />
+    </div>
+    <h3 className="text-lg font-bold text-gray-900 mb-1">No cards added</h3>
+    <p className="text-sm text-gray-500 mb-6 max-w-xs mx-auto">
+      Add a payment method to checkout faster and manage your subscription.
+    </p>
+    <Button onClick={onAdd} className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-11 px-8">
+      <Plus className="mr-2 h-4 w-4" /> Add Payment Method
+    </Button>
+  </div>
+);
+
 // MAIN COMPONENT
 export default function WalletView() {
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [cards, setCards] = useState<any[]>([]);
@@ -173,6 +200,16 @@ export default function WalletView() {
   const openDeleteConfirm = (card: any) => {
     setSelectedCard(card);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleAdd = () => {
+    setSelectedCard(null);
+    setIsFormModalOpen(true);
+  };
+
+  const handleEdit = (card: any) => {
+    setSelectedCard(card);
+    setIsFormModalOpen(true);
   };
 
   const handleDelete = async () => {
