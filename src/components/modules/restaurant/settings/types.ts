@@ -51,10 +51,17 @@ export interface KycData {
   updatedAt: string;
 }
 
+export interface OnboardingUpdateStatus {
+  location: "pending" | "approved" | "none";
+  bankDetails: "pending" | "approved" | "none";
+  kyc: "pending" | "approved" | "none";
+}
+
 export interface SettingsData {
   profile: ProfileData;
   location: LocationData;
   schedules: ScheduleData[];
   bankAccount: BankAccountData;
   kyc: KycData[];
+  onboardingUpdate: OnboardingUpdateStatus;
 }

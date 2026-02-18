@@ -47,7 +47,9 @@ export async function verifyOtpAction(payload: {
         const cookieStore = await cookies();
         cookieStore.set("token", data.accessToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure:
+            process.env.NODE_ENV === "production" &&
+            process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https"),
           sameSite: "lax",
           path: "/",
           maxAge: 60 * 60 * 24 * 7,
@@ -57,6 +59,8 @@ export async function verifyOtpAction(payload: {
           cookieStore.set("role", data.user.role, { path: "/" });
         }
       }
+      console.log(data);
+
       return data;
     },
   );

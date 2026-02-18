@@ -36,7 +36,7 @@ import {
 } from "@/lib/schemas/restaurant-onboarding";
 import useLocale from "@/hooks/useLocals";
 import { useOnboarding } from "@/components/modules/restaurant/onboarding/OnboardingContext";
-import RestaurantLocationMap from "./RestaurantLocationMap";
+import LocationPicker from "@/components/common/LocationPicker";
 import { PhoneInput } from "@/components/ui/phone-input";
 
 import { WizardStepProps } from "../types";
@@ -80,10 +80,6 @@ export default function StepRestaurantInfoView() {
     },
   });
 
-  const isMapInteraction = useRef(false);
-  const watchedAddress = form.watch("address");
-  const watchedCountry = form.watch("country");
-
   // Load data from LocalStorage
   useEffect(() => {
     const savedData = localStorage.getItem("onboarding_restaurant_info");
@@ -108,40 +104,6 @@ export default function StepRestaurantInfoView() {
       }
     }
   }, [form]);
-
-  // Forward Geocoding
-  useEffect(() => {
-    if (isMapInteraction.current) {
-      isMapInteraction.current = false;
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      if (!watchedAddress) {
-        form.setValue("location", undefined);
-        return;
-      }
-
-      if (!window.google || !window.google.maps) return;
-
-      const fullQuery = watchedCountry
-        ? `${watchedAddress}, ${watchedCountry}`
-        : watchedAddress;
-
-      const geocoder = new window.google.maps.Geocoder();
-      geocoder.geocode({ address: fullQuery }, (results, status) => {
-        if (status === "OK" && results && results[0]) {
-          const location = results[0].geometry.location;
-          form.setValue("location", {
-            lat: location.lat(),
-            lng: location.lng(),
-          });
-        }
-      });
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [watchedAddress, watchedCountry, form]);
 
   const onSubmit = (data: RestaurantInfoInput) => {
     console.log("Static Mode: Saving Restaurant Info", data);
@@ -292,54 +254,29 @@ export default function StepRestaurantInfoView() {
 
           {/* Section 3: Address & Map */}
           <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase text-gray-400">
-                    Full Address
-                  </label>
-                  <FormControl>
-                    <div className="relative">
-                      <MapPin className="absolute left-4 top-3.5 h-4 w-4 text-gray-400" />
-                      <Input
-                        placeholder="Click on map or type address..."
-                        className="pl-12 h-12 bg-gray-50/50 border-gray-100 rounded-xl"
-                        {...field}
-                      />
-                    </div>
-                  </FormControl>
-                  <Typography className="text-[10px] text-gray-400 mt-1">
-                    Click on the map to select your location or type your
-                    address above.
-                  </Typography>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <RestaurantLocationMap
-                      location={field.value}
-                      onLocationSelect={(loc, address) => {
-                        isMapInteraction.current = true;
-                        field.onChange(loc);
-                        if (address) {
-                          form.setValue("address", address);
-                        }
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase text-gray-400">
+                Restaurant Location
+              </label>
+              <LocationPicker
+                initialAddress={form.getValues("address")}
+                initialLocation={form.getValues("location")}
+                onLocationChange={(loc: {
+                  lat: number;
+                  lng: number;
+                  address: string;
+                  country?: string;
+                }) => {
+                  form.setValue("address", loc.address);
+                  form.setValue("location", { lat: loc.lat, lng: loc.lng });
+                  if (loc.country) {
+                    form.setValue("country", loc.country);
+                  }
+                }}
+                placeholder="Search for restaurant address..."
+              />
+            </div>
+            <FormMessage>{form.formState.errors.address?.message}</FormMessage>
           </div>
 
           {/* Section 4: Description */}

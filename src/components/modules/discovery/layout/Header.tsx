@@ -145,6 +145,14 @@ const RestaurantHeader = () => {
                 </div>
               ) : (
                 <div className="hidden md:flex items-center gap-3">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-white font-bold text-sm leading-none">
+                      {user?.name || "User"}
+                    </p>
+                    <p className="text-white/70 text-[10px] uppercase tracking-widest font-medium mt-1">
+                      {user?.role?.name || "Customer"}
+                    </p>
+                  </div>
                   <UserProfile
                     user={user}
                     country={country}

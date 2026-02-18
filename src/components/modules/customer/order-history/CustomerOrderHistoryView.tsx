@@ -1,17 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  FileDown,
-  Plus,
-  RefreshCw,
-  HelpCircle,
-  Search,
-  Filter,
-} from "lucide-react";
+import { FileDown, Plus, RefreshCw, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination,
@@ -29,8 +21,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { OrdersSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
+
+// Enum for Order Status
+export enum OrderStatus {
+  PENDING = "pending",
+  ACCEPTED = "accepted",
+  PREPARE = "prepare",
+  READY = "ready",
+  OUT_FOR_DELIVERY = "out_of_delivery",
+  DELIVERED = "delivered",
+  REJECTED = "rejected",
+}
 
 // Interface based on the API response provided
 interface OrderItem {
@@ -49,7 +51,7 @@ interface PaymentDetails {
 interface Order {
   orderId: string;
   totalAmount: string;
-  status: string; // "paid", "pending", "cancelled", "delivered"
+  OrderStatus: string; // Maps to OrderStatus enum values
   paymentMethod: string;
   orderDate: string;
   orderTime: string;
@@ -114,14 +116,23 @@ export default function CustomerOrderHistory() {
   // Filter Logic
   const filteredOrders = orders.filter((order) => {
     if (statusFilter !== "all") {
-      const status = order.status.toLowerCase();
-      if (
-        statusFilter === "delivered" &&
-        status !== "delivered" &&
-        status !== "paid"
-      )
-        return false;
-      if (statusFilter === "cancelled" && status !== "cancelled") return false;
+      const status = order.OrderStatus?.toLowerCase() || "";
+
+      if (statusFilter === "delivered") {
+        return status === OrderStatus.DELIVERED;
+      }
+      if (statusFilter === "cancelled") {
+        return status === OrderStatus.REJECTED;
+      }
+      if (statusFilter === "active") {
+        return [
+          OrderStatus.PENDING,
+          OrderStatus.ACCEPTED,
+          OrderStatus.PREPARE,
+          OrderStatus.READY,
+          OrderStatus.OUT_FOR_DELIVERY,
+        ].includes(status as OrderStatus);
+      }
     }
     // Date filtering could be added here if we parse orderDate
     return true;
@@ -161,6 +172,37 @@ export default function CustomerOrderHistory() {
     return hasLeadingSlash
       ? `${cleanBaseUrl}${cleanPath}`
       : `${cleanBaseUrl}/${cleanPath}`;
+  };
+
+  const getStatusColor = (status: string) => {
+    const s = status?.toLowerCase();
+    switch (s) {
+      case OrderStatus.DELIVERED:
+        return "bg-emerald-100 text-emerald-700";
+      case OrderStatus.REJECTED:
+        return "bg-red-100 text-red-600";
+      case OrderStatus.OUT_FOR_DELIVERY:
+        return "bg-purple-100 text-purple-700";
+      case OrderStatus.READY:
+        return "bg-indigo-100 text-indigo-700";
+      case OrderStatus.PREPARE:
+        return "bg-blue-100 text-blue-700";
+      case OrderStatus.ACCEPTED:
+        return "bg-blue-50 text-blue-600";
+      case OrderStatus.PENDING:
+      default:
+        return "bg-yellow-100 text-yellow-700";
+    }
+  };
+
+  const getStatusLabel = (status: string) => {
+    const s = status?.toLowerCase();
+    switch (s) {
+      case OrderStatus.OUT_FOR_DELIVERY:
+        return "Out for Delivery";
+      default:
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    }
   };
 
   if (loading) {
@@ -236,6 +278,21 @@ export default function CustomerOrderHistory() {
 
             <div className="flex items-center gap-2">
               <Checkbox
+                id="filter-active"
+                className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+                checked={statusFilter === "active"}
+                onCheckedChange={() => setStatusFilter("active")}
+              />
+              <label
+                htmlFor="filter-active"
+                className="text-sm font-medium text-gray-700 cursor-pointer select-none"
+              >
+                Active
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
                 id="filter-delivered"
                 className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
                 checked={statusFilter === "delivered"}
@@ -260,7 +317,7 @@ export default function CustomerOrderHistory() {
                 htmlFor="filter-cancelled"
                 className="text-sm font-medium text-gray-700 cursor-pointer select-none"
               >
-                Cancelled
+                Rejected/Cancelled
               </label>
             </div>
           </div>
@@ -291,19 +348,20 @@ export default function CustomerOrderHistory() {
         {/* Order Cards List */}
         <div className="space-y-4">
           {currentOrders.map((order) => {
-            const isCancelled = order.status.toLowerCase() === "cancelled";
+            const isRejected =
+              order.OrderStatus.toLowerCase() === OrderStatus.REJECTED;
+            const isDelivered =
+              order.OrderStatus.toLowerCase() === OrderStatus.DELIVERED;
             const firstItem = order.items?.[0];
             const itemNames = order.items
               ?.map((i) => `${i.quantity}x ${i.name}`)
               .join(", ");
-            // Derive Title: Use Restaurant Name if available (it's not in provided JSON), else first item name or generic
-            // Mocking Restaurant Name for visual consistency with screenshot using data cues or fallback
             const displayTitle = firstItem?.name || "Order";
 
             return (
               <Card
                 key={order.orderId}
-                className={`border-none shadow-sm rounded-3xl overflow-hidden transition-all hover:shadow-md ${isCancelled ? "bg-red-50" : "bg-white"}`}
+                className={`border-none shadow-sm rounded-3xl overflow-hidden transition-all hover:shadow-md ${isRejected ? "bg-red-50" : "bg-white"}`}
               >
                 <CardContent className="p-0">
                   <div className="flex flex-col md:flex-row items-center p-5 gap-6">
@@ -348,24 +406,12 @@ export default function CustomerOrderHistory() {
                       <div
                         className={`
                                         px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider
-                                        ${isCancelled
-                            ? "bg-red-100 text-red-600"
-                            : order.status.toLowerCase() ===
-                              "delivered" ||
-                              order.status.toLowerCase() ===
-                              "paid"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-yellow-100 text-yellow-700"
-                          }
+                                        ${getStatusColor(order.OrderStatus)}
                                     `}
                       >
-                        {!isCancelled &&
-                          (order.status.toLowerCase() === "delivered" ||
-                            order.status.toLowerCase() === "paid") && (
-                            <span>✓</span>
-                          )}
-                        {isCancelled && <span>✕</span>}
-                        {order.status}
+                        {isDelivered && <span>✓</span>}
+                        {isRejected && <span>✕</span>}
+                        {getStatusLabel(order.OrderStatus)}
                       </div>
 
                       {/* Price */}
@@ -374,7 +420,7 @@ export default function CustomerOrderHistory() {
                       </span>
 
                       {/* Action Button */}
-                      {isCancelled ? (
+                      {isRejected ? (
                         <Button
                           variant="outline"
                           className="rounded-full h-9 px-5 bg-white border-gray-200 text-gray-600 text-[11px] font-bold hover:bg-gray-50"
@@ -413,10 +459,11 @@ export default function CustomerOrderHistory() {
                       <PaginationLink
                         onClick={() => handlePageChange(page)}
                         isActive={currentPage === page}
-                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${currentPage === page
-                          ? "bg-emerald-bg text-white hover:bg-emerald-bg"
-                          : "text-gray-500 hover:bg-gray-100"
-                          }`}
+                        className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${
+                          currentPage === page
+                            ? "bg-emerald-bg text-white hover:bg-emerald-bg"
+                            : "text-gray-500 hover:bg-gray-100"
+                        }`}
                       >
                         {page}
                       </PaginationLink>
