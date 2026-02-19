@@ -10,11 +10,13 @@ import { ProfileData } from "@/types/customer.types";
 interface ProfileSidebarProps {
   profile: ProfileData;
   onAvatarChange: (file: File | null) => void;
+  onNotificationClick?: () => void;
 }
 
 export default function ProfileSidebar({
   profile,
   onAvatarChange,
+  onNotificationClick,
 }: ProfileSidebarProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,7 +94,9 @@ export default function ProfileSidebar({
               <div className="bg-white p-2 rounded-xl group-hover:scale-105 transition-transform">
                 <Bell className="h-5 w-5 text-emerald-600" />
               </div>
-              <span className="text-sm font-bold text-gray-700">Notifications</span>
+              <span className="text-sm font-bold text-gray-700">
+                Notifications
+              </span>
             </div>
             <div className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
               3
