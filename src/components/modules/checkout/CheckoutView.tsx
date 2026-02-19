@@ -393,8 +393,8 @@ const CheckoutView = () => {
                           <div
                             key={addr.id}
                             className={`p-4 rounded-xl border cursor-pointer flex items-start gap-3 transition-all ${selectedAddress?.id === addr.id
-                                ? "border-[#346853] bg-[#346853]/5"
-                                : "border-gray-200 hover:border-gray-300"
+                              ? "border-[#346853] bg-[#346853]/5"
+                              : "border-gray-200 hover:border-gray-300"
                               }`}
                             onClick={() => {
                               setSelectedAddress(addr);
@@ -403,8 +403,8 @@ const CheckoutView = () => {
                           >
                             <div
                               className={`mt-1 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${selectedAddress?.id === addr.id
-                                  ? "border-[#346853]"
-                                  : "border-gray-300"
+                                ? "border-[#346853]"
+                                : "border-gray-300"
                                 }`}
                             >
                               {selectedAddress?.id === addr.id && (
@@ -470,10 +470,10 @@ const CheckoutView = () => {
                       <div
                         onClick={() => setPaymentMethod("stripe")}
                         className={`border p-4 rounded-lg cursor-pointer transition-all ${paymentMethod === "stripe" ||
-                            (typeof paymentMethod === "string" &&
-                              paymentMethod.startsWith("pm_"))
-                            ? "border-[#346853] bg-[#346853]/5"
-                            : "border-gray-200 hover:border-gray-300"
+                          (typeof paymentMethod === "string" &&
+                            paymentMethod.startsWith("pm_"))
+                          ? "border-[#346853] bg-[#346853]/5"
+                          : "border-gray-200 hover:border-gray-300"
                           }`}
                       >
                         <div className="flex items-center justify-between">
@@ -515,8 +515,8 @@ const CheckoutView = () => {
                                   setPaymentMethod("stripe");
                                 }}
                                 className={`p-3 rounded-xl border border-dashed flex items-center gap-3 cursor-pointer transition-all group ${paymentMethod === "stripe"
-                                    ? "border-[#346853] bg-[#346853]/5"
-                                    : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
+                                  ? "border-[#346853] bg-[#346853]/5"
+                                  : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
                                   }`}
                               >
                                 <div
@@ -540,8 +540,8 @@ const CheckoutView = () => {
                                     setPaymentMethod(card.stripePaymentMethodId);
                                   }}
                                   className={`p-3 rounded-xl border border-dashed flex items-center justify-between cursor-pointer transition-all group ${paymentMethod === card.stripePaymentMethodId
-                                      ? "border-[#346853] bg-[#346853]/5"
-                                      : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
+                                    ? "border-[#346853] bg-[#346853]/5"
+                                    : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
                                     }`}
                                 >
                                   <div className="flex items-center gap-3">

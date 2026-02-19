@@ -21,6 +21,8 @@ import SecuritySettingsCard from "./security-settings-card";
 import { ProfileData } from "@/types/customer.types";
 import { ProfileSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
+import NotificationPanel from "./notification-panel";
+
 export default function CustomerProfileSettingsView() {
   const [isPending, startTransition] = useTransition();
   const [profile, setProfile] = useState<ProfileData | null>(null);
@@ -28,6 +30,7 @@ export default function CustomerProfileSettingsView() {
     null,
   );
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [activeView, setActiveView] = useState<'profile' | 'notifications'>('profile');
 
   useEffect(() => {
     async function loadData() {

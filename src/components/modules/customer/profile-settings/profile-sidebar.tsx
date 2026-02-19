@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { Camera } from "lucide-react";
+import { Camera, Bell } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
@@ -82,6 +82,22 @@ export default function ProfileSidebar({
             <span className="text-sm font-semibold text-gray-600">Reviews</span>
             <span className="font-bold text-amber-500">4.8</span>
           </div>
+
+          {/* Notification Button */}
+          <button
+            onClick={onNotificationClick}
+            className="w-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 p-4 rounded-2xl flex items-center justify-between transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="bg-white p-2 rounded-xl group-hover:scale-105 transition-transform">
+                <Bell className="h-5 w-5 text-emerald-600" />
+              </div>
+              <span className="text-sm font-bold text-gray-700">Notifications</span>
+            </div>
+            <div className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+              3
+            </div>
+          </button>
         </div>
       </CardContent>
     </Card>
