@@ -12,7 +12,6 @@ import { toast } from "react-hot-toast";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { WalletSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 

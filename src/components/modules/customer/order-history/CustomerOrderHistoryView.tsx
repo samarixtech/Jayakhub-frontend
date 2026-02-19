@@ -1,5 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { addToCart } from "@/redux/slices/cartSlice";
 import { FileDown, Plus, RefreshCw, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { OrdersSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
+import useLocale from "@/hooks/useLocals";
 
 // Enum for Order Status
 export enum OrderStatus {
@@ -36,10 +40,12 @@ export enum OrderStatus {
 
 // Interface based on the API response provided
 interface OrderItem {
+  id?: string;
   name: string;
   price: string;
   quantity: number;
   image: string; // "uploads\item-images\..."
+  selectedVariations?: any[];
 }
 
 interface PaymentDetails {
@@ -74,6 +80,10 @@ export default function CustomerOrderHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false); // Mobile filter toggle
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { country, language } = useLocale();
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -203,6 +213,28 @@ export default function CustomerOrderHistory() {
       default:
         return s.charAt(0).toUpperCase() + s.slice(1);
     }
+  };
+
+  const handleReorder = (order: Order) => {
+    if (!order.items || order.items.length === 0) return;
+
+    order.items.forEach((item) => {
+      // Construct CartItem from OrderItem
+      const cartItem = {
+        id: item.id || `temp-${Date.now()}-${Math.random()}`,
+        name: item.name,
+        description: "",
+        price: parseFloat(item.price),
+        quantity: item.quantity,
+        image: item.image,
+        selectedVariations: item.selectedVariations || [],
+        cartId: `reorder-${order.orderId}-${item.id || item.name}-${Date.now()}`,
+      };
+      dispatch(addToCart(cartItem));
+    });
+
+    // Navigate to checkout
+    router.push(`/${country}/${language}/checkout`);
   };
 
   if (loading) {
@@ -352,6 +384,8 @@ export default function CustomerOrderHistory() {
               order.OrderStatus.toLowerCase() === OrderStatus.REJECTED;
             const isDelivered =
               order.OrderStatus.toLowerCase() === OrderStatus.DELIVERED;
+            const isDeliveredOrPaid =
+              isDelivered || order.OrderStatus.toLowerCase() === "paid";
             const firstItem = order.items?.[0];
             const itemNames = order.items
               ?.map((i) => `${i.quantity}x ${i.name}`)
@@ -428,7 +462,14 @@ export default function CustomerOrderHistory() {
                           Help
                         </Button>
                       ) : (
-                        <Button className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm">
+                        <Button
+                          className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
+                          onClick={() => {
+                            if (isDeliveredOrPaid) {
+                              handleReorder(order);
+                            }
+                          }}
+                        >
                           <RefreshCw size={12} />
                           Reorder
                         </Button>

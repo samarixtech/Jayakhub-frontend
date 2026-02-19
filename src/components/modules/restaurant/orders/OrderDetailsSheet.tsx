@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -7,8 +7,9 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
 
 // Temporary types - ideally move to a types file
 export interface OrderItem {
@@ -28,28 +29,110 @@ export interface Order {
   subtotal: number;
   tax: number;
   total: number;
+  originalStatus?: string;
 }
 
 interface OrderDetailsSheetProps {
   order: Order | null;
   isOpen: boolean;
   onClose: () => void;
-  onAccept?: (orderId: string) => void;
+  onStatusUpdate: (orderId: string, newStatus: string) => Promise<void>;
 }
 
 const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
   order,
   isOpen,
   onClose,
-  onAccept,
+  onStatusUpdate,
 }) => {
+  const [updating, setUpdating] = useState(false);
+
   if (!order) return null;
+
+  const handleUpdateClick = async (newStatus: string) => {
+    setUpdating(true);
+    try {
+      await onStatusUpdate(order.id, newStatus);
+      onClose();
+    } catch (error) {
+      console.error("Failed to update status", error);
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const renderFooterActions = () => {
+    // Normalize status for check
+    const currentStatus = order.originalStatus || order.status.toLowerCase();
+
+    // PENDING (NEW, PENDING) -> Accept / Reject
+    if (currentStatus === "pending" || currentStatus === "new") {
+      return (
+        <div className="flex gap-3 w-full">
+          <Button
+            onClick={() => handleUpdateClick("rejected")}
+            disabled={updating}
+            variant="outline"
+            className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+          >
+            {updating ? (
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            ) : null}
+            Reject
+          </Button>
+          <Button
+            onClick={() => handleUpdateClick("accepted")}
+            disabled={updating}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+          >
+            {updating ? (
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            ) : null}
+            Accept Order
+          </Button>
+        </div>
+      );
+    }
+
+    // ACCEPTED -> Prepare (Green)
+    if (currentStatus === "accepted") {
+      return (
+        <Button
+          onClick={() => handleUpdateClick("prepare")}
+          disabled={updating}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+        >
+          {updating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          Start Preparing
+        </Button>
+      );
+    }
+
+    // PREPARE -> Ready (Green)
+    if (currentStatus === "prepare" || currentStatus === "preparing") {
+      return (
+        <Button
+          onClick={() => handleUpdateClick("ready")}
+          disabled={updating}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+        >
+          {updating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          Mark as Ready
+        </Button>
+      );
+    }
+
+    // For other statuses (ready, out_for_delivery, delivered, rejected), return null
+    return null;
+  };
+
+  const footerContent = renderFooterActions();
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="w-full sm:max-w-md p-0 overflow-y-auto">
+      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full">
         {/* Header */}
-        <SheetHeader className="p-6 border-b border-gray-100 sticky top-0 bg-white z-10">
+        <SheetHeader className="p-6 border-b border-gray-100 flex-none sticky top-0 bg-white z-10">
           <div className="flex items-center justify-between">
             <div>
               <SheetTitle className="text-lg font-bold text-gray-900">
@@ -69,13 +152,13 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           </div>
         </SheetHeader>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* Status */}
           <div>
             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
               Status
             </h4>
-            <span className="text-sm font-bold text-gray-900">
+            <span className="text-sm font-bold text-gray-900 bg-gray-100 px-3 py-1 rounded-full">
               {order.status}
             </span>
           </div>
@@ -152,22 +235,12 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="p-6 border-t border-gray-100 bg-gray-50/50 sticky bottom-0">
-          <div className="flex gap-3 justify-end">
-            <SheetClose asChild>
-              <Button variant="ghost" className="font-semibold text-gray-600">
-                Close
-              </Button>
-            </SheetClose>
-            <Button
-              className="bg-primary hover:bg-primary/90 text-white font-bold"
-              onClick={() => onAccept && onAccept(order.id)}
-            >
-              Accept Order
-            </Button>
+        {/* Footer Actions - Only render if there are actions */}
+        {footerContent && (
+          <div className="p-6 border-t border-gray-100 bg-gray-50/50 sticky bottom-0 flex-none">
+            {footerContent}
           </div>
-        </div>
+        )}
       </SheetContent>
     </Sheet>
   );
