@@ -148,7 +148,8 @@ export default function OverviewPage() {
   };
 
   const getStatusLabel = (status: string) => {
-    const s = status?.toLowerCase();
+    if (!status) return "Pending";
+    const s = status.toLowerCase();
     switch (s) {
       case OrderStatus.OUT_FOR_DELIVERY:
         return "Out for Delivery";
