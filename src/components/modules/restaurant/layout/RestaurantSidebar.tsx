@@ -135,17 +135,15 @@ export function RestaurantSidebar() {
         {!isCollapsed ? (
           <div className="flex items-center gap-2 px-4 w-full">
             {/* Placeholder Logo */}
-            <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shrink-0">
-              <Store className="text-white w-5 h-5" />
-            </div>
-            <Typography className="font-bold text-lg tracking-tight text-white">
-              JAYAK HUB
-            </Typography>
+           
+            <Image src="/EngLogo (2).png" alt="Logo" width={180} height={200} />
           </div>
         ) : (
-          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-            <Store className="text-white w-5 h-5" />
-          </div>
+          <div className="">
+        
+         
+           <Image src="/favicon.ico" alt="Logo" width={40} height={50} />
+            </div>  
         )}
       </SidebarHeader>
 
