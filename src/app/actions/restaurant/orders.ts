@@ -7,13 +7,14 @@ export async function getRestaurantOrdersAction() {
     const api = await serverApi();
     const response = await api.get("/restaurant-orders");
     return {
-      success: true,
+      success: true as const,
       data: response.data,
     };
   } catch (error: any) {
     console.error("Fetch restaurant orders error:", error);
     return {
-      success: false,
+      success: false as const,
+      data: null,
       message: error.response?.data?.message || "Failed to fetch orders",
     };
   }

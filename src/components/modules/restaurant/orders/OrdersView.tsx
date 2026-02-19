@@ -78,9 +78,10 @@ const OrdersView = () => {
     async function fetchOrders() {
       try {
         const res = await getRestaurantOrdersAction();
-        if (res.success && res.data?.data) {
-          setStats(res.data.data.stats);
-          const apiOrders: ApiOrder[] = res.data.data.orders || [];
+        const resData = res.data as any;
+        if (res.success && resData?.data) {
+          setStats(resData.data.stats);
+          const apiOrders: ApiOrder[] = resData.data.orders || [];
 
           // Map API orders to UI Orders
           const mappedOrders: UIOrder[] = apiOrders.map((o) => ({
@@ -191,9 +192,10 @@ const OrdersView = () => {
       if (res.success) {
         // Re-fetch orders to update UI
         const ordersRes = await getRestaurantOrdersAction();
-        if (ordersRes.success && ordersRes.data?.data) {
-          setStats(ordersRes.data.data.stats);
-          const apiOrders: ApiOrder[] = ordersRes.data.data.orders || [];
+        const ordersData = ordersRes.data as any;
+        if (ordersRes.success && ordersData?.data) {
+          setStats(ordersData.data.stats);
+          const apiOrders: ApiOrder[] = ordersData.data.orders || [];
           const mappedOrders: UIOrder[] = apiOrders.map((o) => ({
             id: o.orderId,
             customerName: o.customerName,
