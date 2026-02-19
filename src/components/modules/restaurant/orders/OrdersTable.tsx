@@ -11,6 +11,7 @@ interface OrdersTableProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  loading?: boolean;
 }
 
 const OrdersTable: React.FC<OrdersTableProps> = ({
@@ -19,6 +20,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  loading = false,
 }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -32,6 +34,9 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
         return "bg-blue-100 text-blue-700 hover:bg-blue-100";
       case "DELIVERED":
         return "bg-gray-100 text-gray-700 hover:bg-gray-100";
+      case "REJECTED":
+      case "CANCELLED":
+        return "bg-red-50 text-red-700 hover:bg-red-50"; // Destructive color
       default:
         return "bg-gray-100 text-gray-700 hover:bg-gray-100";
     }
@@ -101,6 +106,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
     <GlobalTable
       data={data}
       columns={columns}
+      loading={loading}
       paginationParams={{
         currentPage,
         totalPages,

@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import {
-  Plus,
   Trash2,
   Edit2,
   Loader2,
@@ -13,11 +12,9 @@ import { toast } from "react-hot-toast";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { WalletSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
-import { AddCardForm } from "./add-card-form";
 import {
   deleteCardAction,
   getMyCardsAction,
