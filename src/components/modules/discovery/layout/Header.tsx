@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useParams } from "next/navigation";
 import { getProfile } from "@/app/actions/customer/userprofile";
 import { logoutAction } from "@/app/actions/auth/auth";
 import Image from "next/image";
@@ -25,10 +25,13 @@ import engLogo from "../../../../../public/EngLogo (2).png";
 import arabicLogo from "../../../../../public/ArbicLogo (2).png";
 
 const RestaurantHeader = () => {
-  const { country, language } = useLocale();
+  const { country: localeCountry, language: localeLanguage } = useLocale();
+  const params = useParams();
+
+  const country = (params?.country as string) || localeCountry || "pk";
+  const language = (params?.language as string) || localeLanguage || "en";
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { setIsFilterOpen } = useDiscoveryUI();
 
   const [currentAddress, setCurrentAddress] = useState("Iraq, Baghdad");
@@ -68,21 +71,21 @@ const RestaurantHeader = () => {
         <div className="flex items-center justify-start md:justify-center bg-[#3C8C64] px-4 md:px-6 h-12 md:h-10 overflow-x-auto scrollbar-hide">
           <div className="flex flex-row items-center gap-3 w-max md:w-auto pr-4 md:pr-0">
             <Link
-              href="/home"
+              href={`/${country}/${language}/home`}
               className="text-[11px] font-bold text-white uppercase tracking-wide border border-white/50 rounded px-4 py-1.5 hover:bg-white/10 transition-colors whitespace-nowrap shrink-0"
             >
               Our Business Website
             </Link>
 
             <Link
-              href="/restaurant-register"
+              href={`/${country}/${language}/restaurant-register`}
               className="text-[11px] font-bold text-white uppercase tracking-wide border border-white/50 rounded px-4 py-1.5 hover:bg-white/10 transition-colors whitespace-nowrap shrink-0"
             >
               Sign for a Restaurant Account
             </Link>
 
             <Link
-              href="/partners"
+              href={`/${country}/${language}/partners`}
               className="text-[11px] font-bold text-white uppercase tracking-wide border border-white/50 rounded px-4 py-1.5 hover:bg-white/10 transition-colors whitespace-nowrap shrink-0"
             >
               Sign up to be a business partner
@@ -95,7 +98,7 @@ const RestaurantHeader = () => {
           <div className="flex items-center justify-between px-4 md:px-6 h-14 md:h-14">
             {/* LEFT: Logo */}
             <div className="flex items-center gap-4 shrink-0">
-              <Link href="/restaurants">
+              <Link href={`/${country}/${language}/restaurants`}>
                 <Image
                   src={language === "ar" ? arabicLogo : engLogo}
                   alt="Jayak Hub"
@@ -114,7 +117,7 @@ const RestaurantHeader = () => {
                 isLoggedIn={isLoggedIn}
                 className="md:min-w-[400px] md:max-w-sm bg-white/10 text-white border-white/10 hover:bg-white/20 [&_svg]:text-white shadow-none"
                 onLocationChange={(lat, lng) => {
-                  const params = new URLSearchParams(searchParams.toString());
+                  const params = new URLSearchParams(window.location.search);
                   params.set("lat", lat.toString());
                   params.set("lng", lng.toString());
                   router.push(`${pathname}?${params.toString()}`);
@@ -131,13 +134,13 @@ const RestaurantHeader = () => {
               {!isLoggedIn ? (
                 <div className="flex items-center gap-2">
                   <Link
-                    href="/login"
+                    href={`/${country}/${language}/login`}
                     className="text-white text-sm font-medium hover:text-white/80 transition-colors hidden md:inline"
                   >
                     Login
                   </Link>
                   <Link
-                    href="/register"
+                    href={`/${country}/${language}/register`}
                     className="bg-white text-emerald-bg text-sm font-semibold border border-emerald-bg rounded-full px-4 py-1.5 hover:bg-white/90 transition-colors hidden md:inline-block"
                   >
                     Sign up
@@ -195,7 +198,7 @@ const RestaurantHeader = () => {
                 isLoggedIn={isLoggedIn}
                 className="w-full max-w-none bg-white/10 text-white border-white/10 hover:bg-white/20 [&_svg]:text-white shadow-none"
                 onLocationChange={(lat, lng) => {
-                  const params = new URLSearchParams(searchParams.toString());
+                  const params = new URLSearchParams(window.location.search);
                   params.set("lat", lat.toString());
                   params.set("lng", lng.toString());
                   router.push(`${pathname}?${params.toString()}`);
@@ -217,6 +220,8 @@ const RestaurantHeader = () => {
         isLoggedIn={isLoggedIn}
         user={user}
         showFilter={pathname?.endsWith("/restaurants")}
+        country={country}
+        language={language}
       />
     </>
   );

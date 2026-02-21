@@ -2,7 +2,7 @@
 import { executeRestaurantAction } from "@/lib/utils/execute-restaurant-action";
 
 import { ActionResponse } from "@/lib/utils/response-handler";
-import { BulkImportItem } from "@/types/menu.types";
+import { BulkImportItem } from "@/types";
 
 interface VariantOption {
   name: string;

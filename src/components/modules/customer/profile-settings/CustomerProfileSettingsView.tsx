@@ -18,19 +18,20 @@ import PersonalInfoCard from "./personal-info-card";
 import PaymentMethodsCard from "./payment-methods-card";
 import IdentityVerificationCard from "./kyc-verification-card";
 import SecuritySettingsCard from "./security-settings-card";
-import { ProfileData } from "@/types/customer.types";
+import { CustomerProfileData } from "@/types";
 import { ProfileSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 
 import NotificationPanel from "./notification-panel";
 
 export default function CustomerProfileSettingsView() {
   const [isPending, startTransition] = useTransition();
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [initialProfile, setInitialProfile] = useState<ProfileData | null>(
-    null,
-  );
+  const [profile, setProfile] = useState<CustomerProfileData | null>(null);
+  const [initialProfile, setInitialProfile] =
+    useState<CustomerProfileData | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [activeView, setActiveView] = useState<'profile' | 'notifications'>('profile');
+  const [activeView, setActiveView] = useState<"profile" | "notifications">(
+    "profile",
+  );
 
   useEffect(() => {
     async function loadData() {

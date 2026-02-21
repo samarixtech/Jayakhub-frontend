@@ -39,7 +39,7 @@ import { useOnboarding } from "@/components/modules/restaurant/onboarding/Onboar
 import LocationPicker from "@/components/common/LocationPicker";
 import { PhoneInput } from "@/components/ui/phone-input";
 
-import { WizardStepProps } from "../types";
+import { StepRestaurantInfoProps } from "@/types";
 
 const CUISINE_TYPES = [
   "Fast Food",

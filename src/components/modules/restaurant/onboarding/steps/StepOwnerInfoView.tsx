@@ -26,7 +26,7 @@ import useLocale from "@/hooks/useLocals";
 import { getProfile } from "@/app/actions/customer/userprofile";
 import { Mail } from "lucide-react";
 
-import { WizardStepProps } from "../types";
+import { WizardStepProps } from "@/types";
 import { useOnboarding } from "../OnboardingContext";
 
 export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {

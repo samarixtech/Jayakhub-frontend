@@ -29,17 +29,34 @@ export async function loginAction(data: LoginInput): Promise<ActionResponse> {
     async () =>
       api.post("/login", { identifier: data.email, password: data.password }),
     "Login successful",
+    async (responseData: any) => {
+      const userId =
+        responseData?.id || responseData?.userId || responseData?.user?.id;
+      if (userId) {
+        const cookieStore = await cookies();
+        cookieStore.set("tempUserId", userId, { path: "/" });
+      }
+      return { ...responseData, identifier: data.email };
+    },
   );
 }
 
 // ==================== VERIFY OTP ACTION ====================
 export async function verifyOtpAction(payload: {
-  email: string;
   otp: string;
 }): Promise<ActionResponse> {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get("tempUserId")?.value;
+
+  if (!userId) {
+    return {
+      success: false,
+      message: "Session expired or missing. Please login again.",
+    };
+  }
+
   return responseHandler(
-    async () =>
-      api.post("/verify-otp", { identifier: payload.email, otp: payload.otp }),
+    async () => api.post("/verify-otp", { userId, otp: payload.otp }),
     "Verification successful",
     async (data: any) => {
       // Side effect: Set Cookies
@@ -59,6 +76,7 @@ export async function verifyOtpAction(payload: {
           cookieStore.set("role", data.user.role, { path: "/" });
         }
       }
+      cookieStore.delete("tempUserId"); // Clean up temp cookie
       console.log(data);
 
       return data;
@@ -93,10 +111,19 @@ export async function registerAction(
         name: data.name,
         email: data.email,
         password: data.password,
-        phone: data.phone,
+        phone: Number(data.phone.replace(/\D/g, "")),
         role: "customer",
       }),
     "Registration successful",
+    async (responseData: any) => {
+      const userId =
+        responseData?.id || responseData?.userId || responseData?.user?.id;
+      if (userId) {
+        const cookieStore = await cookies();
+        cookieStore.set("tempUserId", userId, { path: "/" });
+      }
+      return { ...responseData, email: data.email };
+    },
   );
 }
 
@@ -176,10 +203,19 @@ export async function registerRestaurantAction(
         name: data.name,
         email: data.email,
         password: data.password,
-        phone: data.phone,
+        phone: Number(data.phone.replace(/\D/g, "")),
         role: "restaurant_owner",
       }),
     "Restaurant registration successful",
+    async (responseData: any) => {
+      const userId =
+        responseData?.id || responseData?.userId || responseData?.user?.id;
+      if (userId) {
+        const cookieStore = await cookies();
+        cookieStore.set("tempUserId", userId, { path: "/" });
+      }
+      return { ...responseData, email: data.email };
+    },
   );
 }
 

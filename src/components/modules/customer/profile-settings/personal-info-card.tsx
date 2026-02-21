@@ -5,7 +5,7 @@ import { useZodForm } from "@/hooks/use-zod-form";
 import { updateProfileSchema, UpdateProfileInput } from "@/lib/schemas/profile";
 import { updateProfileAction } from "@/app/actions/customer/userprofile";
 import { useServerAction } from "@/hooks/use-server-action";
-import { ProfileData } from "@/types/customer.types";
+import { CustomerProfileData } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/form";
 
 interface PersonalInfoCardProps {
-  profile: ProfileData;
+  profile: CustomerProfileData;
 }
 
 export default function PersonalInfoCard({ profile }: PersonalInfoCardProps) {

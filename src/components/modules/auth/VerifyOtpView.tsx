@@ -74,7 +74,7 @@ export default function VerifyOtpView() {
     if (!email) return;
 
     startVerifyTransition(async () => {
-      const result = await verifyOtpAction({ email, otp: otpValue });
+      const result = await verifyOtpAction({ otp: otpValue });
 
       if (result.success) {
         // HANDLE "Forgot Password" FLOW VS "Registration" FLOW
