@@ -33,3 +33,14 @@ export async function getRestaurantBySlugAction(
     },
   );
 }
+
+export async function getPreviousOrderRestaurantsAction(): Promise<ActionResponse> {
+  const api = await serverApi();
+  return responseHandler(
+    async () => api.get("/my-order-resturant"),
+    undefined,
+    async (data) => {
+      return data;
+    },
+  );
+}

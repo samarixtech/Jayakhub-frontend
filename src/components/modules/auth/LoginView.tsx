@@ -49,8 +49,8 @@ export default function LoginView() {
   // 2. SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(loginAction, {
     onSuccess: (data: any) => {
-      if (data?.identifier) {
-        const { identifier } = data;
+      const identifier = data?.identifier || data?.email;
+      if (identifier) {
         sessionStorage.setItem("pendingVerificationEmail", identifier);
         router.push(
           `/${country?.toLowerCase() || "pakistan"}/${language?.toLowerCase() || "en"}/verify-otp?email=${encodeURIComponent(identifier)}`,

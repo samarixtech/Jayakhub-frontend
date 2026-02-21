@@ -7,12 +7,11 @@ import { updateQuantity } from "@/redux/slices/cartSlice";
 import {
   Minus,
   Plus,
-  Trash2,
   ChevronDown,
   ChevronUp,
   ShoppingBasket,
 } from "lucide-react";
-import { CartItem } from "@/types/menu.types";
+import { CartItem } from "@/types";
 import { useCLC } from "@/app/context/CLCContext";
 import Image from "next/image";
 

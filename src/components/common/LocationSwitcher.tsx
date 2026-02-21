@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { getUserAddresses } from "@/app/actions/customer/address";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -60,7 +60,6 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   className,
 }) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const tLocation = useTranslations("location.dropdown");
   const tCountries = useTranslations("countries");
   const isMobile = useIsMobile();
@@ -137,7 +136,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
         setSelectedLocation(newPos);
 
         if (updateUrl) {
-          const params = new URLSearchParams(searchParams.toString());
+          const params = new URLSearchParams(window.location.search);
           params.set("lat", latitude.toString());
           params.set("lng", longitude.toString());
           router.replace(`?${params.toString()}`);
@@ -181,6 +180,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   const autoDetectRef = React.useRef(false);
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
     const lat = searchParams.get("lat");
     const lng = searchParams.get("lng");
 

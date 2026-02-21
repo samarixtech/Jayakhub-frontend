@@ -8,7 +8,7 @@ import {
   UploadCloud,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { SettingsData } from "../types";
+import { SettingsData } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
   Select,

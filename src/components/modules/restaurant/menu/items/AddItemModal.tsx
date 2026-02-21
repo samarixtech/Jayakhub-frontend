@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useLocale from "@/hooks/useLocals";
-import { BulkImportItem } from "@/types/menu.types";
+import { BulkImportItem } from "@/types";
 
 interface AddItemModalProps {
   open: boolean;

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SettingsData } from "../types";
+import { SettingsData } from "@/types";
 import LocationPicker from "@/components/common/LocationPicker";
 
 import { updateLocationAction } from "@/app/actions/restaurant/settings";

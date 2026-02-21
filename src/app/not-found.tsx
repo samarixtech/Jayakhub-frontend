@@ -17,7 +17,7 @@ const outerRing = [
   "🍊", // Orange
   "🥒", // Cucumber
   "🥬", // Leafy Green
-  "🌽"  // Corn
+  "🌽", // Corn
 ];
 
 // Inner ring (6 items)
@@ -27,7 +27,7 @@ const innerRing = [
   "🥑", // Avocado
   "🥝", // Kiwi
   "🫐", // Blueberries
-  "🍇"  // Grapes
+  "🍇", // Grapes
 ];
 
 // Helper to calculate position on a circle
@@ -42,12 +42,10 @@ const getPosition = (index: number, total: number, radiusPercent: number) => {
 const NotFoundPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCFBF4] overflow-hidden font-serif text-[#C5A572] py-10 sm:py-0">
-
       {/* 404 Group */}
       {/* Mobile: Reduced Scale (0.6), Tighter Gap. Desktop: Scale 1, Large Gap */}
       {/* ADDED mb-2 to ensure spacing from text below on mobile. Removed negative bottom margin. */}
       <div className="flex items-center justify-center gap-1 sm:gap-10 md:gap-16 scale-[0.6] xs:scale-[0.65] sm:scale-90 md:scale-100 transition-transform duration-300 w-full max-w-6xl mx-auto mb-2 sm:mb-8 mt-4 sm:mt-10">
-
         {/* Left 4 Container - Width ensures spacing consistency without pushing content */}
         <div className="flex justify-end items-center min-w-[100px] sm:min-w-[200px]">
           <span className="text-[180px] sm:text-[300px] font-bold text-[#D4C4A8] leading-none select-none">
@@ -57,7 +55,6 @@ const NotFoundPage = () => {
 
         {/* The '0' - Perfectly Circular Vegetable Arrangement */}
         <div className="relative w-[210px] h-[210px] sm:w-[300px] sm:h-[300px] shrink-0">
-
           {/* Outer Ring */}
           {outerRing.map((emoji, index) => {
             const pos = getPosition(index, outerRing.length, 42); // 42% radius
@@ -68,7 +65,7 @@ const NotFoundPage = () => {
                 style={{
                   left: pos.left,
                   top: pos.top,
-                  transform: 'translate(-50%, -50%)',
+                  transform: "translate(-50%, -50%)",
                   zIndex: 10,
                 }}
                 initial={{ rotate: Math.random() * 30 - 15 }}
@@ -76,7 +73,7 @@ const NotFoundPage = () => {
                   scale: 1.3,
                   rotate: 0,
                   zIndex: 50,
-                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                  transition: { type: "spring", stiffness: 400, damping: 10 },
                 }}
               >
                 {emoji}
@@ -94,7 +91,7 @@ const NotFoundPage = () => {
                 style={{
                   left: pos.left,
                   top: pos.top,
-                  transform: 'translate(-50%, -50%)',
+                  transform: "translate(-50%, -50%)",
                   zIndex: 5,
                 }}
                 initial={{ rotate: Math.random() * 30 - 15 }}
@@ -102,18 +99,17 @@ const NotFoundPage = () => {
                   scale: 1.3,
                   rotate: 0,
                   zIndex: 50,
-                  transition: { type: "spring", stiffness: 400, damping: 10 }
+                  transition: { type: "spring", stiffness: 400, damping: 10 },
                 }}
               >
                 {emoji}
               </motion.div>
             );
           })}
-
         </div>
 
         {/* Right 4 Container - Width ensures spacing consistency without pushing content */}
-        <div className="flex justify-start items-center min-w-[100px] sm:min-w-[200px]">
+        <div className="flex justify-end items-center min-w-[100px] sm:min-w-[200px] ml-15">
           <span className="text-[180px] sm:text-[300px] font-bold text-[#D4C4A8] leading-none select-none">
             4
           </span>
@@ -127,7 +123,8 @@ const NotFoundPage = () => {
           Oops! Page Not Found
         </h2>
         <p className="text-[#8C7B66] text-sm sm:text-base mb-8 px-2 leading-relaxed">
-          The page you are looking for might have been removed or is temporarily unavailable.
+          The page you are looking for might have been removed or is temporarily
+          unavailable.
         </p>
 
         <Link
@@ -137,7 +134,6 @@ const NotFoundPage = () => {
           GO TO HOMEPAGE
         </Link>
       </div>
-
     </div>
   );
 };

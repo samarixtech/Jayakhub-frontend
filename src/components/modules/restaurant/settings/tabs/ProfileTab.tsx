@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { SettingsData } from "../types";
+import { SettingsData } from "@/types";
 import { useServerAction } from "@/hooks/use-server-action";
 import { updateRestaurantProfileAction } from "@/app/actions/restaurant/settings";
 import { toast } from "react-hot-toast";

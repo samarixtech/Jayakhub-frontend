@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Home, SlidersHorizontal, ShoppingBag, User } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,8 @@ interface RestaurantsBottomNavProps {
   isLoggedIn: boolean;
   user: any;
   showFilter?: boolean;
+  country: string;
+  language: string;
 }
 
 const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
@@ -23,18 +25,30 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
   isLoggedIn,
   user,
   showFilter = true,
+  country: propCountry,
+  language: propLanguage,
 }) => {
   const pathname = usePathname();
+  const params = useParams();
+
+  // Use URL params first to avoid middleware casing redirects
+  const country = (params?.country as string) || propCountry || "pk";
+  const language = (params?.language as string) || propLanguage || "en";
+
   const totalItems = useSelector((state: RootState) =>
     state.cart.items.reduce((sum, item) => sum + item.quantity, 0),
   );
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) =>
+    pathname === `/${country}/${language}${path}`;
 
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 py-2 px-6 flex justify-between items-center z-50 md:hidden pb-safe">
       {/* Home */}
-      <Link href="/restaurants" className="flex flex-col items-center gap-1">
+      <Link
+        href={`/${country}/${language}/restaurants`}
+        className="flex flex-col items-center gap-1"
+      >
         <Home
           className={`w-6 h-6 ${
             isActive("/restaurants") ? "text-[#346853]" : "text-gray-400"
@@ -78,7 +92,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
 
       {/* Profile */}
       <Link
-        href="/customer/dashboard"
+        href={`/${country}/${language}/customer/dashboard`}
         className="flex flex-col items-center gap-1"
       >
         {isLoggedIn && user ? (

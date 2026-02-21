@@ -4,11 +4,11 @@ import { Camera, Bell } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import { ProfileData } from "@/types/customer.types";
+import { CustomerProfileData } from "@/types";
 
 // TYPES
 interface ProfileSidebarProps {
-  profile: ProfileData;
+  profile: CustomerProfileData;
   onAvatarChange: (file: File | null) => void;
   onNotificationClick?: () => void;
 }

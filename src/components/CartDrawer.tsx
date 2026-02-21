@@ -6,7 +6,7 @@ import { updateQuantity, clearCart } from "@/redux/slices/cartSlice";
 
 import { X, Plus, Minus, ShoppingBag, Info, Trash2 } from "lucide-react";
 import { AppDispatch, RootState } from "@/redux/store/store";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useCLC } from "@/app/context/CLCContext";
 import Image from "next/image";
 
@@ -20,6 +20,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const cart = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const params = useParams();
 
   // Mock data for display purposes
   const restaurantName = "JayakHub Selections";
@@ -44,9 +45,11 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   };
 
   const handleCheckout = () => {
-    router.push(
-      `/${country.toLocaleLowerCase()}/${language.toLocaleLowerCase()}/checkout`,
-    );
+    // Navigate with exact route params to prevent middleware redirect mismatch.
+    const routeCountry = params?.country || country.toLowerCase();
+    const routeLang = params?.language || language.toLowerCase();
+
+    router.push(`/${routeCountry}/${routeLang}/checkout`);
     onClose();
   };
 

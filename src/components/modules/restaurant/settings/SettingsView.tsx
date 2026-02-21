@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useServerAction } from "@/hooks/use-server-action";
 import { getAccountSettingsAction } from "@/app/actions/restaurant/settings";
-import { SettingsData } from "./types";
+import { SettingsData } from "@/types";
 
 // Import Tab Components
 import { ProfileTab } from "./tabs/ProfileTab";
