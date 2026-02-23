@@ -10,6 +10,7 @@ interface ReportsStatsCardProps {
   trendLabel?: string; // e.g., "vs last period"
   isPositive: boolean;
   icon: React.ReactNode;
+  iconBgColor?: string;
   className?: string;
 }
 
@@ -20,32 +21,33 @@ const ReportsStatsCard: React.FC<ReportsStatsCardProps> = ({
   trendLabel = "vs last period",
   isPositive,
   icon,
+  iconBgColor = "bg-gray-50",
   className,
 }) => {
   return (
-    <Card className={cn("border-gray-100 shadow-sm bg-white", className)}>
-      <CardContent className="p-6">
+    <Card className={cn("border-gray-100 shadow-sm bg-white rounded-[16px]", className)}>
+      <CardContent className="p-6 flex flex-col justify-between h-full min-h-[140px]">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-sm font-bold text-gray-500">{label}</h3>
-          <div className="p-2 rounded-lg bg-gray-50 text-gray-400">{icon}</div>
+          <h3 className="text-[13px] font-bold text-[#657a8a]">{label}</h3>
+          <div className={`p-2 rounded-lg flex items-center justify-center ${iconBgColor}`}>
+            {icon}
+          </div>
         </div>
-        <div className="space-y-2">
-          <h2 className="text-3xl font-bold text-gray-900">{value}</h2>
-          <div className="flex items-center gap-2">
-            <span
-              className={cn(
-                "flex items-center text-xs font-bold",
-                isPositive ? "text-emerald-500" : "text-red-500",
-              )}
-            >
+        <div className="flex flex-col gap-1.5 mt-2">
+          <h2 className="text-[28px] font-black text-[#1b2d22] leading-none">{value}</h2>
+          <div className="flex items-center gap-1.5 font-bold text-[11px]">
+            <span className={cn(
+              "flex items-center",
+              isPositive ? "text-emerald-500" : "text-red-500",
+            )}>
               {isPositive ? (
-                <TrendingUp className="w-3 h-3 mr-1" />
+                <TrendingUp className="w-3.5 h-3.5 mr-0.5 stroke-[3]" />
               ) : (
-                <TrendingDown className="w-3 h-3 mr-1" />
+                <TrendingDown className="w-3.5 h-3.5 mr-0.5 stroke-[3]" />
               )}
               {trend}
             </span>
-            <span className="text-xs text-green-500 font-medium">
+            <span className="text-[#1eb589] font-bold">
               {trendLabel}
             </span>
           </div>
