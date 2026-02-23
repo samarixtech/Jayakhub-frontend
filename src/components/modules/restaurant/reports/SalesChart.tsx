@@ -38,16 +38,11 @@ const options = {
     tooltip: {
       mode: "index" as const,
       intersect: false,
-      backgroundColor: "#fff",
-      titleColor: "#374151",
-      bodyColor: "#374151",
-      borderColor: "#e5e7eb",
-      borderWidth: 1,
+      backgroundColor: "#1b2d22",
+      titleColor: "#fff",
+      bodyColor: "#fff",
       padding: 10,
-      displayColors: false,
-      callbacks: {
-        label: (context: any) => `Sales: $${context.parsed.y}`,
-      },
+      displayColors: true,
     },
   },
   scales: {
@@ -57,17 +52,33 @@ const options = {
         drawBorder: false,
       },
       ticks: {
-        color: "#9ca3af",
+        color: "#9ca3af", // gray-400
         font: {
           size: 10,
+          weight: 'bold' as const
         },
       },
+      border: { display: false }
     },
     y: {
-      display: false, // Hide Y axis as per screenshot minimalist look
       grid: {
-        display: false,
+        color: "#f3f4f6", // gray-100
+        drawTicks: false,
       },
+      ticks: {
+        color: "#9ca3af", // gray-400
+        font: {
+          size: 10,
+          weight: 'bold' as const
+        },
+        callback: function (value: any) {
+          return '$' + value;
+        },
+        stepSize: 495,
+      },
+      border: { display: false },
+      min: 0,
+      max: 2000,
     },
   },
   interaction: {
@@ -77,62 +88,60 @@ const options = {
   },
   elements: {
     point: {
-      radius: 0, // Hide points by default
+      radius: 0,
       hoverRadius: 6,
-      backgroundColor: "#1B4332",
     },
     line: {
-      tension: 0.4, // Smooth curve
-      borderWidth: 2,
+      tension: 0.1, // very slight curve but mostly straight between points
     },
   },
 };
 
 const labels = [
-  "Feb 01",
-  "Feb 05",
-  "Feb 10",
-  "Feb 14",
-  "Feb 18",
-  "Feb 21",
-  "Feb 25",
-  "Feb 28",
+  "Feb 1", "Feb 5", "Feb 9", "Feb 13", "Feb 17", "Feb 21", "Feb 25", "Feb 29"
 ];
 
 const data = {
   labels,
   datasets: [
     {
-      label: "Sales",
-      data: [1200, 1900, 1500, 2200, 2800, 2400, 3100, 2900],
-      borderColor: "#1B4332", // Primary green
+      label: "Current Period",
+      data: [1300, 1800, 1600, 1900, 1750, 1950, 1700, 1850],
+      borderColor: "#1B4332", // Dark Green
       backgroundColor: (context: any) => {
         const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, "rgba(27, 67, 50, 0.1)");
-        gradient.addColorStop(1, "rgba(27, 67, 50, 0)");
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, "rgba(27, 67, 50, 0.15)");
+        gradient.addColorStop(1, "rgba(27, 67, 50, 0.02)");
         return gradient;
       },
       fill: true,
+      borderWidth: 2,
+    },
+    {
+      label: "Previous Period",
+      data: [1100, 1500, 1400, 1600, 1500, 1650, 1450, 1600],
+      borderColor: "#a7f3d0", // Light emerald/mint
+      backgroundColor: "transparent",
+      fill: false,
+      borderWidth: 2,
+      borderDash: [5, 5],
     },
   ],
 };
 
 const SalesChart = () => {
   return (
-    <div className="w-full h-[300px]">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-bold text-gray-900">
-          Total Sales Over Time
+    <div className="w-full flex flex-col h-full">
+      <div className="mb-6">
+        <h2 className="text-[16px] font-bold text-gray-900 leading-none">
+          Sales Over Time
         </h2>
-        <div className="flex gap-4 text-xs font-medium text-gray-400">
-          <span className="text-gray-900 cursor-pointer">Daily</span>
-          <span className="hover:text-gray-900 cursor-pointer transition-colors">
-            Weekly
-          </span>
-        </div>
+        <p className="text-[12px] text-gray-400 mt-1">
+          Revenue trend with previous period comparison
+        </p>
       </div>
-      <div className="relative h-[250px] w-full">
+      <div className="flex-1 min-h-[250px] w-full mt-2 relative">
         <Line options={options} data={data} />
       </div>
     </div>

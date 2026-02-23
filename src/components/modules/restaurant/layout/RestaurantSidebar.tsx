@@ -51,7 +51,7 @@ const NAV_SECTIONS = [
         href: "/restaurant/dashboard",
         icon: LayoutDashboard,
       },
-      { name: "POS", href: "/restaurant/pos", icon: Store },
+      { name: "POS", href: "/pos", icon: Store },
       { name: "Orders", href: "/restaurant/orders", icon: ShoppingCart },
       {
         name: "Menu Management",
@@ -72,11 +72,7 @@ const NAV_SECTIONS = [
       { name: "Marketing", href: "/restaurant/marketing", icon: Megaphone },
       { name: "Ratings & Reviews", href: "/restaurant/reviews", icon: Star },
       { name: "Users & Roles", href: "/restaurant/users", icon: Users },
-      {
-        name: "Payment History",
-        href: "/restaurant/payments",
-        icon: CreditCard,
-      },
+      { name: "Finance", href: "/restaurant/payments", icon: CreditCard },
       { name: "Reports", href: "/restaurant/reports", icon: BarChart2 },
     ],
   },
@@ -99,8 +95,8 @@ import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 
 export function RestaurantSidebar() {
   const pathname = usePathname();
-  const { state } = useSidebar();
-  const isCollapsed = state === "collapsed";
+  const { state, isMobile } = useSidebar();
+  const isCollapsed = state === "collapsed" && !isMobile;
   const { country, language } = useLocale();
 
   const handleLogout = async () => {
@@ -135,15 +131,15 @@ export function RestaurantSidebar() {
         {!isCollapsed ? (
           <div className="flex items-center gap-2 px-4 w-full">
             {/* Placeholder Logo */}
-           
+
             <Image src="/EngLogo (2).png" alt="Logo" width={180} height={200} />
           </div>
         ) : (
           <div className="">
-        
-         
-           <Image src="/favicon.ico" alt="Logo" width={40} height={50} />
-            </div>  
+
+
+            <Image src="/favicon.ico" alt="Logo" width={40} height={50} />
+          </div>
         )}
       </SidebarHeader>
 
@@ -208,11 +204,10 @@ export function RestaurantSidebar() {
                       asChild
                       tooltip={item.name}
                       isActive={isActive}
-                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${
-                        isActive
-                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                          : "text-sidebar-foreground/80"
-                      }`}
+                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${isActive
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                        : "text-sidebar-foreground/80"
+                        }`}
                     >
                       <Link href={item.href}>
                         <item.icon className="w-5 h-5" />

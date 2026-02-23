@@ -1,7 +1,9 @@
+import DashboardView from "@/components/modules/restaurant/dashboard/DashboardView";
+
 export default function RestaurantDashboardPage() {
   return (
-    <div>
-      <h1>Restaurant Dashboard</h1>
+    <div className="w-full h-full pb-8">
+      <DashboardView />
     </div>
   );
 }
