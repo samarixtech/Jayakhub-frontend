@@ -18,7 +18,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import RestaurantsBottomNav from "../restaurants/RestaurantsBottomNav";
-import { useDiscoveryUI } from "@/app/context/DiscoveryUIContext";
+import { useDiscoveryUI } from "@/context/DiscoveryUIContext";
 
 // Assets
 import engLogo from "../../../../../public/EngLogo (2).png";

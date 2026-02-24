@@ -2,6 +2,7 @@ export type ActionResponse<T = any> = {
   success: boolean;
   message: string;
   data?: T;
+  suggestion?: string[];
   errors?: string[];
   statusCode?: number;
 };
@@ -38,6 +39,7 @@ export async function responseHandler<T>(
       message:
         responseData.meta?.message || successMessage || "Operation successful",
       data: resolvedData,
+      suggestion: responseData.suggestion,
       statusCode: responseData.meta?.status || 200,
     };
   } catch (error: any) {

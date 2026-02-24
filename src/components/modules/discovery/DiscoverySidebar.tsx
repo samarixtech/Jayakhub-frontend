@@ -12,34 +12,28 @@ const QUICK_FILTERS = [
   { id: "free_delivery", label: "Free Delivery" },
   { id: "offers", label: "Offers" },
   { id: "online_payment", label: "Online Payment" },
-  { id: "cuisines", label: "Cuisines" },
 ];
 
 const PRICE_LEVELS = ["$", "$$", "$$$"];
 
-const CUISINE_LIST = [
-  { name: "American", count: 124 },
-  { name: "Burgers", count: 85 },
-  { name: "Chinese", count: 62 },
-  { name: "Japanese", count: 45 },
-  { name: "Desserts", count: 38 },
-  { name: "Italian", count: 33 },
-  { name: "Mexican", count: 28 },
-  { name: "Indian", count: 25 },
-];
-
 const VISIBLE_CUISINES = 5;
+
+interface CuisineType {
+  id: string;
+  name: string;
+}
 
 interface DiscoverySidebarProps {
   selectedSort: string;
   onSortChange: (sort: string) => void;
   activeFilters: string[];
-  onFilterToggle: (filterId: string) => void;
+  onFilterToggle: (id: string) => void;
   selectedPrice: string | null;
   onPriceToggle: (price: string) => void;
   showAllCuisines: boolean;
   onToggleCuisines: () => void;
-  className?: string; // Allow passing extra classes if needed
+  cuisineTypes: CuisineType[];
+  className?: string;
 }
 
 const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
@@ -51,11 +45,13 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
   onPriceToggle,
   showAllCuisines,
   onToggleCuisines,
+  cuisineTypes,
   className = "",
 }) => {
+  const cuisines = Array.isArray(cuisineTypes) ? cuisineTypes : [];
   const visibleCuisines = showAllCuisines
-    ? CUISINE_LIST
-    : CUISINE_LIST.slice(0, VISIBLE_CUISINES);
+    ? cuisines
+    : cuisines.slice(0, VISIBLE_CUISINES);
 
   return (
     <div className={`space-y-7 ${className}`}>
@@ -150,20 +146,44 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
             <label
               key={cuisine.name}
               className="flex items-center justify-between w-full cursor-pointer group"
+              onClick={() => onFilterToggle(cuisine.name)}
             >
               <div className="flex items-center gap-3">
-                <span className="w-[18px] h-[18px] rounded border-2 border-gray-300 group-hover:border-gray-400 flex items-center justify-center transition-all" />
-                <span className="text-[13px] text-gray-700 group-hover:text-gray-900 transition-colors">
+                <span
+                  className={`w-[18px] h-[18px] rounded border-2 flex items-center justify-center transition-all ${
+                    activeFilters.includes(cuisine.name)
+                      ? "border-[#346853] bg-[#346853]"
+                      : "border-gray-300 group-hover:border-gray-400"
+                  }`}
+                >
+                  {activeFilters.includes(cuisine.name) && (
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-3 h-3 text-white"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  )}
+                </span>
+                <span
+                  className={`text-[13px] transition-colors ${
+                    activeFilters.includes(cuisine.name)
+                      ? "text-gray-900 font-medium"
+                      : "text-gray-700 group-hover:text-gray-900"
+                  }`}
+                >
                   {cuisine.name}
                 </span>
               </div>
-              <span className="text-[12px] text-gray-400 font-medium">
-                {cuisine.count}
-              </span>
             </label>
           ))}
         </div>
-        {CUISINE_LIST.length > VISIBLE_CUISINES && (
+        {cuisines.length > VISIBLE_CUISINES && (
           <button
             onClick={onToggleCuisines}
             className="text-[#346853] text-[13px] font-medium mt-4 hover:underline flex items-center gap-1"

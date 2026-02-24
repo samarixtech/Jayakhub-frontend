@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/redux/slices/cartSlice";
-import { FileDown, Plus, RefreshCw, Search, Filter } from "lucide-react";
+import { FileDown, Plus, RefreshCw, Search, Filter, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { OrdersSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 import useLocale from "@/hooks/useLocals";
+import { RatingModal } from "@/components/common/RatingModal";
 
 // Enum for Order Status
 export enum OrderStatus {
@@ -63,6 +64,10 @@ interface Order {
   orderTime: string;
   paymentDetails: PaymentDetails;
   items: OrderItem[];
+  restaurantId?: string;
+  hasFeedback?: boolean;
+  rating?: number;
+  review?: string;
 }
 
 interface OrderSummary {
@@ -80,6 +85,9 @@ export default function CustomerOrderHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false); // Mobile filter toggle
+
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+  const [currentOrderInfo, setCurrentOrderInfo] = useState<any>(null);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -122,6 +130,8 @@ export default function CustomerOrderHistory() {
     }
     fetchOrders();
   }, []);
+
+  console.log("All Orders", orders || "undefined");
 
   // Filter Logic
   const filteredOrders = orders.filter((order) => {
@@ -235,6 +245,36 @@ export default function CustomerOrderHistory() {
 
     // Navigate to checkout
     router.push(`/${country}/${language}/checkout`);
+  };
+
+  const handleRateOrder = (order: Order) => {
+    setCurrentOrderInfo({
+      rawOrder: order,
+      orderNumber: `#${order.orderId?.substring(0, 8) || "Order"}`,
+      // Use restaurant object name if available, otherwise just use a generic fallback (since orders endpoint stripped the restaurant nested object)
+      restaurantName: "Restaurant Order",
+      items: (order.items || []).map((item: any) => ({
+        id:
+          item.id ||
+          item.itemId ||
+          item.orderItemId ||
+          `temp-${Date.now()}-${Math.random()}`,
+        originalId: item.id || item.itemId || item.orderItemId || null,
+        orderItemId: item.orderItemId || null,
+        name: item.name,
+        price: parseFloat(item.price),
+        quantity: item.quantity,
+        image: getImageUrl(item.image),
+      })),
+      delivery: {
+        driverName: "Your Rider",
+        vehicle: "Delivery",
+        time: order.orderTime || "Just now",
+        driverImage:
+          "https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200",
+      },
+    });
+    setIsRatingModalOpen(true);
   };
 
   if (loading) {
@@ -476,6 +516,63 @@ export default function CustomerOrderHistory() {
                       )}
                     </div>
                   </div>
+
+                  {/* Rating / Review Block for Delivered Orders */}
+                  {isDelivered &&
+                    (() => {
+                      const ratedItem = order.items?.find(
+                        (item: any) => item.rate && item.rate > 0,
+                      ) as any;
+                      const hasGivenReview = !!ratedItem;
+                      const ratingValue = ratedItem?.rate || 5;
+                      const reviewText =
+                        ratedItem?.comment ||
+                        "Thank you for the wonderful feedback. Your response has been recorded.";
+
+                      return (
+                        <div className="bg-[#FAFAFA] border border-gray-100 p-5 mx-5 mb-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                          {hasGivenReview ? (
+                            <div className="flex-1 w-full flex flex-col gap-2">
+                              <div className="flex justify-between items-center w-full">
+                                <span className="font-bold text-gray-800 text-sm">
+                                  Your Review
+                                </span>
+                                <div className="flex gap-1">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={`w-4 h-4 ${i < ratingValue ? "fill-gray-800 text-gray-800" : "fill-gray-200 text-gray-200"}`}
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              <p className="text-gray-400 text-xs italic">
+                                "{reviewText}"
+                              </p>
+                            </div>
+                          ) : (
+                            <>
+                              <div>
+                                <h4 className="font-bold text-gray-800 text-sm mb-1">
+                                  No review given
+                                </h4>
+                                <p className="text-gray-500 text-xs">
+                                  Share your experience with others!
+                                </p>
+                              </div>
+                              <Button
+                                variant="outline"
+                                className="rounded-full bg-white border-gray-200 text-gray-800 text-[12px] font-bold h-10 px-5 hover:bg-gray-50 w-full md:w-auto shadow-sm"
+                                onClick={() => handleRateOrder(order)}
+                              >
+                                <Star className="w-4 h-4 mr-2" />
+                                Rate Order
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })()}
                 </CardContent>
               </Card>
             );
@@ -523,6 +620,15 @@ export default function CustomerOrderHistory() {
           </div>
         )}
       </div>
+
+      {/* Global Rating Modal */}
+      {currentOrderInfo && (
+        <RatingModal
+          open={isRatingModalOpen}
+          onOpenChange={(open) => setIsRatingModalOpen(open)}
+          orderInfo={currentOrderInfo}
+        />
+      )}
     </div>
   );
 }

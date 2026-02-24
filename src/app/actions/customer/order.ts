@@ -1,5 +1,4 @@
 "use server";
-
 import { serverApi } from "@/components/services/api";
 
 interface CreateOrderPayload {
@@ -58,6 +57,31 @@ export async function getAllOrders(): Promise<{
       success: false,
       message: error.message || "Failed to fetch orders",
       data: null,
+    };
+  }
+}
+
+export async function submitRatingAction(payload: {
+  orderId: string;
+  restaurantId: string;
+  itemId?: string; // Optional since some backend "Get Orders" permutations strip item ID
+  orderItemId?: string;
+  rating: number;
+  isRecommended: boolean;
+  comment: string;
+}) {
+  try {
+    const api = await serverApi();
+    const response = await api.post("/rating", payload);
+    return {
+      success: true,
+      data: response.data,
+      message: "Rating submitted successfully",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "Failed to submit rating",
     };
   }
 }

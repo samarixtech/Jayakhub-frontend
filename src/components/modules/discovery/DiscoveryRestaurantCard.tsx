@@ -10,6 +10,7 @@ export interface RestaurantProps {
   name: string;
   image: string;
   rating: number;
+  totalRatings?: number;
   priceLevel: string;
   cuisine: string;
   deliveryTime: string;
@@ -43,7 +44,8 @@ const DiscoveryRestaurantCard = ({
     }
   };
 
-  const widthClasses = fluid || isCompact ? "w-full min-w-0" : "min-w-[300px] w-[300px]";
+  const widthClasses =
+    fluid || isCompact ? "w-full min-w-0" : "min-w-[300px] w-[300px]";
 
   return (
     <div
@@ -52,8 +54,9 @@ const DiscoveryRestaurantCard = ({
     >
       {/* Image Container */}
       <div
-        className={`relative ${isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
-          } w-full overflow-hidden shadow-sm`}
+        className={`relative ${
+          isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
+        } w-full overflow-hidden shadow-sm`}
       >
         <Image
           width={250}
@@ -75,16 +78,22 @@ const DiscoveryRestaurantCard = ({
       <div className={`${isCompact ? "pt-2 space-y-0.5" : "pt-3 space-y-1"}`}>
         <div className="flex justify-between items-start">
           <h3
-            className={`${isCompact ? "text-sm" : "text-lg"
-              } font-bold text-gray-900 truncate pr-2`}
+            className={`${
+              isCompact ? "text-sm" : "text-lg"
+            } font-bold text-gray-900 truncate pr-2`}
           >
             {data.name}
           </h3>
-          <div className="flex items-center gap-1 bg-green-50 px-1.5 py-0.5 rounded-md self-center">
-            <Star className="h-3 w-3 text-green-600 fill-green-600" />
+          <div className="flex items-center gap-1 bg-green-50 px-1.5 py-0.5 rounded-md self-center whitespace-nowrap">
+            <Star className="h-3 w-3 text-green-600 fill-green-600 shrink-0" />
             <span className="text-xs font-bold text-green-700">
-              {data.rating}
+              {data.rating > 0 ? Number(data.rating).toFixed(1) : "New"}
             </span>
+            {!!data.totalRatings && data.totalRatings > 0 && (
+              <span className="text-[10px] text-green-600 font-medium">
+                ({data.totalRatings})
+              </span>
+            )}
           </div>
         </div>
 
@@ -97,10 +106,10 @@ const DiscoveryRestaurantCard = ({
         <div className="flex items-center gap-4 text-xs text-gray-500 pt-0.5 font-medium">
           <div className="flex items-center gap-1.5">
             <Clock className="h-4 w-4 text-gray-400" />
-            <span>{data.deliveryTime}</span>
+            <span>{data.deliveryTime || "30-45 mins"}</span>
           </div>
-          {!isCompact && (
-            data.deliveryFee === 0 ? (
+          {!isCompact &&
+            (data.deliveryFee === 0 ? (
               <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
                 <Bike className="h-4 w-4" />
                 <span>Free Delivery</span>
@@ -110,8 +119,7 @@ const DiscoveryRestaurantCard = ({
                 <Bike className="h-4 w-4 text-gray-400" />
                 <span>${data.deliveryFee} Delivery</span>
               </div>
-            )
-          )}
+            ))}
         </div>
       </div>
     </div>

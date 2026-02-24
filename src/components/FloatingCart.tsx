@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ShoppingBasket, ChevronRight } from "lucide-react";
-import { useCLC } from "@/app/context/CLCContext";
+import { useCLC } from "@/context/CLCContext";
 
 interface FloatingCartProps {
   itemCount: number;

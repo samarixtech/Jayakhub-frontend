@@ -1,9 +1,9 @@
 "use client";
-import { Search } from "lucide-react";
+import { GlobalSearch } from "./GlobalSearch";
 
 const HeroBanner = () => {
   return (
-    <div className="relative w-full h-[180px] md:h-[220px] overflow-hidden bg-black text-white">
+    <div className="relative w-full h-[180px] md:h-[220px] bg-black text-white z-20">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
@@ -21,17 +21,7 @@ const HeroBanner = () => {
         </h1>
 
         {/* Search Bar */}
-        <div className="w-full max-w-[540px] flex items-center bg-white rounded-full shadow-lg overflow-hidden px-3 md:px-4 py-1 md:py-0">
-          <Search className="w-4 h-4 md:w-5 md:h-5 text-gray-400 shrink-0" />
-          <input
-            type="text"
-            placeholder="Search for restaurants, cuisines..."
-            className="flex-1 h-10 md:h-12 px-2 md:px-3 text-sm text-gray-700 placeholder:text-gray-400 outline-none bg-transparent"
-          />
-          <button className="bg-[#346853] hover:bg-[#2a5443] text-white text-xs md:text-sm font-semibold px-4 py-2 md:px-5 md:py-2 rounded-full transition-colors shrink-0">
-            Search
-          </button>
-        </div>
+        <GlobalSearch />
       </div>
     </div>
   );
