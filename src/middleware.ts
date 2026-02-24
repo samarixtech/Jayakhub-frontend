@@ -56,22 +56,46 @@ export async function middleware(request: NextRequest) {
 
   // Auth Protection
   const token = request.cookies.get("token")?.value;
-  const isProtected = pathSegments.some(
-    (segment) => segment === "customer" || segment === "restaurant",
-  );
+  const role = request.cookies.get("role")?.value;
 
-  if (isProtected && !token) {
-    const loginUrl = new URL(`/${country}/${language}/login`, request.url);
-    const response = NextResponse.redirect(loginUrl);
-    response.cookies.set("USER_COUNTRY", country, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-    });
-    response.cookies.set("NEXT_LOCALE", language, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-    });
-    return response;
+  const isCustomerRoute = pathSegments.some(
+    (segment) => segment === "customer",
+  );
+  const isRestaurantRoute = pathSegments.some(
+    (segment) => segment === "restaurant",
+  );
+  const isProtected = isCustomerRoute || isRestaurantRoute;
+
+  if (isProtected) {
+    if (!token) {
+      const loginUrl = new URL(`/${country}/${language}/login`, request.url);
+      const response = NextResponse.redirect(loginUrl);
+      response.cookies.set("USER_COUNTRY", country, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+      });
+      response.cookies.set("NEXT_LOCALE", language, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+      });
+      return response;
+    }
+
+    // Role-based access control
+    if (isCustomerRoute && role !== "customer") {
+      const redirectPath =
+        role === "restaurant_owner" ? "restaurant/dashboard" : "login";
+      return NextResponse.redirect(
+        new URL(`/${country}/${language}/${redirectPath}`, request.url),
+      );
+    }
+
+    if (isRestaurantRoute && role !== "restaurant_owner") {
+      const redirectPath = role === "customer" ? "customer/dashboard" : "login";
+      return NextResponse.redirect(
+        new URL(`/${country}/${language}/${redirectPath}`, request.url),
+      );
+    }
   }
 
   // Check if the URL already has the valid format /[country]/[language]/...

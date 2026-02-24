@@ -221,7 +221,7 @@ export function RestaurantSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="p-4 group-data-[collapsible=icon]:!p-0 border-t border-white/10 transition-all duration-300">
+      <SidebarFooter className="p-4 group-data-[collapsible=icon]:p-0! border-t border-white/10 transition-all duration-300">
         <SidebarMenu className="group-data-[collapsible=icon]:items-center">
           <SidebarMenuItem>
             <LanguageSwitcher
@@ -233,9 +233,9 @@ export function RestaurantSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={handleLogout}
-              className="hover:bg-red-500/20 text-red-300 hover:text-red-200 h-11 cursor-pointer group-data-[collapsible=icon]:!size-11 group-data-[collapsible=icon]:!p-0 group-data-[collapsible=icon]:justify-center"
+              className="hover:bg-red-500/20 text-red-300 hover:text-red-200 h-11 cursor-pointer group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:p-0! group-data-[collapsible=icon]:justify-center"
             >
-              <LogOut className="w-5 h-5 group-data-[collapsible=icon]:!size-6" />
+              <LogOut className="w-5 h-5 group-data-[collapsible=icon]:size-6!" />
               <span className="group-data-[collapsible=icon]:hidden">
                 Logout
               </span>
