@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationModal";
 import GlobalTable from "@/components/common/GlobalTable";
-import { AddItemModal } from "./AddItemModal";
+import { AddItemModal } from "../components/AddItemModal";
 import Image from "next/image";
 
 // Mock Data for stats
@@ -254,8 +254,8 @@ export default function MenuItemsView() {
                     <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
                       {imageUrl ? (
                         <Image
-                        width={200}
-                        height={200}
+                          width={200}
+                          height={200}
                           src={imageUrl}
                           alt={item.name}
                           className="w-full h-full object-cover"

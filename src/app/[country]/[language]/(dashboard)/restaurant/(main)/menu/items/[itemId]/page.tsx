@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import AddNewItemView from "@/components/modules/restaurant/menu/items/AddNewItemView";
-
+import AddNewItemView from "@/components/modules/restaurant/menu/views/AddNewItemView";
 export const metadata: Metadata = {
   title: "Edit Item | Restaurant Dashboard",
   description: "Edit menu item details.",
