@@ -303,35 +303,35 @@ const AllRestaurantsPage: React.FC = () => {
             <div className="flex gap-12 md:gap-6 overflow-x-auto pb-2 pl-3 sm:pl-0 scrollbar-hide">
               {isCuisinesLoading
                 ? // Skeleton Loading for Cuisines
-                  Array.from({ length: 8 }).map((_, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col items-center gap-2 min-w-[70px] animate-pulse"
-                    >
-                      <div className="w-24 h-24 rounded-full bg-gray-200" />
-                      <div className="w-12 h-3 rounded bg-gray-200" />
-                    </div>
-                  ))
+                Array.from({ length: 8 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col items-center gap-2 min-w-[70px] animate-pulse"
+                  >
+                    <div className="w-24 h-24 rounded-full bg-gray-200" />
+                    <div className="w-12 h-3 rounded bg-gray-200" />
+                  </div>
+                ))
                 : cuisineTypes.map((cat: any, index: number) => (
-                    <button
-                      key={index}
-                      className="flex flex-col items-center gap-2 min-w-[70px] group"
-                    >
-                      <div className="w-23 h-23 rounded-full overflow-hidden border border-gray-100 shadow-sm group-hover:border-emerald-500 transition-colors">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <Image
-                          width={250}
-                          height={250}
-                          src={cat.image}
-                          alt={cat.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <span className="text-xs font-medium text-gray-700 group-hover:text-[#346853] transition-colors whitespace-nowrap">
-                        {cat.name}
-                      </span>
-                    </button>
-                  ))}
+                  <button
+                    key={index}
+                    className="flex flex-col items-center gap-2 min-w-[70px] group"
+                  >
+                    <div className="w-23 h-23 rounded-full overflow-hidden border border-gray-100 shadow-sm group-hover:border-emerald-500 transition-colors">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <Image
+                        width={250}
+                        height={250}
+                        src={cat.image}
+                        alt={cat.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    </div>
+                    <span className="text-xs font-medium text-gray-700 group-hover:text-[#346853] transition-colors whitespace-nowrap">
+                      {cat.name}
+                    </span>
+                  </button>
+                ))}
             </div>
           </section>
 
@@ -416,21 +416,19 @@ const AllRestaurantsPage: React.FC = () => {
                 <div className="flex bg-gray-100 p-1 rounded-lg">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`p-1.5 rounded-md transition-all ${
-                      viewMode === "grid"
-                        ? "bg-white shadow-sm text-gray-900"
-                        : "text-gray-400 hover:text-gray-600"
-                    }`}
+                    className={`p-1.5 rounded-md transition-all ${viewMode === "grid"
+                      ? "bg-white shadow-sm text-gray-900"
+                      : "text-gray-400 hover:text-gray-600"
+                      }`}
                   >
                     <LayoutGrid className="w-5 h-4" />
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`p-1.5 rounded-md transition-all ${
-                      viewMode === "list"
-                        ? "bg-white shadow-sm text-gray-900"
-                        : "text-gray-400 hover:text-gray-600"
-                    }`}
+                    className={`p-1.5 rounded-md transition-all ${viewMode === "list"
+                      ? "bg-white shadow-sm text-gray-900"
+                      : "text-gray-400 hover:text-gray-600"
+                      }`}
                   >
                     <List className="w-5 h-5" />
                   </button>
@@ -439,24 +437,21 @@ const AllRestaurantsPage: React.FC = () => {
 
               {isPending ? (
                 <div
-                  className={`grid gap-4 ${
-                    viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
-                  }`}
+                  className={`grid gap-4 ${viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
+                    }`}
                 >
                   {[1, 2, 3, 4, 5, 6].map((i) => (
                     <div
                       key={i}
-                      className={`bg-gray-200 rounded-2xl animate-pulse ${
-                        viewMode === "list" ? "h-[200px]" : "h-[140px]"
-                      }`}
+                      className={`bg-gray-200 rounded-2xl animate-pulse ${viewMode === "list" ? "h-[200px]" : "h-[140px]"
+                        }`}
                     />
                   ))}
                 </div>
               ) : restaurants.length > 0 ? (
                 <div
-                  className={`grid gap-4 ${
-                    viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
-                  }`}
+                  className={`grid gap-4 ${viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
+                    }`}
                 >
                   {restaurants.map((restaurant) => (
                     <DiscoveryRestaurantCard
@@ -525,24 +520,21 @@ const AllRestaurantsPage: React.FC = () => {
 
                   {isPreviousOrdersLoading ? (
                     <div
-                      className={`grid gap-4 ${
-                        viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
-                      }`}
+                      className={`grid gap-4 ${viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
+                        }`}
                     >
                       {[1, 2].map((i) => (
                         <div
                           key={i}
-                          className={`bg-gray-200 rounded-2xl animate-pulse ${
-                            viewMode === "list" ? "h-[200px]" : "h-[140px]"
-                          }`}
+                          className={`bg-gray-200 rounded-2xl animate-pulse ${viewMode === "list" ? "h-[200px]" : "h-[140px]"
+                            }`}
                         />
                       ))}
                     </div>
                   ) : (
                     <div
-                      className={`grid gap-4 ${
-                        viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
-                      }`}
+                      className={`grid gap-4 ${viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
+                        }`}
                     >
                       {previousOrders.map((restaurant) => (
                         <DiscoveryRestaurantCard
@@ -557,8 +549,8 @@ const AllRestaurantsPage: React.FC = () => {
                 </div>
               </section>
             )}
-        </div>
-      </div>
+        </div >
+      </div >
 
       {/* ===== BOTTOM NAVIGATION ===== */}
       {/* ===== MOBILE FILTER SHEET (BOTTOM) ===== */}

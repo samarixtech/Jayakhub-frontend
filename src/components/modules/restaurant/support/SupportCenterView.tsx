@@ -47,12 +47,12 @@ const MOCK_TICKETS: Ticket[] = [
 ];
 
 const KB_CATEGORIES: KBCategory[] = [
-    { name: "Getting Started", description: "Setup guide, onboarding, first steps", articles: 12, icon: <BookOpen className="w-4 h-4" />, color: "text-emerald-600", bgColor: "bg-emerald-50" },
-    { name: "Orders & Delivery", description: "Order flow, tracking, delivery", articles: 18, icon: <ShoppingBag className="w-4 h-4" />, color: "text-blue-600", bgColor: "bg-blue-50" },
-    { name: "Payments & Billing", description: "Payouts, invoices, billing info", articles: 9, icon: <CreditCard className="w-4 h-4" />, color: "text-amber-600", bgColor: "bg-amber-50" },
-    { name: "Menu Management", description: "Items, categories, variants, photos", articles: 21, icon: <BookOpen className="w-4 h-4" />, color: "text-purple-600", bgColor: "bg-purple-50" },
-    { name: "Account & Settings", description: "Profile, team roles, notifications", articles: 14, icon: <Settings className="w-4 h-4" />, color: "text-slate-600", bgColor: "bg-slate-100" },
-    { name: "Troubleshooting", description: "Common issues, error codes, fixes", articles: 16, icon: <AlertCircle className="w-4 h-4" />, color: "text-red-500", bgColor: "bg-red-50" },
+    { name: "Getting Started", description: "Setup guide, onboarding, first steps", articles: 12, icon: <BookOpen className="w-[18px] h-[18px]" />, color: "text-[#346853]", bgColor: "bg-[#f2f8f6] border border-[#e8f3ef]" },
+    { name: "Orders & Delivery", description: "Order flow, tracking, delivery", articles: 18, icon: <ShoppingBag className="w-[18px] h-[18px]" />, color: "text-[#3b82f6]", bgColor: "bg-[#eff6ff] border border-[#dbeafe]" },
+    { name: "Payments & Billing", description: "Payouts, invoices, billing info", articles: 14, icon: <CreditCard className="w-[18px] h-[18px]" />, color: "text-[#f59e0b]", bgColor: "bg-[#fffbeb] border border-[#fef3c7]" },
+    { name: "Menu Management", description: "Items, categories, variants, photos", articles: 21, icon: <BookOpen className="w-[18px] h-[18px]" />, color: "text-[#a855f7]", bgColor: "bg-[#faf5ff] border border-[#f3e8ff]" },
+    { name: "Account & Settings", description: "Profile, team roles, notifications", articles: 9, icon: <Settings className="w-[18px] h-[18px]" />, color: "text-[#3b82f6]", bgColor: "bg-[#eff6ff] border border-[#dbeafe]" },
+    { name: "Troubleshooting", description: "Common issues, error codes, fixes", articles: 16, icon: <AlertCircle className="w-[18px] h-[18px]" />, color: "text-[#ec4899]", bgColor: "bg-[#fdf2f8] border border-[#fce7f3]" },
 ];
 
 const FAQ_ITEMS = [
@@ -69,13 +69,13 @@ const FAQ_ITEMS = [
 /* ──────────────────────────── Status Badge ──────────────────────────── */
 const StatusBadge = ({ status }: { status: Ticket["status"] }) => {
     const map: Record<string, { bg: string; text: string; label: string }> = {
-        OPEN: { bg: "bg-orange-100", text: "text-orange-700", label: "OPEN" },
-        "IN PROGRESS": { bg: "bg-blue-100", text: "text-blue-700", label: "IN PROGRESS" },
-        RESOLVED: { bg: "bg-emerald-100", text: "text-emerald-700", label: "RESOLVED" },
+        OPEN: { bg: "bg-[#fef3c7]", text: "text-[#d97706]", label: "OPEN" },
+        "IN PROGRESS": { bg: "bg-[#dbeafe]", text: "text-[#2563eb]", label: "IN PROGRESS" },
+        RESOLVED: { bg: "bg-[#d1fae5]", text: "text-[#059669]", label: "RESOLVED" },
     };
     const s = map[status];
     return (
-        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold tracking-wide ${s.bg} ${s.text}`}>
+        <span className={`inline-flex items-center justify-center px-3 py-1 rounded-full text-[10px] font-bold tracking-wider ${s.bg} ${s.text} w-fit`}>
             {s.label}
         </span>
     );
@@ -101,61 +101,64 @@ const SupportCenterView = () => {
     return (
         <div className="w-full max-w-[1200px] mx-auto pb-12">
             {/* ── Page Header ── */}
-            <div className="flex justify-between items-center mb-6">
-                <div /> {/* spacer — page title is in the RestaurantHeader */}
+            <div className="flex justify-end items-center mb-4">
                 <button
                     onClick={() => setTicketDialogOpen(true)}
-                    className="flex items-center gap-2 bg-[#346853] hover:bg-[#2a5644] text-white text-[13px] font-semibold px-4 py-2.5 rounded-lg transition-colors shadow-sm"
+                    className="flex items-center gap-1.5 bg-[#2E6B56] hover:bg-[#255745] text-white text-[12px] font-bold px-5 py-2 rounded-full transition-colors shadow-sm tracking-wide"
                 >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-3.5 h-3.5" strokeWidth={3} />
                     New Ticket
                 </button>
             </div>
 
             {/* ── Hero Search Banner ── */}
-            <div className="bg-[#346853] rounded-2xl px-8 py-10 mb-8 text-center">
-                <h2 className="text-white text-[24px] font-bold mb-2">How can we help you today?</h2>
-                <p className="text-white/70 text-[14px] mb-6">Search for articles, FAQs, or browse our knowledge base</p>
-                <div className="max-w-[480px] mx-auto relative">
-                    <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            <div className="w-full rounded-2xl bg-gradient-to-r from-[#219e74] to-[#39cd96] px-8 py-12 mb-6 text-center text-white relative flex flex-col items-center justify-center shadow-sm overflow-hidden">
+                {/* Decorative right-side shape */}
+                <div className="absolute top-0 right-0 w-[400px] h-full bg-white/5 transform -skew-x-[35deg] origin-top translate-x-32" />
+                <div className="absolute top-0 right-0 w-[250px] h-[250px] bg-[#39cd96] rounded-full blur-3xl translate-x-1/3 -translate-y-1/3 opacity-80" />
+
+                <h2 className="text-[22px] md:text-[24px] font-bold mb-2 relative z-10 tracking-wide text-white">How can we help you today?</h2>
+                <p className="text-white/80 text-[13px] mb-6 relative z-10 font-medium">Search for articles, FAQs, or browse our knowledge base.</p>
+                <div className="w-full max-w-[500px] relative z-10">
+                    <Search className="w-[18px] h-[18px] absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" strokeWidth={2} />
                     <input
                         type="text"
-                        placeholder="e.g. How to change opening hours..."
-                        className="w-full h-11 pl-10 pr-4 rounded-xl bg-white text-[13px] text-gray-700 placeholder:text-gray-400 border-0 outline-none focus:ring-2 focus:ring-white/30"
+                        placeholder="e.g. How to change opening hours.."
+                        className="w-full h-11 pl-12 pr-4 rounded-full bg-white text-[13px] text-gray-800 placeholder:text-gray-400 border-0 outline-none shadow-sm focus:ring-2 focus:ring-white/40"
                     />
                 </div>
             </div>
 
             {/* ── Contact Cards ── */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {/* Live Chat */}
-                <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                    <div className="w-12 h-12 rounded-xl bg-[#346853] flex items-center justify-center mb-3">
-                        <MessageSquare className="w-5 h-5 text-white" />
+                <div className="bg-white border border-gray-100 rounded-2xl p-6 md:py-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="w-10 h-10 rounded-lg bg-[#e8f3ef] flex items-center justify-center mb-4">
+                        <MessageSquare className="w-5 h-5 text-[#346853] fill-current opacity-80" />
                     </div>
-                    <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-0.5">Live Chat</h3>
-                    <div className="flex items-center gap-1.5 text-[12px] text-gray-500">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        Online · Avg 2 min wait
+                    <h3 className="text-[14px] font-bold text-gray-800 mb-1">Live Chat</h3>
+                    <div className="flex items-center gap-1.5 text-[12px] text-gray-500 font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#1E9E74]" />
+                        Online – Avg 2 min wait
                     </div>
                 </div>
 
                 {/* Phone Support */}
-                <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                    <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mb-3">
-                        <Phone className="w-5 h-5 text-blue-600" />
+                <div className="bg-white border border-gray-100 rounded-2xl p-6 md:py-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="w-10 h-10 rounded-lg bg-[#e8f3ef] flex items-center justify-center mb-4">
+                        <Phone className="w-5 h-5 text-[#346853] fill-current opacity-80" />
                     </div>
-                    <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-0.5">Phone Support</h3>
-                    <p className="text-[12px] text-gray-500">+964 750 000 0000</p>
+                    <h3 className="text-[14px] font-bold text-gray-800 mb-1">Phone Support</h3>
+                    <p className="text-[12px] text-gray-500 font-medium">+964 750 000 0000</p>
                 </div>
 
                 {/* Email Us */}
-                <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                    <div className="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center mb-3">
-                        <Mail className="w-5 h-5 text-amber-600" />
+                <div className="bg-white border border-gray-100 rounded-2xl p-6 md:py-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                    <div className="w-10 h-10 rounded-lg bg-[#e8f3ef] flex items-center justify-center mb-4">
+                        <Mail className="w-5 h-5 text-[#346853] fill-current opacity-80" />
                     </div>
-                    <h3 className="text-[15px] font-bold text-[#1a1a1a] mb-0.5">Email Us</h3>
-                    <p className="text-[12px] text-gray-500">support@jayakhub.com</p>
+                    <h3 className="text-[14px] font-bold text-gray-800 mb-1">Email Us</h3>
+                    <p className="text-[12px] text-gray-500 font-medium">support@jayakhub.com</p>
                 </div>
             </div>
 
@@ -165,10 +168,10 @@ const SupportCenterView = () => {
                 <div className="lg:col-span-3 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
                     <div className="flex justify-between items-center mb-5">
                         <div>
-                            <h3 className="text-[16px] font-bold text-[#1a1a1a]">Support Tickets</h3>
+                            <h3 className="text-[15px] font-bold text-[#1a1a1a]">Support Tickets</h3>
                             <p className="text-[12px] text-gray-400 mt-0.5">Your recent inquiries</p>
                         </div>
-                        <button className="text-[12px] font-semibold text-[#346853] border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors">
+                        <button className="text-[12px] font-semibold text-gray-700 border border-gray-200 rounded-lg px-6 py-1.5 hover:bg-gray-50 transition-colors">
                             All
                         </button>
                     </div>
@@ -189,13 +192,13 @@ const SupportCenterView = () => {
                             {MOCK_TICKETS.map((t) => (
                                 <div
                                     key={t.id}
-                                    className="grid grid-cols-[72px_1fr_100px_64px_80px] gap-2 items-center px-1 py-3 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors"
+                                    className="grid grid-cols-[72px_1fr_100px_64px_80px] gap-2 items-center px-1 py-4 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 transition-colors"
                                     onClick={() => handleTicketClick(t)}
                                 >
-                                    <span className="text-[12px] font-semibold text-[#1a1a1a]">{t.id}</span>
-                                    <span className="text-[12px] text-gray-600 truncate">{t.subject}</span>
+                                    <span className="text-[12px] font-bold text-[#346853]">{t.id}</span>
+                                    <span className="text-[12px] text-gray-600 truncate font-medium">{t.subject}</span>
                                     <StatusBadge status={t.status} />
-                                    <span className={`text-[12px] font-semibold ${t.priority === "High" ? "text-red-600" : t.priority === "Medium" ? "text-amber-600" : "text-gray-500"}`}>{t.priority}</span>
+                                    <span className={`text-[12px] font-semibold ${t.priority === "High" ? "text-red-500" : t.priority === "Medium" ? "text-amber-500" : "text-gray-500"}`}>{t.priority}</span>
                                     <span className="text-[11px] text-gray-400 text-right">{t.updated}</span>
                                 </div>
                             ))}
@@ -203,13 +206,13 @@ const SupportCenterView = () => {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex items-center justify-center gap-1 mt-5">
-                        <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-center gap-2 mt-6">
+                        <button className="w-8 h-8 flex items-center justify-center rounded border border-gray-100 text-gray-400 hover:bg-gray-50 transition-colors shadow-sm">
                             <ChevronLeft className="w-4 h-4" />
                         </button>
-                        <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#346853] text-white text-[12px] font-bold">1</button>
-                        <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-600 text-[12px] font-semibold hover:bg-gray-50 transition-colors">2</button>
-                        <button className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:bg-gray-50 transition-colors">
+                        <button className="w-8 h-8 flex items-center justify-center rounded bg-[#346853] text-white text-[13px] font-medium shadow-sm">1</button>
+                        <button className="w-8 h-8 flex items-center justify-center rounded border border-gray-100 text-gray-600 text-[13px] font-medium hover:bg-gray-50 transition-colors shadow-sm">2</button>
+                        <button className="w-8 h-8 flex items-center justify-center rounded border border-gray-100 text-gray-400 hover:bg-gray-50 transition-colors shadow-sm">
                             <ChevronRight className="w-4 h-4" />
                         </button>
                     </div>
@@ -217,24 +220,24 @@ const SupportCenterView = () => {
 
                 {/* Knowledge Base */}
                 <div className="lg:col-span-2 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-                    <div className="mb-5">
-                        <h3 className="text-[16px] font-bold text-[#1a1a1a]">Knowledge Base</h3>
+                    <div className="mb-6">
+                        <h3 className="text-[15px] font-bold text-[#1a1a1a]">Knowledge Base</h3>
                         <p className="text-[12px] text-gray-400 mt-0.5">Browse help topics</p>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                        {KB_CATEGORIES.map((cat) => (
-                            <div key={cat.name} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors group">
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-9 h-9 rounded-lg ${cat.bgColor} flex items-center justify-center ${cat.color}`}>
+                    <div className="flex flex-col gap-4">
+                        {KB_CATEGORIES.map((cat, idx) => (
+                            <div key={idx} className="flex items-center justify-between cursor-pointer group">
+                                <div className="flex items-center gap-4">
+                                    <div className={`w-10 h-10 rounded-xl ${cat.bgColor} flex items-center justify-center ${cat.color} group-hover:scale-105 transition-transform`}>
                                         {cat.icon}
                                     </div>
                                     <div>
-                                        <h4 className="text-[13px] font-semibold text-[#1a1a1a]">{cat.name}</h4>
+                                        <h4 className="text-[13px] font-bold text-gray-800">{cat.name}</h4>
                                         <p className="text-[11px] text-gray-400">{cat.description}</p>
                                     </div>
                                 </div>
-                                <span className="text-[11px] font-semibold text-gray-400">{cat.articles} articles</span>
+                                <span className="text-[11px] text-gray-400">{cat.articles} articles</span>
                             </div>
                         ))}
                     </div>
