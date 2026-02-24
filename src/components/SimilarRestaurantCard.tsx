@@ -1,7 +1,7 @@
 import React from "react";
 import { SimilarRestaurant } from "@/types";
 import { Star, Clock } from "lucide-react";
-import { useCLC } from "@/app/context/CLCContext";
+import { useCLC } from "@/context/CLCContext";
 import Image from "next/image";
 
 interface SimilarRestaurantCardProps {

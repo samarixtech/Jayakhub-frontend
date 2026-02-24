@@ -12,7 +12,7 @@ import {
   ShoppingBasket,
 } from "lucide-react";
 import { CartItem } from "@/types";
-import { useCLC } from "@/app/context/CLCContext";
+import { useCLC } from "@/context/CLCContext";
 import Image from "next/image";
 
 interface CartSidebarProps {

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/redux/slices/cartSlice";
-import { FileDown, Plus, RefreshCw, Search, Filter } from "lucide-react";
+import { FileDown, Plus, RefreshCw, Search, Filter, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { OrdersSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 import useLocale from "@/hooks/useLocals";
+import { RatingModal } from "@/components/common/RatingModal";
 
 // Enum for Order Status
 export enum OrderStatus {
@@ -67,6 +68,10 @@ interface Order {
   orderTime: string;
   paymentDetails: PaymentDetails;
   items: OrderItem[];
+  restaurantId?: string;
+  hasFeedback?: boolean;
+  rating?: number;
+  review?: string;
 }
 
 interface OrderSummary {
@@ -84,6 +89,9 @@ export default function CustomerOrderHistory() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false); // Mobile filter toggle
+
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+  const [currentOrderInfo, setCurrentOrderInfo] = useState<any>(null);
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -126,6 +134,8 @@ export default function CustomerOrderHistory() {
     }
     fetchOrders();
   }, []);
+
+  console.log("All Orders", orders || "undefined");
 
   // Filter Logic
   const filteredOrders = orders.filter((order) => {
@@ -239,6 +249,36 @@ export default function CustomerOrderHistory() {
 
     // Navigate to checkout
     router.push(`/${country}/${language}/checkout`);
+  };
+
+  const handleRateOrder = (order: Order) => {
+    setCurrentOrderInfo({
+      rawOrder: order,
+      orderNumber: `#${order.orderId?.substring(0, 8) || "Order"}`,
+      // Use restaurant object name if available, otherwise just use a generic fallback (since orders endpoint stripped the restaurant nested object)
+      restaurantName: "Restaurant Order",
+      items: (order.items || []).map((item: any) => ({
+        id:
+          item.id ||
+          item.itemId ||
+          item.orderItemId ||
+          `temp-${Date.now()}-${Math.random()}`,
+        originalId: item.id || item.itemId || item.orderItemId || null,
+        orderItemId: item.orderItemId || null,
+        name: item.name,
+        price: parseFloat(item.price),
+        quantity: item.quantity,
+        image: getImageUrl(item.image),
+      })),
+      delivery: {
+        driverName: "Your Rider",
+        vehicle: "Delivery",
+        time: order.orderTime || "Just now",
+        driverImage:
+          "https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200",
+      },
+    });
+    setIsRatingModalOpen(true);
   };
 
   if (loading) {
@@ -492,7 +532,6 @@ export default function CustomerOrderHistory() {
                       const reviewText =
                         ratedItem?.comment ||
                         "Thank you for the wonderful feedback. Your response has been recorded.";
-                      const replyText = ratedItem?.reply;
 
                       return (
                         <div className="bg-[#FAFAFA] border border-gray-100 p-5 mx-5 mb-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -506,29 +545,14 @@ export default function CustomerOrderHistory() {
                                   {Array.from({ length: 5 }).map((_, i) => (
                                     <Star
                                       key={i}
-                                      className={`w-4 h-4 ${i < ratingValue ? "fill-[#f5a623] text-[#f5a623]" : "fill-gray-200 text-gray-200"}`}
+                                      className={`w-4 h-4 ${i < ratingValue ? "fill-gray-800 text-gray-800" : "fill-gray-200 text-gray-200"}`}
                                     />
                                   ))}
                                 </div>
                               </div>
-                              <p className="text-[#657a8a] text-[13px] italic font-medium">
+                              <p className="text-gray-400 text-xs italic">
                                 "{reviewText}"
                               </p>
-
-                              {replyText && (
-                                <div className="mt-2.5 bg-[#E2F1E8] border border-[#357252]/10 p-4 rounded-xl flex flex-col gap-2 w-full">
-                                  <span className="text-[11px] font-bold text-[#357252] uppercase tracking-wider flex items-center gap-1.5">
-                                    <RefreshCw
-                                      size={12}
-                                      className="scale-x-[-1] shrink-0"
-                                    />
-                                    Restaurant Reply
-                                  </span>
-                                  <p className="text-[13px] text-[#1b2d22] leading-relaxed font-medium">
-                                    {replyText}
-                                  </p>
-                                </div>
-                              )}
                             </div>
                           ) : (
                             <>
@@ -600,6 +624,15 @@ export default function CustomerOrderHistory() {
           </div>
         )}
       </div>
+
+      {/* Global Rating Modal */}
+      {currentOrderInfo && (
+        <RatingModal
+          open={isRatingModalOpen}
+          onOpenChange={(open) => setIsRatingModalOpen(open)}
+          orderInfo={currentOrderInfo}
+        />
+      )}
     </div>
   );
 }

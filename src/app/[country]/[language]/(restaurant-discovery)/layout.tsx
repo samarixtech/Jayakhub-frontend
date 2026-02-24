@@ -1,6 +1,6 @@
 import React from "react";
 import RestaurantHeader from "@/components/modules/discovery/layout/Header";
-import { DiscoveryUIProvider } from "@/app/context/DiscoveryUIContext";
+import { DiscoveryUIProvider } from "@/context/DiscoveryUIContext";
 
 export default function RestaurantDiscoveryLayout({
   children,

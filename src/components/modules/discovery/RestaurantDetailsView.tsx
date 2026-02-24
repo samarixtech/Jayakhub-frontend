@@ -13,11 +13,15 @@ import CartDrawer from "@/components/CartDrawer";
 import RestaurantSkeleton from "@/components/skeletons/RestaurantSkeleton";
 
 import { Plus, Clock, Star, MapPin } from "lucide-react";
-import { useCLC } from "@/app/context/CLCContext";
+import { useCLC } from "@/context/CLCContext";
 import { getCookie } from "cookies-next";
 import { useServerAction } from "@/hooks/use-server-action";
-import { getRestaurantBySlugAction } from "@/app/actions/public/restaurants";
+import {
+  getRestaurantBySlugAction,
+  getRestaurantReviewsAction,
+} from "@/app/actions/public/restaurants";
 import { Badge } from "@/components/ui/badge";
+import { ReviewsModal } from "@/components/common/ReviewsModal";
 import Image from "next/image";
 
 interface RestaurantDetails {
@@ -125,6 +129,8 @@ export default function RestaurantDetailsView() {
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false);
+  const [reviewsData, setReviewsData] = useState<any>(null);
 
   const { setCLC, country, currency, language } = useCLC();
 
@@ -150,6 +156,21 @@ export default function RestaurantDetailsView() {
     },
   );
 
+  const { execute: fetchReviews } = useServerAction(
+    getRestaurantReviewsAction,
+    {
+      suppressSuccessToast: true,
+      onSuccess: (data: any) => {
+        if (data) {
+          setReviewsData(data);
+        }
+      },
+      onError: (err) => {
+        console.error("Failed to fetch reviews data:", err);
+      },
+    },
+  );
+
   useEffect(() => {
     let c = Array.isArray(params?.country)
       ? params.country[0]
@@ -164,6 +185,7 @@ export default function RestaurantDetailsView() {
     if (slugParam) {
       console.log("Fetching restaurant with slug:", slugParam);
       fetchRestaurant(slugParam);
+      fetchReviews(slugParam);
     } else {
       console.log("No slug param found");
       setIsLoading(false);
@@ -284,13 +306,13 @@ export default function RestaurantDetailsView() {
                 {restaurant?.type?.join(" • ")}
               </p>
 
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 md:gap-6 text-xs md:text-sm text-gray-600">
+              <div className="flex items-center justify-center md:justify-start gap-4 text-sm text-gray-600">
                 <div
-                  className="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity group bg-gray-50 px-3 py-1.5 rounded-full md:bg-transparent md:p-0 md:rounded-none"
+                  className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity group"
                   onClick={() => setIsReviewsModalOpen(true)}
                 >
-                  <Star className="w-4 h-4 md:w-5 md:h-5 fill-amber-400 text-amber-400 group-hover:scale-110 transition-transform" />
-                  <span className="font-bold text-gray-900 text-sm md:text-base">
+                  <Star className="w-4 h-4 fill-amber-400 text-amber-400 group-hover:scale-110 transition-transform" />
+                  <span className="font-bold text-gray-900">
                     {reviewsData?.totalAverageRating > 0
                       ? Number(reviewsData.totalAverageRating).toFixed(1)
                       : "New"}
@@ -299,10 +321,8 @@ export default function RestaurantDetailsView() {
                     {reviewsData?.totalRatingCount > 0
                       ? `(${reviewsData.totalRatingCount})`
                       : ""}{" "}
-                    <span className="hidden md:inline px-1 text-gray-300">
-                      •
-                    </span>{" "}
-                    <span className="text-[#346853] font-bold group-hover:underline hidden md:inline">
+                    <span className="px-1 text-gray-300">•</span>{" "}
+                    <span className="text-[#346853] font-bold group-hover:underline">
                       See reviews ›
                     </span>
                   </span>
@@ -415,6 +435,18 @@ export default function RestaurantDetailsView() {
             dispatch(addToCart(item));
             setSelectedItem(null);
           }}
+        />
+      )}
+
+      {/* Reviews Modal */}
+      {reviewsData && (
+        <ReviewsModal
+          isOpen={isReviewsModalOpen}
+          onClose={() => setIsReviewsModalOpen(false)}
+          restaurantName={reviewsData.restaurantName || restaurant.name}
+          totalAverageRating={reviewsData.totalAverageRating || 0}
+          totalRatingCount={reviewsData.totalRatingCount || 0}
+          reviews={reviewsData.reviews || []}
         />
       )}
     </div>

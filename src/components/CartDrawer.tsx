@@ -7,7 +7,7 @@ import { updateQuantity, clearCart } from "@/redux/slices/cartSlice";
 import { X, Plus, Minus, ShoppingBag, Info, Trash2 } from "lucide-react";
 import { AppDispatch, RootState } from "@/redux/store/store";
 import { useRouter, useParams } from "next/navigation";
-import { useCLC } from "@/app/context/CLCContext";
+import { useCLC } from "@/context/CLCContext";
 import Image from "next/image";
 
 interface CartDrawerProps {
