@@ -51,7 +51,7 @@ const NAV_SECTIONS = [
         href: "/restaurant/dashboard",
         icon: LayoutDashboard,
       },
-      { name: "POS", href: "/pos", icon: Store },
+      { name: "POS", href: "/restaurant/pos", icon: Store },
       { name: "Orders", href: "/restaurant/orders", icon: ShoppingCart },
       {
         name: "Menu Management",
@@ -136,8 +136,6 @@ export function RestaurantSidebar() {
           </div>
         ) : (
           <div className="">
-
-
             <Image src="/favicon.ico" alt="Logo" width={40} height={50} />
           </div>
         )}
@@ -204,10 +202,11 @@ export function RestaurantSidebar() {
                       asChild
                       tooltip={item.name}
                       isActive={isActive}
-                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${isActive
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                        : "text-sidebar-foreground/80"
-                        }`}
+                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${
+                        isActive
+                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                          : "text-sidebar-foreground/80"
+                      }`}
                     >
                       <Link href={item.href}>
                         <item.icon className="w-5 h-5" />
