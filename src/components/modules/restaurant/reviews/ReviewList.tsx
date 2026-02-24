@@ -1,103 +1,162 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { Star, Reply } from "lucide-react";
-import { ReviewItem, MOCK_REVIEWS_DATA } from "./types";
+import { ReviewItem } from "./types";
 import ReviewDetailSheet from "./ReviewDetailSheet";
 
-export default function ReviewList() {
-    const [selectedReview, setSelectedReview] = useState<ReviewItem | null>(null);
+interface ReviewListProps {
+  reviews: ReviewItem[];
+  refetch: () => void;
+}
 
-    return (
-        <div className="flex flex-col gap-4 mt-8">
+export default function ReviewList({ reviews, refetch }: ReviewListProps) {
+  const [selectedReview, setSelectedReview] = useState<ReviewItem | null>(null);
+  const [filter, setFilter] = useState("All");
 
-            {/* Filter Pills */}
-            <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                <button className="bg-[#357252] text-white px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap">
-                    All Reviews
-                </button>
-                <button className="bg-white border text-gray-700 hover:bg-gray-50 border-gray-200 px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap">
-                    Unreplied
-                </button>
-                <button className="bg-white border text-gray-700 hover:bg-gray-50 border-gray-200 px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap">
-                    5 Stars
-                </button>
-                <button className="bg-white border text-gray-700 hover:bg-gray-50 border-gray-200 px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap flex items-center gap-1">
-                    Critical (1-3) <span className="text-[10px]">▼</span>
-                </button>
-            </div>
+  const safeReviews = reviews || [];
 
-            {/* Review Cards */}
-            <div className="flex flex-col gap-4">
-                {MOCK_REVIEWS_DATA.map((review) => (
-                    <div
-                        key={review.id}
-                        onClick={() => setSelectedReview(review)}
-                        className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm flex flex-col gap-4 cursor-pointer hover:border-[#357252]/30 transition-colors"
-                    >
-                        <div className="flex justify-between items-start">
-                            <div className="flex items-center gap-3">
-                                <Image
-                                    src={review.avatar}
-                                    alt={review.author}
-                                    width={40}
-                                    height={40}
-                                    className="rounded-full"
-                                />
-                                <div className="flex flex-col">
-                                    <span className="text-[14px] font-bold text-[#1b2d22]">{review.author}</span>
-                                    <span className="text-[11px] font-medium text-[#8ea89a]">{review.time} • Order {review.orderId}</span>
-                                </div>
-                            </div>
-                            <div className="flex gap-1">
-                                {[...Array(5)].map((_, i) => (
-                                    <Star key={i} className={`w-4 h-4 stroke-[#f5a623] ${i < review.rating ? 'fill-[#f5a623]' : 'fill-transparent'}`} />
-                                ))}
-                            </div>
-                        </div>
-                        <p className="text-[13px] text-[#1b2d22] font-medium leading-relaxed">
-                            {review.text}
-                        </p>
+  const filteredReviews = safeReviews.filter((review) => {
+    if (filter === "Unreplied") return review.reply === null;
+    if (filter === "5 Stars") return review.rating === 5;
+    if (filter === "Critical") return review.rating >= 1 && review.rating <= 3;
+    return true; // "All"
+  });
 
-                        {!review.replied && (
-                            <div className="flex mt-2">
-                                <button
-                                    className="flex items-center gap-2 text-[#357252] text-[12px] font-bold hover:underline"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedReview(review);
-                                    }}
-                                >
-                                    <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
-                                    Reply
-                                </button>
-                            </div>
-                        )}
+  const getPillClass = (activeName: string) => {
+    return filter === activeName
+      ? "bg-[#357252] text-white px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors"
+      : "bg-white border text-gray-700 hover:bg-gray-50 border-gray-200 px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors";
+  };
 
-                        {/* Restaurant Reply Block */}
-                        {review.replied && review.reply && (
-                            <div className="mt-3 border border-gray-100 rounded-xl p-4 flex flex-col gap-2.5">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-1.5 text-[#357252] text-[12px] font-bold">
-                                        <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
-                                        Restaurant Reply
-                                    </div>
-                                    <span className="text-[11px] font-medium text-[#8ea89a]">{review.reply.time}</span>
-                                </div>
-                                <p className="text-[13px] text-[#8ea89a] leading-relaxed">
-                                    {review.reply.text}
-                                </p>
-                            </div>
-                        )}
+  return (
+    <div className="flex flex-col gap-4 mt-8">
+      {/* Filter Pills */}
+      <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+        <button
+          onClick={() => setFilter("All")}
+          className={getPillClass("All")}
+        >
+          All Reviews
+        </button>
+        <button
+          onClick={() => setFilter("Unreplied")}
+          className={getPillClass("Unreplied")}
+        >
+          Unreplied
+        </button>
+        <button
+          onClick={() => setFilter("5 Stars")}
+          className={getPillClass("5 Stars")}
+        >
+          5 Stars
+        </button>
+        <button
+          onClick={() => setFilter("Critical")}
+          className={getPillClass("Critical") + " flex items-center gap-1"}
+        >
+          Critical (1-3) <span className="text-[10px]">▼</span>
+        </button>
+      </div>
+
+      {/* Review Cards */}
+      <div className="flex flex-col gap-4">
+        {filteredReviews.length === 0 && (
+          <div className="text-center py-8 text-gray-500 text-sm font-medium">
+            No reviews found.
+          </div>
+        )}
+        {filteredReviews.map((review) => {
+          const isReplied = review.reply !== null;
+          const displayDate = new Date(review.createdAt).toLocaleDateString(
+            undefined,
+            { month: "short", day: "numeric", year: "numeric" },
+          );
+
+          const getInitials = (name: string) => {
+            if (!name) return "U";
+            const parts = name.split(" ").filter(Boolean);
+            if (parts.length >= 2) {
+              return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name.substring(0, 2).toUpperCase();
+          };
+
+          return (
+            <div
+              key={review.id}
+              onClick={() => setSelectedReview(review)}
+              className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm flex flex-col gap-4 cursor-pointer hover:border-[#357252]/30 transition-colors"
+            >
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#E2F1E8] text-[#1b2d22] flex shrink-0 items-center justify-center font-bold text-[13px] border border-gray-100 uppercase tracking-wide">
+                    {getInitials(review.userName)}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[14px] font-bold text-[#1b2d22]">
+                      {review.userName}
+                    </span>
+                    <span className="text-[11px] font-medium text-[#8ea89a]">
+                      {displayDate} • Order {review.orderId}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 stroke-[#f5a623] ${i < review.rating ? "fill-[#f5a623]" : "fill-transparent"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <p className="text-[13px] text-[#1b2d22] font-medium leading-relaxed">
+                {review.comment}
+              </p>
+
+              {!isReplied && (
+                <div className="flex mt-2">
+                  <button
+                    className="flex items-center gap-2 text-[#357252] text-[12px] font-bold hover:underline"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedReview(review);
+                    }}
+                  >
+                    <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
+                    Reply
+                  </button>
+                </div>
+              )}
+
+              {/* Restaurant Reply Block */}
+              {isReplied && review.reply && (
+                <div className="mt-3 border border-gray-100 rounded-xl p-4 flex flex-col gap-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-[#357252] text-[12px] font-bold">
+                      <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
+                      Restaurant Reply
                     </div>
-                ))}
+                    <span className="text-[11px] font-medium text-[#8ea89a]">
+                      Recently
+                    </span>
+                  </div>
+                  <p className="text-[13px] text-[#8ea89a] leading-relaxed">
+                    {review.reply}
+                  </p>
+                </div>
+              )}
             </div>
+          );
+        })}
+      </div>
 
-            <ReviewDetailSheet
-                review={selectedReview}
-                onClose={() => setSelectedReview(null)}
-            />
-        </div>
-    );
+      <ReviewDetailSheet
+        review={selectedReview}
+        onClose={() => setSelectedReview(null)}
+        refetch={refetch}
+      />
+    </div>
+  );
 }
