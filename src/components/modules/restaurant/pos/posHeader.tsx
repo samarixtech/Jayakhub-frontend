@@ -11,7 +11,7 @@ import {
   Menu,
   ShoppingCart,
 } from "lucide-react";
-import { usePOS } from "../../context/POSContext";
+import { usePOS } from "../../../../context/POSContext";
 import KeyboardShortcutsModal from "./keyboard-shortcuts-modal";
 import PendingOrdersSidebar from "./pending-orders-sidebar";
 import CloseRegisterModal from "./close-Register";

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { usePOS } from "../../context/POSContext";
+import { usePOS } from "../../../../context/POSContext";
 import { Plus } from "lucide-react";
 
 const menuItems = [

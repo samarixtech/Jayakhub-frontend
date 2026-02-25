@@ -2,7 +2,7 @@
 
 import React from "react";
 import { LayoutGrid, Sandwich, Pizza, Wine, CakeSlice } from "lucide-react";
-import { usePOS } from "../../context/POSContext";
+import { usePOS } from "../../../../context/POSContext";
 import {
   Sheet,
   SheetContent,

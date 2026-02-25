@@ -13,7 +13,7 @@ import {
   Clock,
   Coffee,
 } from "lucide-react";
-import { usePOS } from "../../context/POSContext";
+import { usePOS } from "../../../../context/POSContext";
 import {
   Sheet,
   SheetContent,

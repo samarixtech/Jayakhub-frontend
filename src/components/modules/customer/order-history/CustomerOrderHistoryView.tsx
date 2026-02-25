@@ -42,11 +42,15 @@ export enum OrderStatus {
 // Interface based on the API response provided
 interface OrderItem {
   id?: string;
+  orderItemId?: string;
   name: string;
   price: string;
   quantity: number;
   image: string; // "uploads\item-images\..."
   selectedVariations?: any[];
+  rate?: number;
+  comment?: string;
+  reply?: string | null;
 }
 
 interface PaymentDetails {
@@ -528,6 +532,7 @@ export default function CustomerOrderHistory() {
                       const reviewText =
                         ratedItem?.comment ||
                         "Thank you for the wonderful feedback. Your response has been recorded.";
+                      const replyText = ratedItem?.reply;
 
                       return (
                         <div className="bg-[#FAFAFA] border border-gray-100 p-5 mx-5 mb-5 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
@@ -541,14 +546,29 @@ export default function CustomerOrderHistory() {
                                   {Array.from({ length: 5 }).map((_, i) => (
                                     <Star
                                       key={i}
-                                      className={`w-4 h-4 ${i < ratingValue ? "fill-gray-800 text-gray-800" : "fill-gray-200 text-gray-200"}`}
+                                      className={`w-4 h-4 ${i < ratingValue ? "fill-[#f5a623] text-[#f5a623]" : "fill-gray-200 text-gray-200"}`}
                                     />
                                   ))}
                                 </div>
                               </div>
-                              <p className="text-gray-400 text-xs italic">
+                              <p className="text-[#657a8a] text-[13px] italic font-medium">
                                 "{reviewText}"
                               </p>
+
+                              {replyText && (
+                                <div className="mt-2.5 bg-[#E2F1E8] border border-[#357252]/10 p-4 rounded-xl flex flex-col gap-2 w-full">
+                                  <span className="text-[11px] font-bold text-[#357252] uppercase tracking-wider flex items-center gap-1.5">
+                                    <RefreshCw
+                                      size={12}
+                                      className="scale-x-[-1] shrink-0"
+                                    />
+                                    Restaurant Reply
+                                  </span>
+                                  <p className="text-[13px] text-[#1b2d22] leading-relaxed font-medium">
+                                    {replyText}
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           ) : (
                             <>

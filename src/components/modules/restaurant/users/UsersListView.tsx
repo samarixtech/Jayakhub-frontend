@@ -15,7 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { toast } from "react-hot-toast";
@@ -33,6 +32,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Link from "next/link";
 
 export default function UsersListView() {
   const [selectedFilter, setSelectedFilter] = useState("ALL");
@@ -165,12 +165,12 @@ export default function UsersListView() {
           <Button variant="ghost" size="icon" className="text-gray-500">
             <Bell className="w-5 h-5" />
           </Button>
-          <LocalizedLink href="/restaurant/users/new">
+          <Link href="/restaurant/users/new">
             <Button className="bg-[#1F4D36] hover:bg-[#183d2b] text-white gap-2">
               <Plus className="w-4 h-4" />
               Add User
             </Button>
-          </LocalizedLink>
+          </Link>
         </div>
       </div>
 
@@ -291,8 +291,7 @@ export default function UsersListView() {
                   {/* Actions Column */}
                   <TableCell className="text-right pr-6">
                     <div className="flex items-center justify-end gap-2">
-                      {/* Using LocalizedLink for navigation */}
-                      <LocalizedLink href={`/restaurant/users/${user.id}`}>
+                      <Link href={`/restaurant/users/${user.id}`}>
                         <Button
                           variant="ghost"
                           size="icon"
@@ -300,7 +299,7 @@ export default function UsersListView() {
                         >
                           <Edit2 className="w-4 h-4" />
                         </Button>
-                      </LocalizedLink>
+                      </Link>
                       <Button
                         variant="ghost"
                         size="icon"

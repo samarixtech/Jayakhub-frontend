@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { Typography } from "@/components/ui/typography";
 import { useServerAction } from "@/hooks/use-server-action";
 import {
@@ -29,6 +28,7 @@ import { DeleteConfirmationModal } from "@/components/common/DeleteConfirmationM
 import GlobalTable from "@/components/common/GlobalTable";
 import { AddItemModal } from "../components/AddItemModal";
 import Image from "next/image";
+import Link from "next/link";
 
 // Mock Data for stats
 const STATS = [
@@ -315,9 +315,7 @@ export default function MenuItemsView() {
               header: "Actions",
               cell: (item: any) => (
                 <div className="flex items-center justify-end gap-2">
-                  <LocalizedLink
-                    href={`/restaurant/menu/items/${item.id || item._id}`}
-                  >
+                  <Link href={`/restaurant/menu/items/${item.id || item._id}`}>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -325,7 +323,7 @@ export default function MenuItemsView() {
                     >
                       <Edit2 className="w-4 h-4" />
                     </Button>
-                  </LocalizedLink>
+                  </Link>
                   <Button
                     variant="ghost"
                     size="icon"

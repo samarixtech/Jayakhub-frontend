@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { registerRestaurantAction } from "@/app/actions/auth/auth";
 import { registerSchema, RegisterInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
@@ -28,6 +27,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useZodForm } from "@/hooks/use-zod-form";
+import Link from "next/link";
 
 export default function RestaurantRegisterView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -297,12 +297,12 @@ export default function RestaurantRegisterView() {
                     <div className="space-y-1 leading-none">
                       <FormLabel className="text-sm font-normal text-gray-500">
                         I agree to the{" "}
-                        <LocalizedLink
+                        <Link
                           href="/terms"
                           className="font-bold text-emerald-bg hover:underline"
                         >
                           Terms and Conditions
-                        </LocalizedLink>
+                        </Link>
                       </FormLabel>
                       <FormMessage />
                     </div>
@@ -331,12 +331,12 @@ export default function RestaurantRegisterView() {
             className="mt-6 text-center text-gray-600 pb-0.5"
           >
             Already a partner?{" "}
-            <LocalizedLink
+            <Link
               href="/login"
               className="text-emerald-bg font-bold hover:underline"
             >
               {t("login")}
-            </LocalizedLink>
+            </Link>
           </Typography>
         </CardContent>
       </Card>

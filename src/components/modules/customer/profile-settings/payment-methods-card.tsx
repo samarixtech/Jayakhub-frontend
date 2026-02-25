@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronRight, CreditCard, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getMyCardsAction } from "@/app/actions/customer/userprofile";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
+import Link from "next/link";
 
 const PaymentMethodsCard = () => {
   const [defaultCard, setDefaultCard] = useState<any>(null);
@@ -37,7 +37,7 @@ const PaymentMethodsCard = () => {
             Manage your saved cards and default payment
           </p>
         </div>
-        <LocalizedLink href="/customer/wallet">
+        <Link href="/customer/wallet">
           {" "}
           <Button
             variant="outline"
@@ -45,7 +45,7 @@ const PaymentMethodsCard = () => {
           >
             Manage
           </Button>
-        </LocalizedLink>
+        </Link>
       </CardHeader>
 
       <CardContent className="p-0">

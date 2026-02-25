@@ -19,8 +19,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import LocalizedLink from "../navigation/LocalizedLink";
 import { Typography } from "@/components/ui/typography";
+import Link from "next/link";
 
 const navItems = [
   { name: "Overview", href: "/customer/dashboard", icon: LayoutDashboard },
@@ -93,10 +93,7 @@ export function AppSidebar() {
                     }`}
                     onClick={() => isMobile && setOpenMobile(false)}
                   >
-                    <LocalizedLink
-                      href={item.href}
-                      className="flex items-center"
-                    >
+                    <Link href={item.href} className="flex items-center">
                       <item.icon
                         size={24}
                         strokeWidth={isActive ? 2.5 : 2}
@@ -109,7 +106,7 @@ export function AppSidebar() {
                           {item.name}
                         </span>
                       )}
-                    </LocalizedLink>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );
