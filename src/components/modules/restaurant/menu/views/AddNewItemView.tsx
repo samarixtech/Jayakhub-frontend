@@ -11,7 +11,6 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Typography } from "@/components/ui/typography";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { useServerAction } from "@/hooks/use-server-action";
 import {
   getAllCategoriesAction,
@@ -23,6 +22,7 @@ import {
 } from "@/app/actions/restaurant/menu";
 import { toast } from "react-hot-toast";
 import { useLocalizedRouter } from "@/hooks/use-localized-router";
+import Link from "next/link";
 
 interface AddNewItemViewProps {
   itemId?: string;
@@ -271,11 +271,11 @@ export default function AddNewItemView({ itemId }: AddNewItemViewProps) {
   return (
     <div className="w-full max-w-[1400px] mx-auto p-4 flex flex-col gap-6">
       <div className="flex items-center gap-4">
-        <LocalizedLink href="/restaurant/menu/items">
+        <Link href="/restaurant/menu/items">
           <Button variant="ghost" size="icon" className="rounded-full">
             <ArrowLeft className="w-5 h-5" />
           </Button>
-        </LocalizedLink>
+        </Link>
         <Typography variant="h2" className="text-xl font-bold">
           {itemId ? "Edit Item" : "Add New Item"}
         </Typography>
@@ -570,7 +570,7 @@ export default function AddNewItemView({ itemId }: AddNewItemViewProps) {
 
             <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 max-w-sm mx-auto">
               {/* Preview Image Area */}
-              <div className="aspect-[4/3] bg-gray-100 flex items-center justify-center relative">
+              <div className="aspect-4/3 bg-gray-100 flex items-center justify-center relative">
                 {image ? (
                   <img
                     src={image}

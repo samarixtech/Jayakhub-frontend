@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function AuthLayout({
   children,
@@ -89,9 +89,9 @@ export default function AuthLayout({
       {/* LEFT PANEL BRANDING AND ILLUSTRATON */}
       <div className="hidden md:flex bg-emerald-bg text-white flex-col justify-between overflow-hidden relative">
         {content.showBack && (
-          <LocalizedLink href="/restaurants" className="m-5 inline-block w-fit">
+          <Link href="/restaurants" className="m-5 inline-block w-fit">
             <ArrowLeft className="hover:text-emerald-400 transition-colors" />
-          </LocalizedLink>
+          </Link>
         )}
 
         <div className="p-12 mt-8">

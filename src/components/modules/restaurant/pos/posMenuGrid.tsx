@@ -1,9 +1,9 @@
 "use client";
 
-import React from 'react';
-import Image from 'next/image';
-import { usePOS } from '../../app/context/POSContext';
-import { Plus } from 'lucide-react';
+import React from "react";
+import Image from "next/image";
+import { usePOS } from "@/app/context/POSContext";
+import { Plus } from "lucide-react";
 
 const menuItems = [
     { id: 1, name: "Angus Beef Burger", price: 14.50, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=300&auto=format&fit=crop" },

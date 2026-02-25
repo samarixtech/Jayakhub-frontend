@@ -2,8 +2,13 @@
 
 import React from "react";
 import { LayoutGrid, Sandwich, Pizza, Wine, CakeSlice } from "lucide-react";
-import { usePOS } from "../../app/context/POSContext";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { usePOS } from "@/app/context/POSContext";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 export default function POSSidebar() {
     const { isSidebarOpen, setIsSidebarOpen } = usePOS();

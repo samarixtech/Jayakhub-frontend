@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/input-otp";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
+import Link from "next/link";
 
 export default function VerifyOtpView() {
   const [otpValue, setOtpValue] = useState("");
@@ -228,14 +228,14 @@ export default function VerifyOtpView() {
             <Typography variant="small" className="text-slate-500 font-medium">
               Back to
             </Typography>
-            <LocalizedLink href="/login" className="inline-block">
+            <Link href="/login" className="inline-block">
               <Typography
                 variant="small"
                 className="text-emerald-bg font-bold transition-colors hover:opacity-80"
               >
                 Log in
               </Typography>
-            </LocalizedLink>
+            </Link>
           </div>
         </div>
       </CardContent>

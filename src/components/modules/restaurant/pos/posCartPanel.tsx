@@ -1,12 +1,28 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Utensils, ShoppingBag, Bike, ReceiptText, User, Plus, Minus, X, Clock, Coffee } from 'lucide-react';
-import { usePOS } from '../../app/context/POSContext';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import TableModal from './table-modal';
-import ItemModifiersModal from './item-modifiers-modal';
-import PaymentModal from './payment-modal';
+import React, { useState } from "react";
+import {
+  Utensils,
+  ShoppingBag,
+  Bike,
+  ReceiptText,
+  User,
+  Plus,
+  Minus,
+  X,
+  Clock,
+  Coffee,
+} from "lucide-react";
+import { usePOS } from "@/app/context/POSContext";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import TableModal from "./table-modal";
+import ItemModifiersModal from "./item-modifiers-modal";
+import PaymentModal from "./payment-modal";
 
 export default function POSCartPanel() {
     const { cartItems, updateQuantity, removeFromCart, subtotal, tax, total, isCartOpen, setIsCartOpen } = usePOS();

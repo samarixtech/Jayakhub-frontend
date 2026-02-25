@@ -1,8 +1,17 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Wifi, Clock, LogOut, Keyboard, User, Menu, ShoppingCart } from "lucide-react";
-import { usePOS } from "../../app/context/POSContext";
+import {
+  Search,
+  Wifi,
+  Clock,
+  LogOut,
+  Keyboard,
+  User,
+  Menu,
+  ShoppingCart,
+} from "lucide-react";
+import { usePOS } from "@/app/context/POSContext";
 import KeyboardShortcutsModal from "./keyboard-shortcuts-modal";
 import PendingOrdersSidebar from "./pending-orders-sidebar";
 import CloseRegisterModal from "./close-Register";

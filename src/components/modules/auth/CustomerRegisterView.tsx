@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Typography } from "@/components/ui/typography";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
 import { useZodForm } from "@/hooks/use-zod-form";
 import Link from "next/link";
@@ -38,7 +37,7 @@ export default function CustomerRegisterView() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // 1 SETUP FORM WITH ZOD
+  // SETUP FORM WITH ZOD
   const form = useZodForm(registerSchema, {
     defaultValues: {
       name: "",
@@ -332,12 +331,12 @@ export default function CustomerRegisterView() {
             className="mt-6 text-center text-gray-600 pb-0.5"
           >
             {t("existingAccount")}{" "}
-            <LocalizedLink
+            <Link
               href="/login"
               className="text-emerald-bg font-bold hover:underline"
             >
               {t("login")}
-            </LocalizedLink>
+            </Link>
           </Typography>
         </CardContent>
       </Card>

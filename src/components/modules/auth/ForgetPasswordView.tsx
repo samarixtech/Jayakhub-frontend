@@ -18,8 +18,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import LocalizedLink from "@/components/navigation/LocalizedLink";
 import { useZodForm } from "@/hooks/use-zod-form";
+import Link from "next/link";
 
 export default function ForgotPasswordView() {
   const router = useRouter();
@@ -101,12 +101,12 @@ export default function ForgotPasswordView() {
         <div className="text-center mt-8">
           <Typography variant="small" className="text-gray-600">
             Remember your password?{" "}
-            <LocalizedLink
+            <Link
               href="/login"
               className="font-bold text-emerald-bg hover:underline"
             >
               Login
-            </LocalizedLink>
+            </Link>
           </Typography>
         </div>
       </CardContent>
