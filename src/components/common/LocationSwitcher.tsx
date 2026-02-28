@@ -10,7 +10,12 @@ import {
   ChevronLeft,
   AlertCircle,
 } from "lucide-react";
-import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import {
+  useJsApiLoader,
+  GoogleMap,
+  Marker,
+  StandaloneSearchBox,
+} from "@react-google-maps/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Popover,
@@ -52,6 +57,10 @@ interface Address {
   longitude: number | string;
 }
 
+const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = [
+  "places",
+];
+
 const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   currentAddress,
   onAddressChange,
@@ -85,9 +94,12 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   const [tempAddress, setTempAddress] = useState<string | null>(null);
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
 
+  const searchBoxRef = React.useRef<google.maps.places.SearchBox | null>(null);
+
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+    libraries,
   });
 
   const params = useParams();
@@ -211,6 +223,31 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
             setTempAddress(results[0].formatted_address);
           }
         });
+      }
+    }
+  };
+
+  const onLoadSearchBox = (ref: google.maps.places.SearchBox) => {
+    searchBoxRef.current = ref;
+  };
+
+  const onPlacesChanged = () => {
+    const places = searchBoxRef.current?.getPlaces();
+    if (places && places.length > 0) {
+      const place = places[0];
+      if (place.geometry?.location) {
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+        const newPos = { lat, lng };
+
+        setMapCenter(newPos);
+        setSelectedLocation(newPos);
+        setTempAddress(place.formatted_address || place.name || "");
+
+        if (mapRef) {
+          mapRef.panTo(newPos);
+          mapRef.setZoom(15);
+        }
       }
     }
   };
@@ -425,7 +462,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col h-full h-[80vh] sm:h-auto">
+        <div className="flex flex-col h-full sm:h-auto">
           <div className="p-3 border-b border-gray-100 bg-gray-50/50 flex items-center gap-2">
             <Button
               variant="ghost"
@@ -438,14 +475,34 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
             <h3 className="text-sm font-bold text-gray-900">Select on Map</h3>
           </div>
 
+          {isLoaded && !loadError && (
+            <div className="p-3 bg-white border-b border-gray-100">
+              <StandaloneSearchBox
+                onLoad={onLoadSearchBox}
+                onPlacesChanged={onPlacesChanged}
+              >
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search location..."
+                    className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50 outline-none text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:border-emerald-500 transition-all shadow-sm"
+                  />
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MapPin className="h-4 w-4 text-gray-400" />
+                  </div>
+                </div>
+              </StandaloneSearchBox>
+            </div>
+          )}
+
           <div
             className={cn(
               "relative flex-1 p-2 bg-gray-100",
-              isMobile ? "h-[350px]" : "h-[450px]",
+              isMobile ? "h-[350px]" : "h-[300px]",
             )}
             style={{
-              minHeight: isMobile ? "350px" : "450px",
-              height: isMobile ? "350px" : "450px",
+              minHeight: isMobile ? "350px" : "300px",
+              height: isMobile ? "350px" : "300px",
             }}
           >
             {loadError ? (
@@ -459,7 +516,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                 mapContainerStyle={{
                   width: "100%",
                   height: "100%",
-                  minHeight: isMobile ? "350px" : "450px",
+                  minHeight: isMobile ? "350px" : "300px",
                   borderRadius: "0.75rem",
                 }}
                 center={mapCenter}
@@ -531,7 +588,13 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
       <PopoverTrigger asChild>{TriggerButton}</PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-[450px] p-0 bg-white border-gray-200 rounded-2xl shadow-2xl overflow-hidden"
+        className="w-[500px] p-0 bg-white border-gray-200 rounded-2xl shadow-2xl overflow-hidden"
+        onInteractOutside={(e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest(".pac-container")) {
+            e.preventDefault();
+          }
+        }}
       >
         {renderContent()}
       </PopoverContent>

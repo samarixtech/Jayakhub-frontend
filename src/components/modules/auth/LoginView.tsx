@@ -3,8 +3,8 @@ import { useState } from "react";
 import { FaApple } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import useLocale from "@/hooks/useLocals";
+import { AUTH_KEYS } from "@/config/auth-keys.config";
 import { loginAction } from "@/app/actions/auth/auth";
 import { loginSchema, LoginInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
@@ -36,9 +36,8 @@ import { useZodForm } from "@/hooks/use-zod-form";
 export default function LoginView() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const { country, language } = useLocale();
 
-  // 1 SETUP FORM WITH ZOD
+  // SETUP FORM WITH ZOD
   const form = useZodForm(loginSchema, {
     defaultValues: {
       email: "",
@@ -46,48 +45,34 @@ export default function LoginView() {
     },
   });
 
-  // 2. SETUP SERVER ACTION
+  // SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(loginAction, {
     onSuccess: (data: any) => {
       const identifier = data?.identifier || data?.email;
       if (identifier) {
-        sessionStorage.setItem("pendingVerificationEmail", identifier);
-        router.push(
-          `/${country?.toLowerCase() || "pakistan"}/${language?.toLowerCase() || "en"}/verify-otp?email=${encodeURIComponent(identifier)}`,
-        );
+        sessionStorage.setItem(AUTH_KEYS.PENDING_EMAIL, identifier);
+        router.push(`/verify-otp?email=${encodeURIComponent(identifier)}`);
       } else if (data?.data?.user?.role || data?.user?.role) {
         // Direct login success
         const role = (data.data?.user?.role || data.user?.role) as UserRole;
-
-        const targetCountry = country || "pakistan";
-        const targetLang = language || "en";
 
         if (role === "restaurant_owner") {
           getRestaurantStatusAction()
             .then((statusRes) => {
               if (statusRes.success && statusRes.data?.status === "active") {
-                router.push(
-                  `/${targetCountry}/${targetLang}/restaurant/dashboard`,
-                );
+                router.push(`/restaurant/dashboard`);
               } else {
-                router.push(
-                  `/${targetCountry}/${targetLang}/restaurant/status`,
-                );
+                router.push(`/restaurant/status`);
               }
             })
             .catch((err) => {
-              router.push(`/${targetCountry}/${targetLang}/restaurant/status`);
+              router.push(`/restaurant/status`);
             });
           return;
         }
 
         const targetSubPath = ROLE_REDIRECT_MAP[role];
-
-        if (targetSubPath) {
-          router.push(`/${targetCountry}/${targetLang}${targetSubPath}`);
-        } else {
-          router.push(`/${targetCountry}/${targetLang}/dashboard`);
-        }
+        router.push(targetSubPath || "/dashboard");
       }
     },
   });
@@ -99,9 +84,7 @@ export default function LoginView() {
   }
 
   return (
-    <GoogleOAuthProvider
-      clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
-    >
+    <>
       <Card className="border-none shadow-none bg-transparent py-2">
         <CardHeader className="px-0 pt-0 text-center">
           <CardTitle className="text-3xl font-bold text-emerald-bg">
@@ -118,8 +101,6 @@ export default function LoginView() {
             <GoogleAuthButton
               loading={isGoogleLoading}
               setLoading={setIsGoogleLoading}
-              country={country}
-              language={language}
               disabled={isPending}
             />
             <Button
@@ -142,7 +123,7 @@ export default function LoginView() {
             </div>
           </div>
 
-          {/* FORM*/}
+          {/* FORM */}
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -238,6 +219,6 @@ export default function LoginView() {
           </Typography>
         </CardContent>
       </Card>
-    </GoogleOAuthProvider>
+    </>
   );
 }

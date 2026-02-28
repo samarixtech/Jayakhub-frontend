@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { registerRestaurantAction } from "@/app/actions/auth/auth";
 import { registerSchema, RegisterInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Separator } from "@/components/ui/separator";
 import { FaApple } from "react-icons/fa";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
@@ -28,6 +27,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { useZodForm } from "@/hooks/use-zod-form";
 import Link from "next/link";
+import { AUTH_KEYS } from "@/config/auth-keys.config";
 
 export default function RestaurantRegisterView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,7 @@ export default function RestaurantRegisterView() {
   const router = useRouter();
   const { country, language } = useLocale();
 
-  // 1 SETUP FORM WITH ZOD
+  // SETUP FORM WITH ZOD
   const form = useZodForm(registerSchema, {
     defaultValues: {
       name: "",
@@ -50,7 +50,6 @@ export default function RestaurantRegisterView() {
     },
   });
 
-  // Restore from Session Storage
   // Using useEffect to avoid hydration mismatch
   useEffect(() => {
     const savedData = sessionStorage.getItem("restaurant_register_form");
@@ -87,7 +86,7 @@ export default function RestaurantRegisterView() {
     };
   }, [form]);
 
-  // 2 SETUP SERVER ACTION
+  // SETUP SERVER ACTION
   const { execute, isPending } = useServerAction(registerRestaurantAction, {
     onSuccess: (data: any) => {
       const identifier = data?.email || form.getValues("email");
@@ -95,7 +94,7 @@ export default function RestaurantRegisterView() {
       // CLEAR STORAGE
       sessionStorage.removeItem("restaurant_register_form");
 
-      sessionStorage.setItem("pendingVerificationEmail", identifier);
+      sessionStorage.setItem(AUTH_KEYS.PENDING_EMAIL, identifier);
       toast.success("Business account created! Verify your OTP.");
 
       router.push(
@@ -109,9 +108,7 @@ export default function RestaurantRegisterView() {
   };
 
   return (
-    <GoogleOAuthProvider
-      clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
-    >
+    <>
       <Card className="border-none shadow-none bg-transparent m-0 p-0">
         <CardHeader className="px-0 pt-0 text-center">
           <Typography
@@ -340,6 +337,6 @@ export default function RestaurantRegisterView() {
           </Typography>
         </CardContent>
       </Card>
-    </GoogleOAuthProvider>
+    </>
   );
 }

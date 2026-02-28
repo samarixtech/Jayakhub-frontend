@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useZodForm } from "@/hooks/use-zod-form";
+import { AUTH_KEYS } from "@/config/auth-keys.config";
 
 export default function NewPasswordView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,8 +43,8 @@ export default function NewPasswordView() {
   });
 
   useEffect(() => {
-    const email = sessionStorage.getItem("pendingVerificationEmail");
-    const otp = sessionStorage.getItem("pendingOTP");
+    const email = sessionStorage.getItem(AUTH_KEYS.PENDING_EMAIL);
+    const otp = sessionStorage.getItem(AUTH_KEYS.PENDING_OTP);
 
     if (!email || !otp) {
       toast.error("Session expired. Please start over.");

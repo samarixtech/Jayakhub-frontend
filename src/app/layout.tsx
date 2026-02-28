@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { cookies } from "next/headers";
+import AuthProvider from "@/providers/AuthProvider";
 import { CLCProvider } from "../context/CLCContext";
 import { Toaster } from "react-hot-toast";
 import { Metadata } from "next";
@@ -92,7 +93,7 @@ export default async function RootLayout({
         <CLCProvider>
           <ReduxProvider>
             <NextIntlClientProvider locale={currentLocale} messages={messages}>
-              {children}
+              <AuthProvider>{children}</AuthProvider>
             </NextIntlClientProvider>
           </ReduxProvider>
         </CLCProvider>
