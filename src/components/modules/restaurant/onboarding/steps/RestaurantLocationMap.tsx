@@ -19,7 +19,7 @@ interface RestaurantLocationMapProps {
 
 const defaultCenter = {
   lat: 40.7128, // Default fallback (New York) - can be changed to project default
-  lng: -74.0060,
+  lng: -74.006,
 };
 
 const containerStyle = {
@@ -36,6 +36,7 @@ export default function RestaurantLocationMap({
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "", // Ensure this is set
+    libraries: ["places"],
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -72,25 +73,28 @@ export default function RestaurantLocationMap({
     });
   }, []);
 
-  const handleLocationUpdate = useCallback((lat: number, lng: number) => {
-     const newLoc = { lat, lng };
-     
-     // Reverse Geocoding
-     if (window.google && window.google.maps) {
+  const handleLocationUpdate = useCallback(
+    (lat: number, lng: number) => {
+      const newLoc = { lat, lng };
+
+      // Reverse Geocoding
+      if (window.google && window.google.maps) {
         const geocoder = new window.google.maps.Geocoder();
         geocoder.geocode({ location: newLoc }, (results, status) => {
-            if (status === "OK" && results && results[0]) {
-               const address = results[0].formatted_address;
-               onLocationSelect(newLoc, address);
-            } else {
-                // Fallback without address
-                onLocationSelect(newLoc);
-            }
+          if (status === "OK" && results && results[0]) {
+            const address = results[0].formatted_address;
+            onLocationSelect(newLoc, address);
+          } else {
+            // Fallback without address
+            onLocationSelect(newLoc);
+          }
         });
-     } else {
-         onLocationSelect(newLoc);
-     }
-  }, [onLocationSelect]);
+      } else {
+        onLocationSelect(newLoc);
+      }
+    },
+    [onLocationSelect],
+  );
 
   const handleMapClick = useCallback(
     (e: google.maps.MapMouseEvent) => {
@@ -98,7 +102,7 @@ export default function RestaurantLocationMap({
         handleLocationUpdate(e.latLng.lat(), e.latLng.lng());
       }
     },
-    [handleLocationUpdate]
+    [handleLocationUpdate],
   );
 
   const handleLocateMe = () => {
@@ -116,11 +120,15 @@ export default function RestaurantLocationMap({
           toast.success("Location found!", { id: "locating" });
         },
         () => {
-          toast.error("Error: The Geolocation service failed.", { id: "locating" });
-        }
+          toast.error("Error: The Geolocation service failed.", {
+            id: "locating",
+          });
+        },
       );
     } else {
-      toast.error("Error: Your browser doesn't support geolocation.", { id: "locating" });
+      toast.error("Error: Your browser doesn't support geolocation.", {
+        id: "locating",
+      });
     }
   };
 
@@ -128,21 +136,25 @@ export default function RestaurantLocationMap({
 
   if (loadError) {
     return (
-      <div className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center p-4 text-center`}>
+      <div
+        className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center p-4 text-center`}
+      >
         <div className="text-red-500">
-           <p className="font-bold">Error loading maps</p>
-           <p className="text-sm">Please check your API key configuration.</p>
+          <p className="font-bold">Error loading maps</p>
+          <p className="text-sm">Please check your API key configuration.</p>
         </div>
       </div>
     );
   }
 
   if (!hasApiKey) {
-      return (
-      <div className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center p-4 text-center`}>
+    return (
+      <div
+        className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center p-4 text-center`}
+      >
         <div className="text-gray-500">
-           <p className="font-bold">Maps Unavailable</p>
-           <p className="text-sm">Google Maps API Key is missing.</p>
+          <p className="font-bold">Maps Unavailable</p>
+          <p className="text-sm">Google Maps API Key is missing.</p>
         </div>
       </div>
     );
@@ -150,17 +162,21 @@ export default function RestaurantLocationMap({
 
   if (!isLoaded) {
     return (
-      <div className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center`}>
+      <div
+        className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center`}
+      >
         <div className="animate-pulse flex flex-col items-center">
-             <MapPin className="h-8 w-8 text-gray-300 mb-2" />
-             <span className="text-gray-400 text-sm">Loading Map...</span>
+          <MapPin className="h-8 w-8 text-gray-300 mb-2" />
+          <span className="text-gray-400 text-sm">Loading Map...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`relative ${className} rounded-2xl overflow-hidden border border-gray-100 shadow-inner`}>
+    <div
+      className={`relative ${className} rounded-2xl overflow-hidden border border-gray-100 shadow-inner`}
+    >
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
@@ -169,9 +185,9 @@ export default function RestaurantLocationMap({
         onUnmount={onUnmount}
         onClick={handleMapClick}
         options={{
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: false,
         }}
       >
         {location && <Marker position={location} />}

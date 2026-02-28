@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import useLocale from "@/hooks/useLocals";
 import { forgotPasswordAction } from "@/app/actions/auth/auth";
 import { forgotPasswordSchema, ForgotPasswordInput } from "@/lib/schemas/auth";
 import { useServerAction } from "@/hooks/use-server-action";
@@ -20,10 +19,10 @@ import {
 } from "@/components/ui/form";
 import { useZodForm } from "@/hooks/use-zod-form";
 import Link from "next/link";
+import { AUTH_KEYS } from "@/config/auth-keys.config";
 
 export default function ForgotPasswordView() {
   const router = useRouter();
-  const { country, language } = useLocale();
 
   const form = useZodForm(forgotPasswordSchema, {
     defaultValues: {
@@ -34,9 +33,9 @@ export default function ForgotPasswordView() {
   const { execute, isPending } = useServerAction(forgotPasswordAction, {
     onSuccess: (data: any) => {
       if (data?.email) {
-        sessionStorage.setItem("pendingVerificationEmail", data.email);
-        sessionStorage.setItem("verificationIntent", "forgot-password");
-        const verifyPath = `/${country?.toLowerCase()}/${language?.toLowerCase()}/verify-otp`;
+        sessionStorage.setItem(AUTH_KEYS.PENDING_EMAIL, data.email);
+        sessionStorage.setItem(AUTH_KEYS.INTENT, "forgot-password");
+        const verifyPath = `/verify-otp`;
         router.push(verifyPath);
       }
     },

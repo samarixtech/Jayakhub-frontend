@@ -4,7 +4,6 @@ import { FaApple } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import useLocale from "@/hooks/useLocals";
 import { registerAction } from "@/app/actions/auth/auth";
@@ -29,6 +28,7 @@ import { Typography } from "@/components/ui/typography";
 import { GoogleAuthButton } from "@/components/modules/auth/GoogleAuthButton";
 import { useZodForm } from "@/hooks/use-zod-form";
 import Link from "next/link";
+import { AUTH_KEYS } from "@/config/auth-keys.config";
 
 export default function CustomerRegisterView() {
   const t = useTranslations("authModal");
@@ -88,7 +88,7 @@ export default function CustomerRegisterView() {
       sessionStorage.removeItem("customer_register_form");
 
       if (identifier) {
-        sessionStorage.setItem("pendingVerificationEmail", identifier);
+        sessionStorage.setItem(AUTH_KEYS.PENDING_EMAIL, identifier);
         router.push(
           `/${country?.toLowerCase() || "pakistan"}/${language?.toLowerCase() || "en"}/verify-otp?email=${encodeURIComponent(identifier)}`,
         );
@@ -113,9 +113,7 @@ export default function CustomerRegisterView() {
   }
 
   return (
-    <GoogleOAuthProvider
-      clientId={`${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}`}
-    >
+    <>
       <Card className="border-none shadow-none bg-transparent overflow-hidden m-0 p-0">
         <CardHeader className="px-0 pt-0 text-center">
           <Typography
@@ -135,8 +133,8 @@ export default function CustomerRegisterView() {
               role="customer"
               loading={isGoogleLoading}
               setLoading={setIsGoogleLoading}
-              country={country}
-              language={language}
+              // country={country}
+              // language={language}
               disabled={isPending}
             />
             <Button
@@ -340,6 +338,6 @@ export default function CustomerRegisterView() {
           </Typography>
         </CardContent>
       </Card>
-    </GoogleOAuthProvider>
+    </>
   );
 }

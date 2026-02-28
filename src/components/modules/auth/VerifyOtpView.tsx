@@ -3,7 +3,6 @@ import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import useLocale from "@/hooks/useLocals";
 import { resendOtpAction, verifyOtpAction } from "@/app/actions/auth/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +15,7 @@ import { Typography } from "@/components/ui/typography";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import Link from "next/link";
+import { AUTH_KEYS } from "@/config/auth-keys.config";
 
 export default function VerifyOtpView() {
   const [otpValue, setOtpValue] = useState("");
@@ -25,19 +25,17 @@ export default function VerifyOtpView() {
   const [timer, setTimer] = useState(60);
 
   const router = useRouter();
-  const { country, language } = useLocale();
 
   // CHECK THAT IF VERIFICATION EMAIL IS STORED IN SESSION STORAGE (IF NOT, REDIRECT TO REGISTER)
   useEffect(() => {
-    const storedEmail = sessionStorage.getItem("pendingVerificationEmail");
+    const storedEmail = sessionStorage.getItem(AUTH_KEYS.PENDING_EMAIL);
     if (storedEmail) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEmail(storedEmail);
     } else {
       toast.error("No verification email found. Redirecting...");
-      router.push(`/${country}/${language}/register`);
+      router.push(`/register`);
     }
-  }, [router, country, language]);
+  }, [router]);
 
   // COUNTDOWN TIMER
   useEffect(() => {
@@ -78,12 +76,10 @@ export default function VerifyOtpView() {
 
       if (result.success) {
         // HANDLE "Forgot Password" FLOW VS "Registration" FLOW
-        const intent = sessionStorage.getItem("verificationIntent");
+        const intent = sessionStorage.getItem(AUTH_KEYS.INTENT);
         if (intent === "forgot-password") {
-          sessionStorage.setItem("pendingOTP", otpValue);
-          router.push(
-            `/${country?.toLowerCase()}/${language?.toLowerCase()}/new-password`,
-          );
+          sessionStorage.setItem(AUTH_KEYS.PENDING_OTP, otpValue);
+          router.push(`/new-password`);
           return;
         }
 
@@ -94,18 +90,14 @@ export default function VerifyOtpView() {
         if (!targetSubPath) {
           console.error("Invalid or missing role:", role);
           toast.error("Authentication error: Invalid user role");
-          router.replace(
-            `/${country.toLowerCase()}/${language.toLowerCase()}/login`,
-          );
+          router.replace(`/login`);
           return;
         }
 
-        // FINALIZE AND REDIRECT
+        // FINALIZE, CLEAN AND REDIRECT
         toast.success(result.message || "Account verified!");
-        sessionStorage.removeItem("pendingVerificationEmail");
-
-        const targetCountry = country || "pakistan";
-        const targetLang = language || "en";
+        sessionStorage.removeItem(AUTH_KEYS.PENDING_EMAIL);
+        sessionStorage.removeItem(AUTH_KEYS.INTENT);
 
         // If restaurant owner, check status before redirecting
         if (role === "restaurant_owner") {
@@ -117,41 +109,29 @@ export default function VerifyOtpView() {
               const status = statusRes.data.status;
 
               if (status === "active") {
-                router.replace(
-                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
-                );
+                router.replace(`/restaurant/dashboard`);
               } else if (status === "pending" || status === "rejected") {
-                router.replace(
-                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
-                );
+                router.replace(`/restaurant/status`);
               } else {
                 // Draft or any other status -> Onboarding
-                router.replace(
-                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
-                );
+                router.replace(`/restaurant/onboarding`);
               }
             } else {
               // No restaurant data found -> Onboarding
-              router.replace(
-                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
-              );
+              router.replace(`/restaurant/onboarding`);
             }
             return;
           } catch (err) {
             console.error("Status check failed", err);
-            // On error (network/etc), safer to go to onboarding or status?
+            // On error (network/etc), safer to go to onboarding or status
             // If it failed, maybe we can't determine status.
             // But usually this means not found if API throws on 404.
-            router.replace(
-              `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
-            );
+            router.replace(`/restaurant/onboarding`);
             return;
           }
         }
 
-        const finalUrl = `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}${targetSubPath}`;
-
-        router.replace(finalUrl);
+        router.replace(targetSubPath);
       } else {
         toast.error(result.message || "Verification failed");
         setOtpValue(""); // CLEAR OTP ON ERROR

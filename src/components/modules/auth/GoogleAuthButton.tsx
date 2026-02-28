@@ -10,15 +10,12 @@ import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
 import { Loader2 } from "lucide-react";
 import { useServerAction } from "@/hooks/use-server-action";
-export function GoogleAuthButton({ country, language, loading, role }: any) {
+export function GoogleAuthButton({ loading, role }: any) {
   const router = useRouter();
 
   const { execute, isPending } = useServerAction(googleAuthAction, {
     onSuccess: (data: any) => {
       if (data?.role) {
-        const targetCountry = country || "pakistan";
-        const targetLang = language || "en";
-
         if (data.role === "restaurant_owner") {
           // Check restaurant status before redirecting
           getRestaurantStatusAction()
@@ -28,38 +25,28 @@ export function GoogleAuthButton({ country, language, loading, role }: any) {
                 const status = statusRes.data.status;
 
                 if (status === "active") {
-                  router.push(
-                    `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/dashboard`,
-                  );
+                  router.push(`/restaurant/dashboard`);
                 } else if (status === "pending" || status === "rejected") {
-                  router.push(
-                    `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/status`,
-                  );
+                  router.push(`/restaurant/status`);
                 } else {
                   // Draft or any other status -> Onboarding
-                  router.push(
-                    `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
-                  );
+                  router.push(`/restaurant/onboarding`);
                 }
               } else {
                 // No restaurant data found -> Onboarding
-                router.push(
-                  `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
-                );
+                router.push(`/restaurant/onboarding`);
               }
             })
             .catch((err) => {
               console.error("Status check failed", err);
               // On error (likely no restaurant found) -> Onboarding
-              router.push(
-                `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}/restaurant/onboarding`,
-              );
+              router.push(`/restaurant/onboarding`);
             });
           return;
         }
 
         const targetSubPath = ROLE_REDIRECT_MAP[data.role as UserRole];
-        const finalUrl = `/${targetCountry.toLowerCase()}/${targetLang.toLowerCase()}${targetSubPath}`;
+        const finalUrl = `${targetSubPath}`;
         router.push(finalUrl);
       }
     },
