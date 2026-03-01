@@ -1,25 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  CreditCard,
-  Banknote,
-  MapPin,
-  User,
-  Circle,
-  CheckCircle2,
-  Plus,
-} from "lucide-react";
 import OrderSummary from "@/components/modules/checkout/OrderSummary";
 import {
   getProfile,
   getMyCardsAction,
 } from "@/app/actions/customer/userprofile";
 import { getUserAddresses } from "@/app/actions/customer/address";
-import AddNewAddressModal from "@/components/modules/customer/address/AddNewAddressModal";
-import { GlobalModal } from "@/components/common/GlobalModal";
+import { CheckoutPromoBanner } from "./components/CheckoutPromoBanner";
+import { CheckoutLoginForm } from "./components/CheckoutLoginForm";
+import { CheckoutPersonalDetails } from "./components/CheckoutPersonalDetails";
+import { CheckoutDeliveryAddress } from "./components/CheckoutDeliveryAddress";
+import { CheckoutPaymentMethod } from "./components/CheckoutPaymentMethod";
 import CheckoutSkeleton from "@/components/skeletons/CheckoutSkeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store/store";
@@ -38,7 +30,6 @@ import {
 } from "@/components/ui/breadcrumb";
 
 const CheckoutView = () => {
-  //  REDUX
   const dispatch = useDispatch<AppDispatch>();
   const cart = useSelector((state: RootState) => state.cart.items);
   const router = useRouter();
@@ -52,10 +43,7 @@ const CheckoutView = () => {
   const [selectedAddress, setSelectedAddress] = useState<any>(null);
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "cod" | string>(
     "cod",
-  ); // Updated Type
-  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-  const [isAddNewAddressModalOpen, setIsAddNewAddressModalOpen] =
-    useState(false);
+  );
 
   const { country, language } = useLocale();
 
@@ -73,7 +61,7 @@ const CheckoutView = () => {
     setIsPlacingOrder(true);
 
     // Prepare Payload
-    const restaurantId = cart[0].restaurantId || ""; // Assuming all items from same restaurant
+    const restaurantId = cart[0].restaurantId || "";
     const fullAddress = `${selectedAddress.streetAddress}, ${selectedAddress.city}, ${selectedAddress.stateProvince}`;
 
     // Calculate total amount
@@ -81,11 +69,11 @@ const CheckoutView = () => {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
-    const deliveryFee = 10; // Fixed for now, should come from somewhere
+    const deliveryFee = 10;
     const totalAmount = subtotal + deliveryFee;
 
     const payload = {
-      paymentMethod: paymentMethod as any, // Cast to any to allow dynamic string 'pm_...'
+      paymentMethod: paymentMethod as any,
       restaurantId,
       items: cart.map((item) => ({
         itemName: item.name,
@@ -112,15 +100,8 @@ const CheckoutView = () => {
           const orderId = res.data?.orderId || "new";
           router.push(`/${country}/${language}/order-confirmation/${orderId}`);
         } else {
-          // Stripe Success (existing or new)
-          // If we sent a pm_id, backend might process immediately (capture)
-          // OR if 'stripe' (new card), it returns a URL.
-          // Let's assume typical behavior: if URL is present, open it.
-          // If successful payment without URL (e.g. saved card), handle success.
-
           if (res.data?.url) {
-            // New Card Flow or 3DS required
-            window.open(res.data.url, "_blank");
+            window.location.assign(res.data.url);
           } else if (res.success || res.meta?.status === 200) {
             // Successful charge with saved card
             toast.success("Payment successful!");
@@ -151,7 +132,6 @@ const CheckoutView = () => {
       if (addressRes && addressRes.data) {
         setSavedAddresses(addressRes.data);
 
-        // Only set default if one isn't already selected, or validify selection
         if (!selectedAddress) {
           const defaultAddr = addressRes.data.find((addr: any) => addr.status);
           if (defaultAddr) {
@@ -182,10 +162,9 @@ const CheckoutView = () => {
   };
 
   // Check auth status and fetch profile & addresses
-
   useEffect(() => {
     const init = async () => {
-      // 1. Try to fetch profile to check auth status
+      // Try to fetch profile to check auth status
       try {
         const profileRes: any = await getProfile();
         console.log("Profile Res:", profileRes);
@@ -197,7 +176,7 @@ const CheckoutView = () => {
           await fetchAddresses();
           await fetchCards();
         } else if (profileRes.meta?.status === 200 && profileRes.data) {
-          // Fallback for different structure
+          // Fallback
           setIsLoggedIn(true);
           setUserProfile(profileRes.data.data || profileRes.data);
           await fetchAddresses();
@@ -214,7 +193,7 @@ const CheckoutView = () => {
     };
 
     init();
-  }, []); // Run once on mount
+  }, []);
 
   if (loading) return <CheckoutSkeleton />;
 
@@ -246,364 +225,29 @@ const CheckoutView = () => {
           </h1>
 
           {/* Promo Banner if logged in */}
-          {!isLoggedIn && (
-            <div className="w-full bg-[#346853] rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between text-white shadow-lg relative overflow-hidden">
-              <div className="relative z-10">
-                <h2 className="text-2xl font-bold mb-1">
-                  Sign up to get free delivery on
-                </h2>
-                <h2 className="text-2xl font-bold">your first order</h2>
-              </div>
-              {/* Simple Logo Placeholder */}
-              <div className="flex items-center gap-2 mt-4 md:mt-0 relative z-10">
-                {/* Replace with actual Logo */}
-                <div className="text-right">
-                  <h3 className="font-black text-xl tracking-tight">
-                    JAYAK HUB
-                  </h3>
-                  <p className="text-[10px] tracking-widest opacity-80">
-                    Iraq's Premier Food Delivery Platform
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          {!isLoggedIn && <CheckoutPromoBanner />}
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Left Column: Forms or Login Prompt */}
             <div className="lg:col-span-8 space-y-6">
               {!isLoggedIn ? (
-                <div className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 bg-white p-10 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-2">
-                    <User className="w-10 h-10 text-[#346853]" />
-                  </div>
-                  <div className="space-y-2">
-                    <h2 className="text-2xl font-bold text-gray-900">
-                      Login to Place Order
-                    </h2>
-                    <p className="text-gray-500 max-w-sm mx-auto">
-                      Please sign in or create an account to proceed with your
-                      order and manage your delivery details.
-                    </p>
-                  </div>
-                  <div className="flex gap-4">
-                    <Button
-                      onClick={() => router.push("/login")}
-                      className="bg-[#346853] hover:bg-[#2a5443] text-white px-8 rounded-full font-bold h-12"
-                    >
-                      Login / Sign Up
-                    </Button>
-                  </div>
-                </div>
+                <CheckoutLoginForm />
               ) : (
                 <>
-                  <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                    <div className="flex items-center gap-3 mb-6">
-                      <User className="text-[#346853]" size={20} />
-                      <h3 className="font-bold text-lg text-gray-900">
-                        Personal Details
-                      </h3>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-1">
-                          Email
-                        </label>
-                        <Input
-                          defaultValue={
-                            userProfile?.email || "shoaib.dev510@gmail.com"
-                          }
-                          className="h-11 bg-white"
-                          readOnly={!!userProfile?.email}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-gray-500 mb-1">
-                          Full Name
-                        </label>
-                        <Input
-                          defaultValue={userProfile?.name || "Muhammad Shoaib"}
-                          className="h-11 bg-white"
-                        />
-                      </div>
-                      <div className="md:col-span-2">
-                        <label className="block text-xs font-bold text-gray-500 mb-1">
-                          Mobile Number
-                        </label>
-                        <div className="flex gap-2">
-                          {/* <div className="h-11 w-20 flex items-center justify-center border rounded-md bg-gray-50 text-sm font-medium text-gray-600">
-                            +63
-                          </div> */}
-                          <Input
-                            defaultValue={userProfile?.phone || "912 345 6789"}
-                            className="h-11 bg-white flex-1"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <CheckoutPersonalDetails userProfile={userProfile} />
 
-                  {/* Delivery Address */}
-                  <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                    <div className="flex items-center gap-3 mb-6">
-                      <MapPin className="text-[#346853]" size={20} />
-                      <h3 className="font-bold text-lg text-gray-900">
-                        Delivery Address
-                      </h3>
-                    </div>
-                    <div className="bg-gray-50 p-4 rounded-lg flex items-center justify-between">
-                      <div>
-                        <h4 className="font-bold text-gray-900 mb-1">
-                          {selectedAddress
-                            ? selectedAddress.label
-                            : "No Address Selected"}
-                        </h4>
-                        <p className="text-sm text-gray-500">
-                          {selectedAddress
-                            ? `${selectedAddress.streetAddress}, ${selectedAddress.city}, ${selectedAddress.stateProvince}`
-                            : "Please select or add an address."}
-                        </p>
-                        {selectedAddress?.noteToCourier && (
-                          <p className="text-xs text-gray-400 mt-1">
-                            Note: {selectedAddress.noteToCourier}
-                          </p>
-                        )}
-                      </div>
-                    </div>
+                  <CheckoutDeliveryAddress
+                    selectedAddress={selectedAddress}
+                    savedAddresses={savedAddresses}
+                    setSelectedAddress={setSelectedAddress}
+                    fetchAddresses={fetchAddresses}
+                  />
 
-                    <GlobalModal
-                      trigger={
-                        <Button
-                          className="w-full mt-4 bg-[#346853] hover:bg-[#2a5443] text-white"
-                          onClick={() => setIsAddressModalOpen(true)}
-                        >
-                          Change
-                        </Button>
-                      }
-                      title="Select Delivery Address"
-                      description="Choose where you want your order delivered."
-                      open={isAddressModalOpen}
-                      onOpenChange={setIsAddressModalOpen}
-                    >
-                      <div className="space-y-3 max-h-[400px] overflow-y-auto">
-                        {savedAddresses.map((addr) => (
-                          <div
-                            key={addr.id}
-                            className={`p-4 rounded-xl border cursor-pointer flex items-start gap-3 transition-all ${
-                              selectedAddress?.id === addr.id
-                                ? "border-[#346853] bg-[#346853]/5"
-                                : "border-gray-200 hover:border-gray-300"
-                            }`}
-                            onClick={() => {
-                              setSelectedAddress(addr);
-                              setIsAddressModalOpen(false);
-                            }}
-                          >
-                            <div
-                              className={`mt-1 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
-                                selectedAddress?.id === addr.id
-                                  ? "border-[#346853]"
-                                  : "border-gray-300"
-                              }`}
-                            >
-                              {selectedAddress?.id === addr.id && (
-                                <div className="w-2.5 h-2.5 rounded-full bg-[#346853]" />
-                              )}
-                            </div>
-                            <div>
-                              <p className="font-bold text-gray-900 text-sm">
-                                {addr.label}
-                              </p>
-                              <p className="text-sm text-gray-500 mt-0.5">
-                                {addr.streetAddress}, {addr.city},{" "}
-                                {addr.stateProvince}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                        {savedAddresses.length === 0 && (
-                          <p className="text-center text-gray-500 py-4">
-                            No addresses found.
-                          </p>
-                        )}
-
-                        {/* Add New Address Button */}
-                        <button
-                          onClick={() => {
-                            setIsAddressModalOpen(false); // Close selection modal
-                            setIsAddNewAddressModalOpen(true); // Open add modal
-                          }}
-                          className="w-full p-4 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center gap-2 text-gray-500 hover:text-[#346853] hover:border-[#346853] hover:bg-gray-50 transition-all group"
-                        >
-                          <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                          <span className="font-bold text-sm">
-                            Add New Address
-                          </span>
-                        </button>
-                      </div>
-                    </GlobalModal>
-
-                    <AddNewAddressModal
-                      open={isAddNewAddressModalOpen}
-                      onOpenChange={(open) => {
-                        setIsAddNewAddressModalOpen(open);
-                        if (!open) {
-                          // Refresh list when closed
-                          fetchAddresses();
-                          setIsAddressModalOpen(true);
-                        }
-                      }}
-                    />
-                  </div>
-
-                  {/* Payment Method */}
-                  <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-                    <div className="flex items-center gap-3 mb-6">
-                      <Banknote className="text-[#346853]" size={20} />
-                      <h3 className="font-bold text-lg text-gray-900">
-                        Payment Method
-                      </h3>
-                    </div>
-                    <div className="space-y-3">
-                      {/* Stripe Option */}
-                      <div
-                        onClick={() => setPaymentMethod("stripe")}
-                        className={`border p-4 rounded-lg cursor-pointer transition-all ${
-                          paymentMethod === "stripe" ||
-                          (typeof paymentMethod === "string" &&
-                            paymentMethod.startsWith("pm_"))
-                            ? "border-[#346853] bg-[#346853]/5"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <CreditCard
-                              className={
-                                paymentMethod === "stripe" ||
-                                (typeof paymentMethod === "string" &&
-                                  paymentMethod.startsWith("pm_"))
-                                  ? "text-[#346853]"
-                                  : "text-gray-400"
-                              }
-                            />
-                            <div>
-                              <p className="font-bold text-gray-900 text-sm">
-                                Credit Card / Stripe
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                Secure payment via Stripe
-                              </p>
-                            </div>
-                          </div>
-                          {(paymentMethod === "stripe" ||
-                            (typeof paymentMethod === "string" &&
-                              paymentMethod.startsWith("pm_"))) && (
-                            <CheckCircle2 className="text-[#346853] fill-[#346853]/20" />
-                          )}
-                        </div>
-
-                        {/* Saved Cards & New Card Options */}
-                        {(paymentMethod === "stripe" ||
-                          (typeof paymentMethod === "string" &&
-                            paymentMethod.startsWith("pm_"))) && (
-                          <div className="mt-4 pt-4 border-t border-[#346853]/10 animate-in fade-in slide-in-from-top-2 space-y-3">
-                            {/* Option: Pay with New Card */}
-                            <div
-                              onClick={(e) => {
-                                e.stopPropagation(); // Prevent parent click
-                                setPaymentMethod("stripe");
-                              }}
-                              className={`p-3 rounded-xl border border-dashed flex items-center gap-3 cursor-pointer transition-all group ${
-                                paymentMethod === "stripe"
-                                  ? "border-[#346853] bg-[#346853]/5"
-                                  : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
-                              }`}
-                            >
-                              <div
-                                className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === "stripe" ? "border-[#346853]" : "border-gray-400 group-hover:border-[#346853]"}`}
-                              >
-                                {paymentMethod === "stripe" && (
-                                  <div className="w-2 h-2 rounded-full bg-[#346853]" />
-                                )}
-                              </div>
-                              <span className="font-medium text-sm text-gray-700">
-                                Pay with a new card
-                              </span>
-                            </div>
-
-                            {/* Saved Cards List */}
-                            {savedCards.map((card: any) => (
-                              <div
-                                key={card.id}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setPaymentMethod(card.stripePaymentMethodId);
-                                }}
-                                className={`p-3 rounded-xl border border-dashed flex items-center justify-between cursor-pointer transition-all group ${
-                                  paymentMethod === card.stripePaymentMethodId
-                                    ? "border-[#346853] bg-[#346853]/5"
-                                    : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
-                                }`}
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div
-                                    className={`w-4 h-4 rounded-full border flex items-center justify-center ${paymentMethod === card.stripePaymentMethodId ? "border-[#346853]" : "border-gray-400 group-hover:border-[#346853]"}`}
-                                  >
-                                    {paymentMethod ===
-                                      card.stripePaymentMethodId && (
-                                      <div className="w-2 h-2 rounded-full bg-[#346853]" />
-                                    )}
-                                  </div>
-                                  <div className="flex flex-col">
-                                    <span className="font-medium text-sm text-gray-900 capitalize">
-                                      {card.cardType} •••• {card.last4}
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                      Expires {card.expiryDate}
-                                    </span>
-                                  </div>
-                                </div>
-                                <CreditCard
-                                  size={16}
-                                  className="text-gray-400"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* COD Option */}
-                      <div
-                        onClick={() => setPaymentMethod("cod")}
-                        className={`border p-4 rounded-lg flex items-center justify-between cursor-pointer transition-all ${paymentMethod === "cod" ? "border-[#346853] bg-[#346853]/5" : "border-gray-200 hover:border-gray-300"}`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <Banknote
-                            className={
-                              paymentMethod === "cod"
-                                ? "text-[#346853]"
-                                : "text-gray-400"
-                            }
-                          />
-                          <div>
-                            <p className="font-bold text-gray-900 text-sm">
-                              Cash on Delivery
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              Pay when food arrives
-                            </p>
-                          </div>
-                        </div>
-                        {paymentMethod === "cod" ? (
-                          <CheckCircle2 className="text-[#346853] fill-[#346853]/20" />
-                        ) : (
-                          <Circle className="text-gray-300" />
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <CheckoutPaymentMethod
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    savedCards={savedCards}
+                  />
 
                   {/* Special Instructions */}
                   <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">

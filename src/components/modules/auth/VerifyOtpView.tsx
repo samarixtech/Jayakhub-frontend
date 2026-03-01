@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { resendOtpAction, verifyOtpAction } from "@/app/actions/auth/auth";
+import { useCountdown } from "@/hooks/use-countdown";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -22,7 +23,7 @@ export default function VerifyOtpView() {
   const [isVerifying, startVerifyTransition] = useTransition();
   const [isResending, startResendTransition] = useTransition();
   const [email, setEmail] = useState<string | null>(null);
-  const [timer, setTimer] = useState(60);
+  const { timer, setTimer } = useCountdown(60);
 
   const router = useRouter();
 
@@ -37,16 +38,12 @@ export default function VerifyOtpView() {
     }
   }, [router]);
 
-  // COUNTDOWN TIMER
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [timer]);
+  const resolveRestaurantPath = (status?: string | null) => {
+    if (status === "active") return "/restaurant/dashboard";
+    if (status === "pending" || status === "rejected")
+      return "/restaurant/status";
+    return "/restaurant/onboarding";
+  };
 
   // RESEND OTP HANDLER
   const handleResend = () => {
@@ -99,34 +96,19 @@ export default function VerifyOtpView() {
         sessionStorage.removeItem(AUTH_KEYS.PENDING_EMAIL);
         sessionStorage.removeItem(AUTH_KEYS.INTENT);
 
-        // If restaurant owner, check status before redirecting
+        // If RESTAURANT OWNER, CHECK STATUS BEFORE REDIRECTING
         if (role === "restaurant_owner") {
           try {
             const statusRes = await getRestaurantStatusAction();
-
-            // Check if restaurant exists and has data
-            if (statusRes.success && statusRes.data) {
-              const status = statusRes.data.status;
-
-              if (status === "active") {
-                router.replace(`/restaurant/dashboard`);
-              } else if (status === "pending" || status === "rejected") {
-                router.replace(`/restaurant/status`);
-              } else {
-                // Draft or any other status -> Onboarding
-                router.replace(`/restaurant/onboarding`);
-              }
-            } else {
-              // No restaurant data found -> Onboarding
-              router.replace(`/restaurant/onboarding`);
-            }
+            const status =
+              statusRes.success && statusRes.data
+                ? statusRes.data.status
+                : null;
+            router.replace(resolveRestaurantPath(status));
             return;
           } catch (err) {
             console.error("Status check failed", err);
-            // On error (network/etc), safer to go to onboarding or status
-            // If it failed, maybe we can't determine status.
-            // But usually this means not found if API throws on 404.
-            router.replace(`/restaurant/onboarding`);
+            router.replace("/restaurant/onboarding");
             return;
           }
         }
@@ -158,11 +140,9 @@ export default function VerifyOtpView() {
             onChange={(value) => setOtpValue(value)}
             onComplete={handleVerify}
             disabled={isVerifying}
-            // Ensure the container itself can be focused
             containerClassName="group flex items-center has-[:disabled]:opacity-50"
           >
             <InputOTPGroup className="gap-2 sm:gap-4 font-bold">
-              {/* Use a simple array map, ensuring the Slot receives the index */}
               {Array.from({ length: 6 }).map((_, index) => (
                 <InputOTPSlot
                   key={index}

@@ -72,7 +72,6 @@ const OrderSummary = ({
                         {item.selectedVariations.map((v) => v.name).join(", ")}
                       </p>
                     )}
-                  {/* Mock logic for 'Platter size' if needed */}
                 </div>
               </div>
               <span className="font-medium text-gray-900">

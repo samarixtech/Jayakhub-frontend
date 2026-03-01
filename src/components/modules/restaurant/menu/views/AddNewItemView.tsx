@@ -17,7 +17,6 @@ import {
   getVariantGroupsAction,
   createItemAction,
   updateItemAction,
-  getMenuItemsAction,
   getMenuItemByIdAction,
 } from "@/app/actions/restaurant/menu";
 import { toast } from "react-hot-toast";

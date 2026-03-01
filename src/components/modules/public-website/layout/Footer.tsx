@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import image2 from "./../../public/EngLogo (2).png"; // Adjust path as needed based on project structure
+import image2 from "../../../../../public/EngLogo (2).png";
 
 const Footer = () => {
   const t = useTranslations("Footer");
@@ -20,7 +20,11 @@ const Footer = () => {
     { icon: Facebook, href: "https://www.facebook.com", target: "_blank" },
     { icon: Instagram, href: "https://www.instagram.com", target: "_blank" },
     { icon: Twitter, href: "https://twitter.com", target: "_blank" },
-    { icon: Linkedin, href: "https://www.linkedin.com/company", target: "_blank" },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/company",
+      target: "_blank",
+    },
   ];
 
   const companyLinks = [
@@ -80,7 +84,7 @@ const Footer = () => {
 
             <div className="flex space-x-3 pt-2">
               {socialLinks.map((social, index) => (
-                <a  // <--- Changed Link to a
+                <a // <--- Changed Link to a
                   key={index}
                   href={social.href}
                   target={social.target} // <--- Add this line
@@ -89,7 +93,6 @@ const Footer = () => {
                 >
                   <social.icon className="w-5 h-5 text-white" />
                 </a>
-
               ))}
             </div>
           </div>
@@ -100,7 +103,10 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-[#FFFFFF80]">
               {companyLinks.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="hover:text-white transition-colors">
+                  <Link
+                    href={link.href}
+                    className="hover:text-white transition-colors"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -114,7 +120,10 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-[#FFFFFF80]">
               {supportLinks.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="hover:text-white transition-colors">
+                  <Link
+                    href={link.href}
+                    className="hover:text-white transition-colors"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -128,7 +137,10 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-[#FFFFFF80]">
               {partnerLinks.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="hover:text-white transition-colors">
+                  <Link
+                    href={link.href}
+                    className="hover:text-white transition-colors"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -139,11 +151,25 @@ const Footer = () => {
 
         {/* BOTTOM BAR */}
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-[#FFFFFF80]">
-          <p className="text-[#FFFFFF80]">© 2026 Jayak Hub. All rights reserved.</p>
+          <p className="text-[#FFFFFF80]">
+            © 2026 Jayak Hub. All rights reserved.
+          </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <Link href="/privacyPolicy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/cookies" className="hover:text-white transition-colors">Cookies</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms
+            </Link>
+            <Link
+              href="/privacyPolicy"
+              className="hover:text-white transition-colors"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/cookies"
+              className="hover:text-white transition-colors"
+            >
+              Cookies
+            </Link>
           </div>
         </div>
       </div>

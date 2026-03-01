@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import NotificationPanel from "@/components/modules/customer/profile-settings/notification-panel";
+import NotificationPanel from "@/components/modules/customer/profile-settings/components/notification-panel";
 import {
   LayoutDashboard,
   Settings,
@@ -233,7 +233,9 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout }) => {
                 className="flex items-center w-full px-3 py-2.5 rounded-lg hover:bg-red-50 text-gray-700 hover:text-red-600 transition-colors cursor-pointer outline-none group"
               >
                 <LogOut className="h-4 w-4 mr-3 text-gray-500 group-hover:text-red-600 transition-colors" />
-                <span className="font-medium text-sm">{tProfile("link.logout")}</span>
+                <span className="font-medium text-sm">
+                  {tProfile("link.logout")}
+                </span>
               </DropdownMenuItem>
             </div>
           </>

@@ -9,8 +9,6 @@ import { useSelector } from "react-redux";
 import { FiShoppingBag } from "react-icons/fi";
 import { RootState } from "@/redux/store/store";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-
-// Components
 import CartDrawer from "@/components/CartDrawer";
 import useLocale from "@/hooks/useLocals";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
@@ -57,14 +55,13 @@ const CustomerHeader = () => {
   return (
     <header className="w-full z-50 shrink-0 relative">
       <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4">
-        {/* ROW 1: Auth | Logo + Location (Desktop) | Lang */}
+        {/* ROW 1 Auth | Logo + Location (Desktop) | Lang */}
         <div className="bg-emerald-bg px-4 py-3 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4">
           {/* MOBILE SIDEBAR TRIGGER */}
           <div className="md:hidden text-white">
             <SidebarTrigger className="text-white hover:bg-white/10" />
           </div>
 
-          {/* Existing Mobile/Desktop Logic for Auth/Logo */}
           <div className="md:hidden">
             {!isLoggedIn ? (
               <Button
@@ -100,7 +97,7 @@ const CustomerHeader = () => {
               />
             </Link>
 
-            {/* Location Switcher NEXT TO LOGO on Desktop */}
+            {/* Location Switcher */}
             <div className="hidden md:block">
               <LocationSwitcher
                 currentAddress={currentAddress}
@@ -122,7 +119,7 @@ const CustomerHeader = () => {
           </div>
         </div>
 
-        {/* ROW 2: Location Switcher (Mobile) + Cart (Mobile) */}
+        {/* ROW 2 Location Switcher (Mobile) + Cart (Mobile) */}
         <div className="bg-white px-4 py-3 md:hidden flex items-center gap-3 border-b">
           <div className="flex-1 shrink-0 overflow-hidden">
             <LocationSwitcher
@@ -156,7 +153,7 @@ const CustomerHeader = () => {
           </div>
         </div>
 
-        {/* Desktop Right Section: Language, Cart & Profile */}
+        {/* Desktop Right Section Language, Cart & Profile */}
         <div className="hidden md:flex items-center gap-3 shrink-0">
           <div className="hidden sm:block">
             <LanguageSwitcher />

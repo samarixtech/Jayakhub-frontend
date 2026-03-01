@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +30,7 @@ export function SecurityTab() {
     async function fetchSettings() {
       try {
         const res = await getAccountSettingsAction();
+        console.log("security response", res || "undefined");
         if (res.success && res.data) {
           const profile = res.data.data?.profile || res.data.profile;
 
