@@ -38,6 +38,27 @@ const RestaurantHeader = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        // Scrolling down and pass threshold -> hide top bar
+        setIsScrolled(true);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up -> show top bar
+        setIsScrolled(false);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -67,8 +88,11 @@ const RestaurantHeader = () => {
   return (
     <>
       <header className="fixed top-0 left-0 w-full z-50 shrink-0">
-        {/* ===== TOP BAR (Desktop Only) ===== */}
-        <div className="flex items-center justify-start md:justify-center bg-[#3C8C64] px-4 md:px-6 h-12 md:h-10 overflow-x-auto scrollbar-hide">
+        {/* ===== TOP BAR ===== */}
+        <div
+          className={`flex items-center justify-start md:justify-center bg-[#3C8C64] px-4 md:px-6 overflow-x-auto scrollbar-hide transition-all duration-300 ${isScrolled ? "-mt-12 md:-mt-10" : "mt-0"
+            } h-12 md:h-10`}
+        >
           <div className="flex flex-row items-center gap-3 w-max md:w-auto pr-4 md:pr-0">
             <Link
               href={`/${country}/${language}/home`}

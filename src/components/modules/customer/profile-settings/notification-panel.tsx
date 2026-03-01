@@ -1,14 +1,19 @@
 "use client";
-import { ArrowLeft, Bell } from "lucide-react";
+import { ArrowLeft, Bell, Star, Utensils } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
+
+import { useRouter, useParams } from "next/navigation";
+import useLocale from "@/hooks/useLocals";
 
 interface NotificationPanelProps {
   onBack: () => void;
   className?: string;
   initialNotifications?: any[];
   isLoading?: boolean;
+  userRole?: string;
+  onNavigate?: () => void;
 }
 
 interface Notification {
@@ -37,13 +42,59 @@ function getRelativeTime(dateString: string) {
   return Math.floor(seconds) + " seconds ago";
 }
 
+function getNotificationIcon(notification: Notification) {
+  const title = notification.title.toLowerCase();
+  const body = notification.body.toLowerCase();
+
+  if (title.includes("rating") || title.includes("review") || body.includes("rating") || body.includes("review")) {
+    return <Star className="h-5 w-5 text-zinc-400 shrink-0" />;
+  }
+
+  // Default to food/order icon for other notifications (orders, accepted, etc.)
+  return <Utensils className="h-5 w-5 text-zinc-400 shrink-0" />;
+}
+
 export default function NotificationPanel({
   onBack,
   className,
   initialNotifications = [],
   isLoading = false,
+  userRole = "customer",
+  onNavigate,
 }: NotificationPanelProps) {
   const notifications = initialNotifications;
+  const router = useRouter();
+  const { country: localeCountry, language: localeLanguage } = useLocale();
+  const params = useParams();
+
+  const country = (params?.country as string) || localeCountry || "pk";
+  const language = (params?.language as string) || localeLanguage || "en";
+
+  const handleNotificationClick = (notification: Notification) => {
+    // Determine route based on notification content
+    const title = notification.title.toLowerCase();
+    const body = notification.body.toLowerCase();
+
+    let path = "";
+    const isRestaurant = userRole === "restaurant_owner";
+    const basePath = `/${country}/${language}/${isRestaurant ? "restaurant" : "customer"}`;
+
+    if (title.includes("rating") || title.includes("review") || body.includes("rating") || body.includes("review")) {
+      // Navigate to reviews page
+      path = isRestaurant ? `${basePath}/reviews` : `${basePath}/orders`; // Customers usually see reviews on their past orders
+    } else if (title.includes("order") || body.includes("order") || title.includes("accepted") || title.includes("rejected")) {
+      // Navigate to orders page
+      path = isRestaurant ? `${basePath}/orders` : `${basePath}/order-history`;
+    }
+
+    if (path) {
+      router.push(path);
+      if (onNavigate) {
+        onNavigate(); // Close the dropdown/panel
+      }
+    }
+  };
+
   console.log("NotificationPanel: Rendered with", { notifications, isLoading });
 
   return (
@@ -75,25 +126,29 @@ export default function NotificationPanel({
               notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`px-5 py-3 hover:bg-gray-50 transition-colors cursor-pointer ${
-                    !notification.isRead ? "bg-emerald-50/30" : ""
-                  }`}
+                  onClick={() => handleNotificationClick(notification)}
+                  className={`px-5 py-3 flex gap-4 hover:bg-gray-50 transition-colors cursor-pointer ${!notification.isRead ? "bg-emerald-50/30" : ""
+                    }`}
                 >
-                  <div className="flex justify-between items-start mb-1">
-                    <h4
-                      className={`text-xs font-bold line-clamp-1 ${
-                        !notification.isRead ? "text-gray-900" : "text-gray-700"
-                      }`}
-                    >
-                      {notification.title}
-                    </h4>
-                    <span className="text-[10px] text-gray-400 whitespace-nowrap ml-2">
-                      {getRelativeTime(notification.createdAt)}
-                    </span>
+                  <div className="mt-0.5">
+                    {getNotificationIcon(notification)}
                   </div>
-                  <p className="text-xs text-gray-600  leading-snug line-clamp-2">
-                    {notification.body}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start mb-1">
+                      <h4
+                        className={`text-xs font-bold line-clamp-1 ${!notification.isRead ? "text-gray-900" : "text-gray-700"
+                          }`}
+                      >
+                        {notification.title}
+                      </h4>
+                      <span className="text-[10px] text-gray-400 whitespace-nowrap ml-2">
+                        {getRelativeTime(notification.createdAt)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600 leading-snug line-clamp-2">
+                      {notification.body}
+                    </p>
+                  </div>
                 </div>
               ))
             ) : (
