@@ -155,7 +155,7 @@ export async function createItemAction(
 
 export async function getMenuItemsAction(): Promise<ActionResponse> {
   return executeRestaurantAction(
-    (api, restaurantId) => api.get(`/item-menu/${restaurantId}`),
+    (api, restaurantId) => api.get("/item-menu"),
     "Menu fetched successfully",
   );
 }

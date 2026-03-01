@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/immutability */
-"use client";
 import { useRouter, usePathname } from "next/navigation";
 import { setCookie } from "cookies-next";
 import { Check, ChevronDown } from "lucide-react";
@@ -21,12 +19,12 @@ interface Language {
 }
 
 const languages: Language[] = [
-  { code: "en", name: "English", countryCode: "US", dir: "ltr" },
-  { code: "ar", name: "العربية", countryCode: "IQ", dir: "rtl" },
+  { code: "en", name: "EN", countryCode: "US", dir: "ltr" },
+  { code: "ar", name: "AR", countryCode: "IQ", dir: "rtl" },
 ];
 
 interface LanguageSwitcherProps {
-  variant?: "default" | "sidebar";
+  variant?: "default" | "sidebar" | "navbar";
   collapsed?: boolean;
   className?: string;
 }
@@ -69,6 +67,7 @@ const LanguageSwitcher = ({
   };
 
   const isSidebar = variant === "sidebar";
+  const isNavbar = variant === "navbar";
 
   return (
     <DropdownMenu>
@@ -84,9 +83,11 @@ const LanguageSwitcher = ({
               ${
                 isSidebar
                   ? "w-full justify-start hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 h-11 px-4"
-                  : "bg-none border-none hover:bg-white/10 text-white px-4 py-5 rounded-full gap-2 h-10"
+                  : isNavbar
+                    ? "flex h-auto w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-[#E8F4F1]/10 md:bg-[#FFF9EE] text-[#E8F4F1] md:text-[#2C2C2C] hover:bg-[#E8F4F1]/20 md:hover:bg-[#0B5D4E] md:hover:text-white transition-all md:shadow-sm"
+                    : "bg-none border-none hover:bg-white/10 text-white px-4 py-5 rounded-full gap-2 h-10"
               }
-              ${collapsed ? "!size-11 !p-0 justify-center" : ""}
+              ${collapsed ? "size-11! p-0! justify-center" : ""}
               ${className}
             `}
           >
@@ -94,8 +95,12 @@ const LanguageSwitcher = ({
               className={`flex items-center gap-2 ${collapsed ? "justify-center w-full" : ""}`}
             >
               <div
-                className={`rounded-full overflow-hidden relative ${
-                  isSidebar && collapsed ? "w-6 h-6" : "w-5 h-5"
+                className={`rounded-full overflow-hidden relative shrink-0 ${
+                  isSidebar && collapsed
+                    ? "w-6 h-6"
+                    : isNavbar
+                      ? "w-[30px] h-[30px]"
+                      : "w-5 h-5"
                 }`}
               >
                 <ReactCountryFlag
@@ -113,14 +118,20 @@ const LanguageSwitcher = ({
                 />
               </div>
               {!collapsed && (
-                <span className="font-bold tracking-wide text-xs md:text-sm">
-                  {isSidebar ? activeLang.name : activeLang.code.toUpperCase()}
+                <span
+                  className={`font-bold tracking-wide text-xs md:text-sm ${isNavbar ? "hidden md:block" : ""}`}
+                >
+                  {isSidebar ? activeLang.name : activeLang.name}
                 </span>
               )}
             </div>
             {!collapsed && (
               <ChevronDown
-                className={`w-3 h-3 opacity-50 group-hover:opacity-100 group-data-[state=open]:rotate-180 transition-transform duration-300 ${isSidebar ? "ml-auto" : ""}`}
+                className={`w-3 h-3 transition-transform duration-300 ${
+                  isNavbar
+                    ? "text-[#E8F4F1] md:text-[#0B5D4E]"
+                    : "opacity-50 group-hover:opacity-100"
+                } group-data-[state=open]:rotate-180 ${isSidebar ? "ml-auto" : ""}`}
               />
             )}
           </Button>
@@ -130,7 +141,11 @@ const LanguageSwitcher = ({
       <DropdownMenuContent
         align="end"
         sideOffset={8}
-        className="w-48 p-2 bg-white/95 backdrop-blur-xl border-[#E2E8F0] rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] animate-in fade-in zoom-in-95 duration-200"
+        className={`w-48 p-2 ${
+          isNavbar
+            ? "bg-[#E8F4F1] text-[#2C2C2C] border-[#0B5D4E] shadow-xl"
+            : "bg-white/95 backdrop-blur-xl border-[#E2E8F0] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)]"
+        } rounded-2xl animate-in fade-in zoom-in-95 duration-200 z-60`}
       >
         <div className="px-2 py-1.5 mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">
           Select Language
@@ -143,8 +158,10 @@ const LanguageSwitcher = ({
               relative flex items-center justify-between px-3 py-2.5 mb-1 cursor-pointer rounded-lg transition-all duration-200
               ${
                 l.code === activeLang.code
-                  ? "bg-emerald-bg/10 text-emerald-bg font-semibold"
-                  : "hover:bg-gray-100 text-gray-600 font-medium"
+                  ? "bg-emerald-bg/10 text-[#0B5D4E] font-semibold"
+                  : isNavbar
+                    ? "hover:bg-[#0B5D4E] hover:text-white text-[#2C2C2C] font-medium"
+                    : "hover:bg-gray-100 text-gray-600 font-medium"
               }
             `}
           >

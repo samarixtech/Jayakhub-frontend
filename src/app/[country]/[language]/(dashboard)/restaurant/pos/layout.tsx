@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import POSNavbar from "@/components/modules/restaurant/pos/posHeader";
 import POSSidebar from "@/components/modules/restaurant/pos/pos-Sidebar";
 import { POSProvider } from "@/context/POSContext";
