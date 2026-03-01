@@ -10,11 +10,15 @@ import {
   User,
   Menu,
   ShoppingCart,
+  Settings,
+  ClipboardList,
 } from "lucide-react";
-import { usePOS } from "../../../../context/POSContext";
+import { usePOS } from "@/context/POSContext";
 import KeyboardShortcutsModal from "./keyboard-shortcuts-modal";
 import PendingOrdersSidebar from "./pending-orders-sidebar";
 import CloseRegisterModal from "./close-Register";
+import POSSettingsModal from "./pos-settings-modal";
+import ActivityLogSidebar from "./activity-log-sidebar";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -24,6 +28,8 @@ export default function POSNavbar() {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isPendingOrdersOpen, setIsPendingOrdersOpen] = useState(false);
   const [isCloseRegisterOpen, setIsCloseRegisterOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isActivityLogOpen, setIsActivityLogOpen] = useState(false);
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -100,6 +106,23 @@ export default function POSNavbar() {
           </button>
 
           <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-1 hover:bg-white/10 rounded-full transition-colors relative group"
+          >
+            <Settings className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
+          </button>
+
+          <button
+            onClick={() => setIsActivityLogOpen(true)}
+            className="relative p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
+          >
+            <ClipboardList className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
+            <div className="absolute -top-0 -right-0.5 w-[16px] h-[16px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
+              21
+            </div>
+          </button>
+
+          <button
             onClick={() => setIsCloseRegisterOpen(true)}
             className="flex items-center gap-2 bg-[#f9e9cc] text-[#d68b20] px-3.5 py-1.5 rounded-md cursor-pointer text-[13px] font-bold ml-1 hover:bg-[#ffe3b5]"
           >
@@ -127,6 +150,14 @@ export default function POSNavbar() {
       <CloseRegisterModal
         open={isCloseRegisterOpen}
         onOpenChange={setIsCloseRegisterOpen}
+      />
+      <POSSettingsModal
+        open={isSettingsOpen}
+        onOpenChange={setIsSettingsOpen}
+      />
+      <ActivityLogSidebar
+        open={isActivityLogOpen}
+        onOpenChange={setIsActivityLogOpen}
       />
     </nav>
   );

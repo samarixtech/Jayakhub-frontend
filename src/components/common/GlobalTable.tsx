@@ -46,6 +46,7 @@ interface GlobalTableProps<T> {
   loading?: boolean;
   emptyMessage?: string;
   onRowClick?: (item: T) => void;
+  rowClassName?: (item: T) => string;
   searchParams?: SearchParams;
   paginationParams?: PaginationParams;
 }
@@ -56,6 +57,7 @@ export default function GlobalTable<T>({
   loading = false,
   emptyMessage = "No data available",
   onRowClick,
+  rowClassName,
   searchParams,
   paginationParams,
 }: GlobalTableProps<T>) {
@@ -77,12 +79,12 @@ export default function GlobalTable<T>({
 
       <div className="rounded-md border-none">
         <Table>
-          <TableHeader className="bg-gray-50/50">
+          <TableHeader className="bg-transparent border-b border-gray-100">
             <TableRow>
               {columns.map((col, index) => (
                 <TableHead
                   key={index}
-                  className={`font-semibold text-gray-600 px-6 ${col.headerClassName || ""}`}
+                  className={`font-semibold text-[#6B7280] px-7 ${col.headerClassName || ""}`}
                 >
                   {col.header}
                 </TableHead>
@@ -114,15 +116,13 @@ export default function GlobalTable<T>({
                 <TableRow
                   key={rowIndex}
                   onClick={() => onRowClick && onRowClick(item)}
-                  className={`transition-colors border-none ${onRowClick
-                    ? "cursor-pointer hover:bg-gray-50/50"
-                    : "hover:bg-gray-50/50"
-                    }`}
+                  className={`border-b border-gray-100 ${onRowClick ? "cursor-pointer hover:bg-gray-50/50" : ""
+                    } ${rowClassName ? rowClassName(item) : ""}`}
                 >
                   {columns.map((col, colIndex) => (
                     <TableCell
                       key={colIndex}
-                      className={`px-4 border-none ${col.className || ""}`}
+                      className={`px-7 border-b border-gray-50/50 ${col.className || ""}`}
                     >
                       {col.cell
                         ? col.cell(item)

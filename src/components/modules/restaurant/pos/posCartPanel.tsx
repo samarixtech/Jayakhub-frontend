@@ -11,9 +11,8 @@ import {
   Minus,
   X,
   Clock,
-  Coffee,
 } from "lucide-react";
-import { usePOS } from "../../../../context/POSContext";
+import { usePOS } from "@/context/POSContext";
 import {
   Sheet,
   SheetContent,
@@ -196,12 +195,6 @@ export default function POSCartPanel() {
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <button className="w-[70px] bg-[#fffcf7] text-[#e87a27] font-bold py-2 md:py-2.5 rounded-[6px] flex flex-col items-center justify-center gap-[4px] hover:bg-[#ffeadd] transition-colors shadow-[0_1px_2px_rgba(232,122,39,0.1)]">
-            <Coffee className="w-[16px] h-[16px] stroke-[2px]" />
-            <span className="text-[10px] uppercase font-black tracking-tight">
-              KOT
-            </span>
-          </button>
           <button className="flex-1 bg-[#fffbe6] text-[#b8860b] font-bold py-2 md:py-2.5 rounded-[6px] flex flex-col items-center justify-center gap-[4px] hover:bg-[#fff7d1] transition-colors shadow-[0_1px_2px_rgba(184,134,11,0.1)]">
             <Clock className="w-[16px] h-[16px] stroke-[2px]" />
             <span className="text-[10px] uppercase font-black tracking-tight">

@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { OrdersSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 import useLocale from "@/hooks/useLocals";
 import { RatingModal } from "@/components/common/RatingModal";
+import EmptyState from "@/components/common/EmptyState";
+import { FileDown } from "lucide-react";
 
 import { Order, OrderStatus } from "../types";
 import { OrderHistoryHeader } from "./components/OrderHistoryHeader";
@@ -120,14 +122,22 @@ export default function CustomerOrderHistoryView() {
         </div>
 
         <div className="space-y-4">
-          {currentOrders.map((order) => (
-            <OrderCard
-              key={order.orderId}
-              order={order}
-              handleReorder={handleReorder}
-              handleRateOrder={handleRateOrder}
+          {filteredOrders.length === 0 ? (
+            <EmptyState
+              icon={FileDown}
+              title="No Orders Yet"
+              message="Once you place your first order, you'll see it listed here with all the details."
             />
-          ))}
+          ) : (
+            currentOrders.map((order) => (
+              <OrderCard
+                key={order.orderId}
+                order={order}
+                handleReorder={handleReorder}
+                handleRateOrder={handleRateOrder}
+              />
+            ))
+          )}
         </div>
 
         {filteredOrders.length > 0 && (
