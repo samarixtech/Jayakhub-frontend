@@ -45,19 +45,19 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
   onClose,
   onStatusUpdate,
 }) => {
-  const [updating, setUpdating] = useState(false);
+  const [updatingAction, setUpdatingAction] = useState<string | null>(null);
 
   if (!order) return null;
 
   const handleUpdateClick = async (newStatus: string) => {
-    setUpdating(true);
+    setUpdatingAction(newStatus);
     try {
       await onStatusUpdate(order.id, newStatus);
       onClose();
     } catch (error) {
       console.error("Failed to update status", error);
     } finally {
-      setUpdating(false);
+      setUpdatingAction(null);
     }
   };
 
@@ -71,21 +71,21 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
         <div className="flex gap-3 w-full">
           <Button
             onClick={() => handleUpdateClick("rejected")}
-            disabled={updating}
+            disabled={!!updatingAction}
             variant="outline"
             className="flex-1 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
           >
-            {updating ? (
+            {updatingAction === "rejected" ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : null}
             Reject
           </Button>
           <Button
             onClick={() => handleUpdateClick("accepted")}
-            disabled={updating}
+            disabled={!!updatingAction}
             className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
           >
-            {updating ? (
+            {updatingAction === "accepted" ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : null}
             Accept Order
@@ -99,10 +99,10 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
       return (
         <Button
           onClick={() => handleUpdateClick("prepare")}
-          disabled={updating}
+          disabled={!!updatingAction}
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
         >
-          {updating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          {updatingAction === "prepare" ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
           Start Preparing
         </Button>
       );
@@ -113,10 +113,10 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
       return (
         <Button
           onClick={() => handleUpdateClick("ready")}
-          disabled={updating}
+          disabled={!!updatingAction}
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
         >
-          {updating ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          {updatingAction === "ready" ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
           Mark as Ready
         </Button>
       );

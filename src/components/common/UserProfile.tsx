@@ -242,6 +242,8 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout }) => {
             onBack={() => setView("menu")}
             initialNotifications={notifications}
             isLoading={loadingNotifications}
+            userRole={userRole}
+            onNavigate={() => handleOpenChange(false)}
           />
         )}
       </DropdownMenuContent>
