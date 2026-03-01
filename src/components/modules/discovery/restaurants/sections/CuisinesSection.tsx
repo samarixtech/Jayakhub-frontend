@@ -1,12 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-interface CuisinesSectionProps {
-  isCuisinesLoading: boolean;
-  cuisineTypes: any[];
-  activeFilters: string[];
-  onCuisineClick: (id: string) => void;
-}
+import { CuisinesSectionProps } from "@/components/modules/discovery/discovery.types";
 
 export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
   isCuisinesLoading,

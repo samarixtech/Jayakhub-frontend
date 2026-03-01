@@ -24,7 +24,7 @@ export default function OrderConfirmedView() {
         {/* Success Icon */}
         <div className="w-24 h-24 bg-[#346853]/10 rounded-full flex items-center justify-center mb-6">
           <div className="w-12 h-12 bg-[#346853] rounded-full flex items-center justify-center">
-            <Check className="text-white w-8 h-8 stroke-[3]" />
+            <Check className="text-white w-8 h-8 stroke-3" />
           </div>
         </div>
 

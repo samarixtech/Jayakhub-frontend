@@ -10,7 +10,7 @@ import {
   getPreviousOrderRestaurantsAction,
 } from "@/app/actions/public/restaurants";
 import { getCuisineTypesAction } from "@/app/actions/public/cuisines";
-import { RestaurantProps } from "@/components/modules/discovery/DiscoveryRestaurantCard";
+import { RestaurantProps } from "@/components/modules/discovery/discovery.types";
 
 export function useRestaurantDiscovery() {
   const params = useParams();

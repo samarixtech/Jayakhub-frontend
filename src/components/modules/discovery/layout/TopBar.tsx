@@ -1,5 +1,7 @@
 "use client";
+
 import Link from "next/link";
+
 import { TopBarProps } from "@/components/modules/discovery/discovery.types";
 
 const TopBar = ({ isScrolled }: TopBarProps) => {

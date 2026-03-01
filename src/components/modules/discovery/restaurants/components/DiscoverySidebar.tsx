@@ -18,23 +18,10 @@ const PRICE_LEVELS = ["$", "$$", "$$$"];
 
 const VISIBLE_CUISINES = 5;
 
-interface CuisineType {
-  id: string;
-  name: string;
-}
-
-interface DiscoverySidebarProps {
-  selectedSort: string;
-  onSortChange: (sort: string) => void;
-  activeFilters: string[];
-  onFilterToggle: (id: string) => void;
-  selectedPrice: string | null;
-  onPriceToggle: (price: string) => void;
-  showAllCuisines: boolean;
-  onToggleCuisines: () => void;
-  cuisineTypes: CuisineType[];
-  className?: string;
-}
+import {
+  CuisineType,
+  DiscoverySidebarProps,
+} from "@/components/modules/discovery/discovery.types";
 
 const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
   selectedSort,

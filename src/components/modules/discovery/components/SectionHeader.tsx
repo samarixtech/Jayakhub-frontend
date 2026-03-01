@@ -2,11 +2,7 @@ import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface SectionHeaderProps {
-  title: string;
-  actionText?: string;
-  onAction?: () => void;
-}
+import { SectionHeaderProps } from "@/components/modules/discovery/discovery.types";
 
 const SectionHeader = ({
   title,

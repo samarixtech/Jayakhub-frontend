@@ -1,16 +1,11 @@
 import React from "react";
-import SectionHeader from "@/components/modules/discovery/SectionHeader";
-import DiscoveryRestaurantCard, {
-  RestaurantProps,
-} from "@/components/modules/discovery/DiscoveryRestaurantCard";
+import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
+import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
 import { LayoutGrid, List, Sprout } from "lucide-react";
-
-interface AllRestaurantsSectionProps {
-  isPending: boolean;
-  restaurants: RestaurantProps[];
-  viewMode: "grid" | "list";
-  setViewMode: (mode: "grid" | "list") => void;
-}
+import {
+  RestaurantProps,
+  AllRestaurantsSectionProps,
+} from "@/components/modules/discovery/discovery.types";
 
 export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
   isPending,

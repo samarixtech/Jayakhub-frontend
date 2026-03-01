@@ -1,4 +1,4 @@
-import RestaurantDetailsView from "@/components/modules/discovery/RestaurantDetailsView";
+import RestaurantDetailsView from "@/components/modules/discovery/restaurant-details/RestaurantDetailsView";
 
 export default function RestaurantPage() {
   return <RestaurantDetailsView />;
