@@ -22,6 +22,10 @@ interface POSContextType {
     subtotal: number;
     tax: number;
     total: number;
+    activeView: "menu" | "online";
+    setActiveView: (view: "menu" | "online") => void;
+    activeCategory: string;
+    setActiveCategory: (category: string) => void;
 }
 
 const POSContext = createContext<POSContextType | undefined>(undefined);
@@ -30,6 +34,8 @@ export function POSProvider({ children }: { children: ReactNode }) {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [activeView, setActiveView] = useState<"menu" | "online">("menu");
+    const [activeCategory, setActiveCategory] = useState("all");
 
     const addToCart = (item: Omit<CartItem, "quantity">) => {
         setCartItems((prev) => {
@@ -80,7 +86,11 @@ export function POSProvider({ children }: { children: ReactNode }) {
                 setIsSidebarOpen,
                 subtotal,
                 tax,
-                total
+                total,
+                activeView,
+                setActiveView,
+                activeCategory,
+                setActiveCategory
             }}
         >
             {children}

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { Banknote, CreditCard, Smartphone, Check, Printer } from "lucide-react";
-import { usePOS } from "../../context/POSContext";
+import { usePOS } from "@/context/POSContext";
 
 interface PaymentModalProps {
   open: boolean;

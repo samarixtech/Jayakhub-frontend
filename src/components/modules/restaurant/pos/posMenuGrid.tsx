@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { usePOS } from "../../context/POSContext";
+import { usePOS } from "@/context/POSContext";
 import { Plus } from "lucide-react";
 
 const menuItems = [
@@ -93,12 +93,22 @@ const menuItems = [
 ];
 
 export default function POSMenuGrid() {
-  const { addToCart } = usePOS();
+  const { addToCart, activeCategory } = usePOS();
+
+  // Simple filtering logic based on activeCategory
+  const filteredItems = menuItems.filter((item) => {
+    if (activeCategory === "all") return true;
+    if (activeCategory === "burgers" && item.name.toLowerCase().includes("burger")) return true;
+    if (activeCategory === "pizza" && (item.name.toLowerCase().includes("pizza") || item.name.toLowerCase().includes("margherita") || item.name.toLowerCase().includes("pepperoni"))) return true;
+    if (activeCategory === "drink" && (item.name.toLowerCase().includes("zero") || item.name.toLowerCase().includes("lemonade") || item.name.toLowerCase().includes("latte"))) return true;
+    if (activeCategory === "dessert" && (item.name.toLowerCase().includes("tiramisu") || item.name.toLowerCase().includes("cheesecake"))) return true;
+    return false;
+  });
 
   return (
     <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 overflow-y-auto w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3">
-        {menuItems.map((item) => (
+        {filteredItems.map((item) => (
           <div
             key={item.id}
             onClick={() => addToCart(item)}
