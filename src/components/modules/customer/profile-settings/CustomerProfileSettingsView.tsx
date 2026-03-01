@@ -6,8 +6,6 @@ import PaymentMethodsCard from "./components/payment-methods-card";
 import IdentityVerificationCard from "./components/kyc-verification-card";
 import SecuritySettingsCard from "./components/security-settings-card";
 import { ProfileSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
-
-// The newly extracted logic hook
 import { useProfileSettings } from "./useProfileSettings";
 
 export default function CustomerProfileSettingsView() {
@@ -36,17 +34,17 @@ export default function CustomerProfileSettingsView() {
           />
         </div>
 
-        {/* Responsive Grid System */}
+        {/* Grid System */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          {/* Sidebar Area */}
-          <aside className="lg:col-span-4 w-full">
+          {/* Sidebar Area (Left) */}
+          <aside className="lg:col-span-4 w-full lg:sticky lg:top-8 transition-all duration-300">
             <ProfileSidebar
               profile={profile}
               onAvatarChange={(file: File | null) => setAvatarFile(file)}
             />
           </aside>
 
-          {/* Main Content Area */}
+          {/* Main Content Area (Right) */}
           <main className="lg:col-span-8 space-y-6 w-full">
             <PersonalInfoCard profile={profile} />
             <PaymentMethodsCard />
