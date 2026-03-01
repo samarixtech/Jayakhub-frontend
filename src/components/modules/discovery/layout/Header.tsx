@@ -1,130 +1,56 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, usePathname, useParams } from "next/navigation";
-import { getProfile } from "@/app/actions/customer/userprofile";
-import { logoutAction } from "@/app/actions/auth/auth";
 import Image from "next/image";
-import { useSelector } from "react-redux";
-import { FiShoppingBag } from "react-icons/fi";
-import { RootState } from "@/redux/store/store";
-import CartDrawer from "@/components/CartDrawer";
-import useLocale from "@/hooks/useLocals";
-import LanguageSwitcher from "../../../common/LanguageSwitcher";
-import LocationSwitcher from "../../../common/LocationSwitcher";
-import UserProfile from "../../../common/UserProfile";
 import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import RestaurantsBottomNav from "../restaurants/RestaurantsBottomNav";
-import { useDiscoveryUI } from "@/context/DiscoveryUIContext";
+import CartDrawer from "@/components/CartDrawer";
+import RestaurantsBottomNav from "./RestaurantsBottomNav";
+import TopBar from "./TopBar";
 
 // Assets
 import engLogo from "../../../../../public/EngLogo (2).png";
 import arabicLogo from "../../../../../public/ArbicLogo (2).png";
 
+// Extracted Modules
+import { useHeader } from "./useHeader";
+import { HeaderActions } from "./HeaderActions";
+import { HeaderLocation } from "./HeaderLocation";
+
 const RestaurantHeader = () => {
-  const { country: localeCountry, language: localeLanguage } = useLocale();
-  const params = useParams();
+  const {
+    pathname,
+    currentAddress,
+    setCurrentAddress,
+    isLoggedIn,
+    user,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isScrolled,
+    totalItems,
+    handleLogout,
+    handleLocationChange,
+    setIsFilterOpen,
+  } = useHeader();
 
-  const country = (params?.country as string) || localeCountry || "pk";
-  const language = (params?.language as string) || localeLanguage || "en";
-  const router = useRouter();
-  const pathname = usePathname();
-  const { setIsFilterOpen } = useDiscoveryUI();
-
-  const [currentAddress, setCurrentAddress] = useState("Iraq, Baghdad");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        // Scrolling down and pass threshold -> hide top bar
-        setIsScrolled(true);
-      } else if (currentScrollY < lastScrollY) {
-        // Scrolling up -> show top bar
-        setIsScrolled(false);
-      }
-
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await getProfile();
-        if (response.success && response.data) {
-          setIsLoggedIn(true);
-          setUser(response.data);
-        } else {
-          // If 401 or other error, mostly means not logged in
-          setIsLoggedIn(false);
-          setUser(null);
-        }
-      } catch (error) {
-        // Ignore auth errors on public pages
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    };
-    fetchProfile();
-  }, []);
-
-  const totalItems = useSelector((state: RootState) =>
-    state.cart.items.reduce((sum, item) => sum + item.quantity, 0),
-  );
+  // Middleware handles locales now, but our assets toggle based on language if available.
+  // We can default to engLogo since middleware manages the URL path routing now.
+  // However, `useParams` could still be used here directly for the logo toggle.
+  // We'll fallback to english logo if the pathname doesn't have arabic.
+  const isArabic = pathname?.includes("/ar/");
 
   return (
     <>
       <header className="fixed top-0 left-0 w-full z-50 shrink-0">
         {/* ===== TOP BAR ===== */}
-        <div
-          className={`flex items-center justify-start md:justify-center bg-[#3C8C64] px-4 md:px-6 overflow-x-auto scrollbar-hide transition-all duration-300 ${isScrolled ? "-mt-12 md:-mt-10" : "mt-0"
-            } h-12 md:h-10`}
-        >
-          <div className="flex flex-row items-center gap-3 w-max md:w-auto pr-4 md:pr-0">
-            <Link
-              href={`/${country}/${language}/home`}
-              className="text-[11px] font-bold text-white uppercase tracking-wide border border-white/50 rounded px-4 py-1.5 hover:bg-white/10 transition-colors whitespace-nowrap shrink-0"
-            >
-              Our Business Website
-            </Link>
-
-            <Link
-              href={`/${country}/${language}/restaurant-register`}
-              className="text-[11px] font-bold text-white uppercase tracking-wide border border-white/50 rounded px-4 py-1.5 hover:bg-white/10 transition-colors whitespace-nowrap shrink-0"
-            >
-              Sign for a Restaurant Account
-            </Link>
-
-            <Link
-              href={`/${country}/${language}/partners`}
-              className="text-[11px] font-bold text-white uppercase tracking-wide border border-white/50 rounded px-4 py-1.5 hover:bg-white/10 transition-colors whitespace-nowrap shrink-0"
-            >
-              Sign up to be a business partner
-            </Link>
-          </div>
-        </div>
+        <TopBar isScrolled={isScrolled} />
 
         {/* ===== MAIN HEADER BAR ===== */}
         <nav className="w-full bg-[#346853] shadow-md">
           <div className="flex items-center justify-between px-4 md:px-6 h-14 md:h-14">
             {/* LEFT: Logo */}
             <div className="flex items-center gap-4 shrink-0">
-              <Link href={`/${country}/${language}/restaurants`}>
+              <Link href="/restaurants">
                 <Image
-                  src={language === "ar" ? arabicLogo : engLogo}
+                  src={isArabic ? arabicLogo : engLogo}
                   alt="Jayak Hub"
                   width={140}
                   className="object-contain w-[120px] md:w-[140px]"
@@ -133,100 +59,36 @@ const RestaurantHeader = () => {
               </Link>
             </div>
 
-            {/* CENTER: Location Switcher */}
+            {/* CENTER: Location Switcher (Desktop) */}
             <div className="hidden md:flex flex-1 justify-center px-4">
-              <LocationSwitcher
+              <HeaderLocation
                 currentAddress={currentAddress}
-                onAddressChange={setCurrentAddress}
+                setCurrentAddress={setCurrentAddress}
                 isLoggedIn={isLoggedIn}
+                onLocationChange={handleLocationChange}
                 className="md:min-w-[400px] md:max-w-sm bg-white/10 text-white border-white/10 hover:bg-white/20 [&_svg]:text-white shadow-none"
-                onLocationChange={(lat, lng) => {
-                  const params = new URLSearchParams(window.location.search);
-                  params.set("lat", lat.toString());
-                  params.set("lng", lng.toString());
-                  router.push(`${pathname}?${params.toString()}`);
-                }}
               />
             </div>
 
             {/* RIGHT: Language, Auth, Cart */}
-            <div className="flex items-center gap-2 md:gap-3 shrink-0">
-              {/* Language */}
-              <LanguageSwitcher />
-
-              {/* Auth Section */}
-              {!isLoggedIn ? (
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={`/${country}/${language}/login`}
-                    className="text-white text-sm font-medium hover:text-white/80 transition-colors hidden md:inline"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href={`/${country}/${language}/register`}
-                    className="bg-white text-emerald-bg text-sm font-semibold border border-emerald-bg rounded-full px-4 py-1.5 hover:bg-white/90 transition-colors hidden md:inline-block"
-                  >
-                    Sign up
-                  </Link>
-                </div>
-              ) : (
-                <div className="hidden md:flex items-center gap-3">
-                  <div className="text-right hidden sm:block">
-                    <p className="text-white font-bold text-sm leading-none">
-                      {user?.name || "User"}
-                    </p>
-                    <p className="text-white/70 text-[10px] uppercase tracking-widest font-medium mt-1">
-                      {user?.role?.name || "Customer"}
-                    </p>
-                  </div>
-                  <UserProfile
-                    user={user}
-                    country={country}
-                    language={language}
-                    onLogout={async () => {
-                      await logoutAction();
-                      setIsLoggedIn(false);
-                      setUser(null);
-                      window.location.href = `/${country}/${language}/login`;
-                    }}
-                  />
-                </div>
-              )}
-
-              {/* Cart */}
-              <div className="relative hidden md:block">
-                <Button
-                  onClick={() => setIsDrawerOpen(true)}
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 text-white hover:bg-white/10 rounded-full"
-                >
-                  <FiShoppingBag className="w-6 h-6" />
-                </Button>
-                {totalItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full bg-red-500 text-white pointer-events-none border-2 border-[#346853]">
-                    {totalItems > 9 ? "9+" : totalItems}
-                  </Badge>
-                )}
-              </div>
-            </div>
+            <HeaderActions
+              isLoggedIn={isLoggedIn}
+              user={user}
+              totalItems={totalItems}
+              onLogout={handleLogout}
+              onCartClick={() => setIsDrawerOpen(true)}
+            />
           </div>
 
-          {/* Mobile: Location + Cart Row */}
+          {/* Mobile: Location Row */}
           <div className="md:hidden flex items-center gap-3 px-4 pb-3">
             <div className="flex-1 min-w-0">
-              <LocationSwitcher
+              <HeaderLocation
                 currentAddress={currentAddress}
-                onAddressChange={setCurrentAddress}
+                setCurrentAddress={setCurrentAddress}
                 isLoggedIn={isLoggedIn}
+                onLocationChange={handleLocationChange}
                 className="w-full max-w-none bg-white/10 text-white border-white/10 hover:bg-white/20 [&_svg]:text-white shadow-none"
-                onLocationChange={(lat, lng) => {
-                  const params = new URLSearchParams(window.location.search);
-                  params.set("lat", lat.toString());
-                  params.set("lng", lng.toString());
-                  router.push(`${pathname}?${params.toString()}`);
-                }}
               />
             </div>
           </div>
@@ -237,6 +99,7 @@ const RestaurantHeader = () => {
           onClose={() => setIsDrawerOpen(false)}
         />
       </header>
+
       {/* ===== BOTTOM NAVIGATION (Mobile) ===== */}
       <RestaurantsBottomNav
         onFilterClick={() => setIsFilterOpen(true)}
@@ -244,8 +107,6 @@ const RestaurantHeader = () => {
         isLoggedIn={isLoggedIn}
         user={user}
         showFilter={pathname?.endsWith("/restaurants")}
-        country={country}
-        language={language}
       />
     </>
   );

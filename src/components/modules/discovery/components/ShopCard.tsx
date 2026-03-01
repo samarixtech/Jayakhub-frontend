@@ -1,12 +1,7 @@
 import React from "react";
 import { Clock } from "lucide-react";
 
-interface ShopProps {
-  id: string;
-  name: string;
-  image: string;
-  deliveryTime: string;
-}
+import { ShopProps } from "@/components/modules/discovery/discovery.types";
 
 const ShopCard = ({ data }: { data: ShopProps }) => {
   return (

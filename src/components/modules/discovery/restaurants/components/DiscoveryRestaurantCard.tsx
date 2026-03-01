@@ -4,27 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 
-export interface RestaurantProps {
-  id: string;
-  slug: string;
-  name: string;
-  image: string;
-  rating: number;
-  totalRatings?: number;
-  priceLevel: string;
-  cuisine: string;
-  deliveryTime: string;
-  deliveryFee: number;
-  discount?: string;
-  isFavorite?: boolean;
-}
-
-interface CardProps {
-  data: RestaurantProps;
-  variant?: "default" | "compact";
-  className?: string; // Allow overriding classes
-  fluid?: boolean; // If true, takes full width of container
-}
+import {
+  RestaurantProps,
+  CardProps,
+} from "@/components/modules/discovery/discovery.types";
 
 const DiscoveryRestaurantCard = ({
   data,

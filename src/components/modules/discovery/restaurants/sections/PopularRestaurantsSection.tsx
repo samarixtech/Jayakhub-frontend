@@ -1,13 +1,10 @@
 import React from "react";
-import SectionHeader from "@/components/modules/discovery/SectionHeader";
-import DiscoveryRestaurantCard, {
+import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
+import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
+import {
   RestaurantProps,
-} from "@/components/modules/discovery/DiscoveryRestaurantCard";
-
-interface PopularRestaurantsSectionProps {
-  isPending: boolean;
-  restaurants: RestaurantProps[];
-}
+  PopularRestaurantsSectionProps,
+} from "@/components/modules/discovery/discovery.types";
 
 export const PopularRestaurantsSection: React.FC<
   PopularRestaurantsSectionProps

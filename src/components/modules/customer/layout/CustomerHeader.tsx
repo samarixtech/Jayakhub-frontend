@@ -74,13 +74,11 @@ const CustomerHeader = () => {
             ) : (
               <UserProfile
                 user={user}
-                country={country}
-                language={language}
                 onLogout={async () => {
                   await logoutAction();
                   setIsLoggedIn(false);
                   setUser(null);
-                  window.location.href = `/${country}/${language}/login`;
+                  window.location.href = "/login";
                 }}
               />
             )}
@@ -195,13 +193,11 @@ const CustomerHeader = () => {
               </div>
               <UserProfile
                 user={user}
-                country={country}
-                language={language}
                 onLogout={async () => {
                   await logoutAction();
                   setIsLoggedIn(false);
                   setUser(null);
-                  window.location.href = `/${country}/${language}/login`;
+                  window.location.href = "/login";
                 }}
               />
             </div>

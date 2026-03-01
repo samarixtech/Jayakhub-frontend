@@ -31,7 +31,6 @@ const PAGE_NAMES: Record<string, string> = {
 
 export default function RestaurantHeader() {
   const pathname = usePathname();
-  const { country, language } = useLocale();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -66,12 +65,10 @@ export default function RestaurantHeader() {
         </Button>
         <UserProfile
           user={user}
-          country={country}
-          language={language}
           onLogout={async () => {
             await logoutAction();
             setUser(null);
-            window.location.href = `/${country}/${language}/login`;
+            window.location.href = "/login";
           }}
         />
       </div>

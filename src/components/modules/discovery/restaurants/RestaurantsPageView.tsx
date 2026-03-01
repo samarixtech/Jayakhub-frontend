@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import HeroBanner from "@/components/modules/discovery/HeroBanner";
-import DiscoverySidebar from "@/components/modules/discovery/DiscoverySidebar";
+import HeroBanner from "@/components/modules/discovery/restaurants/components/HeroBanner";
+import DiscoverySidebar from "@/components/modules/discovery/restaurants/components/DiscoverySidebar";
 import { RatingModal } from "@/components/common/RatingModal";
 import { useDiscoveryUI } from "@/context/DiscoveryUIContext";
 import {
@@ -11,8 +11,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-
-// Hooks
 import { useRestaurantDiscovery } from "@/hooks/use-restaurant-discovery";
 
 // Sections
@@ -28,7 +26,7 @@ const AllRestaurantsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans pb-20">
-      {/* Hero Banner - Full Width */}
+      {/* Hero Banner */}
       <HeroBanner />
 
       {/* Sidebar + Main Content */}

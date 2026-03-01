@@ -1,5 +1,5 @@
 "use client";
-import { GlobalSearch } from "./GlobalSearch";
+import { GlobalSearch } from "../../components/GlobalSearch";
 
 const HeroBanner = () => {
   return (

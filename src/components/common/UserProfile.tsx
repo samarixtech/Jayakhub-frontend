@@ -33,8 +33,6 @@ interface UserNavProps {
     role?: string;
   } | null;
   onLogout?: () => void;
-  country: string;
-  language: string;
 }
 
 const ROLE_CONFIG = {

@@ -1,15 +1,10 @@
 import React from "react";
-import SectionHeader from "@/components/modules/discovery/SectionHeader";
-import DiscoveryRestaurantCard, {
+import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
+import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
+import {
   RestaurantProps,
-} from "@/components/modules/discovery/DiscoveryRestaurantCard";
-
-interface PreviousOrdersSectionProps {
-  isLoggedIn: boolean;
-  isPreviousOrdersLoading: boolean;
-  previousOrders: RestaurantProps[];
-  viewMode: "grid" | "list";
-}
+  PreviousOrdersSectionProps,
+} from "@/components/modules/discovery/discovery.types";
 
 export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
   isLoggedIn,
