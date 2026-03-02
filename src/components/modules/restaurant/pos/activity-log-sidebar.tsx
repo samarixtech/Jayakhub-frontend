@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Sheet,
     SheetContent,
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet";
-import { Bell, XCircle, MapPin, Bike, ShoppingCart } from "lucide-react";
+import { Bell, XCircle, MapPin, Bike, ShoppingCart, Loader2 } from "lucide-react";
+import { getNotifications } from "@/app/actions/customer/notifications";
 
 interface ActivityLogSidebarProps {
     open: boolean;
@@ -27,98 +28,55 @@ export default function ActivityLogSidebar({
         { id: "payments", label: "Payments" },
     ];
 
-    const logs = [
-        {
-            id: 1,
-            type: "order_alert",
-            message: "New online order JH-1105 from Layla Z.",
-            time: "10:51 · 28 Feb",
-            icon: Bell,
-            iconBg: "bg-[#fff1d6]",
-            iconColor: "text-[#c97a22]",
-        },
-        {
-            id: 2,
-            type: "order_alert",
-            message: "New online order JH-1104 from Omar B.",
-            time: "10:50 · 28 Feb",
-            icon: Bell,
-            iconBg: "bg-[#fff1d6]",
-            iconColor: "text-[#c97a22]",
-        },
-        {
-            id: 3,
-            type: "order_rejected",
-            message: "Order JH-1102 rejected",
-            time: "10:50 · 28 Feb",
-            icon: XCircle,
-            iconBg: "bg-red-50",
-            iconColor: "text-red-500",
-        },
-        {
-            id: 4,
-            type: "order_rejected",
-            message: "Order JH-1103 rejected",
-            time: "10:50 · 28 Feb",
-            icon: XCircle,
-            iconBg: "bg-red-50",
-            iconColor: "text-red-500",
-        },
-        {
-            id: 5,
-            type: "order_alert",
-            message: "New online order JH-1103 from Youssef T.",
-            time: "10:49 · 28 Feb",
-            icon: Bell,
-            iconBg: "bg-[#fff1d6]",
-            iconColor: "text-[#c97a22]",
-        },
-        {
-            id: 6,
-            type: "rider_arrived",
-            message: "Rider arrived for JH-1100",
-            time: "10:47 · 28 Feb",
-            icon: MapPin,
-            iconBg: "bg-emerald-50",
-            iconColor: "text-[#357252]",
-        },
-        {
-            id: 7,
-            type: "rider_arriving",
-            message: "Rider arriving for JH-1100",
-            time: "10:47 · 28 Feb",
-            icon: MapPin,
-            iconBg: "bg-[#fff1d6]",
-            iconColor: "text-[#c97a22]",
-        },
-        {
-            id: 8,
-            type: "rider_en_route",
-            message: "Rider en route for JH-1100",
-            time: "10:47 · 28 Feb",
-            icon: Bike,
-            iconBg: "bg-blue-50",
-            iconColor: "text-blue-500",
-        },
-        {
-            id: 9,
-            type: "rider_assigned",
-            message: "Rider Rami S. assigned to JH-1100",
-            time: "10:47 · 28 Feb",
-            icon: Bike,
-            iconBg: "bg-blue-50",
-            iconColor: "text-blue-500",
-        },
-        {
-            id: 10,
-            type: "order_ready",
-            message: "Order JH-1100 marked ready",
-            time: "10:47 · 28 Feb",
-            icon: ShoppingCart,
-            iconBg: "bg-[#fff1d6]",
-            iconColor: "text-[#c97a22]",
-        },
-    ];
+    const [logs, setLogs] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (open) {
+            fetchLogs();
+        }
+    }, [open]);
+
+    const fetchLogs = async () => {
+        setIsLoading(true);
+        try {
+            const res = await getNotifications();
+            if (res.success && res.data) {
+                const notifications = Array.isArray(res.data) ? res.data : res.data.data || [];
+                setLogs(notifications);
+            }
+        } catch (error) {
+            console.error("Failed to fetch notifications", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const formatTime = (dateString: string) => {
+        const d = new Date(dateString);
+        const time = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+        const day = d.getDate();
+        const month = d.toLocaleString('default', { month: 'short' });
+        return `${time} · ${day} ${month}`;
+    };
+
+    const getIconForType = (type: string) => {
+        switch (type) {
+            case "order_rejected":
+                return { icon: XCircle, bg: "bg-red-50", color: "text-red-500" };
+            case "rider_arrived":
+                return { icon: MapPin, bg: "bg-emerald-50", color: "text-[#357252]" };
+            case "rider_arriving":
+                return { icon: MapPin, bg: "bg-[#fff1d6]", color: "text-[#c97a22]" };
+            case "rider_en_route":
+            case "rider_assigned":
+                return { icon: Bike, bg: "bg-blue-50", color: "text-blue-500" };
+            case "order_ready":
+                return { icon: ShoppingCart, bg: "bg-[#fff1d6]", color: "text-[#c97a22]" };
+            default:
+                return { icon: Bell, bg: "bg-[#fff1d6]", color: "text-[#c97a22]" };
+        }
+    };
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
@@ -139,8 +97,8 @@ export default function ActivityLogSidebar({
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`pb-3 text-[13px] font-bold capitalize transition-colors relative ${activeTab === tab.id
-                                        ? "text-[#357252]"
-                                        : "text-gray-400 hover:text-gray-600"
+                                    ? "text-[#357252]"
+                                    : "text-gray-400 hover:text-gray-600"
                                     }`}
                             >
                                 {tab.label}
@@ -153,28 +111,38 @@ export default function ActivityLogSidebar({
                 </div>
 
                 <div className="flex-1 overflow-y-auto px-6 py-4 bg-white">
-                    <div className="flex flex-col gap-5">
-                        {logs.map((log) => {
-                            const Icon = log.icon;
-                            return (
-                                <div key={log.id} className="flex gap-4 items-start group">
-                                    <div
-                                        className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${log.iconBg}`}
-                                    >
-                                        <Icon className={`w-4 h-4 ${log.iconColor}`} />
+                    {isLoading ? (
+                        <div className="flex justify-center py-10">
+                            <Loader2 className="w-8 h-8 animate-spin text-gray-300" />
+                        </div>
+                    ) : logs.length === 0 ? (
+                        <div className="flex justify-center py-10 text-gray-400 font-medium text-[13px]">
+                            No activity logs found.
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-5">
+                            {logs.map((log) => {
+                                const { icon: Icon, bg, color } = getIconForType(log.type);
+                                return (
+                                    <div key={log.id} className="flex gap-4 items-start group">
+                                        <div
+                                            className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${bg}`}
+                                        >
+                                            <Icon className={`w-4 h-4 ${color}`} />
+                                        </div>
+                                        <div className="flex flex-col pt-1">
+                                            <span className="text-[13px] font-bold text-[#1f2937] leading-tight group-hover:text-[#357252] transition-colors cursor-pointer">
+                                                {log.body || log.title}
+                                            </span>
+                                            <span className="text-[11px] font-semibold text-gray-400 mt-1">
+                                                {formatTime(log.createdAt)}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col pt-1">
-                                        <span className="text-[13px] font-bold text-[#1f2937] leading-tight group-hover:text-[#357252] transition-colors cursor-pointer">
-                                            {log.message}
-                                        </span>
-                                        <span className="text-[11px] font-semibold text-gray-400 mt-1">
-                                            {log.time}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </SheetContent>
         </Sheet>

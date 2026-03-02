@@ -3,6 +3,7 @@
 import React from "react";
 import { LayoutGrid, Sandwich, Pizza, Wine, CakeSlice, Globe } from "lucide-react";
 import { usePOS } from "@/context/POSContext";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Sheet,
   SheetContent,
@@ -11,20 +12,38 @@ import {
 } from "@/components/ui/sheet";
 
 export default function POSSidebar() {
-  const { isSidebarOpen, setIsSidebarOpen, activeView, setActiveView, activeCategory, setActiveCategory } = usePOS();
+  const {
+    isSidebarOpen,
+    setIsSidebarOpen,
+    activeView,
+    setActiveView,
+    activeCategory,
+    setActiveCategory,
+    globalCategories,
+    isPosLoading,
+  } = usePOS();
 
+  // "All" is manually injected to allow fetching the full list without a category filter
   const categories = [
     { id: "all", label: "All", icon: LayoutGrid },
-    { id: "burgers", label: "Burgers", icon: Sandwich },
-    { id: "pizza", label: "Pizza", icon: Pizza },
-    { id: "drink", label: "Drink", icon: Wine },
-    { id: "dessert", label: "Dessert", icon: CakeSlice },
+    ...globalCategories.map((catString: string) => ({
+      id: catString,
+      label: catString,
+      icon: Sandwich, // Generic icon for dynamic categories
+    })),
   ];
 
   const SidebarContent = () => (
     <aside className="w-[60px] shrink-0 bg-white lg:border-r border-gray-200 flex flex-col items-center py-2 h-full z-10 overflow-y-auto">
-      <div className="flex-1 w-full flex flex-col items-center">
-        {categories.map((cat) => {
+      <div className="flex-1 w-full flex flex-col items-center gap-4 pt-1">
+        {isPosLoading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="flex flex-col items-center gap-1">
+              <Skeleton className="w-[30px] h-[30px] rounded-full" />
+              <Skeleton className="w-[40px] h-[10px] rounded-sm" />
+            </div>
+          ))
+        ) : (categories.map((cat) => {
           const isActive = activeView === 'menu' && activeCategory === cat.id;
           const Icon = cat.icon;
           return (
@@ -48,13 +67,14 @@ export default function POSSidebar() {
                 strokeWidth={isActive ? 2.5 : 2}
               />
               <span
-                className={`text-[10px] font-extrabold tracking-wide ${isActive ? "text-[#357252]" : "text-gray-400"}`}
+                className={`text-[10px] font-extrabold tracking-wide text-center leading-tight line-clamp-1 ${isActive ? "text-[#357252]" : "text-gray-400"
+                  }`}
               >
                 {cat.label}
               </span>
             </button>
           );
-        })}
+        }))}
       </div>
 
       <button

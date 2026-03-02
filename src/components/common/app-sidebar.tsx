@@ -27,7 +27,7 @@ const navItems = [
   { name: "Orders", href: "/customer/order-history", icon: ReceiptText },
   { name: "Profile", href: "/customer/profile-settings", icon: User },
   { name: "Addresses", href: "/customer/address", icon: MapPin },
-  { name: "Billing", href: "/customer/payment-history", icon: CreditCard },
+  { name: "Payment History", href: "/customer/payment-history", icon: CreditCard },
   { name: "Wallet", href: "/customer/wallet", icon: Wallet },
 ];
 

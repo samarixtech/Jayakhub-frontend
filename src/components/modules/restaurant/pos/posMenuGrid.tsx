@@ -4,139 +4,99 @@ import React from "react";
 import Image from "next/image";
 import { usePOS } from "@/context/POSContext";
 import { Plus } from "lucide-react";
-
-const menuItems = [
-  {
-    id: 1,
-    name: "Angus Beef Burger",
-    price: 14.5,
-    image:
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 2,
-    name: "Truffle Mushroom Burger",
-    price: 16.0,
-    image:
-      "https://images.unsplash.com/photo-1586816001966-79b736744398?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 3,
-    name: "Crispy Chicken Deluxe",
-    price: 13.5,
-    image:
-      "https://images.unsplash.com/photo-1615719413546-198b25453f85?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 4,
-    name: "Classic Margherita",
-    price: 12.0,
-    image:
-      "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 5,
-    name: "Pepperoni Feast",
-    price: 15.0,
-    image:
-      "https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 6,
-    name: "BBQ Chicken Pizza",
-    price: 16.5,
-    image:
-      "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 7,
-    name: "Coca-Cola Zero",
-    price: 3.0,
-    image:
-      "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 8,
-    name: "Craft Lemonade",
-    price: 4.5,
-    image:
-      "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 9,
-    name: "Iced Matcha Latte",
-    price: 5.5,
-    image:
-      "https://images.unsplash.com/photo-1536281140500-7b624452fa13?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 10,
-    name: "Tiramisu",
-    price: 7.0,
-    image:
-      "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 11,
-    name: "Cheesecake",
-    price: 6.5,
-    image:
-      "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?q=80&w=300&auto=format&fit=crop",
-  },
-  {
-    id: 12,
-    name: "French Fries",
-    price: 5.0,
-    image:
-      "https://images.unsplash.com/photo-1576107232684-1279f3908581?q=80&w=300&auto=format&fit=crop",
-  },
-];
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "@/redux/slices/cartSlice";
+import { AppDispatch, RootState } from "@/redux/store/store";
 
 export default function POSMenuGrid() {
-  const { addToCart, activeCategory } = usePOS();
+  const { posItems, isPosLoading, setIsCartOpen } = usePOS();
+  const dispatch = useDispatch<AppDispatch>();
+  const orderType = useSelector((state: RootState) => state.cart.orderType);
 
-  // Simple filtering logic based on activeCategory
-  const filteredItems = menuItems.filter((item) => {
-    if (activeCategory === "all") return true;
-    if (activeCategory === "burgers" && item.name.toLowerCase().includes("burger")) return true;
-    if (activeCategory === "pizza" && (item.name.toLowerCase().includes("pizza") || item.name.toLowerCase().includes("margherita") || item.name.toLowerCase().includes("pepperoni"))) return true;
-    if (activeCategory === "drink" && (item.name.toLowerCase().includes("zero") || item.name.toLowerCase().includes("lemonade") || item.name.toLowerCase().includes("latte"))) return true;
-    if (activeCategory === "dessert" && (item.name.toLowerCase().includes("tiramisu") || item.name.toLowerCase().includes("cheesecake"))) return true;
-    return false;
-  });
+  if (isPosLoading) {
+    return (
+      <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 overflow-y-auto w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="bg-white rounded-[10px] overflow-hidden flex flex-col h-[150px]">
+              <Skeleton className="h-[90px] md:h-[100px] w-full rounded-none" />
+              <div className="p-2 sm:p-2.5 flex flex-col gap-2">
+                <Skeleton className="h-3 w-3/4 rounded-full" />
+                <Skeleton className="h-3 w-1/3 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!posItems || posItems.length === 0) {
+    return (
+      <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 flex flex-col items-center justify-center w-full text-gray-400">
+        <p className="text-sm font-medium">No items found in this category.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 overflow-y-auto w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3">
-        {filteredItems.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => addToCart(item)}
-            className="group bg-white rounded-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden cursor-pointer flex flex-col hover:shadow-md hover:border-[#357252]/30 transition-all active:scale-95 duration-200 relative"
-          >
-            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 text-[#357252] shadow-sm">
-              <Plus className="w-3.5 h-3.5 stroke-[3px]" />
-            </div>
+        {posItems.map((item) => {
+          // Generate appropriate image URL based on DB relative upload vs absolute
+          const imageUrl = item.image?.startsWith("http")
+            ? item.image
+            : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${item.image?.replace(/\\/g, "/")}`;
 
-            <div className="h-[90px] md:h-[100px] w-full relative bg-gray-100 overflow-hidden">
-              <Image
-                src={item.image}
-                alt={item.name}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                unoptimized
-              />
+          return (
+            <div
+              key={item.id}
+              onClick={() => {
+                dispatch(addToCart({
+                  id: item.id,
+                  name: item.name,
+                  description: item.description || "",
+                  price: item.basePrice,
+                  quantity: 1,
+                  image: imageUrl,
+                  variations: item.variations || [],
+                  cashierItemId: item.id, // Set backend id mapping
+                  tableName: "Table 4",   // Dummy for now, real selection comes from TableModal
+                  orderType: orderType,
+                  paymentMethod: "Cash"
+                }));
+                // Auto-open cart on mobile when an item is added
+                if (window.innerWidth < 1024) {
+                  setIsCartOpen(true);
+                }
+              }}
+              className="group bg-white rounded-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden cursor-pointer flex flex-col hover:shadow-md hover:border-[#357252]/30 transition-all active:scale-95 duration-200 relative"
+            >
+              <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 text-[#357252] shadow-sm">
+                <Plus className="w-3.5 h-3.5 stroke-[3px]" />
+              </div>
+
+              <div className="h-[90px] md:h-[100px] w-full relative bg-gray-100 overflow-hidden">
+                <Image
+                  src={imageUrl}
+                  alt={item.name}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  unoptimized
+                />
+              </div>
+              <div className="p-2 sm:p-2.5 flex flex-col gap-1">
+                <h3 className="text-[11px] sm:text-[12px] font-extrabold text-[#333] leading-snug truncate group-hover:text-[#357252] transition-colors">
+                  {item.name}
+                </h3>
+                <p className="text-[#357252] font-black text-[11px] sm:text-[12px]">
+                  ${Number(item.basePrice).toFixed(2)}
+                </p>
+              </div>
             </div>
-            <div className="p-2 sm:p-2.5 flex flex-col gap-1">
-              <h3 className="text-[11px] sm:text-[12px] font-extrabold text-[#333] leading-snug truncate group-hover:text-[#357252] transition-colors">
-                {item.name}
-              </h3>
-              <p className="text-[#357252] font-black text-[11px] sm:text-[12px]">
-                ${item.price.toFixed(2)}
-              </p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

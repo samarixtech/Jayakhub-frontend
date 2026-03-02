@@ -3,8 +3,13 @@
 import React, { useState } from "react";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GlobalModal } from "@/components/common/GlobalModal";
-import { Banknote, CreditCard, Smartphone, Check, Printer } from "lucide-react";
+import { Check, Printer, Loader2, Banknote, CreditCard, Smartphone } from "lucide-react";
 import { usePOS } from "@/context/POSContext";
+import { useSelector, useDispatch } from "react-redux";
+import { clearCart } from "@/redux/slices/cartSlice";
+import { RootState, AppDispatch } from "@/redux/store/store";
+import { addCartItemsAction } from "@/app/actions/restaurant/cart";
+import toast from "react-hot-toast";
 
 interface PaymentModalProps {
   open: boolean;
@@ -18,10 +23,14 @@ export default function PaymentModal({
   open,
   onOpenChange,
 }: PaymentModalProps) {
-  const { cartItems, subtotal, tax, total } = usePOS();
+  const { subtotal, tax, total } = usePOS();
+  const dispatch = useDispatch<AppDispatch>();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
   const [method, setMethod] = useState<PaymentMethod>(null);
   const [step, setStep] = useState<PaymentStep>("select");
   const [amountTendered, setAmountTendered] = useState<string>("100");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Total logic wrapper for rendering safely
   const displayTotal = total > 0 ? total : 17.32; // Fallback for UI visualization based on screenshot
@@ -37,9 +46,32 @@ export default function PaymentModal({
     }
   }, [open, displayTotal]);
 
-  const handleConfirm = () => {
-    if (method) {
-      setStep("receipt");
+  const handleConfirm = async () => {
+    if (method && cartItems.length > 0) {
+      setIsProcessing(true);
+
+      const payload = cartItems.map(item => ({
+        cashierItemId: item.cashierItemId || item.id,
+        quantity: item.quantity,
+        tableName: item.tableName || "Table 5",
+        orderType: item.orderType || "Dine-In",
+        paymentMethod: method.charAt(0).toUpperCase() + method.slice(1)
+      }));
+
+      try {
+        const result = await addCartItemsAction(payload);
+        if (result.success) {
+          toast.success("Payment successful!");
+          dispatch(clearCart());
+          setStep("receipt");
+        } else {
+          toast.error(result.message || "Failed to process payment");
+        }
+      } catch (err) {
+        toast.error("An error occurred during payment.");
+      } finally {
+        setIsProcessing(false);
+      }
     }
   };
 
@@ -270,19 +302,21 @@ export default function PaymentModal({
           </div>
         )}
 
-        {/* Action Button */}
         <button
           onClick={handleConfirm}
-          disabled={!method}
-          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors ${
-            !method
+          disabled={!method || isProcessing}
+          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${!method || isProcessing
               ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
               : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
-          }`}
+            }`}
         >
-          {!method
-            ? "Select Payment Method"
-            : `Confirm ${method.charAt(0).toUpperCase() + method.slice(1)} Payment`}
+          {isProcessing ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : !method ? (
+            "Select Payment Method"
+          ) : (
+            `Confirm ${method.charAt(0).toUpperCase() + method.slice(1)} Payment`
+          )}
         </button>
       </div>
     </GlobalModal>
