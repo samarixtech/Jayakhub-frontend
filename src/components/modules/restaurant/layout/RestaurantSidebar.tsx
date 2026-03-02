@@ -13,7 +13,6 @@ import {
   Settings,
   HelpCircle,
   Database,
-  Languages,
   LogOut,
   ChevronDown,
 } from "lucide-react";
@@ -91,8 +90,6 @@ import { deleteCookie } from "cookies-next";
 import useLocale from "@/hooks/useLocals";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 
-// ... imports ...
-
 export function RestaurantSidebar() {
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
@@ -126,13 +123,21 @@ export function RestaurantSidebar() {
         } as React.CSSProperties
       }
     >
-      {/* LOGO HEADER */}
+      {/* HEADER */}
       <SidebarHeader className="h-16 flex items-center justify-center border-b border-white/10 mb-2">
-        <Link href={`/${country}/${language}/restaurants`} className="w-full flex items-center justify-center">
+        <Link
+          href={`/${country}/${language}/restaurants`}
+          className="w-full flex items-center justify-center"
+        >
           {!isCollapsed ? (
             <div className="flex items-center gap-2 px-4 w-full justify-center">
-              {/* Placeholder Logo */}
-              <Image src="/EngLogo (2).png" alt="Logo" width={180} height={200} />
+              {/* LOGO */}
+              <Image
+                src="/EngLogo (2).png"
+                alt="Logo"
+                width={180}
+                height={200}
+              />
             </div>
           ) : (
             <div className="">
@@ -203,10 +208,11 @@ export function RestaurantSidebar() {
                       asChild
                       tooltip={item.name}
                       isActive={isActive}
-                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${isActive
+                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${
+                        isActive
                           ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
                           : "text-sidebar-foreground/80"
-                        }`}
+                      }`}
                     >
                       <Link href={item.href}>
                         <item.icon className="w-5 h-5" />

@@ -1,12 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { User, Phone } from "lucide-react";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
-
+import { User, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { Typography } from "@/components/ui/typography";
@@ -18,79 +12,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  ownerInfoSchema,
-  OwnerInfoInput,
-} from "@/lib/schemas/restaurant-onboarding";
-import useLocale from "@/hooks/useLocals";
-import { getProfile } from "@/app/actions/customer/userprofile";
-import { Mail } from "lucide-react";
+import { useStepOwnerInfo } from "../../hooks/useStepOwnerInfo";
+// import { useStepSchedule } from "../../hooks/useStepSchedule";
 
-import { WizardStepProps } from "@/types";
-import { useOnboarding } from "../OnboardingContext";
-
-export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {
-  const router = useRouter();
-  console.log(
-    "StepOwnerInfoView rendered. onNext:",
-    !!onNext,
-    "onBack:",
-    !!onBack,
-  );
-  const { country, language } = useLocale();
-  const { nextStep } = useOnboarding();
-  const [email, setEmail] = useState<string>("");
-
-  useEffect(() => {
-    async function fetchEmail() {
-      const res = await getProfile();
-      if (res.success && res.data?.email) {
-        setEmail(res.data.email);
-      }
-    }
-    fetchEmail();
-  }, []);
-
-  const form = useForm<OwnerInfoInput>({
-    resolver: zodResolver(ownerInfoSchema),
-    defaultValues: {
-      ownerName: "",
-      ownerPhone: "",
-    },
-  });
-  useEffect(() => {
-    try {
-      const savedData = localStorage.getItem("onboarding_owner_info");
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        form.reset(parsed);
-      }
-    } catch (e) {
-      console.error("Failed to load owner info", e);
-    }
-  }, []); // Empty dependency array to run only on mount
-
-  const onSubmit = (data: OwnerInfoInput) => {
-    console.log("Static Mode: Saving Owner Info", data);
-    try {
-      localStorage.setItem("onboarding_owner_info", JSON.stringify(data));
-      toast.success("Owner info saved");
-    } catch (e) {
-      console.error("LocalStorage Save Error", e);
-    }
-
-    // Simplified navigation using Context
-    console.log("Calling nextStep from Context...");
-    nextStep();
-    router.push(
-      `/${country}/${language}/restaurant/onboarding/step-restaurant-info`,
-    );
-  };
-
-  const onError = (errors: any) => {
-    console.error("Validation Errors:", errors);
-    toast.error("Please check the form for errors");
-  };
+export default function StepOwnerInfoView() {
+  const { form, email, onSubmit, onError } = useStepOwnerInfo();
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -175,8 +101,6 @@ export default function StepOwnerInfoView({ onNext, onBack }: WizardStepProps) {
           <div className="flex flex-col sm:flex-row justify-end items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <Button
               type="submit"
-              onClick={() => console.log("Next Step Button Clicked")}
-              disabled={false}
               className="w-full sm:w-auto bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
             >
               Next Step
