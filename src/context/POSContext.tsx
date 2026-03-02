@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { getPosItems } from "@/app/actions/restaurant/pos";
 
 export type CartItem = {
     id: number;
@@ -8,6 +9,8 @@ export type CartItem = {
     price: number;
     quantity: number;
     image: string;
+    variations?: { name: string; additionalPrice: number }[];
+    selectedVariation?: { name: string; additionalPrice: number };
 };
 
 interface POSContextType {
@@ -15,6 +18,9 @@ interface POSContextType {
     addToCart: (item: Omit<CartItem, "quantity">) => void;
     removeFromCart: (id: number) => void;
     updateQuantity: (id: number, delta: number) => void;
+    updateItemVariation: (id: number, variation: { name: string; additionalPrice: number }) => void;
+    activeModifierItemId: string | number | null;
+    setActiveModifierItemId: (id: string | number | null) => void;
     isCartOpen: boolean;
     setIsCartOpen: (isOpen: boolean) => void;
     isSidebarOpen: boolean;
@@ -26,6 +32,9 @@ interface POSContextType {
     setActiveView: (view: "menu" | "online") => void;
     activeCategory: string;
     setActiveCategory: (category: string) => void;
+    posItems: any[];
+    globalCategories: string[];
+    isPosLoading: boolean;
 }
 
 const POSContext = createContext<POSContextType | undefined>(undefined);
@@ -36,6 +45,45 @@ export function POSProvider({ children }: { children: ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [activeView, setActiveView] = useState<"menu" | "online">("menu");
     const [activeCategory, setActiveCategory] = useState("all");
+    const [activeModifierItemId, setActiveModifierItemId] = useState<string | number | null>(null);
+
+    // Server API State
+    const [posItems, setPosItems] = useState<any[]>([]);
+    const [globalCategories, setGlobalCategories] = useState<string[]>([]);
+    const [isPosLoading, setIsPosLoading] = useState(false);
+
+    useEffect(() => {
+        let isMounted = true;
+        const fetchPosData = async () => {
+            setIsPosLoading(true);
+            try {
+                // Determine whether to fetch "all" or filtered subset
+                const params = activeCategory === "all" ? undefined : activeCategory;
+                const result = await getPosItems(params);
+
+                if (result.success && result.data?.data) {
+                    if (isMounted) {
+                        setPosItems(result.data.data.items || []);
+
+                        // Categories from API to dynamically build sidebar (only pull "categories" array from response root if present)
+                        if (result.data.data.categories) {
+                            setGlobalCategories(result.data.data.categories);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("Failed fetching POS items", error);
+            } finally {
+                if (isMounted) setIsPosLoading(false);
+            }
+        };
+
+        fetchPosData();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [activeCategory]);
 
     const addToCart = (item: Omit<CartItem, "quantity">) => {
         setCartItems((prev) => {
@@ -69,7 +117,18 @@ export function POSProvider({ children }: { children: ReactNode }) {
         );
     };
 
-    const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const updateItemVariation = (id: number, variation: { name: string; additionalPrice: number }) => {
+        setCartItems((prev) =>
+            prev.map((i) =>
+                i.id === id ? { ...i, selectedVariation: variation } : i
+            )
+        );
+    };
+
+    const subtotal = cartItems.reduce((acc, item) => {
+        const itemPrice = item.selectedVariation ? item.price + item.selectedVariation.additionalPrice : item.price;
+        return acc + itemPrice * item.quantity;
+    }, 0);
     const tax = subtotal * 0.05; // 5% tax
     const total = subtotal + tax;
 
@@ -80,6 +139,9 @@ export function POSProvider({ children }: { children: ReactNode }) {
                 addToCart,
                 removeFromCart,
                 updateQuantity,
+                updateItemVariation,
+                activeModifierItemId,
+                setActiveModifierItemId,
                 isCartOpen,
                 setIsCartOpen,
                 isSidebarOpen,
@@ -90,7 +152,10 @@ export function POSProvider({ children }: { children: ReactNode }) {
                 activeView,
                 setActiveView,
                 activeCategory,
-                setActiveCategory
+                setActiveCategory,
+                posItems,
+                globalCategories,
+                isPosLoading
             }}
         >
             {children}

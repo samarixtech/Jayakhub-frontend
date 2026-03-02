@@ -1,5 +1,5 @@
 "use client";
-import { Loader2, AlertTriangle } from "lucide-react";
+import { Loader2, AlertTriangle, CreditCard } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { GlobalModal } from "@/components/common/GlobalModal";
@@ -7,7 +7,7 @@ import { WalletSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton
 
 import { useWallet } from "./useWallet";
 import { PaymentCard } from "./components/payment-card";
-import { EmptyState } from "./components/empty-state";
+import  EmptyState  from "../../../common/EmptyState"
 
 export default function WalletView() {
   const {
@@ -54,7 +54,9 @@ export default function WalletView() {
               />
             ))
           ) : (
-            <EmptyState />
+            <div className="flex col-span-full items-center justify-center">
+            <EmptyState  icon={CreditCard} title="No cards added" message="Please make a order so your card will automatically be saved ."/>
+            </div>
           )}
         </div>
 

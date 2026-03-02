@@ -141,11 +141,11 @@ export interface WizardStepProps {
 
 // Configuration props for the initial restaurant info onboarding step.
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface StepRestaurantInfoProps extends WizardStepProps {}
+export interface StepRestaurantInfoProps extends WizardStepProps { }
 
 // Configuration props for the restaurant license onboarding step.
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface StepLicenseProps extends WizardStepProps {}
+export interface StepLicenseProps extends WizardStepProps { }
 
 // ============================================================================
 // CUSTOMER TYPES
@@ -223,9 +223,14 @@ export interface CartItem extends MenuItem {
   productId?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedVariations?: any[];
+  selectedVariation?: { name: string; additionalPrice: number };
   restaurantName?: string;
   restaurantId?: string;
   totalPrice?: number;
+  cashierItemId?: string;
+  tableName?: string;
+  orderType?: string;
+  paymentMethod?: string;
 }
 
 // Summary snippet object highlighting a restaurant, usually used in recommendation rails.

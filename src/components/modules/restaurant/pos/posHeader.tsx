@@ -14,6 +14,9 @@ import {
   ClipboardList,
 } from "lucide-react";
 import { usePOS } from "@/context/POSContext";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
+import { getNotifications } from "@/app/actions/customer/notifications";
 import KeyboardShortcutsModal from "./keyboard-shortcuts-modal";
 import PendingOrdersSidebar from "./pending-orders-sidebar";
 import CloseRegisterModal from "./close-Register";
@@ -31,7 +34,29 @@ export default function POSNavbar() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isActivityLogOpen, setIsActivityLogOpen] = useState(false);
 
+  const pendingOrdersCount = useSelector((state: RootState) => state.cart.pendingOrders.length);
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+
+  React.useEffect(() => {
+    const fetchNotificationsCount = async () => {
+      try {
+        const res = await getNotifications();
+        if (res.success && res.data) {
+          const notifs = Array.isArray(res.data) ? res.data : res.data.data || [];
+          const unreadCount = notifs.filter((n: any) => !n.isRead).length;
+          setUnreadNotificationsCount(unreadCount > 0 ? unreadCount : notifs.length); // Fallback to total if isRead isn't actively set yet
+        }
+      } catch (err) {
+        // Silent catch for background polling
+      }
+    };
+
+    fetchNotificationsCount();
+    const interval = setInterval(fetchNotificationsCount, 30000); // Polling every 30s
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <nav className="h-[64px] shrink-0 bg-[#357252] text-white flex items-center justify-between px-3 sm:px-6 z-20 relative">
@@ -93,9 +118,11 @@ export default function POSNavbar() {
             className="relative p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-left"
           >
             <Clock className="w-[20px] h-[20px] text-white" />
-            <div className="absolute -top-0 -right-0.5 w-[14px] h-[14px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
-              1
-            </div>
+            {pendingOrdersCount > 0 && (
+              <div className="absolute -top-0 -right-0.5 w-[14px] h-[14px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
+                {pendingOrdersCount}
+              </div>
+            )}
           </button>
 
           <button
@@ -117,9 +144,11 @@ export default function POSNavbar() {
             className="relative p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer"
           >
             <ClipboardList className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
-            <div className="absolute -top-0 -right-0.5 w-[16px] h-[16px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
-              21
-            </div>
+            {unreadNotificationsCount > 0 && (
+              <div className="absolute -top-0 -right-0.5 w-[16px] h-[16px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
+                {unreadNotificationsCount}
+              </div>
+            )}
           </button>
 
           <button
