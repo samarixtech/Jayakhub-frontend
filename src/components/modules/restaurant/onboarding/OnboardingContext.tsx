@@ -7,17 +7,14 @@ interface OnboardingContextType {
   setLogoPreview: (url: string | null) => void;
   bannerPreview: string | null;
   setBannerPreview: (url: string | null) => void;
-  // Store actual File objects for FormData upload
   logoFile: File | null;
   setLogoFile: (file: File | null) => void;
   bannerFile: File | null;
   setBannerFile: (file: File | null) => void;
-  // KYC Files
   kycFile: File | null;
   setKycFile: (file: File | null) => void;
   docFile: File | null;
   setDocFile: (file: File | null) => void;
-  // Wizard Navigation
   currentStep: number;
   nextStep: () => void;
   prevStep: () => void;

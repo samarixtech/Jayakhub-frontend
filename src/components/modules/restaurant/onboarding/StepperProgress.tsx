@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import { STEPS } from "./constants";
+import { STEPS } from "./onboarding.constants";
 
 interface StepperProgressProps {
   currentStep: number;

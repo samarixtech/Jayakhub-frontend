@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { OnboardingHeader } from "./OnboardingHeader";
 import { StepperProgress } from "./StepperProgress";
-import StepOwnerInfo from "./steps/StepOwnerInfoView";
-import StepRestaurantInfo from "./steps/StepRestaurantInfoView";
-import StepSchedule from "./steps/StepScheduleView";
-import StepKyc from "./steps/StepKycView";
+import StepOwnerInfo from "./views/steps/StepOwnerInfoView";
+import StepRestaurantInfo from "./views/steps/StepRestaurantInfoView";
+import StepSchedule from "./views/steps/StepScheduleView";
+import StepKyc from "./views/steps/StepKycView";
 
-import StepBrandAssetsView from "./steps/StepBrandAssetsView";
-import StepBankDetailsView from "./steps/StepBankDetailsView";
+import StepBrandAssetsView from "./views/steps/StepBrandAssetsView";
+import StepBankDetailsView from "./views/steps/StepBankDetailsView";
 
 function RestaurantOnboardingContent() {
   const [currentStep, setCurrentStep] = useState(1); // 1 == initial form step

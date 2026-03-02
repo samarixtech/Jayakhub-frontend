@@ -18,7 +18,7 @@ interface RestaurantLocationMapProps {
 }
 
 const defaultCenter = {
-  lat: 40.7128, // Default fallback (New York) - can be changed to project default
+  lat: 40.7128, // Default fallback New York
   lng: -74.006,
 };
 
@@ -42,7 +42,6 @@ export default function RestaurantLocationMap({
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [center, setCenter] = useState(defaultCenter);
 
-  // If external location changes (e.g. initial load), update center
   useEffect(() => {
     if (location) {
       setCenter(location);
