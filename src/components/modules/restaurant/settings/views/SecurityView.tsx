@@ -8,7 +8,7 @@ import {
   useSetPasswordForm,
   useChangePasswordForm,
 } from "../hooks/useSecuritySettings";
-
+import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
 import {
   Card,
   CardHeader,
@@ -21,11 +21,7 @@ export default function SecurityView() {
   const { loading, isGoogleOnly, email } = useSecuritySettings();
 
   if (loading) {
-    return (
-      <div className="flex h-60 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <SettingsSkeleton />;
   }
 
   return (

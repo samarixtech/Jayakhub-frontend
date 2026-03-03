@@ -12,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
 
 import {
   Card,
@@ -78,6 +79,10 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
       setLoading(false);
     }
   };
+
+  if (!settings) {
+    return <SettingsSkeleton />;
+  }
 
   return (
     <Card className="py-6">

@@ -8,11 +8,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { AppDispatch, RootState } from "@/redux/store/store";
+import toast from "react-hot-toast";
 
 export default function POSMenuGrid() {
-  const { posItems, isPosLoading, setIsCartOpen } = usePOS();
+  const { posItems, isPosLoading, setIsCartOpen, selectedTable } = usePOS();
   const dispatch = useDispatch<AppDispatch>();
-  const orderType = useSelector((state: RootState) => state.cart.orderType);
+  const { orderType, pendingOrders } = useSelector((state: RootState) => state.cart);
 
   if (isPosLoading) {
     return (
@@ -53,6 +54,31 @@ export default function POSMenuGrid() {
             <div
               key={item.id}
               onClick={() => {
+                // Table constraints check
+                if (orderType === "Dine-In") {
+                  if (!selectedTable) {
+                    toast.error("Please select a table before adding items.");
+                    setIsCartOpen(true);
+                    return;
+                  }
+
+                  // Check if the current table is already pending an order
+                  const isTablePending = pendingOrders.some(
+                    (order) => order.tableName === selectedTable.name
+                  );
+
+                  if (isTablePending) {
+                    toast.error(`Table ${selectedTable.name} already has a pending order.`);
+                    return;
+                  }
+
+                  // Check if the table is fundamentally unavailable/occupied
+                  if (selectedTable.status === "Pay Pending" || selectedTable.status === "Occupied") {
+                    toast.error(`Table ${selectedTable.name} is not available.`);
+                    return;
+                  }
+                }
+
                 dispatch(addToCart({
                   id: item.id,
                   name: item.name,
@@ -62,7 +88,7 @@ export default function POSMenuGrid() {
                   image: imageUrl,
                   variations: item.variations || [],
                   cashierItemId: item.id, // Set backend id mapping
-                  tableName: "Table 4",   // Dummy for now, real selection comes from TableModal
+                  tableName: selectedTable?.name || "Table",
                   orderType: orderType,
                   paymentMethod: "Cash"
                 }));

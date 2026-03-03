@@ -1,31 +1,138 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GlobalModal } from "@/components/common/GlobalModal";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, Loader2 } from "lucide-react";
+import { getTablesAction } from "@/app/actions/restaurant/tables";
+import { getTableStatusesFromDB, saveTableStatusToDB, TableStatus } from "@/lib/indexedDB";
+import toast from "react-hot-toast";
+import { usePOS } from "@/context/POSContext";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
 
 interface TableModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-const tables = [
-    { id: "T1", status: "Pay Pending", details: "Pay Pending" },
-    { id: "T2", status: "Available", details: "2 Seats" },
-    { id: "T3", status: "Available", details: "6 Seats" },
-    { id: "T4", status: "Available", details: "4 Seats" },
-    { id: "T5", status: "Available", details: "4 Seats" },
-    { id: "T6", status: "Available", details: "2 Seats" },
-    { id: "T7", status: "Selected", details: "8 Seats" },
-    { id: "T8", status: "Available", details: "4 Seats" },
-    { id: "T9", status: "Available", details: "6 Seats" },
-    { id: "T10", status: "Available", details: "2 Seats" },
-    { id: "T11", status: "Available", details: "4 Seats" },
-    { id: "T12", status: "Available", details: "8 Seats" },
-];
+export interface CombinedTable {
+    id: string;
+    originalId: string;
+    name: string;
+    seats: number;
+    status: string;
+    details: string;
+}
 
 export default function TableModal({ open, onOpenChange }: TableModalProps) {
+    const { setSelectedTable } = usePOS();
+    const pendingOrders = useSelector((state: RootState) => state.cart.pendingOrders);
+    const [tables, setTables] = useState<CombinedTable[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (open) {
+            fetchTablesAndStatus();
+        }
+    }, [open]);
+
+    const fetchTablesAndStatus = async () => {
+        setIsLoading(true);
+        try {
+            const [apiRes, dbStatuses] = await Promise.all([
+                getTablesAction(),
+                getTableStatusesFromDB(),
+            ]);
+
+            if (apiRes.success && apiRes.data) {
+                const apiTables = apiRes.data;
+                const normalized: CombinedTable[] = apiTables.map((t: any) => {
+                    const dbStatus = dbStatuses.find((s) => s.id === t.id);
+
+                    // Default logic: If it's explicitly set in DB or API says it's strictly 'Available'
+                    let status = "Available";
+                    if (dbStatus) {
+                        status = dbStatus.status;
+                    } else if (t.status && t.status !== "Available" && t.status !== "available" && t.status !== 1) {
+                        // If backend thinks it's not available and we have no DB override, show as Pay Pending
+                        status = "Pay Pending";
+                    }
+
+                    return {
+                        id: t.name || t.id,
+                        originalId: t.id,
+                        name: t.name || t.id,
+                        seats: t.seats || t.capacity || 0,
+                        status: status,
+                        details: status === "Pay Pending" ? "Pay Pending" : `${t.seats || t.capacity || 0} Seats`,
+                    };
+                });
+                setTables(normalized);
+            } else {
+                toast.error("Failed to load tables");
+            }
+        } catch (error) {
+            toast.error("An error occurred loading tables");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleTableClick = async (table: CombinedTable) => {
+        if (table.status === "Available" || table.status === "Pay Pending") {
+            const newStatus = "Selected";
+
+            // Update local state for immediate UI feedback
+            setTables((prev) =>
+                prev.map((t) => {
+                    if (t.originalId === table.originalId) {
+                        return { ...t, status: newStatus };
+                    }
+                    // Optionally unselect other tables if only one table can be selected at a time
+                    if (t.status === "Selected") {
+                        // Decide if we should keep it selected, usually it's single selection for cart
+                        // If multiple selection is allowed, remove this reset. I'll assume single selection for the active cart.
+                        return { ...t, status: "Available" };
+                    }
+                    return t;
+                })
+            );
+
+            // Persist selection to DB
+            try {
+                // Deselect previously selected in DB (optional, but good for single table per cart)
+                const currentStatuses = await getTableStatusesFromDB();
+                const promises = currentStatuses
+                    .filter(s => s.status === "Selected")
+                    .map(s => saveTableStatusToDB({ id: s.id, status: "Available" }));
+                await Promise.all(promises);
+
+                // Save new selection
+                await saveTableStatusToDB({
+                    id: table.originalId,
+                    status: newStatus,
+                });
+
+                // Update Global Context
+                setSelectedTable({
+                    id: table.originalId,
+                    name: table.name,
+                    status: newStatus
+                });
+
+                toast.success(`Table ${table.name} selected`);
+                // Close modal after selection
+                onOpenChange(false);
+            } catch (err) {
+                console.error("Failed to save table status", err);
+                toast.error("Failed to save table selection");
+            }
+        } else {
+            toast.error(`Table ${table.name} is ${table.status} and cannot be selected`);
+        }
+    };
+
     return (
         <GlobalModal
             open={open}
@@ -55,51 +162,79 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
                 </div>
 
                 {/* Table Grid */}
-                <div className="grid grid-cols-4 gap-[20px]">
-                    {tables.map((table) => {
-                        let bgClass = "";
-                        let borderClass = "";
-                        let titleClass = "";
-                        let detailsClass = "";
-
-                        if (table.status === "Pay Pending") {
-                            bgClass = "bg-[#fffcf7]";
-                            borderClass = "border-[#ffd98a]";
-                            titleClass = "text-[#cc7c50]";
-                            detailsClass = "text-[#cc7c50] font-[800]";
-                        } else if (table.status === "Selected") {
-                            bgClass = "bg-[#357252]";
-                            borderClass = "border-transparent";
-                            titleClass = "text-white";
-                            detailsClass = "text-[#759885] font-[800]";
-                        } else {
-                            // Available
-                            bgClass = "bg-[#f5fdf7]";
-                            borderClass = "border-[#bbf4d4]";
-                            titleClass = "text-[#1b2d22]";
-                            detailsClass = "text-[#8ea89a] font-[800]";
-                        }
-
-                        return (
-                            <button
-                                key={table.id}
-                                className={`relative flex flex-col items-center justify-center h-[130px] rounded-[16px] border ${bgClass} ${borderClass} transition-colors hover:opacity-90`}
+                {isLoading ? (
+                    <div className="grid grid-cols-4 gap-[20px] min-h-[200px] max-h-[400px] overflow-y-auto pr-2">
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="relative flex flex-col items-center justify-center h-[130px] rounded-[16px] border border-gray-100 bg-gray-50/50 animate-pulse"
                             >
-                                {table.status === "Selected" && (
-                                    <div className="absolute top-[10px] right-[10px]">
-                                        <CircleCheck className="w-[16px] h-[16px] text-white stroke-[2px]" />
-                                    </div>
-                                )}
-                                <span className={`text-[24px] font-[900] tracking-tight leading-none mb-[8px] ${titleClass}`}>
-                                    {table.id}
-                                </span>
-                                <span className={`text-[13px] ${detailsClass}`}>
-                                    {table.details}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
+                                <div className="h-6 w-12 bg-gray-200 rounded mb-3"></div>
+                                <div className="h-3 w-16 bg-gray-200 rounded"></div>
+                            </div>
+                        ))}
+                    </div>
+                ) : tables.length === 0 ? (
+                    <div className="flex flex-1 items-center justify-center min-h-[200px] text-gray-400 font-medium">
+                        No tables found
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-4 gap-[20px] min-h-[200px] max-h-[400px] overflow-y-auto pr-2">
+                        {tables.map((table) => {
+                            const isPending = pendingOrders.some(order => order.tableName === table.name);
+                            const displayStatus = isPending ? "Pay Pending" : table.status;
+                            const displayDetails = isPending ? "Pay Pending" : table.details;
+
+                            let bgClass = "";
+                            let borderClass = "";
+                            let titleClass = "";
+                            let detailsClass = "";
+
+                            if (displayStatus === "Pay Pending") {
+                                bgClass = "bg-[#fffcf7]";
+                                borderClass = "border-[#ffd98a]";
+                                titleClass = "text-[#cc7c50]";
+                                detailsClass = "text-[#cc7c50] font-[800]";
+                            } else if (displayStatus === "Selected") {
+                                bgClass = "bg-[#357252]";
+                                borderClass = "border-transparent";
+                                titleClass = "text-white";
+                                detailsClass = "text-[#759885] font-[800]";
+                            } else if (displayStatus === "Occupied") {
+                                bgClass = "bg-[#fff5f5]";
+                                borderClass = "border-[#ffadad]";
+                                titleClass = "text-[#d65555]";
+                                detailsClass = "text-[#d65555] font-[800]";
+                            } else {
+                                // Available
+                                bgClass = "bg-[#f5fdf7]";
+                                borderClass = "border-[#bbf4d4]";
+                                titleClass = "text-[#1b2d22]";
+                                detailsClass = "text-[#8ea89a] font-[800]";
+                            }
+
+                            return (
+                                <button
+                                    key={table.originalId}
+                                    onClick={() => handleTableClick(table)}
+                                    className={`relative flex flex-col items-center justify-center h-[130px] rounded-[16px] border ${bgClass} ${borderClass} transition-colors hover:opacity-90`}
+                                >
+                                    {displayStatus === "Selected" && (
+                                        <div className="absolute top-[10px] right-[10px]">
+                                            <CircleCheck className="w-[16px] h-[16px] text-white stroke-[2px]" />
+                                        </div>
+                                    )}
+                                    <span className={`text-[24px] font-[900] tracking-tight leading-none mb-[8px] ${titleClass}`}>
+                                        {table.name}
+                                    </span>
+                                    <span className={`text-[13px] ${detailsClass}`}>
+                                        {displayDetails}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </GlobalModal>
     );

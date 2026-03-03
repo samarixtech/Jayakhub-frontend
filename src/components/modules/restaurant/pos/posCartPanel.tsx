@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { usePOS } from "@/context/POSContext";
 import { useSelector, useDispatch } from "react-redux";
-import { updateQuantity, loadCartFromDB, clearCart, setOrderType, saveToPendingOrders } from "@/redux/slices/cartSlice";
+import { updateQuantity, loadCartFromDB, clearCart, setOrderType, saveToPendingOrdersThunk } from "@/redux/slices/cartSlice";
 import { RootState, AppDispatch } from "@/redux/store/store";
 import {
   Sheet,
@@ -32,6 +32,7 @@ export default function POSCartPanel() {
     isCartOpen,
     setIsCartOpen,
     setActiveModifierItemId,
+    selectedTable
   } = usePOS();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -107,7 +108,9 @@ export default function POSCartPanel() {
                 <span className="text-gray-400 font-[800] uppercase tracking-wider text-[9px]">
                   Table
                 </span>
-                <span className="font-black text-[#111] text-[12px]">T4</span>
+                <span className="font-black text-[#111] text-[12px]">
+                  {selectedTable ? selectedTable.name : "Select"}
+                </span>
               </div>
             )}
             <div className={`flex-1 px-3 flex items-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors ${orderType !== "Dine-In" && "justify-center"}`}>
@@ -259,7 +262,7 @@ export default function POSCartPanel() {
           <button
             onClick={() => {
               if (cartItems.length > 0) {
-                dispatch(saveToPendingOrders());
+                dispatch(saveToPendingOrdersThunk({ tableName: selectedTable?.name || undefined }));
                 toast.success("Order saved to Pending!");
               }
             }}

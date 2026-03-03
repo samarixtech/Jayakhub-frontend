@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
 
 import {
   Card,
@@ -13,9 +14,18 @@ import {
 } from "@/components/ui/card";
 
 export function NotificationsView() {
+  const [loading, setLoading] = useState(true);
   const [orderSound, setOrderSound] = useState(true);
   const [emailReceipts, setEmailReceipts] = useState(false);
   const [smsAlerts, setSmsAlerts] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading for UI consistency since there isn't an explicit fetch here currently.
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, []);
 
   const notifications = [
     {
@@ -40,6 +50,10 @@ export function NotificationsView() {
       onChange: setSmsAlerts,
     },
   ];
+
+  if (loading) {
+    return <SettingsSkeleton />;
+  }
 
   return (
     <Card className="py-6">
