@@ -11,7 +11,7 @@ const passwordRules = z
     "Password must contain at least one special character (e.g. @, #, $, %, etc.)",
   );
 
-// For Google-verified users
+// ========== FOR GOOGLE VERIFIED SCHEMA ==========
 export const setPasswordSchema = z
   .object({
     password: passwordRules,
@@ -22,7 +22,7 @@ export const setPasswordSchema = z
     path: ["confirmPassword"],
   });
 
-// For Email/Both verified users
+// ========== FOR EMAIL/BOTH VERIFIED USERS ==========
 export const changePasswordSchema = z
   .object({
     oldPassword: z.string().min(1, "Current password is required"),
@@ -34,5 +34,6 @@ export const changePasswordSchema = z
     path: ["confirmPassword"],
   });
 
+// ========== TYPE INFERENCES ==========
 export type SetPasswordInput = z.infer<typeof setPasswordSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;

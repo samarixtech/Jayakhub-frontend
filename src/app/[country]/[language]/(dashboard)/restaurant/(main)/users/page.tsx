@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import UsersListView from "@/components/modules/restaurant/users/UsersListView";
+import UsersListView from "@/components/modules/restaurant/users/views/UsersListView";
 
 export const metadata: Metadata = {
   title: "Users & Roles | Restaurant Dashboard",

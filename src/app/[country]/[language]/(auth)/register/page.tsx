@@ -1,4 +1,4 @@
-import CustomerRegisterView from "@/components/modules/auth/CustomerRegisterView";
+import CustomerRegisterView from "@/components/modules/auth/views/CustomerRegisterView";
 
 const page = () => {
   return <CustomerRegisterView />;

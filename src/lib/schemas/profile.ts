@@ -8,8 +8,6 @@ export const updateProfileSchema = z.object({
   avatar: z.any().optional(),
 });
 
-export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
-
 // ==================== CHANGE PASSWORD SCHEMA ====================
 export const changePasswordSchema = z
   .object({
@@ -24,8 +22,6 @@ export const changePasswordSchema = z
     path: ["confirmPassword"],
   });
 
-export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
-
 // ==================== ADD CARD SCHEMA ====================
 export const addCardSchema = z.object({
   cardholderName: z.string().min(2, "Cardholder name is required"),
@@ -36,4 +32,8 @@ export const addCardSchema = z.object({
   isDefault: z.boolean().default(false),
 });
 
+// ========== TYPE INFERENCES ==========
+
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type AddCardInput = z.infer<typeof addCardSchema>;
