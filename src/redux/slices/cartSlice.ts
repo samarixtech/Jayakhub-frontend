@@ -1,12 +1,18 @@
 import { CartItem } from "@/types";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCartItemsFromDB } from "@/lib/indexedDB";
+import { getCartItemsFromDB, getPendingOrdersFromDB, savePendingOrdersToDB } from "@/lib/indexedDB";
 
 export const loadCartFromDB = createAsyncThunk(
   "cart/loadCartFromDB",
   async () => {
-    const items = await getCartItemsFromDB();
-    return items as CartItem[];
+    const [items, pending] = await Promise.all([
+      getCartItemsFromDB(),
+      getPendingOrdersFromDB()
+    ]);
+    return {
+      items: items as CartItem[],
+      pendingOrders: (pending || []) as PendingOrder[]
+    };
   }
 );
 
@@ -15,6 +21,7 @@ export interface PendingOrder {
   items: CartItem[];
   orderType: "Dine-In" | "Takeaway" | "Delivery";
   timestamp: string;
+  tableName?: string;
 }
 
 interface CartState {
@@ -103,13 +110,14 @@ const cartSlice = createSlice({
       state.orderType = action.payload;
     },
 
-    saveToPendingOrders: (state) => {
+    saveToPendingOrders: (state, action: PayloadAction<{ tableName?: string } | undefined>) => {
       if (state.items.length === 0) return;
       const newPendingOrder: PendingOrder = {
         id: `PO-${Date.now()}`,
         items: [...state.items],
         orderType: state.orderType,
         timestamp: new Date().toISOString(),
+        tableName: action.payload?.tableName,
       };
       state.pendingOrders.push(newPendingOrder);
       state.items = [];
@@ -130,18 +138,38 @@ const cartSlice = createSlice({
       state.isLoading = true;
     });
     builder.addCase(loadCartFromDB.fulfilled, (state, action) => {
-      state.items = action.payload || [];
+      state.items = action.payload?.items || [];
+      state.pendingOrders = action.payload?.pendingOrders || [];
       state.isLoading = false;
     });
     builder.addCase(loadCartFromDB.rejected, (state) => {
       state.items = [];
+      state.pendingOrders = [];
       state.isLoading = false;
     });
   }
 });
 
+export const saveToPendingOrdersThunk = createAsyncThunk(
+  "cart/saveToPendingOrdersThunk",
+  async (payload: { tableName?: string } | undefined, { dispatch, getState }) => {
+    dispatch(saveToPendingOrders(payload));
+    const state = getState() as { cart: CartState };
+    await savePendingOrdersToDB(state.cart.pendingOrders);
+  }
+);
+
+export const restoreFromPendingThunk = createAsyncThunk(
+  "cart/restoreFromPendingThunk",
+  async (id: string, { dispatch, getState }) => {
+    dispatch(restoreFromPending(id));
+    const state = getState() as { cart: CartState };
+    // Immediately persist the removed item back to DB
+    await savePendingOrdersToDB(state.cart.pendingOrders);
+  }
+);
+
 export const { addToCart, updateQuantity, updateItemVariation, clearCart, setCart, setOrderType, saveToPendingOrders, restoreFromPending } =
   cartSlice.actions;
 
 export default cartSlice.reducer;
-

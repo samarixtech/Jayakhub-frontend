@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { SettingsData } from "@/types";
 import { useProfileSettings } from "../hooks/useProfileSettings";
 import { ProfileImageUpload } from "../components/ProfileImageUpload";
+import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
 
 import {
   Card,
@@ -48,6 +49,10 @@ export default function ProfileView({
     handleSubmit,
     profile,
   } = useProfileSettings(settings);
+
+  if (!settings) {
+    return <SettingsSkeleton />;
+  }
 
   return (
     <Card className="py-6">

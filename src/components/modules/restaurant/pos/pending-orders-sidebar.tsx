@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store/store";
-import { restoreFromPending } from "@/redux/slices/cartSlice";
+import { restoreFromPendingThunk } from "@/redux/slices/cartSlice";
 import { ShoppingCart } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -24,7 +24,7 @@ export default function PendingOrdersSidebar({ open, onOpenChange }: PendingOrde
             toast.error("Please clear or pay for the current cart before restoring a pending order.");
             return;
         }
-        dispatch(restoreFromPending(id));
+        dispatch(restoreFromPendingThunk(id));
         toast.success("Order restored to cart!");
         onOpenChange(false);
     };
@@ -52,7 +52,7 @@ export default function PendingOrdersSidebar({ open, onOpenChange }: PendingOrde
                             }, 0);
 
                             // Try to get a table name from items, fallback to orderType
-                            const displayName = order.items[0]?.tableName || (order.orderType === "Dine-In" ? "Table" : order.orderType);
+                            const displayName = order.tableName || order.items[0]?.tableName || (order.orderType === "Dine-In" ? "Table" : order.orderType);
 
                             // Format time ago roughly
                             const timeAgoMs = Date.now() - new Date(order.timestamp).getTime();
@@ -60,20 +60,21 @@ export default function PendingOrdersSidebar({ open, onOpenChange }: PendingOrde
                             const timeAgoStr = minutesAgo < 1 ? "Just now" : `${minutesAgo}m ago`;
 
                             return (
-                                <div key={order.id} className="border border-gray-100 rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow cursor-default group relative">
+                                <div
+                                    key={order.id}
+                                    onClick={() => handleRestore(order.id)}
+                                    className="border border-gray-100 rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:bg-gray-50 group relative"
+                                >
                                     <div className="flex justify-between items-center mb-1">
                                         <span className="text-[13px] font-black text-[#1eb589] tracking-tight">{displayName}</span>
                                         <span className="text-[11px] text-[#8ea89a] font-medium">{timeAgoStr}</span>
                                     </div>
                                     <div className="text-[11px] text-[#556977] font-medium flex justify-between items-center mt-2">
                                         <span>{itemTotal} items · ${priceTotal.toFixed(2)}</span>
-                                        <button
-                                            onClick={() => handleRestore(order.id)}
-                                            className="text-[#357252] hover:bg-[#e6f4ef] p-1.5 rounded-md transition-colors flex items-center gap-1.5 font-bold"
-                                        >
+                                        <div className="text-[#357252] group-hover:bg-[#e6f4ef] p-1.5 rounded-md transition-colors flex items-center gap-1.5 font-bold">
                                             <ShoppingCart className="w-3.5 h-3.5" />
                                             Cart
-                                        </button>
+                                        </div>
                                     </div>
                                 </div>
                             );

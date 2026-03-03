@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { getPosItems } from "@/app/actions/restaurant/pos";
+import { getTablesAction } from "@/app/actions/restaurant/tables";
+import { getTableStatusesFromDB } from "@/lib/indexedDB";
 
 export type CartItem = {
     id: number;
@@ -35,6 +37,8 @@ interface POSContextType {
     posItems: any[];
     globalCategories: string[];
     isPosLoading: boolean;
+    selectedTable: { id: string; name: string; status: string } | null;
+    setSelectedTable: (table: { id: string; name: string; status: string } | null) => void;
 }
 
 const POSContext = createContext<POSContextType | undefined>(undefined);
@@ -51,6 +55,37 @@ export function POSProvider({ children }: { children: ReactNode }) {
     const [posItems, setPosItems] = useState<any[]>([]);
     const [globalCategories, setGlobalCategories] = useState<string[]>([]);
     const [isPosLoading, setIsPosLoading] = useState(false);
+
+    // Global Table State
+    const [selectedTable, setSelectedTable] = useState<{ id: string; name: string; status: string } | null>(null);
+
+    // Initial DB Fetch for Selected Table (runs once or when context mounts)
+    useEffect(() => {
+        const fetchInitialTable = async () => {
+            try {
+                const [apiRes, dbStatuses] = await Promise.all([
+                    getTablesAction(),
+                    getTableStatusesFromDB(),
+                ]);
+                if (apiRes.success && apiRes.data) {
+                    const selectedDbStatus = dbStatuses.find(s => s.status === "Selected");
+                    if (selectedDbStatus) {
+                        const tableData = apiRes.data.find((t: any) => t.id === selectedDbStatus.id);
+                        if (tableData) {
+                            setSelectedTable({
+                                id: tableData.id,
+                                name: tableData.name || tableData.id,
+                                status: "Selected"
+                            });
+                        }
+                    }
+                }
+            } catch (err) {
+                // silent
+            }
+        };
+        fetchInitialTable();
+    }, []);
 
     useEffect(() => {
         let isMounted = true;
@@ -155,7 +190,9 @@ export function POSProvider({ children }: { children: ReactNode }) {
                 setActiveCategory,
                 posItems,
                 globalCategories,
-                isPosLoading
+                isPosLoading,
+                selectedTable,
+                setSelectedTable
             }}
         >
             {children}

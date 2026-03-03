@@ -10,6 +10,7 @@ import { useServerAction } from "@/hooks/use-server-action";
 import { updateRestaurantScheduleAction } from "@/app/actions/restaurant/settings";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
 
 function formatTimeForInput(timeStr: string): string {
   if (!timeStr) return "";
@@ -114,6 +115,10 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
     );
     updateSchedule(payload);
   };
+
+  if (!settings) {
+    return <SettingsSkeleton />;
+  }
 
   return (
     <Card className="py-6">
