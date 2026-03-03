@@ -1,0 +1,48 @@
+"use client";
+
+interface ReviewFilterPillsProps {
+  filter: string;
+  onFilterChange: (filter: string) => void;
+}
+
+const ReviewFilterPills: React.FC<ReviewFilterPillsProps> = ({
+  filter,
+  onFilterChange,
+}) => {
+  const getPillClass = (activeName: string) => {
+    return filter === activeName
+      ? "bg-[#357252] text-white px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors"
+      : "bg-white border text-gray-700 hover:bg-gray-50 border-gray-200 px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors";
+  };
+
+  return (
+    <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
+      <button
+        onClick={() => onFilterChange("All")}
+        className={getPillClass("All")}
+      >
+        All Reviews
+      </button>
+      <button
+        onClick={() => onFilterChange("Unreplied")}
+        className={getPillClass("Unreplied")}
+      >
+        Unreplied
+      </button>
+      <button
+        onClick={() => onFilterChange("5 Stars")}
+        className={getPillClass("5 Stars")}
+      >
+        5 Stars
+      </button>
+      <button
+        onClick={() => onFilterChange("Critical")}
+        className={getPillClass("Critical") + " flex items-center gap-1"}
+      >
+        Critical (1-3) <span className="text-[10px]">▼</span>
+      </button>
+    </div>
+  );
+};
+
+export default ReviewFilterPills;

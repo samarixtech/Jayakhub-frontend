@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Clock, Loader2, Save } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -28,7 +28,16 @@ const DAYS_ORDER = [
   "Sunday",
 ];
 
-export function HoursTab({ settings }: { settings: SettingsData | null }) {
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+
+export function HoursView({ settings }: { settings: SettingsData | null }) {
   const router = useRouter();
   const initialSchedules = React.useMemo(() => {
     // Ensure all days are present, default to closed if missing
@@ -107,90 +116,87 @@ export function HoursTab({ settings }: { settings: SettingsData | null }) {
   };
 
   return (
-    <div className="p-6">
-      <div className="mb-6 border-b border-gray-100 pb-4">
-        <h2 className="text-lg font-bold text-gray-900">Operating Hours</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+    <Card className="py-6">
+      <CardHeader>
+        <CardTitle className="text-lg font-bold">Operating Hours</CardTitle>
+        <CardDescription className="text-gray-500">
           Set your weekly opening and closing times.
-        </p>
-      </div>
-
-      <div className="space-y-0 text-sm">
-        {/* Header Row */}
-        <div className="flex items-center gap-4 pb-2 mb-2 border-b border-gray-100 text-gray-500 font-medium px-2">
-          <span className="w-[120px]">Day</span>
-          <span className="w-[120px] text-center">Open Time</span>
-          <span className="w-4"></span>
-          <span className="w-[120px] text-center">Close Time</span>
-          <div className="flex-1" />
-          <span className="w-[60px] text-right">Status</span>
-        </div>
-
-        {schedules.map((schedule, index) => (
-          <div
-            key={schedule.dayOfWeek}
-            className={`flex items-center gap-4 py-3 border-b border-gray-50 last:border-b-0 px-2 transition-colors rounded-lg hover:bg-gray-50/50 ${schedule.isClosed ? "opacity-60" : ""}`}
-          >
-            {/* Day */}
-            <span className="w-[120px] font-medium text-gray-700">
-              {schedule.dayOfWeek}
-            </span>
-
-            {/* Open Time */}
-            <div className="relative">
-              <Input
-                type="time"
-                value={formatTimeForInput(schedule.openTime)}
-                onChange={(e) =>
-                  handleTimeChange(index, "openTime", e.target.value)
-                }
-                disabled={schedule.isClosed}
-                className="h-9 w-[120px] text-center border-gray-200 focus-visible:ring-primary/20 bg-white"
-              />
-            </div>
-
-            <span className="text-gray-400 w-4 text-center text-xs">to</span>
-
-            {/* Close Time */}
-            <div className="relative">
-              <Input
-                type="time"
-                value={formatTimeForInput(schedule.closeTime)}
-                onChange={(e) =>
-                  handleTimeChange(index, "closeTime", e.target.value)
-                }
-                disabled={schedule.isClosed}
-                className="h-9 w-[120px] text-center border-gray-200 focus-visible:ring-primary/20 bg-white"
-              />
-            </div>
-
-            {/* Spacer */}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-0 text-sm">
+          {/* Header Row */}
+          <div className="flex items-center gap-4 pb-2 mb-2 border-b border-border text-muted-foreground font-medium px-2">
+            <span className="w-[120px]">Day</span>
+            <span className="w-[120px] text-center">Open Time</span>
+            <span className="w-4"></span>
+            <span className="w-[120px] text-center">Close Time</span>
             <div className="flex-1" />
-
-            {/* Toggle */}
-            <div className="w-[60px] flex justify-end">
-              <Switch
-                checked={!schedule.isClosed}
-                onCheckedChange={() => handleToggleClosed(index)}
-                className="data-[state=checked]:bg-emerald-600 data-[state=unchecked]:bg-gray-200"
-              />
-            </div>
+            <span className="w-[60px] text-right">Status</span>
           </div>
-        ))}
-      </div>
 
-      <div className="mt-8 flex justify-end">
+          {schedules.map((schedule, index) => (
+            <div
+              key={schedule.dayOfWeek}
+              className={`flex items-center gap-4 py-3 border-b border-border/50 last:border-b-0 px-2 transition-colors rounded-lg hover:bg-muted/50 ${schedule.isClosed ? "opacity-60" : ""}`}
+            >
+              {/* Day */}
+              <span className="w-[120px] font-medium text-foreground">
+                {schedule.dayOfWeek}
+              </span>
+
+              {/* Open Time */}
+              <div className="relative">
+                <Input
+                  type="time"
+                  value={formatTimeForInput(schedule.openTime)}
+                  onChange={(e) =>
+                    handleTimeChange(index, "openTime", e.target.value)
+                  }
+                  disabled={schedule.isClosed}
+                  className="h-9 w-[120px] text-center bg-background"
+                />
+              </div>
+
+              <span className="text-muted-foreground w-4 text-center text-xs">
+                to
+              </span>
+
+              {/* Close Time */}
+              <div className="relative">
+                <Input
+                  type="time"
+                  value={formatTimeForInput(schedule.closeTime)}
+                  onChange={(e) =>
+                    handleTimeChange(index, "closeTime", e.target.value)
+                  }
+                  disabled={schedule.isClosed}
+                  className="h-9 w-[120px] text-center bg-background"
+                />
+              </div>
+
+              {/* Spacer */}
+              <div className="flex-1" />
+
+              {/* Toggle */}
+              <div className="w-[60px] flex justify-end">
+                <Switch
+                  checked={!schedule.isClosed}
+                  onCheckedChange={() => handleToggleClosed(index)}
+                  className="data-[state=checked]:bg-emerald-600 data-[state=unchecked]:bg-gray-200"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end border-t border-border pt-6 mt-2">
         <Button
           onClick={handleSubmit}
           disabled={isPending || !isDirty}
           className={`
-                min-w-[140px] transition-all duration-300 gap-2
-                ${
-                  !isDirty || isPending
-                    ? "bg-gray-200 text-gray-400 hover:bg-gray-200 cursor-not-allowed"
-                    : "bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                }
-            `}
+            min-w-[140px] transition-all duration-300 gap-2
+          `}
         >
           {isPending ? (
             <>
@@ -204,7 +210,7 @@ export function HoursTab({ settings }: { settings: SettingsData | null }) {
             </>
           )}
         </Button>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }

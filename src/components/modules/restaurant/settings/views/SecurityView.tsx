@@ -1,54 +1,24 @@
 "use client";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  getAccountSettingsAction,
-  setNewPasswordAction,
-} from "@/app/actions/restaurant/settings";
-import { changePasswordAction } from "@/app/actions/customer/userprofile";
-import toast from "react-hot-toast";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
-  setPasswordSchema,
-  changePasswordSchema,
-  SetPasswordInput,
-  ChangePasswordInput,
-} from "@/lib/schemas/restaurant-security";
+  useSecuritySettings,
+  useSetPasswordForm,
+  useChangePasswordForm,
+} from "../hooks/useSecuritySettings";
 
-export function SecurityTab() {
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [verifiedVia, setVerifiedVia] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
-  useEffect(() => {
-    async function fetchSettings() {
-      try {
-        const res = await getAccountSettingsAction();
-        console.log("security response", res || "undefined");
-        if (res.success && res.data) {
-          const profile = res.data.data?.profile || res.data.profile;
-
-          if (profile) {
-            setVerifiedVia(profile.verifiedVia || "email");
-            setEmail(profile.ownerEmail || "");
-          }
-        }
-      } catch (error) {
-        toast.error("Failed to fetch security settings");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchSettings();
-  }, []);
-
-  const isGoogleOnly = verifiedVia === "google";
+export default function SecurityView() {
+  const { loading, isGoogleOnly, email } = useSecuritySettings();
 
   if (loading) {
     return (
@@ -59,52 +29,36 @@ export function SecurityTab() {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-6 border-b border-gray-100 pb-4">
-        <h2 className="text-lg font-bold text-gray-900">Security</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
+    <Card className="py-6">
+      <CardHeader>
+        <CardTitle className="text-lg font-bold">Security</CardTitle>
+        <CardDescription className="text-gray-500">
           {isGoogleOnly
             ? `You are logged in via Google (${email}). You can set a password for this account.`
             : "Update your password securely."}
-        </p>
-      </div>
-
-      {isGoogleOnly ? <SetPasswordForm /> : <ChangePasswordForm />}
-    </div>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isGoogleOnly ? <SetPasswordForm /> : <ChangePasswordForm />}
+      </CardContent>
+    </Card>
   );
 }
 
 function SetPasswordForm() {
-  const [submitting, setSubmitting] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-    reset,
-  } = useForm<SetPasswordInput>({
-    resolver: zodResolver(setPasswordSchema),
-    mode: "onChange",
-  });
-
-  const onSubmit = async (data: SetPasswordInput) => {
-    setSubmitting(true);
-    try {
-      const res = await setNewPasswordAction(data.password);
-      if (res.success) {
-        toast.success(res.message);
-        reset();
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    submitting,
+    showPassword,
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
+    form: {
+      register,
+      handleSubmit,
+      formState: { errors, isValid },
+    },
+    onSubmit,
+  } = useSetPasswordForm();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
@@ -178,42 +132,21 @@ function SetPasswordForm() {
 }
 
 function ChangePasswordForm() {
-  const [submitting, setSubmitting] = useState(false);
-  const [showOldPassword, setShowOldPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-    reset,
-  } = useForm<ChangePasswordInput>({
-    resolver: zodResolver(changePasswordSchema),
-    mode: "onChange",
-  });
-
-  const onSubmit = async (data: ChangePasswordInput) => {
-    setSubmitting(true);
-    try {
-      const res = await changePasswordAction({
-        oldPassword: data.oldPassword,
-        newPassword: data.newPassword,
-        confirmPassword: data.confirmPassword,
-      });
-
-      if (res.success) {
-        toast.success(res.message);
-        reset();
-      } else {
-        toast.error(res.message);
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+    submitting,
+    showOldPassword,
+    setShowOldPassword,
+    showNewPassword,
+    setShowNewPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
+    form: {
+      register,
+      handleSubmit,
+      formState: { errors, isValid },
+    },
+    onSubmit,
+  } = useChangePasswordForm();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">

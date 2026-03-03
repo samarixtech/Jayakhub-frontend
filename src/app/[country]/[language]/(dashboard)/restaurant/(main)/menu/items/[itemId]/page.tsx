@@ -13,5 +13,5 @@ interface EditItemPageProps {
 
 export default async function EditItemPage({ params }: EditItemPageProps) {
   const { itemId } = await params;
-  return <AddNewItemView itemId={itemId} />;
+  return <AddNewItemView />;
 }

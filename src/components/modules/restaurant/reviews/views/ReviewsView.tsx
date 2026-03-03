@@ -1,32 +1,25 @@
 "use client";
-import { Calendar } from "lucide-react";
 
-import ReviewsStats from "./ReviewsStats";
-import ReviewsCharts from "./ReviewsCharts";
-import ReviewList from "./ReviewList";
-import { useServerAction } from "@/hooks/use-server-action";
-import { getReviewsAnalyticsAction } from "@/app/actions/restaurant/reviews";
+import { Calendar } from "lucide-react";
+import ReviewsStats from "../components/ReviewsStats";
+import ReviewsCharts from "../components/ReviewsCharts";
+import ReviewList from "../components/ReviewList";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
+import { useReviews } from "../hooks/useReviews";
 
 export default function ReviewsView() {
-  const [data, setData] = useState<any>(null);
-
-  const { execute: fetchAnalytics, isPending } = useServerAction(
-    getReviewsAnalyticsAction,
-    {
-      onSuccess: (resData: any) => {
-        // Handle wrapper if present
-        const unwrapped = resData?.data ? resData.data : resData;
-        setData(unwrapped);
-      },
-      suppressSuccessToast: true,
-    },
-  );
-
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
+  const {
+    data,
+    stats,
+    filteredReviews,
+    fetchAnalytics,
+    isPending,
+    filter,
+    setFilter,
+    selectedReview,
+    handleOrderClick,
+    closeDetailSheet,
+  } = useReviews();
 
   return (
     <div className="w-full max-w-[1024px] mx-auto space-y-6 px-4 md:px-0">
@@ -50,13 +43,21 @@ export default function ReviewsView() {
       ) : (
         <>
           {/* Metrics Cards Row */}
-          <ReviewsStats summary={data.summary} />
+          <ReviewsStats summary={stats} />
 
           {/* Charts Row */}
-          <ReviewsCharts summary={data.summary} />
+          <ReviewsCharts summary={stats} />
 
           {/* Reviews List Section (includes filter pills and details sheet) */}
-          <ReviewList reviews={data.reviews} refetch={fetchAnalytics} />
+          <ReviewList
+            filteredReviews={filteredReviews}
+            filter={filter}
+            onFilterChange={setFilter}
+            selectedReview={selectedReview}
+            onOrderClick={handleOrderClick}
+            onCloseDetail={closeDetailSheet}
+            refetch={fetchAnalytics}
+          />
         </>
       )}
     </div>

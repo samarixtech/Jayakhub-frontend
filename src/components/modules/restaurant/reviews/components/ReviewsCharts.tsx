@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -41,6 +40,7 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
   };
 
   // -------- Rating Trend Chart Config --------
+
   // Transform trend data strictly ensuring length match
   const trendLabels =
     safeSummary.trend.length > 0

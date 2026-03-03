@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Star } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
-import { ReviewItem } from "./types";
+import { ReviewItem } from "../../restaurant.types";
 import { useServerAction } from "@/hooks/use-server-action";
 import { replyToReviewAction } from "@/app/actions/restaurant/reviews";
 import { toast } from "react-hot-toast";

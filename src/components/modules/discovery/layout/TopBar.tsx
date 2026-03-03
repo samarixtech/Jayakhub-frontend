@@ -1,14 +1,12 @@
 "use client";
-
 import Link from "next/link";
-
 import { TopBarProps } from "@/components/modules/discovery/discovery.types";
 
 const TopBar = ({ isScrolled }: TopBarProps) => {
   const links = [
     { label: "Our Business Website", href: "/home" },
     {
-      label: "Sign for a Restaurant Account",
+      label: "Sign up for a Restaurant Account",
       href: "/restaurant-register",
     },
     {

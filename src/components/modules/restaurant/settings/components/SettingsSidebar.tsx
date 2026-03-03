@@ -68,8 +68,6 @@ export function SettingsSidebar() {
       </h2>
       <div className="flex flex-row md:flex-col gap-2 md:gap-1 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
         {tabs.map((tab) => {
-          // Check if the current path starts with the tab href to keep it active
-          // For exact matching on sub-routes if needed, but simple includes/startsWith is often enough for tabs
           const isActive = pathname?.includes(tab.href);
 
           return (

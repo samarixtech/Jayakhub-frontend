@@ -9,28 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { X, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
 
-// Temporary types - ideally move to a types file
-export interface OrderItem {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-}
-
-export interface Order {
-  id: string;
-  customerName: string;
-  customerPhone: string;
-  status: string;
-  date: string;
-  items: OrderItem[];
-  subtotal: number;
-  tax: number;
-  total: number;
-  originalStatus?: string;
-}
+import { UIOrder as Order } from "../hooks/useOrders";
 
 interface OrderDetailsSheetProps {
   order: Order | null;
@@ -102,7 +82,9 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           disabled={!!updatingAction}
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
         >
-          {updatingAction === "prepare" ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          {updatingAction === "prepare" ? (
+            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          ) : null}
           Start Preparing
         </Button>
       );
@@ -116,7 +98,9 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           disabled={!!updatingAction}
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
         >
-          {updatingAction === "ready" ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+          {updatingAction === "ready" ? (
+            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          ) : null}
           Mark as Ready
         </Button>
       );
@@ -235,7 +219,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           </div>
         </div>
 
-        {/* Footer Actions - Only render if there are actions */}
+        {/* Footer Actions, Only render if there are actions */}
         {footerContent && (
           <div className="p-6 border-t border-gray-100 bg-gray-50/50 sticky bottom-0 flex-none">
             {footerContent}

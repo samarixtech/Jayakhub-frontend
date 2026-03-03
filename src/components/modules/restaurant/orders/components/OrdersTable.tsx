@@ -3,7 +3,7 @@ import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { Badge } from "@/components/ui/badge";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Order } from "./OrderDetailsSheet"; // Importing types
+import { UIOrder as Order } from "../hooks/useOrders";
 
 interface OrdersTableProps {
   data: Order[];
@@ -112,7 +112,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
         totalPages,
         onPageChange,
       }}
-      onRowClick={onViewOrder} // Make the whole row clickable too
+      onRowClick={onViewOrder}
     />
   );
 };

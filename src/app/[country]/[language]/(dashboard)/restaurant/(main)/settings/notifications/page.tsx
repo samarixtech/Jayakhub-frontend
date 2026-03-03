@@ -1,17 +1,9 @@
-import { NotificationsTab } from "@/components/modules/restaurant/settings/tabs/NotificationsTab";
+import { NotificationsView } from "@/components/modules/restaurant/settings/views/NotificationsView";
 
 export default function NotificationsPage() {
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-        <p className="text-sm text-gray-500">
-          Manage your notification preferences.
-        </p>
-      </div>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <NotificationsTab />
-      </div>
+      <NotificationsView />
     </div>
   );
 }
