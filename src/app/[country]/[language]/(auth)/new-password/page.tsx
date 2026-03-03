@@ -1,4 +1,4 @@
-import NewPasswordView from "@/components/modules/auth/NewPasswordView";
+import NewPasswordView from "@/components/modules/auth/views/NewPasswordView";
 import React from "react";
 
 const page = () => {

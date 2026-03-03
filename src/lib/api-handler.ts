@@ -1,4 +1,6 @@
-// @/lib/api-handler.ts
+/*
+ * @DESC: API HANDLER IS USED HERE TO HANDLE THE API REQUESTS
+ */
 
 export interface ActionResponse<T = any> {
   success: boolean;
@@ -13,7 +15,6 @@ export async function handleApiRequest<T>(
   try {
     const response = await requestFn();
 
-    // Adjust these keys based on your actual Backend JSON structure
     return {
       success: true,
       message: response.data?.meta?.message || "Success",

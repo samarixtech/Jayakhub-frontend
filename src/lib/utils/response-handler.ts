@@ -15,10 +15,6 @@ export async function responseHandler<T>(
   try {
     const response = await apiCall();
 
-    // Check for our API standard structure if applicable (meta + data)
-    // Or just assume 'response' is the data depending on the axios client setup
-    // The existing code used response.data.data etc.
-
     const responseData = response.data || response;
 
     // Check if meta.status exists (API convention in this project)

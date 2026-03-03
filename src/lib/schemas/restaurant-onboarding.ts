@@ -1,14 +1,12 @@
 import { z } from "zod";
 
-// Step 1: Owner Info
+// ========== OWNER INFO SCHEMA ==========
 export const ownerInfoSchema = z.object({
   ownerName: z.string().min(2, "Name must be at least 2 characters"),
   ownerPhone: z.string().min(10, "Phone number must be at least 10 characters"),
 });
 
-export type OwnerInfoInput = z.infer<typeof ownerInfoSchema>;
-
-// Step 2: Restaurant Info
+// ========== RESTAURANT INFO SCHEMA ==========
 export const restaurantInfoSchema = z.object({
   restaurantName: z.string().min(2, "Restaurant name is required"),
   restaurantPhone: z.string().min(10, "Phone number is required"),
@@ -30,23 +28,20 @@ export const restaurantInfoSchema = z.object({
   banner: z.any().optional(),
 });
 
-export type RestaurantInfoInput = z.infer<typeof restaurantInfoSchema>;
-
-// Step 3: Brand Assets
+// ========== BRAND ASSETS SCHEMA ==========
 export const brandAssetsSchema = z.object({
   logo: z.any().optional(),
   banner: z.any().optional(),
 });
 
-export type BrandAssetsInput = z.infer<typeof brandAssetsSchema>;
-
-// Step 3: Schedule
+// ========== DAY SCHEDULE SCHEMA ==========
 const dayScheduleSchema = z.object({
   isOpen: z.boolean().default(true),
   openTime: z.string().optional(),
   closeTime: z.string().optional(),
 });
 
+// ========== SCHEDULE SCHEMA ==========
 export const scheduleSchema = z.object({
   monday: dayScheduleSchema,
   tuesday: dayScheduleSchema,
@@ -57,9 +52,7 @@ export const scheduleSchema = z.object({
   sunday: dayScheduleSchema,
 });
 
-export type ScheduleInput = z.infer<typeof scheduleSchema>;
-
-// Step 4: License
+// ========== LICENSE SCHEMA ==========
 export const licenseSchema = z.object({
   // licenseNumber removed as per request
   licenseFile: z
@@ -70,9 +63,7 @@ export const licenseSchema = z.object({
     ),
 });
 
-export type LicenseInput = z.infer<typeof licenseSchema>;
-
-// Step 4: KYC
+// ========== KYC SCHEMA ==========
 export const kycSchema = z.object({
   documentType: z.enum(["national_id", "driving_license", "passport"]),
   documentFile: z
@@ -83,9 +74,7 @@ export const kycSchema = z.object({
     ),
 });
 
-export type KycInput = z.infer<typeof kycSchema>;
-
-// Step 6: Bank Details
+// ========== BANK DETAILS SCHEMA ==========
 export const bankDetailsSchema = z.object({
   accountTitle: z.string().min(3, "Account Title is required"),
   bankName: z.string().min(1, "Select a bank"),
@@ -93,9 +82,7 @@ export const bankDetailsSchema = z.object({
   iban: z.string().min(23, "IBAN must be at least 23 characters"),
 });
 
-export type BankDetailsInput = z.infer<typeof bankDetailsSchema>;
-
-// Step 7: Final Registration API Payload for /onboarding/register
+// ========== FINAL REGISTRATION API PAYLOAD FOR /ONBOARDING/REGISTER ==========
 export const restaurantRegistrationSchema = z.object({
   name: z.string(),
   email: z.string().email(),
@@ -116,6 +103,14 @@ export const restaurantRegistrationSchema = z.object({
   bannerImage: z.string().optional(),
 });
 
+// TYPE INFERECES
+export type OwnerInfoInput = z.infer<typeof ownerInfoSchema>;
+export type RestaurantInfoInput = z.infer<typeof restaurantInfoSchema>;
+export type BrandAssetsInput = z.infer<typeof brandAssetsSchema>;
+export type ScheduleInput = z.infer<typeof scheduleSchema>;
+export type LicenseInput = z.infer<typeof licenseSchema>;
+export type KycInput = z.infer<typeof kycSchema>;
+export type BankDetailsInput = z.infer<typeof bankDetailsSchema>;
 export type RestaurantRegistrationInput = z.infer<
   typeof restaurantRegistrationSchema
 >;

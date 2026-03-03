@@ -1,9 +1,12 @@
 import { z } from "zod";
+
+// ========== LOGIN SCHEMA ==========
 export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+// ========== REGISTER SCHEMA ==========
 export const registerSchema = z
   .object({
     name: z
@@ -36,10 +39,12 @@ export const registerSchema = z
     path: ["confirmPassword"],
   });
 
+// ========== FORGOT PASSWORD SCHEMA ==========
 export const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
 
+// ========== RESET PASSWORD SCHEMA ==========
 export const resetPasswordSchema = z
   .object({
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -52,11 +57,13 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+// ========== OTP SCHEMA ==========
 export const otpSchema = z.object({
   email: z.string().email("Invalid email"),
   otp: z.string().min(4, "OTP must be valid"),
 });
 
+// ========== TYPE INFERENCES ==========
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;

@@ -1,4 +1,4 @@
-import VerifyOtpView from "@/components/modules/auth/VerifyOtpView";
+import VerifyOtpView from "@/components/modules/auth/views/VerifyOtpView";
 
 const page = () => {
   return <VerifyOtpView />;

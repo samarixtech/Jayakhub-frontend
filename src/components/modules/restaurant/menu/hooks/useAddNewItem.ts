@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useServerAction } from "@/hooks/use-server-action";
 import {
   createItemAction,
@@ -10,13 +10,12 @@ import {
   getVariantGroupsAction,
 } from "@/app/actions/restaurant/menu";
 import { toast } from "react-hot-toast";
-import { useLocalizedRouter } from "@/hooks/use-localized-router";
 
 export const useAddNewItem = () => {
   const params = useParams();
   const itemId = (params.itemId || params.id) as string;
   const isEditMode = !!itemId;
-  const router = useLocalizedRouter();
+  const router = useRouter();
 
   const [categories, setCategories] = useState<any[]>([]);
   const [variantGroups, setVariantGroups] = useState<any[]>([]);

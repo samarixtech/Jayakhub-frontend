@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import UserFormView from "@/components/modules/restaurant/users/UserFormView";
+import UserFormView from "@/components/modules/restaurant/users/views/UserFormView";
 
 export const metadata: Metadata = {
   title: "Edit User | Restaurant Dashboard",

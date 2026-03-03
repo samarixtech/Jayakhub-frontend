@@ -1,3 +1,7 @@
+/*
+ * @DESC: VALIDATOR IS USED HERE TO VALIDATE THE ZOD SCHEMA
+ */
+
 import { z } from "zod";
 
 export type ValidationResult<T> =
