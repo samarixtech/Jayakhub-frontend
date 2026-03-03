@@ -14,7 +14,7 @@ import { useLocalizedRouter } from "@/hooks/use-localized-router";
 
 export const useAddNewItem = () => {
   const params = useParams();
-  const itemId = params.id as string;
+  const itemId = (params.itemId || params.id) as string;
   const isEditMode = !!itemId;
   const router = useLocalizedRouter();
 

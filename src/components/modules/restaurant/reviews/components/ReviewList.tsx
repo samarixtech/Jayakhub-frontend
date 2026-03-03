@@ -1,63 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
 import { Star, Reply } from "lucide-react";
-import { ReviewItem } from "./types";
+import { ReviewItem } from "../../restaurant.types";
 import ReviewDetailSheet from "./ReviewDetailSheet";
+import ReviewFilterPills from "./ReviewFilterPills";
 
 interface ReviewListProps {
-  reviews: ReviewItem[];
+  filteredReviews: ReviewItem[];
+  filter: string;
+  onFilterChange: (filter: string) => void;
+  selectedReview: ReviewItem | null;
+  onOrderClick: (review: ReviewItem) => void;
+  onCloseDetail: () => void;
   refetch: () => void;
 }
 
-export default function ReviewList({ reviews, refetch }: ReviewListProps) {
-  const [selectedReview, setSelectedReview] = useState<ReviewItem | null>(null);
-  const [filter, setFilter] = useState("All");
-
-  const safeReviews = reviews || [];
-
-  const filteredReviews = safeReviews.filter((review) => {
-    if (filter === "Unreplied") return review.reply === null;
-    if (filter === "5 Stars") return review.rating === 5;
-    if (filter === "Critical") return review.rating >= 1 && review.rating <= 3;
-    return true; // "All"
-  });
-
-  const getPillClass = (activeName: string) => {
-    return filter === activeName
-      ? "bg-[#357252] text-white px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors"
-      : "bg-white border text-gray-700 hover:bg-gray-50 border-gray-200 px-5 py-2 rounded-full text-[12px] font-bold whitespace-nowrap transition-colors";
-  };
-
+export default function ReviewList({
+  filteredReviews,
+  filter,
+  onFilterChange,
+  selectedReview,
+  onOrderClick,
+  onCloseDetail,
+  refetch,
+}: ReviewListProps) {
   return (
     <div className="flex flex-col gap-4 mt-8">
       {/* Filter Pills */}
-      <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
-        <button
-          onClick={() => setFilter("All")}
-          className={getPillClass("All")}
-        >
-          All Reviews
-        </button>
-        <button
-          onClick={() => setFilter("Unreplied")}
-          className={getPillClass("Unreplied")}
-        >
-          Unreplied
-        </button>
-        <button
-          onClick={() => setFilter("5 Stars")}
-          className={getPillClass("5 Stars")}
-        >
-          5 Stars
-        </button>
-        <button
-          onClick={() => setFilter("Critical")}
-          className={getPillClass("Critical") + " flex items-center gap-1"}
-        >
-          Critical (1-3) <span className="text-[10px]">▼</span>
-        </button>
-      </div>
+      <ReviewFilterPills filter={filter} onFilterChange={onFilterChange} />
 
       {/* Review Cards */}
       <div className="flex flex-col gap-4">
@@ -85,7 +55,7 @@ export default function ReviewList({ reviews, refetch }: ReviewListProps) {
           return (
             <div
               key={review.id}
-              onClick={() => setSelectedReview(review)}
+              onClick={() => onOrderClick(review)}
               className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm flex flex-col gap-4 cursor-pointer hover:border-[#357252]/30 transition-colors"
             >
               <div className="flex justify-between items-start">
@@ -121,7 +91,7 @@ export default function ReviewList({ reviews, refetch }: ReviewListProps) {
                     className="flex items-center gap-2 text-[#357252] text-[12px] font-bold hover:underline"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedReview(review);
+                      onOrderClick(review);
                     }}
                   >
                     <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
@@ -154,7 +124,7 @@ export default function ReviewList({ reviews, refetch }: ReviewListProps) {
 
       <ReviewDetailSheet
         review={selectedReview}
-        onClose={() => setSelectedReview(null)}
+        onClose={onCloseDetail}
         refetch={refetch}
       />
     </div>
