@@ -3,7 +3,14 @@
 import React, { useState } from "react";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GlobalModal } from "@/components/common/GlobalModal";
-import { Check, Printer, Loader2, Banknote, CreditCard, Smartphone } from "lucide-react";
+import {
+  Check,
+  Printer,
+  Loader2,
+  Banknote,
+  CreditCard,
+  Smartphone,
+} from "lucide-react";
 import { usePOS } from "@/context/POSContext";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "@/redux/slices/cartSlice";
@@ -33,7 +40,7 @@ export default function PaymentModal({
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Total logic wrapper for rendering safely
-  const displayTotal = total > 0 ? total : 17.32; // Fallback for UI visualization based on screenshot
+  const displayTotal = total > 0 ? total : 17.32;
   const displaySubtotal = subtotal > 0 ? subtotal : 16.5;
   const displayTax = tax > 0 ? tax : 0.83;
 
@@ -50,12 +57,12 @@ export default function PaymentModal({
     if (method && cartItems.length > 0) {
       setIsProcessing(true);
 
-      const payload = cartItems.map(item => ({
+      const payload = cartItems.map((item) => ({
         cashierItemId: item.cashierItemId || item.id,
         quantity: item.quantity,
         tableName: item.tableName || "Table 5",
         orderType: item.orderType || "Dine-In",
-        paymentMethod: method.charAt(0).toUpperCase() + method.slice(1)
+        paymentMethod: method.charAt(0).toUpperCase() + method.slice(1),
       }));
 
       try {
@@ -76,7 +83,6 @@ export default function PaymentModal({
   };
 
   const handleNewOrder = () => {
-    // Here you'd clear cart etc.
     onOpenChange(false);
   };
 
@@ -305,10 +311,11 @@ export default function PaymentModal({
         <button
           onClick={handleConfirm}
           disabled={!method || isProcessing}
-          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${!method || isProcessing
+          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${
+            !method || isProcessing
               ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
               : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
-            }`}
+          }`}
         >
           {isProcessing ? (
             <Loader2 className="w-5 h-5 animate-spin" />

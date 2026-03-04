@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import Image from "next/image";
 import { usePOS } from "@/context/POSContext";
 import { Plus } from "lucide-react";
@@ -13,14 +11,19 @@ import toast from "react-hot-toast";
 export default function POSMenuGrid() {
   const { posItems, isPosLoading, setIsCartOpen, selectedTable } = usePOS();
   const dispatch = useDispatch<AppDispatch>();
-  const { orderType, pendingOrders } = useSelector((state: RootState) => state.cart);
+  const { orderType, pendingOrders } = useSelector(
+    (state: RootState) => state.cart,
+  );
 
   if (isPosLoading) {
     return (
       <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 overflow-y-auto w-full">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3">
           {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="bg-white rounded-[10px] overflow-hidden flex flex-col h-[150px]">
+            <div
+              key={i}
+              className="bg-white rounded-[10px] overflow-hidden flex flex-col h-[150px]"
+            >
               <Skeleton className="h-[90px] md:h-[100px] w-full rounded-none" />
               <div className="p-2 sm:p-2.5 flex flex-col gap-2">
                 <Skeleton className="h-3 w-3/4 rounded-full" />
@@ -45,7 +48,6 @@ export default function POSMenuGrid() {
     <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 overflow-y-auto w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3">
         {posItems.map((item) => {
-          // Generate appropriate image URL based on DB relative upload vs absolute
           const imageUrl = item.image?.startsWith("http")
             ? item.image
             : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${item.image?.replace(/\\/g, "/")}`;
@@ -54,7 +56,6 @@ export default function POSMenuGrid() {
             <div
               key={item.id}
               onClick={() => {
-                // Table constraints check
                 if (orderType === "Dine-In") {
                   if (!selectedTable) {
                     toast.error("Please select a table before adding items.");
@@ -64,34 +65,43 @@ export default function POSMenuGrid() {
 
                   // Check if the current table is already pending an order
                   const isTablePending = pendingOrders.some(
-                    (order) => order.tableName === selectedTable.name
+                    (order) => order.tableName === selectedTable.name,
                   );
 
                   if (isTablePending) {
-                    toast.error(`Table ${selectedTable.name} already has a pending order.`);
+                    toast.error(
+                      `Table ${selectedTable.name} already has a pending order.`,
+                    );
                     return;
                   }
 
-                  // Check if the table is fundamentally unavailable/occupied
-                  if (selectedTable.status === "Pay Pending" || selectedTable.status === "Occupied") {
-                    toast.error(`Table ${selectedTable.name} is not available.`);
+                  // Check if the table is fundamentally unavailable
+                  if (
+                    selectedTable.status === "Pay Pending" ||
+                    selectedTable.status === "Occupied"
+                  ) {
+                    toast.error(
+                      `Table ${selectedTable.name} is not available.`,
+                    );
                     return;
                   }
                 }
 
-                dispatch(addToCart({
-                  id: item.id,
-                  name: item.name,
-                  description: item.description || "",
-                  price: item.basePrice,
-                  quantity: 1,
-                  image: imageUrl,
-                  variations: item.variations || [],
-                  cashierItemId: item.id, // Set backend id mapping
-                  tableName: selectedTable?.name || "Table",
-                  orderType: orderType,
-                  paymentMethod: "Cash"
-                }));
+                dispatch(
+                  addToCart({
+                    id: item.id,
+                    name: item.name,
+                    description: item.description || "",
+                    price: item.basePrice,
+                    quantity: 1,
+                    image: imageUrl,
+                    variations: item.variations || [],
+                    cashierItemId: item.id,
+                    tableName: selectedTable?.name || "Table",
+                    orderType: orderType,
+                    paymentMethod: "Cash",
+                  }),
+                );
                 // Auto-open cart on mobile when an item is added
                 if (window.innerWidth < 1024) {
                   setIsCartOpen(true);
