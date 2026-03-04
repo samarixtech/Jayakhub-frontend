@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import ChefImg from "../../../../../public/Chef.png";
 
 export default function AuthLayout({
   children,
@@ -106,7 +107,7 @@ export default function AuthLayout({
 
         <div className="relative w-full h-[45%] mt-auto">
           <Image
-            src="/Chef.png"
+            src={ChefImg}
             alt="Authentication Illustration"
             fill
             style={{ objectFit: "contain", objectPosition: "bottom" }}
