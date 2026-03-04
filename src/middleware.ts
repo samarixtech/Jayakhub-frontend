@@ -83,18 +83,30 @@ export async function middleware(request: NextRequest) {
 
     // Role-based access control
     if (isCustomerRoute && role !== "customer") {
-      const redirectPath =
-        role === "restaurant_owner" ? "restaurant/dashboard" : "login";
+      let redirectPath = "login";
+      if (role === "restaurant_owner") redirectPath = "restaurant/dashboard";
+      if (role === "cashier") redirectPath = "restaurant/pos";
+
       return NextResponse.redirect(
         new URL(`/${country}/${language}/${redirectPath}`, request.url),
       );
     }
 
-    if (isRestaurantRoute && role !== "restaurant_owner") {
-      const redirectPath = role === "customer" ? "customer/dashboard" : "login";
-      return NextResponse.redirect(
-        new URL(`/${country}/${language}/${redirectPath}`, request.url),
-      );
+    if (isRestaurantRoute) {
+      if (role !== "restaurant_owner" && role !== "cashier") {
+        const redirectPath =
+          role === "customer" ? "customer/dashboard" : "login";
+        return NextResponse.redirect(
+          new URL(`/${country}/${language}/${redirectPath}`, request.url),
+        );
+      }
+
+      // Restrict cashiers exclusively to the POS route
+      if (role === "cashier" && !pathSegments.includes("pos")) {
+        return NextResponse.redirect(
+          new URL(`/${country}/${language}/restaurant/pos`, request.url),
+        );
+      }
     }
   }
 

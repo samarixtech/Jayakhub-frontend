@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import POSMenuGrid from "@/components/modules/restaurant/pos/posMenuGrid";
-import POSCartPanel from "@/components/modules/restaurant/pos/posCartPanel";
-import OnlineOrdersView from "@/components/modules/restaurant/pos/online-orders-view";
+import POSMenuGrid from "@/components/modules/restaurant/pos/views/POSMenuGridView";
+import POSCartPanel from "@/components/modules/restaurant/pos/components/POSCartPanel";
+import OnlineOrdersView from "@/components/modules/restaurant/pos/views/OnlineOrdersView";
 import { usePOS } from "@/context/POSContext";
 
 export default function POSPage() {

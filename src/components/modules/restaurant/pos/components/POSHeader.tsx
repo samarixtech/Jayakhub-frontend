@@ -1,5 +1,6 @@
+// TODO: use js-cookies for role checking instead of document.cookie
+// TODO: instead of separate state for each model make it one state and use it for all modals like this: type ModalType = 'settings' | 'keyboard' | null
 "use client";
-
 import React, { useState } from "react";
 import {
   Search,
@@ -17,11 +18,11 @@ import { usePOS } from "@/context/POSContext";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
 import { getNotifications } from "@/app/actions/customer/notifications";
-import KeyboardShortcutsModal from "./keyboard-shortcuts-modal";
-import PendingOrdersSidebar from "./pending-orders-sidebar";
-import CloseRegisterModal from "./close-Register";
-import POSSettingsModal from "./pos-settings-modal";
-import ActivityLogSidebar from "./activity-log-sidebar";
+import KeyboardShortcutsModal from "./KeyboardShortcutsModal";
+import PendingOrdersSidebar from "./PendingOrdersSidebar";
+import CloseRegisterModal from "./CloseRegisterModal";
+import POSSettingsModal from "./POSSettingsModal";
+import ActivityLogSidebar from "./ActivityLogSidebar";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -34,19 +35,30 @@ export default function POSNavbar() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isActivityLogOpen, setIsActivityLogOpen] = useState(false);
 
-  const pendingOrdersCount = useSelector((state: RootState) => state.cart.pendingOrders.length);
+  const pendingOrdersCount = useSelector(
+    (state: RootState) => state.cart.pendingOrders.length,
+  );
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const [userRole, setUserRole] = useState<string>("restaurant_owner");
 
   React.useEffect(() => {
+    // Safely parse the "role" cookie client-side
+    const match = document.cookie.match(new RegExp("(^| )role=([^;]+)"));
+    if (match) setUserRole(decodeURIComponent(match[2]));
+
     const fetchNotificationsCount = async () => {
       try {
         const res = await getNotifications();
         if (res.success && res.data) {
-          const notifs = Array.isArray(res.data) ? res.data : res.data.data || [];
+          const notifs = Array.isArray(res.data)
+            ? res.data
+            : res.data.data || [];
           const unreadCount = notifs.filter((n: any) => !n.isRead).length;
-          setUnreadNotificationsCount(unreadCount > 0 ? unreadCount : notifs.length); // Fallback to total if isRead isn't actively set yet
+          setUnreadNotificationsCount(
+            unreadCount > 0 ? unreadCount : notifs.length,
+          );
         }
       } catch (err) {
         // Silent catch for background polling
@@ -56,6 +68,23 @@ export default function POSNavbar() {
     fetchNotificationsCount();
     const interval = setInterval(fetchNotificationsCount, 30000); // Polling every 30s
     return () => clearInterval(interval);
+  }, []);
+
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "F1") {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      } else if (e.key === "F4") {
+        e.preventDefault();
+        setIsPendingOrdersOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
@@ -86,6 +115,7 @@ export default function POSNavbar() {
             <Search className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-gray-400" />
           </div>
           <input
+            ref={searchInputRef}
             type="text"
             placeholder="Search menu..."
             className="w-full bg-white text-gray-900 rounded-full pl-9 sm:pl-11 pr-4 py-1.5 sm:py-2 outline-none focus:ring-2 focus:ring-emerald-500 text-[12px] sm:text-[13px] font-semibold placeholder:text-gray-400 placeholder:font-normal"
@@ -119,7 +149,7 @@ export default function POSNavbar() {
           >
             <Clock className="w-[20px] h-[20px] text-white" />
             {pendingOrdersCount > 0 && (
-              <div className="absolute -top-0 -right-0.5 w-[14px] h-[14px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
+              <div className="absolute top-0 -right-0.5 w-[14px] h-[14px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
                 {pendingOrdersCount}
               </div>
             )}
@@ -132,12 +162,14 @@ export default function POSNavbar() {
             <Keyboard className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
           </button>
 
-          <button
-            onClick={() => setIsSettingsOpen(true)}
-            className="p-1 hover:bg-white/10 rounded-full transition-colors relative group"
-          >
-            <Settings className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
-          </button>
+          {userRole !== "cashier" && (
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-1 hover:bg-white/10 rounded-full transition-colors relative group"
+            >
+              <Settings className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
+            </button>
+          )}
 
           <button
             onClick={() => setIsActivityLogOpen(true)}
@@ -145,7 +177,7 @@ export default function POSNavbar() {
           >
             <ClipboardList className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
             {unreadNotificationsCount > 0 && (
-              <div className="absolute -top-0 -right-0.5 w-[16px] h-[16px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
+              <div className="absolute top-0 -right-0.5 w-[16px] h-[16px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
                 {unreadNotificationsCount}
               </div>
             )}
