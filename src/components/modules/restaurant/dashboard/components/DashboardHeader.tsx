@@ -6,12 +6,14 @@ import { useMemo } from "react";
 interface DashboardHeaderProps {
   isOnline: boolean;
   setIsOnline: (checked: boolean) => void;
+  isToggling?: boolean;
   ownerName: string;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   isOnline,
   setIsOnline,
+  isToggling = false,
   ownerName,
 }) => {
   // DYNAMIC GREETING BASED ON TIME
@@ -47,7 +49,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             id="online-status"
             checked={isOnline}
             onCheckedChange={setIsOnline}
-            className="data-[state=checked]:bg-[#1eb589] data-[state=unchecked]:bg-slate-400/50"
+            disabled={isToggling}
+            className="data-[state=checked]:bg-[#1eb589] data-[state=unchecked]:bg-slate-400/50 disabled:opacity-50"
           />
         </div>
       </CardContent>

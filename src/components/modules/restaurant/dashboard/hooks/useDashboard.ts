@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { getDashboardAnalyticsAction } from "@/app/actions/restaurant/dashboard";
+import { updateRestaurantProfileAction } from "@/app/actions/restaurant/settings";
+import toast from "react-hot-toast";
 
 export function useDashboard() {
   const [isOnline, setIsOnline] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [isToggling, setIsToggling] = useState(false);
   const [dashboardData, setDashboardData] = useState<any>(null);
 
   useEffect(() => {
@@ -11,12 +14,41 @@ export function useDashboard() {
       setIsLoading(true);
       const res = await getDashboardAnalyticsAction();
       if (res.success && res.data) {
-        setDashboardData((res.data as any).data);
+        const payload = (res.data as any).data;
+        setDashboardData(payload);
+        if (payload && typeof payload.isOnline === 'boolean') {
+          setIsOnline(payload.isOnline);
+        }
       }
       setIsLoading(false);
     };
     fetchDashboardData();
   }, []);
+
+  const handleOnlineToggle = async (newStatus: boolean) => {
+    setIsOnline(newStatus); // Optimistic update
+    setIsToggling(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("isOnline", newStatus.toString());
+
+      const res = await updateRestaurantProfileAction(formData);
+      if (!res.success) {
+        // Revert on failure
+        setIsOnline(!newStatus);
+        toast.error("Failed to update status");
+      } else {
+        toast.success(`Restaurant is now ${newStatus ? 'Online' : 'Offline'}`);
+      }
+    } catch (error) {
+      // Revert on error
+      setIsOnline(!newStatus);
+      toast.error("Failed to update status");
+    } finally {
+      setIsToggling(false);
+    }
+  };
 
   // Chart Data Config
   const labels = dashboardData?.revenueChart?.map((item: any) => item.day) || [
@@ -84,7 +116,8 @@ export function useDashboard() {
 
   return {
     isOnline,
-    setIsOnline,
+    setIsOnline: handleOnlineToggle,
+    isToggling,
     isLoading,
     chartData,
     maxDataPoint,
