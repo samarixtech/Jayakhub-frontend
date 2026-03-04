@@ -1,5 +1,6 @@
 "use client";
-import { useState, useTransition } from "react";
+
+import { useState, useTransition, useCallback, useRef, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { ActionResponse } from "@/lib/utils/response-handler";
 
@@ -20,28 +21,40 @@ export function useServerAction<TInput, TResponse>(
   const [isPending, startTransition] = useTransition();
   const [result, setResult] = useState<ActionResponse<TResponse> | null>(null);
 
-  const execute = async (input?: TInput) => {
-    startTransition(async () => {
-      try {
-        const response = await (action as any)(input);
-        setResult(response);
+  // Use refs to keep action and options stable for useCallback
+  const actionRef = useRef(action);
+  const optionsRef = useRef(options);
 
-        if (response.success) {
-          if (!options.suppressSuccessToast) {
-            toast.success(response.message);
+  useEffect(() => {
+    actionRef.current = action;
+    optionsRef.current = options;
+  }, [action, options]);
+
+  const execute = useCallback(
+    async (input?: TInput) => {
+      startTransition(async () => {
+        try {
+          const response = await (actionRef.current as any)(input);
+          setResult(response);
+
+          if (response.success) {
+            if (!optionsRef.current.suppressSuccessToast) {
+              toast.success(response.message);
+            }
+            optionsRef.current.onSuccess?.(response.data);
+          } else {
+            toast.error(response.message);
+            optionsRef.current.onError?.(response.message);
           }
-          options.onSuccess?.(response.data);
-        } else {
-          toast.error(response.message);
-          options.onError?.(response.message);
+        } catch (error) {
+          const msg = "An unexpected error occurred";
+          toast.error(msg);
+          optionsRef.current.onError?.(msg);
         }
-      } catch (error) {
-        const msg = "An unexpected error occurred";
-        toast.error(msg);
-        options.onError?.(msg);
-      }
-    });
-  };
+      });
+    },
+    [startTransition],
+  );
 
   return {
     execute,
