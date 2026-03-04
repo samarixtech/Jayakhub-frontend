@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import AddNewItemView from "@/components/modules/restaurant/menu/views/AddNewItemView";
+import AddNewItemView from "@/components/modules/restaurant/menu/items/views/AddNewItemView";
 
 export const metadata: Metadata = {
   title: "Add New Item | Menu Management",

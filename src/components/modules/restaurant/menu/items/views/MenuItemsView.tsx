@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import { Plus, Edit2, Trash2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

@@ -7,7 +7,7 @@ import { useRouter, useParams } from "next/navigation";
 import ReactCountryFlag from "react-country-flag";
 import { getNames, getCode } from "country-list";
 import emojiFlags from "emoji-flags";
-import { countryCurrencyMap } from "@/app/utils/country";
+import { countryCurrencyMap } from "@/lib/utils/country";
 
 interface Country {
   code: string;

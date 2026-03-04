@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import { useServerAction } from "@/hooks/use-server-action";
@@ -11,8 +12,10 @@ export function useRestaurantStatus() {
   >(null);
   const [loading, setLoading] = useState(true);
   const [isNew, setIsNew] = useState(false);
+  const fetchedRef = useRef(false);
 
   const { execute } = useServerAction(getRestaurantStatusAction, {
+    suppressSuccessToast: true,
     onSuccess: (data: any) => {
       if (!data) return;
 
@@ -31,13 +34,20 @@ export function useRestaurantStatus() {
   });
 
   useEffect(() => {
+    if (fetchedRef.current) return;
+
+    fetchedRef.current = true;
+    console.log("Restaurant status check triggered");
     execute();
+  }, []);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       setIsNew(
         new URLSearchParams(window.location.search).get("new") === "true",
       );
     }
-  }, [execute]);
+  }, []);
 
   return {
     status,

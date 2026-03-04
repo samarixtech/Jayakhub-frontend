@@ -19,6 +19,7 @@ export const useAddNewItem = () => {
 
   const [categories, setCategories] = useState<any[]>([]);
   const [variantGroups, setVariantGroups] = useState<any[]>([]);
+  const [fetchedVariations, setFetchedVariations] = useState<any[]>([]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -56,26 +57,59 @@ export const useAddNewItem = () => {
     {
       suppressSuccessToast: true,
       onSuccess: (data: any) => {
-        if (data) {
+        console.log("FETCH ITEM SUCCESS", data);
+
+        const itemData = data?.item || data?.data?.item || data?.data || data;
+
+        if (itemData && (itemData.name || itemData.category)) {
+          // Normalize Dietary Type
+          let normalizedDietaryType = "None";
+          const rawType = (itemData.dietaryType || "").toUpperCase().trim();
+          if (rawType === "VEG") normalizedDietaryType = "Veg";
+          if (rawType === "NON_VEG" || rawType === "NON-VEG")
+            normalizedDietaryType = "Non-Veg";
+
+          // Extract IDs from Variant Groups
+          const rawGroups = itemData.variantGroups || itemData.variations || [];
+          const mappedGroups = Array.isArray(rawGroups)
+            ? rawGroups
+                .map((g: any) => (typeof g === "object" ? g.id || g._id : g))
+                .filter(Boolean)
+            : [];
+
+          if (Array.isArray(rawGroups) && rawGroups.length > 0) {
+            setFetchedVariations(rawGroups);
+          }
+
           setFormData({
-            name: data.name || "",
-            description: data.description || "",
-            category: data.category || "",
-            basePrice: data.basePrice?.toString() || "",
-            itemImage: data.itemImage || "",
-            isAvailable: data.isAvailable ?? true,
-            isVeg: data.isVeg ?? false,
-            dietaryType: data.dietaryType || "None",
-            variantGroups: data.variantGroups || [],
+            name: itemData.name || "",
+            description: itemData.description || "",
+            category: itemData.category || "",
+            basePrice:
+              itemData.basePrice?.toString() ||
+              itemData.price?.toString() ||
+              "",
+            itemImage: itemData.itemImage || itemData.image || "",
+            isAvailable: itemData.isAvailable ?? true,
+            isVeg: itemData.isVeg ?? false,
+            dietaryType: normalizedDietaryType as any,
+            variantGroups: mappedGroups,
           });
-          if (data.itemImage) {
+
+          const imgToPreview = itemData.itemImage || itemData.image;
+          if (imgToPreview) {
             setImagePreview(
-              data.itemImage.startsWith("http")
-                ? data.itemImage
-                : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${data.itemImage}`,
+              imgToPreview.startsWith("http")
+                ? imgToPreview
+                : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${imgToPreview}`,
             );
           }
+        } else {
+          toast.error("Failed to load item details properly.");
         }
+      },
+      onError: (err) => {
+        console.error("FETCH ITEM ERROR", err);
       },
     },
   );
@@ -87,6 +121,38 @@ export const useAddNewItem = () => {
       fetchItem(itemId);
     }
   }, [itemId, isEditMode]);
+
+  useEffect(() => {
+    if (fetchedVariations.length > 0 && variantGroups.length > 0) {
+      if (
+        !fetchedVariations.some((v) => typeof v === "string" || v.id || v._id)
+      ) {
+        const variationNames = fetchedVariations.map((v: any) =>
+          v.name?.toLowerCase().trim(),
+        );
+        const matchedIds: string[] = [];
+
+        variantGroups.forEach((vg) => {
+          const hasMatch = vg.options?.some((opt: any) =>
+            variationNames.includes(opt.name?.toLowerCase().trim()),
+          );
+          if (hasMatch) {
+            matchedIds.push(vg.id || vg._id);
+          }
+        });
+
+        if (matchedIds.length > 0) {
+          setFormData((prev) => ({
+            ...prev,
+            variantGroups: Array.from(
+              new Set([...prev.variantGroups, ...matchedIds]),
+            ),
+          }));
+        }
+        setFetchedVariations([]); // Run once
+      }
+    }
+  }, [fetchedVariations, variantGroups]);
 
   const { execute: createItem, isPending: isCreating } = useServerAction(
     createItemAction,
@@ -139,14 +205,37 @@ export const useAddNewItem = () => {
     const submitData = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (key === "variantGroups") {
-        submitData.append(key, JSON.stringify(value));
+        submitData.append("variantGroups", JSON.stringify(value));
+
+        const selectedGroupIds = value as string[];
+        const selectedGroupObjs = variantGroups.filter((g) =>
+          selectedGroupIds.includes(g.id || g._id),
+        );
+        const variationsPayload: any[] = [];
+
+        selectedGroupObjs.forEach((g) => {
+          g.options?.forEach((opt: any) => {
+            variationsPayload.push({
+              name: opt.name,
+              additionalPrice:
+                opt.isFree || opt.price === "Free"
+                  ? 0
+                  : Number(opt.price?.toString().replace(/[^0-9.]/g, "")) || 0,
+            });
+          });
+        });
+
+        submitData.append("variations", JSON.stringify(variationsPayload));
+      } else if (key === "dietaryType") {
+        const mappedType = value.toString().toUpperCase().replace("-", "_");
+        submitData.append(key, mappedType);
       } else {
         submitData.append(key, value.toString());
       }
     });
 
     if (imageFile) {
-      submitData.append("image", imageFile);
+      submitData.append("itemImage", imageFile);
     }
 
     if (isEditMode) {
