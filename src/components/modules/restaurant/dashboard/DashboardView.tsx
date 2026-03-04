@@ -12,6 +12,7 @@ export default function DashboardView() {
   const {
     isOnline,
     setIsOnline,
+    isToggling,
     isLoading,
     chartData,
     maxDataPoint,
@@ -32,6 +33,7 @@ export default function DashboardView() {
       <DashboardHeader
         isOnline={isOnline}
         setIsOnline={setIsOnline}
+        isToggling={isToggling}
         ownerName={ownerName}
       />
 
