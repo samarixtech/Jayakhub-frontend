@@ -1,4 +1,4 @@
-import PaymentsView from "@/components/modules/restaurant/payments/PaymentsView";
+import PaymentsView from "@/components/modules/restaurant/payments/views/PaymentsView";
 import React from "react";
 
 const PaymentsPage = () => {

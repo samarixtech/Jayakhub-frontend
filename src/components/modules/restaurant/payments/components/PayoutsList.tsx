@@ -12,31 +12,13 @@ interface Payout {
   status: "IN TRANSIT" | "PAID";
 }
 
-const MOCK_PAYOUTS: Payout[] = [
-  {
-    id: "1",
-    date: "Today, 4:00 PM",
-    amount: "$3,450.00",
-    bankAccount: "Citibank •••• 4242",
-    status: "IN TRANSIT",
-  },
-  {
-    id: "2",
-    date: "Feb 10, 2026",
-    amount: "$2,100.50",
-    bankAccount: "Citibank •••• 4242",
-    status: "PAID",
-  },
-  {
-    id: "3",
-    date: "Feb 03, 2026",
-    amount: "$4,200.00",
-    bankAccount: "Citibank •••• 4242",
-    status: "PAID",
-  },
-];
 
-const PayoutsList = () => {
+
+interface PayoutsListProps {
+  payouts: Payout[];
+}
+
+const PayoutsList = ({ payouts }: PayoutsListProps) => {
   return (
     <Card className="border-gray-100 shadow-sm bg-white">
       <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-gray-50">
@@ -66,7 +48,7 @@ const PayoutsList = () => {
           </div>
 
           {/* Rows */}
-          {MOCK_PAYOUTS.map((payout) => (
+          {payouts.map((payout) => (
             <div
               key={payout.id}
               className="grid grid-cols-4 gap-4 px-6 py-4 items-center hover:bg-gray-50/50 transition-colors border-b border-gray-50 last:border-0 cursor-pointer group"
@@ -92,6 +74,11 @@ const PayoutsList = () => {
               </div>
             </div>
           ))}
+          {payouts.length === 0 && (
+            <div className="py-8 text-center text-sm text-gray-500">
+              No payouts found for this period.
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

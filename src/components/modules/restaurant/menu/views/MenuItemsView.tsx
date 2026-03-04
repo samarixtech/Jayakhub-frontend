@@ -77,7 +77,7 @@ export default function MenuItemsView() {
       header: "Category",
       accessorKey: "category",
       cell: (item: any) => (
-        <div className="text-center">
+        <div className="text-left">
           <Badge
             variant="outline"
             className="font-semibold rounded-md border text-[10px] px-2 py-0.5 shadow-none uppercase bg-white border-gray-200 text-gray-700"
@@ -91,7 +91,7 @@ export default function MenuItemsView() {
       header: "Price",
       accessorKey: "basePrice",
       cell: (item: any) => (
-        <div className="text-right font-medium text-gray-700 font-mono">
+        <div className="text-left font-medium text-gray-700 font-mono">
           ${item.basePrice}
         </div>
       ),
@@ -100,7 +100,7 @@ export default function MenuItemsView() {
       header: "Status",
       accessorKey: "isAvailable",
       cell: (item: any) => (
-        <div className="text-center">
+        <div className="text-left">
           <Switch
             checked={item.isAvailable}
             className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-200"
@@ -111,7 +111,7 @@ export default function MenuItemsView() {
     {
       header: "Actions",
       cell: (item: any) => (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-start gap-2">
           <Link href={`/restaurant/menu/items/${item.id || item._id}`}>
             <Button
               variant="ghost"
