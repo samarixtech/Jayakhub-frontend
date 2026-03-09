@@ -12,15 +12,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useSecuritySettings } from "./useSecuritySettings";
+import { useTranslations } from "next-intl";
 
 export function SecuritySettingsForm() {
   const { form, isPending, onSubmit } = useSecuritySettings();
+  const t = useTranslations('CustomerDashboard.ProfileSettings');
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-6">
-          <p className="text-[14px] font-bold text-gray-900">Change Password</p>
+          <p className="text-[14px] font-bold text-gray-900">{t('change_password')}</p>
 
           <FormField
             control={form.control}
@@ -28,7 +30,7 @@ export function SecuritySettingsForm() {
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <FormLabel className="text-[12px] font-bold text-gray-900">
-                  Current Password
+                  {t('current_password')}
                 </FormLabel>
                 <FormControl>
                   <div className="relative">
@@ -39,7 +41,7 @@ export function SecuritySettingsForm() {
                     <Input
                       {...field}
                       type="password"
-                      placeholder="••••••••"
+                      placeholder={t('password_placeholder')}
                       className="pl-12 rounded-2xl border-gray-100 bg-[#F9FAFB] h-12"
                     />
                   </div>
@@ -56,13 +58,13 @@ export function SecuritySettingsForm() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-[12px] font-bold text-gray-900">
-                    New Password
+                    {t('new_password')}
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="password"
-                      placeholder="••••••••"
+                      placeholder={t('password_placeholder')}
                       className="rounded-2xl border-gray-100 bg-[#F9FAFB] h-12"
                     />
                   </FormControl>
@@ -76,13 +78,13 @@ export function SecuritySettingsForm() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-[12px] font-bold text-gray-900">
-                    Confirm Password
+                    {t('confirm_password')}
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="password"
-                      placeholder="••••••••"
+                      placeholder={t('password_placeholder')}
                       className="rounded-2xl border-gray-100 bg-[#F9FAFB] h-12"
                     />
                   </FormControl>
@@ -102,10 +104,10 @@ export function SecuritySettingsForm() {
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Updating...
+                {t('updating')}
               </>
             ) : (
-              "Update Password"
+              t('update_password')
             )}
           </Button>
         </div>

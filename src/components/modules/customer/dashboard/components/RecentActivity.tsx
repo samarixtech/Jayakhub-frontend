@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Order } from "../../types";
 import { getStatusColor, getStatusLabel } from "../utils";
+import { useTranslations } from "next-intl";
 
 interface RecentActivityProps {
   recentOrders: Order[];
@@ -21,11 +22,13 @@ export const RecentActivity = ({
   country,
   language,
 }: RecentActivityProps) => {
+  const t = useTranslations('CustomerDashboard.RecentActivity');
+
   return (
     <Card className="lg:col-span-2 border-none shadow-sm rounded-4xl bg-white overflow-hidden">
       <CardHeader className="px-8 pt-8 flex flex-row items-center justify-between">
         <CardTitle className="text-lg font-black text-gray-900">
-          Recent Activity
+          {t('recent_activity')}
         </CardTitle>
         <Button
           variant="link"
@@ -33,7 +36,7 @@ export const RecentActivity = ({
           asChild
         >
           <Link href={`/${country}/${language}/customer/order-history`}>
-            View All
+            {t('view_all')}
           </Link>
         </Button>
       </CardHeader>
@@ -83,7 +86,7 @@ export const RecentActivity = ({
                       {orderName}
                     </Typography>
                     <Typography className="text-xs text-gray-400 font-medium">
-                      {itemCount} {itemCount === 1 ? "item" : "items"} • $
+                      {itemCount} {itemCount === 1 ? t('item') : t('items')} • $
                       {order.totalAmount}
                     </Typography>
                   </div>
@@ -103,7 +106,7 @@ export const RecentActivity = ({
           })
         ) : (
           <div className="text-center text-gray-500 py-4">
-            No recent activity.
+            {t('no_activity')}
           </div>
         )}
       </CardContent>

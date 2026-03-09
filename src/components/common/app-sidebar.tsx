@@ -21,17 +21,19 @@ import {
 } from "@/components/ui/sidebar";
 import { Typography } from "@/components/ui/typography";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const navItems = [
-  { name: "Overview", href: "/customer/dashboard", icon: LayoutDashboard },
-  { name: "Orders", href: "/customer/order-history", icon: ReceiptText },
-  { name: "Profile", href: "/customer/profile-settings", icon: User },
-  { name: "Addresses", href: "/customer/address", icon: MapPin },
-  { name: "Payment History", href: "/customer/payment-history", icon: CreditCard },
-  { name: "Wallet", href: "/customer/wallet", icon: Wallet },
+  { key: "overview", href: "/customer/dashboard", icon: LayoutDashboard },
+  { key: "orders", href: "/customer/order-history", icon: ReceiptText },
+  { key: "profile", href: "/customer/profile-settings", icon: User },
+  { key: "addresses", href: "/customer/address", icon: MapPin },
+  { key: "payment_history", href: "/customer/payment-history", icon: CreditCard },
+  { key: "wallet", href: "/customer/wallet", icon: Wallet },
 ];
 
 export function AppSidebar() {
+  const t = useTranslations('CustomerDashboard.Sidebar');
   const pathname = usePathname();
   const { state, isMobile, setOpenMobile } = useSidebar();
   const isCollapsed = state === "collapsed";
@@ -46,17 +48,16 @@ export function AppSidebar() {
       }
     >
       <div
-        className={`flex flex-col h-full ${
-          isMobile
-            ? "bg-white p-4"
-            : "bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100/50 p-6"
-        }`}
+        className={`flex flex-col h-full ${isMobile
+          ? "bg-white p-4"
+          : "bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100/50 p-6"
+          }`}
       >
         {/* HEADER: LOGO + CLOSE BUTTON (MOBILE ONLY) */}
         {isMobile && (
           <div className="flex items-center justify-between mb-6 px-2">
             <Typography className="text-lg font-black text-emerald-900">
-              Menu
+              {t('menu')}
             </Typography>
             <Button
               variant="ghost"
@@ -72,7 +73,7 @@ export function AppSidebar() {
         {/* SECTION LABEL (DESKTOP ONLY) */}
         {!isCollapsed && !isMobile && (
           <Typography className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 mb-6 px-4">
-            Account
+            {t('account')}
           </Typography>
         )}
 
@@ -81,16 +82,15 @@ export function AppSidebar() {
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
-                <SidebarMenuItem key={item.name}>
+                <SidebarMenuItem key={item.key}>
                   <SidebarMenuButton
                     asChild
-                    tooltip={item.name}
+                    tooltip={t(item.key)}
                     isActive={isActive}
-                    className={`h-14 transition-all duration-200 rounded-2xl px-4 ${
-                      isActive
-                        ? "bg-emerald-50 text-[#346853] hover:bg-emerald-50 hover:text-[#346853]"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                    }`}
+                    className={`h-14 transition-all duration-200 rounded-2xl px-4 ${isActive
+                      ? "bg-emerald-50 text-[#346853] hover:bg-emerald-50 hover:text-[#346853]"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                      }`}
                     onClick={() => isMobile && setOpenMobile(false)}
                   >
                     <Link href={item.href} className="flex items-center">
@@ -103,7 +103,7 @@ export function AppSidebar() {
                         <span
                           className={`text-base font-semibold truncate ${isActive ? "text-[#346853]" : "text-slate-500"}`}
                         >
-                          {item.name}
+                          {t(item.key)}
                         </span>
                       )}
                     </Link>

@@ -17,28 +17,29 @@ import {
   MapPin,
 } from "lucide-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 const navItems = [
-  { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Order History", href: "/dashboard/orderHistory", icon: Users },
+  { key: "overview", href: "/dashboard", icon: LayoutDashboard },
+  { key: "order_history", href: "/dashboard/orderHistory", icon: Users },
   {
-    name: "My Profile",
+    key: "my_profile",
     href: "/dashboard/profileSettings",
     icon: User,
   },
   {
-    name: "My Address",
+    key: "my_address",
     href: "/dashboard/address",
     icon: MapPin,
   },
   {
-    name: "Payment History",
+    key: "payment_history",
     href: "/dashboard/paymentHistory",
     icon: BarChart,
     // hasPermission:'view.history'
   },
   {
-    name: "Change Password",
+    key: "change_password",
     href: "/dashboard/changePassword",
     icon: Settings,
   },
@@ -48,6 +49,7 @@ const primaryDark = "#0B5D4E"; // Primary theme color (Dark Green/Teal)
 const primaryLight = "#E8F4F1"; // Primary background/accent color (Light Green/Teal)
 
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
+  const t = useTranslations('CustomerDashboard.Sidebar');
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(true);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -114,14 +116,12 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
       )}
 
       <aside
-        className={`${
-          isOpen ? "w-64" : "w-20"
+        className={`${isOpen ? "w-64" : "w-20"
           // Switched border to a standard gray for better visibility on light background
-        } fixed lg:sticky top-0 left-0 h-screen bg-[#E8F4F1] border-r border-gray-200 shadow-xl flex flex-col z-30 transition-all duration-300
-          ${
-            isSidebarOpen
-              ? "translate-x-0"
-              : "-translate-x-full lg:translate-x-0"
+          } fixed lg:sticky top-0 left-0 h-screen bg-[#E8F4F1] border-r border-gray-200 shadow-xl flex flex-col z-30 transition-all duration-300
+          ${isSidebarOpen
+            ? "translate-x-0"
+            : "-translate-x-full lg:translate-x-0"
           }`}
       >
         {/* Header */}
@@ -132,7 +132,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
               <div className="w-8 h-8 bg-[#0B5D4E] rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">L</span>
               </div>
-              <span className="font-semibold text-gray-800">Dashboard</span>
+              <span className="font-semibold text-gray-800">{t('dashboard')}</span>
             </div>
           )}
 
@@ -147,24 +147,23 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
-          {navItems.map(({ name, href, icon: Icon }) => {
+          {navItems.map(({ key, href, icon: Icon }) => {
             const active = pathname === href;
             return (
               <Link
-                key={name}
+                key={key}
                 href={href}
                 className={`group flex items-center gap-4 px-3 py-3 rounded-xl transition-all 
-                ${
-                  active
+                ${active
                     ? "bg-[#0B5D4E] text-white font-semibold shadow-md" // **ACTIVE: Dark background, White text**
                     : "text-gray-700 hover:bg-gray-100" // Inactive: Dark text, Light hover background
-                }`}
+                  }`}
               >
                 <div
                   className={`p-1.5 rounded-lg ${
                     // Using primaryLight for inactive icon background to match sidebar theme, and white for active icon background for contrast
                     active ? "bg-white" : "bg-[#E8F4F1]"
-                  }`}
+                    }`}
                 >
                   {/* Icon color fix: Dark primary color when active, Gray when inactive */}
                   <Icon
@@ -174,16 +173,15 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
                 </div>
 
                 <span
-                  className={`text-sm transition-all ${
-                    isOpen ? "opacity-100" : "opacity-0 hidden"
-                  } ${active ? "text-white" : "text-gray-700 font-medium"}`}
+                  className={`text-sm transition-all ${isOpen ? "opacity-100" : "opacity-0 hidden"
+                    } ${active ? "text-white" : "text-gray-700 font-medium"}`}
                 >
-                  {name}
+                  {t(key)}
                 </span>
 
                 {!isOpen && (
                   <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-gray-800 text-white text-xs opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-lg z-50">
-                    {name}
+                    {t(key)}
                   </span>
                 )}
               </Link>
@@ -197,9 +195,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className={`flex items-center gap-3 w-full p-3 rounded-xl transition-all group hover:bg-gray-100 ${
-                isProfileOpen ? "bg-gray-100" : ""
-              }`}
+              className={`flex items-center gap-3 w-full p-3 rounded-xl transition-all group hover:bg-gray-100 ${isProfileOpen ? "bg-gray-100" : ""
+                }`}
             >
               <div className="flex items-center gap-3 min-w-0">
                 {/* Avatar color fix */}
@@ -232,15 +229,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
               {isOpen && (
                 <ChevronDown
                   size={16}
-                  className={`text-gray-400 transition-transform ${
-                    isProfileOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-gray-400 transition-transform ${isProfileOpen ? "rotate-180" : ""
+                    }`}
                 />
               )}
 
               {!isOpen && (
                 <span className="absolute left-full ml-2 px-2 py-1 rounded-md bg-gray-800 text-white text-xs opacity-0 group-hover:opacity-100 transition whitespace-nowrap pointer-events-none shadow-lg z-50">
-                  Profile
+                  {t('profile')}
                 </span>
               )}
             </button>
@@ -248,9 +244,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
             {/* Profile Popup */}
             {isProfileOpen && (
               <div
-                className={`absolute bottom-full mb-2 left-0 right-0 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden ${
-                  isOpen ? "w-full" : "w-64"
-                }`}
+                className={`absolute bottom-full mb-2 left-0 right-0 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden ${isOpen ? "w-full" : "w-64"
+                  }`}
               >
                 <div className="p-4 border-b border-gray-200">
                   <div className="flex items-center gap-3 mb-3">
@@ -258,8 +253,8 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
                     <div className="w-12 h-12 bg-[#0B5D4E] rounded-full flex items-center justify-center flex-shrink-0">
                       {userData.avatar ? (
                         <Image
-                        width={200}
-                        height={200}
+                          width={200}
+                          height={200}
                           src={userData.avatar}
                           alt={userData.name}
                           className="w-12 h-12 rounded-full"
@@ -291,7 +286,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                   >
                     <User size={16} className="text-gray-500" />
-                    <span>My Profile</span>
+                    <span>{t('my_profile')}</span>
                   </Link>
 
                   <Link
@@ -299,14 +294,14 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: any) {
                     className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                   >
                     <Settings size={16} className="text-gray-500" />
-                    <span>Account Settings</span>
+                    <span>{t('account_settings')}</span>
                   </Link>
                 </div>
 
                 <div className="p-2 border-t border-gray-200">
                   <button className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors">
                     <LogOut size={16} />
-                    <span>Sign Out</span>
+                    <span>{t('sign_out')}</span>
                   </button>
                 </div>
               </div>

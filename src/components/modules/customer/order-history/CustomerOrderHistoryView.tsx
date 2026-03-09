@@ -5,6 +5,7 @@ import useLocale from "@/hooks/useLocals";
 import { RatingModal } from "@/components/common/RatingModal";
 import EmptyState from "@/components/common/EmptyState";
 import { FileDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { Order, OrderStatus } from "../types";
 import { OrderHistoryHeader } from "./components/OrderHistoryHeader";
@@ -29,6 +30,8 @@ export default function CustomerOrderHistoryView() {
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  const t = useTranslations('CustomerDashboard.OrderHistory');
 
   const { handlePageChange, handleReorder, handleRateOrder } =
     useOrderHistoryActions({
@@ -115,7 +118,7 @@ export default function CustomerOrderHistoryView() {
         />
 
         <div className="flex justify-end items-center gap-2 text-xs text-gray-400 font-medium">
-          <span>Rows per page:</span>
+          <span>{t('rows_per_page')}</span>
           <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-100 text-gray-700 font-bold min-w-[40px] text-center">
             {itemsPerPage}
           </div>
@@ -125,8 +128,8 @@ export default function CustomerOrderHistoryView() {
           {filteredOrders.length === 0 ? (
             <EmptyState
               icon={FileDown}
-              title="No Orders Yet"
-              message="Once you place your first order, you'll see it listed here with all the details."
+              title={t('no_orders_yet')}
+              message={t('no_orders_message')}
             />
           ) : (
             currentOrders.map((order) => (

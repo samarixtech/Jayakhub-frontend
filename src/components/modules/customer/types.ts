@@ -37,4 +37,5 @@ export interface OrderSummary {
   totalSpend: string;
   totalOrdersCount: number;
   totalPendingOrders: number;
+  averageRating: string | number;
 }

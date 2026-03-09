@@ -8,6 +8,7 @@ import {
   getStatusColor,
   getStatusLabel,
 } from "../useOrderHistoryActions";
+import { useTranslations } from "next-intl";
 
 interface OrderCardProps {
   order: Order;
@@ -20,6 +21,7 @@ export const OrderCard = ({
   handleReorder,
   handleRateOrder,
 }: OrderCardProps) => {
+  const t = useTranslations('CustomerDashboard.OrderHistory');
   const isRejected = order.OrderStatus.toLowerCase() === OrderStatus.REJECTED;
   const isDelivered = order.OrderStatus.toLowerCase() === OrderStatus.DELIVERED;
   const isDeliveredOrPaid =
@@ -28,14 +30,13 @@ export const OrderCard = ({
   const itemNames = order.items
     ?.map((i) => `${i.quantity}x ${i.name}`)
     .join(", ");
-  const displayTitle = firstItem?.name || "Order";
+  const displayTitle = firstItem?.name || t('order_default');
 
   return (
     <Card
       key={order.orderId}
-      className={`border-none shadow-sm rounded-3xl overflow-hidden transition-all hover:shadow-md ${
-        isRejected ? "bg-red-50" : "bg-white"
-      }`}
+      className={`border-none shadow-sm rounded-3xl overflow-hidden transition-all hover:shadow-md ${isRejected ? "bg-red-50" : "bg-white"
+        }`}
     >
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row items-center p-5 gap-6">
@@ -93,7 +94,7 @@ export const OrderCard = ({
                 variant="outline"
                 className="rounded-full h-9 px-5 bg-white border-gray-200 text-gray-600 text-[11px] font-bold hover:bg-gray-50"
               >
-                Help
+                {t('help')}
               </Button>
             ) : (
               <Button
@@ -105,7 +106,7 @@ export const OrderCard = ({
                 }}
               >
                 <RefreshCw size={12} />
-                Reorder
+                {t('reorder')}
               </Button>
             )}
           </div>
@@ -121,7 +122,7 @@ export const OrderCard = ({
             const ratingValue = ratedItem?.rate || 5;
             const reviewText =
               ratedItem?.comment ||
-              "Thank you for the wonderful feedback. Your response has been recorded.";
+              t('default_review_message');
             const replyText = ratedItem?.reply;
 
             return (
@@ -130,17 +131,16 @@ export const OrderCard = ({
                   <div className="flex-1 w-full flex flex-col gap-2">
                     <div className="flex justify-between items-center w-full">
                       <span className="font-bold text-gray-800 text-sm">
-                        Your Review
+                        {t('your_review')}
                       </span>
                       <div className="flex gap-1">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star
                             key={i}
-                            className={`w-4 h-4 ${
-                              i < ratingValue
-                                ? "fill-[#f5a623] text-[#f5a623]"
-                                : "fill-gray-200 text-gray-200"
-                            }`}
+                            className={`w-4 h-4 ${i < ratingValue
+                              ? "fill-[#f5a623] text-[#f5a623]"
+                              : "fill-gray-200 text-gray-200"
+                              }`}
                           />
                         ))}
                       </div>
@@ -156,7 +156,7 @@ export const OrderCard = ({
                             size={12}
                             className="scale-x-[-1] shrink-0"
                           />
-                          Restaurant Reply
+                          {t('restaurant_reply')}
                         </span>
                         <p className="text-[13px] text-[#1b2d22] leading-relaxed font-medium">
                           {replyText}
@@ -168,10 +168,10 @@ export const OrderCard = ({
                   <>
                     <div>
                       <h4 className="font-bold text-gray-800 text-sm mb-1">
-                        No review given
+                        {t('no_review_given')}
                       </h4>
                       <p className="text-gray-500 text-xs">
-                        Share your experience with others!
+                        {t('share_experience')}
                       </p>
                     </div>
                     <Button
@@ -180,7 +180,7 @@ export const OrderCard = ({
                       onClick={() => handleRateOrder(order)}
                     >
                       <Star className="w-4 h-4 mr-2" />
-                      Rate Order
+                      {t('rate_order')}
                     </Button>
                   </>
                 )}

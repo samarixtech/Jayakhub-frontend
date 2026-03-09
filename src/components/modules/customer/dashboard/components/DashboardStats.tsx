@@ -3,6 +3,7 @@ import { Typography } from "@/components/ui/typography";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrderSummary } from "../../types";
+import { useTranslations } from "next-intl";
 
 interface DashboardStatsProps {
   summary: OrderSummary;
@@ -10,30 +11,32 @@ interface DashboardStatsProps {
 }
 
 export const DashboardStats = ({ summary, loading }: DashboardStatsProps) => {
+  const t = useTranslations('CustomerDashboard.DashboardStats');
+
   const STATS = [
     {
-      label: "Total Spent",
+      label: t('total_spent'),
       value: `$${summary.totalSpend}`,
       icon: DollarSign,
       color: "text-emerald-600",
       bg: "bg-emerald-50",
     },
     {
-      label: "Total Orders",
+      label: t('total_orders'),
       value: summary.totalOrdersCount.toString(),
       icon: ShoppingBag,
       color: "text-blue-600",
       bg: "bg-blue-50",
     },
     {
-      label: "Average Rating",
-      value: "4.8", // Static rating currently
+      label: t('average_rating'),
+      value: summary.averageRating?.toString() || "0.0",
       icon: Star,
       color: "text-amber-500",
       bg: "bg-amber-50",
     },
     {
-      label: "Active Orders",
+      label: t('active_orders'),
       value: summary.totalPendingOrders.toString(),
       icon: Timer,
       color: "text-purple-600",

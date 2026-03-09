@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { KycRecord } from "./useKycVerification";
 import { KYC_DOCUMENTS } from "./kyc-constants";
+import { useTranslations } from "next-intl";
 
 interface DocumentItemProps {
   item: (typeof KYC_DOCUMENTS)[0];
@@ -37,9 +38,8 @@ export function DocumentItem({
 
   return (
     <div
-      className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4 border rounded-2xl transition-all px-4 sm:px-5 ${
-        isSelected ? "border-blue-200 bg-blue-50/30" : "border-gray-50 bg-white"
-      }`}
+      className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4 border rounded-2xl transition-all px-4 sm:px-5 ${isSelected ? "border-blue-200 bg-blue-50/30" : "border-gray-50 bg-white"
+        }`}
     >
       <div className="flex items-center gap-4">
         <div className="bg-blue-50 p-2.5 rounded-xl shrink-0">{item.icon}</div>
@@ -99,6 +99,7 @@ function DocumentActionArea({
   onResetSelection,
   onFinalUpload,
 }: DocumentActionAreaProps) {
+  const t = useTranslations('CustomerDashboard.ProfileSettings');
   const existingDoc = kycData.find((d) => d.documentType === item.id);
 
   if (existingDoc) {
@@ -123,7 +124,7 @@ function DocumentActionArea({
           className="bg-[#2D6A4F] hover:bg-[#1B4332] text-white text-xs font-bold rounded-xl px-4 h-9 whitespace-nowrap"
         >
           {isUploading && <Loader2 className="animate-spin mr-2" size={14} />}
-          {isUploading ? "Uploading..." : "Confirm"}
+          {isUploading ? t('uploading') : t('confirm')}
         </Button>
       </div>
     );
@@ -136,7 +137,7 @@ function DocumentActionArea({
       disabled={!!activeTypeId || fetching}
       className="text-gray-600 text-xs font-bold flex gap-2 border border-gray-100 rounded-xl px-4 py-2 h-auto hover:bg-gray-50 whitespace-nowrap"
     >
-      <Upload size={14} /> Select
+      <Upload size={14} /> {t('select')}
     </Button>
   );
 }

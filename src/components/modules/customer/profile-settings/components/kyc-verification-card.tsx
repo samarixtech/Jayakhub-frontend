@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useKycVerification } from "./kyc/useKycVerification";
 import { KYC_DOCUMENTS } from "./kyc/kyc-constants";
 import { DocumentItem } from "./kyc/kyc-document-item";
+import { useTranslations } from "next-intl";
 
 export default function IdentityVerificationCard() {
   const {
@@ -19,12 +20,13 @@ export default function IdentityVerificationCard() {
     handleFinalUpload,
     resetSelection,
   } = useKycVerification();
+  const t = useTranslations('CustomerDashboard.ProfileSettings');
 
   return (
     <Card className="rounded-3xl p-5 md:p-8 border-none shadow-sm bg-white overflow-hidden">
       <CardHeader className="px-0 pt-0 pb-6">
         <CardTitle className="text-lg font-bold text-gray-900">
-          Identity Verification
+          {t('identity_verification_title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-0 space-y-3">
@@ -59,8 +61,7 @@ export default function IdentityVerificationCard() {
 
         <p className="flex items-start sm:items-center gap-2 text-[11px] text-gray-400 font-medium pt-3 leading-relaxed">
           <Info size={14} className="text-blue-500 shrink-0 mt-0.5 sm:mt-0" />
-          Complete verification with at least one document to unlock full
-          features.
+          {t('complete_verification')}
         </p>
       </CardContent>
     </Card>

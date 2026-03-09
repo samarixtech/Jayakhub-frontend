@@ -15,6 +15,13 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 
+import growImg from "../../../../../public/grow.png";
+import restaurantOwnerImg from "../../../../../public/restaurant-owner.png";
+import gourmetImg from "../../../../../public/gourmet.jpg";
+import baghdadBitesImg from "../../../../../public/baghdad-bites.jpg";
+import mixedGrillImg from "../../../../../public/mixed-grill.jpg";
+import partnerImage2Img from "../../../../../public/partner-image2.jpg";
+
 export default function Partners() {
   const t = useTranslations("Partners");
   const [isVisible, setIsVisible] = useState(false);
@@ -207,7 +214,7 @@ export default function Partners() {
                 <Image
                   width={250}
                   height={250}
-                  src="/grow.png"
+                  src={growImg}
                   alt="Chef in kitchen"
                   className="w-full h-auto object-cover scale-105"
                 />
@@ -249,7 +256,7 @@ export default function Partners() {
             <div className="relative order-2 lg:order-1">
               <div className="relative z-10 w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white max-w-lg mx-auto lg:max-w-none rotate-1 hover:rotate-0 transition-transform duration-500">
                 <Image
-                  src="/restaurant-owner.png"
+                  src={restaurantOwnerImg}
                   width={200}
                   height={200}
                   alt="Restaurant Dashboard"
@@ -299,9 +306,11 @@ export default function Partners() {
                 ))}
               </ul>
               <div className="mt-10">
-                <Button className="bg-slate-900 text-white hover:bg-slate-800 h-12 px-8 rounded-xl shadow-lg">
-                  {t("dashboard.button")}
-                </Button>
+                <Link href="/login">
+                  <Button className="bg-primary cursor-pointer text-white hover:bg-primary/80 h-12 px-8 rounded-xl shadow-lg">
+                    {t("dashboard.button")}
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -360,22 +369,22 @@ export default function Partners() {
               {
                 title: "Sign Up",
                 desc: "Fill out our simple registration form and tell us about your restaurant.",
-                img: "/gourmet.jpg",
+                img: gourmetImg,
               },
               {
                 title: "Get Approved",
                 desc: "Our team reviews your application and gets you onboarded within 48 hours.",
-                img: "/baghdad-bites.jpg",
+                img: baghdadBitesImg,
               },
               {
                 title: "Set Up Your Menu",
                 desc: "Add your dishes, set prices, and customize your restaurant profile.",
-                img: "/mixed-grill.jpg",
+                img: mixedGrillImg,
               },
               {
                 title: "Start Receiving Orders",
                 desc: "Go live and start accepting orders from customers in your area.",
-                img: "/partner-image2.jpg",
+                img: partnerImage2Img,
               },
             ].map((step, i) => (
               <div
@@ -383,7 +392,7 @@ export default function Partners() {
                 className="bg-white rounded-4xl p-4 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 group"
               >
                 <div className="aspect-square rounded-3xl overflow-hidden relative mb-6">
-                  <img
+                  <Image
                     src={step.img}
                     alt={step.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"

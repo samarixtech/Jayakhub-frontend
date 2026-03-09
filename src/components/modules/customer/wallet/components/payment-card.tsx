@@ -1,6 +1,7 @@
 import { Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 // CARD STYLES (COLORS)
 const getCardStyles = (type: string) => {
@@ -59,6 +60,8 @@ export const PaymentCard = ({
   card: any;
   onDelete: (card: any) => void;
 }) => {
+  const t = useTranslations('CustomerDashboard.Wallet');
+
   return (
     <div className="space-y-4 w-full max-w-[380px] group">
       {/* Visual Card */}
@@ -74,7 +77,7 @@ export const PaymentCard = ({
           <EmvChip />
           {card.isDefault && (
             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-md font-medium tracking-wider px-2 py-0.5 text-[10px] shadow-sm">
-              DEFAULT
+              {t('default')}
             </Badge>
           )}
         </div>
@@ -94,18 +97,18 @@ export const PaymentCard = ({
           <div className="flex gap-6">
             <div>
               <p className="text-[8px] font-bold text-white/70 tracking-widest uppercase mb-0.5">
-                Card Holder
+                {t('card_holder')}
               </p>
               <p className="font-bold tracking-widest text-xs uppercase line-clamp-1 max-w-[120px]">
-                {card.cardholderName || "NAME"}
+                {card.cardholderName || t('name_placeholder')}
               </p>
             </div>
             <div>
               <p className="text-[8px] font-bold text-white/70 tracking-widest uppercase mb-0.5">
-                Expires
+                {t('expires')}
               </p>
               <p className="font-bold tracking-widest text-xs">
-                {card.expiryDate || "MM/YY"}
+                {card.expiryDate || t('expiry_placeholder')}
               </p>
             </div>
           </div>
@@ -121,7 +124,7 @@ export const PaymentCard = ({
           size="sm"
           className="flex-1 rounded-xl h-9 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs transition-colors"
         >
-          <Trash2 className="h-3.5 w-3.5 mr-2" /> Remove
+          <Trash2 className="h-3.5 w-3.5 mr-2" /> {t('remove')}
         </Button>
       </div>
     </div>

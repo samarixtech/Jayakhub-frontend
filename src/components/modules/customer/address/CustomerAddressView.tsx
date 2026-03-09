@@ -23,6 +23,7 @@ import { toast } from "react-hot-toast";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { AddressesSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
+import { useTranslations } from "next-intl";
 
 interface Address {
   id: string;
@@ -52,6 +53,8 @@ export default function CustomerAddressView() {
   // Delete Modal State
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState<Address | null>(null);
+
+  const t = useTranslations('CustomerDashboard.Addresses');
 
   const fetchAddresses = async () => {
     setLoading(true);
@@ -135,7 +138,7 @@ export default function CustomerAddressView() {
   // Table Columns Configuration
   const columns: Column<Address>[] = [
     {
-      header: "Type",
+      header: t('type'),
       cell: (address) => {
         const { icon, bg } = getIcon(address.label);
         return (
@@ -148,7 +151,7 @@ export default function CustomerAddressView() {
       },
     },
     {
-      header: "Label",
+      header: t('label_col'),
       cell: (address) => (
         <div className="flex flex-col">
           <span className="font-bold text-gray-900 text-sm">
@@ -159,7 +162,7 @@ export default function CustomerAddressView() {
       ),
     },
     {
-      header: "Full Address",
+      header: t('full_address'),
       cell: (address) => {
         const fullAddress = `${address.streetAddress}, ${address.apartment ? address.apartment + ", " : ""}${address.city}, ${address.stateProvince} ${address.zipCode}`;
         return (
@@ -170,16 +173,16 @@ export default function CustomerAddressView() {
       },
     },
     {
-      header: "Status",
+      header: t('status'),
       cell: (address) =>
         address.status && (
           <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-lg">
-            Active
+            {t('active')}
           </Badge>
         ),
     },
     {
-      header: "Actions",
+      header: t('actions'),
       className: "text-right",
       cell: (address) => (
         <div className="flex justify-end gap-3">
@@ -224,10 +227,10 @@ export default function CustomerAddressView() {
               variant="h2"
               className="text-[#1F2937] font-black text-xl md:text-2xl tracking-tight"
             >
-              Addresses
+              {t('title')}
             </Typography>
             <Typography variant="p" className="text-gray-500 text-xs md:text-sm mt-0.5 md:mt-1">
-              Manage your delivery locations
+              {t('subtitle')}
             </Typography>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -242,7 +245,7 @@ export default function CustomerAddressView() {
               onClick={handleAddNew}
               className="flex-1 sm:flex-none rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-10 md:h-11 px-6 shadow-sm transition-all text-xs md:text-sm font-bold"
             >
-              <Plus className="h-5 w-5 mr-1" /> Add New
+              <Plus className="h-5 w-5 mr-1" /> {t('add_new')}
             </Button>
           </div>
         </header>
@@ -254,7 +257,7 @@ export default function CustomerAddressView() {
               data={paginatedAddresses}
               columns={columns}
               loading={loading}
-              emptyMessage='No addresses found. Click "Add New" to create one.'
+              emptyMessage={t('no_addresses')}
               paginationParams={{
                 currentPage,
                 totalPages,
@@ -281,8 +284,8 @@ export default function CustomerAddressView() {
         <GlobalModal
           open={deleteModalOpen}
           onOpenChange={setDeleteModalOpen}
-          title="Delete Address"
-          description="Are you sure you want to delete this address? This action cannot be undone."
+          title={t('delete_title')}
+          description={t('delete_desc')}
           trigger={<></>} // No external trigger needed as it's controlled by state
         >
           <div className="flex justify-end gap-3 mt-6">
@@ -291,14 +294,14 @@ export default function CustomerAddressView() {
               onClick={() => setDeleteModalOpen(false)}
               className="rounded-full"
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button
               variant="destructive"
               onClick={handleConfirmDelete}
               className="rounded-full bg-red-500 hover:bg-red-600 text-white"
             >
-              Delete
+              {t('delete')}
             </Button>
           </div>
         </GlobalModal>

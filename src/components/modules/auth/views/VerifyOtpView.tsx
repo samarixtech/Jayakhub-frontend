@@ -54,6 +54,7 @@ export default function VerifyOtpView() {
             onComplete={handleVerify}
             disabled={isVerifying}
             containerClassName="group flex items-center has-[:disabled]:opacity-50"
+            autoFocus
           >
             <InputOTPGroup className="gap-2 sm:gap-4 font-bold">
               {Array.from({ length: 6 }).map((_, index) => (

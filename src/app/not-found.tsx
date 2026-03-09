@@ -42,7 +42,7 @@ const getPosition = (index: number, total: number, radiusPercent: number) => {
 const NotFoundPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#FCFBF4] overflow-hidden font-serif text-[#C5A572] py-10 sm:py-0">
-      {/* 404 Group */}
+      
       {/* Mobile: Reduced Scale (0.6), Tighter Gap. Desktop: Scale 1, Large Gap */}
       {/* ADDED mb-2 to ensure spacing from text below on mobile. Removed negative bottom margin. */}
       <div className="flex items-center justify-center gap-1 sm:gap-10 md:gap-16 scale-[0.6] xs:scale-[0.65] sm:scale-90 md:scale-100 transition-transform duration-300 w-full max-w-6xl mx-auto mb-2 sm:mb-8 mt-4 sm:mt-10">

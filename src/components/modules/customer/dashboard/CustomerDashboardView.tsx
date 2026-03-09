@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import useLocale from "@/hooks/useLocals";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 import { Order, OrderSummary } from "../types";
 import { DashboardStats } from "./components/DashboardStats";
@@ -10,11 +11,13 @@ import { RecentActivity } from "./components/RecentActivity";
 import { QuickActions } from "./components/QuickActions";
 
 export default function CustomerDashboardView() {
+  const t = useTranslations('CustomerDashboard.DashboardView');
   const { country, language } = useLocale();
   const [summary, setSummary] = useState<OrderSummary>({
     totalSpend: "0.00",
     totalOrdersCount: 0,
     totalPendingOrders: 0,
+    averageRating: "0.0",
   });
   const [recentOrders, setRecentOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -50,11 +53,10 @@ export default function CustomerDashboardView() {
           variant="h2"
           className="text-2xl font-black text-gray-900 flex items-center gap-2"
         >
-          Overview
+          {t('overview')}
         </Typography>
         <Typography variant="p" className="text-gray-500 text-sm mt-1">
-          Welcome back, here&apos;s what&apos;s happening with your account
-          today.
+          {t('welcome_message')}
         </Typography>
       </div>
 

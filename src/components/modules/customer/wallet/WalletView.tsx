@@ -7,9 +7,11 @@ import { WalletSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton
 
 import { useWallet } from "./useWallet";
 import { PaymentCard } from "./components/payment-card";
-import  EmptyState  from "../../../common/EmptyState"
+import EmptyState from "../../../common/EmptyState"
+import { useTranslations } from "next-intl";
 
 export default function WalletView() {
+  const t = useTranslations('CustomerDashboard.Wallet');
   const {
     cards,
     isLoading,
@@ -35,10 +37,10 @@ export default function WalletView() {
               variant="h2"
               className="text-2xl font-black text-gray-900"
             >
-              Wallet
+              {t('title')}
             </Typography>
             <Typography variant="p" className="text-gray-500 text-sm mt-1">
-              Manage your payment methods and billing information.
+              {t('subtitle')}
             </Typography>
           </div>
         </div>
@@ -55,7 +57,7 @@ export default function WalletView() {
             ))
           ) : (
             <div className="flex col-span-full items-center justify-center">
-            <EmptyState  icon={CreditCard} title="No cards added" message="Please make a order so your card will automatically be saved ."/>
+              <EmptyState icon={CreditCard} title="No cards added" message="Please make a order so your card will automatically be saved ." />
             </div>
           )}
         </div>
@@ -64,8 +66,8 @@ export default function WalletView() {
         <GlobalModal
           open={isDeleteModalOpen}
           onOpenChange={setIsDeleteModalOpen}
-          title="Remove Payment Method"
-          description="Are you sure you want to remove this card? This action cannot be undone."
+          title={t('remove_payment_title')}
+          description={t('remove_payment_desc')}
           trigger={<span className="hidden" />}
         >
           <div className="flex flex-col items-center gap-6 py-2">
@@ -93,10 +95,10 @@ export default function WalletView() {
                 {isDeleting ? (
                   <>
                     <Loader2 className="animate-spin mr-2 h-4 w-4" />{" "}
-                    Removing...
+                    {t('removing')}
                   </>
                 ) : (
-                  "Yes, Remove Card"
+                  t('yes_remove_card')
                 )}
               </Button>
               <Button
@@ -105,7 +107,7 @@ export default function WalletView() {
                 disabled={isDeleting}
                 className="w-full h-12 rounded-xl text-gray-500 font-bold hover:bg-gray-50"
               >
-                Cancel
+                {t('cancel')}
               </Button>
             </div>
           </div>

@@ -9,44 +9,47 @@ import {
 import { Card } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface QuickActionsProps {
   country: string;
   language: string;
 }
 
-const QUICK_ACTIONS = [
-  {
-    label: "Order Food",
-    icon: UtensilsCrossed,
-    color: "text-emerald-600",
-    hrefSuffix: "/restaurants",
-  },
-  {
-    label: "Reorder",
-    icon: RotateCcw,
-    color: "text-blue-500",
-    hrefSuffix: null,
-  },
-  {
-    label: "KYC Verify",
-    icon: ShieldCheck,
-    color: "text-amber-600",
-    hrefSuffix: "/customer/profile-settings",
-  },
-  {
-    label: "Payment Methods",
-    icon: CreditCard,
-    color: "text-purple-600",
-    hrefSuffix: "/customer/wallet",
-  },
-];
-
 export const QuickActions = ({ country, language }: QuickActionsProps) => {
+  const t = useTranslations('CustomerDashboard.QuickActions');
+
+  const QUICK_ACTIONS = [
+    {
+      label: t('order_food'),
+      icon: UtensilsCrossed,
+      color: "text-emerald-600",
+      hrefSuffix: "/restaurants",
+    },
+    {
+      label: t('reorder'),
+      icon: RotateCcw,
+      color: "text-blue-500",
+      hrefSuffix: null,
+    },
+    {
+      label: t('kyc_verify'),
+      icon: ShieldCheck,
+      color: "text-amber-600",
+      hrefSuffix: "/customer/profile-settings",
+    },
+    {
+      label: t('payment_methods'),
+      icon: CreditCard,
+      color: "text-purple-600",
+      hrefSuffix: "/customer/wallet",
+    },
+  ];
+
   return (
     <Card className="border-none shadow-sm rounded-4xl bg-white p-8 h-fit">
       <Typography className="text-lg font-black text-gray-900 mb-6">
-        Quick Actions
+        {t('quick_actions')}
       </Typography>
       <div className="space-y-3">
         {QUICK_ACTIONS.map((action) => {

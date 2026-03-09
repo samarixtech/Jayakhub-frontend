@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { AddressFormData } from "@/hooks/useAddressGeocoding";
+import { useTranslations } from "next-intl";
 
 interface AddressFormProps {
   formData: AddressFormData;
@@ -24,6 +25,8 @@ export const AddressForm = ({
   otherLabel,
   setOtherLabel,
 }: AddressFormProps) => {
+  const t = useTranslations('CustomerDashboard.Addresses');
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -38,7 +41,7 @@ export const AddressForm = ({
     <form className="space-y-5">
       {/* Address Label */}
       <div className="space-y-3">
-        <Label className="text-sm font-bold text-gray-900">Address Label</Label>
+        <Label className="text-sm font-bold text-gray-900">{t('address_label')}</Label>
         <div className="flex gap-3">
           {["Home", "Work", "Other"].map((type) => (
             <button
@@ -47,21 +50,20 @@ export const AddressForm = ({
               onClick={() => setAddressType(type as any)}
               className={`
                 px-6 py-2.5 rounded-full text-sm font-bold transition-all flex-1
-                ${
-                  addressType === type
-                    ? "bg-[#1E4D3B] text-white shadow-md"
-                    : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                ${addressType === type
+                  ? "bg-[#1E4D3B] text-white shadow-md"
+                  : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
                 }
               `}
             >
-              {type}
+              {type === "Home" ? t('home') : type === "Work" ? t('work') : t('other')}
             </button>
           ))}
         </div>
         {addressType === "Other" && (
           <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-300">
             <Input
-              placeholder="e.g. Grandma's House"
+              placeholder={t('other_placeholder')}
               className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
               autoFocus
               value={otherLabel}
@@ -74,11 +76,11 @@ export const AddressForm = ({
       {/* Street Address */}
       <div className="space-y-2">
         <Label htmlFor="street" className="text-sm font-bold text-gray-900">
-          Street Address
+          {t('street_address')}
         </Label>
         <Input
           id="street"
-          placeholder="e.g. 123 Main St"
+          placeholder={t('street_placeholder')}
           className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
           value={formData.street}
           onChange={handleInputChange}
@@ -88,11 +90,11 @@ export const AddressForm = ({
       {/* Apartment */}
       <div className="space-y-2">
         <Label htmlFor="apt" className="text-sm font-bold text-gray-900">
-          Apartment, Suite, Unit, etc. (Optional)
+          {t('apartment')}
         </Label>
         <Input
           id="apt"
-          placeholder="e.g. Apt 4B"
+          placeholder={t('apt_placeholder')}
           className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
           value={formData.apt}
           onChange={handleInputChange}
@@ -103,11 +105,11 @@ export const AddressForm = ({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="city" className="text-sm font-bold text-gray-900">
-            City
+            {t('city')}
           </Label>
           <Input
             id="city"
-            placeholder="e.g. Baghdad"
+            placeholder={t('city_placeholder')}
             className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
             value={formData.city}
             onChange={handleInputChange}
@@ -115,11 +117,11 @@ export const AddressForm = ({
         </div>
         <div className="space-y-2">
           <Label htmlFor="state" className="text-sm font-bold text-gray-900">
-            State / Province
+            {t('state_province')}
           </Label>
           <Input
             id="state"
-            placeholder="e.g. Al Mansour"
+            placeholder={t('state_placeholder')}
             className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
             value={formData.state}
             onChange={handleInputChange}
@@ -131,11 +133,11 @@ export const AddressForm = ({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="zip" className="text-sm font-bold text-gray-900">
-            Zip / Postal Code
+            {t('zip_code')}
           </Label>
           <Input
             id="zip"
-            placeholder="e.g. 10011"
+            placeholder={t('zip_placeholder')}
             className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
             value={formData.zip}
             onChange={handleInputChange}
@@ -143,11 +145,11 @@ export const AddressForm = ({
         </div>
         <div className="space-y-2">
           <Label htmlFor="country" className="text-sm font-bold text-gray-900">
-            Country
+            {t('country')}
           </Label>
           <Input
             id="country"
-            placeholder="Iraq"
+            placeholder={t('country_placeholder')}
             className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
             value={formData.country}
             onChange={handleInputChange}
@@ -159,10 +161,10 @@ export const AddressForm = ({
       <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50/50 border border-gray-100">
         <div className="space-y-0.5">
           <Label className="text-sm font-bold text-gray-900">
-            Set as Active Address
+            {t('set_active')}
           </Label>
           <p className="text-xs text-gray-500">
-            Use this address for your order
+            {t('use_this_address')}
           </p>
         </div>
         <Switch
@@ -177,11 +179,11 @@ export const AddressForm = ({
       {/* Note */}
       <div className="space-y-2">
         <Label htmlFor="note" className="text-sm font-bold text-gray-900">
-          Note to Courier (Optional)
+          {t('note_to_courier')}
         </Label>
         <Textarea
           id="note"
-          placeholder="e.g. Ring the doorbell, leave at front desk..."
+          placeholder={t('note_placeholder')}
           className="min-h-[100px] rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 resize-none text-base"
           value={formData.note}
           onChange={handleInputChange}
