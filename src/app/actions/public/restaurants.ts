@@ -59,10 +59,12 @@ export async function getPreviousOrderRestaurantsAction(): Promise<ActionRespons
 
 export async function getRestaurantReviewsAction(
   slug: string,
+  filter?: string,
 ): Promise<ActionResponse> {
   const api = await serverApi();
+  const queryParams = filter ? `?filter=${filter}` : "";
   return responseHandler(
-    async () => api.get(`/restaurant/reviews/${slug}`),
+    async () => api.get(`/restaurant/reviews/${slug}${queryParams}`),
     undefined,
     async (data) => {
       return data;

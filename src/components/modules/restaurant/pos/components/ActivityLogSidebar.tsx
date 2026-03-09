@@ -26,15 +26,6 @@ export default function ActivityLogSidebar({
   open,
   onOpenChange,
 }: ActivityLogSidebarProps) {
-  const [activeTab, setActiveTab] = useState("all");
-
-  const tabs = [
-    { id: "all", label: "All" },
-    { id: "tables", label: "Tables" },
-    { id: "online", label: "Online" },
-    { id: "payments", label: "Payments" },
-  ];
-
   const [logs, setLogs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -106,27 +97,6 @@ export default function ActivityLogSidebar({
             Activity Log
           </SheetTitle>
         </SheetHeader>
-
-        <div className="px-6 pt-2 pb-0 border-b border-gray-100 shrink-0 bg-white">
-          <div className="flex gap-6">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`pb-3 text-[13px] font-bold capitalize transition-colors relative ${
-                  activeTab === tab.id
-                    ? "text-[#357252]"
-                    : "text-gray-400 hover:text-gray-600"
-                }`}
-              >
-                {tab.label}
-                {activeTab === tab.id && (
-                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#357252] rounded-t-full"></div>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
 
         <div className="flex-1 overflow-y-auto px-6 py-4 bg-white">
           {isLoading ? (

@@ -1,8 +1,7 @@
-import SupportCenterView from "@/components/modules/restaurant/support/SupportCenterView";
-import React from "react";
+import SupportCenterView from "@/components/modules/restaurant/support/views/SupportCenterView";
 
 const SupportPage = () => {
-    return <SupportCenterView />;
+  return <SupportCenterView />;
 };
 
 export default SupportPage;

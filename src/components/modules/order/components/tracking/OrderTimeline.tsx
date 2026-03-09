@@ -21,24 +21,38 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
           title="Order Confirmed"
           description="We've received your order and the restaurant is starting soon."
           time={orderTime}
-          status="completed"
+          status={
+            orderStatus === "pending"
+              ? "pending"
+              : ["accepted", "paid"].includes(orderStatus)
+                ? "active"
+                : "completed"
+          }
         />
         <TimelineItem
           icon={Utensils}
           title="Preparing your food"
           description="The chef is working their magic! Your order is being packed."
           status={
-            orderStatus === "preparing" || orderStatus === "paid"
+            ["prepare", "preparing"].includes(orderStatus)
               ? "active"
-              : "pending"
+              : ["out_of_delivery", "delivered"].includes(orderStatus)
+                ? "completed"
+                : "pending"
           }
-          time="Expected 12:30 PM"
+          // time="Expected 12:30 PM"
         />
         <TimelineItem
           icon={Bike}
           title="On the way"
           description="Hang tight! Your rider will be heading to you soon."
-          status={orderStatus === "on_the_way" ? "active" : "pending"}
+          status={
+            orderStatus === "out_of_delivery"
+              ? "active"
+              : orderStatus === "delivered"
+                ? "completed"
+                : "pending"
+          }
         />
         <TimelineItem
           icon={MapPin}

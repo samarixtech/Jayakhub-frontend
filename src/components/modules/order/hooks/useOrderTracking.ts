@@ -9,14 +9,12 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
     const loadData = async () => {
       setLoading(true);
       try {
-        if (!orderIdFromUrl) {
-          setOrder(null);
-          setLoading(false);
-          return;
-        }
         const response = await getCurrentOrder(orderIdFromUrl);
         if (response.success && response.data) {
-          setOrder(response.data);
+          // If the backend wraps the object in a "data" property, unwrap it
+          const resData = response.data as any;
+          const orderData = resData.data ? resData.data : resData;
+          setOrder(orderData);
         } else {
           console.error("Failed to load order:", response.message);
           setOrder(null);

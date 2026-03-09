@@ -42,7 +42,9 @@ export const HeaderActions = ({
               {user?.name || "User"}
             </p>
             <p className="text-white/70 text-[10px] uppercase tracking-widest font-medium mt-1">
-              {user?.role?.name || "Customer"}
+              {typeof user?.role === "string"
+                ? user.role.replace(/_/g, " ")
+                : user?.role?.name || "NULL"}
             </p>
           </div>
           <UserProfile user={user} onLogout={onLogout} />

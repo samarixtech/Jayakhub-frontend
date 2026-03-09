@@ -60,7 +60,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
           maxTicksLimit: 5,
           color: "#8ea89a",
           font: { size: 11, weight: 600 },
-          callback: (value: any) => "Rs. " + value,
+          callback: (value: any) => "$" + value,
         },
         border: { display: false, dash: [4, 4] },
         grid: { color: "#f3f4f6", drawTicks: false },

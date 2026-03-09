@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X, Star, CheckCircle2, ThumbsUp } from "lucide-react";
 import { formatDistanceToNow, parse } from "date-fns";
@@ -9,7 +9,7 @@ export interface Review {
   userName: string;
   rating: number;
   comment: string;
-  date: string; // e.g., "22/02/2026"
+  date: string;
   orderedItems: string[];
 }
 
@@ -20,11 +20,12 @@ export interface ReviewsModalProps {
   totalAverageRating: number;
   totalRatingCount: number;
   reviews: Review[];
+  onFilterChange?: (filter?: string) => void;
+  isLoading?: boolean;
 }
 
 const parseDateString = (dateStr: string) => {
   try {
-    // Assuming format "DD/MM/YYYY" as shown in the API response
     if (dateStr.includes("/")) {
       return parse(dateStr, "dd/MM/yyyy", new Date());
     }
@@ -39,7 +40,7 @@ const getRelativeTime = (dateStr: string) => {
     const d = parseDateString(dateStr);
     return formatDistanceToNow(d, { addSuffix: true });
   } catch (e) {
-    return dateStr; // fallback to original string if parsing fails
+    return dateStr;
   }
 };
 
@@ -50,12 +51,28 @@ export function ReviewsModal({
   totalAverageRating,
   totalRatingCount,
   reviews,
+  onFilterChange,
+  isLoading = false,
 }: ReviewsModalProps) {
   const [activeFilter, setActiveFilter] = useState("Top reviews");
 
   const filters = ["Top reviews", "Newest", "Highest rating", "Lowest rating"];
 
-  // Calculate star breakdown from provided reviews (or mock if needed)
+  const filterToApiValue: Record<string, string | undefined> = {
+    "Top reviews": undefined,
+    Newest: "newest",
+    "Highest rating": "highestRated",
+    "Lowest rating": "lowestRating",
+  };
+
+  const handleFilterClick = (filter: string) => {
+    setActiveFilter(filter);
+    if (onFilterChange) {
+      onFilterChange(filterToApiValue[filter]);
+    }
+  };
+
+  // Calculate star breakdown from provided reviews
   const starBreakdown = useMemo(() => {
     const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
     if (reviews && reviews.length > 0) {
@@ -68,9 +85,7 @@ export function ReviewsModal({
     }
 
     // Convert to percentages
-    const max = Math.max(...Object.values(counts), 1); // prevent div by 0
-    // To make the UI look good even with few reviews, we can add a tiny bit of math
-    // but here we just map directly to the total length for realistic scaling compared to max
+    const max = Math.max(...Object.values(counts), 1);
 
     return [5, 4, 3, 2, 1].map((stars) => ({
       stars,
@@ -78,38 +93,6 @@ export function ReviewsModal({
       percentage: (counts[stars as keyof typeof counts] / max) * 100,
     }));
   }, [reviews]);
-
-  const sortedReviews = useMemo(() => {
-    let sorted = [...(reviews || [])];
-    switch (activeFilter) {
-      case "Newest":
-        sorted.sort(
-          (a, b) =>
-            parseDateString(b.date).getTime() -
-            parseDateString(a.date).getTime(),
-        );
-        break;
-      case "Highest rating":
-        sorted.sort((a, b) => b.rating - a.rating);
-        break;
-      case "Lowest rating":
-        sorted.sort((a, b) => a.rating - b.rating);
-        break;
-      case "Top reviews":
-      default:
-        // Top reviews usually mixes highest rating and recency/helpfulness
-        // We'll just sort by rating then date for now
-        sorted.sort((a, b) => {
-          if (b.rating !== a.rating) return b.rating - a.rating;
-          return (
-            parseDateString(b.date).getTime() -
-            parseDateString(a.date).getTime()
-          );
-        });
-        break;
-    }
-    return sorted;
-  }, [reviews, activeFilter]);
 
   if (!isOpen) return null;
 
@@ -125,10 +108,10 @@ export function ReviewsModal({
                 Reviews
               </Dialog.Title>
               <Dialog.Description className="text-gray-500 font-medium whitespace-pre-line mt-1">
-                {restaurantName.replace(" ", "\n")}
+                {restaurantName}
               </Dialog.Description>
             </div>
-            <Dialog.Close className="p-2 rounded-full hover:bg-gray-100 transition-colors bg-gray-50 flex-shrink-0">
+            <Dialog.Close className="p-2 rounded-full hover:bg-gray-100 transition-colors bg-gray-50 shrink-0">
               <X className="w-5 h-5 text-gray-600" />
             </Dialog.Close>
           </div>
@@ -138,7 +121,7 @@ export function ReviewsModal({
             <div className="flex flex-col sm:flex-row gap-8 py-6">
               {/* Left side large rating */}
               <div className="flex flex-col justify-start shrink-0 min-w-[120px]">
-                <div className="text-6xl font-extrabold text-gray-900 tracking-tighter leading-none mb-2">
+                <div className="text-6xl font-bold text-gray-900 tracking-tighter leading-none mb-2">
                   {totalAverageRating.toFixed(1)}
                 </div>
                 <div className="flex items-center gap-1 mb-1">
@@ -184,7 +167,7 @@ export function ReviewsModal({
               {filters.map((filter) => (
                 <button
                   key={filter}
-                  onClick={() => setActiveFilter(filter)}
+                  onClick={() => handleFilterClick(filter)}
                   className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                     activeFilter === filter
                       ? "bg-gray-900 text-white"
@@ -198,8 +181,24 @@ export function ReviewsModal({
 
             {/* Review List */}
             <div className="space-y-8 pb-4">
-              {sortedReviews.length > 0 ? (
-                sortedReviews.map((review, idx) => (
+              {isLoading ? (
+                <div className="space-y-6">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex flex-col gap-3 animate-pulse">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-gray-200" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-4 w-28 bg-gray-200 rounded" />
+                          <div className="h-3 w-20 bg-gray-100 rounded" />
+                        </div>
+                      </div>
+                      <div className="h-4 w-full bg-gray-100 rounded" />
+                      <div className="h-4 w-3/4 bg-gray-100 rounded" />
+                    </div>
+                  ))}
+                </div>
+              ) : reviews.length > 0 ? (
+                reviews.map((review, idx) => (
                   <div key={idx} className="flex flex-col">
                     <div className="flex items-start gap-4 mb-3">
                       {/* Avatar */}
@@ -261,7 +260,7 @@ export function ReviewsModal({
                     </div>
 
                     {/* Divider for all but last */}
-                    {idx < sortedReviews.length - 1 && (
+                    {idx < reviews.length - 1 && (
                       <div className="h-px w-full bg-gray-100 mt-8" />
                     )}
                   </div>

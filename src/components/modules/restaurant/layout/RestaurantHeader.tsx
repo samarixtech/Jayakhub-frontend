@@ -5,7 +5,6 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Typography } from "@/components/ui/typography";
 import { usePathname } from "next/navigation";
 import UserProfile from "@/components/common/UserProfile";
-import useLocale from "@/hooks/useLocals";
 import { getProfile } from "@/app/actions/customer/userprofile";
 import { logoutAction } from "@/app/actions/auth/auth";
 import { Bell } from "lucide-react";

@@ -16,7 +16,7 @@ export function useDashboard() {
       if (res.success && res.data) {
         const payload = (res.data as any).data;
         setDashboardData(payload);
-        if (payload && typeof payload.isOnline === 'boolean') {
+        if (payload && typeof payload.isOnline === "boolean") {
           setIsOnline(payload.isOnline);
         }
       }
@@ -39,7 +39,7 @@ export function useDashboard() {
         setIsOnline(!newStatus);
         toast.error("Failed to update status");
       } else {
-        toast.success(`Restaurant is now ${newStatus ? 'Online' : 'Offline'}`);
+        toast.success(`Restaurant is now ${newStatus ? "Online" : "Offline"}`);
       }
     } catch (error) {
       // Revert on error
@@ -99,15 +99,18 @@ export function useDashboard() {
     return `${diffDays} days ago`;
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IQ", {
-      style: "currency",
-      currency: "IQD",
-      minimumFractionDigits: 0,
-    })
-      .format(amount)
-      .replace("IQD", "Rs.");
-  };
+  // TODO: Use formatCurrency with proper locale in the future
+  // const formatCurrency = (amount: number) => {
+  //   return new Intl.NumberFormat("en-IQ", {
+  //     style: "currency",
+  //     currency: "IQD",
+  //     minimumFractionDigits: 0,
+  //   })
+  //     .format(amount)
+  //     .replace("IQD", "Rs.");
+  // };
+
+  const formatCurrency = (amount: number) => `$${amount}`;
 
   const ownerName = dashboardData?.ownerName || "Chef";
   const stats = dashboardData?.stats;

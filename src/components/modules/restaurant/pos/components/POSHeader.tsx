@@ -191,12 +191,21 @@ export default function POSNavbar() {
             Register 1
           </button>
 
-          <Link
-            href="/restaurant/dashboard"
-            className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block"
-          >
-            <LogOut className="w-[20px] h-[20px]" />
-          </Link>
+          {userRole === "restaurant_owner" ? (
+            <Link
+              href="/restaurant/dashboard"
+              className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block"
+            >
+              <LogOut className="w-[20px] h-[20px]" />
+            </Link>
+          ) : (
+            <button
+              onClick={() => setIsCloseRegisterOpen(true)}
+              className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block"
+            >
+              <LogOut className="w-[20px] h-[20px]" />
+            </button>
+          )}
         </div>
       </div>
 

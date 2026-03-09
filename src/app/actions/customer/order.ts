@@ -65,7 +65,7 @@ export async function getAllOrders(filter?: string): Promise<{
 export async function submitRatingAction(payload: {
   orderId: string;
   restaurantId: string;
-  itemId?: string; // Optional since some backend "Get Orders" permutations strip item ID
+  itemId?: string;
   orderItemId?: string;
   rating: number;
   isRecommended: boolean;
