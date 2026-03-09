@@ -4,7 +4,7 @@ import { Clock, Star, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   RestaurantHeroProps,
-  RestaurantDetails,
+  // RestaurantDetails,
 } from "@/components/modules/discovery/discovery.types";
 
 export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
@@ -28,7 +28,7 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
       </div>
 
       {/* RESTAURANT INFO SECTION */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 -mt-12 md:-mt-24 mb-6 md:mb-8">
+      <div className="max-w-7xl mx-auto relative z-20 -mt-12 md:-mt-24 mb-6 md:mb-8">
         <div className="bg-white rounded-2xl md:rounded-3xl shadow-lg p-4 md:p-6 lg:p-8 flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
           <div className="w-24 h-24 md:w-32 md:h-32 rounded-xl overflow-hidden shadow-md border-4 border-white shrink-0 -mt-14 md:mt-0 bg-white relative z-30">
             <Image

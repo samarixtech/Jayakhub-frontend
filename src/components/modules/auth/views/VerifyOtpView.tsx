@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Typography } from "@/components/ui/typography";
 import { useVerifyOtp } from "../hooks/useVerifyOtp";
+import { useEffect, useRef } from "react";
 
 export default function VerifyOtpView() {
   const {
@@ -23,6 +24,14 @@ export default function VerifyOtpView() {
     handleResend,
     handleVerify,
   } = useVerifyOtp();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   return (
     <Card className="border-none shadow-none bg-transparent m-0 py-2">
@@ -38,6 +47,7 @@ export default function VerifyOtpView() {
       <CardContent className="px-0">
         <div className="flex flex-col items-center space-y-8">
           <InputOTP
+            ref={inputRef}
             maxLength={6}
             value={otpValue}
             onChange={(value) => setOtpValue(value)}

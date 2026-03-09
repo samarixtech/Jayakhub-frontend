@@ -88,7 +88,7 @@ export default function OrderTrackingView({ params }: { params: any }) {
             <OrderMap address={order.address} />
             <OrderTimeline
               orderTime={order.orderTime}
-              orderStatus={order.status}
+              orderStatus={order.orderStatus}
             />
           </div>
 

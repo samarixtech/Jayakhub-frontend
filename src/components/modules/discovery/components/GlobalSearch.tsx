@@ -278,7 +278,10 @@ export const GlobalSearch = () => {
                     {suggestions.map((sug, i) => (
                       <div
                         key={i}
-                        onClick={() => handleSearchSubmit(sug)}
+                        onClick={() => {
+                          setQuery(sug);
+                          handleSearchSubmit(sug);
+                        }}
                         className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
                       >
                         <Search className="w-4 h-4 text-emerald-500 shrink-0" />

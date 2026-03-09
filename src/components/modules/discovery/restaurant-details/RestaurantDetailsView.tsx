@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import ProductModal from "@/components/ProductModal";
 import FloatingCart from "@/components/FloatingCart";
 import CartDrawer from "@/components/CartDrawer";
@@ -85,6 +83,8 @@ export default function RestaurantDetailsView() {
           totalAverageRating={state.reviewsData.totalAverageRating || 0}
           totalRatingCount={state.reviewsData.totalRatingCount || 0}
           reviews={state.reviewsData.reviews || []}
+          onFilterChange={actions.fetchReviewsWithFilter}
+          isLoading={state.reviewsLoading}
         />
       )}
     </div>

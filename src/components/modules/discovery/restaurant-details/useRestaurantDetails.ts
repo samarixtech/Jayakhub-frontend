@@ -35,6 +35,7 @@ export function useRestaurantDetails() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isReviewsModalOpen, setIsReviewsModalOpen] = useState(false);
   const [reviewsData, setReviewsData] = useState<any>(null);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
 
   const { setCLC, country, currency, language } = useCLC();
 
@@ -60,20 +61,20 @@ export function useRestaurantDetails() {
     },
   );
 
-  const { execute: fetchReviews } = useServerAction(
-    getRestaurantReviewsAction,
-    {
-      suppressSuccessToast: true,
-      onSuccess: (data: any) => {
-        if (data) {
-          setReviewsData(data);
-        }
-      },
-      onError: (err) => {
-        console.error("Failed to fetch reviews data:", err);
-      },
-    },
-  );
+  const fetchReviewsWithFilter = async (filter?: string) => {
+    if (!slugParam) return;
+    setReviewsLoading(true);
+    try {
+      const res = await getRestaurantReviewsAction(slugParam, filter);
+      if (res.success && res.data) {
+        setReviewsData(res.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch reviews data:", err);
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
 
   useEffect(() => {
     let c = Array.isArray(params?.country)
@@ -89,7 +90,7 @@ export function useRestaurantDetails() {
     if (slugParam) {
       console.log("Fetching restaurant with slug:", slugParam);
       fetchRestaurant(slugParam);
-      fetchReviews(slugParam);
+      fetchReviewsWithFilter();
     } else {
       console.log("No slug param found");
       setIsLoading(false);
@@ -171,6 +172,7 @@ export function useRestaurantDetails() {
       isCartOpen,
       isReviewsModalOpen,
       reviewsData,
+      reviewsLoading,
       cart,
       country,
       currency,
@@ -186,6 +188,7 @@ export function useRestaurantDetails() {
       setSelectedItem,
       setIsCartOpen,
       setIsReviewsModalOpen,
+      fetchReviewsWithFilter,
       handleAddToCart,
       scrollToCategory,
       handleAddToCartFromModal,

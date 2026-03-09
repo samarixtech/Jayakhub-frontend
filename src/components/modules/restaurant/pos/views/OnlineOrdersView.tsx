@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Bell,
   ChefHat,
@@ -9,7 +8,6 @@ import {
   X,
   Phone,
   Bike,
-  User,
 } from "lucide-react";
 import Image from "next/image";
 import { useOnlineOrders } from "../hooks/useOnlineOrders";

@@ -12,6 +12,20 @@ export const useHeader = () => {
   const { setIsFilterOpen } = useDiscoveryUI();
 
   const [currentAddress, setCurrentAddress] = useState("Iraq, Baghdad");
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("userLocation");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.address) {
+          setCurrentAddress(parsed.address);
+        }
+      }
+    } catch (e) {
+      // Ignored
+    }
+  }, []);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);

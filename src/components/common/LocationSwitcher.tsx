@@ -92,6 +92,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
     lng: number;
   } | null>(null);
   const [tempAddress, setTempAddress] = useState<string | null>(null);
+  const [inputValue, setInputValue] = useState("");
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
 
   const searchBoxRef = React.useRef<google.maps.places.SearchBox | null>(null);
@@ -170,6 +171,12 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
               const address = results[0].formatted_address;
               setDetectedLocation(address);
               setTempAddress(address);
+              try {
+                localStorage.setItem(
+                  "userLocation",
+                  JSON.stringify({ lat: latitude, lng: longitude, address }),
+                );
+              } catch (e) {}
               if (view === "list") {
                 onAddressChange(address);
               }
@@ -197,12 +204,77 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
     const lng = searchParams.get("lng");
 
     if (isLoaded && !autoDetectRef.current) {
+      // Check local storage first
+      try {
+        const stored = localStorage.getItem("userLocation");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.address) {
+            setDetectedLocation(parsed.address);
+            setTempAddress(parsed.address);
+            if (parsed.lat && parsed.lng) {
+              setMapCenter({ lat: parsed.lat, lng: parsed.lng });
+              setSelectedLocation({ lat: parsed.lat, lng: parsed.lng });
+            }
+
+            if (
+              currentAddress === "Iraq, Baghdad" ||
+              currentAddress === getCountryFromUrl()
+            ) {
+              onAddressChange(parsed.address);
+            }
+
+            autoDetectRef.current = true;
+            return;
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse local storage", e);
+      }
+
       if (!lat || !lng) {
         console.log("LocationSwitcher: Auto-detecting location...");
         autoDetectRef.current = true;
         getCurrentLocation(true);
       } else {
+        console.log(
+          "LocationSwitcher: Detecting address from URL coordinates...",
+        );
         autoDetectRef.current = true;
+
+        const pos = { lat: Number(lat), lng: Number(lng) };
+        setMapCenter(pos);
+        setSelectedLocation(pos);
+
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode({ location: pos }, (results, status) => {
+          if (status === "OK" && results && results[0]) {
+            const address = results[0].formatted_address;
+            setDetectedLocation(address);
+            setTempAddress(address);
+
+            if (
+              currentAddress === "Iraq, Baghdad" ||
+              currentAddress === getCountryFromUrl()
+            ) {
+              onAddressChange(address);
+            }
+
+            try {
+              localStorage.setItem(
+                "userLocation",
+                JSON.stringify({
+                  lat: pos.lat,
+                  lng: pos.lng,
+                  address,
+                }),
+              );
+            } catch (e) {}
+          } else {
+            console.error("Geocoder failed: " + status);
+            getCurrentLocation(true); // Fallback to browser geolocation
+          }
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -221,6 +293,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
         geocoder.geocode({ location: newPos }, (results, status) => {
           if (status === "OK" && results && results[0]) {
             setTempAddress(results[0].formatted_address);
+            setInputValue(results[0].formatted_address);
           }
         });
       }
@@ -242,7 +315,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
 
         setMapCenter(newPos);
         setSelectedLocation(newPos);
-        setTempAddress(place.formatted_address || place.name || "");
+
+        const addressName = place.formatted_address || place.name || "";
+        setTempAddress(addressName);
+        setInputValue(addressName);
 
         if (mapRef) {
           mapRef.panTo(newPos);
@@ -255,6 +331,18 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   const confirmLocation = () => {
     if (tempAddress) {
       onAddressChange(tempAddress);
+      if (selectedLocation) {
+        try {
+          localStorage.setItem(
+            "userLocation",
+            JSON.stringify({
+              lat: selectedLocation.lat,
+              lng: selectedLocation.lng,
+              address: tempAddress,
+            }),
+          );
+        } catch (e) {}
+      }
     }
     if (selectedLocation && onLocationChange) {
       onLocationChange(selectedLocation.lat, selectedLocation.lng);
@@ -408,15 +496,24 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                       key={addr.id}
                       onClick={() => {
                         onAddressChange(fullAddress);
-                        if (
-                          onLocationChange &&
-                          addr.latitude &&
-                          addr.longitude
-                        ) {
-                          onLocationChange(
-                            Number(addr.latitude),
-                            Number(addr.longitude),
-                          );
+                        if (addr.latitude && addr.longitude) {
+                          const lat = Number(addr.latitude);
+                          const lng = Number(addr.longitude);
+
+                          if (onLocationChange) {
+                            onLocationChange(lat, lng);
+                          }
+
+                          try {
+                            localStorage.setItem(
+                              "userLocation",
+                              JSON.stringify({
+                                lat,
+                                lng,
+                                address: fullAddress,
+                              }),
+                            );
+                          } catch (e) {}
                         }
                         setIsOpen(false);
                       }}
@@ -484,6 +581,8 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                 <div className="relative">
                   <input
                     type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Search location..."
                     className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50 outline-none text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:border-emerald-500 transition-all shadow-sm"
                   />

@@ -1,6 +1,12 @@
 "use client";
+
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GlobalModal } from "@/components/common/GlobalModal";
+import { Loader2 } from "lucide-react";
+import { useCloseRegister } from "../hooks/useCloseRegister";
+import { ShiftReportPDF } from "./ShiftReportPDF";
+import { CloseRegisterMetrics } from "./CloseRegisterMetrics";
+import { CloseRegisterPaymentSummary } from "./CloseRegisterPaymentSummary";
 
 interface CloseRegisterModalProps {
   open: boolean;
@@ -11,6 +17,9 @@ export default function CloseRegisterModal({
   open,
   onOpenChange,
 }: CloseRegisterModalProps) {
+  const { data, isLoading, isPending, pdfRef, handleCloseShift } =
+    useCloseRegister({ open, onOpenChange });
+
   return (
     <GlobalModal
       open={open}
@@ -24,83 +33,47 @@ export default function CloseRegisterModal({
         </DialogTitle>
       </DialogHeader>
 
-      <div className="p-6">
-        <div className="bg-[#f8fafa] rounded-xl p-6 mb-6">
-          <div className="grid grid-cols-2 gap-y-6 gap-x-4">
-            <div>
-              <p className="text-[11px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-                TOTAL SALES
-              </p>
-              <p className="text-[26px] font-black text-[#1b2d22] tracking-tight leading-none">
-                $50.40
-              </p>
+      <div className="p-6 relative">
+        <div className="bg-white mb-6">
+          {isLoading ? (
+            <div className="flex justify-center py-10">
+              <Loader2 className="w-6 h-6 animate-spin text-[#357252]" />
             </div>
-            <div>
-              <p className="text-[11px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-                GROSS PROFIT
-              </p>
-              <p className="text-[26px] font-black text-[#1eb589] tracking-tight leading-none">
-                $32.76
-              </p>
-            </div>
+          ) : data ? (
+            <>
+              <div className="mb-4 border-b border-gray-100 pb-4">
+                <h2 className="text-[17px] font-black tracking-tight text-[#1b2d22]">
+                  Shift Report
+                </h2>
+                <div className="flex justify-between items-center mt-2 text-[12px] text-gray-500 font-medium">
+                  <span>{new Date().toLocaleString()}</span>
+                  <span>Cashier: {data.user?.name || "Unknown"}</span>
+                </div>
+              </div>
 
-            <div>
-              <p className="text-[11px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-                TRANSACTIONS
-              </p>
-              <p className="text-[22px] font-black text-[#1b2d22] tracking-tight leading-none">
-                3
-              </p>
-            </div>
-            <div>
-              <p className="text-[11px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-                AVG ORDER
-              </p>
-              <p className="text-[22px] font-black text-[#1b2d22] tracking-tight leading-none">
-                $16.80
-              </p>
-            </div>
-          </div>
+              <CloseRegisterMetrics metrics={data.metrics} />
+              <CloseRegisterPaymentSummary
+                paymentSummary={data.paymentSummary}
+              />
+            </>
+          ) : (
+            <p className="text-sm text-center text-gray-500 py-6">
+              No data available.
+            </p>
+          )}
         </div>
 
-        <div className="border-t border-gray-100 pt-5 mb-6">
-          <h3 className="text-[12px] font-bold text-[#556977] tracking-wide mb-4 uppercase">
-            PAYMENT SUMMARY
-          </h3>
-
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-[13.5px] font-medium text-[#1b2d22]">
-                Cash Payments
-              </span>
-              <span className="text-[13.5px] font-bold text-[#1b2d22]">
-                $17.32
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[13.5px] font-medium text-[#1b2d22]">
-                Card Payments
-              </span>
-              <span className="text-[13.5px] font-bold text-[#1b2d22]">
-                $15.75
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[13.5px] font-medium text-[#1b2d22]">
-                Online Orders
-              </span>
-              <span className="text-[13.5px] font-bold text-[#1b2d22]">
-                $0.00
-              </span>
-            </div>
-          </div>
-        </div>
+        {/* Hidden PDF Template */}
+        <ShiftReportPDF data={data} pdfRef={pdfRef} />
 
         <button
-          onClick={() => onOpenChange(false)}
-          className="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white font-bold py-3.5 rounded-xl text-[14.5px] transition-colors shadow-sm"
+          onClick={handleCloseShift}
+          disabled={isPending || isLoading || !data}
+          className="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white font-bold py-3.5 rounded-xl text-[14px] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
         >
-          Close Shift & Print Report
+          {isPending
+            ? "Closing & Saving Report..."
+            : "Close Shift & Print Report"}
         </button>
       </div>
     </GlobalModal>
