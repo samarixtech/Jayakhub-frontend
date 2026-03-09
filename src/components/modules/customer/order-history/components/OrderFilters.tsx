@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 
 interface OrderFiltersProps {
   showFilters: boolean;
@@ -23,14 +24,15 @@ export const OrderFilters = ({
   dateRange,
   setDateRange,
 }: OrderFiltersProps) => {
+  const t = useTranslations('CustomerDashboard.OrderHistory');
+
   return (
     <div
-      className={`${
-        showFilters ? "flex" : "hidden"
-      } md:flex flex-col md:flex-row bg-white rounded-2xl p-4 md:p-2 md:pl-6 shadow-sm items-start md:items-center gap-4 md:gap-6 overflow-x-auto transition-all`}
+      className={`${showFilters ? "flex" : "hidden"
+        } md:flex flex-col md:flex-row bg-white rounded-2xl p-4 md:p-2 md:pl-6 shadow-sm items-start md:items-center gap-4 md:gap-6 overflow-x-auto transition-all`}
     >
       <span className="text-sm font-bold text-gray-900 shrink-0 mb-2 md:mb-0">
-        Filters:
+        {t('filters_label')}
       </span>
 
       <div className="flex flex-wrap md:flex-nowrap items-center gap-4 md:gap-6 flex-1 w-full md:w-auto">
@@ -46,7 +48,7 @@ export const OrderFilters = ({
             htmlFor="filter-all"
             className="text-sm font-medium text-gray-700 cursor-pointer select-none"
           >
-            All
+            {t('filter_all')}
           </label>
         </div>
 
@@ -61,7 +63,7 @@ export const OrderFilters = ({
             htmlFor="filter-active"
             className="text-sm font-medium text-gray-700 cursor-pointer select-none"
           >
-            Active
+            {t('filter_active')}
           </label>
         </div>
 
@@ -76,7 +78,7 @@ export const OrderFilters = ({
             htmlFor="filter-delivered"
             className="text-sm font-medium text-gray-700 cursor-pointer select-none"
           >
-            Delivered
+            {t('filter_delivered')}
           </label>
         </div>
 
@@ -91,7 +93,7 @@ export const OrderFilters = ({
             htmlFor="filter-cancelled"
             className="text-sm font-medium text-gray-700 cursor-pointer select-none"
           >
-            Rejected/Cancelled
+            {t('filter_cancelled')}
           </label>
         </div>
       </div>
@@ -99,13 +101,13 @@ export const OrderFilters = ({
       <div className="flex items-center gap-2 shrink-0 md:ml-auto w-full md:w-auto pt-2 md:pt-0 border-t md:border-t-0 border-gray-50">
         <Select value={dateRange} onValueChange={setDateRange}>
           <SelectTrigger className="w-full md:w-[140px] h-9 rounded-lg border-gray-200 text-xs font-bold bg-gray-50">
-            <SelectValue placeholder="Date Range" />
+            <SelectValue placeholder={t('date_range')} />
           </SelectTrigger>
           <SelectContent className="bg-white">
-            <SelectItem value="30">Last 30 Days</SelectItem>
-            <SelectItem value="90">Last 3 Months</SelectItem>
-            <SelectItem value="180">Last 6 Months</SelectItem>
-            <SelectItem value="365">Last Year</SelectItem>
+            <SelectItem value="30">{t('last_30_days')}</SelectItem>
+            <SelectItem value="90">{t('last_3_months')}</SelectItem>
+            <SelectItem value="180">{t('last_6_months')}</SelectItem>
+            <SelectItem value="365">{t('last_year')}</SelectItem>
           </SelectContent>
         </Select>
       </div>

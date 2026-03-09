@@ -1,6 +1,8 @@
 import { Card } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 export function PaymentHistoryMetrics({ summary }: { summary: any }) {
+    const t = useTranslations('CustomerDashboard.PaymentHistory');
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
             {/* Total Spent */}
@@ -11,7 +13,7 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-[10px] font-bold text-[#6B7280] tracking-wider uppercase mb-0.5">
-                            Total Spent
+                            {t('total_spent')}
                         </span>
                         <span className="text-[22px] font-black text-[#1E293B] leading-none tracking-tight">
                             ${Number(summary?.totalSpend || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -39,7 +41,7 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-[10px] font-bold text-[#6B7280] tracking-wider uppercase mb-0.5">
-                            This Month
+                            {t('this_month')}
                         </span>
                         <span className="text-[22px] font-black text-[#1E293B] leading-none tracking-tight">
                             $286.00
@@ -59,10 +61,10 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-[10px] font-bold text-[#6B7280] tracking-wider uppercase mb-0.5">
-                            Pending
+                            {t('pending')}
                         </span>
                         <span className="text-[22px] font-black text-[#1E293B] leading-none tracking-tight">
-                            {summary?.totalPendingOrders || 0} Pending
+                            {summary?.totalPendingOrders || 0} {t('pending')}
                         </span>
                     </div>
                 </div>
@@ -87,10 +89,10 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-[10px] font-bold text-[#6B7280] tracking-wider uppercase mb-0.5">
-                            Next Billing
+                            {t('next_billing')}
                         </span>
                         <span className="text-[22px] font-black text-[#1E293B] leading-none tracking-tight">
-                            Dec 01
+                            {t('dec_01')}
                         </span>
                     </div>
                 </div>

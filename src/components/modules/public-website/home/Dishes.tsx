@@ -3,6 +3,10 @@ import { Star, Plus, Minus, Heart, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import mixedGrillImg from '../../../../../public/mixed-grill.jpg';
+import gourmetImg from '../../../../../public/gourmet.jpg';
+import sausageFeastImg from '../../../../../public/sausage-feast.jpg';
+import hyderabadBiryaniImg from '../../../../../public/Hyderabad-biryani.jpg';
 
 const dishes = [
   {
@@ -13,7 +17,7 @@ const dishes = [
     originalPrice: 24.99,
     rating: 4.9,
     reviews: 320,
-    image: '/mixed-grill.jpg',
+    image: mixedGrillImg,
     tag: 'Bestseller',
     tagColor: 'bg-primary',
   },
@@ -25,7 +29,7 @@ const dishes = [
     originalPrice: null,
     rating: 4.8,
     reviews: 180,
-    image: '/gourmet.jpg',
+    image: gourmetImg,
     tag: "New Arrival",
     tagColor: 'bg-primary',
   },
@@ -37,7 +41,7 @@ const dishes = [
     originalPrice: 19.99,
     rating: 4.6,
     reviews: 95,
-    image: '/sausage-feast.jpg',
+    image: sausageFeastImg,
     tag: '15% OFF',
     tagColor: 'bg-primary',
   },
@@ -49,7 +53,7 @@ const dishes = [
     originalPrice: null,
     rating: 4.7,
     reviews: 250,
-    image: '/Hyderabad-biryani.jpg',
+    image: hyderabadBiryaniImg,
     tag: 'Spicy',
     tagColor: 'bg-primary',
   },

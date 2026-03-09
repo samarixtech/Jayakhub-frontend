@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Search, Package, ArrowRight, ChevronDown, ChevronUp, MessageCircle, Mail, CreditCard, User, Shield, Truck, Layers } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import HeroBackground from '@/components/common/public-website/HeroBackground';
+import WaveDivider from '@/components/common/public-website/WaveDivider';
 
 // Help categories data
 
@@ -48,19 +50,7 @@ export default function Help() {
         <div className="bg-white min-h-screen font-sans">
             {/* Hero Section */}
             <section className="bg-primary pt-32 pb-48 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-                {/* Background elements (same as Terms) */}
-                <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px]" />
-                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#FE8C34]/10 rounded-full blur-[100px]" />
-                    <div
-                        className="absolute inset-0 opacity-[0.03]"
-                        style={{
-                            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-                            backgroundSize: '60px 60px'
-                        }}
-                    />
-                </div>
+                <HeroBackground />
 
                 <div className="max-w-3xl mx-auto z-10 relative text-center">
                     <div className="inline-block bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 mb-6">
@@ -84,15 +74,7 @@ export default function Help() {
                 </div>
 
 
-                {/* Wave divider */}
-                <div className="absolute bottom-0 left-0 right-0">
-                    <svg viewBox="0 0 1440 100" fill="none" className="w-full" preserveAspectRatio="none">
-                        <path
-                            d="M0 100L60 90C120 80 240 60 360 50C480 40 600 40 720 45C840 50 960 60 1080 65C1200 70 1320 70 1380 70L1440 70V100H0Z"
-                            fill="white"
-                        />
-                    </svg>
-                </div>
+                <WaveDivider />
             </section>
 
             {/* Main Content */}

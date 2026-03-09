@@ -2,6 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { Star, Clock, Flame, ChevronRight, Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import alMansourImg from "../../../../../public/al-mansour.jpg";
+import baghdadBitesImg from "../../../../../public/baghdad-bites.jpg";
+import pizzaPalaceImg from "../../../../../public/pizza-palace.jpg";
+import spiceRouteImg from "../../../../../public/spice-route.png";
+import sushiMasterImg from "../../../../../public/sushi-master.jpg";
+import greenGardenImg from "../../../../../public/green-garden.png";
 
 const categories = [
   { name: "All", icon: "🔥" },
@@ -21,7 +27,7 @@ const restaurants = [
     reviews: 1120,
     time: "25-35 min",
     delivery: "Free",
-    image: "/al-mansour.jpg",
+    image: alMansourImg,
     badge: "Top Rated",
     badgeColor: "bg-primary",
   },
@@ -33,7 +39,7 @@ const restaurants = [
     reviews: 850,
     time: "20-30 min",
     delivery: "$1.50",
-    image: "/baghdad-bites.jpg",
+    image: baghdadBitesImg,
     badge: "Popular",
     badgeColor: "bg-primary",
   },
@@ -45,7 +51,7 @@ const restaurants = [
     reviews: 780,
     time: "30-40 min",
     delivery: "Free",
-    image: "/pizza-palace.jpg",
+    image: pizzaPalaceImg,
     badge: "20% OFF",
     badgeColor: "bg-primary",
   },
@@ -57,7 +63,7 @@ const restaurants = [
     reviews: 650,
     time: "35-45 min",
     delivery: "$2.00",
-    image: "/spice-route.png",
+    image: spiceRouteImg,
     badge: "Popular",
     badgeColor: "bg-primary",
   },
@@ -69,7 +75,7 @@ const restaurants = [
     reviews: 480,
     time: "25-35 min",
     delivery: "Free",
-    image: "/sushi-master.jpg",
+    image: sushiMasterImg,
     badge: "New",
     badgeColor: "bg-primary",
   },
@@ -81,7 +87,7 @@ const restaurants = [
     reviews: 420,
     time: "15-25 min",
     delivery: "$1.00",
-    image: "/green-garden.png",
+    image: greenGardenImg,
     badge: "tasty",
     badgeColor: "bg-primary",
   },
@@ -158,8 +164,8 @@ export default function Restaurants() {
               key={category.name}
               onClick={() => setActiveCategory(category.name)}
               className={`flex items-center gap-2 px-5 py-2.5 md:py-3 rounded-full font-medium transition-all duration-300 whitespace-nowrap ${activeCategory === category.name
-                  ? "bg-primary text-white shadow-lg shadow-primary/25 scale-105"
-                  : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
+                ? "bg-primary text-white shadow-lg shadow-primary/25 scale-105"
+                : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
                 }`}
             >
               <span className="text-lg">{category.icon}</span>
@@ -174,16 +180,16 @@ export default function Restaurants() {
             <div
               key={restaurant.id}
               className={`group relative bg-white rounded-2xl md:rounded-3xl overflow-hidden border border-[#E2E8F0] hover:border-primary/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl cursor-pointer ${isVisible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
                 }`}
               style={{ transitionDelay: `${(index + 2) * 100}ms` }}
             >
               {/* Image Container */}
               <div className="relative h-48 md:h-52 lg:h-56 overflow-hidden">
                 <Image
-                width={200}
-                height={200}
+                  width={200}
+                  height={200}
                   src={restaurant.image}
                   alt={restaurant.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -211,8 +217,8 @@ export default function Restaurants() {
                 >
                   <Heart
                     className={`w-4 h-4 md:w-5 md:h-5 transition-colors ${favorites.includes(restaurant.id)
-                        ? "text-red-500 fill-red-500"
-                        : "text-[#64748B]"
+                      ? "text-red-500 fill-red-500"
+                      : "text-[#64748B]"
                       }`}
                   />
                 </button>

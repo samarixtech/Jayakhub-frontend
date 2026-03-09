@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from 'next/navigation';
 import { useTranslations, useLocale } from "next-intl";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import CountrySwitcher from "@/components/common/CountrySwitcher";
@@ -13,6 +14,7 @@ import image2 from "../../../../../public/EngLogo (2).png";
 const Navbar: React.FC = () => {
   const t = useTranslations("Navbar");
   const localeFromNext = useLocale();
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const handleCloseMobileMenu = useCallback(() => {
@@ -51,15 +53,19 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.to}
-                href={item.to}
-                className="text-[#E8F4F1] hover:text-[#B6932F] font-medium transition-colors duration-200"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname.includes(item.to);
+              return (
+                <Link
+                  key={item.to}
+                  href={item.to}
+                  className={`font-medium transition-colors duration-200 ${isActive ? "text-[#B6932F]" : "text-[#E8F4F1] hover:text-[#B6932F]"
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
 
             <div className="flex items-center gap-3">
               <LanguageSwitcher variant="navbar" />
@@ -84,17 +90,15 @@ const Navbar: React.FC = () => {
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 bg-[#2C2C2C]/50 z-40 ${
-              isClosing ? "animate-fade-out-fast" : "animate-fade-in-fast"
-            }`}
+            className={`fixed inset-0 bg-[#2C2C2C]/50 z-40 ${isClosing ? "animate-fade-out-fast" : "animate-fade-in-fast"
+              }`}
             onClick={handleCloseMobileMenu}
           ></div>
 
           {/* Sidebar */}
           <div
-            className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-linear-to-b from-[#0B5D4E] to-[#0B5D4E] text-[#E8F4F1] z-50 shadow-2xl overflow-y-auto ${
-              isClosing ? "animate-slide-out-right" : "animate-slide-in-right"
-            }`}
+            className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-linear-to-b from-[#0B5D4E] to-[#0B5D4E] text-[#E8F4F1] z-50 shadow-2xl overflow-y-auto ${isClosing ? "animate-slide-out-right" : "animate-slide-in-right"
+              }`}
           >
             <div className="flex justify-between items-center p-4 border-b border-[#E8F4F1]/20">
               <h2 className="text-lg font-semibold">Menu</h2>
@@ -107,16 +111,20 @@ const Navbar: React.FC = () => {
             </div>
 
             <div className="flex flex-col space-y-1 p-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.to}
-                  href={item.to}
-                  onClick={handleCloseMobileMenu}
-                  className="hover:bg-[#E8F4F1]/10 px-3 py-3 rounded-lg transition-colors text-base font-medium"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = pathname.includes(item.to);
+                return (
+                  <Link
+                    key={item.to}
+                    href={item.to}
+                    onClick={handleCloseMobileMenu}
+                    className={`px-3 py-3 rounded-lg transition-colors text-base font-medium ${isActive ? "bg-[#E8F4F1]/10 text-[#B6932F]" : "hover:bg-[#E8F4F1]/10"
+                      }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              })}
 
               <div className="border-t border-[#E8F4F1]/20 my-3"></div>
 

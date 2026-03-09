@@ -1,6 +1,7 @@
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import { Button } from "@/components/ui/button";
 import { Crosshair } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface AddressMapProps {
   isLoaded: boolean;
@@ -28,6 +29,8 @@ export const AddressMap = ({
   onMapClick,
   onLocateMe,
 }: AddressMapProps) => {
+  const t = useTranslations('CustomerDashboard.Addresses');
+
   return (
     <div className="relative w-full h-60 rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shrink-0">
       {isLoaded ? (
@@ -48,7 +51,7 @@ export const AddressMap = ({
         </GoogleMap>
       ) : (
         <div className="flex items-center justify-center h-full text-gray-400">
-          {loadError ? "Error loading maps" : "Loading Map..."}
+          {loadError ? t('error_loading_maps') : t('loading_map')}
         </div>
       )}
 
@@ -59,11 +62,11 @@ export const AddressMap = ({
         className="absolute top-4 right-4 bg-white hover:bg-gray-50 text-emerald-800 shadow-md gap-2 rounded-full font-bold text-xs h-9 px-4 z-10"
       >
         <Crosshair size={14} className="text-emerald-600" />
-        Locate Me
+        {t('locate_me')}
       </Button>
 
       <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 shadow-sm border border-gray-100 pointer-events-none">
-        Tap on map to pin location
+        {t('tap_on_map')}
       </div>
     </div>
   );

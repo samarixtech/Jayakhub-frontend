@@ -3,6 +3,7 @@ import { Star, Zap, Gift, Clock } from 'lucide-react';
 import { FaApple, FaGooglePlay } from 'react-icons/fa';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import mobileAppImg from '../../../../../public/mobileApp.png';
 
 export default function DownloadApp() {
   const t = useTranslations('Home.download_app');
@@ -60,7 +61,7 @@ export default function DownloadApp() {
             <div className="relative w-full max-w-[260px] md:max-w-xs">
               <div className="absolute inset-0 bg-primary/20 rounded-[3rem] blur-3xl transform scale-110 animate-pulse" />
               <Image
-                src="/mobileApp.png"
+                src={mobileAppImg}
                 alt="Jayak Hub App"
                 width={320}
                 height={640}

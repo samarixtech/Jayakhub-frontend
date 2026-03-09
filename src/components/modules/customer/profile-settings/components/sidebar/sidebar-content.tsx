@@ -6,6 +6,7 @@ import { Typography } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { CustomerProfileData } from "@/types";
 import { useSidebar } from "./useSidebar";
+import { useTranslations } from "next-intl";
 
 interface SidebarContentProps {
   profile: CustomerProfileData;
@@ -22,6 +23,7 @@ export function SidebarContent({
     profile,
     onAvatarChange,
   );
+  const t = useTranslations('CustomerDashboard.ProfileSettings');
 
   return (
     <div className="flex flex-col items-center text-center w-full">
@@ -48,7 +50,7 @@ export function SidebarContent({
       </Typography>
       <div className="flex gap-2 mt-4">
         {profile.isVerified && (
-          <Badge className="bg-emerald-50 text-emerald-600">VERIFIED</Badge>
+          <Badge className="bg-emerald-50 text-emerald-600">{t('verified')}</Badge>
         )}
         <Badge className="bg-blue-50 text-blue-600 uppercase">
           {profile.role?.name}
@@ -58,12 +60,12 @@ export function SidebarContent({
       <div className="w-full mt-12 space-y-4 px-4">
         <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center">
           <span className="text-sm font-semibold text-gray-600">
-            Total Orders
+            {t('total_orders')}
           </span>
           <span className="font-bold text-emerald-bg">142</span>
         </div>
         <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center">
-          <span className="text-sm font-semibold text-gray-600">Reviews</span>
+          <span className="text-sm font-semibold text-gray-600">{t('reviews')}</span>
           <span className="font-bold text-amber-500">4.8</span>
         </div>
 
@@ -77,7 +79,7 @@ export function SidebarContent({
               <Bell className="h-5 w-5 text-emerald-600" />
             </div>
             <span className="text-sm font-bold text-gray-700">
-              Notifications
+              {t('notifications')}
             </span>
           </div>
           <div className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">

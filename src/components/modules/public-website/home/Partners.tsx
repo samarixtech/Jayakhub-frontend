@@ -86,11 +86,10 @@ export default function Partner() {
 
           {/* Section Header */}
           <div
-            className={`text-center mb-10 transition-all duration-700 relative z-10 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
+            className={`text-center mb-10 transition-all duration-700 relative z-10 ${isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+              }`}
           >
             <span className="inline-flex items-center gap-2 bg-white/10 text-white/80 px-4 py-2 rounded-full text-sm font-semibold mb-4 border border-white/10">
               {t("badge")}
@@ -109,9 +108,8 @@ export default function Partner() {
             {partnerOptions.map((option, index) => (
               <div
                 key={option.id}
-                className={`group relative rounded-3xl overflow-hidden transition-all duration-700 ${
-                  isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
-                }`}
+                className={`group relative rounded-3xl overflow-hidden transition-all duration-700 ${isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                  }`}
                 style={{ transitionDelay: `${(index + 1) * 200}ms` }}
                 onMouseEnter={() => setHoveredCard(option.id)}
                 onMouseLeave={() => setHoveredCard(null)}
@@ -180,11 +178,10 @@ export default function Partner() {
 
           {/* Stats */}
           <div
-            className={`mt-10 grid grid-cols-2 md:grid-cols-4 gap-8 transition-all duration-700 delay-500 relative z-10 border-t border-white/10 pt-8 ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
+            className={`mt-10 grid grid-cols-2 md:grid-cols-4 gap-8 transition-all duration-700 delay-500 relative z-10 border-t border-white/10 pt-8 ${isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+              }`}
           >
             {[
               { value: "500+", label: t("stats.drivers") },

@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { usePersonalInfo } from "./usePersonalInfo";
+import { useTranslations } from "next-intl";
 
 interface PersonalInfoFormProps {
   profile: CustomerProfileData;
@@ -20,6 +21,7 @@ interface PersonalInfoFormProps {
 
 export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
   const { form, isPending, onSubmit } = usePersonalInfo(profile);
+  const t = useTranslations('CustomerDashboard.ProfileSettings');
 
   return (
     <Form {...form}>
@@ -32,11 +34,11 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-                  First Name
+                  {t('first_name')}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Name"
+                    placeholder={t('first_name_placeholder')}
                     className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
                     {...field}
                   />
@@ -53,11 +55,11 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-                  Last Name
+                  {t('last_name')}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Last Name"
+                    placeholder={t('last_name_placeholder')}
                     className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
                     {...field}
                   />
@@ -70,7 +72,7 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
           {/* EMAIL ADDRESS (DISABLED) */}
           <FormItem>
             <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-              Email Address
+              {t('email_address')}
             </FormLabel>
             <div className="relative">
               <Mail
@@ -94,7 +96,7 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-                  Phone Number
+                  {t('phone_number')}
                 </FormLabel>
                 <div className="relative">
                   <Phone
@@ -103,7 +105,7 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
                   />
                   <FormControl>
                     <Input
-                      placeholder="Phone"
+                      placeholder={t('phone_placeholder')}
                       className="pl-12 rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
                       {...field}
                     />
@@ -124,10 +126,10 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             {isPending ? (
               <>
                 <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                Saving...
+                {t('saving')}
               </>
             ) : (
-              "Save Changes"
+              t('save_changes')
             )}
           </Button>
         </div>

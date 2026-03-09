@@ -3,6 +3,11 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import PublicHeroSection from '@/components/common/public-website/publicHeroSection';
+import engineImg from '../../../../../public/engine.png';
+import burgerImg from '../../../../../public/burger.jpg';
+import forRestaurantsImg from '../../../../../public/For-restaurants.png';
+import forRidersImg from '../../../../../public/For-riders.png';
 
 export default function About() {
   const t = useTranslations('About');
@@ -28,57 +33,11 @@ export default function About() {
   return (
     <div className="bg-white">
       {/* ===== HERO SECTION ===== */}
-      <section ref={heroRef} className="bg-primary pt-20 pb-34 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent-yellow/10 rounded-full blur-[100px]" />
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '60px 60px'
-            }}
-          />
-        </div>
-
-        <div className="max-w-5xl mx-auto text-center relative">
-          <span className="inline-block bg-white/10 text-white/90 text-sm font-semibold px-4 py-2 rounded-full mb-8 border border-white/10">
-            {t('hero.badge')}
-          </span>
-
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-8 flex flex-col items-center">
-            <span>{t('hero.title_p1')}</span>
-            <span className="text-[#fe8c34] relative mt-2 md:mt-0">
-              {t('hero.title_highlight')}
-              {/* Custom Underline Curve */}
-              <svg
-                viewBox="0 0 300 20"
-                fill="none"
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[110%] h-auto text-[#fe8c34]"
-              >
-                <path
-                  d="M10 15C100 5 200 5 290 15"
-                  stroke="currentColor"
-                  strokeWidth="6"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-          </h1>
-        </div>
-
-        {/* Wave divider */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 100" fill="none" className="w-full" preserveAspectRatio="none">
-            <path
-              d="M0 100L60 90C120 80 240 60 360 50C480 40 600 40 720 45C840 50 960 60 1080 65C1200 70 1320 70 1380 70L1440 70V100H0Z"
-              fill="white"
-            />
-          </svg>
-        </div>
-      </section>
+      <PublicHeroSection
+        badge={t('hero.badge')}
+        title_p1={t('hero.title_p1')}
+        title_highlight={t('hero.title_highlight')}
+      />
 
       {/* ===== FULL WIDTH IMAGE ===== */}
       <section className="px-4 sm:px-6 lg:px-8 py-20">
@@ -87,7 +46,7 @@ export default function About() {
             <Image
               width={250}
               height={250}
-              src="/engine.png"
+              src={engineImg}
               alt="Food delivery"
               className="w-full h-full object-cover"
             />
@@ -213,19 +172,19 @@ export default function About() {
                 title: t('ecosystem.items.customers.title'),
                 description: t('ecosystem.items.customers.desc'),
                 cta: t('ecosystem.items.customers.cta'),
-                image: '/burger.jpg',
+                image: burgerImg,
               },
               {
                 title: t('ecosystem.items.restaurants.title'),
                 description: t('ecosystem.items.restaurants.desc'),
                 cta: t('ecosystem.items.restaurants.cta'),
-                image: '/For-restaurants.png',
+                image: forRestaurantsImg,
               },
               {
                 title: t('ecosystem.items.riders.title'),
                 description: t('ecosystem.items.riders.desc'),
                 cta: t('ecosystem.items.riders.cta'),
-                image: '/For-riders.png',
+                image: forRidersImg,
               },
             ].map((item) => (
               <div key={item.title} className="group">

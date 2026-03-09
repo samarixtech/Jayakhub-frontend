@@ -16,6 +16,7 @@ import {
 } from "@/hooks/useAddressGeocoding";
 import { AddressMap } from "./components/AddressMap";
 import { AddressForm } from "./components/AddressForm";
+import { useTranslations } from "next-intl";
 
 interface Address {
   id: string;
@@ -50,6 +51,7 @@ export default function AddNewAddressModal({
   );
   const [otherLabel, setOtherLabel] = useState("");
   const [loading, setLoading] = useState(false);
+  const t = useTranslations('CustomerDashboard.Addresses');
 
   const [formData, setFormData] = useState({
     street: "",
@@ -179,7 +181,7 @@ export default function AddNewAddressModal({
         {/* Fixed Header */}
         <div className="flex justify-between items-center px-8 pt-5 border-b border-gray-100 bg-white shrink-0 z-10">
           <h2 className="text-xl font-bold text-gray-900">
-            {addressToEdit ? "Edit Address" : "Add New Address"}
+            {addressToEdit ? t('edit_address') : t('add_new_address')}
           </h2>
         </div>
 
@@ -217,7 +219,7 @@ export default function AddNewAddressModal({
             className="flex-1 h-12 rounded-full font-bold text-gray-700 hover:bg-gray-100 hover:text-gray-900"
             disabled={loading}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button
             type="button"
@@ -228,12 +230,12 @@ export default function AddNewAddressModal({
             {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {addressToEdit ? "Updating..." : "Saving..."}
+                {addressToEdit ? t('updating') : t('saving')}
               </>
             ) : addressToEdit ? (
-              "Update Address"
+              t('update_address')
             ) : (
-              "Save Address"
+              t('save_address')
             )}
           </Button>
         </div>

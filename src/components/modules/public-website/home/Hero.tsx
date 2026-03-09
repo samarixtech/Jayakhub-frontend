@@ -7,6 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from "@/lib/utils";
 import { useTranslations } from 'next-intl';
+import deliciousFoodImg from '../../../../../public/DeliciousFood.png';
+import falafelImg from '../../../../../public/Falafel.png';
+import dolmaImg from '../../../../../public/Dolma.png';
+import tabboulehImg from '../../../../../public/Tabbouleh.png';
 
 export default function Hero() {
     const t = useTranslations('Home');
@@ -104,7 +108,7 @@ export default function Hero() {
                             <div className="relative w-full h-full">
                                 <div className="absolute inset-0 bg-primary/30 rounded-full blur-[40px] lg:blur-[60px] animate-pulse" />
                                 <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl animate-float">
-                                    <Image src="/DeliciousFood.png" alt="Featured Dish" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
+                                    <Image src={deliciousFoodImg} alt="Featured Dish" fill className="object-cover" priority sizes="(max-width: 768px) 100vw, 50vw" />
                                 </div>
                                 {/* Ring adjusted to be tighter (-12px on mobile, -16px desktop) */}
                                 <div className="absolute inset-[-12px] lg:inset-[-16px] border-2 border-dashed border-white/10 rounded-full animate-spin-slow" />
@@ -113,16 +117,16 @@ export default function Hero() {
 
                         {/* Floating Items - Responsive positioning and scaling */}
                         <FloatingCard
-                            img="/Falafel.png" title="Falafel" price="$5.99"
+                            img={falafelImg} title="Falafel" price="$5.99"
                             className="scale-90 sm:scale-100 top-0 right-0 sm:top-10 sm:right-10"
                         />
                         <FloatingCard
-                            img="/Dolma.png" title="Dolma" price="$8.99"
+                            img={dolmaImg} title="Dolma" price="$8.99"
                             className="scale-90 sm:scale-100 bottom-0 left-0 sm:bottom-20 sm:left-10"
                             delay="1s" reverse
                         />
                         <FloatingCard
-                            img="/Tabbouleh.png" title="Tabbouleh" price="$4.99"
+                            img={tabboulehImg} title="Tabbouleh" price="$4.99"
                             className="scale-90 sm:scale-100 top-1/4 -left-4 sm:top-1/3 sm:-left-5"
                             delay="1.5s"
                         />
