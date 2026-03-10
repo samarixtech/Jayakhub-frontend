@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export const generateInvoicePDF = (order: any) => {
+export const generateInvoicePDF = (order: any, userEmail: string = "", userName: string = "") => {
   const doc = new jsPDF();
 
   // Brand / Header
@@ -14,7 +14,7 @@ export const generateInvoicePDF = (order: any) => {
 
   doc.setFontSize(30);
   doc.setTextColor(220); // Light gray
-  doc.text("INVOICE", 150, 25, { align: "right" });
+  doc.text("INVOICE", 195, 25, { align: "right" });
 
   // Separator
   doc.setLineWidth(0.5);
@@ -28,13 +28,25 @@ export const generateInvoicePDF = (order: any) => {
 
   doc.setFontSize(11);
   doc.setTextColor(0);
-  doc.text(order.paymentDetails?.ownerName || "Guest User", 15, 52);
+  // Priority: profile name -> order customer name -> payment owner name
+  const finalCustomerName = String(userName || order.customerName || order.paymentDetails?.ownerName || "Guest User");
+  doc.text(finalCustomerName, 15, 52);
+
   doc.setFontSize(10);
   doc.setTextColor(100);
-  // Mock address since not in payload
-  doc.text("123 Main Street, Apt 4B", 15, 57);
-  doc.text("Baghdad, Iraq 10001", 15, 62);
-  doc.text("user@example.com", 15, 67);
+
+  // Use actual address from order with fallback check
+  // User requested N/A instead of mock data
+  const rawAddress = String(order.address || order.fullAddress || order.shippingAddress || "N/A");
+  const addressLines = rawAddress.split(",");
+  let addrY = 57;
+  addressLines.slice(0, 3).forEach((line: string) => {
+    doc.text(line.trim(), 15, addrY);
+    addrY += 5;
+  });
+
+  // User email
+  doc.text(String(userEmail || order.customerEmail || "N/A"), 15, addrY + 2);
 
   // Invoice Details
   doc.setFontSize(9);
@@ -42,51 +54,50 @@ export const generateInvoicePDF = (order: any) => {
   doc.text("INVOICE DETAILS", 110, 45);
 
   const detailsX = 110;
-  const valuesX = 160;
+  const valuesX = 195;
   let currentY = 52;
   const lineHeight = 6;
 
   doc.setFontSize(10);
   doc.setTextColor(100);
+  // User requested: Use "Invoice Number" label and show Order ID there
   doc.text("Invoice Number", detailsX, currentY);
   doc.setTextColor(0);
-  doc.text(`#INV-${order.orderId.substring(0, 8)}`, valuesX, currentY);
+  doc.text(String(order.orderId || "N/A"), valuesX, currentY, { align: "right" });
 
   currentY += lineHeight;
   doc.setTextColor(100);
   doc.text("Date Issued", detailsX, currentY);
   doc.setTextColor(0);
-  doc.text(order.orderDate, valuesX, currentY);
+  const timing = `${order.orderDate || ""} ${order.orderTime || ""}`.trim();
+  doc.text(timing || "N/A", valuesX, currentY, { align: "right" });
 
   currentY += lineHeight;
   doc.setTextColor(100);
   doc.text("Payment Method", detailsX, currentY);
   doc.setTextColor(0);
-  const cardInfo =
-    order.paymentDetails?.cardType === "Cash/Other"
-      ? "Cash on Delivery"
-      : `${order.paymentDetails?.cardType || "Card"} •• ${order.paymentDetails?.cardNumber?.slice(-4) || "XXXX"}`;
-  doc.text(cardInfo, valuesX, currentY);
+  const payMethod = String(order.paymentMethod || "N/A").toUpperCase();
+  doc.text(payMethod, valuesX, currentY, { align: "right" });
 
   currentY += lineHeight;
   doc.setTextColor(100);
   doc.text("Transaction ID", detailsX, currentY);
   doc.setTextColor(0);
-  doc.text(`tx_${order.orderId.substring(0, 10)}`, valuesX, currentY);
+
+  // Very robust transaction ID check
+  // User requested N/A instead of generated/mock data
+  doc.text(String(order.transactionId || "N/A"), valuesX, currentY, { align: "right" });
 
   // Table
-  const tableSeparation = 15; // gap between header and table
-  const tableStartY = 85;
+  const tableStartY = Math.max(addrY + 15, 85);
 
-  const tableData = order.items.map((item: any) => [
-    item.name,
-    item.quantity,
-    `$${Number(item.price).toFixed(2)}`,
-    `$${(Number(item.price) * item.quantity).toFixed(2)}`,
+  const itemsArr = Array.isArray(order.items) ? order.items : [];
+  const tableData = itemsArr.map((item: any) => [
+    item.name || "Item",
+    item.quantity || 0,
+    `$${Number(item.price || 0).toFixed(2)}`,
+    `$${(Number(item.price || 0) * (item.quantity || 0)).toFixed(2)}`,
   ]);
-
-  // Service Fee Row
-  tableData.push(["Service Fee", "1", "$2.50", "$2.50"]);
 
   autoTable(doc, {
     startY: tableStartY,
@@ -112,51 +123,45 @@ export const generateInvoicePDF = (order: any) => {
     },
   });
 
-  const finalY = (doc as any).lastAutoTable.finalY + 10;
+  const lastTableBottom = (doc as any).lastAutoTable?.finalY || tableStartY + 20;
+  const bottomY = lastTableBottom + 10;
 
   // Totals Section
-  const itemTotal = order.items.reduce(
-    (acc: number, item: any) => acc + Number(item.price) * item.quantity,
+  const subTotalAmount = itemsArr.reduce(
+    (acc: number, item: any) => acc + Number(item.price || 0) * (item.quantity || 0),
     0,
   );
-  const serviceFee = 2.5;
-  const calcTotal = itemTotal + serviceFee;
+  const finalTotalAmount = Number(order.totalAmount || subTotalAmount);
 
   // Right align totals
-  const rightColX = 140;
-  const valColX = 190;
-  let totalY = finalY;
+  const rightColLabelX = 140;
+  const rightColValueX = 195;
+  let summaryLineY = bottomY;
 
   doc.setFontSize(10);
   doc.setTextColor(100);
-  doc.text("Subtotal", rightColX, totalY);
+  doc.text("Subtotal", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text(`$${itemTotal.toFixed(2)}`, valColX, totalY, { align: "right" });
+  doc.text(`$${subTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, { align: "right" });
 
-  totalY += 8;
+  summaryLineY += 8;
   doc.setTextColor(100);
-  doc.text("Tax (0%)", rightColX, totalY);
+  doc.text("Tax (0%)", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text("$0.00", valColX, totalY, { align: "right" });
-
-  totalY += 8;
-  doc.setTextColor(100);
-  doc.text("Delivery Fee", rightColX, totalY);
-  doc.setTextColor(0);
-  doc.text("Free", valColX, totalY, { align: "right" });
+  doc.text("$0.00", rightColValueX, summaryLineY, { align: "right" });
 
   // Divider
   doc.setDrawColor(230);
-  doc.line(rightColX, totalY + 5, 195, totalY + 5);
+  doc.line(rightColLabelX, summaryLineY + 5, 195, summaryLineY + 5);
 
   // Grand Total
-  totalY += 15;
+  summaryLineY += 15;
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(52, 104, 83); // Emerald
-  doc.text("Total Paid", rightColX, totalY);
-  doc.text(`$${calcTotal.toFixed(2)}`, valColX, totalY, { align: "right" });
+  doc.text("Total Paid", rightColLabelX, summaryLineY);
+  doc.text(`$${finalTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, { align: "right" });
 
   // Save
-  doc.save(`Invoice_${order.orderId}.pdf`);
+  doc.save(`Invoice_${order.orderId || "Order"}.pdf`);
 };
