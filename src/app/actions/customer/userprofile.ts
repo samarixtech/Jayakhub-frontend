@@ -11,6 +11,16 @@ import {
 import { validateSchema } from "@/lib/validator";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
+// ==================== SET NEW PASSWORD (GOOGLE LOGIN) ====================
+export async function setNewPasswordAction(
+  password: string,
+): Promise<ActionResponse> {
+  return responseHandler(async () => {
+    const api = await serverApi();
+    return api.post("/set-new-password", { password });
+  }, "Password set successfully");
+}
+
 // ==================== GET USER PROFILE ====================
 export async function getProfile(): Promise<ActionResponse> {
   return responseHandler(
@@ -56,11 +66,30 @@ export async function updateProfileAction(
   return responseHandler(
     async () => {
       const api = await serverApi();
-      return api.put("/update-profile", formData);
+      const avatar = formData.get("avatar");
+
+      // 1. ALWAYS send JSON first to update text fields properly
+      // This bypasses FormData stringification and satisfies backend's strict numeric type requirement for phone
+      const profileResult = await api.put("/update-profile", {
+        name: formData.get("name"),
+        lastName: formData.get("lastName"),
+        phone: Number(formData.get("phone")?.toString().replace(/\D/g, "")),
+      });
+
+      // 2. If an avatar is present, send a SECOND request via FormData (WITHOUT text fields)
+      // This prevents the backend from validating a stringified phone number during file upload
+      if (avatar && avatar instanceof File && avatar.size > 0) {
+        const avatarFormData = new FormData();
+        avatarFormData.append("avatar", avatar);
+        return api.put("/update-profile", avatarFormData);
+      }
+
+      return profileResult;
     },
     "Profile updated successfully",
     (data) => {
-      revalidatePath("/");
+      // Revalidate to force a rerender and refresh data on client
+      revalidatePath("/", "layout");
       return data;
     },
   );

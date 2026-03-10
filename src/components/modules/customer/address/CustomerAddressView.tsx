@@ -54,7 +54,7 @@ export default function CustomerAddressView() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState<Address | null>(null);
 
-  const t = useTranslations('CustomerDashboard.Addresses');
+  const t = useTranslations("CustomerDashboard.Addresses");
 
   const fetchAddresses = async () => {
     setLoading(true);
@@ -138,7 +138,7 @@ export default function CustomerAddressView() {
   // Table Columns Configuration
   const columns: Column<Address>[] = [
     {
-      header: t('type'),
+      header: t("type"),
       cell: (address) => {
         const { icon, bg } = getIcon(address.label);
         return (
@@ -151,7 +151,7 @@ export default function CustomerAddressView() {
       },
     },
     {
-      header: t('label_col'),
+      header: t("label_col"),
       cell: (address) => (
         <div className="flex flex-col">
           <span className="font-bold text-gray-900 text-sm">
@@ -162,7 +162,7 @@ export default function CustomerAddressView() {
       ),
     },
     {
-      header: t('full_address'),
+      header: t("full_address"),
       cell: (address) => {
         const fullAddress = `${address.streetAddress}, ${address.apartment ? address.apartment + ", " : ""}${address.city}, ${address.stateProvince} ${address.zipCode}`;
         return (
@@ -173,16 +173,16 @@ export default function CustomerAddressView() {
       },
     },
     {
-      header: t('status'),
+      header: t("status"),
       cell: (address) =>
         address.status && (
           <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-lg">
-            {t('active')}
+            {t("active")}
           </Badge>
         ),
     },
     {
-      header: t('actions'),
+      header: t("actions"),
       className: "text-right",
       cell: (address) => (
         <div className="flex justify-end gap-3">
@@ -227,25 +227,21 @@ export default function CustomerAddressView() {
               variant="h2"
               className="text-[#1F2937] font-black text-xl md:text-2xl tracking-tight"
             >
-              {t('title')}
+              {t("title")}
             </Typography>
-            <Typography variant="p" className="text-gray-500 text-xs md:text-sm mt-0.5 md:mt-1">
-              {t('subtitle')}
+            <Typography
+              variant="p"
+              className="text-gray-500 text-xs md:text-sm mt-0.5 md:mt-1"
+            >
+              {t("subtitle")}
             </Typography>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full border-gray-200 bg-white h-10 w-10 shrink-0"
-            >
-              <Bell className="h-5 w-5 text-gray-500" />
-            </Button>
-            <Button
               onClick={handleAddNew}
               className="flex-1 sm:flex-none rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-10 md:h-11 px-6 shadow-sm transition-all text-xs md:text-sm font-bold"
             >
-              <Plus className="h-5 w-5 mr-1" /> {t('add_new')}
+              <Plus className="h-5 w-5 mr-1" /> {t("add_new")}
             </Button>
           </div>
         </header>
@@ -257,7 +253,7 @@ export default function CustomerAddressView() {
               data={paginatedAddresses}
               columns={columns}
               loading={loading}
-              emptyMessage={t('no_addresses')}
+              emptyMessage={t("no_addresses")}
               paginationParams={{
                 currentPage,
                 totalPages,
@@ -284,8 +280,8 @@ export default function CustomerAddressView() {
         <GlobalModal
           open={deleteModalOpen}
           onOpenChange={setDeleteModalOpen}
-          title={t('delete_title')}
-          description={t('delete_desc')}
+          title={t("delete_title")}
+          description={t("delete_desc")}
           trigger={<></>} // No external trigger needed as it's controlled by state
         >
           <div className="flex justify-end gap-3 mt-6">
@@ -294,14 +290,14 @@ export default function CustomerAddressView() {
               onClick={() => setDeleteModalOpen(false)}
               className="rounded-full"
             >
-              {t('cancel')}
+              {t("cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleConfirmDelete}
               className="rounded-full bg-red-500 hover:bg-red-600 text-white"
             >
-              {t('delete')}
+              {t("delete")}
             </Button>
           </div>
         </GlobalModal>

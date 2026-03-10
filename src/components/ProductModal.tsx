@@ -96,8 +96,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
         {/* Header Image */}
         <div className="relative h-48 w-full">
           <Image
-          width={200}
-          height={200}
+            width={200}
+            height={200}
             src={item.imageUrl || item.image}
             alt={item.name}
             className="w-full h-full object-cover"
@@ -218,9 +218,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
             {/* Add Button */}
             <button
               onClick={handleAddToCartClick}
-              className="flex-1 h-12 bg-[#346853] text-white rounded-lg font-bold flex items-center justify-between px-6 hover:bg-[#2a5443] transition-colors active:scale-[0.98]"
+              className="flex-1 h-12 bg-[#346853] text-white rounded-lg font-bold text-sm flex items-center justify-between px-6 hover:bg-[#2a5443] transition-colors active:scale-[0.98]"
             >
-              <span>Add to Cart</span>
+              <span className="hidden sm:block">Add to Cart</span>
               <span>${totalPrice.toFixed(2)}</span>
             </button>
           </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import { Lock, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PasswordField } from "@/components/modules/auth/components/PasswordField";
 import {
   Form,
   FormControl,
@@ -11,61 +11,58 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useSecuritySettings } from "./useSecuritySettings";
+import {
+  useSetPasswordForm,
+  useChangePasswordForm,
+} from "./useSecuritySettings";
 import { useTranslations } from "next-intl";
+import { CustomerProfileData } from "@/types";
 
-export function SecuritySettingsForm() {
-  const { form, isPending, onSubmit } = useSecuritySettings();
-  const t = useTranslations('CustomerDashboard.ProfileSettings');
+interface SecuritySettingsFormProps {
+  profile: CustomerProfileData;
+}
+
+export function SecuritySettingsForm({ profile }: SecuritySettingsFormProps) {
+  const t = useTranslations("CustomerDashboard.ProfileSettings");
+
+  const needsPasswordSet =
+    profile.verification_status?.current_method === "google" &&
+    profile.password === false;
+
+  // Render the appropriate form depending on state
+  if (needsPasswordSet) {
+    return <SetPasswordForm t={t} />;
+  }
+
+  return <ChangePasswordForm t={t} />;
+}
+
+function SetPasswordForm({ t }: { t: any }) {
+  const { form, isPending, onSubmit } = useSetPasswordForm();
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-6">
-          <p className="text-[14px] font-bold text-gray-900">{t('change_password')}</p>
-
-          <FormField
-            control={form.control}
-            name="oldPassword"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel className="text-[12px] font-bold text-gray-900">
-                  {t('current_password')}
-                </FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Lock
-                      className="absolute left-4 top-3.5 text-gray-400"
-                      size={18}
-                    />
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder={t('password_placeholder')}
-                      className="pl-12 rounded-2xl border-gray-100 bg-[#F9FAFB] h-12"
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <p className="text-[14px] font-bold text-gray-900">
+            You are currently logged in with Google. Set a new password to
+            secure your account.
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="newPassword"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-[12px] font-bold text-gray-900">
-                    {t('new_password')}
+                    {t("new_password")}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder={t('password_placeholder')}
-                      className="rounded-2xl border-gray-100 bg-[#F9FAFB] h-12"
+                    <PasswordField
+                      field={field}
+                      error={!!fieldState.error}
+                      placeholder={t("password_placeholder")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -75,17 +72,16 @@ export function SecuritySettingsForm() {
             <FormField
               control={form.control}
               name="confirmPassword"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-[12px] font-bold text-gray-900">
-                    {t('confirm_password')}
+                    {t("confirm_password")}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder={t('password_placeholder')}
-                      className="rounded-2xl border-gray-100 bg-[#F9FAFB] h-12"
+                    <PasswordField
+                      field={field}
+                      error={!!fieldState.error}
+                      placeholder={t("password_placeholder")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -104,10 +100,104 @@ export function SecuritySettingsForm() {
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t('updating')}
+                {t("updating")}
               </>
             ) : (
-              t('update_password')
+              "Set Password"
+            )}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
+
+function ChangePasswordForm({ t }: { t: any }) {
+  const { form, isPending, onSubmit } = useChangePasswordForm();
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="space-y-6">
+          <p className="text-[14px] font-bold text-gray-900">
+            {t("change_password")}
+          </p>
+
+          <FormField
+            control={form.control}
+            name="oldPassword"
+            render={({ field, fieldState }) => (
+              <FormItem className="space-y-2">
+                <FormLabel className="text-[12px] font-bold text-gray-900">
+                  {t("current_password")}
+                </FormLabel>
+                <FormControl>
+                  <PasswordField
+                    field={field}
+                    error={!!fieldState.error}
+                    placeholder={t("password_placeholder")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="newPassword"
+              render={({ field, fieldState }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[12px] font-bold text-gray-900">
+                    {t("new_password")}
+                  </FormLabel>
+                  <FormControl>
+                    <PasswordField
+                      field={field}
+                      error={!!fieldState.error}
+                      placeholder={t("password_placeholder")}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field, fieldState }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-[12px] font-bold text-gray-900">
+                    {t("confirm_password")}
+                  </FormLabel>
+                  <FormControl>
+                    <PasswordField
+                      field={field}
+                      error={!!fieldState.error}
+                      placeholder={t("password_placeholder")}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end pt-4">
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="rounded-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white px-8 h-12 font-bold min-w-[180px]"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {t("updating")}
+              </>
+            ) : (
+              t("update_password")
             )}
           </Button>
         </div>

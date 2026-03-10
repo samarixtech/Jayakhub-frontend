@@ -20,6 +20,7 @@ export function useKycVerification() {
   const { execute: fetchStatus, isPending: fetching } = useServerAction(
     getKycStatus,
     {
+      suppressSuccessToast: true,
       onSuccess: (data: any) => setKycData(data),
     },
   );

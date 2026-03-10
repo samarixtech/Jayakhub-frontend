@@ -105,7 +105,7 @@ export function useRestaurantDetails() {
       name: item.name,
       price: item.basePrice,
       imageUrl: item.image
-        ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${item.image.replace(/\\/g, "/")}`
+        ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL?.replace(/\/+$/, "")}/${item.image.replace(/^\/+/, "").replace(/\\/g, "/")}`
         : "",
       description: item.description,
       quantity: 1,

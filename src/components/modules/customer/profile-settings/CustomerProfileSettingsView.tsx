@@ -49,7 +49,7 @@ export default function CustomerProfileSettingsView() {
             <PersonalInfoCard profile={profile} />
             <PaymentMethodsCard />
             <IdentityVerificationCard />
-            <SecuritySettingsCard />
+            <SecuritySettingsCard profile={profile} />
           </main>
         </div>
       </div>

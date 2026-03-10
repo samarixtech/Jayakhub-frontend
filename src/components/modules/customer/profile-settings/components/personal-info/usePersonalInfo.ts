@@ -10,7 +10,11 @@ export function usePersonalInfo(profile: CustomerProfileData) {
     defaultValues: {
       name: profile.name || "",
       lastName: profile.lastName || "",
-      phone: profile.phone || "",
+      phone: profile.phone
+        ? profile.phone.toString().startsWith("+")
+          ? profile.phone.toString()
+          : `+${profile.phone.toString()}`
+        : "",
     },
   });
 
@@ -20,7 +24,8 @@ export function usePersonalInfo(profile: CustomerProfileData) {
     const formData = new FormData();
     formData.append("name", data.name);
     if (data.lastName) formData.append("lastName", data.lastName);
-    formData.append("phone", data.phone);
+    // Strip non-digits for backend numeric validation
+    formData.append("phone", data.phone.replace(/\D/g, ""));
     // EMAIL IS READONLY NOT SENT IN PAYLOAD
     execute(formData);
   }
@@ -30,7 +35,11 @@ export function usePersonalInfo(profile: CustomerProfileData) {
     form.reset({
       name: profile.name || "",
       lastName: profile.lastName || "",
-      phone: profile.phone || "",
+      phone: profile.phone
+        ? profile.phone.toString().startsWith("+")
+          ? profile.phone.toString()
+          : `+${profile.phone.toString()}`
+        : "",
     });
   }, [profile, form]);
 

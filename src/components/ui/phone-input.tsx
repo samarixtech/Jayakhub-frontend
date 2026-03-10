@@ -34,26 +34,38 @@ type PhoneInputProps = Omit<
 const PhoneInput = React.forwardRef<
   React.ElementRef<typeof RPNInput.default>,
   PhoneInputProps
->(({ className, onChange, ...props }, ref) => {
+>(({ className, onChange, value, ...props }, ref) => {
+  const processedValue = React.useMemo(() => {
+    if (!value) return "";
+    const str = String(value).trim();
+    if (str && !str.startsWith("+") && /^\d+$/.test(str) && str.length > 0) {
+      return `+${str}`;
+    }
+    return str;
+  }, [value]);
+
   return (
-    <RPNInput.default
-      ref={ref}
-      className={cn("flex", className)}
-      flagComponent={FlagComponent}
-      countrySelectComponent={CountrySelect}
-      inputComponent={InputComponent}
-      smartCaret={false}
-      /**
-       * Handles the onChange event.
-       *
-       * react-phone-number-input might trigger the onChange event as undefined
-       * when a valid phone number is not generated.
-       *
-       * @param value
-       */
-      onChange={(value) => onChange?.(value || ("" as RPNInput.Value))}
-      {...props}
-    />
+    /* The wrapper div below acts as the visual "Input". 
+      focus-within handles the blue ring for the entire group.
+    */
+    <div
+      className={cn(
+        "flex h-10 w-full rounded-md border border-input bg-background text-sm ring-offset-background transition-all focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+        className,
+      )}
+    >
+      <RPNInput.default
+        ref={ref}
+        className="flex w-full"
+        flagComponent={FlagComponent}
+        countrySelectComponent={CountrySelect}
+        inputComponent={InputComponent}
+        smartCaret={false}
+        value={processedValue as RPNInput.Value}
+        onChange={(v) => onChange?.(v || ("" as RPNInput.Value))}
+        {...props}
+      />
+    </div>
   );
 });
 PhoneInput.displayName = "PhoneInput";
@@ -63,7 +75,11 @@ const InputComponent = React.forwardRef<
   React.ComponentProps<"input">
 >(({ className, ...props }, ref) => (
   <Input
-    className={cn("rounded-none rounded-e-lg border-l-0 h-full", className)}
+    /* Removed borders and focus rings to let the parent container handle them */
+    className={cn(
+      "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-full w-full bg-transparent rounded-none rounded-e-lg",
+      className,
+    )}
     {...props}
     ref={ref}
   />
@@ -97,9 +113,10 @@ const CountrySelect = ({
       <PopoverTrigger asChild>
         <Button
           type="button"
-          variant={"outline"}
+          variant="ghost" /* Using ghost to remove the button's own border */
           className={cn(
-            "flex gap-1 rounded-none rounded-s-lg px-3 border-r-0 focus:z-10 bg-[#FBFCFD] h-full",
+            "flex gap-1 rounded-none rounded-s-lg px-3 border-r focus:z-10 h-full hover:bg-muted/50 transition-none",
+            disabled && "opacity-50",
           )}
           disabled={disabled}
         >
@@ -109,7 +126,7 @@ const CountrySelect = ({
           </span>
           <ChevronDown
             className={cn(
-              "-mr-2 h-4 w-4 opacity-50",
+              "-mr-1 h-4 w-4 opacity-50",
               disabled ? "hidden" : "opacity-100",
             )}
           />
@@ -161,7 +178,7 @@ const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
   const Flag = flags[country];
 
   return (
-    <span className="flex w-8 shrink-0 overflow-hidden ">
+    <span className="flex w-7 shrink-0 overflow-hidden">
       {Flag && (
         <span className="h-full w-full [&_svg]:h-full [&_svg]:w-full [&_svg]:object-cover [&_svg]:scale-[1.5] flex items-center justify-center">
           <Flag title={countryName} />

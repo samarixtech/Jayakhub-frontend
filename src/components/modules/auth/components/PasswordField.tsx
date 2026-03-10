@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 interface PasswordFieldProps {
   placeholder?: string;
   field: any;
+  error?: boolean;
 }
 
 export function PasswordField({
   placeholder = "Password",
   field,
+  error,
 }: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,7 +22,11 @@ export function PasswordField({
       <Input
         type={showPassword ? "text" : "password"}
         placeholder={placeholder}
-        className="h-13 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+        className={`h-13 pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg ${
+          error
+            ? "border-red-500 focus-visible:ring-red-500/10 focus-visible:border-red-500"
+            : ""
+        }`}
         {...field}
       />
       <button

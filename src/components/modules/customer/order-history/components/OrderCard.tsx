@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Search, RefreshCw, Star } from "lucide-react";
+import { Search, RefreshCw, Star, Navigation } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Order, OrderStatus } from "../../types";
@@ -96,17 +96,23 @@ export const OrderCard = ({
               >
                 {t('help')}
               </Button>
+            ) : isDelivered ? (
+              <Button
+                className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
+                onClick={() => handleReorder(order)}
+              >
+                <RefreshCw size={12} />
+                Reorder
+              </Button>
             ) : (
               <Button
                 className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
                 onClick={() => {
-                  if (isDeliveredOrPaid) {
-                    handleReorder(order);
-                  }
+                  window.location.href = `/order/${order.orderId}`;
                 }}
               >
-                <RefreshCw size={12} />
-                {t('reorder')}
+                <Navigation size={12} />
+                Track
               </Button>
             )}
           </div>

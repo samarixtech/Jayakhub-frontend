@@ -20,8 +20,16 @@ export function useProfileSettings() {
     async function loadData() {
       const result = await getProfile();
       if (result.success) {
-        setProfile(result.data);
-        setInitialProfile(result.data);
+        const formattedProfile = {
+          ...result.data,
+          phone: result.data.phone
+            ? result.data.phone.toString().startsWith("+")
+              ? result.data.phone.toString()
+              : `+${result.data.phone.toString()}`
+            : "",
+        };
+        setProfile(formattedProfile);
+        setInitialProfile(formattedProfile);
       }
     }
     loadData();
@@ -48,7 +56,8 @@ export function useProfileSettings() {
     const formData = new FormData();
     formData.append("name", profile.name);
     formData.append("lastName", profile.lastName || "");
-    formData.append("phone", profile.phone);
+    // Strip non-digits for backend numeric validation
+    formData.append("phone", profile.phone.replace(/\D/g, ""));
     if (avatarFile) formData.append("avatar", avatarFile);
 
     startTransition(async () => {
