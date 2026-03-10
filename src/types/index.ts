@@ -133,7 +133,6 @@ export interface SettingsData {
 // RESTAURANT ONBOARDING TYPES
 // ============================================================================
 
-// Shared props injected down into individual onboarding Wizard steps.
 export interface WizardStepProps {
   onNext?: () => void;
   onBack?: () => void;
@@ -141,11 +140,11 @@ export interface WizardStepProps {
 
 // Configuration props for the initial restaurant info onboarding step.
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface StepRestaurantInfoProps extends WizardStepProps { }
+export interface StepRestaurantInfoProps extends WizardStepProps {}
 
 // Configuration props for the restaurant license onboarding step.
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface StepLicenseProps extends WizardStepProps { }
+export interface StepLicenseProps extends WizardStepProps {}
 
 // ============================================================================
 // CUSTOMER TYPES
@@ -153,14 +152,20 @@ export interface StepLicenseProps extends WizardStepProps { }
 
 // Represents a Customer's profile details on the user platform.
 export interface CustomerProfileData {
+  totalOrders: number;
+  averageRating: number;
   name: string;
   lastName: string;
   phone: string;
   email: string;
   avatar?: string;
   isVerified?: boolean;
-  role?: {
-    name: string;
+  role?: string;
+  password?: boolean;
+  verification_status?: {
+    is_email_verified: boolean;
+    is_phone_verified: boolean;
+    current_method: string;
   };
 }
 

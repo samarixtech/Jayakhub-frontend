@@ -5,10 +5,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { cookies } from "next/headers";
+import AuthProvider from "@/components/providers/AuthProvider";
 import { CLCProvider } from "../context/CLCContext";
 import { Toaster } from "react-hot-toast";
 import { Metadata } from "next";
-import AuthProvider from "@/context/AuthProvider";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({

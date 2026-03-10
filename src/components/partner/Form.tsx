@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 export default function PartnerForm() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<any>({
     businessName: "",
     firstName: "",
     lastName: "",
@@ -17,9 +18,18 @@ export default function PartnerForm() {
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
 
+  const handlePhoneChange = (value: string) => {
+    setForm({ ...form, phone: value });
+  };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log("Submitted Data:", form);
+    // Sanitize phone for backend (numeric only)
+    const sanitizedData = {
+      ...form,
+      phone: form.phone.replace(/\D/g, ""),
+    };
+    console.log("Submitted Data:", sanitizedData);
   };
 
   return (
@@ -83,17 +93,14 @@ export default function PartnerForm() {
           onChange={handleChange}
         />
 
-        <div className="relative">
-          <span className="absolute left-2 top-2 text-gray-500 text-sm">+92</span>
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Mobile Number *"
-            required
-            className="w-full pl-10 p-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-[#0B5D4E] focus:border-[#0B5D4E] outline-none text-sm"
-            onChange={handleChange}
-          />
-        </div>
+        <PhoneInput
+          defaultCountry="PK"
+          placeholder="Mobile Number *"
+          required
+          className="w-full"
+          value={form.phone}
+          onChange={handlePhoneChange}
+        />
 
         <label className="flex items-start gap-2 text-sm cursor-pointer">
           <input
@@ -126,7 +133,7 @@ export default function PartnerForm() {
           </a>
         </p>
         <p>
-          Want to be an JAYAK HUB  rider?{" "}
+          Want to be an JAYAK HUB rider?{" "}
           <a className="text-[#0B5D4E] font-medium hover:underline" href="#">
             Click here
           </a>
@@ -139,8 +146,14 @@ export default function PartnerForm() {
       {/* Animation */}
       <style jsx>{`
         @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(6px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(6px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .animate-fadeIn {
           animation: fadeIn 0.3s ease-out;

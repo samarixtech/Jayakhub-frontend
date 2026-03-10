@@ -1,9 +1,10 @@
 "use client";
 
-import { Mail, Phone, Loader2 } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
 import { CustomerProfileData } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { PhoneInput } from "@/components/ui/phone-input";
 import {
   Form,
   FormControl,
@@ -21,7 +22,7 @@ interface PersonalInfoFormProps {
 
 export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
   const { form, isPending, onSubmit } = usePersonalInfo(profile);
-  const t = useTranslations('CustomerDashboard.ProfileSettings');
+  const t = useTranslations("CustomerDashboard.ProfileSettings");
 
   return (
     <Form {...form}>
@@ -34,11 +35,11 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-                  {t('first_name')}
+                  {t("first_name")}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t('first_name_placeholder')}
+                    placeholder={t("first_name_placeholder")}
                     className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
                     {...field}
                   />
@@ -55,11 +56,11 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-                  {t('last_name')}
+                  {t("last_name")}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t('last_name_placeholder')}
+                    placeholder={t("last_name_placeholder")}
                     className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
                     {...field}
                   />
@@ -72,7 +73,7 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
           {/* EMAIL ADDRESS (DISABLED) */}
           <FormItem>
             <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-              {t('email_address')}
+              {t("email_address")}
             </FormLabel>
             <div className="relative">
               <Mail
@@ -96,21 +97,17 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11px] font-bold text-gray-500 uppercase ml-1">
-                  {t('phone_number')}
+                  {t("phone_number")}
                 </FormLabel>
-                <div className="relative">
-                  <Phone
-                    className="absolute left-4 top-3.5 text-gray-400"
-                    size={18}
+                <FormControl>
+                  <PhoneInput
+                    defaultCountry="PK"
+                    placeholder={t("phone_placeholder")}
+                    className="rounded-2xl border-gray-100 bg-gray-100/50 h-12 focus-visible:ring-emerald-bg"
+                    value={field.value}
+                    onChange={field.onChange}
                   />
-                  <FormControl>
-                    <Input
-                      placeholder={t('phone_placeholder')}
-                      className="pl-12 rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
-                      {...field}
-                    />
-                  </FormControl>
-                </div>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -120,16 +117,15 @@ export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
         <div className="flex justify-end">
           <Button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || !form.formState.isDirty}
             className="bg-emerald-bg hover:bg-emerald-bg-hover text-white font-bold rounded-xl h-12 px-8"
           >
             {isPending ? (
               <>
                 <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                {t('saving')}
               </>
             ) : (
-              t('save_changes')
+              t("save_changes")
             )}
           </Button>
         </div>

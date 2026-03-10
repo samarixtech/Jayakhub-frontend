@@ -23,7 +23,7 @@ export function SidebarContent({
     profile,
     onAvatarChange,
   );
-  const t = useTranslations('CustomerDashboard.ProfileSettings');
+  const t = useTranslations("CustomerDashboard.ProfileSettings");
 
   return (
     <div className="flex flex-col items-center text-center w-full">
@@ -50,42 +50,34 @@ export function SidebarContent({
       </Typography>
       <div className="flex gap-2 mt-4">
         {profile.isVerified && (
-          <Badge className="bg-emerald-50 text-emerald-600">{t('verified')}</Badge>
+          <Badge className="bg-emerald-50 text-emerald-600">
+            {t("verified")}
+          </Badge>
         )}
         <Badge className="bg-blue-50 text-blue-600 uppercase">
-          {profile.role?.name}
+          {profile.role}
         </Badge>
       </div>
+
       {/* STATS SECTION */}
       <div className="w-full mt-12 space-y-4 px-4">
+        <h2 className="font-semibold text-slate-500 text-left">Statistics</h2>
         <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center">
           <span className="text-sm font-semibold text-gray-600">
-            {t('total_orders')}
+            {t("total_orders")}
           </span>
-          <span className="font-bold text-emerald-bg">142</span>
+          <span className="font-bold text-emerald-bg">
+            {profile.totalOrders}
+          </span>
         </div>
         <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center">
-          <span className="text-sm font-semibold text-gray-600">{t('reviews')}</span>
-          <span className="font-bold text-amber-500">4.8</span>
+          <span className="text-sm font-semibold text-gray-600">
+            {t("reviews")}
+          </span>
+          <span className="font-bold text-amber-500">
+            {profile.averageRating}
+          </span>
         </div>
-
-        {/* Notification Button */}
-        <button
-          onClick={onNotificationClick}
-          className="w-full bg-emerald-50 text-emerald-600 hover:bg-emerald-100 p-4 rounded-2xl flex items-center justify-between transition-colors group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="bg-white p-2 rounded-xl group-hover:scale-105 transition-transform">
-              <Bell className="h-5 w-5 text-emerald-600" />
-            </div>
-            <span className="text-sm font-bold text-gray-700">
-              {t('notifications')}
-            </span>
-          </div>
-          <div className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            3
-          </div>
-        </button>
       </div>
     </div>
   );

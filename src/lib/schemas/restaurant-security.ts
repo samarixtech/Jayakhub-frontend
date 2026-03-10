@@ -14,10 +14,10 @@ const passwordRules = z
 // ========== FOR GOOGLE VERIFIED SCHEMA ==========
 export const setPasswordSchema = z
   .object({
-    password: passwordRules,
+    newPassword: passwordRules,
     confirmPassword: z.string().min(1, "Confirm Password is required"),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });

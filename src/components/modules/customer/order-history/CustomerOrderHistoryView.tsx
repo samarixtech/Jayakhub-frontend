@@ -25,13 +25,13 @@ export default function CustomerOrderHistoryView() {
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [dateRange, setDateRange] = useState("30");
+  const [dateRange, setDateRange] = useState("all");
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const t = useTranslations('CustomerDashboard.OrderHistory');
+  const t = useTranslations("CustomerDashboard.OrderHistory");
 
   const { handlePageChange, handleReorder, handleRateOrder } =
     useOrderHistoryActions({
@@ -44,9 +44,11 @@ export default function CustomerOrderHistoryView() {
 
   useEffect(() => {
     async function fetchOrders() {
+      setLoading(true);
       try {
         const { getAllOrders } = await import("@/app/actions/customer/order");
-        const res = await getAllOrders();
+        const filterParam = dateRange !== "all" ? dateRange : undefined;
+        const res = await getAllOrders(filterParam);
         if (res.success) {
           const responseData = res.data as any;
           if (
@@ -61,6 +63,8 @@ export default function CustomerOrderHistoryView() {
             setOrders(responseData.orders);
           } else if (Array.isArray(responseData)) {
             setOrders(responseData);
+          } else {
+            setOrders([]);
           }
         }
       } catch (error) {
@@ -70,7 +74,7 @@ export default function CustomerOrderHistoryView() {
       }
     }
     fetchOrders();
-  }, []);
+  }, [dateRange]);
 
   // Filter Logic
   const filteredOrders = orders.filter((order) => {
@@ -118,7 +122,7 @@ export default function CustomerOrderHistoryView() {
         />
 
         <div className="flex justify-end items-center gap-2 text-xs text-gray-400 font-medium">
-          <span>{t('rows_per_page')}</span>
+          <span>{t("rows_per_page")}</span>
           <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-100 text-gray-700 font-bold min-w-[40px] text-center">
             {itemsPerPage}
           </div>
@@ -128,8 +132,8 @@ export default function CustomerOrderHistoryView() {
           {filteredOrders.length === 0 ? (
             <EmptyState
               icon={FileDown}
-              title={t('no_orders_yet')}
-              message={t('no_orders_message')}
+              title={t("no_orders_yet")}
+              message={t("no_orders_message")}
             />
           ) : (
             currentOrders.map((order) => (
