@@ -51,7 +51,7 @@ export async function getAllOrders(filter?: string): Promise<{
   try {
     const api = await serverApi();
     const url = filter ? `/all-orders?filter=${filter}` : "/all-orders";
-    const response = await api.get(url);
+    const response: any = await api.get(url);
     return { success: true, data: response.data };
   } catch (error: any) {
     return {
@@ -61,6 +61,7 @@ export async function getAllOrders(filter?: string): Promise<{
     };
   }
 }
+
 
 export async function submitRatingAction(payload: {
   orderId: string;
