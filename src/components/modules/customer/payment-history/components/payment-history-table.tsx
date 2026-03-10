@@ -15,6 +15,8 @@ interface PaymentHistoryTableProps {
   totalPages: number;
   startIndex: number;
   itemsPerPage: number;
+  userEmail: string;
+  userName: string;
 }
 
 export function PaymentHistoryTable({
@@ -27,8 +29,11 @@ export function PaymentHistoryTable({
   totalPages,
   startIndex,
   itemsPerPage,
+  userEmail,
+  userName,
 }: PaymentHistoryTableProps) {
   const t = useTranslations('CustomerDashboard.PaymentHistory');
+  console.log("PAYMENT HISTORY TABLE ORDERS PROP:", JSON.stringify(orders[0]));
   const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (page: number) => {
@@ -140,7 +145,7 @@ export function PaymentHistoryTable({
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              generateInvoicePDF(order);
+              generateInvoicePDF(order, userEmail, userName);
             }}
             className="h-[26px] px-3 rounded-md border border-gray-200 text-[#1E293B] font-bold text-[10px] hover:bg-gray-50 flex items-center justify-center ml-auto shadow-sm"
           >
@@ -162,8 +167,8 @@ export function PaymentHistoryTable({
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`px-5 py-1.5 rounded-full text-[12px] font-bold transition-all shadow-sm ${activeTab === tab
-                  ? "bg-[#f0fdf4] text-[#10b981] border border-[#10b981]"
-                  : "text-[#6B7280] bg-white hover:text-[#374151] border border-gray-100"
+                ? "bg-[#f0fdf4] text-[#10b981] border border-[#10b981]"
+                : "text-[#6B7280] bg-white hover:text-[#374151] border border-gray-100"
                 }`}
             >
               {tab === "All" ? t('all') : tab === "Cards" ? t('cards') : t('cash')}
@@ -220,8 +225,8 @@ export function PaymentHistoryTable({
                       key={page}
                       onClick={() => handlePageChange(page)}
                       className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm font-bold text-[12px] transition ${currentPage === page
-                          ? "text-white bg-[#225539]"
-                          : "text-[#4B5563] bg-white border border-gray-100 hover:text-gray-900"
+                        ? "text-white bg-[#225539]"
+                        : "text-[#4B5563] bg-white border border-gray-100 hover:text-gray-900"
                         }`}
                     >
                       {page}

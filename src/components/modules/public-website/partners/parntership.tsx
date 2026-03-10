@@ -70,26 +70,26 @@ export default function Partners() {
     {
       step: 1,
       title: t("how_it_works.steps.signup.title"),
-      description: t("how_it_works.steps.signup.desc"),
-      image: "/restaurant-1.jpg",
+      desc: t("how_it_works.steps.signup.desc"),
+      img: gourmetImg,
     },
     {
       step: 2,
       title: t("how_it_works.steps.approve.title"),
-      description: t("how_it_works.steps.approve.desc"),
-      image: "/restaurant-2.jpg",
+      desc: t("how_it_works.steps.approve.desc"),
+      img: baghdadBitesImg,
     },
     {
       step: 3,
       title: t("how_it_works.steps.menu.title"),
-      description: t("how_it_works.steps.menu.desc"),
-      image: "/hero-food-main.jpg",
+      desc: t("how_it_works.steps.menu.desc"),
+      img: mixedGrillImg,
     },
     {
       step: 4,
       title: t("how_it_works.steps.orders.title"),
-      description: t("how_it_works.steps.orders.desc"),
-      image: "/hero-food-3.png",
+      desc: t("how_it_works.steps.orders.desc"),
+      img: partnerImage2Img,
     },
   ];
 
@@ -195,14 +195,12 @@ export default function Partners() {
               </div>
 
               <div className="flex flex-wrap gap-6 text-sm font-medium text-white/80">
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-[#F5A623]" />
-                  <span>{t("hero.checks.sales")}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-[#F5A623]" />
-                  <span>{t("hero.checks.marketing")}</span>
-                </div>
+                {['sales', 'marketing'].map((item) => (
+                  <div key={item} className="flex items-center gap-2">
+                    <Check className="w-5 h-5 text-[#F5A623]" />
+                    <span>{t(`hero.checks.${item}`)}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -288,12 +286,7 @@ export default function Partners() {
                 {t("dashboard.desc")}
               </p>
               <ul className="space-y-4">
-                {[
-                  t("dashboard.features.notifications"),
-                  t("dashboard.features.menu"),
-                  t("dashboard.features.reports"),
-                  t("dashboard.features.feedback"),
-                ].map((item) => (
+                {['notifications', 'menu', 'reports', 'feedback'].map((item) => (
                   <li
                     key={item}
                     className="flex items-center gap-3 text-slate-700 font-medium"
@@ -301,7 +294,7 @@ export default function Partners() {
                     <div className="w-6 h-6 rounded-full bg-accent-orange/20 flex items-center justify-center shrink-0">
                       <Check className="w-3.5 h-3.5 text-accent-orange" />
                     </div>
-                    {item}
+                    {t(`dashboard.features.${item}`)}
                   </li>
                 ))}
               </ul>
@@ -365,28 +358,7 @@ export default function Partners() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                title: "Sign Up",
-                desc: "Fill out our simple registration form and tell us about your restaurant.",
-                img: gourmetImg,
-              },
-              {
-                title: "Get Approved",
-                desc: "Our team reviews your application and gets you onboarded within 48 hours.",
-                img: baghdadBitesImg,
-              },
-              {
-                title: "Set Up Your Menu",
-                desc: "Add your dishes, set prices, and customize your restaurant profile.",
-                img: mixedGrillImg,
-              },
-              {
-                title: "Start Receiving Orders",
-                desc: "Go live and start accepting orders from customers in your area.",
-                img: partnerImage2Img,
-              },
-            ].map((step, i) => (
+            {howItWorks.map((step, i) => (
               <div
                 key={i}
                 className="bg-white rounded-4xl p-4 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 group"

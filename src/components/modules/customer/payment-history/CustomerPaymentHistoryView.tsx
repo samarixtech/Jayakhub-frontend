@@ -9,6 +9,7 @@ import { PaymentHistoryTable } from "./components/payment-history-table";
 export default function CustomerPaymentHistory() {
   const [orders, setOrders] = useState<any[]>([]);
   const [summary, setSummary] = useState<any>({});
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   // Tabs for transaction table
@@ -16,35 +17,44 @@ export default function CustomerPaymentHistory() {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; 
+  const itemsPerPage = 4;
 
   useEffect(() => {
-    async function fetchOrders() {
+    async function loadData() {
       try {
         setLoading(true);
         const { getAllOrders } = await import("@/app/actions/customer/order");
+        const { getProfile } = await import("@/app/actions/customer/userprofile");
 
         let filterParam = undefined;
         if (activeTab === "Cards") filterParam = "card";
         if (activeTab === "Cash") filterParam = "cod";
 
-        const res = await getAllOrders(filterParam);
-        if (res.success && res.data?.data) {
-          if (Array.isArray(res.data.data.orders)) {
-            setOrders(res.data.data.orders);
+        const [ordersRes, profileRes] = await Promise.all([
+          getAllOrders(filterParam),
+          getProfile()
+        ]);
+
+        if (ordersRes.success && ordersRes.data?.data) {
+          if (Array.isArray(ordersRes.data.data.orders)) {
+            setOrders(ordersRes.data.data.orders);
             setCurrentPage(1);
           }
-          if (res.data.data.summary) {
-            setSummary(res.data.data.summary);
+          if (ordersRes.data.data.summary) {
+            setSummary(ordersRes.data.data.summary);
           }
         }
+
+        if (profileRes.success) {
+          setUserProfile(profileRes.data);
+        }
       } catch (error) {
-        console.error("Failed to fetch orders", error);
+        console.error("Failed to fetch data", error);
       } finally {
         setLoading(false);
       }
     }
-    fetchOrders();
+    loadData();
   }, [activeTab]);
 
   const totalPages = Math.ceil(orders.length / itemsPerPage);
@@ -69,6 +79,8 @@ export default function CustomerPaymentHistory() {
           totalPages={totalPages}
           startIndex={startIndex}
           itemsPerPage={itemsPerPage}
+          userEmail={userProfile?.email || ""}
+          userName={`${userProfile?.name || ""} ${userProfile?.lastName || ""}`.trim()}
         />
       </div>
     </div>
