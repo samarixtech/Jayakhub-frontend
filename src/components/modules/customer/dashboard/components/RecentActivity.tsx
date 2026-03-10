@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
@@ -63,14 +64,24 @@ export const RecentActivity = ({
         ) : recentOrders.length > 0 ? (
           recentOrders.map((order) => {
             const statusStyle = getStatusColor(order.OrderStatus);
-            const orderName =
-              order.items && order.items.length > 0
-                ? order.items[0].name
-                : `Order #${order.orderId.substring(0, 8)}`;
+            const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+
+            const orderName = firstItem
+              ? firstItem.name
+              : `Order #${order.orderId.substring(0, 8)}`;
+
             const itemCount = (order.items || []).reduce(
               (acc, item) => acc + item.quantity,
               0,
             );
+
+            // Image URL logic
+            let imageUrl = null;
+            if (firstItem?.image) {
+              imageUrl = firstItem.image.startsWith("http")
+                ? firstItem.image
+                : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${firstItem.image.replace(/\\/g, "/")}`;
+            }
 
             return (
               <div
@@ -78,8 +89,17 @@ export const RecentActivity = ({
                 className="flex items-center justify-between group cursor-pointer"
               >
                 <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0">
-                    <ShoppingBag className="h-5 w-5 text-gray-400" />
+                  <div className="h-12 w-12 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 overflow-hidden relative">
+                    {imageUrl ? (
+                      <Image
+                        src={imageUrl}
+                        alt={orderName}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <ShoppingBag className="h-5 w-5 text-gray-400" />
+                    )}
                   </div>
                   <div>
                     <Typography className="font-bold text-gray-900 text-sm">
