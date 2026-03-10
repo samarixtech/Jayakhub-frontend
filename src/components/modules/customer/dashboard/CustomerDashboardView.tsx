@@ -32,7 +32,7 @@ export default function CustomerDashboardView() {
           const apiData = result.data.data;
           if (apiData.summary) setSummary(apiData.summary);
           if (apiData.orders && Array.isArray(apiData.orders)) {
-            setRecentOrders(apiData.orders);
+            setRecentOrders(apiData.orders.slice(0, 5));
           }
         }
       } catch (error) {
