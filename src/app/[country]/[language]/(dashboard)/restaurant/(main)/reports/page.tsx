@@ -1,4 +1,4 @@
-import ReportsView from "@/components/modules/restaurant/reports/ReportsView";
+import ReportsView from "@/components/modules/restaurant/reports/views/ReportsView";
 import React from "react";
 
 const ReportsPage = () => {

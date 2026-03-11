@@ -117,7 +117,7 @@ export const generatePaymentHistoryPDF = (
     const items = Array.isArray(order.items) ? order.items : [];
 
     if (items.length > 0) {
-      items.forEach((item, index) => {
+      items.forEach((item: any, index: number) => {
         // We pad the description with a prefix symbol for visual heirarchy
         const prefix = index === items.length - 1 ? "   " : "   ";
         const bullet = index === items.length - 1 ? "└" : "├";

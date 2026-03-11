@@ -9,7 +9,7 @@ const agent = new https.Agent({
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 40000,
+  // timeout: 40000,
   httpsAgent: agent,
 } as any);
 

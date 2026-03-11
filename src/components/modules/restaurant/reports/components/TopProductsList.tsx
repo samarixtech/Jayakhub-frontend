@@ -6,24 +6,24 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Star, X } from "lucide-react";
 
 interface TopProductsListProps {
-  products?: { name: string; quantity: number; total: number }[];
+  products?: any[];
 }
 
 const TopProductsList = ({ products = [] }: TopProductsListProps) => {
   const [activeView, setActiveView] = useState<"all" | "detail" | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
-  const totalRevenue = products.reduce((acc, p) => acc + p.total, 0);
+  const totalRevenue = products.reduce((acc, p) => acc + (p.revenue || p.total || 0), 0);
 
   const formattedProducts = products.map((p, index) => ({
     id: String(index + 1),
     rank: index + 1,
     name: p.name,
-    category: "Main Dish", // Default as not in API
+    category: p.category || "Main Dish",
     unitsSold: p.quantity,
-    revenue: `$${p.total.toLocaleString()}`,
-    numericRevenue: p.total,
-    image: "", // Default
+    revenue: `$${(p.revenue || p.total || 0).toLocaleString()}`,
+    numericRevenue: p.revenue || p.total || 0,
+    image: p.image || "", 
     rankColor:
       index === 0
         ? "text-amber-600"
@@ -40,11 +40,11 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
           : index === 2
             ? "bg-orange-50"
             : "bg-slate-100",
-    rating: 4.5, // Default
-    price: `$${(p.total / (p.quantity || 1)).toFixed(2)}`,
-    cost: "$0.00",
-    profit: `$${p.total.toLocaleString()}`,
-    profitMargin: "100%",
+    rating: typeof p.rating === 'number' ? p.rating : 4.5,
+    price: `$${(p.price !== undefined ? p.price : (p.total / (p.quantity || 1))).toFixed(2)}`,
+    cost: `$${(p.cost || 0).toLocaleString()}`,
+    profit: `$${(p.profit || p.total || 0).toLocaleString()}`,
+    profitMargin: p.profitMargin || "100%",
   }));
 
   const handleOpenAll = () => {
@@ -160,10 +160,10 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                 {/* Green Summary Bar */}
                 <div className="bg-[#f0f9f4] rounded-xl px-5 py-3.5 mb-5 flex justify-between items-center">
                   <span className="text-[14px] font-semibold text-[#2d6a4f]">
-                    8 Products
+                    {formattedProducts.length} Products
                   </span>
                   <span className="text-[20px] font-black text-[#2d6a4f]">
-                    $13,865
+                    ${totalRevenue.toLocaleString()}
                   </span>
                 </div>
 
@@ -191,7 +191,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
 
                 {/* Product Rows */}
                 <div className="flex flex-col">
-                  {MOCK_PRODUCTS.map((product) => (
+                  {formattedProducts.map((product) => (
                     <div
                       key={product.id}
                       className="grid grid-cols-[28px_1fr_52px_72px_56px] gap-2 items-center px-1 py-3 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors border-b border-gray-50 last:border-b-0"
