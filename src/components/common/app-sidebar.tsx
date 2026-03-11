@@ -80,7 +80,7 @@ export function AppSidebar() {
         <SidebarContent className="p-0">
           <SidebarMenu className="gap-0">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname.endsWith(item.href);
               return (
                 <SidebarMenuItem key={item.key}>
                   <SidebarMenuButton
