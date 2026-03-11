@@ -55,10 +55,10 @@ const options = {
         color: "#9ca3af", // gray-400
         font: {
           size: 10,
-          weight: 'bold' as const
+          weight: "bold" as const,
         },
       },
-      border: { display: false }
+      border: { display: false },
     },
     y: {
       grid: {
@@ -69,10 +69,10 @@ const options = {
         color: "#9ca3af", // gray-400
         font: {
           size: 10,
-          weight: 'bold' as const
+          weight: "bold" as const,
         },
         callback: function (value: any) {
-          return '$' + value;
+          return "$" + value;
         },
         stepSize: 495,
       },
@@ -97,40 +97,64 @@ const options = {
   },
 };
 
-const labels = [
-  "Feb 1", "Feb 5", "Feb 9", "Feb 13", "Feb 17", "Feb 21", "Feb 25", "Feb 29"
-];
+interface SalesChartProps {
+  graphData?: { date: string; sales: number }[];
+}
 
-const data = {
-  labels,
-  datasets: [
-    {
-      label: "Current Period",
-      data: [1300, 1800, 1600, 1900, 1750, 1950, 1700, 1850],
-      borderColor: "#1B4332", // Dark Green
-      backgroundColor: (context: any) => {
-        const ctx = context.chart.ctx;
-        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(0, "rgba(27, 67, 50, 0.15)");
-        gradient.addColorStop(1, "rgba(27, 67, 50, 0.02)");
-        return gradient;
+const SalesChart = ({ graphData = [] }: SalesChartProps) => {
+  const labels = graphData.map((item) => {
+    const d = new Date(item.date);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  });
+
+  const salesValues = graphData.map((item) => item.sales);
+  const maxSales = Math.max(...salesValues, 2000);
+  const stepSize = Math.ceil(maxSales / 4);
+
+  const dynamicOptions = {
+    ...options,
+    scales: {
+      ...options.scales,
+      y: {
+        ...options.scales.y,
+        max: maxSales + stepSize / 2,
+        ticks: {
+          ...options.scales.y.ticks,
+          stepSize: stepSize,
+        },
       },
-      fill: true,
-      borderWidth: 2,
     },
-    {
-      label: "Previous Period",
-      data: [1100, 1500, 1400, 1600, 1500, 1650, 1450, 1600],
-      borderColor: "#a7f3d0", // Light emerald/mint
-      backgroundColor: "transparent",
-      fill: false,
-      borderWidth: 2,
-      borderDash: [5, 5],
-    },
-  ],
-};
+  };
 
-const SalesChart = () => {
+  const chartData = {
+    labels: labels.length > 0 ? labels : ["No Data"],
+    datasets: [
+      {
+        label: "Current Period",
+        data: salesValues.length > 0 ? salesValues : [0],
+        borderColor: "#1B4332", // Dark Green
+        backgroundColor: (context: any) => {
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+          gradient.addColorStop(0, "rgba(27, 67, 50, 0.15)");
+          gradient.addColorStop(1, "rgba(27, 67, 50, 0.02)");
+          return gradient;
+        },
+        fill: true,
+        borderWidth: 2,
+      },
+      {
+        label: "Previous Period",
+        data: salesValues.map((v) => v * 0.8), // Mock comparison if not provided by API
+        borderColor: "#a7f3d0", // Light emerald/mint
+        backgroundColor: "transparent",
+        fill: false,
+        borderWidth: 2,
+        borderDash: [5, 5],
+      },
+    ],
+  };
+
   return (
     <div className="w-full flex flex-col h-full">
       <div className="mb-6">
@@ -142,7 +166,7 @@ const SalesChart = () => {
         </p>
       </div>
       <div className="flex-1 min-h-[250px] w-full mt-2 relative">
-        <Line options={options} data={data} />
+        <Line options={dynamicOptions as any} data={chartData} />
       </div>
     </div>
   );

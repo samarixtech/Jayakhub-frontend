@@ -1,6 +1,5 @@
 "use client";
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReportsStatsCard from "./ReportsStatsCard";
 import SalesChart from "./SalesChart";
 import TopProductsList from "./TopProductsList";
@@ -15,8 +14,40 @@ import {
   Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getReportsAction } from "@/app/actions/restaurant/reports";
 
 const ReportsView = () => {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      setLoading(true);
+      const result = await getReportsAction();
+      if (result.success) {
+        setData(result.data.data);
+      }
+      setLoading(false);
+    };
+    fetchReports();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-[400px] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1B4332]"></div>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="w-full h-[400px] flex items-center justify-center text-gray-500">
+        No report data available.
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-[1200px] mx-auto space-y-6">
       {/* Header - Date Filter Only */}
@@ -34,35 +65,35 @@ const ReportsView = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ReportsStatsCard
           label="Total Sales"
-          value="$45,232"
-          trend="+21%"
+          value={`$${Number(data.totalSales).toLocaleString()}`}
+          trend={`${data.lastPeriodSalesAverage}%`}
           trendLabel="vs last period"
-          isPositive={true}
+          isPositive={Number(data.lastPeriodSalesAverage) >= 0}
           icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
           iconBgColor="bg-emerald-50"
         />
         <ReportsStatsCard
           label="Total Orders"
-          value="1,245"
-          trend="+14%"
+          value={data.totalOrders.toLocaleString()}
+          trend={`${data.lastPeriodOrdersAverage}%`}
           trendLabel="vs last period"
-          isPositive={true}
+          isPositive={Number(data.lastPeriodOrdersAverage) >= 0}
           icon={<ShoppingBag className="w-4 h-4 text-blue-600" />}
           iconBgColor="bg-blue-50"
         />
         <ReportsStatsCard
           label="Avg Order Value"
-          value="$36.33"
-          trend="+$3.20"
+          value={`$${Number(data.averageOrderValue).toFixed(2)}`}
+          trend={`$${data.lastPeriodAverageOrderValue}`}
           trendLabel="vs last period"
-          isPositive={true}
+          isPositive={Number(data.lastPeriodAverageOrderValue) >= 0}
           icon={<TrendingUp className="w-4 h-4 text-amber-600" />}
           iconBgColor="bg-amber-50"
         />
         <ReportsStatsCard
           label="Repeat Customer Rate"
-          value="28.4%"
-          trend="+2%"
+          value={data.repeatedCustomerRate}
+          trend="+0%"
           trendLabel="vs last period"
           isPositive={true}
           icon={<Award className="w-4 h-4 text-purple-600" />}
@@ -74,28 +105,31 @@ const ReportsView = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Sales Chart (Takes up 2 columns) */}
         <div className="lg:col-span-2 bg-white p-6 rounded-[16px] border border-gray-100 shadow-sm">
-          <SalesChart />
+          <SalesChart graphData={data.salesGraph} />
         </div>
 
         {/* Top Products (Takes up 1 column) */}
         <div className="bg-white p-6 rounded-[16px] border border-gray-100 shadow-sm">
-          <TopProductsList />
+          <TopProductsList products={data.topProducts} />
         </div>
       </div>
 
       {/* Sources & Peak Hours Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white p-6 rounded-[16px] border border-gray-100 shadow-sm">
-          <OrderSources />
+          <OrderSources sources={data.orderResource} />
         </div>
         <div className="col-span-1 bg-white p-6 rounded-[16px] border border-gray-100 shadow-sm">
-          <PeakHours />
+          <PeakHours peakHours={data.peakHours} />
         </div>
       </div>
 
       {/* Recent Orders Section */}
       <div className="bg-white p-6 rounded-[16px] border border-gray-100 shadow-sm">
-        <RecentOrders />
+        <RecentOrders
+          orders={data.orders?.items || []}
+          totalCount={data.orders?.totalCount}
+        />
       </div>
     </div>
   );

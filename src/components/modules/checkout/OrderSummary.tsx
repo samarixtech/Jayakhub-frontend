@@ -1,5 +1,5 @@
 "use client";
-import { Clock, Tag } from "lucide-react";
+import { Clock, Loader2, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface CartItem {
@@ -125,7 +125,11 @@ const OrderSummary = ({
           disabled={isPlacingOrder}
           className="w-full h-12 bg-[#346853] hover:bg-[#2a5443] text-white font-bold rounded-lg disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {isPlacingOrder ? "Placing Order..." : "Place Order"}
+          {isPlacingOrder ? (
+            <Loader2 className="animate-spin" size={18} />
+          ) : (
+            "Place Order"
+          )}
         </Button>
 
         <p className="text-[10px] text-gray-400 text-center mt-3 leading-tight">

@@ -24,7 +24,8 @@ export default function CustomerPaymentHistory() {
       try {
         setLoading(true);
         const { getAllOrders } = await import("@/app/actions/customer/order");
-        const { getProfile } = await import("@/app/actions/customer/userprofile");
+        const { getProfile } =
+          await import("@/app/actions/customer/userprofile");
 
         let filterParam = undefined;
         if (activeTab === "Cards") filterParam = "card";
@@ -32,7 +33,7 @@ export default function CustomerPaymentHistory() {
 
         const [ordersRes, profileRes] = await Promise.all([
           getAllOrders(filterParam),
-          getProfile()
+          getProfile(),
         ]);
 
         if (ordersRes.success && ordersRes.data?.data) {
@@ -65,7 +66,12 @@ export default function CustomerPaymentHistory() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] p-6 lg:p-8 xl:p-10 transition-all font-sans">
       <div className="max-w-6xl mx-auto space-y-6">
-        <PaymentHistoryHeader />
+        <PaymentHistoryHeader
+          orders={orders}
+          summary={summary}
+          userEmail={userProfile?.email || ""}
+          userName={`${userProfile?.name || ""} ${userProfile?.lastName || ""}`.trim()}
+        />
 
         <PaymentHistoryMetrics summary={summary} />
 
