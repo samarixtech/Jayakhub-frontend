@@ -68,7 +68,7 @@ function SetPasswordForm() {
               type={showPassword ? "text" : "password"}
               placeholder="New Password"
               className="h-11 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary pr-10 text-base"
-              {...register("password")}
+              {...register("newPassword")}
             />
             <button
               type="button"
@@ -79,9 +79,9 @@ function SetPasswordForm() {
               {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
             </button>
           </div>
-          {errors.password && (
+          {errors.newPassword && (
             <p className="text-red-500 text-xs mt-1">
-              {errors.password.message}
+              {errors.newPassword.message}
             </p>
           )}
         </div>

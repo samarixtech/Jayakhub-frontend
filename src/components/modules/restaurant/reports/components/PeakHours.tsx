@@ -9,10 +9,12 @@ interface PeakHour {
 }
 
 interface PeakHoursProps {
-  peakHours?: string;
+  peakHours?: any;
 }
 
-const PeakHours = ({ peakHours = "N/A" }: PeakHoursProps) => {
+const PeakHours = ({ peakHours }: PeakHoursProps) => {
+  const displayTime = typeof peakHours === 'object' && peakHours !== null ? peakHours.time : (peakHours || "N/A");
+
   return (
     <div className="w-full">
       <div className="mb-6">
@@ -27,7 +29,7 @@ const PeakHours = ({ peakHours = "N/A" }: PeakHoursProps) => {
           Busiest Period
         </span>
         <span className="text-[28px] font-black text-[#1B4332]">
-          {peakHours}
+          {displayTime}
         </span>
       </div>
 

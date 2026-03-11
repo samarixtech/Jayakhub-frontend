@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import ReportsStatsCard from "./ReportsStatsCard";
-import SalesChart from "./SalesChart";
-import TopProductsList from "./TopProductsList";
-import OrderSources from "./OrderSources";
-import PeakHours from "./PeakHours";
-import RecentOrders from "./RecentOrders";
+import React from "react";
+import ReportsStatsCard from "../components/ReportsStatsCard";
+import SalesChart from "../components/SalesChart";
+import TopProductsList from "../components/TopProductsList";
+import OrderSources from "../components/OrderSources";
+import PeakHours from "../components/PeakHours";
+import RecentOrders from "../components/RecentOrders";
 import {
   ChevronDown,
   DollarSign,
@@ -14,23 +14,10 @@ import {
   Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getReportsAction } from "@/app/actions/restaurant/reports";
+import { useReports } from "../hooks/useReports";
 
 const ReportsView = () => {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      setLoading(true);
-      const result = await getReportsAction();
-      if (result.success) {
-        setData(result.data.data);
-      }
-      setLoading(false);
-    };
-    fetchReports();
-  }, []);
+  const { data, loading } = useReports();
 
   if (loading) {
     return (

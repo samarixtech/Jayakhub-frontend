@@ -20,7 +20,7 @@ interface Order {
   orderId: string;
   date: string;
   time: string;
-  status: string;
+  status: "Completed" | "Preparing" | "Cancelled";
   customer: string;
   items: string;
   source: string;

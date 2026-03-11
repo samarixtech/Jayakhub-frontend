@@ -64,7 +64,7 @@ export function useSetPasswordForm() {
   const onSubmit = async (data: SetPasswordInput) => {
     setSubmitting(true);
     try {
-      const res = await setNewPasswordAction(data.password);
+      const res = await setNewPasswordAction(data.newPassword);
       if (res.success) {
         toast.success(res.message);
         form.reset();
