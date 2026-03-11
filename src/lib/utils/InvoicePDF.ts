@@ -1,7 +1,11 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 
-export const generateInvoicePDF = (order: any, userEmail: string = "", userName: string = "") => {
+export const generateInvoicePDF = (
+  order: any,
+  userEmail: string = "",
+  userName: string = "",
+) => {
   const doc = new jsPDF();
 
   // Brand / Header
@@ -29,7 +33,12 @@ export const generateInvoicePDF = (order: any, userEmail: string = "", userName:
   doc.setFontSize(11);
   doc.setTextColor(0);
   // Priority: profile name -> order customer name -> payment owner name
-  const finalCustomerName = String(userName || order.customerName || order.paymentDetails?.ownerName || "Guest User");
+  const finalCustomerName = String(
+    userName ||
+      order.customerName ||
+      order.paymentDetails?.ownerName ||
+      "Guest User",
+  );
   doc.text(finalCustomerName, 15, 52);
 
   doc.setFontSize(10);
@@ -37,7 +46,9 @@ export const generateInvoicePDF = (order: any, userEmail: string = "", userName:
 
   // Use actual address from order with fallback check
   // User requested N/A instead of mock data
-  const rawAddress = String(order.address || order.fullAddress || order.shippingAddress || "N/A");
+  const rawAddress = String(
+    order.address || order.fullAddress || order.shippingAddress || "N/A",
+  );
   const addressLines = rawAddress.split(",");
   let addrY = 57;
   addressLines.slice(0, 3).forEach((line: string) => {
@@ -63,7 +74,9 @@ export const generateInvoicePDF = (order: any, userEmail: string = "", userName:
   // User requested: Use "Invoice Number" label and show Order ID there
   doc.text("Invoice Number", detailsX, currentY);
   doc.setTextColor(0);
-  doc.text(String(order.orderId || "N/A"), valuesX, currentY, { align: "right" });
+  doc.text(String(order.orderId || "N/A"), valuesX, currentY, {
+    align: "right",
+  });
 
   currentY += lineHeight;
   doc.setTextColor(100);
@@ -86,7 +99,12 @@ export const generateInvoicePDF = (order: any, userEmail: string = "", userName:
 
   // Very robust transaction ID check
   // User requested N/A instead of generated/mock data
-  doc.text(String(order.transactionId || "N/A"), valuesX, currentY, { align: "right" });
+  doc.text(
+    String(order.transactionId || "N/A").substring(0, 20),
+    valuesX,
+    currentY,
+    { align: "right" },
+  );
 
   // Table
   const tableStartY = Math.max(addrY + 15, 85);
@@ -123,12 +141,14 @@ export const generateInvoicePDF = (order: any, userEmail: string = "", userName:
     },
   });
 
-  const lastTableBottom = (doc as any).lastAutoTable?.finalY || tableStartY + 20;
+  const lastTableBottom =
+    (doc as any).lastAutoTable?.finalY || tableStartY + 20;
   const bottomY = lastTableBottom + 10;
 
   // Totals Section
   const subTotalAmount = itemsArr.reduce(
-    (acc: number, item: any) => acc + Number(item.price || 0) * (item.quantity || 0),
+    (acc: number, item: any) =>
+      acc + Number(item.price || 0) * (item.quantity || 0),
     0,
   );
   const finalTotalAmount = Number(order.totalAmount || subTotalAmount);
@@ -142,7 +162,9 @@ export const generateInvoicePDF = (order: any, userEmail: string = "", userName:
   doc.setTextColor(100);
   doc.text("Subtotal", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text(`$${subTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, { align: "right" });
+  doc.text(`$${subTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
+    align: "right",
+  });
 
   summaryLineY += 8;
   doc.setTextColor(100);
@@ -160,7 +182,9 @@ export const generateInvoicePDF = (order: any, userEmail: string = "", userName:
   doc.setFont("helvetica", "bold");
   doc.setTextColor(52, 104, 83); // Emerald
   doc.text("Total Paid", rightColLabelX, summaryLineY);
-  doc.text(`$${finalTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, { align: "right" });
+  doc.text(`$${finalTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
+    align: "right",
+  });
 
   // Save
   doc.save(`Invoice_${order.orderId || "Order"}.pdf`);

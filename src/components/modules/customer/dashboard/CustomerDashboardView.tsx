@@ -11,7 +11,7 @@ import { RecentActivity } from "./components/RecentActivity";
 import { QuickActions } from "./components/QuickActions";
 
 export default function CustomerDashboardView() {
-  const t = useTranslations('CustomerDashboard.DashboardView');
+  const t = useTranslations("CustomerDashboard.DashboardView");
   const { country, language } = useLocale();
   const [summary, setSummary] = useState<OrderSummary>({
     totalSpend: "0.00",
@@ -53,10 +53,10 @@ export default function CustomerDashboardView() {
           variant="h2"
           className="text-2xl font-black text-gray-900 flex items-center gap-2"
         >
-          {t('overview')}
+          {t("overview")}
         </Typography>
         <Typography variant="p" className="text-gray-500 text-sm mt-1">
-          {t('welcome_message')}
+          {t("welcome_message")}
         </Typography>
       </div>
 
