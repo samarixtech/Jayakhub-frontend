@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { cn } from "@/lib/utils";
 import OrderDetailSidebar, { OrderDetail } from "./OrderDetailSidebar";

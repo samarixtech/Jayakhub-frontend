@@ -80,9 +80,9 @@ const ReportsView = () => {
         <ReportsStatsCard
           label="Repeat Customer Rate"
           value={data.repeatedCustomerRate}
-          trend="+0%"
+          trend={Number(data.lastPeriodRepeatedCustomerRate)}
           trendLabel="vs last period"
-          isPositive={true}
+          isPositive={Number(data.lastPeriodRepeatedCustomerRate) >= 0}
           icon={<Award className="w-4 h-4 text-purple-600" />}
           iconBgColor="bg-purple-50"
         />

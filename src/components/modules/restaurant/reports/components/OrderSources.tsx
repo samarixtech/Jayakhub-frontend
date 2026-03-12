@@ -1,14 +1,3 @@
-import React from "react";
-
-interface OrderSource {
-  id: string;
-  source: string;
-  orders: number;
-  revenue: string;
-  percentage: number;
-  color: string;
-}
-
 interface OrderSourcesProps {
   sources?: { walkInDineIn: number; online: number };
 }
@@ -53,7 +42,7 @@ const OrderSources = ({
             </div>
 
             {/* Progress Bar Container */}
-            <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full ${item.color}`}
                 style={{ width: `${item.percentage}%` }}
