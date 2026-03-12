@@ -4,9 +4,7 @@ import { revalidatePath } from "next/cache";
 import {
   updateProfileSchema,
   changePasswordSchema,
-  addCardSchema,
   ChangePasswordInput,
-  AddCardInput,
 } from "@/lib/schemas/profile";
 import { validateSchema } from "@/lib/validator";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
@@ -159,59 +157,12 @@ export async function getKycStatus(): Promise<ActionResponse> {
   }, "KYC status fetched");
 }
 
-// ==================== ADD CARD ====================
-export async function addCardAction(
-  data: AddCardInput,
-): Promise<ActionResponse> {
-  const validation = validateSchema(addCardSchema, data);
-  if (!validation.success) {
-    return {
-      success: false,
-      message: "Validation failed",
-      errors: validation.errors,
-    };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.post("/cards", data);
-    },
-    "Card saved successfully",
-    () => revalidatePath("/"),
-  );
-}
-
 // ==================== GET ALL CARDS ====================
 export async function getMyCardsAction(): Promise<ActionResponse> {
   return responseHandler(async () => {
     const api = await serverApi();
     return api.get("/cards/me");
   }, "Cards fetched successfully");
-}
-
-// ==================== UPDATE CARD ====================
-export async function updateCardAction(
-  id: string,
-  data: AddCardInput,
-): Promise<ActionResponse> {
-  const validation = validateSchema(addCardSchema, data);
-  if (!validation.success) {
-    return {
-      success: false,
-      message: "Validation failed",
-      errors: validation.errors,
-    };
-  }
-
-  return responseHandler(
-    async () => {
-      const api = await serverApi();
-      return api.put(`/cards/${id}`, data);
-    },
-    "Card updated successfully",
-    () => revalidatePath("/"),
-  );
 }
 
 // ==================== DELETE CARD ====================

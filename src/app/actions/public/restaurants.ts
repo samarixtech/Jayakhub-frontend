@@ -1,5 +1,6 @@
 "use server";
 import { serverApi } from "@/components/services/api";
+import { headers } from "next/headers";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
 export async function getAllRestaurantsAction(params?: {
@@ -23,9 +24,17 @@ export async function getAllRestaurantsAction(params?: {
   const queryString = searchParams.toString();
   const url = queryString ? `/allResturant?${queryString}` : "/allResturant";
 
+  const headersList = await headers();
+  const userNameHeader = headersList.get("x-forwarded-for");
+
   const api = await serverApi();
   return responseHandler(
-    async () => api.get(url),
+    async () =>
+      api.get(url, {
+        headers: {
+          "x-forwarded-for": userNameHeader,
+        },
+      }),
     undefined,
     async (data) => {
       return data;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Star, X } from "lucide-react";
@@ -13,7 +13,10 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
   const [activeView, setActiveView] = useState<"all" | "detail" | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
-  const totalRevenue = products.reduce((acc, p) => acc + (p.revenue || p.total || 0), 0);
+  const totalRevenue = products.reduce(
+    (acc, p) => acc + (p.revenue || p.total || 0),
+    0,
+  );
 
   const formattedProducts = products.map((p, index) => ({
     id: String(index + 1),
@@ -23,7 +26,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
     unitsSold: p.quantity,
     revenue: `$${(p.revenue || p.total || 0).toLocaleString()}`,
     numericRevenue: p.revenue || p.total || 0,
-    image: p.image || "", 
+    image: p.image || "",
     rankColor:
       index === 0
         ? "text-amber-600"
@@ -40,8 +43,8 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
           : index === 2
             ? "bg-orange-50"
             : "bg-slate-100",
-    rating: typeof p.rating === 'number' ? p.rating : 4.5,
-    price: `$${(p.price !== undefined ? p.price : (p.total / (p.quantity || 1))).toFixed(2)}`,
+    rating: typeof p.rating === "number" ? p.rating : 4.5,
+    price: `$${(p.price !== undefined ? p.price : p.total / (p.quantity || 1)).toFixed(2)}`,
     cost: `$${(p.cost || 0).toLocaleString()}`,
     profit: `$${(p.profit || p.total || 0).toLocaleString()}`,
     profitMargin: p.profitMargin || "100%",
@@ -101,7 +104,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
               <div className="w-10 h-10 rounded-lg bg-gray-100 relative overflow-hidden flex items-center justify-center border border-gray-100 shadow-sm shrink-0">
                 {product.image ? (
                   <img
-                    src={product.image}
+                    src={process.env.NEXT_PUBLIC_IMAGE_BASE_URL + product.image}
                     className="absolute inset-0 w-full h-full object-cover"
                     alt={product.name}
                   />
@@ -215,7 +218,10 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                         <div className="w-9 h-9 rounded-lg bg-gray-100 relative overflow-hidden flex items-center justify-center border border-gray-100 shrink-0">
                           {product.image ? (
                             <img
-                              src={product.image}
+                              src={
+                                process.env.NEXT_PUBLIC_IMAGE_BASE_URL +
+                                product.image
+                              }
                               className="absolute inset-0 w-full h-full object-cover"
                               alt={product.name}
                             />
@@ -286,7 +292,10 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   <div className="w-[56px] h-[56px] rounded-xl bg-gray-100 relative overflow-hidden flex items-center justify-center shrink-0 border border-gray-100">
                     {selectedProduct.image ? (
                       <img
-                        src={selectedProduct.image}
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_BASE_URL +
+                          selectedProduct.image
+                        }
                         className="absolute inset-0 w-full h-full object-cover"
                         alt={selectedProduct.name}
                       />
