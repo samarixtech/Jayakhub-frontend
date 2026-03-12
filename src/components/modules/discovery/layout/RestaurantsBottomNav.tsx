@@ -27,6 +27,11 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
   const isActive = (path: string) =>
     pathname === path || pathname?.endsWith(path);
 
+  const imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
+  const avatarSrc = user?.avatar
+    ? `${imageBaseUrl}${user.avatar}`
+    : user?.image || undefined;
+
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 py-2 px-6 flex justify-between items-center z-50 md:hidden pb-safe">
       {/* Home */}
@@ -80,7 +85,8 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
         {isLoggedIn && user ? (
           <Avatar className="h-6 w-6 border border-gray-200 transaction-transform hover:scale-105">
             <AvatarImage
-              src={user?.avatar || user?.image}
+              // src={user?.avatar || user?.image}
+              src={avatarSrc || user?.image}
               alt={user?.name || "User"}
             />
             <AvatarFallback className="bg-[#346853] text-white text-[9px] font-medium">

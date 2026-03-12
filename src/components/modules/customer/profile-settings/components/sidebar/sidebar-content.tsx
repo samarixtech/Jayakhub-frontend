@@ -55,7 +55,9 @@ export function SidebarContent({
           </Badge>
         )}
         <Badge className="bg-blue-50 text-blue-600 uppercase">
-          {profile.role}
+          {typeof profile.role === "string"
+            ? profile.role
+            : (profile.role as any)?.name || "Customer"}
         </Badge>
       </div>
 

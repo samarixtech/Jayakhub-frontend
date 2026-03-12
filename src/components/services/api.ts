@@ -97,7 +97,7 @@ export async function serverApi() {
 
   const instance = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 40000,
+    // timeout: 40000,
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
