@@ -87,9 +87,19 @@ export async function updateProfileAction(
       return profileResult;
     },
     "Profile updated successfully",
-    (data) => {
+    async (data) => {
       // Revalidate to force a rerender and refresh data on client
       revalidatePath("/", "layout");
+
+      // Harmonize role field with getProfile (ensure it's a string from cookies)
+      const { cookies } = await import("next/headers");
+      const cookieStore = await cookies();
+      const role = cookieStore.get("role")?.value;
+
+      const user = data?.user || data;
+      if (role && user && typeof user === "object") {
+        return { ...data, user: { ...user, role } };
+      }
       return data;
     },
   );
