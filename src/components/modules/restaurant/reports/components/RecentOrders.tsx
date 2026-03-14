@@ -8,23 +8,12 @@ interface Order {
   orderId: string;
   date: string;
   time: string;
-  status: "Completed" | "Preparing" | "Cancelled";
+  status: string | "Completed" | "Preparing" | "Cancelled";
   customer: string;
   items: string;
   source: string;
   total: string;
-}
-
-interface Order {
-  id: string;
-  orderId: string;
-  date: string;
-  time: string;
-  status: "Completed" | "Preparing" | "Cancelled";
-  customer: string;
-  items: string;
-  source: string;
-  total: string;
+  rawData?: any;
 }
 
 const getStatusStyles = (status: string) => {
@@ -73,10 +62,12 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       items: o.summary || "No details",
       source: o.source || "N/A",
       total: `$${Number(o.totalPrice).toFixed(2)}`,
+      rawData: o,
     };
   });
 
   const handleOrderClick = (order: Order) => {
+    const raw = order.rawData;
     setSelectedOrder({
       id: order.id,
       orderId: order.orderId,
@@ -86,6 +77,16 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       customer: order.customer,
       source: order.source,
       total: order.total,
+      paymentMethod: raw?.paymentMethod || "N/A",
+      prepDuration: raw?.prepareTime ? `${raw.prepareTime} min` : "N/A",
+      subtotal: order.total,
+      tax: "$0.00",
+      itemsList: raw?.items?.map((item: any) => ({
+        name: item.name,
+        qty: item.quantity,
+        price: Number(item.price),
+        total: Number(item.price) * Number(item.quantity),
+      })),
     });
     setSidebarOpen(true);
   };

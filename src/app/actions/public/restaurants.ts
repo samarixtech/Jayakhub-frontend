@@ -3,6 +3,24 @@ import { serverApi } from "@/components/services/api";
 import { headers } from "next/headers";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
+// TEMPORARY HELPER
+export async function getClientIp() {
+  const headersList = await headers();
+
+  const forwarded = headersList.get("x-forwarded-for");
+  const realIp = headersList.get("x-real-ip");
+
+  if (forwarded) {
+    return forwarded.split(",")[0].trim(); // first IP is client
+  }
+
+  if (realIp) {
+    return realIp;
+  }
+
+  return null;
+}
+
 export async function getAllRestaurantsAction(params?: {
   lat?: number;
   lng?: number;
@@ -24,15 +42,18 @@ export async function getAllRestaurantsAction(params?: {
   const queryString = searchParams.toString();
   const url = queryString ? `/allResturant?${queryString}` : "/allResturant";
 
-  const headersList = await headers();
-  const userNameHeader = headersList.get("x-forwarded-for");
+  // const headersList = await headers();
+  // const userNameHeader = headersList.get("x-forwarded-for");
+
+  // TEMPORARY HELPER
+  const clientIp = await getClientIp();
 
   const api = await serverApi();
   return responseHandler(
     async () =>
       api.get(url, {
         headers: {
-          "x-forwarded-for": userNameHeader,
+          "x-forwarded-for": clientIp,
         },
       }),
     undefined,
