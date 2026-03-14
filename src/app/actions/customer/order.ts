@@ -5,6 +5,7 @@ interface CreateOrderPayload {
   paymentMethod: "stripe" | "cod";
   restaurantId: string;
   items: {
+    itemId: string;
     itemName: string;
     itemPrice: number;
     quantity: number;
@@ -61,7 +62,6 @@ export async function getAllOrders(filter?: string): Promise<{
     };
   }
 }
-
 
 export async function submitRatingAction(payload: {
   orderId: string;

@@ -1,26 +1,9 @@
 "use server";
 import { serverApi } from "@/components/services/api";
-import { headers } from "next/headers";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
+import getClientIp from "@/lib/getClientIp";
 
-// TEMPORARY HELPER
-export async function getClientIp() {
-  const headersList = await headers();
-
-  const forwarded = headersList.get("x-forwarded-for");
-  const realIp = headersList.get("x-real-ip");
-
-  if (forwarded) {
-    return forwarded.split(",")[0].trim(); // first IP is client
-  }
-
-  if (realIp) {
-    return realIp;
-  }
-
-  return null;
-}
-
+// ==================== GET ALL RESTAURANTS ACTION ====================
 export async function getAllRestaurantsAction(params?: {
   lat?: number;
   lng?: number;
@@ -42,10 +25,7 @@ export async function getAllRestaurantsAction(params?: {
   const queryString = searchParams.toString();
   const url = queryString ? `/allResturant?${queryString}` : "/allResturant";
 
-  // const headersList = await headers();
-  // const userNameHeader = headersList.get("x-forwarded-for");
-
-  // TEMPORARY HELPER
+  // HELPER FUNCTION TO GET CLIENT IP ADDRESS
   const clientIp = await getClientIp();
 
   const api = await serverApi();
@@ -63,6 +43,7 @@ export async function getAllRestaurantsAction(params?: {
   );
 }
 
+// ==================== GET RESTAURANT BY SLUG (RESTAURANT DETAIL WITH MENU) ACTION ====================
 export async function getRestaurantBySlugAction(
   slug: string,
 ): Promise<ActionResponse> {
@@ -76,6 +57,7 @@ export async function getRestaurantBySlugAction(
   );
 }
 
+// ==================== GET PREVIOUS ORDERED FROM RESTAURANTS ACTION ==================== TODO: MOVE THIS BECAUSE IT IS NOT PUBLIC (AUTHORIZED API)
 export async function getPreviousOrderRestaurantsAction(): Promise<ActionResponse> {
   const api = await serverApi();
   return responseHandler(
@@ -87,6 +69,7 @@ export async function getPreviousOrderRestaurantsAction(): Promise<ActionRespons
   );
 }
 
+// ==================== GET RESTAURANT REVIEWS ACTION ====================
 export async function getRestaurantReviewsAction(
   slug: string,
   filter?: string,

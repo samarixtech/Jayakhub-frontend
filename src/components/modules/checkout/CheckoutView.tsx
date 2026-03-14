@@ -76,6 +76,7 @@ const CheckoutView = () => {
       paymentMethod: paymentMethod as any,
       restaurantId,
       items: cart.map((item) => ({
+        itemId: item.id,
         itemName: item.name,
         itemPrice: item.price,
         quantity: item.quantity,

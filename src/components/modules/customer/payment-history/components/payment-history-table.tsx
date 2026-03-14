@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { generateInvoicePDF } from "@/lib/utils/InvoicePDF";
 import { useTranslations } from "next-intl";
+import { formatOrderDateTime } from "@/lib/utils/date";
 
 interface PaymentHistoryTableProps {
   orders: any[];
@@ -32,7 +33,7 @@ export function PaymentHistoryTable({
   userEmail,
   userName,
 }: PaymentHistoryTableProps) {
-  const t = useTranslations('CustomerDashboard.PaymentHistory');
+  const t = useTranslations("CustomerDashboard.PaymentHistory");
   console.log("PAYMENT HISTORY TABLE ORDERS PROP:", JSON.stringify(orders[0]));
   const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
 
@@ -44,7 +45,7 @@ export function PaymentHistoryTable({
 
   const columns: Column<any>[] = [
     {
-      header: t('table_description'),
+      header: t("table_description"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[200px]",
       className: "py-4",
@@ -75,8 +76,9 @@ export function PaymentHistoryTable({
             )}
             <div className="flex flex-col">
               <span className="font-bold text-[#1E293B] text-[15px] line-clamp-1">
-                {firstItem?.name || t('order_component')}
-                {order.items?.length > 1 && ` +${order.items.length - 1} ${t('more')}`}
+                {firstItem?.name || t("order_component")}
+                {order.items?.length > 1 &&
+                  ` +${order.items.length - 1} ${t("more")}`}
               </span>
             </div>
           </div>
@@ -84,29 +86,29 @@ export function PaymentHistoryTable({
       },
     },
     {
-      header: t('table_date'),
+      header: t("table_date"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[150px]",
       cell: (order) => (
         <span className="text-[15px] font-medium text-[#64748B]">
-          {order.orderDate} • {order.orderTime}
+          {formatOrderDateTime(order.orderDate, order.orderTime)}
         </span>
       ),
     },
     {
-      header: t('table_method'),
+      header: t("table_method"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[120px]",
       cell: (order) => {
         const method =
           order.paymentMethod?.toLowerCase() === "card"
-            ? t('visa')
+            ? t("visa")
             : order.paymentMethod?.toLowerCase() === "cod"
-              ? t('cash')
+              ? t("cash")
               : order.paymentMethod;
         const details =
           order.paymentDetails?.cardNumber &&
-            order.paymentDetails?.cardNumber !== "N/A"
+          order.paymentDetails?.cardNumber !== "N/A"
             ? ` •• ${order.paymentDetails.cardNumber.slice(-4)}`
             : "";
 
@@ -119,7 +121,7 @@ export function PaymentHistoryTable({
       },
     },
     {
-      header: t('table_amount'),
+      header: t("table_amount"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[100px]",
       cell: (order) => {
@@ -134,7 +136,7 @@ export function PaymentHistoryTable({
       },
     },
     {
-      header: t('table_receipt'),
+      header: t("table_receipt"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase text-right w-[80px]",
       className: "text-right",
@@ -149,7 +151,7 @@ export function PaymentHistoryTable({
             }}
             className="h-[26px] px-3 rounded-md border border-gray-200 text-[#1E293B] font-bold text-[10px] hover:bg-gray-50 flex items-center justify-center ml-auto shadow-sm"
           >
-            <span>{t('pdf')}</span>
+            <span>{t("pdf")}</span>
           </Button>
         ),
     },
@@ -159,19 +161,24 @@ export function PaymentHistoryTable({
     <Card className="rounded-[24px] border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden bg-white">
       <CardHeader className="border-b border-gray-100 pt-6 pb-6 px-8 flex flex-row items-center justify-between">
         <CardTitle className="text-[16px] font-bold text-[#1E293B]">
-          {t('transactions')}
+          {t("transactions")}
         </CardTitle>
         <div className="flex items-center gap-2">
           {["All", "Cards", "Cash"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-5 py-1.5 rounded-full text-[12px] font-bold transition-all shadow-sm ${activeTab === tab
-                ? "bg-[#f0fdf4] text-[#10b981] border border-[#10b981]"
-                : "text-[#6B7280] bg-white hover:text-[#374151] border border-gray-100"
-                }`}
+              className={`px-5 py-1.5 rounded-full text-[12px] font-bold transition-all shadow-sm ${
+                activeTab === tab
+                  ? "bg-[#f0fdf4] text-[#10b981] border border-[#10b981]"
+                  : "text-[#6B7280] bg-white hover:text-[#374151] border border-gray-100"
+              }`}
             >
-              {tab === "All" ? t('all') : tab === "Cards" ? t('cards') : t('cash')}
+              {tab === "All"
+                ? t("all")
+                : tab === "Cards"
+                  ? t("cards")
+                  : t("cash")}
             </button>
           ))}
         </div>
@@ -182,7 +189,7 @@ export function PaymentHistoryTable({
             data={currentOrders}
             columns={columns}
             loading={loading}
-            emptyMessage={t('no_transactions')}
+            emptyMessage={t("no_transactions")}
             rowClassName={(order) =>
               order.status === "refunded" ? "bg-[#f0fdf4]" : ""
             }
@@ -193,8 +200,8 @@ export function PaymentHistoryTable({
         {!loading && orders.length > 0 && (
           <div className="absolute bottom-5 left-8 right-8 flex items-center justify-between pointer-events-none">
             <span className="text-[12px] text-gray-400 font-medium">
-              {t('showing')} {startIndex + 1}-
-              {Math.min(startIndex + itemsPerPage, orders.length)} {t('of')}{" "}
+              {t("showing")} {startIndex + 1}-
+              {Math.min(startIndex + itemsPerPage, orders.length)} {t("of")}{" "}
               {orders.length}
             </span>
 
@@ -224,10 +231,11 @@ export function PaymentHistoryTable({
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm font-bold text-[12px] transition ${currentPage === page
-                        ? "text-white bg-[#225539]"
-                        : "text-[#4B5563] bg-white border border-gray-100 hover:text-gray-900"
-                        }`}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm font-bold text-[12px] transition ${
+                        currentPage === page
+                          ? "text-white bg-[#225539]"
+                          : "text-[#4B5563] bg-white border border-gray-100 hover:text-gray-900"
+                      }`}
                     >
                       {page}
                     </button>
