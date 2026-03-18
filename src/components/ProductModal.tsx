@@ -90,7 +90,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden gap-0 border-0 rounded-2xl">
+      <DialogContent showCloseButton={false} className="sm:max-w-[425px] p-0 overflow-hidden gap-0 border-0 rounded-2xl">
         <div className="sr-only">
           <DialogTitle>{item.name}</DialogTitle>
         </div>

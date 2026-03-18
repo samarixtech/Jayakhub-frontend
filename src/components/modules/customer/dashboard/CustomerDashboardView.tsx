@@ -46,32 +46,34 @@ export default function CustomerDashboardView() {
   }, []);
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Header */}
-      <div>
-        <Typography
-          variant="h2"
-          className="text-2xl font-black text-gray-900 flex items-center gap-2"
-        >
-          {t("overview")}
-        </Typography>
-        <Typography variant="p" className="text-gray-500 text-sm mt-1">
-          {t("welcome_message")}
-        </Typography>
-      </div>
+    <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
+      <div className="max-w-5xl mx-auto space-y-4 md:space-y-8">
+        {/* Welcome Header */}
+        <div>
+          <Typography
+            variant="h2"
+            className="text-2xl font-black text-gray-900 flex items-center gap-2"
+          >
+            {t("overview")}
+          </Typography>
+          <Typography variant="p" className="text-gray-500 text-sm mt-1">
+            {t("welcome_message")}
+          </Typography>
+        </div>
 
-      {/* Stats Grid */}
-      <DashboardStats summary={summary} loading={loading} />
+        {/* Stats Grid */}
+        <DashboardStats summary={summary} loading={loading} />
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <RecentActivity
-          recentOrders={recentOrders}
-          loading={loading}
-          country={country}
-          language={language}
-        />
-        <QuickActions country={country} language={language} />
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+          <RecentActivity
+            recentOrders={recentOrders}
+            loading={loading}
+            country={country}
+            language={language}
+          />
+          <QuickActions country={country} language={language} />
+        </div>
       </div>
     </div>
   );

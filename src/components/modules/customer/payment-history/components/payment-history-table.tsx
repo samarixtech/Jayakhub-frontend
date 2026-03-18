@@ -37,9 +37,7 @@ export function PaymentHistoryTable({
   userName,
 }: PaymentHistoryTableProps) {
   const t = useTranslations("CustomerDashboard.PaymentHistory");
-  console.log("PAYMENT HISTORY TABLE ORDERS PROP:", JSON.stringify(orders[0]));
-
-  const currentOrders = orders; // pagination is handled by backend
+  const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -162,7 +160,7 @@ export function PaymentHistoryTable({
   ];
 
   return (
-    <Card className="rounded-[24px] border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden bg-white">
+    <Card className="rounded-3xl border border-gray-100 shadow-[0_4px_24px_rgba(0,0,0,0.02)] overflow-hidden bg-white">
       <CardHeader className="border-b border-gray-100 pt-6 pb-6 px-8 flex flex-row items-center justify-between">
         <CardTitle className="text-[16px] font-bold text-[#1E293B]">
           {t("transactions")}

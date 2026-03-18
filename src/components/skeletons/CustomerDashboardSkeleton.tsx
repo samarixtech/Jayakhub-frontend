@@ -145,23 +145,32 @@ export function AddressesSkeleton() {
             <Card className="border-none shadow-sm rounded-2xl overflow-hidden bg-white">
                 <CardContent className="p-0">
                     {/* Mock Table Header */}
-                    <div className="grid grid-cols-5 p-4 border-b border-gray-100 gap-4">
-                        {[1, 2, 3, 4, 5].map(i => <Skeleton key={i} className="h-4 w-full" />)}
+                    <div className="grid grid-cols-2 md:grid-cols-5 p-4 border-b border-gray-100 gap-4">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full hidden md:block" />
+                        <Skeleton className="h-4 w-full hidden md:block" />
+                        <Skeleton className="h-4 w-full hidden md:block" />
                     </div>
                     {/* Mock Table Rows */}
                     {[1, 2, 3, 4].map((row) => (
-                        <div key={row} className="grid grid-cols-5 p-4 gap-4 items-center border-b border-gray-50 last:border-0">
-                            <Skeleton className="h-12 w-12 rounded-xl" />
-                            <div className="space-y-2">
-                                <Skeleton className="h-4 w-20" />
-                                <Skeleton className="h-3 w-12" />
+                        <div key={row} className="grid grid-cols-2 md:grid-cols-5 p-4 gap-4 items-center border-b border-gray-50 last:border-0">
+                            <div className="flex items-center gap-3">
+                                <Skeleton className="h-12 w-12 rounded-xl shrink-0" />
+                                <div className="space-y-2 w-full">
+                                    <Skeleton className="h-4 w-20" />
+                                    <Skeleton className="h-3 w-12" />
+                                </div>
                             </div>
-                            <div className="space-y-1">
+                            <div className="flex justify-end md:hidden">
+                                <Skeleton className="h-8 w-16 rounded-lg" />
+                            </div>
+                            <div className="space-y-1 hidden md:block">
                                 <Skeleton className="h-3 w-full" />
                                 <Skeleton className="h-3 w-3/4" />
                             </div>
-                            <Skeleton className="h-6 w-16 rounded-lg" />
-                            <div className="flex justify-end gap-2">
+                            <Skeleton className="h-6 w-16 rounded-lg hidden md:block" />
+                            <div className="hidden md:flex justify-end gap-2">
                                 <Skeleton className="h-9 w-9 rounded-full" />
                                 <Skeleton className="h-9 w-9 rounded-full" />
                             </div>
@@ -215,22 +224,22 @@ export function BillingSkeleton() {
                     </div>
 
                     <div className="p-0">
-                        <div className="grid grid-cols-5 px-8 py-3 border-b border-gray-50 bg-white">
+                        <div className="grid grid-cols-2 md:grid-cols-5 px-8 py-3 border-b border-gray-50 bg-white">
                             <Skeleton className="h-3 w-20" />
-                            <Skeleton className="h-3 w-16" />
-                            <Skeleton className="h-3 w-16" />
-                            <Skeleton className="h-3 w-16" />
+                            <Skeleton className="h-3 w-16 hidden md:block" />
+                            <Skeleton className="h-3 w-16 hidden md:block" />
+                            <Skeleton className="h-3 w-16 hidden md:block" />
                             <Skeleton className="h-3 w-16 ml-auto" />
                         </div>
                         {[1, 2, 3, 4].map((row) => (
-                            <div key={row} className="grid grid-cols-5 items-center px-8 py-4 border-b border-gray-50 last:border-0">
+                            <div key={row} className="grid grid-cols-2 md:grid-cols-5 items-center px-8 py-4 border-b border-gray-50 last:border-0">
                                 <div className="flex items-center gap-3">
                                     <Skeleton className="h-8 w-8 rounded-lg shrink-0" />
                                     <Skeleton className="h-4 w-32" />
                                 </div>
-                                <Skeleton className="h-3 w-24" />
-                                <Skeleton className="h-3 w-24" />
-                                <Skeleton className="h-4 w-16 font-bold" />
+                                <Skeleton className="h-3 w-24 hidden md:block" />
+                                <Skeleton className="h-3 w-24 hidden md:block" />
+                                <Skeleton className="h-4 w-16 font-bold hidden md:block" />
                                 <Skeleton className="h-7 w-12 rounded-lg ml-auto" />
                             </div>
                         ))}
@@ -285,8 +294,8 @@ export function WalletSkeleton() {
 // ==========================================
 export function PaymentHistorySkeleton() {
     return (
-        <div className="min-h-screen bg-[#F9FAFB] p-5">
-            <div className="max-w-7xl mx-auto animate-in fade-in duration-500">
+        <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
+            <div className="max-w-5xl mx-auto animate-in fade-in duration-500">
                 {/* Header Skeleton */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
@@ -303,24 +312,34 @@ export function PaymentHistorySkeleton() {
                     </div>
                     <div className="p-0">
                         {/* Table Header */}
-                        <div className="grid grid-cols-6 p-4 border-b border-gray-100 gap-4">
-                            {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} className="h-4 w-full" />)}
+                        <div className="grid grid-cols-2 md:grid-cols-6 p-4 border-b border-gray-100 gap-4">
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full hidden md:block" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full hidden md:block" />
+                            <Skeleton className="h-4 w-full hidden md:block" />
+                            <Skeleton className="h-4 w-full hidden md:block" />
                         </div>
                         {/* Table Rows */}
                         {[1, 2, 3, 4, 5].map((row) => (
-                            <div key={row} className="grid grid-cols-6 p-4 gap-4 items-center border-b border-gray-50 last:border-0">
-                                <Skeleton className="h-10 w-10 rounded-lg" />
-                                <div className="space-y-2">
+                            <div key={row} className="grid grid-cols-2 md:grid-cols-6 p-4 gap-4 items-center border-b border-gray-50 last:border-0">
+                                <div className="flex items-center gap-3">
+                                    <Skeleton className="h-10 w-10 rounded-lg shrink-0" />
+                                    <div className="space-y-2 hidden md:block">
+                                        <Skeleton className="h-4 w-24" />
+                                    </div>
+                                </div>
+                                <div className="space-y-2 hidden md:block">
                                     <Skeleton className="h-4 w-24" />
                                 </div>
                                 <div className="space-y-1">
                                     <Skeleton className="h-4 w-24" />
-                                    <Skeleton className="h-3 w-16" />
+                                    <Skeleton className="h-3 w-16 md:hidden" />
                                 </div>
-                                <div className="space-y-1">
+                                <div className="space-y-1 hidden md:block">
                                     <Skeleton className="h-4 w-24" />
                                 </div>
-                                <Skeleton className="h-4 w-16" />
+                                <Skeleton className="h-4 w-16 hidden md:block" />
                                 <div className="flex justify-end">
                                     <Skeleton className="h-8 w-24 rounded-full" />
                                 </div>

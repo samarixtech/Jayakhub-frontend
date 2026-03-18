@@ -29,7 +29,7 @@ export default function WalletView() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
-      <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 animate-in fade-in duration-500">
+      <div className="max-w-5xl mx-auto space-y-4 md:space-y-8 animate-in fade-in duration-500">
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
@@ -46,7 +46,7 @@ export default function WalletView() {
         </div>
 
         {/* CONTENT */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {cards.length > 0 ? (
             cards.map((card) => (
               <PaymentCard

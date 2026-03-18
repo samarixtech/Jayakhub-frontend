@@ -219,9 +219,9 @@ export default function CustomerAddressView() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
-      <div className="max-w-full mx-auto">
+      <div className="max-w-5xl mx-auto">
         {/* Header Section */}
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-6 md:mb-10 gap-4">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-4 md:mb-10 gap-4">
           <div>
             <Typography
               variant="h2"
