@@ -111,12 +111,20 @@ export function useRestaurantDetails() {
       quantity: 1,
       restaurantName: restaurant?.name,
       restaurantId: restaurant?.id,
+      restaurantImage: restaurant?.profileImage,
     };
     dispatch(addToCart(cartItem));
   };
 
   const handleAddToCartFromModal = (item: any) => {
-    dispatch(addToCart(item));
+    dispatch(
+      addToCart({
+        ...item,
+        restaurantName: restaurant?.name,
+        restaurantId: restaurant?.id,
+        restaurantImage: restaurant?.profileImage,
+      }),
+    );
     setSelectedItem(null);
   };
 
@@ -146,7 +154,12 @@ export function useRestaurantDetails() {
     }
   };
 
-  const totalCartPrice = cart.reduce(
+  const restaurantCart = useMemo(() => {
+    if (!restaurant?.id) return [];
+    return cart.filter((item) => item.restaurantId === restaurant.id);
+  }, [cart, restaurant?.id]);
+
+  const totalCartPrice = restaurantCart.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
@@ -173,7 +186,7 @@ export function useRestaurantDetails() {
       isReviewsModalOpen,
       reviewsData,
       reviewsLoading,
-      cart,
+      cart: restaurantCart,
       country,
       currency,
       language,

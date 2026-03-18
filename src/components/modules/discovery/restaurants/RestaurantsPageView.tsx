@@ -55,6 +55,7 @@ const AllRestaurantsPage: React.FC = () => {
           <PopularRestaurantsSection
             isPending={state.isPending}
             restaurants={state.restaurants}
+            isLoggedIn={state.isLoggedIn}
           />
 
           <CuisinesSection
@@ -80,6 +81,7 @@ const AllRestaurantsPage: React.FC = () => {
             restaurants={state.restaurants}
             viewMode={state.viewMode}
             setViewMode={actions.setViewMode}
+            isLoggedIn={state.isLoggedIn}
           />
 
           <PreviousOrdersSection

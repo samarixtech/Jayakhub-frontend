@@ -1,6 +1,7 @@
 "use client";
 import { Clock, Loader2, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCLC } from "@/context/CLCContext";
 
 interface CartItem {
   id?: string;
@@ -32,6 +33,7 @@ const OrderSummary = ({
   onPlaceOrder,
   isPlacingOrder = false,
 }: OrderSummaryProps) => {
+  const { currency } = useCLC();
   return (
     <div className="space-y-6">
       {/* Delivery Time Estimate */}
@@ -43,7 +45,8 @@ const OrderSummary = ({
           <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">
             Est. Delivery Time
           </p>
-          <p className="font-bold text-gray-900">25 - 35 mins</p>
+          <p className="font-bold text-gray-900">25 - 35 mins</p>{" "}
+          {/* TODO: Implement delivery time */}
         </div>
       </div>
 
@@ -75,7 +78,8 @@ const OrderSummary = ({
                 </div>
               </div>
               <span className="font-medium text-gray-900">
-                ${((item.price || 0) * item.quantity).toFixed(2)}
+                {currency}
+                {((item.price || 0) * item.quantity).toFixed(2)}
               </span>
             </div>
           ))}
@@ -85,15 +89,24 @@ const OrderSummary = ({
         <div className="space-y-2 text-sm border-t border-gray-100 pt-4 mb-4">
           <div className="flex justify-between text-gray-500">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>
+              {currency}
+              {subtotal.toFixed(2)}
+            </span>
           </div>
           <div className="flex justify-between text-gray-500">
             <span>Delivery Fee</span>
-            <span>${deliveryFee.toFixed(2)}</span>
+            <span>
+              {currency}
+              {deliveryFee.toFixed(2)}
+            </span>
           </div>
           <div className="flex justify-between text-gray-500">
             <span>Tax</span>
-            <span>${tax.toFixed(2)}</span>
+            <span>
+              {currency}
+              {tax.toFixed(2)}
+            </span>
           </div>
         </div>
 
@@ -101,7 +114,8 @@ const OrderSummary = ({
         <div className="flex justify-between items-center pt-2 mb-6">
           <span className="font-bold text-lg">Total</span>
           <span className="font-bold text-2xl text-[#346853]">
-            ${total.toFixed(2)}
+            {currency}
+            {total.toFixed(2)}
           </span>
         </div>
 

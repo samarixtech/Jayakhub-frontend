@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Order } from "../../types";
 import { getStatusColor, getStatusLabel } from "../utils";
 import { useTranslations } from "next-intl";
+import { formatOrderDateTime } from "@/lib/utils/date";
 
 interface RecentActivityProps {
   recentOrders: Order[];
@@ -23,13 +24,13 @@ export const RecentActivity = ({
   country,
   language,
 }: RecentActivityProps) => {
-  const t = useTranslations('CustomerDashboard.RecentActivity');
+  const t = useTranslations("CustomerDashboard.RecentActivity");
 
   return (
     <Card className="lg:col-span-2 border-none shadow-sm rounded-4xl bg-white overflow-hidden">
       <CardHeader className="px-8 pt-8 flex flex-row items-center justify-between">
         <CardTitle className="text-lg font-black text-gray-900">
-          {t('recent_activity')}
+          {t("recent_activity")}
         </CardTitle>
         <Button
           variant="link"
@@ -37,7 +38,7 @@ export const RecentActivity = ({
           asChild
         >
           <Link href={`/${country}/${language}/customer/order-history`}>
-            {t('view_all')}
+            {t("view_all")}
           </Link>
         </Button>
       </CardHeader>
@@ -64,7 +65,8 @@ export const RecentActivity = ({
         ) : recentOrders.length > 0 ? (
           recentOrders.map((order) => {
             const statusStyle = getStatusColor(order.OrderStatus);
-            const firstItem = order.items && order.items.length > 0 ? order.items[0] : null;
+            const firstItem =
+              order.items && order.items.length > 0 ? order.items[0] : null;
 
             const orderName = firstItem
               ? firstItem.name
@@ -106,7 +108,7 @@ export const RecentActivity = ({
                       {orderName}
                     </Typography>
                     <Typography className="text-xs text-gray-400 font-medium">
-                      {itemCount} {itemCount === 1 ? t('item') : t('items')} • $
+                      {itemCount} {itemCount === 1 ? t("item") : t("items")} • $
                       {order.totalAmount}
                     </Typography>
                   </div>
@@ -118,7 +120,7 @@ export const RecentActivity = ({
                     {getStatusLabel(order.OrderStatus)}
                   </Badge>
                   <Typography className="text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-tighter">
-                    {order.orderDate}, {order.orderTime}
+                    {formatOrderDateTime(order.orderDate, order.orderTime)}
                   </Typography>
                 </div>
               </div>
@@ -126,7 +128,7 @@ export const RecentActivity = ({
           })
         ) : (
           <div className="text-center text-gray-500 py-4">
-            {t('no_activity')}
+            {t("no_activity")}
           </div>
         )}
       </CardContent>

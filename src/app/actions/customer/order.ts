@@ -16,6 +16,7 @@ interface CreateOrderPayload {
   totalAmount: number;
   latitude?: number;
   longitude?: number;
+  currency: string;
 }
 
 export async function createOrderAction(payload: CreateOrderPayload) {
@@ -44,21 +45,35 @@ export async function getCurrentOrder(orderIdFromUrl: any) {
   }
 }
 
-export async function getAllOrders(filter?: string): Promise<{
+export async function getAllOrders(
+  page: number = 1,
+  limit: number = 10,
+  filter?: string,
+): Promise<{
   success: boolean;
   data: any;
+  meta: any;
   message?: string;
 }> {
   try {
     const api = await serverApi();
-    const url = filter ? `/all-orders?filter=${filter}` : "/all-orders";
-    const response: any = await api.get(url);
-    return { success: true, data: response.data };
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (filter) {
+      queryParams.append("filter", filter);
+    }
+
+    const response: any = await api.get(`/all-orders?${queryParams.toString()}`);
+    return { success: true, data: response.data.data, meta: response.data.meta };
   } catch (error: any) {
     return {
       success: false,
       message: error.message || "Failed to fetch orders",
       data: null,
+      meta: null,
     };
   }
 }

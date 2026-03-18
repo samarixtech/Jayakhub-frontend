@@ -11,7 +11,8 @@ import { Order, OrderStatus } from "../types";
 import { OrderHistoryHeader } from "./components/OrderHistoryHeader";
 import { OrderFilters } from "./components/OrderFilters";
 import { OrderCard } from "./components/OrderCard";
-import { OrderPagination } from "./components/OrderPagination";
+import { usePagination } from "@/hooks/usePagination";
+import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { useOrderHistoryActions } from "./useOrderHistoryActions";
 
 export default function CustomerOrderHistoryView() {
@@ -28,16 +29,15 @@ export default function CustomerOrderHistoryView() {
   const [dateRange, setDateRange] = useState("all");
 
   // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const { page, limit, totalPages, handlePageChange, updatePaginationMeta } = usePagination({ initialLimit: 10 });
 
   const t = useTranslations("CustomerDashboard.OrderHistory");
 
-  const { handlePageChange, handleReorder, handleRateOrder } =
+  const { handleReorder, handleRateOrder } =
     useOrderHistoryActions({
       country,
       language,
-      setCurrentPage,
+      setCurrentPage: handlePageChange as any,
       setCurrentOrderInfo,
       setIsRatingModalOpen,
     });
@@ -48,23 +48,18 @@ export default function CustomerOrderHistoryView() {
       try {
         const { getAllOrders } = await import("@/app/actions/customer/order");
         const filterParam = dateRange !== "all" ? dateRange : undefined;
-        const res = await getAllOrders(filterParam);
+        const res = await getAllOrders(page, limit, filterParam);
         if (res.success) {
           const responseData = res.data as any;
-          if (
-            responseData?.data?.orders &&
-            Array.isArray(responseData.data.orders)
-          ) {
-            setOrders(responseData.data.orders);
-          } else if (
-            responseData?.orders &&
-            Array.isArray(responseData.orders)
-          ) {
+          if (responseData && responseData.orders && Array.isArray(responseData.orders)) {
             setOrders(responseData.orders);
           } else if (Array.isArray(responseData)) {
             setOrders(responseData);
           } else {
             setOrders([]);
+          }
+          if (res.meta) {
+            updatePaginationMeta(res.meta);
           }
         }
       } catch (error) {
@@ -74,7 +69,7 @@ export default function CustomerOrderHistoryView() {
       }
     }
     fetchOrders();
-  }, [dateRange]);
+  }, [dateRange, page, limit]);
 
   // Filter Logic
   const filteredOrders = orders.filter((order) => {
@@ -96,12 +91,7 @@ export default function CustomerOrderHistoryView() {
   });
 
   // Pagination Logic
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentOrders = filteredOrders.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
+  // Pagination metadata is now driven by the backend API.
 
   if (loading) return <OrdersSkeleton />;
 
@@ -124,7 +114,7 @@ export default function CustomerOrderHistoryView() {
         <div className="flex justify-end items-center gap-2 text-xs text-gray-400 font-medium">
           <span>{t("rows_per_page")}</span>
           <div className="bg-white px-3 py-1.5 rounded-lg border border-gray-100 text-gray-700 font-bold min-w-[40px] text-center">
-            {itemsPerPage}
+            {limit}
           </div>
         </div>
 
@@ -136,7 +126,7 @@ export default function CustomerOrderHistoryView() {
               message={t("no_orders_message")}
             />
           ) : (
-            currentOrders.map((order) => (
+            filteredOrders.map((order) => (
               <OrderCard
                 key={order.orderId}
                 order={order}
@@ -147,11 +137,14 @@ export default function CustomerOrderHistoryView() {
           )}
         </div>
 
-        {filteredOrders.length > 0 && (
-          <OrderPagination
-            currentPage={currentPage}
+        {totalPages > 1 && (
+          <GlobalPagination
+            currentPage={page}
             totalPages={totalPages}
-            handlePageChange={(page) => handlePageChange(page, totalPages)}
+            onPageChange={(newPage) => {
+              handlePageChange(newPage);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
           />
         )}
       </div>

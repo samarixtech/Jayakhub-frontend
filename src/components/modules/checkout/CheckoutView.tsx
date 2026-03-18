@@ -19,6 +19,7 @@ import { clearCart } from "@/redux/slices/cartSlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
 import useLocale from "@/hooks/useLocals";
+import { useCLC } from "@/context/CLCContext";
 
 import {
   Breadcrumb,
@@ -46,6 +47,7 @@ const CheckoutView = () => {
   );
 
   const { country, language } = useLocale();
+  const { currencyCode } = useCLC();
 
   // ACTIONS
   const handlePlaceOrder = async () => {
@@ -87,6 +89,7 @@ const CheckoutView = () => {
       totalAmount,
       latitude: selectedAddress.latitude,
       longitude: selectedAddress.longitude,
+      currency: currencyCode,
     };
 
     try {

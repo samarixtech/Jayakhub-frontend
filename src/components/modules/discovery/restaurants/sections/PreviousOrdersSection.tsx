@@ -45,6 +45,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
                 variant="default"
                 fluid={true}
                 className="w-full"
+                isLoggedIn={isLoggedIn}
               />
             ))}
           </div>
@@ -84,6 +85,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
                 data={restaurant}
                 variant={viewMode === "grid" ? "compact" : "default"}
                 className="w-full"
+                isLoggedIn={isLoggedIn}
               />
             ))}
           </div>

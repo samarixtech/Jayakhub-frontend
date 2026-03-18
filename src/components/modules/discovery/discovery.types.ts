@@ -84,6 +84,7 @@ export interface RestaurantProps {
   deliveryFee: number;
   discount?: string;
   isFavorite?: boolean;
+  isWishlist?: boolean;
 }
 
 export interface CardProps {
@@ -91,6 +92,8 @@ export interface CardProps {
   variant?: "default" | "compact";
   className?: string;
   fluid?: boolean;
+  isLoggedIn?: boolean;
+  onWishlistToggle?: (restaurantId: string, newState: boolean) => void;
 }
 
 export interface PreviousOrdersSectionProps {
@@ -103,6 +106,7 @@ export interface PreviousOrdersSectionProps {
 export interface PopularRestaurantsSectionProps {
   isPending: boolean;
   restaurants: RestaurantProps[];
+  isLoggedIn?: boolean;
 }
 
 export interface CuisinesSectionProps {
@@ -117,6 +121,7 @@ export interface AllRestaurantsSectionProps {
   restaurants: RestaurantProps[];
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
+  isLoggedIn?: boolean;
 }
 
 export interface ShopProps {

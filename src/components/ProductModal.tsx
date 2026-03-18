@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, X, Check } from "lucide-react";
 import Image from "next/image";
+import { useCLC } from "@/context/CLCContext";
 
 interface ProductModalProps {
   item: any;
@@ -23,6 +24,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const [selectedVariations, setSelectedVariations] = useState<any[]>([]);
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
+  const { currency } = useCLC();
 
   useEffect(() => {
     if (item) {
@@ -118,7 +120,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
               {item.name}
             </h2>
             <span className="text-xl font-bold text-[#346853]">
-              ${(item.price || item.basePrice || 0).toFixed(2)}
+              {currency}
+              {(item.price || item.basePrice || 0).toFixed(2)}
             </span>
           </div>
           <p className="text-gray-500 text-sm leading-relaxed mb-6">
@@ -169,7 +172,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
                         </span>
                       </div>
                       <span className="text-sm text-gray-500">
-                        + ${variation.additionalPrice.toFixed(2)}
+                        + {currency}
+                        {variation.additionalPrice.toFixed(2)}
                       </span>
                     </div>
                   );
@@ -221,7 +225,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
               className="flex-1 h-12 bg-[#346853] text-white rounded-lg font-bold text-sm flex items-center justify-between px-6 hover:bg-[#2a5443] transition-colors active:scale-[0.98]"
             >
               <span className="hidden sm:block">Add to Cart</span>
-              <span>${totalPrice.toFixed(2)}</span>
+              <span>
+                {currency}
+                {totalPrice.toFixed(2)}
+              </span>
             </button>
           </div>
         </div>

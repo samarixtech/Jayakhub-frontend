@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import LanguageSwitcher from "../../../common/LanguageSwitcher";
 import UserProfile from "../../../common/UserProfile";
+import { Heart } from "lucide-react";
 
 import { HeaderActionsProps } from "@/components/modules/discovery/discovery.types";
 
@@ -48,6 +49,21 @@ export const HeaderActions = ({
             </p>
           </div>
           <UserProfile user={user} onLogout={onLogout} />
+        </div>
+      )}
+
+      {/* Wishlist */}
+      {isLoggedIn && (
+        <div className="relative hidden md:block">
+          <Link href="/wishlist">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-white hover:bg-white/10 rounded-full"
+            >
+              <Heart className="w-5 h-5" />
+            </Button>
+          </Link>
         </div>
       )}
 
