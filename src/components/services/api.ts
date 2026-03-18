@@ -1,11 +1,14 @@
 import axios from "axios";
-import https from "https";
+// import https from "https"; // Removed for edge compatibility
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-const agent = new https.Agent({
-  rejectUnauthorized: process.env.NODE_ENV === "production",
-});
+const agent =
+  typeof window === "undefined" && process.env.NEXT_RUNTIME !== "edge"
+    ? new (require("https").Agent)({
+        rejectUnauthorized: process.env.NODE_ENV === "production",
+      })
+    : undefined;
 
 const api = axios.create({
   baseURL: API_BASE_URL,

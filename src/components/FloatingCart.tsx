@@ -32,7 +32,7 @@ const FloatingCart: React.FC<FloatingCartProps> = ({
             <ShoppingBasket size={20} className="text-white" />
           </div>
           <div className="text-left">
-            <p className="font-bold text-sm leading-tight">View your cart</p>
+            <p className="font-bold text-sm leading-tight">View Cart</p>
             <p className="text-[10px] text-white/80 uppercase tracking-wide font-medium mt-0.5">
               {itemCount} ITEMS • {restaurantName}
             </p>

@@ -26,8 +26,10 @@ export default function MenuItemsView() {
     setIsAddModalOpen,
     isPending,
     isDeleting,
+    isUpdatingStatus,
     fetchMenu,
     confirmDelete,
+    toggleStatus,
     filteredItems,
     dynamicFilters,
     stats,
@@ -101,7 +103,11 @@ export default function MenuItemsView() {
         <div className="text-left">
           <Switch
             checked={item.isAvailable}
-            className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-200"
+            disabled={isUpdatingStatus}
+            onCheckedChange={() =>
+              toggleStatus(item.id || item._id, item.isAvailable)
+            }
+            className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-gray-200 cursor-pointer data-[state=checked]:hover:bg-emerald-600 data-[state=unchecked]:hover:bg-gray-300"
           />
         </div>
       ),

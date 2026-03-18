@@ -6,6 +6,7 @@ import {
   getMenuItemsAction,
   getAllCategoriesAction,
   deleteMenuItemAction,
+  updateMenuItemStatusAction,
 } from "@/app/actions/restaurant/menu";
 import { toast } from "react-hot-toast";
 
@@ -58,6 +59,16 @@ export const useMenuItems = () => {
     },
   );
 
+  const { execute: updateStatus, isPending: isUpdatingStatus } = useServerAction(
+    updateMenuItemStatusAction,
+    {
+      onSuccess: () => {
+        fetchMenu();
+      },
+      onError: (err) => toast.error(err || "Failed to update status"),
+    },
+  );
+
   useEffect(() => {
     fetchMenu();
     fetchCategories();
@@ -67,6 +78,10 @@ export const useMenuItems = () => {
     if (deleteId) {
       deleteItem(deleteId);
     }
+  };
+
+  const toggleStatus = (id: string, currentStatus: boolean) => {
+    updateStatus({ id, isAvailable: !currentStatus });
   };
 
   const filteredItems = items.filter((item) => {
@@ -106,8 +121,10 @@ export const useMenuItems = () => {
     setIsAddModalOpen,
     isPending,
     isDeleting,
+    isUpdatingStatus,
     fetchMenu,
     confirmDelete,
+    toggleStatus,
     filteredItems,
     dynamicFilters,
     stats,

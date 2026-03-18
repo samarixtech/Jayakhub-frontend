@@ -1,29 +1,58 @@
 "use client";
-import { Star, Clock, Bike } from "lucide-react";
+import { Star, Clock, Bike, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
+import { toggleWishlistAction } from "@/app/actions/customer/wishlist";
+import { toast } from "react-hot-toast";
+import { useState } from "react";
+import { useCLC } from "@/context/CLCContext";
 
-import {
-  RestaurantProps,
-  CardProps,
-} from "@/components/modules/discovery/discovery.types";
+import { CardProps } from "@/components/modules/discovery/discovery.types";
 
 const DiscoveryRestaurantCard = ({
   data,
   variant = "default",
   className = "",
   fluid = false,
+  isLoggedIn = false,
+  onWishlistToggle,
 }: CardProps) => {
+  const [internalIsWishlist, setInternalIsWishlist] = useState(data.isWishlist);
+  const [isWishlistPending, setIsWishlistPending] = useState(false);
   const router = useRouter();
   const params = useParams();
-  const country = params?.country;
-  const language = params?.language;
+  const { country, language, currency } = useCLC();
   const isCompact = variant === "compact";
 
   const handleClick = () => {
     if (country && language && data.slug) {
       router.push(`/${country}/${language}/restaurants/${data.slug}`);
+    }
+  };
+
+  const handleWishlistToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      toast.error("Please login to manage your wishlist");
+      return;
+    }
+
+    try {
+      setIsWishlistPending(true);
+      const res = await toggleWishlistAction(data.id);
+      if (res.success) {
+        const newState = !internalIsWishlist;
+        setInternalIsWishlist(newState);
+        onWishlistToggle?.(data.id, newState);
+        toast.success(newState ? "Added to wishlist" : "Removed from wishlist");
+      } else {
+        toast.error(res.message || "Failed to update wishlist");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsWishlistPending(false);
     }
   };
 
@@ -54,6 +83,21 @@ const DiscoveryRestaurantCard = ({
           <Badge className="absolute top-3 left-3 bg-[#346853] hover:bg-[#346853] text-white border-0 font-bold px-2 py-0.5 text-[10px] uppercase">
             {data.discount}
           </Badge>
+        )}
+
+        {/* Wishlist Toggle */}
+        {isLoggedIn && (
+          <button
+            onClick={handleWishlistToggle}
+            disabled={isWishlistPending}
+            className="absolute top-3 right-3 p-2 rounded-full transition-all bg-black/20 backdrop-blur-sm hover:bg-black/30 shadow-sm z-10"
+          >
+            <Heart
+              className={`h-4 w-4 transition-colors ${
+                internalIsWishlist ? "text-red-500 fill-red-500" : "text-white"
+              }`}
+            />
+          </button>
         )}
       </div>
 
@@ -100,7 +144,10 @@ const DiscoveryRestaurantCard = ({
             ) : (
               <div className="flex items-center gap-1.5 text-gray-500">
                 <Bike className="h-4 w-4 text-gray-400" />
-                <span>${data.deliveryFee} Delivery</span>
+                <span>
+                  {currency}
+                  {data.deliveryFee} Delivery
+                </span>
               </div>
             ))}
         </div>

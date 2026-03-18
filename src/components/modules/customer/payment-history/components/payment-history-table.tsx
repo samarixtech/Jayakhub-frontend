@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
+import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { generateInvoicePDF } from "@/lib/utils/InvoicePDF";
 import { useTranslations } from "next-intl";
 import { formatOrderDateTime } from "@/lib/utils/date";
@@ -14,6 +15,7 @@ interface PaymentHistoryTableProps {
   currentPage: number;
   setCurrentPage: (page: number) => void;
   totalPages: number;
+  totalCount: number;
   startIndex: number;
   itemsPerPage: number;
   userEmail: string;
@@ -28,6 +30,7 @@ export function PaymentHistoryTable({
   currentPage,
   setCurrentPage,
   totalPages,
+  totalCount,
   startIndex,
   itemsPerPage,
   userEmail,
@@ -35,7 +38,8 @@ export function PaymentHistoryTable({
 }: PaymentHistoryTableProps) {
   const t = useTranslations("CustomerDashboard.PaymentHistory");
   console.log("PAYMENT HISTORY TABLE ORDERS PROP:", JSON.stringify(orders[0]));
-  const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
+
+  const currentOrders = orders; // pagination is handled by backend
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -198,68 +202,20 @@ export function PaymentHistoryTable({
 
         {/* pagination */}
         {!loading && orders.length > 0 && (
-          <div className="absolute bottom-5 left-8 right-8 flex items-center justify-between pointer-events-none">
-            <span className="text-[12px] text-gray-400 font-medium">
+          <div className="absolute bottom-5 left-8 right-8 flex flex-col sm:flex-row sm:items-center justify-between pointer-events-none gap-4">
+            <span className="text-[12px] text-gray-400 font-medium whitespace-nowrap">
               {t("showing")} {startIndex + 1}-
-              {Math.min(startIndex + itemsPerPage, orders.length)} {t("of")}{" "}
-              {orders.length}
+              {Math.min(startIndex + itemsPerPage, totalCount)} {t("of")}{" "}
+              {totalCount}
             </span>
 
             {totalPages > 1 && (
-              <div className="flex gap-2 items-center pointer-events-auto">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-50 border border-gray-100 bg-white shadow-sm font-bold text-[12px]"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="m15 18-6-6 6-6" />
-                  </svg>
-                </button>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <button
-                      key={page}
-                      onClick={() => handlePageChange(page)}
-                      className={`w-8 h-8 rounded-full flex items-center justify-center shadow-sm font-bold text-[12px] transition ${
-                        currentPage === page
-                          ? "text-white bg-[#225539]"
-                          : "text-[#4B5563] bg-white border border-gray-100 hover:text-gray-900"
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ),
-                )}
-
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-900 disabled:opacity-50 border border-gray-100 bg-white shadow-sm font-bold text-[12px]"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </button>
+              <div className="pointer-events-auto">
+                <GlobalPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
               </div>
             )}
           </div>

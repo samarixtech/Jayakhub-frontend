@@ -5,6 +5,7 @@ import { PaymentHistorySkeleton } from "@/components/skeletons/CustomerDashboard
 import { PaymentHistoryHeader } from "./components/payment-history-header";
 import { PaymentHistoryMetrics } from "./components/payment-history-metrics";
 import { PaymentHistoryTable } from "./components/payment-history-table";
+import { usePagination } from "@/hooks/usePagination";
 
 export default function CustomerPaymentHistory() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -16,8 +17,7 @@ export default function CustomerPaymentHistory() {
   const [activeTab, setActiveTab] = useState("All");
 
   // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const { page, limit, totalPages, totalCount, handlePageChange, handleLimitChange, updatePaginationMeta } = usePagination({ initialLimit: 10 });
 
   useEffect(() => {
     async function loadData() {
@@ -32,17 +32,31 @@ export default function CustomerPaymentHistory() {
         if (activeTab === "Cash") filterParam = "cod";
 
         const [ordersRes, profileRes] = await Promise.all([
-          getAllOrders(filterParam),
+          getAllOrders(page, limit, filterParam),
           getProfile(),
         ]);
 
-        if (ordersRes.success && ordersRes.data?.data) {
-          if (Array.isArray(ordersRes.data.data.orders)) {
-            setOrders(ordersRes.data.data.orders);
-            setCurrentPage(1);
+        if (ordersRes.success && ordersRes.data) {
+          if (Array.isArray(ordersRes.data)) {
+            setOrders(ordersRes.data);
           }
-          if (ordersRes.data.data.summary) {
-            setSummary(ordersRes.data.data.summary);
+          // The API structure for summary in getAllOrders changed to response.data.summary?
+          // Wait, 'getAllOrders' returns { success: true, data: response.data.data, meta: response.data.meta }
+          // The summary might be outside of the orders array. In the API response provided:
+          // data: { summary: {...}, orders: [...] }
+          // So if getAllOrders returns data = API.data 
+          // Then data is { summary: {...}, orders: [...] }
+          // wait, the previous code for CustomerOrderHistoryView checked responseData?.data?.orders or responseData?.orders.
+          // Let's assume ordersRes.data has orders and summary.
+          if (ordersRes.data.orders && Array.isArray(ordersRes.data.orders)) {
+            setOrders(ordersRes.data.orders);
+          }
+          if (ordersRes.data.summary) {
+            setSummary(ordersRes.data.summary);
+          }
+          
+          if (ordersRes.meta) {
+            updatePaginationMeta(ordersRes.meta);
           }
         }
 
@@ -56,10 +70,9 @@ export default function CustomerPaymentHistory() {
       }
     }
     loadData();
-  }, [activeTab]);
+  }, [activeTab, page, limit]);
 
-  const totalPages = Math.ceil(orders.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const startIndex = (page - 1) * limit;
 
   if (loading && orders.length === 0) return <PaymentHistorySkeleton />;
 
@@ -80,11 +93,12 @@ export default function CustomerPaymentHistory() {
           loading={loading}
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
+          currentPage={page}
+          setCurrentPage={handlePageChange}
           totalPages={totalPages}
+          totalCount={totalCount}
           startIndex={startIndex}
-          itemsPerPage={itemsPerPage}
+          itemsPerPage={limit}
           userEmail={userProfile?.email || ""}
           userName={`${userProfile?.name || ""} ${userProfile?.lastName || ""}`.trim()}
         />

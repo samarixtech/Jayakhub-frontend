@@ -8,7 +8,7 @@ import {
 
 export const PopularRestaurantsSection: React.FC<
   PopularRestaurantsSectionProps
-> = ({ isPending, restaurants }) => {
+> = ({ isPending, restaurants, isLoggedIn }) => {
   return (
     <section className="mb-8">
       <SectionHeader title="Popular Restaurants" />
@@ -30,6 +30,7 @@ export const PopularRestaurantsSection: React.FC<
                 <DiscoveryRestaurantCard
                   key={restaurant.id}
                   data={restaurant}
+                  isLoggedIn={isLoggedIn}
                 />
               ))
           ) : (

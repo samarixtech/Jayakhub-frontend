@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://app.jayakhub.com/api/v1";
+import getClientIp from "./lib/getClientIp";
+import api from "./components/services/api";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -27,19 +26,15 @@ export async function middleware(request: NextRequest) {
   // 3. If cookies are missing, call detect API
   if (!country || !language) {
     try {
-      const detectRes = await fetch(`${BASE_URL}/detect`, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (detectRes.ok) {
-        const json = await detectRes.json();
-        const data = json?.data;
-        if (data && data.isActive) {
-          country = (data.code || "iq").toLowerCase();
-          language = (data.language || "en").toLowerCase();
-        } else {
-          if (!country) country = "iq";
-          if (!language) language = "en";
-        }
+      const ip = await getClientIp();
+      const detectRes = await api.get("/detect", {
+        headers: { "X-IP": ip || "NULL" },
+      }) as any;
+      
+      const data = detectRes.data?.data;
+      if (data && data.isActive) {
+        country = (data.code || "iq").toLowerCase();
+        language = (data.language || "en").toLowerCase();
       } else {
         if (!country) country = "iq";
         if (!language) language = "en";

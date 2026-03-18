@@ -2,16 +2,14 @@ import React from "react";
 import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
 import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
 import { LayoutGrid, List, Sprout } from "lucide-react";
-import {
-  RestaurantProps,
-  AllRestaurantsSectionProps,
-} from "@/components/modules/discovery/discovery.types";
+import { AllRestaurantsSectionProps } from "@/components/modules/discovery/discovery.types";
 
 export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
   isPending,
   restaurants,
   viewMode,
   setViewMode,
+  isLoggedIn,
 }) => {
   return (
     <section className="mb-20">
@@ -39,6 +37,7 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
                 variant="default"
                 fluid={true}
                 className="w-full"
+                isLoggedIn={isLoggedIn}
               />
             ))}
           </div>
@@ -111,6 +110,7 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
                 data={restaurant}
                 variant={viewMode === "grid" ? "compact" : "default"}
                 className="w-full"
+                isLoggedIn={isLoggedIn}
               />
             ))}
           </div>

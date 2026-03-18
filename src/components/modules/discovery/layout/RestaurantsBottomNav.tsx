@@ -2,7 +2,13 @@
 
 import React from "react";
 import Link from "next/link";
-import { Home, SlidersHorizontal, ShoppingBag, User } from "lucide-react";
+import {
+  Home,
+  SlidersHorizontal,
+  ShoppingBag,
+  User,
+  Heart,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
@@ -76,6 +82,31 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
         </div>
         <span className="text-[10px] font-medium text-gray-500">Cart</span>
       </button>
+
+      {/* Wishlist */}
+      {isLoggedIn && (
+        <Link
+          href="/customer/wishlist"
+          className="flex flex-col items-center gap-1"
+        >
+          <Heart
+            className={`w-6 h-6 ${
+              isActive("/customer/wishlist")
+                ? "text-[#346853]"
+                : "text-gray-400"
+            }`}
+          />
+          <span
+            className={`text-[10px] font-medium ${
+              isActive("/customer/wishlist")
+                ? "text-[#346853]"
+                : "text-gray-500"
+            }`}
+          >
+            Wishlist
+          </span>
+        </Link>
+      )}
 
       {/* Profile */}
       <Link

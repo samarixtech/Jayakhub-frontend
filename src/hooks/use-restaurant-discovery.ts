@@ -163,6 +163,7 @@ export function useRestaurantDiscovery() {
           deliveryFee: 0,
           discount: undefined,
           isFavorite: false,
+          isWishlist: !!item.isWishlist,
         }));
         setPreviousOrders(mapped);
         setIsPreviousOrdersLoading(false);
@@ -207,6 +208,7 @@ export function useRestaurantDiscovery() {
           deliveryFee: 0,
           discount: undefined,
           isFavorite: false,
+          isWishlist: !!item.isWishlist,
         }));
       };
 

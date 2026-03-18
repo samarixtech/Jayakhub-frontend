@@ -2,16 +2,20 @@
 // API & GENERAL TYPES
 // ============================================================================
 
+export interface PaginationMeta {
+  status: number;
+  message: string;
+  page: number;
+  limit: number;
+  offset: number;
+  totalCount: number;
+  totalPages: number;
+}
+
 // Standard API response wrapper expected from the backend.
-export interface ApiResponse {
-  meta: {
-    status: number;
-    message: string;
-  };
-  data: {
-    status: string;
-    message: string;
-  };
+export interface ApiResponse<T = any> {
+  meta: PaginationMeta | { status: number; message: string };
+  data: T;
 }
 
 // Standard API error wrapper.
@@ -231,6 +235,7 @@ export interface CartItem extends MenuItem {
   selectedVariation?: { name: string; additionalPrice: number };
   restaurantName?: string;
   restaurantId?: string;
+  restaurantImage?: string;
   totalPrice?: number;
   cashierItemId?: string;
   tableName?: string;

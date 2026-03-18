@@ -207,3 +207,17 @@ export async function bulkImportItemsAction(
     "/restaurant/menu/items",
   );
 }
+
+export async function updateMenuItemStatusAction(payload: {
+  id: string;
+  isAvailable: boolean;
+}): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api, restaurantId) =>
+      api.put("/update-item", { ...payload, restaurantId }),
+    "Item status updated successfully",
+    "/restaurant/menu/items",
+  );
+}
+
+
