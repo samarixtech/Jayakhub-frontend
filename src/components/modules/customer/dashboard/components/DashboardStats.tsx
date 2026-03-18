@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrderSummary } from "../../types";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface DashboardStatsProps {
   summary: OrderSummary;
@@ -11,32 +12,33 @@ interface DashboardStatsProps {
 }
 
 export const DashboardStats = ({ summary, loading }: DashboardStatsProps) => {
-  const t = useTranslations('CustomerDashboard.DashboardStats');
+  const { formatPrice } = useCLC();
+  const t = useTranslations("CustomerDashboard.DashboardStats");
 
   const STATS = [
     {
-      label: t('total_spent'),
-      value: `$${summary.totalSpend}`,
+      label: t("total_spent"),
+      value: formatPrice(summary.totalSpend),
       icon: DollarSign,
       color: "text-emerald-600",
       bg: "bg-emerald-50",
     },
     {
-      label: t('total_orders'),
+      label: t("total_orders"),
       value: summary.totalOrdersCount.toString(),
       icon: ShoppingBag,
       color: "text-blue-600",
       bg: "bg-blue-50",
     },
     {
-      label: t('average_rating'),
+      label: t("average_rating"),
       value: summary.averageRating?.toString() || "0.0",
       icon: Star,
       color: "text-amber-500",
       bg: "bg-amber-50",
     },
     {
-      label: t('active_orders'),
+      label: t("active_orders"),
       value: summary.totalPendingOrders.toString(),
       icon: Timer,
       color: "text-purple-600",

@@ -10,6 +10,7 @@ import { Order } from "../../types";
 import { getStatusColor, getStatusLabel } from "../utils";
 import { useTranslations } from "next-intl";
 import { formatOrderDateTime } from "@/lib/utils/date";
+import { useCLC } from "@/context/CLCContext";
 
 interface RecentActivityProps {
   recentOrders: Order[];
@@ -25,6 +26,7 @@ export const RecentActivity = ({
   language,
 }: RecentActivityProps) => {
   const t = useTranslations("CustomerDashboard.RecentActivity");
+  const { formatPrice } = useCLC();
 
   return (
     <Card className="lg:col-span-2 border-none shadow-sm rounded-4xl bg-white overflow-hidden">
@@ -108,8 +110,8 @@ export const RecentActivity = ({
                       {orderName}
                     </Typography>
                     <Typography className="text-xs text-gray-400 font-medium">
-                      {itemCount} {itemCount === 1 ? t("item") : t("items")} • $
-                      {order.totalAmount}
+                      {itemCount} {itemCount === 1 ? t("item") : t("items")} •{" "}
+                      {formatPrice(order.totalAmount)}
                     </Typography>
                   </div>
                 </div>

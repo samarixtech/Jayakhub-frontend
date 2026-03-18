@@ -9,6 +9,7 @@ import {
   getStatusLabel,
 } from "../useOrderHistoryActions";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface OrderCardProps {
   order: Order;
@@ -31,6 +32,8 @@ export const OrderCard = ({
     ?.map((i) => `${i.quantity}x ${i.name}`)
     .join(", ");
   const displayTitle = firstItem?.name || t("order_default");
+
+  const { formatPrice } = useCLC();
 
   return (
     <Card
@@ -87,7 +90,7 @@ export const OrderCard = ({
             </div>
 
             <span className="font-semibold text-gray-900 text-sm w-[60px] text-right">
-              ${parseFloat(order.totalAmount).toFixed(2)}
+              {formatPrice(order.totalAmount)}
             </span>
 
             {isRejected ? (

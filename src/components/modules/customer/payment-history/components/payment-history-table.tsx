@@ -6,6 +6,7 @@ import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { generateInvoicePDF } from "@/lib/utils/InvoicePDF";
 import { useTranslations } from "next-intl";
 import { formatOrderDateTime } from "@/lib/utils/date";
+import { useCLC } from "@/context/CLCContext";
 
 interface PaymentHistoryTableProps {
   orders: any[];
@@ -37,7 +38,8 @@ export function PaymentHistoryTable({
   userName,
 }: PaymentHistoryTableProps) {
   const t = useTranslations("CustomerDashboard.PaymentHistory");
-  const currentOrders = orders.slice(startIndex, startIndex + itemsPerPage);
+  const { formatPrice } = useCLC();
+  const currentOrders = orders;
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -132,7 +134,8 @@ export function PaymentHistoryTable({
           <span
             className={`text-[15px] font-black ${isRefund ? "text-[#10b981]" : "text-[#1E293B]"}`}
           >
-            {isRefund ? "+" : ""}${Number(order.totalAmount || 0).toFixed(2)}
+            {isRefund ? "+" : ""}
+            {formatPrice(order.totalAmount || 0)}
           </span>
         );
       },
