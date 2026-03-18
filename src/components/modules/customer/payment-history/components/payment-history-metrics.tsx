@@ -1,8 +1,13 @@
 import { Card } from "@/components/ui/card";
+import { useCLC } from "@/context/CLCContext";
+import { formatCurrency } from "@/lib/utils/currency";
 import { useTranslations } from "next-intl";
+import { FaMoneyBill } from "react-icons/fa";
 
 export function PaymentHistoryMetrics({ summary }: { summary: any }) {
   const t = useTranslations("CustomerDashboard.PaymentHistory");
+  const { formatPrice } = useCLC();
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
       {/* Total Spent */}
@@ -10,7 +15,7 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
         <div className="flex gap-4 items-center">
           <div className="w-[46px] h-[46px] rounded-full bg-[#f0fdf4] flex items-center justify-center shrink-0">
             <span className="text-[#10b981] text-lg font-bold stroke-[2px]">
-              $
+              <FaMoneyBill />
             </span>
           </div>
           <div className="flex flex-col">
@@ -18,11 +23,7 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
               {t("total_spent")}
             </span>
             <span className="text-[22px] font-black text-[#1E293B] leading-none tracking-tight">
-              $
-              {Number(summary?.totalSpend || 0).toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {formatPrice(summary?.totalSpend) || "N/A"}
             </span>
           </div>
         </div>
@@ -59,7 +60,7 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
               {t("this_month")}
             </span>
             <span className="text-[22px] font-black text-[#1E293B] leading-none tracking-tight">
-              ${summary?.thisMonthSpentAmount || "0.00"}
+              {formatPrice(summary?.thisMonthSpentAmount) || "N/A"}
             </span>
           </div>
         </div>

@@ -53,5 +53,17 @@ export const useCLC = () => {
   if (!context) {
     throw new Error("useCLC must be used within a CLCProvider");
   }
-  return context;
+
+  // Helper to format currency dynamically without repeating currencyCode & language
+  const formatPrice = (amount: number | string) => {
+    // We import dynamically or just use the logic directly here to avoid circular dep risks
+    const numericAmount = typeof amount === "string" ? parseFloat(amount) : amount;
+    if (isNaN(numericAmount)) return "0.00";
+    return new Intl.NumberFormat(context.language || "en-US", {
+      style: "currency",
+      currency: context.currencyCode.toUpperCase(),
+    }).format(numericAmount);
+  };
+
+  return { ...context, formatPrice };
 };

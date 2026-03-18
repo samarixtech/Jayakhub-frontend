@@ -28,11 +28,13 @@ export default function CustomerDashboardView() {
         const { getAllOrders } = await import("@/app/actions/customer/order");
         const result = await getAllOrders();
 
-        if (result.success && result.data && result.data.data) {
-          const apiData = result.data.data;
+        if (result.success && result.data) {
+          const apiData = result.data;
           if (apiData.summary) setSummary(apiData.summary);
           if (apiData.orders && Array.isArray(apiData.orders)) {
             setRecentOrders(apiData.orders.slice(0, 5));
+          } else if (Array.isArray(apiData)) {
+            setRecentOrders(apiData.slice(0, 5));
           }
         }
       } catch (error) {
@@ -48,7 +50,7 @@ export default function CustomerDashboardView() {
   return (
     <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
       <div className="max-w-5xl mx-auto space-y-4 md:space-y-8">
-        {/* Welcome Header */}
+        {/* Header */}
         <div>
           <Typography
             variant="h2"
