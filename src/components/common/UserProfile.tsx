@@ -33,6 +33,7 @@ interface UserNavProps {
     role?: string;
   } | null;
   onLogout?: () => void;
+  size?: "default" | "sm";
 }
 
 const ROLE_CONFIG = {
@@ -50,7 +51,7 @@ const ROLE_CONFIG = {
 
 type UserRole = keyof typeof ROLE_CONFIG;
 
-const UserProfile: React.FC<UserNavProps> = ({ user, onLogout }) => {
+const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" }) => {
   const tProfile = useTranslations("profile");
   const imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
   const [view, setView] = useState<"menu" | "notifications">("menu");
@@ -129,15 +130,15 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout }) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="relative h-12 w-12 rounded-full p-0 ring-2 ring-transparent hover:ring-[#346853]/20 transition-all duration-300"
+          className={`relative ${size === "sm" ? "h-8 w-8" : "h-12 w-12"} rounded-full p-0 ring-2 ring-transparent hover:ring-[#346853]/20 transition-all duration-300`}
         >
-          <Avatar className="h-10 w-10 border-2 border-white shadow-md rounded-full cursor-pointer">
+          <Avatar className={`${size === "sm" ? "h-7 w-7" : "h-10 w-10"} border-2 border-white shadow-md rounded-full cursor-pointer`}>
             <AvatarImage
               src={avatarSrc}
               alt="Profile"
               className="object-cover"
             />
-            <AvatarFallback className="bg-linear-to-br from-[#346853] to-[#2a5443] text-white font-bold shadow-inner">
+            <AvatarFallback className="bg-linear-to-br from-[#346853] to-[#2a5443] text-white font-bold shadow-inner text-[10px]">
               {initials}
             </AvatarFallback>
           </Avatar>

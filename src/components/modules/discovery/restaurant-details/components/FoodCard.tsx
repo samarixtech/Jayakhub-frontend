@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Plus } from "lucide-react";
 import {
   FoodCardProps,
-  APIMnuItem,
+
 } from "@/components/modules/discovery/discovery.types";
 
 export const FoodCard: React.FC<FoodCardProps> = ({

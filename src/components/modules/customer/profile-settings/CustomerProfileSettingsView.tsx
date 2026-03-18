@@ -21,8 +21,8 @@ export default function CustomerProfileSettingsView() {
   if (!profile) return <ProfileSkeleton />;
 
   return (
-    <div className="min-h-screen w-full bg-[#F9FAFB]">
-      <div className="max-w-[1400px] mx-auto px-0 py-4 md:px-6 lg:px-8 md:py-10">
+    <div className="min-h-screen w-full bg-[#F9FAFB] py-4 md:p-6 transition-all">
+      <div className="max-w-5xl mx-auto space-y-4 md:space-y-8">
         {/* Header Section */}
         <div className="mb-6 md:mb-8">
           <ProfileHeader

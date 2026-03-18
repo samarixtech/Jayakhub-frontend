@@ -77,8 +77,8 @@ export default function CustomerPaymentHistory() {
   if (loading && orders.length === 0) return <PaymentHistorySkeleton />;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-6 lg:p-8 xl:p-10 transition-all font-sans">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen bg-[#F8FAFC] py-4 md:p-6 transition-all font-sans">
+      <div className="max-w-5xl mx-auto space-y-4 md:space-y-6">
         <PaymentHistoryHeader
           orders={orders}
           summary={summary}

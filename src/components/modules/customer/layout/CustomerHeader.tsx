@@ -56,35 +56,47 @@ const CustomerHeader = () => {
     <header className="w-full z-50 shrink-0 relative">
       <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4">
         {/* ROW 1 Auth | Logo + Location (Desktop) | Lang */}
-        <div className="bg-emerald-bg px-4 py-3 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4">
-          {/* MOBILE SIDEBAR TRIGGER */}
-          <div className="md:hidden text-white">
-            <SidebarTrigger className="text-white hover:bg-white/10" />
-          </div>
-
-          <div className="md:hidden">
-            {!isLoggedIn ? (
-              <Button
-                variant="ghost"
-                className="text-white text-xs font-bold h-8 px-2 hover:bg-white/10"
-                asChild
-              >
-                <Link href={`/login`}>Login</Link>
-              </Button>
-            ) : (
-              <UserProfile
-                user={user}
-                onLogout={async () => {
-                  await logoutAction();
-                  setIsLoggedIn(false);
-                  setUser(null);
-                  window.location.href = "/login";
-                }}
+        <div className="bg-emerald-bg px-4 py-2 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4 shrink-0">
+          {/* MOBILE ROW 1: LOGO (LEFT) | PROFILE + LANG (RIGHT) */}
+          <div className="flex items-center justify-between w-full md:hidden">
+            <Link href="/restaurants" className="shrink-0">
+              <Image
+                src={language === "ar" ? arabicLogo : engLogo}
+                alt="Logo"
+                width={110}
+                height={40}
+                className="object-contain w-[110px]"
+                priority
               />
-            )}
+            </Link>
+
+            <div className="flex items-center gap-2">
+              <LanguageSwitcher className="h-8 px-2" />
+              {!isLoggedIn ? (
+                <Button
+                  variant="ghost"
+                  className="text-white text-xs font-bold h-8 px-2 hover:bg-white/10"
+                  asChild
+                >
+                  <Link href={`/login`}>Login</Link>
+                </Button>
+              ) : (
+                <UserProfile
+                  user={user}
+                  size="sm"
+                  onLogout={async () => {
+                    await logoutAction();
+                    setIsLoggedIn(false);
+                    setUser(null);
+                    window.location.href = "/login";
+                  }}
+                />
+              )}
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 shrink-0">
+          {/* DESKTOP HEADER PART (HIDDEN ON MOBILE) */}
+          <div className="hidden md:flex items-center gap-4 shrink-0">
             <Link href="/restaurants">
               <Image
                 src={language === "ar" ? arabicLogo : engLogo}
@@ -111,20 +123,20 @@ const CustomerHeader = () => {
               />
             </div>
           </div>
-
-          <div className="flex items-center gap-2 md:hidden">
-            <LanguageSwitcher />
-          </div>
         </div>
 
-        {/* ROW 2 Location Switcher (Mobile) + Cart (Mobile) */}
-        <div className="bg-white px-4 py-3 md:hidden flex items-center gap-3 border-b">
+        {/* MOBILE ROW 2: SIDEBAR TRIGGER | LOCATION SWITCHER (MOBILE) | CART (MOBILE) */}
+        <div className="bg-white px-2 py-2 md:hidden flex items-center gap-2 border-b">
+          <div className="text-emerald-bg">
+            <SidebarTrigger className="text-emerald-bg hover:bg-emerald-bg/10 h-9 w-9" />
+          </div>
+
           <div className="flex-1 shrink-0 overflow-hidden">
             <LocationSwitcher
               currentAddress={currentAddress}
               onAddressChange={setCurrentAddress}
               isLoggedIn={isLoggedIn}
-              className="w-full"
+              className="w-full h-9 text-[10px] sm:text-xs px-2"
               onLocationChange={(lat, lng) => {
                 const params = new URLSearchParams(searchParams.toString());
                 params.set("lat", lat.toString());
@@ -139,12 +151,12 @@ const CustomerHeader = () => {
               onClick={() => setIsDrawerOpen(true)}
               variant="secondary"
               size="icon"
-              className="h-10 w-10 rounded-full bg-white text-emerald-900 hover:bg-gray-100 shadow-sm overflow-visible"
+              className="h-9 w-9 rounded-full bg-white text-emerald-900 hover:bg-gray-100 shadow-sm overflow-visible border border-gray-100"
             >
-              <FiShoppingBag className="w-5 h-5" />
+              <FiShoppingBag className="w-4 h-4" />
             </Button>
             {totalItems > 0 && (
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full bg-red-500 text-white pointer-events-none">
+              <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[8px] rounded-full bg-red-500 text-white pointer-events-none">
                 {totalItems > 9 ? "9+" : totalItems}
               </Badge>
             )}

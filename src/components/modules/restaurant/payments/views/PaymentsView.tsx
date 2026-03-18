@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import FinanceHeader from "../components/FinanceHeader";
-import { FinanceSkeleton } from "@/components/skeletons/restaurant-dashboard/FinanceSkeleton";
+import { FinanceSkeleton } from "@/components/skeletons/FinanceSkeleton";
 import AllPayoutsSheet from "../components/AllPayoutsSheet";
 import PayoutDetailSheet from "../components/PayoutDetailSheet";
 import TransactionDetailSidebar, {
