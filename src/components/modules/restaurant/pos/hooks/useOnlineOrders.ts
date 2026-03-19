@@ -40,7 +40,7 @@ export const useOnlineOrders = () => {
 
   const fetchOrders = useCallback(async () => {
     try {
-      const res = await getRestaurantOrdersAction();
+      const res = await getRestaurantOrdersAction(1, 50, "live");
       const resData = res.data as any;
       if (res.success && resData?.data) {
         const apiOrders = resData.data.orders || [];
@@ -83,6 +83,7 @@ export const useOnlineOrders = () => {
     }
   }, []);
 
+  // TODO: IMPROVE THIS LATER
   useEffect(() => {
     fetchOrders();
     const interval = setInterval(fetchOrders, 30000); // 30s polling

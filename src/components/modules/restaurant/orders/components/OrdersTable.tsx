@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UIOrder as Order } from "../hooks/useOrders";
+import { GlobalPagination } from "@/components/common/GlobalPagination";
 
 interface OrdersTableProps {
   data: Order[];
@@ -103,17 +104,23 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
   ];
 
   return (
-    <GlobalTable
-      data={data}
-      columns={columns}
-      loading={loading}
-      paginationParams={{
-        currentPage,
-        totalPages,
-        onPageChange,
-      }}
-      onRowClick={onViewOrder}
-    />
+    <div className="flex flex-col w-full">
+      <GlobalTable
+        data={data}
+        columns={columns}
+        loading={loading}
+        onRowClick={onViewOrder}
+      />
+      {!loading && data.length > 0 && totalPages > 1 && (
+        <div className="p-5 flex justify-end">
+          <GlobalPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

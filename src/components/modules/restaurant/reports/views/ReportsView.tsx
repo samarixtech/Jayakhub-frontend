@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import ReportsStatsCard from "../components/ReportsStatsCard";
 import SalesChart from "../components/SalesChart";
 import TopProductsList from "../components/TopProductsList";
@@ -71,7 +70,7 @@ const ReportsView = () => {
         <ReportsStatsCard
           label="Avg Order Value"
           value={`$${Number(data.averageOrderValue).toFixed(2)}`}
-          trend={`$${data.lastPeriodAverageOrderValue}`}
+          trend={`${data.lastPeriodAverageOrderValue}%`}
           trendLabel="vs last period"
           isPositive={Number(data.lastPeriodAverageOrderValue) >= 0}
           icon={<TrendingUp className="w-4 h-4 text-amber-600" />}
@@ -79,8 +78,8 @@ const ReportsView = () => {
         />
         <ReportsStatsCard
           label="Repeat Customer Rate"
-          value={data.repeatedCustomerRate}
-          trend={Number(data.lastPeriodRepeatedCustomerRate)}
+          value={`${data.repeatedCustomerRate}%`}
+          trend={`${data.lastPeriodRepeatedCustomerRate}%`}
           trendLabel="vs last period"
           isPositive={Number(data.lastPeriodRepeatedCustomerRate) >= 0}
           icon={<Award className="w-4 h-4 text-purple-600" />}

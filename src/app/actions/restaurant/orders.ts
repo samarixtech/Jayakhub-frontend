@@ -2,13 +2,27 @@
 
 import { serverApi } from "@/components/services/api";
 
-export async function getRestaurantOrdersAction() {
+export async function getRestaurantOrdersAction(
+  page: number = 1,
+  limit: number = 10,
+  status?: "live" | "past"
+) {
   try {
     const api = await serverApi();
-    const response = await api.get("/restaurant-orders");
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
+    if (status) {
+      queryParams.append("status", status);
+    }
+
+    const response: any = await api.get(`/restaurant-orders?${queryParams.toString()}`);
     return {
       success: true as const,
       data: response.data,
+      meta: response.data.meta || null,
     };
   } catch (error: any) {
     console.error("Fetch restaurant orders error:", error);

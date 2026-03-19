@@ -153,9 +153,17 @@ export async function createItemAction(
   );
 }
 
-export async function getMenuItemsAction(): Promise<ActionResponse> {
+export async function getMenuItemsAction({ page = 1, limit = 10, search = "", category = "" }: { page?: number, limit?: number, search?: string, category?: string } = {}): Promise<ActionResponse> {
   return executeRestaurantAction(
-    (api, restaurantId) => api.get("/item-menu"),
+    (api, restaurantId) => {
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        ...(search && { search }),
+        ...(category && category !== "All Items" && { category }),
+      });
+      return api.get(`/item-menu?${queryParams.toString()}`);
+    },
     "Menu fetched successfully",
   );
 }

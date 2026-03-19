@@ -5,6 +5,7 @@ export type ActionResponse<T = any> = {
   suggestion?: string[];
   errors?: string[];
   statusCode?: number;
+  meta?: any;
 };
 
 export async function responseHandler<T>(
@@ -37,6 +38,7 @@ export async function responseHandler<T>(
       data: resolvedData,
       suggestion: responseData.suggestion,
       statusCode: responseData.meta?.status || 200,
+      meta: responseData.meta,
     };
   } catch (error: any) {
     if (error.response?.status !== 401) {

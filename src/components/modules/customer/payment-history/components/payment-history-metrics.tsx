@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { useCLC } from "@/context/CLCContext";
-import { formatCurrency } from "@/lib/utils/currency";
 import { useTranslations } from "next-intl";
 import { FaMoneyBill } from "react-icons/fa";
 
