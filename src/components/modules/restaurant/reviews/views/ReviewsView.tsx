@@ -19,6 +19,9 @@ export default function ReviewsView() {
     selectedReview,
     handleOrderClick,
     closeDetailSheet,
+    page,
+    totalPages,
+    handlePageChange,
   } = useReviews();
 
   return (
@@ -57,6 +60,9 @@ export default function ReviewsView() {
             onOrderClick={handleOrderClick}
             onCloseDetail={closeDetailSheet}
             refetch={fetchAnalytics}
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
           />
         </>
       )}

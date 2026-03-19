@@ -4,6 +4,7 @@ import { Star, Reply } from "lucide-react";
 import { ReviewItem } from "../../restaurant.types";
 import ReviewDetailSheet from "./ReviewDetailSheet";
 import ReviewFilterPills from "./ReviewFilterPills";
+import { GlobalPagination } from "@/components/common/GlobalPagination";
 
 interface ReviewListProps {
   filteredReviews: ReviewItem[];
@@ -13,6 +14,9 @@ interface ReviewListProps {
   onOrderClick: (review: ReviewItem) => void;
   onCloseDetail: () => void;
   refetch: () => void;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export default function ReviewList({
@@ -23,6 +27,9 @@ export default function ReviewList({
   onOrderClick,
   onCloseDetail,
   refetch,
+  currentPage,
+  totalPages,
+  onPageChange,
 }: ReviewListProps) {
   return (
     <div className="flex flex-col gap-4 mt-8">
@@ -127,6 +134,17 @@ export default function ReviewList({
         onClose={onCloseDetail}
         refetch={refetch}
       />
+
+      {totalPages > 1 && (
+        <div className="mt-6 border-t border-gray-100 pt-6">
+          <GlobalPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            isLoading={false}
+          />
+        </div>
+      )}
     </div>
   );
 }

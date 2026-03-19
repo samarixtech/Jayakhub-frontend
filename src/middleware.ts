@@ -26,11 +26,13 @@ export async function middleware(request: NextRequest) {
   // 3. If cookies are missing, call detect API
   if (!country || !language) {
     try {
-      const ip = await getClientIp();
-      const detectRes = await api.get("/detect", {
+      const ip = await getClientIp(request.headers);
+      console.log("IP FROM MIDDLEWARE", ip);
+
+      const detectRes = (await api.get("/detect", {
         headers: { "X-IP": ip || "NULL" },
-      }) as any;
-      
+      })) as any;
+
       const data = detectRes.data?.data;
       if (data && data.isActive) {
         country = (data.code || "iq").toLowerCase();
@@ -110,6 +112,21 @@ export async function middleware(request: NextRequest) {
   const hasLanguage = pathSegments[1]?.length === 2;
 
   if (hasCountry && hasLanguage) {
+    const countryInUrl = pathSegments[0];
+    const languageInUrl = pathSegments[1];
+
+    if (
+      countryInUrl !== countryInUrl.toLowerCase() ||
+      languageInUrl !== languageInUrl.toLowerCase()
+    ) {
+      const url = request.nextUrl.clone();
+      const segments = [...pathSegments];
+      segments[0] = countryInUrl.toLowerCase();
+      segments[1] = languageInUrl.toLowerCase();
+      url.pathname = `/${segments.join("/")}`;
+      return NextResponse.redirect(url);
+    }
+
     // Ensure cookies are synced with URL
     const response = NextResponse.next();
     if (pathSegments[0] !== request.cookies.get("USER_COUNTRY")?.value) {

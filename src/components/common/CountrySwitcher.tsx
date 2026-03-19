@@ -19,7 +19,7 @@ interface Country {
 const getDefaultCountryData = (code: string): Country => {
   const countryName = getNames().find((name) => getCode(name) === code) || code;
   const flag = emojiFlags.countryCode(code)?.emoji || "🌐";
-  const currencySymbol = countryCurrencyMap[code] || "$";
+  const currencySymbol = countryCurrencyMap[code]?.symbol || "$";
   return { code, name: countryName, flag, currencySymbol };
 };
 
@@ -187,7 +187,7 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
         <div
           className={`absolute ${
             isNavbar
-              ? "left-0 mt-14 md:mt-2 md:left-auto md:right-0 z-[60]"
+              ? "left-0 mt-14 md:mt-2 md:left-auto md:right-0 z-60"
               : "right-0 top-12 z-50"
           } w-full md:w-64 ${
             isNavbar

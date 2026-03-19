@@ -27,6 +27,7 @@ export async function getAllRestaurantsAction(params?: {
 
   // HELPER FUNCTION TO GET CLIENT IP ADDRESS
   const clientIp = await getClientIp();
+  console.log("IP FROM RESTAURANT ACTION", clientIp);
 
   const api = await serverApi();
   return responseHandler(

@@ -1,25 +1,27 @@
 "use server";
-import api from "@/components/services/api";
-import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
-import { cookies } from "next/headers";
+import { executeRestaurantAction } from "@/lib/utils/execute-restaurant-action";
+import { ActionResponse } from "@/lib/utils/response-handler";
 
 // ==================== GET REVIEWS ANALYTICS ACTION ====================
-export async function getReviewsAnalyticsAction(
-  filters?: any,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  return responseHandler(
-    async () =>
-      api.get("/rating/analytics", {
-        headers: { Authorization: `Bearer ${token}` },
-        params: filters,
-      }),
-    "Rating analytics fetched successfully",
-    async (responseData: any) => {
-      return responseData;
+export async function getReviewsAnalyticsAction({
+  page = 1,
+  limit = 10,
+  filter = "All",
+}: {
+  page?: number;
+  limit?: number;
+  filter?: string;
+} = {}): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => {
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        filter,
+      });
+      return api.get(`/rating/analytics?${queryParams.toString()}`);
     },
+    "Rating analytics fetched successfully",
   );
 }
 
@@ -28,18 +30,9 @@ export async function replyToReviewAction(data: {
   reviewId: string;
   replyText: string;
 }): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  return responseHandler(
-    async () =>
-      api.post(
-        `/rating/${data.reviewId}/reply`,
-        { reply: data.replyText },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      ),
+  return executeRestaurantAction(
+    (api) =>
+      api.post(`/rating/${data.reviewId}/reply`, { reply: data.replyText }),
     "Reply added successfully",
   );
 }

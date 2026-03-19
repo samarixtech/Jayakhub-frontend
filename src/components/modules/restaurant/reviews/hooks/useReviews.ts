@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useServerAction } from "@/hooks/use-server-action";
+import { usePagination } from "@/hooks/usePagination";
 import { getReviewsAnalyticsAction } from "@/app/actions/restaurant/reviews";
 import { ReviewItem } from "../../restaurant.types";
 
@@ -10,31 +11,46 @@ export const useReviews = () => {
   const [selectedReview, setSelectedReview] = useState<ReviewItem | null>(null);
   const [filter, setFilter] = useState("All");
 
+  const {
+    page,
+    limit,
+    totalPages,
+    totalCount,
+    handlePageChange,
+    updatePaginationMeta,
+  } = usePagination({ initialLimit: 10 });
+
   const { execute: fetchAnalytics, isPending } = useServerAction(
     getReviewsAnalyticsAction,
     {
-      onSuccess: (resData: any) => {
+      onSuccess: (resData: any, meta?: any) => {
         const unwrapped = resData?.data ? resData.data : resData;
         setData(unwrapped);
+
+        if (meta) {
+          updatePaginationMeta(meta);
+        } else if (unwrapped?.meta) {
+          updatePaginationMeta(unwrapped.meta);
+        }
       },
       suppressSuccessToast: true,
     },
   );
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
+  const loadReviews = useCallback(() => {
+    fetchAnalytics({ page, limit, filter });
+  }, [fetchAnalytics, page, limit, filter]);
 
-  const filteredReviews = useMemo(() => {
-    const reviews: ReviewItem[] = data?.reviews || [];
-    return reviews.filter((review) => {
-      if (filter === "Unreplied") return review.reply === null;
-      if (filter === "5 Stars") return review.rating === 5;
-      if (filter === "Critical")
-        return review.rating >= 1 && review.rating <= 3;
-      return true; // "All"
-    });
-  }, [data?.reviews, filter]);
+  useEffect(() => {
+    loadReviews();
+  }, [loadReviews]);
+
+  // Reset to page 1 when filter changes
+  useEffect(() => {
+    if (page !== 1) {
+      handlePageChange(1);
+    }
+  }, [filter, handlePageChange]);
 
   const stats = useMemo(() => data?.summary || null, [data]);
 
@@ -50,13 +66,16 @@ export const useReviews = () => {
     data,
     stats,
     reviews: data?.reviews || [],
-    filteredReviews,
-    fetchAnalytics,
+    filteredReviews: data?.reviews || [], // Backend handles filtering now
+    fetchAnalytics: loadReviews,
     isPending,
     filter,
     setFilter,
     selectedReview,
     handleOrderClick,
     closeDetailSheet,
+    page,
+    totalPages,
+    handlePageChange,
   };
 };
