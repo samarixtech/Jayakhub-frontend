@@ -33,7 +33,7 @@ export async function getAllRestaurantsAction(params?: {
     async () =>
       api.get(url, {
         headers: {
-          "x-forwarded-for": userNameHeader,
+          "x-forwarded-for": clientIp,
         },
       }),
     undefined,
