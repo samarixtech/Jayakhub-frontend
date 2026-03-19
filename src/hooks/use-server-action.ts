@@ -9,7 +9,7 @@ type ServerAction<TInput, TResponse> =
   | (() => Promise<ActionResponse<TResponse>>);
 
 interface UseServerActionOptions<TResponse> {
-  onSuccess?: (data?: TResponse) => void;
+  onSuccess?: (data?: TResponse, meta?: any) => void;
   onError?: (message: string) => void;
   suppressSuccessToast?: boolean;
 }
@@ -41,7 +41,7 @@ export function useServerAction<TInput, TResponse>(
             if (!optionsRef.current.suppressSuccessToast) {
               toast.success(response.message);
             }
-            optionsRef.current.onSuccess?.(response.data);
+            optionsRef.current.onSuccess?.(response.data, response.meta);
           } else {
             toast.error(response.message);
             optionsRef.current.onError?.(response.message);

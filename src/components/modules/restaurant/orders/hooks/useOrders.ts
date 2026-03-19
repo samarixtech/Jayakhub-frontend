@@ -52,12 +52,13 @@ export interface UIOrder {
   originalStatus?: string;
 }
 
+import { usePagination } from "@/hooks/usePagination";
+
 export const useOrders = () => {
-  const ITEMS_PER_PAGE = 7;
+  const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } = usePagination({ initialLimit: 10 });
   const [activeTab, setActiveTab] = useState<"live" | "past">("live");
   const [selectedOrder, setSelectedOrder] = useState<UIOrder | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [orders, setOrders] = useState<UIOrder[]>([]);
   const [stats, setStats] = useState<OrderStats>({
     todayOrders: 0,
@@ -107,10 +108,14 @@ export const useOrders = () => {
 
   const fetchOrders = useCallback(async () => {
     try {
-      const res = await getRestaurantOrdersAction();
+      setLoading(true);
+      const res = await getRestaurantOrdersAction(page, limit, activeTab);
       const resData = res.data as any;
       if (res.success && resData?.data) {
         setStats(resData.data.stats);
+        if (res.meta) {
+          updatePaginationMeta(res.meta);
+        }
         const apiOrders: ApiOrder[] = resData.data.orders || [];
 
         const mappedOrders: UIOrder[] = apiOrders.map((o) => ({
@@ -132,7 +137,7 @@ export const useOrders = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, limit, activeTab, updatePaginationMeta]);
 
   useEffect(() => {
     fetchOrders();
@@ -168,6 +173,8 @@ export const useOrders = () => {
     setIsSheetOpen(true);
   };
 
+  // If backend implements status=live|past perfectly, 'orders' already filtered. 
+  // We still do a safety filter if the backend didn't filter it correctly.
   const filteredOrders = orders.filter((order) => {
     const s = order.originalStatus || order.status.toLowerCase();
     if (activeTab === "live") {
@@ -185,27 +192,9 @@ export const useOrders = () => {
     }
   });
 
-  const liveOrdersCount = orders.filter((o) =>
-    [
-      OrderStatus.PENDING,
-      OrderStatus.ACCEPTED,
-      OrderStatus.PREPARE,
-      OrderStatus.READY,
-      OrderStatus.OUT_FOR_DELIVERY,
-    ].includes(o.originalStatus as OrderStatus),
-  ).length;
-
-  const pastOrdersCount = orders.filter((o) =>
-    [OrderStatus.DELIVERED, OrderStatus.REJECTED].includes(
-      o.originalStatus as OrderStatus,
-    ),
-  ).length;
-
-  const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
-  const paginatedOrders = filteredOrders.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
+  const liveOrdersCount = activeTab === "live" ? totalCount : stats.liveOrders || 0;
+  const pastOrdersCount = activeTab === "past" ? totalCount : 0; // Backend should ideally provide stats for this
+  const paginatedOrders = filteredOrders; // Already paginated by backend (mostly)
 
   return {
     orders,
@@ -217,8 +206,8 @@ export const useOrders = () => {
     setSelectedOrder,
     isSheetOpen,
     setIsSheetOpen,
-    currentPage,
-    setCurrentPage,
+    currentPage: page,
+    setCurrentPage: handlePageChange,
     paginatedOrders,
     filteredOrders,
     totalPages,

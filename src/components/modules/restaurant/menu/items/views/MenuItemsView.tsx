@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useMenuItems } from "../hooks/useMenuItems";
 import { MenuItemsStats } from "../components/MenuItemsStats";
 import { MenuItemsFilters } from "../components/MenuItemsFilters";
+import { GlobalPagination } from "@/components/common/GlobalPagination";
 
 export default function MenuItemsView() {
   const {
@@ -33,6 +34,9 @@ export default function MenuItemsView() {
     filteredItems,
     dynamicFilters,
     stats,
+    page,
+    totalPages,
+    handlePageChange,
   } = useMenuItems();
 
   const columns = [
@@ -167,6 +171,13 @@ export default function MenuItemsView() {
           loading={isPending}
           emptyMessage='No items found. Click "Add New Item" to create one.'
         />
+        <div className="mt-4">
+          <GlobalPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </Card>
 
       <DeleteConfirmationModal

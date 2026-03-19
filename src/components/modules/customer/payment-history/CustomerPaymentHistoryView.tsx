@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { PaymentHistorySkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 import { PaymentHistoryHeader } from "./components/payment-history-header";
@@ -17,7 +16,15 @@ export default function CustomerPaymentHistory() {
   const [activeTab, setActiveTab] = useState("All");
 
   // Pagination State
-  const { page, limit, totalPages, totalCount, handlePageChange, handleLimitChange, updatePaginationMeta } = usePagination({ initialLimit: 10 });
+  const {
+    page,
+    limit,
+    totalPages,
+    totalCount,
+    handlePageChange,
+    handleLimitChange,
+    updatePaginationMeta,
+  } = usePagination({ initialLimit: 10 });
 
   useEffect(() => {
     async function loadData() {
@@ -40,21 +47,13 @@ export default function CustomerPaymentHistory() {
           if (Array.isArray(ordersRes.data)) {
             setOrders(ordersRes.data);
           }
-          // The API structure for summary in getAllOrders changed to response.data.summary?
-          // Wait, 'getAllOrders' returns { success: true, data: response.data.data, meta: response.data.meta }
-          // The summary might be outside of the orders array. In the API response provided:
-          // data: { summary: {...}, orders: [...] }
-          // So if getAllOrders returns data = API.data 
-          // Then data is { summary: {...}, orders: [...] }
-          // wait, the previous code for CustomerOrderHistoryView checked responseData?.data?.orders or responseData?.orders.
-          // Let's assume ordersRes.data has orders and summary.
           if (ordersRes.data.orders && Array.isArray(ordersRes.data.orders)) {
             setOrders(ordersRes.data.orders);
           }
           if (ordersRes.data.summary) {
             setSummary(ordersRes.data.summary);
           }
-          
+
           if (ordersRes.meta) {
             updatePaginationMeta(ordersRes.meta);
           }
