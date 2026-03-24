@@ -18,7 +18,7 @@ export async function responseHandler<T>(
 
     const responseData = response.data || response;
 
-    // Check if meta.status exists (API convention in this project)
+    // Check if meta.status exists
     if (responseData.meta && responseData.meta.status >= 400) {
       throw {
         response: {

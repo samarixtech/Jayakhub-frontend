@@ -1,7 +1,7 @@
 "use server";
 import { serverApi } from "@/components/services/api";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
-import getClientIp from "@/lib/getClientIp";
+// import getClientIp from "@/lib/getClientIp";
 
 // ==================== GET ALL RESTAURANTS ACTION ====================
 export async function getAllRestaurantsAction(params?: {
@@ -26,16 +26,20 @@ export async function getAllRestaurantsAction(params?: {
   const url = queryString ? `/allResturant?${queryString}` : "/allResturant";
 
   // HELPER FUNCTION TO GET CLIENT IP ADDRESS
-  const clientIp = await getClientIp();
+  // const clientIp = await getClientIp();
+  // console.log("IP FROM RESTAURANT ACTION", clientIp);
 
   const api = await serverApi();
   return responseHandler(
     async () =>
-      api.get(url, {
-        headers: {
-          "x-forwarded-for": clientIp,
-        },
-      }),
+      api.get(
+        url,
+        //   , {
+        //   headers: {
+        //     "x-forwarded-for": clientIp,
+        //   },
+        // }
+      ),
     undefined,
     async (data) => {
       return data;

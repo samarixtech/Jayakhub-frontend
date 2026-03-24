@@ -4,6 +4,7 @@ import React from "react";
 import StatsCard from "./StatsCard";
 import { Receipt, Timer, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface OrdersStatsProps {
   stats: {
@@ -17,6 +18,7 @@ interface OrdersStatsProps {
 const OrdersStats: React.FC<OrdersStatsProps> = ({ stats, loading }) => {
   const t = useTranslations("RestaurantDashboard.Orders.stats");
 
+  const { formatPrice } = useCLC();
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <StatsCard
@@ -37,8 +39,8 @@ const OrdersStats: React.FC<OrdersStatsProps> = ({ stats, loading }) => {
       />
       <StatsCard
         icon={<Wallet className="w-6 h-6" />}
-        value={`$${stats.totalRevenue}`}
-        label={t("revenue")}
+        value={formatPrice(parseFloat(stats.totalRevenue) || 0)}
+        label="Revenue"
         iconBgColor="bg-blue-50"
         iconColor="text-blue-600"
         loading={loading}

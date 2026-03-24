@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface VariantGroupFormProps {
   groupName: string;
@@ -31,6 +32,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
   isEditing,
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.VariantGroups.form");
+  const { currency } = useCLC();
 
   return (
     <div className="border border-dashed border-[#1F4D36] rounded-xl p-6 bg-[#F9FAFB] relative animate-in fade-in zoom-in-95 duration-200">
@@ -58,7 +60,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
               />
               <div className="relative w-32 shrink-0">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  $
+                  {currency}
                 </span>
                 <Input
                   value={opt.price}

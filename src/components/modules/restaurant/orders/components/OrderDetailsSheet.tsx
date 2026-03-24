@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 
 import { UIOrder as Order } from "../hooks/useOrders";
+import { useCLC } from "@/context/CLCContext";
 
 interface OrderDetailsSheetProps {
   order: Order | null;
@@ -28,6 +29,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
 }) => {
   const t = useTranslations("RestaurantDashboard.Orders.details");
   const [updatingAction, setUpdatingAction] = useState<string | null>(null);
+  const { formatPrice } = useCLC();
 
   if (!order) return null;
 
@@ -184,7 +186,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                     <span className="text-sm text-gray-700">{item.name}</span>
                   </div>
                   <span className="text-sm font-medium text-gray-900">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatPrice(item.price * item.quantity) || "N/A"}
                   </span>
                 </div>
               ))}
@@ -202,19 +204,19 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">{t("subtotal")}</span>
                 <span className="text-gray-900 font-medium">
-                  ${order.subtotal.toFixed(2)}
+                  {formatPrice(order.subtotal) || "N/A"}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">{t("tax")}</span>
                 <span className="text-gray-900 font-medium">
-                  ${order.tax.toFixed(2)}
+                  {formatPrice(order.tax) || "N/A"}
                 </span>
               </div>
               <div className="flex justify-between text-base font-bold mt-2 pt-2 border-t border-gray-100">
                 <span className="text-gray-900">{t("total")}</span>
                 <span className="text-emerald-600">
-                  ${order.total.toFixed(2)}
+                  {formatPrice(order.total) || "N/A"}
                 </span>
               </div>
             </div>

@@ -101,19 +101,6 @@ export function useDashboard() {
     return t("recentActivity.timeAgo.days", { count: diffDays });
   };
 
-  // TODO: Use formatCurrency with proper locale in the future
-  // const formatCurrency = (amount: number) => {
-  //   return new Intl.NumberFormat("en-IQ", {
-  //     style: "currency",
-  //     currency: "IQD",
-  //     minimumFractionDigits: 0,
-  //   })
-  //     .format(amount)
-  //     .replace("IQD", "Rs.");
-  // };
-
-  const formatCurrency = (amount: number) => `$${amount}`;
-
   const ownerName = dashboardData?.ownerName || "Chef";
   const stats = dashboardData?.stats;
   const recentOrders = dashboardData?.recentOrders || [];
@@ -127,7 +114,6 @@ export function useDashboard() {
     chartData,
     maxDataPoint,
     getTimeAgo,
-    formatCurrency,
     ownerName,
     stats,
     recentOrders,

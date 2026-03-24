@@ -18,11 +18,30 @@ interface CLCContextType {
 const CLCContext = createContext<CLCContextType | undefined>(undefined);
 
 export const CLCProvider = ({ children }: { children: ReactNode }) => {
-  const [state, setState] = useState({
-    country: "US",
-    currency: "$",
-    currencyCode: "usd",
-    language: "en",
+  const [state, setState] = useState(() => {
+    // Read USER_COUNTRY cookie on first render to avoid the $ flash on reload
+    let countryCode = "US";
+    let language = "en";
+    if (typeof document !== "undefined") {
+      const cookies = document.cookie.split(";").reduce(
+        (acc, c) => {
+          const [k, v] = c.trim().split("=");
+          acc[k] = decodeURIComponent(v ?? "");
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+      if (cookies["USER_COUNTRY"])
+        countryCode = cookies["USER_COUNTRY"].toUpperCase();
+      if (cookies["NEXT_LOCALE"]) language = cookies["NEXT_LOCALE"];
+    }
+    const countryData = getDefaultCountryData(countryCode);
+    return {
+      country: countryData.code,
+      currency: countryData.currencySymbol,
+      currencyCode: countryData.currencyCode,
+      language,
+    };
   });
 
   const setCLC = (data: {

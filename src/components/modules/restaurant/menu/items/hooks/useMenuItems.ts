@@ -20,7 +20,14 @@ export const useMenuItems = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isFrontendPaginated, setIsFrontendPaginated] = useState(true);
 
-  const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } = usePagination({ initialLimit: 10 });
+  const {
+    page,
+    limit,
+    totalPages,
+    totalCount,
+    handlePageChange,
+    updatePaginationMeta,
+  } = usePagination({ initialLimit: 10 });
 
   const { execute: fetchCategories } = useServerAction(getAllCategoriesAction, {
     suppressSuccessToast: true,
@@ -41,7 +48,7 @@ export const useMenuItems = () => {
       suppressSuccessToast: true,
       onSuccess: (data: any, meta?: any) => {
         let itemsData = [] as any[];
-        
+
         if (data && Array.isArray(data)) {
           itemsData = data;
         } else if (data && data.items && Array.isArray(data.items)) {
@@ -61,7 +68,7 @@ export const useMenuItems = () => {
             page, // preserve current page state for frontend view
             limit: 10,
             totalCount: itemsData.length,
-            totalPages: Math.ceil(itemsData.length / 10)
+            totalPages: Math.ceil(itemsData.length / 10),
           });
         }
       },
@@ -69,7 +76,12 @@ export const useMenuItems = () => {
   );
 
   const fetchMenu = useCallback(() => {
-    fetchMenuAction({ page, limit, search: searchQuery, category: selectedCategory });
+    fetchMenuAction({
+      page,
+      limit,
+      search: searchQuery,
+      category: selectedCategory,
+    });
   }, [fetchMenuAction, page, limit, searchQuery, selectedCategory]);
 
   // Debounce effect to auto-fetch menu upon query change or page changes
@@ -80,15 +92,14 @@ export const useMenuItems = () => {
     return () => clearTimeout(timer);
   }, [fetchMenu]);
 
-  // Always reset to page 1 whenever search filters are actively altered
+  // Always reset to page 1 whenever search filter altered
   useEffect(() => {
     if (page !== 1) {
       handlePageChange(1);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedCategory]);
 
-  // Baseline data fetch for supporting category modules organically 
+  // Baseline data fetch for supporting category modules organically
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
@@ -105,15 +116,13 @@ export const useMenuItems = () => {
     },
   );
 
-  const { execute: updateStatus, isPending: isUpdatingStatus } = useServerAction(
-    updateMenuItemStatusAction,
-    {
+  const { execute: updateStatus, isPending: isUpdatingStatus } =
+    useServerAction(updateMenuItemStatusAction, {
       onSuccess: () => {
         fetchMenu();
       },
       onError: (err) => toast.error(err || "Failed to update status"),
-    },
-  );
+    });
 
   const confirmDelete = () => {
     if (deleteId) {
@@ -126,30 +135,47 @@ export const useMenuItems = () => {
   };
 
   const dynamicFilters = [
-    { label: "All Items", count: totalCount > items.length ? totalCount : items.length },
+    {
+      label: "All Items",
+      count: totalCount > items.length ? totalCount : items.length,
+    },
     ...categories.map((cat) => ({
       label: cat,
-      count: isFrontendPaginated ? items.filter((i) => i.category === cat).length : 0, 
+      count: isFrontendPaginated
+        ? items.filter((i) => i.category === cat).length
+        : 0,
     })),
   ];
 
   const statsList = [
     { label: "Total Items", value: totalCount || items.length },
-    { label: "Active", value: (isFrontendPaginated ? items : items).filter((i) => i.isAvailable).length },
-    { label: "Inactive", value: (isFrontendPaginated ? items : items).filter((i) => !i.isAvailable).length },
+    {
+      label: "Active",
+      value: (isFrontendPaginated ? items : items).filter((i) => i.isAvailable)
+        .length,
+    },
+    {
+      label: "Inactive",
+      value: (isFrontendPaginated ? items : items).filter((i) => !i.isAvailable)
+        .length,
+    },
     { label: "Categories", value: categories.length },
   ];
 
   // Frontend filtering logic fallback if backend isn't paginating and searching yet
-  const postProcessedItems = isFrontendPaginated 
+  const postProcessedItems = isFrontendPaginated
     ? items.filter((item) => {
-        const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory === "All Items" || item.category === selectedCategory;
+        const matchesSearch = item.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+        const matchesCategory =
+          selectedCategory === "All Items" ||
+          item.category === selectedCategory;
         return matchesSearch && matchesCategory;
       })
     : items;
 
-  const finalPaginatedItems = isFrontendPaginated 
+  const finalPaginatedItems = isFrontendPaginated
     ? postProcessedItems.slice((page - 1) * limit, page * limit)
     : items;
 
@@ -160,7 +186,7 @@ export const useMenuItems = () => {
         page: 1,
         limit,
         totalCount: postProcessedItems.length,
-        totalPages: Math.ceil(postProcessedItems.length / limit)
+        totalPages: Math.ceil(postProcessedItems.length / limit),
       });
     }
   }, [searchQuery, selectedCategory, items.length, isFrontendPaginated, limit]);
@@ -187,6 +213,6 @@ export const useMenuItems = () => {
     stats: statsList,
     page,
     totalPages,
-    handlePageChange
+    handlePageChange,
   };
 };

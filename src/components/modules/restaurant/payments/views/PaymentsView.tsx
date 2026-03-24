@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { getFilterOptions } from "../constants";
 import { useTranslations } from "next-intl";
 
@@ -25,6 +25,7 @@ import RevenueChart from "../components/RevenueChart";
 import DonutChart from "../components/DonutChart";
 import { useFinanceOverview } from "../hooks/useFinanceOverview";
 import { FinanceReportPDF } from "../components/FinanceReportPDF";
+import { useCLC } from "@/context/CLCContext";
 
 /* ──────────────── Types ──────────────── */
 export interface Payout {
@@ -36,27 +37,22 @@ export interface Payout {
   eta?: string;
 }
 
-interface Transaction {
-  id: string;
-  type: string;
-  date: string;
-  method: string;
-  netAmount: number;
-  fee: number;
-  total: number;
-}
-
 /* ──────────────── Main Component ──────────────── */
 const PaymentsView = () => {
   const tStats = useTranslations("RestaurantDashboard.Payments.stats");
   const tTrend = useTranslations("RestaurantDashboard.Payments.revenueTrend");
-  const tMethods = useTranslations("RestaurantDashboard.Payments.paymentMethods");
+  const tMethods = useTranslations(
+    "RestaurantDashboard.Payments.paymentMethods",
+  );
   const tTax = useTranslations("RestaurantDashboard.Payments.taxCommissions");
   const tPayouts = useTranslations("RestaurantDashboard.Payments.payouts");
-  const tTransactions = useTranslations("RestaurantDashboard.Payments.transactions");
+  const tTransactions = useTranslations(
+    "RestaurantDashboard.Payments.transactions",
+  );
   const tHeader = useTranslations("RestaurantDashboard.Payments.header");
   const filterOptions = getFilterOptions(tHeader);
 
+  const { formatPrice } = useCLC();
   const [filter, setFilter] = useState("all");
   const { data, loading, error } = useFinanceOverview(filter);
 
@@ -143,7 +139,7 @@ const PaymentsView = () => {
   const paymentMethods = data.paymentMethods.map((pm) => ({
     name: pm.method.charAt(0).toUpperCase() + pm.method.slice(1).toLowerCase(),
     pct: Math.round(pm.percentage),
-    amount: `$${pm.amount}`,
+    amount: formatPrice(pm.amount),
     color: pmColors[pm.method.toLowerCase()] || "#cccccc",
   }));
 
@@ -151,7 +147,8 @@ const PaymentsView = () => {
   const donutColors = paymentMethods.map((p) => p.color);
 
   const filterLabel =
-    filterOptions.find((o) => o.value === filter)?.label || tHeader("filterAllTime");
+    filterOptions.find((o) => o.value === filter)?.label ||
+    tHeader("filterAllTime");
 
   return (
     <div className="w-full max-w-[1200px] mx-auto pb-12 space-y-6">
@@ -167,28 +164,28 @@ const PaymentsView = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <StatCard
             label={tStats("totalRevenue")}
-            value={`$${data.metrics.totalRevenue}`}
+            value={formatPrice(data.metrics.totalRevenue)}
             trend={`↑ ${data.metrics.totalRevenueGrowth}`}
             icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
             iconBg="bg-emerald-50"
           />
           <StatCard
             label={tStats("netProfit")}
-            value={`$${data.metrics.netProfit}`}
+            value={formatPrice(data.metrics.netProfit)}
             trend={`↑ ${data.metrics.netProfitGrowth}`}
             icon={<TrendingUp className="w-4 h-4 text-blue-600" />}
             iconBg="bg-blue-50"
           />
           <StatCard
             label={tStats("platformFees")}
-            value={`$${data.metrics.platformFees}`}
+            value={formatPrice(data.metrics.platformFees)}
             trend={data.metrics.platformFeesLabel}
             icon={<CreditCard className="w-4 h-4 text-amber-600" />}
             iconBg="bg-amber-50"
           />
           <StatCard
             label={tStats("avgOrderValue")}
-            value={`$${data.metrics.avgOrderValue}`}
+            value={formatPrice(data.metrics.avgOrderValue)}
             trend={`↑ ${data.metrics.avgOrderValueGrowth}`}
             icon={<ShoppingCart className="w-4 h-4 text-purple-600" />}
             iconBg="bg-purple-50"
@@ -236,7 +233,7 @@ const PaymentsView = () => {
               <DonutChart
                 pcts={donutPcts}
                 colors={donutColors}
-                totalValue={`$${data.metrics.totalRevenue}`}
+                totalValue={formatPrice(data.metrics.totalRevenue)}
               />
             </div>
             <div className="space-y-3">
@@ -283,7 +280,7 @@ const PaymentsView = () => {
                   {tTax("taxCollected")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
-                  ${data.metrics.taxCollected}
+                  {formatPrice(data.metrics.taxCollected)}
                 </span>
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
@@ -291,7 +288,7 @@ const PaymentsView = () => {
                   {tTax("platformCommission")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
-                  ${data.metrics.platformCommission}
+                  {formatPrice(data.metrics.platformCommission)}
                 </span>
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
@@ -299,7 +296,7 @@ const PaymentsView = () => {
                   {tTax("paymentProcessing")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
-                  ${data.metrics.paymentProcessing}
+                  {formatPrice(data.metrics.paymentProcessing)}
                 </span>
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
@@ -307,7 +304,7 @@ const PaymentsView = () => {
                   {tTax("deliveryCosts")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
-                  ${data.metrics.deliveryCosts}
+                  {formatPrice(data.metrics.deliveryCosts)}
                 </span>
               </div>
             </div>
@@ -316,7 +313,7 @@ const PaymentsView = () => {
                 {tTax("netEarnings")}
               </span>
               <span className="text-[20px] font-black text-[#2d6a4f]">
-                ${data.metrics.netProfit}
+                {formatPrice(data.metrics.netProfit)}
               </span>
             </div>
           </div>
@@ -403,7 +400,10 @@ const PaymentsView = () => {
                 {tTransactions("title")}
               </h3>
               <p className="text-[12px] text-gray-400 mt-0.5">
-                {tTransactions("countSubtitle", { count: data.transactions.items.length, total: data.transactions.totalCount })}
+                {tTransactions("countSubtitle", {
+                  count: data.transactions.items.length,
+                  total: data.transactions.totalCount,
+                })}
               </p>
             </div>
             <button className="text-[12px] font-semibold text-[#346853] border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors">
@@ -469,17 +469,15 @@ const PaymentsView = () => {
                   <span
                     className={`text-[13px] font-bold text-right ${parseFloat(t.netAmount) < 0 ? "text-red-500" : "text-[#1a1a1a]"}`}
                   >
-                    ${Math.abs(parseFloat(t.netAmount)).toFixed(2)}
+                    {formatPrice(parseFloat(t.netAmount))}
                   </span>
                   <span className="text-[13px] font-medium text-gray-400 text-right">
-                    {parseFloat(t.fee) < 0 ? "-" : ""}$
-                    {Math.abs(parseFloat(t.fee)).toFixed(2)}
+                    {formatPrice(parseFloat(t.fee))}
                   </span>
                   <span
                     className={`text-[14px] font-black text-right ${parseFloat(t.total) < 0 ? "text-red-500" : "text-[#1a1a1a]"}`}
                   >
-                    {parseFloat(t.total) < 0 ? "-" : ""}$
-                    {Math.abs(parseFloat(t.total)).toFixed(2)}
+                    {formatPrice(parseFloat(t.total))}
                   </span>
                 </div>
               ))}

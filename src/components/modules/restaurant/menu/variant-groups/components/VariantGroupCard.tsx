@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface VariantGroupCardProps {
   group: any;
@@ -20,6 +21,7 @@ export const VariantGroupCard: React.FC<VariantGroupCardProps> = ({
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.VariantGroups.card");
 
+  const { formatPrice } = useCLC();
   return (
     <Card className="p-0 border-none shadow-sm overflow-hidden animate-in slide-in-from-bottom-2 duration-300">
       <div className="p-4 flex items-center justify-between border-b border-gray-50 bg-white">
@@ -68,7 +70,9 @@ export const VariantGroupCard: React.FC<VariantGroupCardProps> = ({
             className="flex items-center bg-gray-50 rounded-md px-3 py-2 text-sm font-medium text-gray-600 border border-gray-100"
           >
             <span className="mr-2">{opt.name}</span>
-            <span className="font-bold text-[#1F4D36]">{opt.price}</span>
+            <span className="font-bold text-[#1F4D36]">
+              {opt.isFree ? "Free" : `+${formatPrice(opt.price)}`}
+            </span>
           </div>
         ))}
       </div>

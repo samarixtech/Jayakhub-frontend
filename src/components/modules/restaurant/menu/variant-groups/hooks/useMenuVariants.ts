@@ -61,7 +61,7 @@ export const useMenuVariants = () => {
             name: v.groupName,
             options: v.options.map((o: any) => ({
               name: o.name,
-              price: Number(o.price) === 0 ? "Free" : `+$${o.price}`,
+              price: Number(o.price) === 0 ? "Free" : `${o.price}`,
               isFree: Number(o.price) === 0,
             })),
           }));
@@ -126,7 +126,7 @@ export const useMenuVariants = () => {
     setOptions(
       variant.options.map((opt: any) => ({
         name: opt.name,
-        price: opt.isFree ? "0" : opt.price.replace("+$", ""),
+        price: opt.isFree ? "0" : String(opt.price),
       })),
     );
     setIsCreating(true);

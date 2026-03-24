@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ImageIcon, Eye } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface ItemLivePreviewProps {
   formData: any;
@@ -17,6 +18,7 @@ export const ItemLivePreview: React.FC<ItemLivePreviewProps> = ({
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.Items.livePreview");
 
+  const { currency } = useCLC();
   return (
     <div className="sticky top-10 space-y-6">
       {/* PREVIEW HEADER */}
@@ -64,7 +66,7 @@ export const ItemLivePreview: React.FC<ItemLivePreviewProps> = ({
               {formData.name || t("defaultName")}
             </Typography>
             <Typography className="text-3xl font-bold text-[#2D5A43]">
-              ${formData.basePrice || "0.00"}
+              {currency} {formData.basePrice || "0.00"}
             </Typography>
           </div>
         </div>

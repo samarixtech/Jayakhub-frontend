@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import getClientIp from "./lib/getClientIp";
+// import getClientIp from "./lib/getClientIp";
 import api from "./components/services/api";
 
 export async function middleware(request: NextRequest) {
@@ -26,11 +26,16 @@ export async function middleware(request: NextRequest) {
   // 3. If cookies are missing, call detect API
   if (!country || !language) {
     try {
-      const ip = await getClientIp();
-      const detectRes = await api.get("/detect", {
-        headers: { "X-IP": ip || "NULL" },
-      }) as any;
-      
+      // const ip = await getClientIp(request.headers);
+      // console.log("IP FROM MIDDLEWARE", ip);
+
+      const detectRes = (await api.get(
+        "/detect",
+        //   , {
+        //   headers: { "x-ip": ip || "NULL" },
+        // }
+      )) as any;
+
       const data = detectRes.data?.data;
       if (data && data.isActive) {
         country = (data.code || "iq").toLowerCase();
