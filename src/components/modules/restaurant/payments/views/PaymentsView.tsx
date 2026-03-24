@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { filterOptions } from "../constants";
+import { getFilterOptions } from "../constants";
+import { useTranslations } from "next-intl";
 
 import {
   DollarSign,
@@ -47,6 +48,15 @@ interface Transaction {
 
 /* ──────────────── Main Component ──────────────── */
 const PaymentsView = () => {
+  const tStats = useTranslations("RestaurantDashboard.Payments.stats");
+  const tTrend = useTranslations("RestaurantDashboard.Payments.revenueTrend");
+  const tMethods = useTranslations("RestaurantDashboard.Payments.paymentMethods");
+  const tTax = useTranslations("RestaurantDashboard.Payments.taxCommissions");
+  const tPayouts = useTranslations("RestaurantDashboard.Payments.payouts");
+  const tTransactions = useTranslations("RestaurantDashboard.Payments.transactions");
+  const tHeader = useTranslations("RestaurantDashboard.Payments.header");
+  const filterOptions = getFilterOptions(tHeader);
+
   const [filter, setFilter] = useState("all");
   const { data, loading, error } = useFinanceOverview(filter);
 
@@ -141,7 +151,7 @@ const PaymentsView = () => {
   const donutColors = paymentMethods.map((p) => p.color);
 
   const filterLabel =
-    filterOptions.find((o) => o.value === filter)?.label || "All Time";
+    filterOptions.find((o) => o.value === filter)?.label || tHeader("filterAllTime");
 
   return (
     <div className="w-full max-w-[1200px] mx-auto pb-12 space-y-6">
@@ -156,28 +166,28 @@ const PaymentsView = () => {
         {/* Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           <StatCard
-            label="Total Revenue"
+            label={tStats("totalRevenue")}
             value={`$${data.metrics.totalRevenue}`}
             trend={`↑ ${data.metrics.totalRevenueGrowth}`}
             icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
             iconBg="bg-emerald-50"
           />
           <StatCard
-            label="Net Profit"
+            label={tStats("netProfit")}
             value={`$${data.metrics.netProfit}`}
             trend={`↑ ${data.metrics.netProfitGrowth}`}
             icon={<TrendingUp className="w-4 h-4 text-blue-600" />}
             iconBg="bg-blue-50"
           />
           <StatCard
-            label="Platform Fees"
+            label={tStats("platformFees")}
             value={`$${data.metrics.platformFees}`}
             trend={data.metrics.platformFeesLabel}
             icon={<CreditCard className="w-4 h-4 text-amber-600" />}
             iconBg="bg-amber-50"
           />
           <StatCard
-            label="Avg Order Value"
+            label={tStats("avgOrderValue")}
             value={`$${data.metrics.avgOrderValue}`}
             trend={`↑ ${data.metrics.avgOrderValueGrowth}`}
             icon={<ShoppingCart className="w-4 h-4 text-purple-600" />}
@@ -191,17 +201,17 @@ const PaymentsView = () => {
           <div className="lg:col-span-3 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
             <div className="mb-4">
               <h3 className="text-[16px] font-bold text-[#1a1a1a]">
-                Revenue Trend
+                {tTrend("title")}
               </h3>
               <p className="text-[12px] text-gray-400 mt-0.5">
-                Daily revenue over selected period
+                {tTrend("subtitle")}
               </p>
             </div>
             <div className="flex items-center gap-5 mb-4">
               <div className="flex items-center gap-1.5">
                 <span className="w-3 h-0.5 bg-[#346853] rounded-full" />
                 <span className="text-[11px] text-gray-500">
-                  Current Period
+                  {tTrend("currentPeriod")}
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -210,7 +220,7 @@ const PaymentsView = () => {
                   style={{ borderTop: "1.5px dashed #ccc", height: 0 }}
                 />
                 <span className="text-[11px] text-gray-500">
-                  Previous Period
+                  {tTrend("previousPeriod")}
                 </span>
               </div>
             </div>
@@ -220,7 +230,7 @@ const PaymentsView = () => {
           {/* Payment Methods */}
           <div className="lg:col-span-2 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
             <h3 className="text-[16px] font-bold text-[#1a1a1a] mb-5">
-              Payment Methods
+              {tMethods("title")}
             </h3>
             <div className="flex items-center justify-center mb-5">
               <DonutChart
@@ -261,16 +271,16 @@ const PaymentsView = () => {
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
             <div className="mb-5">
               <h3 className="text-[16px] font-bold text-[#1a1a1a]">
-                Tax & Commissions
+                {tTax("title")}
               </h3>
               <p className="text-[12px] text-gray-400 mt-0.5">
-                Breakdown for this period
+                {tTax("subtitle")}
               </p>
             </div>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div className="bg-gray-50 rounded-xl p-4">
                 <span className="text-[11px] text-gray-400 font-medium block mb-1">
-                  Tax Collected
+                  {tTax("taxCollected")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
                   ${data.metrics.taxCollected}
@@ -278,7 +288,7 @@ const PaymentsView = () => {
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
                 <span className="text-[11px] text-gray-400 font-medium block mb-1">
-                  Platform Commission
+                  {tTax("platformCommission")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
                   ${data.metrics.platformCommission}
@@ -286,7 +296,7 @@ const PaymentsView = () => {
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
                 <span className="text-[11px] text-gray-400 font-medium block mb-1">
-                  Payment Processing
+                  {tTax("paymentProcessing")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
                   ${data.metrics.paymentProcessing}
@@ -294,7 +304,7 @@ const PaymentsView = () => {
               </div>
               <div className="bg-gray-50 rounded-xl p-4">
                 <span className="text-[11px] text-gray-400 font-medium block mb-1">
-                  Delivery Costs
+                  {tTax("deliveryCosts")}
                 </span>
                 <span className="text-[20px] font-black text-[#1a1a1a]">
                   ${data.metrics.deliveryCosts}
@@ -303,7 +313,7 @@ const PaymentsView = () => {
             </div>
             <div className="bg-[#e8f5ee] rounded-xl px-5 py-3.5 flex justify-between items-center">
               <span className="text-[13px] font-semibold text-[#2d6a4f]">
-                Net Earnings
+                {tTax("netEarnings")}
               </span>
               <span className="text-[20px] font-black text-[#2d6a4f]">
                 ${data.metrics.netProfit}
@@ -316,17 +326,17 @@ const PaymentsView = () => {
             <div className="flex justify-between items-center mb-5">
               <div>
                 <h3 className="text-[16px] font-bold text-[#1a1a1a]">
-                  Payouts
+                  {tPayouts("title")}
                 </h3>
                 <p className="text-[12px] text-gray-400 mt-0.5">
-                  Transfers to your bank ending •••• 4242
+                  {tPayouts("subtitle")}
                 </p>
               </div>
               <button
                 onClick={() => setAllPayoutsOpen(true)}
                 className="text-[12px] font-semibold text-[#346853] hover:text-[#2a5644] transition-colors"
               >
-                View All
+                {tPayouts("viewAllBtn")}
               </button>
             </div>
 
@@ -335,19 +345,19 @@ const PaymentsView = () => {
               <div className="min-w-[480px]">
                 <div className="grid grid-cols-[1fr_80px_110px_60px_60px] gap-2 items-center px-1 mb-2">
                   <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                    Date
+                    {tPayouts("date")}
                   </span>
                   <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                    Amount
+                    {tPayouts("amount")}
                   </span>
                   <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                    Bank
+                    {tPayouts("bank")}
                   </span>
                   <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                    Status
+                    {tPayouts("status")}
                   </span>
                   <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-right">
-                    ETA
+                    {tPayouts("eta")}
                   </span>
                 </div>
                 <div className="h-px bg-gray-100 mb-1" />
@@ -377,7 +387,7 @@ const PaymentsView = () => {
                 ))}
                 {payouts.length === 0 && (
                   <div className="py-4 text-center text-[12px] text-gray-500">
-                    No payouts found for this period.
+                    {tPayouts("noPayouts")}
                   </div>
                 )}
               </div>
@@ -390,15 +400,14 @@ const PaymentsView = () => {
           <div className="flex justify-between items-center mb-5">
             <div>
               <h3 className="text-[16px] font-bold text-[#1a1a1a]">
-                Transactions
+                {tTransactions("title")}
               </h3>
               <p className="text-[12px] text-gray-400 mt-0.5">
-                {data.transactions.items.length} of{" "}
-                {data.transactions.totalCount}
+                {tTransactions("countSubtitle", { count: data.transactions.items.length, total: data.transactions.totalCount })}
               </p>
             </div>
             <button className="text-[12px] font-semibold text-[#346853] border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-50 transition-colors">
-              All Types
+              {tTransactions("allTypesBtn")}
             </button>
           </div>
 
@@ -408,25 +417,25 @@ const PaymentsView = () => {
               {/* Table Header */}
               <div className="grid grid-cols-[1fr_80px_1.5fr_1fr_1fr_80px_1fr] gap-4 items-center px-4 mb-3">
                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                  Transaction
+                  {tTransactions("transaction")}
                 </span>
                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                  Type
+                  {tTransactions("type")}
                 </span>
                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                  Date
+                  {tTransactions("date")}
                 </span>
                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                  Method
+                  {tTransactions("method")}
                 </span>
                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-right">
-                  Net Amount
+                  {tTransactions("netAmount")}
                 </span>
                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-right">
-                  Fee
+                  {tTransactions("fee")}
                 </span>
                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-right">
-                  Total
+                  {tTransactions("total")}
                 </span>
               </div>
               <div className="h-px bg-gray-100 mb-2" />

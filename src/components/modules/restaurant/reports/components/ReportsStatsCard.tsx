@@ -2,12 +2,12 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ReportsStatsCardProps {
   label: string;
   value: string;
   trend: string | number;
-  trendLabel?: string;
   isPositive: boolean;
   icon: React.ReactNode;
   iconBgColor?: string;
@@ -18,12 +18,13 @@ const ReportsStatsCard: React.FC<ReportsStatsCardProps> = ({
   label,
   value,
   trend,
-  trendLabel = "vs last period",
   isPositive,
   icon,
   iconBgColor = "bg-gray-50",
   className,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Reports.stats");
+
   return (
     <Card
       className={cn(
@@ -58,7 +59,7 @@ const ReportsStatsCard: React.FC<ReportsStatsCardProps> = ({
               )}
               {trend}
             </span>
-            <span className="text-[#1eb589] font-bold">{trendLabel}</span>
+            <span className="text-[#1eb589] font-bold">{t("vsLastPeriod")}</span>
           </div>
         </div>
       </CardContent>

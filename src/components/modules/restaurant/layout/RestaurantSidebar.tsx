@@ -43,44 +43,40 @@ import Image from "next/image";
 // Navigation Items Structure
 const NAV_SECTIONS = [
   {
-    label: "MAIN",
+    labelKey: "main",
     items: [
+      { nameKey: "dashboard", href: "/restaurant/dashboard", icon: LayoutDashboard },
+      { nameKey: "pos", href: "/restaurant/pos", icon: Store },
+      { nameKey: "orders", href: "/restaurant/orders", icon: ShoppingCart },
       {
-        name: "Dashboard",
-        href: "/restaurant/dashboard",
-        icon: LayoutDashboard,
-      },
-      { name: "POS", href: "/restaurant/pos", icon: Store },
-      { name: "Orders", href: "/restaurant/orders", icon: ShoppingCart },
-      {
-        name: "Menu Management",
+        nameKey: "menuManagement",
         icon: UtensilsCrossed,
         isCollapsible: true,
         bgActive: true,
         items: [
-          { name: "Items", href: "/restaurant/menu/items" },
-          { name: "Categories", href: "/restaurant/menu/categories" },
-          { name: "Variant Groups", href: "/restaurant/menu/variants" },
+          { nameKey: "items", href: "/restaurant/menu/items" },
+          { nameKey: "categories", href: "/restaurant/menu/categories" },
+          { nameKey: "variants", href: "/restaurant/menu/variants" },
         ],
       },
     ],
   },
   {
-    label: "MANAGEMENT",
+    labelKey: "management",
     items: [
-      { name: "Marketing", href: "/restaurant/marketing", icon: Megaphone },
-      { name: "Ratings & Reviews", href: "/restaurant/reviews", icon: Star },
-      { name: "Users & Roles", href: "/restaurant/users", icon: Users },
-      { name: "Finance", href: "/restaurant/payments", icon: CreditCard },
-      { name: "Reports", href: "/restaurant/reports", icon: BarChart2 },
+      { nameKey: "marketing", href: "/restaurant/marketing", icon: Megaphone },
+      { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
+      { nameKey: "users", href: "/restaurant/users", icon: Users },
+      { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard },
+      { nameKey: "reports", href: "/restaurant/reports", icon: BarChart2 },
     ],
   },
   {
-    label: "SETTINGS",
+    labelKey: "settings",
     items: [
-      { name: "APIs", href: "/restaurant/apis", icon: Database },
-      { name: "Support Center", href: "/restaurant/support", icon: HelpCircle },
-      { name: "Settings", href: "/restaurant/settings", icon: Settings },
+      { nameKey: "apis", href: "/restaurant/apis", icon: Database },
+      { nameKey: "support", href: "/restaurant/support", icon: HelpCircle },
+      { nameKey: "settings", href: "/restaurant/settings", icon: Settings },
     ],
   },
 ];
@@ -89,8 +85,10 @@ import { logoutAction } from "@/app/actions/auth/auth";
 import { deleteCookie } from "cookies-next";
 import useLocale from "@/hooks/useLocals";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
+import { useTranslations } from "next-intl";
 
 export function RestaurantSidebar() {
+  const t = useTranslations("RestaurantDashboard");
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed" && !isMobile;
@@ -152,7 +150,7 @@ export function RestaurantSidebar() {
           <div key={idx} className="mb-6">
             {!isCollapsed && (
               <Typography className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-2 px-4">
-                {section.label}
+                {t(`Sidebar.sections.${section.labelKey}` as any)}
               </Typography>
             )}
             <SidebarMenu>
@@ -162,18 +160,18 @@ export function RestaurantSidebar() {
                     pathname?.startsWith("/restaurant/menu");
                   return (
                     <Collapsible
-                      key={item.name}
+                      key={item.nameKey}
                       defaultOpen={isActiveGroup}
                       className="group/collapsible"
                     >
                       <SidebarMenuItem>
                         <CollapsibleTrigger asChild>
                           <SidebarMenuButton
-                            tooltip={item.name}
+                            tooltip={t(`Sidebar.items.${item.nameKey}` as any)}
                             className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-sidebar-foreground/80 group-data-[state=open]/collapsible:bg-sidebar-accent text-base ${isActiveGroup ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold" : ""}`}
                           >
                             <item.icon className="w-5 h-5" />
-                            <span>{item.name}</span>
+                            <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
                             <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
@@ -182,13 +180,13 @@ export function RestaurantSidebar() {
                             {item.items.map((subItem: any) => {
                               const isSubActive = pathname === subItem.href;
                               return (
-                                <SidebarMenuSubItem key={subItem.name}>
+                                <SidebarMenuSubItem key={subItem.nameKey}>
                                   <SidebarMenuSubButton
                                     asChild
                                     className={`h-10 pl-12 rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/60 ${isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : ""}`}
                                   >
                                     <Link href={subItem.href}>
-                                      <span>{subItem.name}</span>
+                                      <span>{t(`Sidebar.items.${subItem.nameKey}` as any)}</span>
                                     </Link>
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>
@@ -203,10 +201,10 @@ export function RestaurantSidebar() {
 
                 const isActive = pathname === item.href;
                 return (
-                  <SidebarMenuItem key={item.name}>
+                  <SidebarMenuItem key={item.nameKey}>
                     <SidebarMenuButton
                       asChild
-                      tooltip={item.name}
+                      tooltip={t(`Sidebar.items.${item.nameKey}` as any)}
                       isActive={isActive}
                       className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${
                         isActive
@@ -216,7 +214,7 @@ export function RestaurantSidebar() {
                     >
                       <Link href={item.href}>
                         <item.icon className="w-5 h-5" />
-                        <span>{item.name}</span>
+                        <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -243,7 +241,7 @@ export function RestaurantSidebar() {
             >
               <LogOut className="w-5 h-5 group-data-[collapsible=icon]:size-6!" />
               <span className="group-data-[collapsible=icon]:hidden">
-                Logout
+                {t("Sidebar.logout")}
               </span>
             </SidebarMenuButton>
           </SidebarMenuItem>

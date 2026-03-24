@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Plus, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 interface FilterOption {
   label: string;
@@ -22,6 +23,7 @@ export function UsersFilters({
   selectedFilter,
   onFilterChange,
 }: UsersFiltersProps) {
+  const t = useTranslations("RestaurantDashboard.Users.filters");
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       {/* Filters (Pills) */}
@@ -66,7 +68,7 @@ export function UsersFilters({
         <Link href="/restaurant/users/new">
           <Button className="bg-[#1F4D36] hover:bg-[#183d2b] text-white gap-2">
             <Plus className="w-4 h-4" />
-            Add User
+            {t("addUser")}
           </Button>
         </Link>
       </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { cn } from "@/lib/utils";
 import OrderDetailSidebar, { OrderDetail } from "./OrderDetailSidebar";
+import { useTranslations } from "next-intl";
 
 interface Order {
   id: string;
@@ -43,6 +44,8 @@ interface RecentOrdersProps {
 }
 
 const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
+  const t = useTranslations("RestaurantDashboard.Reports.recentOrders");
+  
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
 
@@ -58,8 +61,8 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
         hour12: true,
       }),
       status: o.status.charAt(0).toUpperCase() + o.status.slice(1),
-      customer: o.customerName || "Guest",
-      items: o.summary || "No details",
+      customer: o.customerName || t("guest"),
+      items: o.summary || t("noDetails"),
       source: o.source || "N/A",
       total: `$${Number(o.totalPrice).toFixed(2)}`,
       rawData: o,
@@ -99,7 +102,7 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
 
   const columns: Column<Order>[] = [
     {
-      header: "ORDER",
+      header: t("columns.order"),
       cell: (item) => (
         <div className="flex flex-col gap-1 py-1">
           <span className="font-bold text-[#1b2d22] text-[13px]">
@@ -112,7 +115,7 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       ),
     },
     {
-      header: "STATUS",
+      header: t("columns.status"),
       cell: (item) => (
         <div className="py-2">
           <span
@@ -127,7 +130,7 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       ),
     },
     {
-      header: "CUSTOMER",
+      header: t("columns.customer"),
       cell: (item) => (
         <span className="text-[#1b2d22] font-medium text-[13px]">
           {item.customer}
@@ -135,13 +138,13 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       ),
     },
     {
-      header: "ITEMS",
+      header: t("columns.items"),
       cell: (item) => (
         <span className="text-[#657a8a] text-[12px]">{item.items}</span>
       ),
     },
     {
-      header: "SOURCE",
+      header: t("columns.source"),
       cell: (item) => (
         <span className="px-2.5 py-1 bg-gray-50 text-gray-500 rounded-lg text-[11px] font-bold max-w-min">
           {item.source}
@@ -149,7 +152,7 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       ),
     },
     {
-      header: "TOTAL",
+      header: t("columns.total"),
       cell: (item) => (
         <span className="font-bold text-[#1b2d22] text-[13px]">
           {item.total}
@@ -162,16 +165,16 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-[16px] font-bold text-gray-900">Recent Orders</h2>
+          <h2 className="text-[16px] font-bold text-gray-900">{t("title")}</h2>
           <p className="text-[12px] text-gray-500 mt-0.5">
-            Click any order for details
+            {t("subtitle")}
           </p>
         </div>
         <button
           onClick={handleAllOrdersClick}
           className="text-[12px] font-bold text-gray-600 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
         >
-          All Orders
+          {t("allOrders")}
         </button>
       </div>
 
@@ -184,8 +187,11 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       {/* Pagination Footer */}
       <div className="flex justify-between items-center mt-4 text-[12px] text-[#8ea89a]">
         <span>
-          Showing 1-{formattedOrders.length} of{" "}
-          {totalCount || formattedOrders.length}
+          {t("pagination", {
+            start: 1,
+            end: formattedOrders.length,
+            total: totalCount || formattedOrders.length,
+          })}
         </span>
         <div className="flex gap-1.5">
           <button className="w-7 h-7 flex items-center justify-center rounded border border-gray-200 text-gray-400">

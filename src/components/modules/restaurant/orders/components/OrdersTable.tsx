@@ -5,6 +5,7 @@ import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UIOrder as Order } from "../hooks/useOrders";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
+import { useTranslations } from "next-intl";
 
 interface OrdersTableProps {
   data: Order[];
@@ -23,6 +24,8 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
   onPageChange,
   loading = false,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Orders.table");
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "NEW":
@@ -45,17 +48,17 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
 
   const columns: Column<Order>[] = [
     {
-      header: "ORDER ID",
+      header: t("orderId"),
       accessorKey: "id",
       className: "font-semibold text-gray-900",
     },
     {
-      header: "CUSTOMER",
+      header: t("customer"),
       accessorKey: "customerName",
       className: "font-medium text-gray-700",
     },
     {
-      header: "SUMMARY",
+      header: t("summary"),
       cell: (order) => (
         <span className="text-gray-500 text-sm truncate max-w-[200px] block">
           {order.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}
@@ -63,7 +66,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
       ),
     },
     {
-      header: "TOTAL",
+      header: t("total"),
       cell: (order) => (
         <span className="font-bold text-gray-900">
           ${order.total.toFixed(2)}
@@ -71,12 +74,12 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
       ),
     },
     {
-      header: "DATE & TIME",
+      header: t("dateTime"),
       accessorKey: "date",
       className: "text-gray-500 text-sm",
     },
     {
-      header: "STATUS",
+      header: t("status"),
       cell: (order) => (
         <Badge
           className={`rounded-full px-3 py-1 text-[10px] font-bold shadow-none border-none ${getStatusColor(order.status)}`}
@@ -86,7 +89,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
       ),
     },
     {
-      header: "ACTION",
+      header: t("action"),
       cell: (order) => (
         <Button
           variant="ghost"

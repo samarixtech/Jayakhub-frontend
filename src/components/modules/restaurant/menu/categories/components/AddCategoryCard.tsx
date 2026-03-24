@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface AddCategoryCardProps {
   isCreating: boolean;
@@ -23,6 +24,8 @@ export const AddCategoryCard: React.FC<AddCategoryCardProps> = ({
   onCancel,
   isSaving,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Categories.addCard");
+
   if (!isCreating) {
     return (
       <Button
@@ -34,7 +37,7 @@ export const AddCategoryCard: React.FC<AddCategoryCardProps> = ({
           <Plus className="w-5 h-5" />
         </div>
         <span className="text-gray-500 font-medium group-hover:text-[#1F4D36]">
-          Create New Category
+          {t("createNew")}
         </span>
       </Button>
     );
@@ -44,10 +47,10 @@ export const AddCategoryCard: React.FC<AddCategoryCardProps> = ({
     <div className="w-full border-2 border-dashed border-[#1F4D36] rounded-2xl p-6 bg-gray-50 animate-in fade-in zoom-in-95 duration-200">
       <div className="flex flex-col gap-4 max-w-md mx-auto">
         <Typography className="font-semibold text-center text-gray-700">
-          Add New Category
+          {t("title")}
         </Typography>
         <Input
-          placeholder="e.g. Appetizers"
+          placeholder={t("placeholder")}
           value={newCategoryName}
           onChange={(e) => setNewCategoryName(e.target.value)}
           className="bg-white"
@@ -60,10 +63,10 @@ export const AddCategoryCard: React.FC<AddCategoryCardProps> = ({
             disabled={isSaving || !newCategoryName}
             className="bg-[#1F4D36] text-white"
           >
-            {isSaving ? "Saving..." : "Create Category"}
+            {isSaving ? t("saving") : t("createBtn")}
           </Button>
           <Button variant="ghost" onClick={onCancel} disabled={isSaving}>
-            Cancel
+            {t("cancel")}
           </Button>
         </div>
       </div>

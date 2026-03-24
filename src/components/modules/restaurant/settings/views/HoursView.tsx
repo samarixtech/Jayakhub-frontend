@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,7 @@ import {
 } from "@/components/ui/card";
 
 export function HoursView({ settings }: { settings: SettingsData | null }) {
+  const t = useTranslations("RestaurantDashboard.Settings.hours");
   const router = useRouter();
   const initialSchedules = React.useMemo(() => {
     // Ensure all days are present, default to closed if missing
@@ -123,21 +125,21 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
   return (
     <Card className="py-6">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Operating Hours</CardTitle>
+        <CardTitle className="text-lg font-bold">{t("title")}</CardTitle>
         <CardDescription className="text-gray-500">
-          Set your weekly opening and closing times.
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-0 text-sm">
           {/* Header Row */}
           <div className="flex items-center gap-4 pb-2 mb-2 border-b border-border text-muted-foreground font-medium px-2">
-            <span className="w-[120px]">Day</span>
-            <span className="w-[120px] text-center">Open Time</span>
+            <span className="w-[120px]">{t("tableDay")}</span>
+            <span className="w-[120px] text-center">{t("tableOpen")}</span>
             <span className="w-4"></span>
-            <span className="w-[120px] text-center">Close Time</span>
+            <span className="w-[120px] text-center">{t("tableClose")}</span>
             <div className="flex-1" />
-            <span className="w-[60px] text-right">Status</span>
+            <span className="w-[60px] text-right">{t("tableStatus")}</span>
           </div>
 
           {schedules.map((schedule, index) => (
@@ -164,7 +166,7 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
               </div>
 
               <span className="text-muted-foreground w-4 text-center text-xs">
-                to
+                {t("to")}
               </span>
 
               {/* Close Time */}
@@ -211,7 +213,7 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
           ) : (
             <>
               <Save className="w-4 h-4" />
-              Save Schedule
+              {t("saveBtn")}
             </>
           )}
         </Button>

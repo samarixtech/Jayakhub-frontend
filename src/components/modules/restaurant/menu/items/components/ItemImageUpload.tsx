@@ -4,6 +4,7 @@ import React, { useCallback } from "react";
 import { X, Image as ImageIcon } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface ItemImageUploadProps {
   imagePreview: string | null;
@@ -14,6 +15,8 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
   imagePreview,
   onImageChange,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.imageUpload");
+
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
       e.preventDefault();
@@ -33,7 +36,7 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
           <ImageIcon className="w-5 h-5" />
         </div>
         <Typography className="font-semibold text-gray-900">
-          Item Image
+          {t("sectionTitle")}
         </Typography>
       </div>
 
@@ -51,7 +54,7 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
             <>
               <Image
                 src={imagePreview}
-                alt="Preview"
+                alt={t("preview")}
                 fill
                 className="object-cover"
               />
@@ -80,10 +83,10 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
                 <ImageIcon className="w-7 h-7" />
               </div>
               <Typography className="text-sm font-bold text-gray-900">
-                Click to upload or drag and drop
+                {t("clickToUpload")}
               </Typography>
               <Typography className="text-xs font-bold text-gray-400 mt-2">
-                PNG, JPG up to 5MB • Recommended 800×600px
+                {t("imageHelp")}
               </Typography>
             </label>
           )}

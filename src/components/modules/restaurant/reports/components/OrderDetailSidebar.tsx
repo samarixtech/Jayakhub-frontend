@@ -3,6 +3,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useTranslations } from "next-intl";
 
 interface OrderItem {
   name: string;
@@ -67,6 +68,7 @@ const OrderDetailSidebar = ({
   onOpenChange,
   order,
 }: OrderDetailSidebarProps) => {
+  const t = useTranslations("RestaurantDashboard.Reports.recentOrders.detail");
   if (!order) return null;
 
   const items = order.itemsList || [];
@@ -108,7 +110,7 @@ const OrderDetailSidebar = ({
               {/* Order Total */}
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Order Total
+                  {t("orderTotal")}
                 </span>
                 <span className="text-[20px] font-bold text-[#1b2d22]">
                   {finalTotal}
@@ -117,14 +119,14 @@ const OrderDetailSidebar = ({
               {/* Status */}
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center items-start">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Status
+                  {t("status")}
                 </span>
                 {getStatusBadge(order.status)}
               </div>
               {/* Customer */}
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Customer
+                  {t("customer")}
                 </span>
                 <span className="text-[14px] font-bold text-[#1b2d22]">
                   {order.customer}
@@ -133,7 +135,7 @@ const OrderDetailSidebar = ({
               {/* Order Source */}
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Order Source
+                  {t("orderSource")}
                 </span>
                 <span className="text-[14px] font-bold text-[#1b2d22]">
                   {order.source}
@@ -142,7 +144,7 @@ const OrderDetailSidebar = ({
               {/* Payment Method */}
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Payment Method
+                  {t("paymentMethod")}
                 </span>
                 <span className="text-[14px] font-bold text-[#1b2d22]">
                   {paymentMethod}
@@ -151,7 +153,7 @@ const OrderDetailSidebar = ({
               {/* Prep Duration */}
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
-                  Prep Duration
+                  {t("prepDuration")}
                 </span>
                 <span className="text-[14px] font-bold text-[#1b2d22]">
                   {prepDuration}
@@ -162,7 +164,7 @@ const OrderDetailSidebar = ({
             {/* Order Items */}
             <div>
               <h3 className="text-[13px] font-bold text-[#1b2d22] mb-3">
-                Order Items
+                {t("orderItems")}
               </h3>
               <div className="space-y-4">
                 {items.map((item, idx) => (
@@ -172,7 +174,7 @@ const OrderDetailSidebar = ({
                         {item.name}
                       </p>
                       <p className="text-[11px] text-gray-400 mt-0.5">
-                        Qty: {item.qty} × ${item.price.toFixed(2)}
+                        {t("qty")} {item.qty} × ${item.price.toFixed(2)}
                       </p>
                     </div>
                     <span className="text-[13px] font-bold text-[#1b2d22]">
@@ -186,20 +188,20 @@ const OrderDetailSidebar = ({
             {/* Summary */}
             <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm space-y-3 mt-auto">
               <div className="flex justify-between items-center">
-                <span className="text-[12px] text-gray-500">Subtotal</span>
+                <span className="text-[12px] text-gray-500">{t("subtotal")}</span>
                 <span className="text-[12px] font-bold text-[#1b2d22]">
                   {subtotal}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-[12px] text-gray-500">Tax (5%)</span>
+                <span className="text-[12px] text-gray-500">{t("tax")}</span>
                 <span className="text-[12px] font-bold text-[#1b2d22]">
                   {tax}
                 </span>
               </div>
               <div className="flex justify-between items-center pt-2">
                 <span className="text-[13px] font-bold text-[#2d6a4f]">
-                  Total
+                  {t("total")}
                 </span>
                 <span className="text-[15px] font-black text-[#2d6a4f]">
                   {finalTotal}

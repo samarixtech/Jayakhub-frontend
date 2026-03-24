@@ -45,6 +45,7 @@ const AllRestaurantsPage: React.FC = () => {
               onToggleCuisines={() =>
                 actions.setShowAllCuisines(!state.showAllCuisines)
               }
+              onResetFilters={actions.resetFilters}
               cuisineTypes={state.cuisineTypes}
             />
           </div>
@@ -113,6 +114,7 @@ const AllRestaurantsPage: React.FC = () => {
             onToggleCuisines={() =>
               actions.setShowAllCuisines(!state.showAllCuisines)
             }
+            onResetFilters={actions.resetFilters}
             cuisineTypes={state.cuisineTypes}
           />
         </SheetContent>

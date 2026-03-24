@@ -1,6 +1,7 @@
 import React from "react";
 import { Edit, FileSpreadsheet } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface StepSelectionProps {
   onManualEntry: () => void;
@@ -11,6 +12,8 @@ export const StepSelection: React.FC<StepSelectionProps> = ({
   onManualEntry,
   onBulkImport,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.stepSelection");
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
       <div
@@ -22,10 +25,10 @@ export const StepSelection: React.FC<StepSelectionProps> = ({
         </div>
         <div className="text-center space-y-2">
           <Typography variant="h4" className="font-bold text-gray-900">
-            Manual Entry
+            {t("manualTitle")}
           </Typography>
           <Typography variant="p" className="text-gray-500 text-sm">
-            Fill out a form to add a single item with full details.
+            {t("manualDesc")}
           </Typography>
         </div>
       </div>
@@ -39,10 +42,10 @@ export const StepSelection: React.FC<StepSelectionProps> = ({
         </div>
         <div className="text-center space-y-2">
           <Typography variant="h4" className="font-bold text-gray-900">
-            Bulk Import
+            {t("bulkTitle")}
           </Typography>
           <Typography variant="p" className="text-gray-500 text-sm">
-            Upload a CSV file to add multiple items at once.
+            {t("bulkDesc")}
           </Typography>
         </div>
       </div>

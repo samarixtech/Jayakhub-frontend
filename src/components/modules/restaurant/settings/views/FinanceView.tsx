@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/card";
 
 export function FinanceView({ settings }: { settings: SettingsData | null }) {
+  const t = useTranslations("RestaurantDashboard.Settings.finance");
   const router = useRouter();
   const bank = settings?.bankAccount;
   const updateStatus = settings?.onboardingUpdate?.bankDetails || "none";
@@ -43,10 +45,10 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
     try {
       const response = await updateBankDetailsAction(formData);
       if (response.success) {
-        toast.success(response.message || "Bank details update requested.");
+        toast.success(response.message || t("successMsg"));
         router.refresh();
       } else {
-        toast.error(response.message || "Failed to update bank details.");
+        toast.error(response.message || t("errorMsg"));
       }
     } catch (error) {
       toast.error("An unexpected error occurred.");
@@ -62,9 +64,9 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
   return (
     <Card className="py-6">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Finance Details</CardTitle>
+        <CardTitle className="text-lg font-bold">{t("title")}</CardTitle>
         <CardDescription className="text-gray-500">
-          Manage your banking information for payouts
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -83,7 +85,7 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
 
         <div className="space-y-4 mt-6">
           <h3 className="text-sm font-semibold text-gray-800">
-            Bank Account Details
+            {t("bankDetails")}
           </h3>
 
           <div
@@ -92,26 +94,26 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <Label className="text-xs text-muted-foreground mb-1 block">
-                  Bank Name
+                  {t("bankName")}
                 </Label>
                 <Input
                   name="bankName"
                   value={formData.bankName}
                   onChange={handleChange}
-                  placeholder="Bank Name"
+                  placeholder={t("bankName")}
                   className="bg-background"
                   disabled={isPending}
                 />
               </div>
               <div>
                 <Label className="text-xs text-muted-foreground mb-1 block">
-                  Account Holder Name
+                  {t("accountHolder")}
                 </Label>
                 <Input
                   name="accountHolderName"
                   value={formData.accountHolderName}
                   onChange={handleChange}
-                  placeholder="Account Holder Name"
+                  placeholder={t("accountHolder")}
                   className="bg-background"
                   disabled={isPending}
                 />
@@ -119,13 +121,13 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
             </div>
             <div>
               <Label className="text-xs text-muted-foreground mb-1 block">
-                IBAN / Account Number
+                {t("iban")}
               </Label>
               <Input
                 name="iban"
                 value={formData.iban}
                 onChange={handleChange}
-                placeholder="IBAN / Account Number"
+                placeholder={t("iban")}
                 className="bg-background"
                 disabled={isPending}
               />
@@ -135,7 +137,7 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
       </CardContent>
       <CardFooter className="flex justify-end pt-6 border-t border-border mt-2">
         <Button onClick={handleSave} disabled={loading || isPending}>
-          {loading ? "Saving..." : "Save Finance Details"}
+          {loading ? "Saving..." : t("saveBtn")}
         </Button>
       </CardFooter>
     </Card>

@@ -16,13 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useUserForm } from "../hooks/useUserForm";
-
-const ROLES = [
-  { label: "Admin", value: "ADMIN" },
-  { label: "Manager", value: "MANAGER" },
-  { label: "Cashier", value: "CASHIER" },
-  { label: "Kitchen", value: "KITCHEN" },
-];
+import { useTranslations } from "next-intl";
 
 export default function UserFormView({
   mode = "add",
@@ -31,7 +25,15 @@ export default function UserFormView({
   mode?: "add" | "edit";
   userId?: string;
 }) {
+  const t = useTranslations("RestaurantDashboard.Users.form");
   const { state, actions, status } = useUserForm({ mode, userId });
+
+  const ROLES = [
+    { label: t("roles.admin"), value: "ADMIN" },
+    { label: t("roles.manager"), value: "MANAGER" },
+    { label: t("roles.cashier"), value: "CASHIER" },
+    { label: t("roles.kitchen"), value: "KITCHEN" },
+  ];
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1000px] mx-auto p-4">
@@ -48,13 +50,13 @@ export default function UserFormView({
             </Button>
           </Link>
           <Typography variant="h2" className="text-xl font-bold text-gray-800">
-            {mode === "add" ? "Add New User" : "Edit User"}
+            {mode === "add" ? t("titleAdd") : t("titleEdit")}
           </Typography>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/restaurant/users">
             <Button variant="ghost" className="text-gray-500">
-              Cancel
+              {t("cancel")}
             </Button>
           </Link>
           <Button
@@ -63,8 +65,8 @@ export default function UserFormView({
             className="bg-[#1F4D36] hover:bg-[#183d2b] text-white font-medium min-w-[120px]"
           >
             {status.isCreating || status.isUpdating
-              ? "Saving..."
-              : "Save Changes"}
+              ? t("saving")
+              : t("saveChanges")}
           </Button>
         </div>
       </div>
@@ -78,12 +80,12 @@ export default function UserFormView({
               variant="h3"
               className="text-lg font-semibold text-gray-900"
             >
-              Personal Information
+              {t("personalInfo")}
             </Typography>
           </div>
           <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
             <Typography className="text-sm font-medium text-gray-600">
-              {state.isActive ? "Active" : "Inactive"}
+              {state.isActive ? t("active") : t("inactive")}
             </Typography>
             <Switch
               checked={state.isActive}
@@ -94,39 +96,39 @@ export default function UserFormView({
         </div>
 
         <Typography className="text-sm text-gray-500 mb-6">
-          Basic identification details for this user.
+          {t("personalDesc")}
         </Typography>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="grid gap-2">
             <Label htmlFor="firstName" className="font-medium text-gray-700">
-              First Name
+              {t("firstName")}
             </Label>
             <Input
               id="firstName"
               value={state.firstName}
               onChange={(e) => actions.setFirstName(e.target.value)}
               className="bg-gray-50/50 border-gray-200"
-              placeholder="e.g. John"
+              placeholder={t("firstNamePlaceholder")}
             />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lastName" className="font-medium text-gray-700">
-              Last Name
+              {t("lastName")}
             </Label>
             <Input
               id="lastName"
               value={state.lastName}
               onChange={(e) => actions.setLastName(e.target.value)}
               className="bg-gray-50/50 border-gray-200"
-              placeholder="e.g. Doe"
+              placeholder={t("lastNamePlaceholder")}
             />
           </div>
         </div>
 
         <div className="grid gap-2">
           <Label htmlFor="email" className="font-medium text-gray-700">
-            Email Address
+            {t("email")}
           </Label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -136,7 +138,7 @@ export default function UserFormView({
               value={state.email}
               onChange={(e) => actions.setEmail(e.target.value)}
               className="pl-9 bg-gray-50/50 border-gray-200"
-              placeholder="e.g. name@restaurant.com"
+              placeholder={t("emailPlaceholder")}
             />
           </div>
         </div>
@@ -150,19 +152,19 @@ export default function UserFormView({
             variant="h3"
             className="text-lg font-semibold text-gray-900"
           >
-            Access & Security
+            {t("accessSecurity")}
           </Typography>
         </div>
         <Typography className="text-sm text-gray-500 mb-6">
-          Manage role permissions and login credentials.
+          {t("accessDesc")}
         </Typography>
 
         <div className="grid gap-6">
           <div className="grid gap-2">
-            <Label className="font-medium text-gray-700">Assigned Role</Label>
+            <Label className="font-medium text-gray-700">{t("assignedRole")}</Label>
             <Select value={state.role} onValueChange={actions.setRole}>
               <SelectTrigger className="bg-gray-50/50 border-gray-200">
-                <SelectValue placeholder="Select a role" />
+                <SelectValue placeholder={t("selectRole")} />
               </SelectTrigger>
               <SelectContent className="bg-white">
                 {ROLES.map((role) => (
@@ -177,7 +179,7 @@ export default function UserFormView({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="grid gap-2">
               <Label htmlFor="password" className="font-medium text-gray-700">
-                Password{" "}
+                {t("password")}{" "}
                 {mode === "add" && <span className="text-red-500">*</span>}
               </Label>
               <div className="relative">
@@ -190,8 +192,8 @@ export default function UserFormView({
                   className="pl-9 bg-gray-50/50 border-gray-200"
                   placeholder={
                     mode === "add"
-                      ? "Create password"
-                      : "Leave blank to keep current"
+                      ? t("createPassword")
+                      : t("leaveBlank")
                   }
                 />
               </div>
@@ -201,7 +203,7 @@ export default function UserFormView({
                 htmlFor="confirmPassword"
                 className="font-medium text-gray-700"
               >
-                Confirm Password{" "}
+                {t("confirmPasswordLabel")}{" "}
                 {mode === "add" && <span className="text-red-500">*</span>}
               </Label>
               <div className="relative">
@@ -212,7 +214,7 @@ export default function UserFormView({
                   value={state.confirmPassword}
                   onChange={(e) => actions.setConfirmPassword(e.target.value)}
                   className="pl-9 bg-gray-50/50 border-gray-200"
-                  placeholder="Confirm password"
+                  placeholder={t("confirmPasswordPlaceholder")}
                 />
               </div>
             </div>

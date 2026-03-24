@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/card";
 
 export function LocationView({ settings }: { settings: SettingsData | null }) {
+  const t = useTranslations("RestaurantDashboard.Settings.location");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const profile = settings?.profile;
@@ -68,13 +70,13 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
       });
 
       if (response.success) {
-        toast.success(response.message || "Location update request submitted.");
+        toast.success(response.message || t("successMsg"));
         router.refresh();
       } else {
-        toast.error(response.message || "Failed to update location.");
+        toast.error(response.message || t("errorMsg"));
       }
     } catch (error) {
-      toast.error("An unexpected error occurred.");
+      toast.error(t("unexpectedErr"));
     } finally {
       setLoading(false);
     }
@@ -87,9 +89,9 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
   return (
     <Card className="py-6">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Location & Contact</CardTitle>
+        <CardTitle className="text-lg font-bold">{t("title")}</CardTitle>
         <CardDescription className="text-gray-500">
-          Where customers can find your restaurant
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
@@ -97,11 +99,10 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
           <Alert className="bg-blue-50 border-blue-200">
             <InfoIcon className="h-4 w-4 text-blue-600" />
             <AlertTitle className="text-blue-800 font-semibold">
-              Update Pending
+              {t("updatePendingTitle")}
             </AlertTitle>
             <AlertDescription className="text-blue-700">
-              YOUR CHANGES ARE SUBMITTED, WE ARE REVIEWING IT AND WILL APPROVE
-              SHORTLY.
+              {t("updatePendingDesc")}
             </AlertDescription>
           </Alert>
         )}
@@ -111,7 +112,7 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
           className={`space-y-3 ${isPending ? "opacity-60 pointer-events-none" : ""}`}
         >
           <Label className="text-sm font-medium text-foreground block">
-            Restaurant Location <span className="text-red-500">*</span>
+            {t("restaurantLocation")} <span className="text-red-500">*</span>
           </Label>
 
           <LocationPicker
@@ -133,7 +134,7 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
             }
           >
             <Label className="text-sm font-medium text-foreground block">
-              Phone Number <span className="text-red-500">*</span>
+              {t("phone")} <span className="text-red-500">*</span>
             </Label>
             <Input
               defaultValue={profile?.phone || ""}
@@ -143,7 +144,7 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
           </div>
           <div className="space-y-1.5">
             <Label className="text-sm font-medium text-foreground block">
-              Email Address
+              {t("email")}
             </Label>
             <Input
               defaultValue={profile?.restaurantEmail || ""}
@@ -155,7 +156,7 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
       </CardContent>
       <CardFooter className="flex justify-end border-t border-border pt-6 mt-2">
         <Button disabled={loading || isPending} onClick={handeSave}>
-          {loading ? "Saving..." : "Save Location"}
+          {loading ? "Saving..." : t("saveBtn")}
         </Button>
       </CardFooter>
     </Card>

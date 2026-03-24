@@ -2,6 +2,7 @@ import React from "react";
 import { Shapes } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 
 interface CategoryStatsProps {
   count: number;
@@ -12,6 +13,8 @@ export const CategoryStats: React.FC<CategoryStatsProps> = ({
   count,
   isLoading,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Categories.stats");
+
   return (
     <div className="bg-[#E2F1E8] rounded-2xl p-6 flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -23,10 +26,10 @@ export const CategoryStats: React.FC<CategoryStatsProps> = ({
             variant="h3"
             className="text-lg font-bold text-gray-900 mb-1"
           >
-            Organize Your Menu
+            {t("title")}
           </Typography>
           <Typography className="text-sm text-gray-600 max-w-md">
-            Create categories to group your menu items.
+            {t("subtitle")}
           </Typography>
         </div>
       </div>
@@ -43,7 +46,7 @@ export const CategoryStats: React.FC<CategoryStatsProps> = ({
               {count}
             </Typography>
             <Typography className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">
-              Categories
+              {t("countLabel")}
             </Typography>
           </div>
         </div>

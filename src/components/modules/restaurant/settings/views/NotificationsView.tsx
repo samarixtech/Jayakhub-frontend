@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/card";
 
 export function NotificationsView() {
+  const t = useTranslations("RestaurantDashboard.Settings.notifications");
   const [loading, setLoading] = useState(true);
   const [orderSound, setOrderSound] = useState(true);
   const [emailReceipts, setEmailReceipts] = useState(false);
@@ -30,22 +32,22 @@ export function NotificationsView() {
   const notifications = [
     {
       id: "order-sound",
-      title: "New Order Sound",
-      description: "Play a sound when a new order arrives",
+      title: t("soundTitle"),
+      description: t("soundDesc"),
       checked: orderSound,
       onChange: setOrderSound,
     },
     {
       id: "email-receipts",
-      title: "Email Receipts",
-      description: "Receive daily summary via email",
+      title: t("emailTitle"),
+      description: t("emailDesc"),
       checked: emailReceipts,
       onChange: setEmailReceipts,
     },
     {
       id: "sms-alerts",
-      title: "SMS Alerts",
-      description: "Get critical updates via SMS",
+      title: t("smsTitle"),
+      description: t("smsDesc"),
       checked: smsAlerts,
       onChange: setSmsAlerts,
     },
@@ -58,9 +60,9 @@ export function NotificationsView() {
   return (
     <Card className="py-6">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Notifications</CardTitle>
+        <CardTitle className="text-lg font-bold">{t("title")}</CardTitle>
         <CardDescription className="text-gray-500">
-          Manage your alerts and notification preferences
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -88,7 +90,7 @@ export function NotificationsView() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end pt-6 border-t border-border mt-2">
-        <Button>Save Preferences</Button>
+        <Button>{t("saveBtn")}</Button>
       </CardFooter>
     </Card>
   );

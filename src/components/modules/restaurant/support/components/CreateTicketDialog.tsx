@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface CreateTicketDialogProps {
   open: boolean;
@@ -36,6 +37,7 @@ const CreateTicketDialog = ({
   const [priority, setPriority] = useState("MEDIUM");
   const [category, setCategory] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const t = useTranslations("RestaurantDashboard.Support.createTicket");
 
   const handleSubmit = async () => {
     if (!subject.trim() || !description.trim()) {
@@ -52,7 +54,7 @@ const CreateTicketDialog = ({
         category,
       });
       if (res.success) {
-        toast.success("Ticket created successfully!");
+        toast.success(t("success"));
         setSubject("");
         setDescription("");
         setPriority("MEDIUM");
@@ -60,10 +62,10 @@ const CreateTicketDialog = ({
         onOpenChange(false);
         onTicketCreated();
       } else {
-        toast.error(res.message || "Failed to create ticket");
+        toast.error(res.message || t("errorFailed"));
       }
     } catch {
-      toast.error("An unexpected error occurred.");
+      toast.error(t("errorUnexpected"));
     } finally {
       setIsSubmitting(false);
     }
@@ -74,68 +76,68 @@ const CreateTicketDialog = ({
       <DialogContent className="sm:max-w-[420px] p-0 rounded-2xl gap-0">
         <DialogHeader className="px-6 pt-6 pb-2">
           <DialogTitle className="text-[18px] font-bold text-[#1a1a1a]">
-            Create New Ticket
+            {t("title")}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Fill out the form below to submit a new support ticket.
+            {t("description")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="px-6 py-4 space-y-5">
           <div>
             <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
-              Subject
+              {t("subjectLabel")}
             </label>
             <input
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              placeholder="Brief summary of your issue"
+              placeholder={t("subjectPlaceholder")}
               className="w-full h-10 px-3 rounded-lg border border-gray-200 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20 transition-colors"
             />
           </div>
 
           <div>
             <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
-              Priority
+              {t("priorityLabel")}
             </label>
             <Select value={priority} onValueChange={setPriority}>
               <SelectTrigger className="w-full h-10 rounded-lg border border-gray-200 text-[13px] text-gray-700 focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20">
-                <SelectValue placeholder="Select priority" />
+                <SelectValue placeholder={t("prioritySelect")} />
               </SelectTrigger>
               <SelectContent className="bg-white">
-                <SelectItem value="LOW">Low</SelectItem>
-                <SelectItem value="MEDIUM">Medium</SelectItem>
-                <SelectItem value="HIGH">High</SelectItem>
+                <SelectItem value="LOW">{t("priorities.low")}</SelectItem>
+                <SelectItem value="MEDIUM">{t("priorities.medium")}</SelectItem>
+                <SelectItem value="HIGH">{t("priorities.high")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
             <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
-              Category
+              {t("categoryLabel")}
             </label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="w-full h-10 rounded-lg border border-gray-200 text-[13px] text-gray-700 focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20">
-                <SelectValue placeholder="Select a category" />
+                <SelectValue placeholder={t("categorySelect")} />
               </SelectTrigger>
               <SelectContent className="bg-white">
-                <SelectItem value="General Inquiry">General Inquiry</SelectItem>
-                <SelectItem value="Technical Issue">Technical Issue</SelectItem>
-                <SelectItem value="Billing">Billing</SelectItem>
-                <SelectItem value="Feature Request">Feature Request</SelectItem>
+                <SelectItem value="General Inquiry">{t("categories.general")}</SelectItem>
+                <SelectItem value="Technical Issue">{t("categories.technical")}</SelectItem>
+                <SelectItem value="Billing">{t("categories.billing")}</SelectItem>
+                <SelectItem value="Feature Request">{t("categories.feature")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div>
             <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
-              Description
+              {t("descLabel")}
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your issue in detail..."
+              placeholder={t("descPlaceholder")}
               rows={4}
               className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20 transition-colors resize-none"
             />
@@ -148,7 +150,7 @@ const CreateTicketDialog = ({
             disabled={isSubmitting}
             className="text-[13px] font-semibold text-gray-500 hover:text-gray-700 transition-colors px-4 py-2"
           >
-            Cancel
+            {t("cancel")}
           </button>
           <button
             onClick={handleSubmit}
@@ -160,7 +162,7 @@ const CreateTicketDialog = ({
             ) : (
               <Play className="w-3.5 h-3.5 fill-white" />
             )}
-            {isSubmitting ? "Submitting..." : "Submit Ticket"}
+            {isSubmitting ? t("submitting") : t("submit")}
           </button>
         </DialogFooter>
       </DialogContent>

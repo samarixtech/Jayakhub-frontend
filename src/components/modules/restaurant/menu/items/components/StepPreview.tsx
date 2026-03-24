@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowLeft, FileWarning } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface StepPreviewProps {
   onBack: () => void;
@@ -20,6 +21,8 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
   onImport,
   onCancel,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.stepPreview");
+
   return (
     <div className="space-y-4 flex flex-col h-full overflow-hidden">
       <div className="flex items-center justify-between">
@@ -29,10 +32,10 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
           className="text-gray-500 hover:text-gray-900 px-0 gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
+          {t("back")}
         </Button>
         <Typography variant="h4" className="font-bold text-gray-900">
-          Preview ({parsedData.length} items)
+          {t("previewTitle", { length: parsedData.length })}
         </Typography>
       </div>
 
@@ -78,7 +81,7 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
         {parsedData.length === 0 ? (
           <div className="text-center p-8 bg-gray-50 rounded-xl">
             <FileWarning className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-            <Typography className="text-gray-500">No data parsed</Typography>
+            <Typography className="text-gray-500">{t("noData")}</Typography>
           </div>
         ) : (
           parsedData.map((row, rowIndex) => (
@@ -88,7 +91,7 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
             >
               <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-bg">
-                  Row {rowIndex + 1}
+                  {t("row", { index: rowIndex + 1 })}
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
@@ -110,14 +113,14 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
 
       <div className="flex justify-end gap-3 pt-4 border-t mt-auto">
         <Button variant="ghost" onClick={onCancel} className="text-gray-500">
-          Cancel
+          {t("cancel")}
         </Button>
         <Button
           className="bg-emerald-bg hover:bg-emerald-bg-hover text-white px-8"
           disabled={isLoading}
           onClick={onImport}
         >
-          {isLoading ? "Importing..." : "Import All"}
+          {isLoading ? t("importing") : t("importBtn")}
         </Button>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 
 interface VariantGroupFormProps {
   groupName: string;
@@ -29,28 +30,30 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
   isSaving,
   isEditing,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.VariantGroups.form");
+
   return (
     <div className="border border-dashed border-[#1F4D36] rounded-xl p-6 bg-[#F9FAFB] relative animate-in fade-in zoom-in-95 duration-200">
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label className="text-gray-700 font-medium">Group Name</Label>
+          <Label className="text-gray-700 font-medium">{t("groupName")}</Label>
           <Input
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
-            placeholder="e.g., Size Options, Toppings"
+            placeholder={t("namePlaceholder")}
             className="bg-white border-gray-200"
             autoFocus
           />
         </div>
 
         <div className="space-y-2">
-          <Label className="text-gray-700 font-medium">Options</Label>
+          <Label className="text-gray-700 font-medium">{t("options")}</Label>
           {options.map((opt, idx) => (
             <div key={idx} className="flex items-center gap-2 mb-2">
               <Input
                 value={opt.name}
                 onChange={(e) => onOptionChange(idx, "name", e.target.value)}
-                placeholder="Option name"
+                placeholder={t("optionPlaceholder")}
                 className="bg-white border-gray-200 flex-1"
               />
               <div className="relative w-32 shrink-0">
@@ -85,7 +88,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
             className="mt-2 border-dashed border-[#1F4D36] text-[#1F4D36] hover:bg-[#1F4D36]/5 h-10 w-auto px-4 gap-2"
           >
             <Plus className="w-4 h-4" />
-            Add Option
+            {t("addOption")}
           </Button>
         </div>
 
@@ -96,10 +99,10 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
             disabled={isSaving}
           >
             {isSaving
-              ? "Saving..."
+              ? t("saving")
               : isEditing
-                ? "Update Group"
-                : "Create Group"}
+                ? t("updateBtn")
+                : t("createBtn")}
           </Button>
           <Button
             onClick={onCancel}
@@ -107,7 +110,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
             className="text-gray-500 hover:text-gray-900"
             disabled={isSaving}
           >
-            Cancel
+            {t("cancel")}
           </Button>
         </div>
       </div>

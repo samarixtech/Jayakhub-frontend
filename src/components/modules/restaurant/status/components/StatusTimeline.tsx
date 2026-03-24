@@ -2,43 +2,46 @@
 
 import { Check, Clock, Mail, Rocket } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
-
-const TIMELINE_STEPS = [
-  {
-    title: "Application Submitted",
-    description: "Your application is in our queue",
-    icon: Check,
-    status: "completed",
-    bgColor: "bg-emerald-500",
-    iconColor: "text-white",
-  },
-  {
-    title: "Team Review",
-    description: "Usually takes 1-2 business days",
-    icon: Clock,
-    status: "current",
-    bgColor: "bg-[#346853]",
-    iconColor: "text-white",
-  },
-  {
-    title: "Confirmation Email",
-    description: "You'll receive an email once approved",
-    icon: Mail,
-    status: "upcoming",
-    bgColor: "bg-white border border-gray-200",
-    iconColor: "text-gray-400",
-  },
-  {
-    title: "Go Live",
-    description: "Start accepting orders on JayakHub",
-    icon: Rocket,
-    status: "upcoming",
-    bgColor: "bg-white border border-gray-200",
-    iconColor: "text-gray-400",
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function StatusTimeline() {
+  const t = useTranslations("RestaurantDashboard.Status.timeline");
+  
+  const TIMELINE_STEPS = [
+    {
+      title: t("step1.title"),
+      description: t("step1.description"),
+      icon: Check,
+      status: "completed",
+      bgColor: "bg-emerald-500",
+      iconColor: "text-white",
+    },
+    {
+      title: t("step2.title"),
+      description: t("step2.description"),
+      icon: Clock,
+      status: "current",
+      bgColor: "bg-[#346853]",
+      iconColor: "text-white",
+    },
+    {
+      title: t("step3.title"),
+      description: t("step3.description"),
+      icon: Mail,
+      status: "upcoming",
+      bgColor: "bg-white border border-gray-200",
+      iconColor: "text-gray-400",
+    },
+    {
+      title: t("step4.title"),
+      description: t("step4.description"),
+      icon: Rocket,
+      status: "upcoming",
+      bgColor: "bg-white border border-gray-200",
+      iconColor: "text-gray-400",
+    },
+  ];
+
   return (
     <div className="relative space-y-8 text-left">
       <div className="absolute left-[19px] top-4 bottom-4 w-[2px] bg-gray-100 z-0" />

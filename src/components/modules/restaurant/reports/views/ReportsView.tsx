@@ -14,8 +14,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useReports } from "../hooks/useReports";
+import { useTranslations } from "next-intl";
 
 const ReportsView = () => {
+  const t = useTranslations("RestaurantDashboard.Reports");
   const { data, loading } = useReports();
 
   if (loading) {
@@ -29,7 +31,7 @@ const ReportsView = () => {
   if (!data) {
     return (
       <div className="w-full h-[400px] flex items-center justify-center text-gray-500">
-        No report data available.
+        {t("header.noData")}
       </div>
     );
   }
@@ -43,44 +45,40 @@ const ReportsView = () => {
           className="bg-white border-gray-200 text-gray-700 h-9"
         >
           <ChevronDown className="mr-2 w-4 h-4 text-gray-400" />
-          <span className="text-xs font-bold">Last 30 Days</span>
+          <span className="text-xs font-bold">{t("header.last30Days")}</span>
         </Button>
       </div>
 
       {/* Stats Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ReportsStatsCard
-          label="Total Sales"
+          label={t("stats.totalSales")}
           value={`$${Number(data.totalSales).toLocaleString()}`}
           trend={`${data.lastPeriodSalesAverage}%`}
-          trendLabel="vs last period"
           isPositive={Number(data.lastPeriodSalesAverage) >= 0}
           icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
           iconBgColor="bg-emerald-50"
         />
         <ReportsStatsCard
-          label="Total Orders"
+          label={t("stats.totalOrders")}
           value={data.totalOrders.toLocaleString()}
           trend={`${data.lastPeriodOrdersAverage}%`}
-          trendLabel="vs last period"
           isPositive={Number(data.lastPeriodOrdersAverage) >= 0}
           icon={<ShoppingBag className="w-4 h-4 text-blue-600" />}
           iconBgColor="bg-blue-50"
         />
         <ReportsStatsCard
-          label="Avg Order Value"
+          label={t("stats.avgOrderValue")}
           value={`$${Number(data.averageOrderValue).toFixed(2)}`}
           trend={`${data.lastPeriodAverageOrderValue}%`}
-          trendLabel="vs last period"
           isPositive={Number(data.lastPeriodAverageOrderValue) >= 0}
           icon={<TrendingUp className="w-4 h-4 text-amber-600" />}
           iconBgColor="bg-amber-50"
         />
         <ReportsStatsCard
-          label="Repeat Customer Rate"
+          label={t("stats.repeatCustomerRate")}
           value={`${data.repeatedCustomerRate}%`}
           trend={`${data.lastPeriodRepeatedCustomerRate}%`}
-          trendLabel="vs last period"
           isPositive={Number(data.lastPeriodRepeatedCustomerRate) >= 0}
           icon={<Award className="w-4 h-4 text-purple-600" />}
           iconBgColor="bg-purple-50"

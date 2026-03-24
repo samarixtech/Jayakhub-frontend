@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 interface OrderSourcesProps {
   sources?: { walkInDineIn: number; online: number };
 }
@@ -5,16 +7,18 @@ interface OrderSourcesProps {
 const OrderSources = ({
   sources = { walkInDineIn: 0, online: 0 },
 }: OrderSourcesProps) => {
+  const t = useTranslations("RestaurantDashboard.Reports.charts.sources");
+
   const data = [
     {
       id: "1",
-      source: "Walk-in / Dine-in",
+      source: t("walkIn"),
       percentage: sources.walkInDineIn,
       color: "bg-[#1B4332]", // Dark Green
     },
     {
       id: "2",
-      source: "Online Ordering",
+      source: t("online"),
       percentage: sources.online,
       color: "bg-[#3B82F6]", // Blue
     },
@@ -23,9 +27,9 @@ const OrderSources = ({
   return (
     <div className="w-full">
       <div className="mb-6">
-        <h2 className="text-[16px] font-bold text-gray-900">Order Sources</h2>
+        <h2 className="text-[16px] font-bold text-gray-900">{t("title")}</h2>
         <p className="text-[12px] text-gray-500 mt-0.5">
-          Where your orders come from
+          {t("subtitle")}
         </p>
       </div>
 

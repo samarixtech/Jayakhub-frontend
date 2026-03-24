@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { Plus, Edit2, Trash2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -39,9 +40,11 @@ export default function MenuItemsView() {
     handlePageChange,
   } = useMenuItems();
 
+  const t = useTranslations("RestaurantDashboard.Menu.Items.views");
+
   const columns = [
     {
-      header: "Item",
+      header: t("columns.item"),
       accessorKey: "name",
       cell: (item: any) => {
         const rawImage = item.itemImage || item.image;
@@ -78,7 +81,7 @@ export default function MenuItemsView() {
       },
     },
     {
-      header: "Category",
+      header: t("columns.category"),
       accessorKey: "category",
       cell: (item: any) => (
         <div className="text-left">
@@ -92,7 +95,7 @@ export default function MenuItemsView() {
       ),
     },
     {
-      header: "Price",
+      header: t("columns.price"),
       accessorKey: "basePrice",
       cell: (item: any) => (
         <div className="text-left font-medium text-gray-700 font-mono">
@@ -101,7 +104,7 @@ export default function MenuItemsView() {
       ),
     },
     {
-      header: "Status",
+      header: t("columns.status"),
       accessorKey: "isAvailable",
       cell: (item: any) => (
         <div className="text-left">
@@ -117,7 +120,7 @@ export default function MenuItemsView() {
       ),
     },
     {
-      header: "Actions",
+      header: t("columns.actions"),
       cell: (item: any) => (
         <div className="flex items-center justify-start gap-2">
           <Link href={`/restaurant/menu/items/${item.id || item._id}`}>
@@ -150,7 +153,7 @@ export default function MenuItemsView() {
           className="bg-emerald-bg hover:bg-emerald-bg-hover text-white gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          Add New Item
+          {t("addNewTitle")}
         </Button>
       </div>
 
@@ -169,7 +172,7 @@ export default function MenuItemsView() {
           data={filteredItems}
           columns={columns}
           loading={isPending}
-          emptyMessage='No items found. Click "Add New Item" to create one.'
+          emptyMessage={t("noItems")}
         />
         <div className="mt-4">
           <GlobalPagination
@@ -183,7 +186,7 @@ export default function MenuItemsView() {
       <DeleteConfirmationModal
         open={!!deleteId}
         onOpenChange={(open: boolean) => !open && setDeleteId(null)}
-        title="Delete Item"
+        title={t("deleteTitle")}
         onConfirm={confirmDelete}
         isDeleting={isDeleting}
       />

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface CategoryCardProps {
   category: any;
@@ -28,6 +29,8 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
   onDelete,
   isUpdating,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Categories.card");
+
   return (
     <Card className="px-3 py-4 flex items-center justify-between border-gray-100 shadow-sm hover:shadow-md transition-shadow">
       {isEditing ? (
@@ -68,7 +71,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
                 {category.categoryName || category.name}
               </Typography>
               <Typography className="text-xs text-gray-400 font-medium mt-0.5">
-                0 items
+                {t("itemsCount")}
               </Typography>
             </div>
           </div>

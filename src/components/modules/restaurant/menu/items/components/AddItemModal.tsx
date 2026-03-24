@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { useAddItem } from "../hooks/useAddItem";
 import { StepSelection } from "./StepSelection";
@@ -37,6 +38,8 @@ export function AddItemModal({
     setParsedData,
   } = useAddItem(onOpenChange, onImportSuccess);
 
+  const t = useTranslations("RestaurantDashboard.Menu.Items.addItemModal");
+
   const handleDownloadTemplate = () => {
     const link = document.createElement("a");
     link.href = "/menu_import_template.csv";
@@ -51,7 +54,7 @@ export function AddItemModal({
       open={open}
       onOpenChange={handleOpenChange}
       trigger={trigger}
-      title={step === "selection" ? "Add New Item" : "Bulk Import Items"}
+      title={step === "selection" ? t("titleNew") : t("titleBulk")}
       className="sm:max-w-4xl max-h-[90vh] flex flex-col"
     >
       {step === "selection" && (
