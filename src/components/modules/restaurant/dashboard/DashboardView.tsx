@@ -7,8 +7,10 @@ import { DashboardMetrics } from "./components/DashboardMetrics";
 import { RevenueChart } from "./components/RevenueChart";
 import { RecentActivity } from "./components/RecentActivity";
 import { RecentOrdersTable } from "./components/RecentOrdersTable";
+import { useCLC } from "@/context/CLCContext";
 
 export default function DashboardView() {
+  const { formatPrice } = useCLC();
   const {
     isOnline,
     setIsOnline,
@@ -17,7 +19,6 @@ export default function DashboardView() {
     chartData,
     maxDataPoint,
     getTimeAgo,
-    formatCurrency,
     ownerName,
     stats,
     recentOrders,
@@ -37,7 +38,7 @@ export default function DashboardView() {
         ownerName={ownerName}
       />
 
-      <DashboardMetrics stats={stats} formatCurrency={formatCurrency} />
+      <DashboardMetrics stats={stats} formatCurrency={formatPrice} />
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -52,10 +53,7 @@ export default function DashboardView() {
         </div>
       </div>
 
-      <RecentOrdersTable
-        orders={recentOrders}
-        formatCurrency={formatCurrency}
-      />
+      <RecentOrdersTable orders={recentOrders} formatCurrency={formatPrice} />
     </div>
   );
 }

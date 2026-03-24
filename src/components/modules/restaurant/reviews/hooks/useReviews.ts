@@ -66,7 +66,7 @@ export const useReviews = () => {
     data,
     stats,
     reviews: data?.reviews || [],
-    filteredReviews: data?.reviews || [], // Backend handles filtering now
+    filteredReviews: data?.reviews || [],
     fetchAnalytics: loadReviews,
     isPending,
     filter,

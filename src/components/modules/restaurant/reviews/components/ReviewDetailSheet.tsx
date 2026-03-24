@@ -6,6 +6,7 @@ import { useServerAction } from "@/hooks/use-server-action";
 import { replyToReviewAction } from "@/app/actions/restaurant/reviews";
 import { toast } from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface ReviewDetailSheetProps {
   review: ReviewItem | null;
@@ -19,6 +20,7 @@ export default function ReviewDetailSheet({
   refetch,
 }: ReviewDetailSheetProps) {
   const t = useTranslations("RestaurantDashboard.Reviews.detail");
+  const { formatPrice } = useCLC();
   const [replyText, setReplyText] = useState("");
 
   const { execute: submitReply, isPending } = useServerAction(
@@ -48,8 +50,8 @@ export default function ReviewDetailSheet({
     ? `${review.customerMetrics.totalOrders} ${t("lifetimeOrders")}`
     : t("newCustomer");
   const avgSpendText = review?.customerMetrics
-    ? `$${review.customerMetrics.averageSpend.toFixed(2)}`
-    : "$0.00";
+    ? `${formatPrice(review.customerMetrics.averageSpend.toFixed(2))}`
+    : "0.00";
 
   const getInitials = (name: string) => {
     if (!name) return "U";
@@ -163,7 +165,9 @@ export default function ReviewDetailSheet({
 
             {/* Review Bubble Section */}
             <div className="flex flex-col gap-3 mb-8">
-              <h3 className="text-[13px] font-bold text-[#1b2d22]">{t("reviewLabel")}</h3>
+              <h3 className="text-[13px] font-bold text-[#1b2d22]">
+                {t("reviewLabel")}
+              </h3>
               <div className="border border-gray-100 rounded-xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)]">
                 <p className="text-[13px] text-[#4b5563] font-medium leading-relaxed">
                   "{review.comment}"

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 ChartJS.register(
   CategoryScale,
@@ -38,6 +39,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
 }) => {
   const t = useTranslations("RestaurantDashboard");
 
+  const { formatPrice, currency } = useCLC();
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -51,7 +53,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
         bodyFont: { size: 14, weight: "bold" as const },
         displayColors: false,
         callbacks: {
-          label: (context: any) => `Rs. ${context.parsed.y.toLocaleString()}`,
+          label: (context: any) => formatPrice(context.parsed.y),
         },
       },
     },
@@ -63,7 +65,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
           maxTicksLimit: 5,
           color: "#8ea89a",
           font: { size: 11, weight: 600 },
-          callback: (value: any) => "$" + value,
+          callback: (value: any) => `${currency}${value}`,
         },
         border: { display: false, dash: [4, 4] },
         grid: { color: "#f3f4f6", drawTicks: false },
@@ -110,7 +112,9 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
             <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center">
               <div className="w-5 h-5 border-2 border-gray-200 border-t-transparent rounded-full animate-spin" />
             </div>
-            <p className="text-sm text-muted-foreground">{t("revenueChart.gatheringData")}</p>
+            <p className="text-sm text-muted-foreground">
+              {t("revenueChart.gatheringData")}
+            </p>
           </div>
         )}
       </CardContent>

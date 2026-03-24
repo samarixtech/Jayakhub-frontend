@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { UIOrder as Order } from "../hooks/useOrders";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface OrdersTableProps {
   data: Order[];
@@ -26,6 +27,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
 }) => {
   const t = useTranslations("RestaurantDashboard.Orders.table");
 
+  const { formatPrice } = useCLC();
   const getStatusColor = (status: string) => {
     switch (status) {
       case "NEW":
@@ -69,7 +71,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
       header: t("total"),
       cell: (order) => (
         <span className="font-bold text-gray-900">
-          ${order.total.toFixed(2)}
+          {formatPrice(order.total) || "N/A"}
         </span>
       ),
     },

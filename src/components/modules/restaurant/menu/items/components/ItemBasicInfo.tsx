@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { LayoutList, Info } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
+import { useCLC } from "@/context/CLCContext";
 
 interface ItemBasicInfoProps {
   formData: any;
@@ -26,6 +27,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.Items.basicInfo");
 
+  const { currency } = useCLC();
   return (
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-8">
       {/* SECTION HEADER */}
@@ -88,7 +90,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
             </Label>
             <div className="relative group">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
-                $
+                {currency}
               </span>
               <Input
                 type="number"

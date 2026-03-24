@@ -15,8 +15,11 @@ import { useMenuItems } from "../hooks/useMenuItems";
 import { MenuItemsStats } from "../components/MenuItemsStats";
 import { MenuItemsFilters } from "../components/MenuItemsFilters";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
+import { useCLC } from "@/context/CLCContext";
 
 export default function MenuItemsView() {
+  const { formatPrice } = useCLC();
+
   const {
     selectedCategory,
     setSelectedCategory,
@@ -70,10 +73,10 @@ export default function MenuItemsView() {
             </div>
             <div>
               <Typography className="font-medium text-gray-900">
-                {item.name}
+                {item.name || "N/A"}
               </Typography>
               <Typography className="text-gray-400 text-xs line-clamp-1">
-                {item.description}
+                {item.description || "N/A"}
               </Typography>
             </div>
           </div>
@@ -89,7 +92,7 @@ export default function MenuItemsView() {
             variant="outline"
             className="font-semibold rounded-md border text-[10px] px-2 py-0.5 shadow-none uppercase bg-white border-gray-200 text-gray-700"
           >
-            {item.category}
+            {item.category || "N/A"}
           </Badge>
         </div>
       ),
@@ -99,7 +102,7 @@ export default function MenuItemsView() {
       accessorKey: "basePrice",
       cell: (item: any) => (
         <div className="text-left font-medium text-gray-700 font-mono">
-          ${item.basePrice}
+          {formatPrice(item.basePrice) || "N/A"}
         </div>
       ),
     },

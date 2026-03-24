@@ -1,12 +1,14 @@
 import React from "react";
+import { useCLC } from "@/context/CLCContext";
 
 const RevenueChart = ({ points, prevPoints }: { points: number[], prevPoints: number[] }) => {
+    const { currency } = useCLC();
     const maxY = 600;
     const w = 560;
     const h = 200;
 
     const labels = ["Jan 29", "Feb 1", "Feb 5", "Feb 9", "Feb 13", "Feb 17", "Feb 21"];
-    const yLabels = ["$1700", "$1200", "$700", "$475", "$238", "$0"];
+    const yLabels = [1700, 1200, 700, 475, 238, 0].map(val => `${currency}${val}`);
 
     return (
         <div className="relative">

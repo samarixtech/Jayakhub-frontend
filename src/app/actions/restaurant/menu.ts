@@ -1,6 +1,5 @@
 "use server";
 import { executeRestaurantAction } from "@/lib/utils/execute-restaurant-action";
-
 import { ActionResponse } from "@/lib/utils/response-handler";
 import { BulkImportItem } from "@/types";
 
@@ -153,19 +152,26 @@ export async function createItemAction(
   );
 }
 
-export async function getMenuItemsAction({ page = 1, limit = 10, search = "", category = "" }: { page?: number, limit?: number, search?: string, category?: string } = {}): Promise<ActionResponse> {
-  return executeRestaurantAction(
-    (api, restaurantId) => {
-      const queryParams = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-        ...(search && { search }),
-        ...(category && category !== "All Items" && { category }),
-      });
-      return api.get(`/item-menu?${queryParams.toString()}`);
-    },
-    "Menu fetched successfully",
-  );
+export async function getMenuItemsAction({
+  page = 1,
+  limit = 10,
+  search = "",
+  category = "",
+}: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+} = {}): Promise<ActionResponse> {
+  return executeRestaurantAction((api, restaurantId) => {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      ...(search && { search }),
+      ...(category && category !== "All Items" && { category }),
+    });
+    return api.get(`/item-menu?${queryParams.toString()}`);
+  }, "Menu fetched successfully");
 }
 
 export async function updateItemAction(
@@ -180,6 +186,7 @@ export async function updateItemAction(
     "/restaurant/menu/items",
   );
 }
+
 export async function getMenuItemByIdAction(
   id: string,
 ): Promise<ActionResponse> {
@@ -227,5 +234,3 @@ export async function updateMenuItemStatusAction(payload: {
     "/restaurant/menu/items",
   );
 }
-
-

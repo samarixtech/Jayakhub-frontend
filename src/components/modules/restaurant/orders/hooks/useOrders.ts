@@ -55,7 +55,14 @@ export interface UIOrder {
 import { usePagination } from "@/hooks/usePagination";
 
 export const useOrders = () => {
-  const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } = usePagination({ initialLimit: 10 });
+  const {
+    page,
+    limit,
+    totalPages,
+    totalCount,
+    handlePageChange,
+    updatePaginationMeta,
+  } = usePagination({ initialLimit: 10 });
   const [activeTab, setActiveTab] = useState<"live" | "past">("live");
   const [selectedOrder, setSelectedOrder] = useState<UIOrder | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -151,11 +158,13 @@ export const useOrders = () => {
 
         // Update selected order if it's the one that was updated
         if (selectedOrder && selectedOrder.id === orderId) {
-          // We need to wait for fetchOrders to finish or manually update it
-          // Re-fetching orders above updates the 'orders' state.
-          // The effect of setOrders will be seen in the next render.
-          // To be safe, we can find the updated order from the fresh data if we had it,
-          // or just close the sheet (which the original code did in handleUpdateClick in OrderDetailsSheet)
+          /*
+           * We need to wait for fetchOrders to finish or manually update it
+           * Re-fetching orders above updates the 'orders' state.
+           * The effect of setOrders will be seen in the next render.
+           * To be safe, we can find the updated order from the fresh data if we had it,
+           * or just close the sheet (which the original code did in handleUpdateClick in OrderDetailsSheet)
+           */
         }
 
         toast.success("Order status updated successfully");
@@ -173,7 +182,7 @@ export const useOrders = () => {
     setIsSheetOpen(true);
   };
 
-  // If backend implements status=live|past perfectly, 'orders' already filtered. 
+  // If backend implements status=live|past perfectly, 'orders' already filtered.
   // We still do a safety filter if the backend didn't filter it correctly.
   const filteredOrders = orders.filter((order) => {
     const s = order.originalStatus || order.status.toLowerCase();
@@ -192,7 +201,8 @@ export const useOrders = () => {
     }
   });
 
-  const liveOrdersCount = activeTab === "live" ? totalCount : stats.liveOrders || 0;
+  const liveOrdersCount =
+    activeTab === "live" ? totalCount : stats.liveOrders || 0;
   const pastOrdersCount = activeTab === "past" ? totalCount : 0; // Backend should ideally provide stats for this
   const paginatedOrders = filteredOrders; // Already paginated by backend (mostly)
 
