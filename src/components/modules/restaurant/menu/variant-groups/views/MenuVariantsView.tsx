@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,8 @@ export default function MenuVariantsView() {
     resetForm,
   } = useMenuVariants();
 
+  const t = useTranslations("RestaurantDashboard.Menu.VariantGroups.views");
+
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1000px] mx-auto p-4">
       <VariantsHeader
@@ -60,10 +63,10 @@ export default function MenuVariantsView() {
             <Plus className="size-5 text-emerald-bg mb-2" />
             <div className="flex flex-col items-center gap-1">
               <span className="text-gray-500 font-medium group-hover:text-[#1F4D36]">
-                Create New Variant Group
+                {t("createNew")}
               </span>
               <span className="text-xs text-gray-400 font-normal">
-                Add sizes, toppings, spice levels and more
+                {t("createNewDesc")}
               </span>
             </div>
           </Button>
@@ -120,7 +123,7 @@ export default function MenuVariantsView() {
         {!isLoadingVariants && variants.length === 0 && !isCreating && (
           <div className="text-center py-12 text-gray-400">
             <Typography className="text-sm">
-              No variant groups created yet.
+              {t("noGroups")}
             </Typography>
           </div>
         )}
@@ -129,8 +132,8 @@ export default function MenuVariantsView() {
       <DeleteConfirmationModal
         open={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
-        title="Delete Variant Group"
-        description={`Are you sure you want to delete "${deleteName}"? This action cannot be undone.`}
+        title={t("deleteTitle")}
+        description={t("deleteDesc", { name: deleteName })}
         onConfirm={confirmDelete}
         isDeleting={isDeletingVariant}
       />

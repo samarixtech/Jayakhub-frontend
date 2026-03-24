@@ -4,10 +4,16 @@ import { Calendar } from "lucide-react";
 import ReviewsStats from "../components/ReviewsStats";
 import ReviewsCharts from "../components/ReviewsCharts";
 import ReviewList from "../components/ReviewList";
+import ReviewDetailSheet from "../components/ReviewDetailSheet";
+import { ReviewItem } from "../../restaurant.types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslations } from "next-intl";
 import { useReviews } from "../hooks/useReviews";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 export default function ReviewsView() {
+  const t = useTranslations("RestaurantDashboard.Reviews");
   const {
     data,
     stats,
@@ -25,10 +31,13 @@ export default function ReviewsView() {
     <div className="w-full max-w-[1024px] mx-auto space-y-6 px-4 md:px-0">
       {/* Top Filter */}
       <div className="flex justify-end">
-        <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors">
-          <Calendar className="w-4 h-4 text-gray-500" />
-          Last 30 Days
-        </button>
+        <Button
+          variant="outline"
+          className="bg-white border-gray-200 text-gray-700 h-9"
+        >
+          <span className="text-xs font-bold">{t("header.last30Days")}</span>
+          <ChevronDown className="ml-2 w-4 h-4 text-gray-400" />
+        </Button>
       </div>
 
       {isPending || !data ? (

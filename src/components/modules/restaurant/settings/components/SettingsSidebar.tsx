@@ -11,48 +11,42 @@ import {
   Shield,
   FileCheck,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // ==================== TAB CONFIG ====================
 const tabs = [
   {
     id: "profile",
-    label: "Profile",
     icon: Store,
     href: "/restaurant/settings/profile",
   },
   {
     id: "location",
-    label: "Location",
     icon: MapPin,
     href: "/restaurant/settings/location",
   },
   {
     id: "hours",
-    label: "Hours",
     icon: Clock,
     href: "/restaurant/settings/hours",
   },
   {
     id: "finance",
-    label: "Finance",
     icon: DollarSign,
     href: "/restaurant/settings/finance",
   },
   {
     id: "notifications",
-    label: "Notifications",
     icon: Bell,
     href: "/restaurant/settings/notifications",
   },
   {
     id: "security",
-    label: "Security",
     icon: Shield,
     href: "/restaurant/settings/security",
   },
   {
     id: "documents",
-    label: "Documents & Verification",
     icon: FileCheck,
     href: "/restaurant/settings/documents",
   },
@@ -60,11 +54,12 @@ const tabs = [
 
 export function SettingsSidebar() {
   const pathname = usePathname();
+  const t = useTranslations("RestaurantDashboard.Settings.sidebar");
 
   return (
     <nav className="w-full md:w-60 shrink-0 bg-white rounded-xl shadow-sm border border-gray-100 p-4 h-fit sticky top-6 z-10">
       <h2 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 hidden md:block">
-        Settings Menu
+        {t("menuTitle")}
       </h2>
       <div className="flex flex-row md:flex-col gap-2 md:gap-1 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
         {tabs.map((tab) => {
@@ -87,7 +82,7 @@ export function SettingsSidebar() {
               <tab.icon
                 className={`w-4 h-4 ${isActive ? "text-primary" : "text-gray-400"}`}
               />
-              {tab.label}
+              {t(tab.id as any)}
             </Link>
           );
         })}

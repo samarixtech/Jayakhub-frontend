@@ -4,6 +4,7 @@ import { Star, Reply } from "lucide-react";
 import { ReviewItem } from "../../restaurant.types";
 import ReviewDetailSheet from "./ReviewDetailSheet";
 import ReviewFilterPills from "./ReviewFilterPills";
+import { useTranslations } from "next-intl";
 
 interface ReviewListProps {
   filteredReviews: ReviewItem[];
@@ -24,6 +25,7 @@ export default function ReviewList({
   onCloseDetail,
   refetch,
 }: ReviewListProps) {
+  const t = useTranslations("RestaurantDashboard.Reviews.list");
   return (
     <div className="flex flex-col gap-4 mt-8">
       {/* Filter Pills */}
@@ -33,7 +35,7 @@ export default function ReviewList({
       <div className="flex flex-col gap-4">
         {filteredReviews.length === 0 && (
           <div className="text-center py-8 text-gray-500 text-sm font-medium">
-            No reviews found.
+            {t("noReviews")}
           </div>
         )}
         {filteredReviews.map((review) => {
@@ -68,7 +70,7 @@ export default function ReviewList({
                       {review.userName}
                     </span>
                     <span className="text-[11px] font-medium text-[#8ea89a]">
-                      {displayDate} • Order {review.orderId}
+                      {displayDate} • {t("order")} {review.orderId}
                     </span>
                   </div>
                 </div>
@@ -95,7 +97,7 @@ export default function ReviewList({
                     }}
                   >
                     <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
-                    Reply
+                    {t("reply")}
                   </button>
                 </div>
               )}
@@ -106,10 +108,10 @@ export default function ReviewList({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5 text-[#357252] text-[12px] font-bold">
                       <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
-                      Restaurant Reply
+                      {t("restaurantReply")}
                     </div>
                     <span className="text-[11px] font-medium text-[#8ea89a]">
-                      Recently
+                      {t("recently")}
                     </span>
                   </div>
                   <p className="text-[13px] text-[#8ea89a] leading-relaxed">

@@ -5,6 +5,7 @@ import { ReviewItem } from "../../restaurant.types";
 import { useServerAction } from "@/hooks/use-server-action";
 import { replyToReviewAction } from "@/app/actions/restaurant/reviews";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface ReviewDetailSheetProps {
   review: ReviewItem | null;
@@ -17,13 +18,14 @@ export default function ReviewDetailSheet({
   onClose,
   refetch,
 }: ReviewDetailSheetProps) {
+  const t = useTranslations("RestaurantDashboard.Reviews.detail");
   const [replyText, setReplyText] = useState("");
 
   const { execute: submitReply, isPending } = useServerAction(
     replyToReviewAction,
     {
       onSuccess: () => {
-        toast.success("Reply submitted successfully!");
+        toast.success(t("success"));
         setReplyText("");
         refetch();
         onClose();
@@ -34,7 +36,7 @@ export default function ReviewDetailSheet({
   const handleSendReply = async () => {
     if (!review?.id) return;
     if (!replyText.trim()) {
-      toast.error("Reply text cannot be empty.");
+      toast.error(t("errorEmpty"));
       return;
     }
     await submitReply({ reviewId: review.id, replyText: replyText });
@@ -43,8 +45,8 @@ export default function ReviewDetailSheet({
   // Derived flags & data processing
   const isReplied = review?.reply !== null;
   const historyText = review?.customerMetrics
-    ? `${review.customerMetrics.totalOrders} lifetime orders`
-    : "New Customer";
+    ? `${review.customerMetrics.totalOrders} ${t("lifetimeOrders")}`
+    : t("newCustomer");
   const avgSpendText = review?.customerMetrics
     ? `$${review.customerMetrics.averageSpend.toFixed(2)}`
     : "$0.00";
@@ -84,11 +86,11 @@ export default function ReviewDetailSheet({
         <div className="sticky top-0 bg-white z-10 px-6 py-5 flex items-start justify-between border-b border-gray-100 shrink-0">
           <div className="flex flex-col gap-1">
             <SheetTitle className="text-[18px] font-bold text-[#1b2d22] border-none m-0 leading-none">
-              Review Detail
+              {t("title")}
             </SheetTitle>
             <span className="text-[12px] font-medium text-[#657a8a] mt-0.5">
               {review?.orderId
-                ? `Order ${review.orderId} • ${displayDate}`
+                ? `${t("order")} ${review.orderId} • ${displayDate}`
                 : ""}
             </span>
           </div>
@@ -143,7 +145,7 @@ export default function ReviewDetailSheet({
             <div className="flex items-center gap-12 mb-8">
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold text-[#8ea89a] uppercase tracking-wider">
-                  History
+                  {t("history")}
                 </span>
                 <span className="text-[13px] font-bold text-[#1b2d22]">
                   {historyText}
@@ -151,7 +153,7 @@ export default function ReviewDetailSheet({
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-bold text-[#8ea89a] uppercase tracking-wider">
-                  Avg Spend
+                  {t("avgSpend")}
                 </span>
                 <span className="text-[13px] font-bold text-[#1b2d22]">
                   {avgSpendText}
@@ -161,7 +163,7 @@ export default function ReviewDetailSheet({
 
             {/* Review Bubble Section */}
             <div className="flex flex-col gap-3 mb-8">
-              <h3 className="text-[13px] font-bold text-[#1b2d22]">Review</h3>
+              <h3 className="text-[13px] font-bold text-[#1b2d22]">{t("reviewLabel")}</h3>
               <div className="border border-gray-100 rounded-xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)]">
                 <p className="text-[13px] text-[#4b5563] font-medium leading-relaxed">
                   "{review.comment}"
@@ -173,25 +175,25 @@ export default function ReviewDetailSheet({
             {isReplied && review.reply ? (
               <div className="flex flex-col gap-3">
                 <h3 className="text-[13px] font-bold text-[#1b2d22]">
-                  Your Reply
+                  {t("yourReply")}
                 </h3>
                 <div className="border border-gray-100 rounded-xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)] flex flex-col gap-4">
                   <p className="text-[13px] text-[#657a8a] leading-relaxed">
                     {review.reply}
                   </p>
                   <span className="text-[11px] font-medium text-[#8ea89a]">
-                    Sent Recently
+                    {t("sentRecently")}
                   </span>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col gap-3">
                 <h3 className="text-[13px] font-bold text-[#1b2d22]">
-                  Write a Reply
+                  {t("writeReply")}
                 </h3>
                 <textarea
                   className="w-full border border-gray-300 rounded-xl p-4 text-[13px] font-medium text-[#1b2d22] placeholder:text-[#8ea89a] placeholder:font-normal outline-none focus:ring-2 focus:ring-[#357252]/20 focus:border-[#357252]/50 resize-none min-h-[100px]"
-                  placeholder="Type your public response here..."
+                  placeholder={t("placeholder")}
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
                   disabled={isPending}
@@ -202,7 +204,7 @@ export default function ReviewDetailSheet({
                     onClick={handleSendReply}
                     disabled={isPending}
                   >
-                    {isPending ? "Sending..." : "Send Reply"}
+                    {isPending ? t("sending") : t("sendReply")}
                   </button>
                 </div>
               </div>

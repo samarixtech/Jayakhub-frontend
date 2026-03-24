@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Eye, EyeOff } from "lucide-react";
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/card";
 
 export default function SecurityView() {
+  const t = useTranslations("RestaurantDashboard.Settings.security");
   const { loading, isGoogleOnly, email } = useSecuritySettings();
 
   if (loading) {
@@ -27,11 +29,11 @@ export default function SecurityView() {
   return (
     <Card className="py-6">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Security</CardTitle>
+        <CardTitle className="text-lg font-bold">{t("title")}</CardTitle>
         <CardDescription className="text-gray-500">
           {isGoogleOnly
-            ? `You are logged in via Google (${email}). You can set a password for this account.`
-            : "Update your password securely."}
+            ? t("googleUserMsg", { email })
+            : t("standardUserMsg")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -42,6 +44,7 @@ export default function SecurityView() {
 }
 
 function SetPasswordForm() {
+  const t = useTranslations("RestaurantDashboard.Settings.security");
   const {
     submitting,
     showPassword,
@@ -61,12 +64,12 @@ function SetPasswordForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <Label className="text-sm font-medium text-gray-700 mb-2 block">
-            New Password <span className="text-red-500">*</span>
+            {t("newPassword")} <span className="text-red-500">*</span>
           </Label>
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
-              placeholder="New Password"
+              placeholder={t("newPassword")}
               className="h-11 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary pr-10 text-base"
               {...register("newPassword")}
             />
@@ -87,12 +90,12 @@ function SetPasswordForm() {
         </div>
         <div>
           <Label className="text-sm font-medium text-gray-700 mb-2 block">
-            Confirm Password <span className="text-red-500">*</span>
+            {t("confirmPassword")} <span className="text-red-500">*</span>
           </Label>
           <div className="relative">
             <Input
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm New Password"
+              placeholder={t("confirmPlaceholder")}
               className="h-11 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary pr-10 text-base"
               {...register("confirmPassword")}
             />
@@ -120,7 +123,7 @@ function SetPasswordForm() {
           className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed h-12 px-8 text-base font-semibold"
         >
           {submitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-          Set Password
+          {t("setBtn")}
         </Button>
       </div>
     </form>
@@ -128,6 +131,7 @@ function SetPasswordForm() {
 }
 
 function ChangePasswordForm() {
+  const t = useTranslations("RestaurantDashboard.Settings.security");
   const {
     submitting,
     showOldPassword,
@@ -148,7 +152,7 @@ function ChangePasswordForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
       <div>
         <Label className="text-sm font-medium text-gray-700 mb-2 block">
-          Current Password <span className="text-red-500">*</span>
+          {t("currentPassword")} <span className="text-red-500">*</span>
         </Label>
         <div className="relative">
           <Input
@@ -176,12 +180,12 @@ function ChangePasswordForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <Label className="text-sm font-medium text-gray-700 mb-2 block">
-            New Password <span className="text-red-500">*</span>
+            {t("newPassword")} <span className="text-red-500">*</span>
           </Label>
           <div className="relative">
             <Input
               type={showNewPassword ? "text" : "password"}
-              placeholder="New Password"
+              placeholder={t("newPassword")}
               className="h-14 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary pr-10 text-base"
               {...register("newPassword")}
             />
@@ -202,12 +206,12 @@ function ChangePasswordForm() {
         </div>
         <div>
           <Label className="text-sm font-medium text-gray-700 mb-2 block">
-            Confirm Password <span className="text-red-500">*</span>
+            {t("confirmPassword")} <span className="text-red-500">*</span>
           </Label>
           <div className="relative">
             <Input
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirm New Password"
+              placeholder={t("confirmPlaceholder")}
               className="h-14 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary pr-10 text-base"
               {...register("confirmPassword")}
             />
@@ -235,7 +239,7 @@ function ChangePasswordForm() {
           className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed h-12 px-8 text-base font-semibold"
         >
           {submitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-          Update Password
+          {t("updateBtn")}
         </Button>
       </div>
     </form>

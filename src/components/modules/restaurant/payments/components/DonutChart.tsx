@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 
 const DonutChart = ({ pcts, colors, totalValue }: { pcts: number[], colors: string[], totalValue: string }) => {
+    const t = useTranslations("RestaurantDashboard.Payments.paymentMethods");
     const radius = 70;
     const cx = 90;
     const cy = 90;
@@ -23,7 +25,7 @@ const DonutChart = ({ pcts, colors, totalValue }: { pcts: number[], colors: stri
                 return seg;
             })}
             <text x={cx} y={cy - 6} textAnchor="middle" fill="#1a1a1a" fontSize="18" fontWeight="900">{totalValue}</text>
-            <text x={cx} y={cy + 10} textAnchor="middle" fill="#a0a0a0" fontSize="9" fontWeight="600">Total</text>
+            <text x={cx} y={cy + 10} textAnchor="middle" fill="#a0a0a0" fontSize="9" fontWeight="600">{t("total")}</text>
         </svg>
     );
 };

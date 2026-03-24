@@ -32,6 +32,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
   onPriceToggle,
   showAllCuisines,
   onToggleCuisines,
+  onResetFilters,
   cuisineTypes,
   className = "",
 }) => {
@@ -44,9 +45,17 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
     <div className={`space-y-7 ${className}`}>
       {/* Sort By */}
       <div>
-        <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
-          Sort By
-        </h4>
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+            Sort By
+          </h4>
+          <button
+            onClick={onResetFilters}
+            className="text-[11px] font-bold text-gray-400 hover:underline uppercase tracking-wider"
+          >
+            Reset Filters
+          </button>
+        </div>
         <div className="space-y-3">
           {SORT_OPTIONS.map((opt) => (
             <label

@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface ItemVariantGroupsSelectionProps {
   variantGroups: any[];
@@ -21,6 +22,7 @@ interface ItemVariantGroupsSelectionProps {
 export const ItemVariantGroupsSelection: React.FC<
   ItemVariantGroupsSelectionProps
 > = ({ variantGroups, selectedGroups, onToggle }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.variantGroups");
   const [groupToAdd, setGroupToAdd] = useState<string>("");
 
   const handleAddGroup = () => {
@@ -38,7 +40,7 @@ export const ItemVariantGroupsSelection: React.FC<
           <Layers className="w-5 h-5" />
         </div>
         <Typography className="font-semibold text-gray-900">
-          Variant Groups
+          {t("sectionTitle")}
         </Typography>
       </div>
 
@@ -46,7 +48,7 @@ export const ItemVariantGroupsSelection: React.FC<
         <div className="flex items-center gap-1.5 opacity-60">
           <Info className="w-3.5 h-3.5 text-gray-400" />
           <Typography className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
-            Add variant groups to this item (e.g., Sizes, Spices).
+            {t("helpText")}
           </Typography>
         </div>
 
@@ -54,7 +56,7 @@ export const ItemVariantGroupsSelection: React.FC<
           <div className="flex-1">
             <Select value={groupToAdd} onValueChange={setGroupToAdd}>
               <SelectTrigger className="h-12 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-medium">
-                <SelectValue placeholder="Select a variant group..." />
+                <SelectValue placeholder={t("selectPlaceholder")} />
               </SelectTrigger>
               <SelectContent className="rounded-2xl bg-gray-50 border-gray-100 shadow-xl p-1">
                 {variantGroups.map((group) => (
@@ -76,7 +78,7 @@ export const ItemVariantGroupsSelection: React.FC<
             disabled={!groupToAdd}
             className="bg-[#2D5A43] hover:bg-[#234735] text-white h-12 px-6 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50"
           >
-            Add Group
+            {t("addBtn")}
           </Button>
         </div>
 
@@ -119,7 +121,7 @@ export const ItemVariantGroupsSelection: React.FC<
           ) : (
             <div className="text-center py-12 bg-gray-50/50 rounded-[24px] border border-dashed border-gray-100">
               <Typography className="text-sm font-bold text-gray-400">
-                No variant groups added yet
+                {t("noGroups")}
               </Typography>
             </div>
           )}

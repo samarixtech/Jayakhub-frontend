@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react";
 import type { Ticket } from "../support.types";
 import { StatusBadge } from "./StatusBadge";
+import { useTranslations } from "next-intl";
 
 interface TicketsTableProps {
   tickets: Ticket[];
@@ -16,14 +17,14 @@ const priorityColor: Record<string, string> = {
   LOW: "text-gray-500",
 };
 
-function formatTimeAgo(dateStr: string): string {
+function formatTimeAgo(dateStr: string, t: any): string {
   const diff = Date.now() - new Date(dateStr).getTime();
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return t("timeAgo.minutes", { count: minutes });
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return t("timeAgo.hours", { count: hours });
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return t("timeAgo.days", { count: days });
 }
 
 export const TicketsTable = ({
@@ -31,15 +32,16 @@ export const TicketsTable = ({
   isLoading,
   onTicketClick,
 }: TicketsTableProps) => {
+  const t = useTranslations("RestaurantDashboard.Support.ticketsTable");
   return (
     <div className="lg:col-span-3 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
       <div className="flex justify-between items-center mb-5">
         <div>
           <h3 className="text-[15px] font-bold text-[#1a1a1a]">
-            Support Tickets
+            {t("title")}
           </h3>
           <p className="text-[12px] text-gray-400 mt-0.5">
-            Your recent inquiries
+            {t("subtitle")}
           </p>
         </div>
       </div>
@@ -49,19 +51,19 @@ export const TicketsTable = ({
           <div className="min-w-[500px]">
             <div className="grid grid-cols-[72px_1fr_100px_64px_80px] gap-2 items-center px-1 mb-2">
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Ticket
+                {t("colTicket")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Subject
+                {t("colSubject")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Status
+                {t("colStatus")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Priority
+                {t("colPriority")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-right">
-                Updated
+                {t("colUpdated")}
               </span>
             </div>
             <div className="h-px bg-gray-100 mb-1" />
@@ -81,50 +83,50 @@ export const TicketsTable = ({
         </div>
       ) : tickets.length === 0 ? (
         <div className="py-8 text-center text-[13px] text-gray-400">
-          No tickets found. Create one to get started.
+          {t("noTickets")}
         </div>
       ) : (
         <div className="overflow-x-auto">
           <div className="min-w-[500px]">
             <div className="grid grid-cols-[72px_1fr_100px_64px_80px] gap-2 items-center px-1 mb-2">
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Ticket
+                {t("colTicket")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Subject
+                {t("colSubject")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Status
+                {t("colStatus")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Priority
+                {t("colPriority")}
               </span>
               <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-right">
-                Updated
+                {t("colUpdated")}
               </span>
             </div>
             <div className="h-px bg-gray-100 mb-1" />
 
-            {tickets.map((t) => (
+            {tickets.map((ticket) => (
               <div
-                key={t.id}
+                key={ticket.id}
                 className="grid grid-cols-[72px_1fr_100px_64px_80px] gap-2 items-center px-1 py-4 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() => onTicketClick(t)}
+                onClick={() => onTicketClick(ticket)}
               >
                 <span className="text-[12px] font-bold text-[#346853]">
-                  {t.id.length > 10 ? t.id.slice(0, 10) + "…" : t.id}
+                  {ticket.id.length > 10 ? ticket.id.slice(0, 10) + "…" : ticket.id}
                 </span>
                 <span className="text-[12px] text-gray-600 truncate font-medium">
-                  {t.subject}
+                  {ticket.subject}
                 </span>
-                <StatusBadge status={t.status} />
+                <StatusBadge status={ticket.status} />
                 <span
-                  className={`text-[12px] font-semibold capitalize ${priorityColor[t.priority] || "text-gray-500"}`}
+                  className={`text-[12px] font-semibold capitalize ${priorityColor[ticket.priority] || "text-gray-500"}`}
                 >
-                  {t.priority.charAt(0) + t.priority.slice(1).toLowerCase()}
+                  {ticket.priority.charAt(0) + ticket.priority.slice(1).toLowerCase()}
                 </span>
                 <span className="text-[11px] text-gray-400 text-right">
-                  {formatTimeAgo(t.updatedAt)}
+                  {formatTimeAgo(ticket.updatedAt, t)}
                 </span>
               </div>
             ))}

@@ -6,6 +6,7 @@ import {
   InfoIcon,
   UploadCloud,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { SettingsData } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,7 @@ export default function DocumentsView({
 }: {
   settings: SettingsData | null;
 }) {
+  const t = useTranslations("RestaurantDashboard.Settings.documents");
   const {
     kyc,
     isPending,
@@ -64,9 +66,9 @@ export default function DocumentsView({
   return (
     <Card className="py-6">
       <CardHeader>
-        <CardTitle>Documents & Verification</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
         <CardDescription>
-          View and manage your business verification documents.
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -74,7 +76,7 @@ export default function DocumentsView({
           <Alert className="bg-blue-50 border-blue-200">
             <InfoIcon className="h-4 w-4 text-blue-600" />
             <AlertTitle className="text-blue-800 font-semibold">
-              Verification Pending
+              {t("updatePendingTitle")}
             </AlertTitle>
             <AlertDescription className="text-blue-700">
               YOUR CHANGES ARE SUBMITTED, WE ARE REVIEWING IT AND WILL APPROVE
@@ -88,12 +90,12 @@ export default function DocumentsView({
           className={`p-5 border border-dashed border-border rounded-xl bg-muted/30 ${isPending ? "opacity-60 pointer-events-none" : ""}`}
         >
           <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
-            <UploadCloud className="w-4 h-4" /> Upload New Document
+            <UploadCloud className="w-4 h-4" /> {t("uploadTitle")}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">
-                Document Type
+                {t("docType")}
               </Label>
               <Select
                 disabled={isPending}
@@ -101,21 +103,21 @@ export default function DocumentsView({
                 onValueChange={setDocType}
               >
                 <SelectTrigger className="bg-background">
-                  <SelectValue placeholder="Select type" />
+                  <SelectValue placeholder={t("selectType")} />
                 </SelectTrigger>
                 <SelectContent className="bg-background">
-                  <SelectItem value="government_id">Government ID</SelectItem>
+                  <SelectItem value="government_id">{t("typeGovId")}</SelectItem>
                   <SelectItem value="driving_license">
-                    Driving License
+                    {t("typeLicense")}
                   </SelectItem>
-                  <SelectItem value="passport">Passport</SelectItem>
-                  <SelectItem value="food_license">Food License</SelectItem>
+                  <SelectItem value="passport">{t("typePassport")}</SelectItem>
+                  <SelectItem value="food_license">{t("typeFoodLicense")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label className="text-xs font-medium text-muted-foreground">
-                Select File
+                {t("selectFile")}
               </Label>
               <Input
                 type="file"
@@ -131,20 +133,20 @@ export default function DocumentsView({
               onClick={handleUpload}
               disabled={loading || isPending || !file}
             >
-              {loading ? "Uploading..." : "Upload Document"}
+              {loading ? t("uploading") : t("uploadBtn")}
             </Button>
           </div>
         </div>
 
         <div className="space-y-4">
           <h3 className="text-sm font-semibold text-foreground">
-            Documents on File
+            {t("docsOnFile")}
           </h3>
 
           {kyc.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <FileCheck className="w-10 h-10 mx-auto mb-3 opacity-50" />
-              <p className="text-sm">No documents uploaded yet.</p>
+              <p className="text-sm">{t("noDocs")}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -152,7 +154,7 @@ export default function DocumentsView({
                 const DocIcon = getDocIcon(doc.documentType);
                 const statusBadge = getStatusBadge(doc.status);
                 const verifiedDate = doc.updatedAt
-                  ? `Verified on ${formatDate(doc.updatedAt)}`
+                  ? t("verifiedOn", { date: formatDate(doc.updatedAt) })
                   : "";
 
                 return (

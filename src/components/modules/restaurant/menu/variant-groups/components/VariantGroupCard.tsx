@@ -3,6 +3,7 @@ import { Sliders, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface VariantGroupCardProps {
   group: any;
@@ -17,6 +18,8 @@ export const VariantGroupCard: React.FC<VariantGroupCardProps> = ({
   onDelete,
   isDeleting,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.VariantGroups.card");
+
   return (
     <Card className="p-0 border-none shadow-sm overflow-hidden animate-in slide-in-from-bottom-2 duration-300">
       <div className="p-4 flex items-center justify-between border-b border-gray-50 bg-white">
@@ -32,7 +35,7 @@ export const VariantGroupCard: React.FC<VariantGroupCardProps> = ({
               {group.name}
             </Typography>
             <Typography className="text-xs text-gray-400 font-medium">
-              {group.options.length} options
+              {t("optionsCount", { count: group.options.length })}
             </Typography>
           </div>
         </div>

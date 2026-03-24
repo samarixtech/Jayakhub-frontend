@@ -1,7 +1,7 @@
-export const filterOptions = [
-  { value: "1", label: "Last 1 Month" },
-  { value: "3", label: "Last 3 Months" },
-  { value: "6", label: "Last 6 Months" },
-  { value: "12", label: "Last 12 Months" },
-  { value: "all", label: "All Time" },
+export const getFilterOptions = (t: any) => [
+  { value: "1", label: t("filter1Month") },
+  { value: "3", label: t("filter3Months") },
+  { value: "6", label: t("filter6Months") },
+  { value: "12", label: t("filter12Months") },
+  { value: "all", label: t("filterAllTime") },
 ];

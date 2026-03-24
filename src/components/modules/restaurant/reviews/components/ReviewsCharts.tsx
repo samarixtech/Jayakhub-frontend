@@ -21,8 +21,10 @@ ChartJS.register(
   ArcElement,
   Tooltip,
   Legend,
+  Legend,
   Filler,
 );
+import { useTranslations } from "next-intl";
 
 interface ReviewsChartsProps {
   summary?: {
@@ -33,6 +35,7 @@ interface ReviewsChartsProps {
 }
 
 export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
+  const t = useTranslations("RestaurantDashboard.Reviews.charts");
   const safeSummary = summary || {
     trend: [],
     distribution: { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 },
@@ -62,7 +65,7 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
     datasets: [
       {
         fill: true,
-        label: "Average Rating",
+        label: t("trend.label"),
         data: trendValues,
         borderColor: "#f5a623",
         backgroundColor: (context: any) => {
@@ -141,14 +144,26 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
   const maxIndex = distPercentages.indexOf(maxPercent);
   const centerSubText =
     totalDist === 0
-      ? "No Reviews"
-      : ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Stars"][maxIndex];
+      ? t("distribution.noReviews")
+      : [
+          t("distribution.stars5"),
+          t("distribution.stars4"),
+          t("distribution.stars3"),
+          t("distribution.stars2"),
+          t("distribution.stars1"),
+        ][maxIndex];
 
   // Dummy array if 0 so doughnut still renders a grey ring
   const hasData = totalDist > 0;
 
   const distData = {
-    labels: ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Stars"],
+    labels: [
+      t("distribution.stars5"),
+      t("distribution.stars4"),
+      t("distribution.stars3"),
+      t("distribution.stars2"),
+      t("distribution.stars1"),
+    ],
     datasets: [
       {
         data: hasData ? distPercentages : [100],
@@ -181,16 +196,22 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
   };
 
   const colors = ["#f5a623", "#5584ff", "#9c59f6", "#f97316", "#ef4444"];
-  const labels = ["5 Stars", "4 Stars", "3 Stars", "2 Stars", "1 Stars"];
+  const labels = [
+    t("distribution.stars5"),
+    t("distribution.stars4"),
+    t("distribution.stars3"),
+    t("distribution.stars2"),
+    t("distribution.stars1"),
+  ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* Rating Trend (Line Chart) */}
       <div className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm col-span-2 flex flex-col min-h-[340px]">
         <div className="mb-4">
-          <h2 className="text-[16px] font-bold text-[#1b2d22]">Rating Trend</h2>
+          <h2 className="text-[16px] font-bold text-[#1b2d22]">{t("trend.title")}</h2>
           <p className="text-[12px] text-[#8ea89a] font-medium mt-0.5">
-            Average ratings over selected period
+            {t("trend.subtitle")}
           </p>
         </div>
         <div className="flex-1 w-full relative">
@@ -202,10 +223,10 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
       <div className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm col-span-1 flex flex-col h-full min-h-[340px]">
         <div className="mb-2">
           <h2 className="text-[16px] font-bold text-[#1b2d22]">
-            Rating Distribution
+            {t("distribution.title")}
           </h2>
           <p className="text-[12px] text-[#8ea89a] font-medium mt-0.5">
-            Breakdown by stars
+            {t("distribution.subtitle")}
           </p>
         </div>
 

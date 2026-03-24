@@ -1,4 +1,5 @@
 import { ShoppingBag, Star, CheckCircle, Banknote } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   Card,
   CardContent,
@@ -41,14 +42,16 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
   activities,
   getTimeAgo,
 }) => {
+  const t = useTranslations("RestaurantDashboard");
+
   return (
     <Card className="rounded-[16px] border-gray-100 shadow-sm flex flex-col h-[360px] pt-4">
       <CardHeader className="pb-4">
         <CardTitle className="text-[16px] font-bold text-[#1b2d22]">
-          Recent Activity
+          {t("recentActivity.title")}
         </CardTitle>
         <CardDescription className="text-[12px] text-[#8ea89a] font-medium mt-0.5">
-          Everything happening now
+          {t("recentActivity.subtitle")}
         </CardDescription>
       </CardHeader>
 
@@ -90,7 +93,7 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
               })
             ) : (
               <div className="py-12 text-center text-sm text-muted-foreground italic">
-                No recent activity to show
+                {t("recentActivity.noActivity")}
               </div>
             )}
           </div>

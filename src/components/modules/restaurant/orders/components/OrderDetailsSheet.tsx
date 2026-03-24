@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { X, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations } from "next-intl";
 
 import { UIOrder as Order } from "../hooks/useOrders";
 
@@ -25,6 +26,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
   onClose,
   onStatusUpdate,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Orders.details");
   const [updatingAction, setUpdatingAction] = useState<string | null>(null);
 
   if (!order) return null;
@@ -58,7 +60,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
             {updatingAction === "rejected" ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : null}
-            Reject
+            {t("rejectBtn")}
           </Button>
           <Button
             onClick={() => handleUpdateClick("accepted")}
@@ -68,7 +70,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
             {updatingAction === "accepted" ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : null}
-            Accept Order
+            {t("acceptBtn")}
           </Button>
         </div>
       );
@@ -85,7 +87,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           {updatingAction === "prepare" ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
           ) : null}
-          Start Preparing
+          {t("startPrepareBtn")}
         </Button>
       );
     }
@@ -101,7 +103,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           {updatingAction === "ready" ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
           ) : null}
-          Mark as Ready
+          {t("markReadyBtn")}
         </Button>
       );
     }
@@ -120,7 +122,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           <div className="flex items-center justify-between">
             <div>
               <SheetTitle className="text-lg font-bold text-gray-900">
-                Order {order.id}
+                {t("orderTitle", { id: order.id })}
               </SheetTitle>
               <p className="text-xs text-gray-500 font-medium">{order.date}</p>
             </div>
@@ -140,7 +142,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           {/* Status */}
           <div>
             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-              Status
+              {t("status")}
             </h4>
             <span className="text-sm font-bold text-gray-900 bg-gray-100 px-3 py-1 rounded-full">
               {order.status}
@@ -150,7 +152,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           {/* Customer */}
           <div>
             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-              Customer
+              {t("customer")}
             </h4>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-sm">
@@ -170,7 +172,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           {/* Items */}
           <div>
             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-              Items
+              {t("items")}
             </h4>
             <div className="space-y-4">
               {order.items.map((item) => (
@@ -194,23 +196,23 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           {/* Payment Summary */}
           <div>
             <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-              Payment Summary
+              {t("paymentSummary")}
             </h4>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Subtotal</span>
+                <span className="text-gray-500">{t("subtotal")}</span>
                 <span className="text-gray-900 font-medium">
                   ${order.subtotal.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Tax</span>
+                <span className="text-gray-500">{t("tax")}</span>
                 <span className="text-gray-900 font-medium">
                   ${order.tax.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between text-base font-bold mt-2 pt-2 border-t border-gray-100">
-                <span className="text-gray-900">Total</span>
+                <span className="text-gray-900">{t("total")}</span>
                 <span className="text-emerald-600">
                   ${order.total.toFixed(2)}
                 </span>

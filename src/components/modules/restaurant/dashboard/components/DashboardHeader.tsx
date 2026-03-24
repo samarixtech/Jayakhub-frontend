@@ -2,6 +2,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 interface DashboardHeaderProps {
   isOnline: boolean;
@@ -16,25 +17,27 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   isToggling = false,
   ownerName,
 }) => {
+  const t = useTranslations("RestaurantDashboard");
+
   // DYNAMIC GREETING BASED ON TIME
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 17) return "Good afternoon";
-    if (hour < 21) return "Good evening";
-    return "Good night";
-  }, []);
+    if (hour < 12) return t("greeting.morning");
+    if (hour < 17) return t("greeting.afternoon");
+    if (hour < 21) return t("greeting.evening");
+    return t("greeting.night");
+  }, [t]);
 
   return (
     <Card className="border-none bg-emerald-bg overflow-hidden rounded-2xl shadow-md">
       <CardContent className="flex items-center justify-between px-6 py-5">
         <div className="space-y-1">
           <h1 className="text-white text-xl font-bold flex items-center gap-2">
-            {greeting}, {ownerName || "JOHN DOE"}{" "}
+            {greeting}, {ownerName || t("greeting.fallbackName")}{" "}
             <span className="animate-bounce-short">👋</span>
           </h1>
           <p className="text-emerald-100/80 text-sm font-medium">
-            Your restaurant is ready to receive orders
+            {t("greeting.subtitle")}
           </p>
         </div>
 
@@ -43,7 +46,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             htmlFor="online-status"
             className="text-white text-sm font-semibold cursor-pointer"
           >
-            {isOnline ? "Online" : "Offline"}
+            {isOnline ? t("status.online") : t("status.offline")}
           </Label>
           <Switch
             id="online-status"

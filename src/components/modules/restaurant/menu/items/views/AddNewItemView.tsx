@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useAddNewItem } from "../hooks/useAddNewItem";
 import { ItemBasicInfo } from "../components/ItemBasicInfo";
 import { ItemImageUpload } from "../components/ItemImageUpload";
@@ -25,11 +26,13 @@ export default function AddNewItemView() {
     router,
   } = useAddNewItem();
 
+  const t = useTranslations("RestaurantDashboard.Menu.Items.views");
+
   if (isFetchingItem) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Typography className="font-bold text-gray-400">
-          Loading item details...
+          {t("loadingDetails")}
         </Typography>
       </div>
     );
@@ -74,7 +77,7 @@ export default function AddNewItemView() {
               onClick={() => router.push("/restaurant/menu/items")}
               className="bg-gray-100/50 hover:bg-gray-100 text-gray-600 font-bold h-14 px-8 rounded-2xl transition-all"
             >
-              Discard Changes
+              {t("discardBtn")}
             </Button>
             <Button
               type="submit"
@@ -82,11 +85,11 @@ export default function AddNewItemView() {
               className="bg-[#2D5A43] hover:bg-[#234735] text-white font-black h-14 px-12 rounded-2xl shadow-xl shadow-emerald-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2"
             >
               {isSaving ? (
-                "Processing..."
+                t("processing")
               ) : (
                 <>
                   <Plus className="w-5 h-5" />
-                  {isEditMode ? "Save Changes" : "Save Item"}
+                  {isEditMode ? t("saveChangesBtn") : t("saveBtn")}
                 </>
               )}
             </Button>

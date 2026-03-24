@@ -14,8 +14,10 @@ import { Button } from "@/components/ui/button";
 import { useUsersList } from "../hooks/useUsersList";
 import { UsersFilters } from "../components/UsersFilters";
 import { UsersTable } from "../components/UsersTable";
+import { useTranslations } from "next-intl";
 
 export default function UsersListView() {
+  const t = useTranslations("RestaurantDashboard.Users.list");
   const {
     users,
     filteredUsers,
@@ -47,8 +49,11 @@ export default function UsersListView() {
 
       <div className="px-2">
         <Typography className="text-sm text-gray-500">
-          Showing {filteredUsers.length > 0 ? 1 : 0}-{filteredUsers.length} of{" "}
-          {users.length}
+          {t("showing", {
+            start: filteredUsers.length > 0 ? 1 : 0,
+            end: filteredUsers.length,
+            total: users.length,
+          })}
         </Typography>
       </div>
 
@@ -58,10 +63,9 @@ export default function UsersListView() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete User</DialogTitle>
+            <DialogTitle>{t("deleteTitle")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this user? This action cannot be
-              undone.
+              {t("deleteDesc")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -70,7 +74,7 @@ export default function UsersListView() {
               onClick={() => setDeleteId(null)}
               disabled={isDeleting}
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -78,7 +82,7 @@ export default function UsersListView() {
               disabled={isDeleting}
               className="bg-red-600 hover:bg-red-700"
             >
-              {isDeleting ? "Deleting..." : "Delete"}
+              {isDeleting ? t("deleting") : t("delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

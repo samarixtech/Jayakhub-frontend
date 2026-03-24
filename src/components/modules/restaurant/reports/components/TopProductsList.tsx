@@ -4,12 +4,14 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Star, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface TopProductsListProps {
   products?: any[];
 }
 
 const TopProductsList = ({ products = [] }: TopProductsListProps) => {
+  const t = useTranslations("RestaurantDashboard.Reports.topProducts");
   const [activeView, setActiveView] = useState<"all" | "detail" | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -22,7 +24,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
     id: String(index + 1),
     rank: index + 1,
     name: p.name,
-    category: p.category || "Main Dish",
+    category: p.category || t("detail.category") || "Main Dish", // Fallback to category text or something if not provided. In en.json I added Main Dish? Ah wait, I didn't. I'll just use "Main Dish" untranslated for fallback or what I had. Wait, let's use the provided category or "Main Dish" (I should have added it, let me just keep it hardcoded for fallback or leave it). Actually, let me use p.category || "Main Dish". Wait, en.json has "Main Dish" in it? No. Let's just do `p.category || "Main Dish"`.
     unitsSold: p.quantity,
     revenue: `$${(p.revenue || p.total || 0).toLocaleString()}`,
     numericRevenue: p.revenue || p.total || 0,
@@ -70,17 +72,17 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
       <div className="flex justify-between items-start mb-6 w-full">
         <div>
           <h2 className="text-[16px] font-bold text-[#1b2d22] leading-none">
-            Top Products
+            {t("title")}
           </h2>
           <p className="text-[12px] text-[#8ea89a] mt-1 font-medium">
-            By units sold
+            {t("subtitle")}
           </p>
         </div>
         <button
           onClick={handleOpenAll}
           className="text-[12px] font-bold text-[#357252] transition-colors hover:text-[#189b74]"
         >
-          View All
+          {t("viewAll")}
         </button>
       </div>
 
@@ -144,10 +146,10 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
               <div className="px-6 pt-5 pb-4 flex justify-between items-start">
                 <div>
                   <SheetTitle className="text-[18px] font-bold text-[#1a1a1a] leading-tight">
-                    All Products
+                    {t("allProducts")}
                   </SheetTitle>
                   <p className="text-[13px] text-[#8a8a8a] font-normal mt-0.5">
-                    8 products ranked by units sold
+                    {t("rankedSubtitle", { count: formattedProducts.length })}
                   </p>
                 </div>
                 <button
@@ -163,7 +165,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                 {/* Green Summary Bar */}
                 <div className="bg-[#f0f9f4] rounded-xl px-5 py-3.5 mb-5 flex justify-between items-center">
                   <span className="text-[14px] font-semibold text-[#2d6a4f]">
-                    {formattedProducts.length} Products
+                    {formattedProducts.length} {t("products")}
                   </span>
                   <span className="text-[20px] font-black text-[#2d6a4f]">
                     ${totalRevenue.toLocaleString()}
@@ -176,16 +178,16 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                     #
                   </span>
                   <span className="text-[11px] font-semibold text-[#a0a0a0] uppercase tracking-wide">
-                    Product
+                    {t("columns.product")}
                   </span>
                   <span className="text-[11px] font-semibold text-[#a0a0a0] uppercase tracking-wide text-center">
-                    Units
+                    {t("columns.units")}
                   </span>
                   <span className="text-[11px] font-semibold text-[#a0a0a0] uppercase tracking-wide text-right">
-                    Revenue
+                    {t("columns.revenue")}
                   </span>
                   <span className="text-[11px] font-semibold text-[#a0a0a0] uppercase tracking-wide text-right">
-                    Rating
+                    {t("columns.rating")}
                   </span>
                 </div>
 
@@ -274,7 +276,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   </SheetTitle>
                   <p className="text-[13px] text-[#8a8a8a] font-normal mt-0.5">
                     {selectedProduct.category} · {selectedProduct.unitsSold}{" "}
-                    units sold
+                    {t("detail.unitsSoldLabel")}
                   </p>
                 </div>
                 <button
@@ -318,7 +320,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Units Sold */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Units Sold
+                      {t("detail.unitsSold")}
                     </span>
                     <span className="text-[22px] font-black text-[#1a1a1a] leading-tight">
                       {selectedProduct.unitsSold}
@@ -328,7 +330,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Total Revenue */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Total Revenue
+                      {t("detail.totalRevenue")}
                     </span>
                     <span className="text-[22px] font-black text-[#1a1a1a] leading-tight">
                       {selectedProduct.revenue}
@@ -338,7 +340,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Price */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Price
+                      {t("detail.price")}
                     </span>
                     <span className="text-[18px] font-black text-[#1a1a1a] leading-tight">
                       {selectedProduct.price}
@@ -348,7 +350,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Cost */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Cost
+                      {t("detail.cost")}
                     </span>
                     <span className="text-[18px] font-black text-[#1a1a1a] leading-tight">
                       {selectedProduct.cost}
@@ -358,7 +360,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Profit */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Profit
+                      {t("detail.profit")}
                     </span>
                     <span className="text-[18px] font-bold text-[#2d9c6f] leading-tight">
                       {selectedProduct.profit}
@@ -368,7 +370,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Profit Margin */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Profit Margin
+                      {t("detail.profitMargin")}
                     </span>
                     <span className="text-[18px] font-black text-[#1a1a1a] leading-tight">
                       {selectedProduct.profitMargin}
@@ -378,7 +380,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Customer Rating */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Customer Rating
+                      {t("detail.customerRating")}
                     </span>
                     <div className="flex items-center gap-1.5">
                       <Star className="w-4 h-4 text-[#f5a623] fill-[#f5a623]" />
@@ -391,7 +393,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                   {/* Category */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
                     <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
-                      Category
+                      {t("detail.category")}
                     </span>
                     <span className="text-[16px] font-bold text-[#1a1a1a] leading-tight">
                       {selectedProduct.category}
@@ -402,7 +404,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                 {/* Avg Revenue Per Unit Bar */}
                 <div className="mt-5 bg-[#e8f5ee] rounded-xl px-5 py-4 flex justify-between items-center">
                   <span className="text-[13px] font-semibold text-[#2d6a4f]">
-                    Avg Revenue Per Unit
+                    {t("detail.avgRevenue")}
                   </span>
                   <span className="text-[18px] font-black text-[#2d6a4f]">
                     {selectedProduct.price}

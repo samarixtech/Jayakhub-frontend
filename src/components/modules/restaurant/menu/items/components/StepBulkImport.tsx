@@ -2,6 +2,7 @@ import React from "react";
 import { ArrowLeft, Download, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface StepBulkImportProps {
   onBack: () => void;
@@ -24,6 +25,8 @@ export const StepBulkImport: React.FC<StepBulkImportProps> = ({
   inputRef,
   onFileChange,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.stepBulk");
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between -mt-2">
@@ -33,7 +36,7 @@ export const StepBulkImport: React.FC<StepBulkImportProps> = ({
           className="text-gray-500 hover:text-gray-900 px-0 -ml-2 gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
+          {t("back")}
         </Button>
 
         <Button
@@ -42,7 +45,7 @@ export const StepBulkImport: React.FC<StepBulkImportProps> = ({
           onClick={onDownloadTemplate}
         >
           <Download className="w-4 h-4" />
-          Template
+          {t("template")}
         </Button>
       </div>
 
@@ -69,10 +72,10 @@ export const StepBulkImport: React.FC<StepBulkImportProps> = ({
         </div>
         <div className="text-center space-y-1">
           <Typography className="font-bold text-gray-900 text-lg">
-            Click or Drag CSV here
+            {t("clickOrDrag")}
           </Typography>
           <Typography className="text-gray-500 text-sm">
-            Supported formats: .csv
+            {t("supportedFormat")}
           </Typography>
         </div>
       </div>

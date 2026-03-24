@@ -3,6 +3,7 @@
 import React from "react";
 import { X, CheckCircle2, Clock, Circle } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { useTranslations } from "next-intl";
 
 interface Payout {
     id: string;
@@ -45,6 +46,8 @@ const TimelineStep = ({ label, time, iconType }: { label: string; time: string; 
 );
 
 const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProps) => {
+    const t = useTranslations("RestaurantDashboard.Payments.payoutDetailSheet");
+
     if (!payout) return null;
 
     const amountNum = parseFloat(payout.amount.replace(/[$,]/g, ""));
@@ -62,8 +65,8 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
                     <div className="px-7 pt-6 pb-4 border-b border-gray-100">
                         <div className="flex justify-between items-start">
                             <div>
-                                <SheetTitle className="text-[20px] font-bold text-[#1a1a1a] leading-tight">{payout.id}</SheetTitle>
-                                <p className="text-[13px] text-gray-400 font-normal mt-1">Payout on {payout.date}</p>
+                                <SheetTitle className="text-[20px] font-bold text-[#1a1a1a] leading-tight">{t("title", { id: payout.id })}</SheetTitle>
+                                <p className="text-[13px] text-gray-400 font-normal mt-1">{t("subtitle", { date: payout.date })}</p>
                             </div>
                             <button
                                 onClick={() => onOpenChange(false)}
@@ -79,11 +82,11 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
                         {/* Payout Amount + Status */}
                         <div className="grid grid-cols-2 gap-3">
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Payout Amount</span>
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">{t("amount")}</span>
                                 <span className="text-[20px] font-black text-[#1a1a1a] leading-tight">{payout.amount}</span>
                             </div>
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">Status</span>
+                                <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">{t("status")}</span>
                                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-bold ${payout.status === "In Transit" ? "bg-orange-100 text-orange-600" : "bg-emerald-50 text-emerald-600"}`}>{payout.status}</span>
                             </div>
                         </div>
@@ -91,60 +94,60 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
                         {/* Period + Orders */}
                         <div className="grid grid-cols-2 gap-3">
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">Payout Period</span>
-                                <span className="text-[14px] font-bold text-[#1a1a1a]">Feb 11 – Feb 14</span>
+                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">{t("period")}</span>
+                                <span className="text-[14px] font-bold text-[#1a1a1a]">{t("periodValue")}</span>
                             </div>
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">Orders Included</span>
-                                <span className="text-[14px] font-bold text-[#1a1a1a]">31 orders</span>
+                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">{t("ordersIncluded")}</span>
+                                <span className="text-[14px] font-bold text-[#1a1a1a]">{t("ordersValue", { count: 31 })}</span>
                             </div>
                         </div>
 
                         {/* Bank + Initiated */}
                         <div className="grid grid-cols-2 gap-3">
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">Bank Account</span>
+                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">{t("bankAccount")}</span>
                                 <span className="text-[14px] font-bold text-[#1a1a1a]">{payout.bank}</span>
                             </div>
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">Initiated</span>
-                                <span className="text-[14px] font-bold text-[#1a1a1a]">Feb 14, 4:00 PM</span>
+                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">{t("initiated")}</span>
+                                <span className="text-[14px] font-bold text-[#1a1a1a]">{t("initiatedValue")}</span>
                             </div>
                         </div>
 
                         {/* Breakdown */}
                         <div className="bg-gray-50 rounded-xl px-5 py-3 space-y-2">
                             <div className="flex justify-between items-center">
-                                <span className="text-[13px] text-gray-500">Gross Revenue</span>
+                                <span className="text-[13px] text-gray-500">{t("grossRevenue")}</span>
                                 <span className="text-[13px] font-semibold text-[#1a1a1a]">${gross.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-[13px] text-gray-500">Platform Commission (10%)</span>
+                                <span className="text-[13px] text-gray-500">{t("platformCommission")}</span>
                                 <span className="text-[13px] font-semibold text-red-500">-${commission.toFixed(2)}</span>
                             </div>
                             <div className="h-px bg-gray-200" />
                             <div className="flex justify-between items-center">
-                                <span className="text-[13px] font-bold text-[#1a1a1a]">Net Payout</span>
+                                <span className="text-[13px] font-bold text-[#1a1a1a]">{t("netPayout")}</span>
                                 <span className="text-[15px] font-black text-[#1a1a1a]">{payout.amount}</span>
                             </div>
                         </div>
 
                         {/* Payout Timeline */}
                         <div className="pt-1">
-                            <h4 className="text-[14px] font-bold text-[#1a1a1a] mb-3">Payout Timeline</h4>
+                            <h4 className="text-[14px] font-bold text-[#1a1a1a] mb-3">{t("payoutTimeline")}</h4>
                             <div className="space-y-3 relative">
                                 <div className="absolute left-[9px] top-5 bottom-2 w-px bg-gray-200" />
                                 {payout.status === "Paid" ? (
                                     <>
-                                        <TimelineStep label="Payout deposited" time={payout.date} iconType="done" />
-                                        <TimelineStep label="In transit to bank" time="Feb 14, 4:00 PM" iconType="done" />
-                                        <TimelineStep label="Payout initiated" time="Feb 14, 4:00 PM" iconType="done" />
+                                        <TimelineStep label={t("payoutDeposited")} time={payout.date} iconType="done" />
+                                        <TimelineStep label={t("inTransit")} time={t("initiatedValue")} iconType="done" />
+                                        <TimelineStep label={t("payoutInitiated")} time={t("initiatedValue")} iconType="done" />
                                     </>
                                 ) : (
                                     <>
-                                        <TimelineStep label="Payout deposited" time="Pending" iconType="pending" />
-                                        <TimelineStep label="In transit to bank" time="Feb 14, 4:00 PM" iconType="active" />
-                                        <TimelineStep label="Payout initiated" time="Feb 14, 4:00 PM" iconType="done" />
+                                        <TimelineStep label={t("payoutDeposited")} time={t("pending")} iconType="pending" />
+                                        <TimelineStep label={t("inTransit")} time={t("initiatedValue")} iconType="active" />
+                                        <TimelineStep label={t("payoutInitiated")} time={t("initiatedValue")} iconType="done" />
                                     </>
                                 )}
                             </div>

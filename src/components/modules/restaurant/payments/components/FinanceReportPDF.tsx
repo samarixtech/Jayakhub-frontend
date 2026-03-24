@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 
 interface FinanceReportPDFProps {
   data: any;
@@ -13,6 +14,8 @@ export const FinanceReportPDF = ({
   pdfRef,
   filterLabel,
 }: FinanceReportPDFProps) => {
+  const t = useTranslations("RestaurantDashboard.Payments.pdf");
+
   if (!data) return null;
 
   return (
@@ -25,21 +28,21 @@ export const FinanceReportPDF = ({
         <div className="flex justify-between items-start border-b-2 border-gray-800 pb-6 mb-8">
           <div>
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-              Finance Summary Report
+              {t("title")}
             </h1>
             <p className="text-gray-500 mt-2 font-medium">
-              Period: {filterLabel}
+              {t("period", { label: filterLabel })}
             </p>
             <p className="text-gray-400 text-sm mt-1">
-              Generated Date: {new Date().toLocaleString()}
+              {t("generatedDate", { date: new Date().toLocaleString() })}
             </p>
           </div>
           <div className="text-right">
             <p className="text-xl font-bold text-gray-900">
-              {data.restaurantName || "Jayak Hub Partner"}
+              {data.restaurantName || t("restaurantName")}
             </p>
             <p className="text-gray-500 font-medium tracking-tight">
-              Restaurant Finance Dashboard
+              {t("dashboard")}
             </p>
           </div>
         </div>
@@ -48,7 +51,7 @@ export const FinanceReportPDF = ({
         <div className="grid grid-cols-4 gap-6 mb-10">
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg text-center">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
-              Total Revenue
+              {t("totalRevenue")}
             </p>
             <p className="text-2xl font-black text-gray-900">
               ${data.metrics.totalRevenue}
@@ -56,7 +59,7 @@ export const FinanceReportPDF = ({
           </div>
           <div className="bg-emerald-50 p-5 border border-emerald-100 rounded-lg text-center">
             <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">
-              Net Profit
+              {t("netProfit")}
             </p>
             <p className="text-2xl font-black text-emerald-700">
               ${data.metrics.netProfit}
@@ -64,7 +67,7 @@ export const FinanceReportPDF = ({
           </div>
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg text-center">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
-              Platform Fees
+              {t("platformFees")}
             </p>
             <p className="text-2xl font-black text-gray-900">
               ${data.metrics.platformFees}
@@ -72,7 +75,7 @@ export const FinanceReportPDF = ({
           </div>
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg text-center">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
-              Avg Order Value
+              {t("avgOrderValue")}
             </p>
             <p className="text-2xl font-black text-gray-900">
               ${data.metrics.avgOrderValue}
@@ -83,18 +86,18 @@ export const FinanceReportPDF = ({
         {/* Tax & Commissions Breakdown */}
         <div className="mb-10">
           <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-3 mb-4">
-            Tax & Commissions Breakdown
+            {t("taxBreakdown")}
           </h2>
           <div className="grid grid-cols-2 gap-x-12 gap-y-4 bg-gray-50 p-6 rounded-xl border border-gray-100">
             <div className="flex justify-between items-center py-2 border-b border-gray-200">
-              <span className="text-gray-600 font-medium">Tax Collected</span>
+              <span className="text-gray-600 font-medium">{t("taxCollected")}</span>
               <span className="font-bold text-gray-900">
                 ${data.metrics.taxCollected}
               </span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-200">
               <span className="text-gray-600 font-medium">
-                Platform Commission
+                {t("platformCommission")}
               </span>
               <span className="font-bold text-gray-900">
                 ${data.metrics.platformCommission}
@@ -102,14 +105,14 @@ export const FinanceReportPDF = ({
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-200">
               <span className="text-gray-600 font-medium">
-                Payment Processing
+                {t("paymentProcessing")}
               </span>
               <span className="font-bold text-gray-900">
                 ${data.metrics.paymentProcessing}
               </span>
             </div>
             <div className="flex justify-between items-center py-2 border-b border-gray-200">
-              <span className="text-gray-600 font-medium">Delivery Costs</span>
+              <span className="text-gray-600 font-medium">{t("deliveryCosts")}</span>
               <span className="font-bold text-gray-900">
                 ${data.metrics.deliveryCosts}
               </span>
@@ -120,7 +123,7 @@ export const FinanceReportPDF = ({
         {/* Payment Methods */}
         <div className="mb-10">
           <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-3 mb-4">
-            Payment Methods
+            {t("paymentMethods")}
           </h2>
           <div className="grid grid-cols-3 gap-6">
             {data.paymentMethods.map((pm: any) => (
@@ -147,20 +150,20 @@ export const FinanceReportPDF = ({
         {/* Transactions Table */}
         <div>
           <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-3 mb-4">
-            Transaction History
+            {t("transactionHistory")}
           </h2>
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b-2 border-gray-800 text-sm">
-                <th className="py-3 px-2 font-bold text-gray-600">ID</th>
-                <th className="py-3 px-2 font-bold text-gray-600">Date</th>
-                <th className="py-3 px-2 font-bold text-gray-600">Type</th>
-                <th className="py-3 px-2 font-bold text-gray-600">Method</th>
+                <th className="py-3 px-2 font-bold text-gray-600">{t("id")}</th>
+                <th className="py-3 px-2 font-bold text-gray-600">{t("date")}</th>
+                <th className="py-3 px-2 font-bold text-gray-600">{t("type")}</th>
+                <th className="py-3 px-2 font-bold text-gray-600">{t("method")}</th>
                 <th className="py-3 px-2 font-bold text-gray-600 text-right">
-                  Fee
+                  {t("fee")}
                 </th>
                 <th className="py-3 px-2 font-bold text-gray-600 text-right">
-                  Total
+                  {t("total")}
                 </th>
               </tr>
             </thead>
@@ -204,7 +207,7 @@ export const FinanceReportPDF = ({
         </div>
 
         <div className="mt-16 text-center text-gray-400 text-xs font-bold tracking-widest border-t border-gray-100 pt-6">
-          <p>CONFIDENTIAL FINANCE REPORT - SECURELY GENERATED BY JAYAK HUB</p>
+          <p>{t("confidential")}</p>
         </div>
       </div>
     </div>

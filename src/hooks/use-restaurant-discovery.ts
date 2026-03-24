@@ -39,6 +39,21 @@ export function useRestaurantDiscovery() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Handlers
+  const resetFilters = () => {
+    setSelectedSort("recommended");
+    setActiveFilters([]);
+    setSelectedPrice(null);
+    setShowAllCuisines(false);
+
+    // Remove from URL while keeping lat/lng
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("query");
+    params.delete("type");
+    params.delete("rating");
+    params.delete("priceTier");
+    window.history.replaceState(null, "", `?${params.toString()}`);
+  };
+
   const handleFilter = (id: string) => {
     setActiveFilters((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
@@ -375,6 +390,7 @@ export function useRestaurantDiscovery() {
       handlePrice,
       setShowAllCuisines,
       setViewMode,
+      resetFilters,
     },
   };
 }

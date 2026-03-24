@@ -5,8 +5,10 @@ import { Typography } from "@/components/ui/typography";
 import { Card } from "@/components/ui/card";
 import { useRestaurantStatus } from "../hooks/useRestaurantStatus";
 import { StatusTimeline } from "../components/StatusTimeline";
+import { useTranslations } from "next-intl";
 
 export default function RestaurantStatusView() {
+  const t = useTranslations("RestaurantDashboard.Status");
   const { status, loading, isNew } = useRestaurantStatus();
 
   if (loading) {
@@ -31,11 +33,10 @@ export default function RestaurantStatusView() {
             variant="h2"
             className="text-2xl font-bold text-gray-900 mb-4"
           >
-            Application Rejected
+            {t("titleRejected")}
           </Typography>
           <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base mb-8">
-            Unfortunately, your application to join JayakHub was not approved at
-            this time. Please contact support for more details.
+            {t("descriptionRejected")}
           </Typography>
         </Card>
       </div>
@@ -56,18 +57,17 @@ export default function RestaurantStatusView() {
             variant="h2"
             className="text-2xl font-bold text-gray-900 mb-4"
           >
-            Application Pending
+            {t("titlePending")}
           </Typography>
           <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base mb-8">
-            Your application is currently under review by our team. We will
-            notify you once a decision has been made.
+            {t("descriptionPending")}
           </Typography>
 
           <div className="w-full border-t border-gray-100 mb-8 mt-4" />
 
           <div className="">
             <Typography className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">
-              CURRENT STATUS
+              {t("currentStatus")}
             </Typography>
             <StatusTimeline />
           </div>
@@ -90,19 +90,18 @@ export default function RestaurantStatusView() {
           variant="h2"
           className="text-2xl font-bold text-gray-900 mb-4"
         >
-          Application submitted!
+          {t("titleSubmitted")}
         </Typography>
 
         <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base">
-          Thank you for applying to join JayakHub. We've received your
-          application and our team will review it shortly.
+          {t("descriptionSubmitted")}
         </Typography>
 
         <div className="w-full border-t border-gray-100 mb-2 mt-8" />
 
         <div className="">
           <Typography className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6 mt-6">
-            WHAT HAPPENS NEXT
+            {t("whatHappensNext")}
           </Typography>
 
           <StatusTimeline />

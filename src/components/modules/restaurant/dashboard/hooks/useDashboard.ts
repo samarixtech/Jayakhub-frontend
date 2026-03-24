@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { getDashboardAnalyticsAction } from "@/app/actions/restaurant/dashboard";
 import { updateRestaurantProfileAction } from "@/app/actions/restaurant/settings";
 import toast from "react-hot-toast";
 
 export function useDashboard() {
+  const t = useTranslations("RestaurantDashboard");
   const [isOnline, setIsOnline] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isToggling, setIsToggling] = useState(false);
@@ -37,14 +39,14 @@ export function useDashboard() {
       if (!res.success) {
         // Revert on failure
         setIsOnline(!newStatus);
-        toast.error("Failed to update status");
+        toast.error(t("status.updateFailed"));
       } else {
-        toast.success(`Restaurant is now ${newStatus ? "Online" : "Offline"}`);
+        toast.success(t("status.updateSuccess", { status: newStatus ? t("status.online") : t("status.offline") }));
       }
     } catch (error) {
       // Revert on error
       setIsOnline(!newStatus);
-      toast.error("Failed to update status");
+      toast.error(t("status.updateFailed"));
     } finally {
       setIsToggling(false);
     }
@@ -52,13 +54,13 @@ export function useDashboard() {
 
   // Chart Data Config
   const labels = dashboardData?.revenueChart?.map((item: any) => item.day) || [
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-    "Sun",
+    t("revenueChart.days.mon"),
+    t("revenueChart.days.tue"),
+    t("revenueChart.days.wed"),
+    t("revenueChart.days.thu"),
+    t("revenueChart.days.fri"),
+    t("revenueChart.days.sat"),
+    t("revenueChart.days.sun"),
   ];
   const dataPoints = dashboardData?.revenueChart?.map((item: any) =>
     parseFloat(item.amount),
@@ -93,10 +95,10 @@ export function useDashboard() {
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMins < 60) return `${diffMins} min ago`;
-    if (diffHours < 24) return `${diffHours} hr ago`;
-    if (diffDays === 1) return `Yesterday`;
-    return `${diffDays} days ago`;
+    if (diffMins < 60) return t("recentActivity.timeAgo.mins", { count: diffMins });
+    if (diffHours < 24) return t("recentActivity.timeAgo.hours", { count: diffHours });
+    if (diffDays === 1) return t("recentActivity.timeAgo.yesterday");
+    return t("recentActivity.timeAgo.days", { count: diffDays });
   };
 
   // TODO: Use formatCurrency with proper locale in the future

@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,6 +34,8 @@ export default function MenuCategoriesView() {
     resetCreate,
     startEdit,
   } = useMenuCategories();
+
+  const t = useTranslations("RestaurantDashboard.Menu.Categories.deleteModal");
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1000px] mx-auto p-4">
@@ -76,8 +79,8 @@ export default function MenuCategoriesView() {
       <GlobalModal
         open={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
-        title="Delete Category"
-        description={`Are you sure you want to delete "${deleteName}"? This action cannot be undone.`}
+        title={t("title")}
+        description={t("description", { name: deleteName })}
         trigger={null}
       >
         <div className="flex justify-end gap-3 mt-6">
@@ -86,7 +89,7 @@ export default function MenuCategoriesView() {
             onClick={() => setIsDeleteModalOpen(false)}
             disabled={isDeleting}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             variant="destructive"
@@ -94,7 +97,7 @@ export default function MenuCategoriesView() {
             disabled={isDeleting}
             className="bg-red-500 hover:bg-red-600"
           >
-            {isDeleting ? "Deleting..." : "Delete Category"}
+            {isDeleting ? t("deleting") : t("deleteBtn")}
           </Button>
         </div>
       </GlobalModal>

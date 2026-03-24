@@ -16,6 +16,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -35,6 +36,8 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
   chartData,
   maxDataPoint,
 }) => {
+  const t = useTranslations("RestaurantDashboard");
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -83,17 +86,17 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
       <CardHeader className="flex flex-row items-start justify-between pb-6">
         <div className="space-y-1">
           <CardTitle className="text-[16px] font-bold text-[#1b2d22]">
-            Revenue Overview
+            {t("revenueChart.title")}
           </CardTitle>
           <CardDescription className="text-[12px] text-[#8ea89a] font-medium">
-            Last 7 Days
+            {t("revenueChart.subtitle")}
           </CardDescription>
         </div>
         <Badge
           variant="secondary"
           className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-none px-3 py-1 text-[10px] uppercase tracking-wider"
         >
-          This Week
+          {t("revenueChart.thisWeek")}
         </Badge>
       </CardHeader>
 
@@ -107,7 +110,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
             <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center">
               <div className="w-5 h-5 border-2 border-gray-200 border-t-transparent rounded-full animate-spin" />
             </div>
-            <p className="text-sm text-muted-foreground">Gathering data...</p>
+            <p className="text-sm text-muted-foreground">{t("revenueChart.gatheringData")}</p>
           </div>
         )}
       </CardContent>

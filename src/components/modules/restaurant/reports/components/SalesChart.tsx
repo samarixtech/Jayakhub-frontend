@@ -13,6 +13,7 @@ import {
   Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { useTranslations } from "next-intl";
 
 ChartJS.register(
   CategoryScale,
@@ -102,6 +103,7 @@ interface SalesChartProps {
 }
 
 const SalesChart = ({ graphData = [] }: SalesChartProps) => {
+  const t = useTranslations("RestaurantDashboard.Reports.charts.sales");
   const labels = graphData.map((item) => {
     const d = new Date(item.date);
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -127,10 +129,10 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
   };
 
   const chartData = {
-    labels: labels.length > 0 ? labels : ["No Data"],
+    labels: labels.length > 0 ? labels : [t("noData")],
     datasets: [
       {
-        label: "Current Period",
+        label: t("currentPeriod"),
         data: salesValues.length > 0 ? salesValues : [0],
         borderColor: "#1B4332", // Dark Green
         backgroundColor: (context: any) => {
@@ -144,7 +146,7 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
         borderWidth: 2,
       },
       {
-        label: "Previous Period",
+        label: t("previousPeriod"),
         data: salesValues.map((v) => v * 0.8), // Mock comparison if not provided by API
         borderColor: "#a7f3d0", // Light emerald/mint
         backgroundColor: "transparent",
@@ -159,10 +161,10 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
     <div className="w-full flex flex-col h-full">
       <div className="mb-6">
         <h2 className="text-[16px] font-bold text-gray-900 leading-none">
-          Sales Over Time
+          {t("title")}
         </h2>
         <p className="text-[12px] text-gray-400 mt-1">
-          Revenue trend with previous period comparison
+          {t("subtitle")}
         </p>
       </div>
       <div className="flex-1 min-h-[250px] w-full mt-2 relative">

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface User {
   id: string;
@@ -32,6 +33,7 @@ interface UsersTableProps {
 }
 
 export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
+  const t = useTranslations("RestaurantDashboard.Users.table");
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -46,19 +48,19 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
       <TableHeader className="bg-gray-50/50">
         <TableRow className="border-gray-100 hover:bg-transparent">
           <TableHead className="font-semibold text-gray-500 text-xs uppercase w-[300px] pl-6">
-            User
+            {t("colUser")}
           </TableHead>
           <TableHead className="font-semibold text-gray-500 text-xs uppercase">
-            Role
+            {t("colRole")}
           </TableHead>
           <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
-            Status
+            {t("colStatus")}
           </TableHead>
           <TableHead className="font-semibold text-gray-500 text-xs uppercase">
-            Last Active
+            {t("colLastActive")}
           </TableHead>
           <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right pr-6">
-            Actions
+            {t("colActions")}
           </TableHead>
         </TableRow>
       </TableHeader>
@@ -97,7 +99,7 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
           // Empty State
           <TableRow>
             <TableCell colSpan={5} className="h-32 text-center text-gray-500">
-              No users found in this category.
+              {t("noUsers")}
             </TableCell>
           </TableRow>
         ) : (

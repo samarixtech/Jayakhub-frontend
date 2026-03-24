@@ -67,6 +67,7 @@ export interface DiscoverySidebarProps {
   onPriceToggle: (price: string) => void;
   showAllCuisines: boolean;
   onToggleCuisines: () => void;
+  onResetFilters: () => void;
   cuisineTypes: CuisineType[];
   className?: string;
 }

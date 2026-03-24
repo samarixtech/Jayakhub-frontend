@@ -4,6 +4,7 @@ import { X, CheckCircle2, Clock } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import type { Ticket } from "../support.types";
 import { StatusBadge } from "./StatusBadge";
+import { useTranslations } from "next-intl";
 
 interface TicketDetailSheetProps {
   open: boolean;
@@ -46,6 +47,8 @@ const TicketDetailSheet = ({
   onOpenChange,
   ticket,
 }: TicketDetailSheetProps) => {
+  const t = useTranslations("RestaurantDashboard.Support.ticketDetail");
+  
   if (!ticket) return null;
 
   const createdDate = new Date(ticket.createdAt).toLocaleString("en-US", {
@@ -87,7 +90,7 @@ const TicketDetailSheet = ({
             <div className="grid grid-cols-2 gap-4 mt-4">
               <div>
                 <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-0.5">
-                  Priority
+                  {t("priority")}
                 </span>
                 <span className="text-[14px] font-semibold text-[#1a1a1a] capitalize">
                   {ticket.priority.charAt(0) +
@@ -96,7 +99,7 @@ const TicketDetailSheet = ({
               </div>
               <div>
                 <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-0.5">
-                  Created
+                  {t("created")}
                 </span>
                 <span className="text-[14px] font-semibold text-[#1a1a1a]">
                   {createdDate}
@@ -110,58 +113,58 @@ const TicketDetailSheet = ({
             {/* Description */}
             <div>
               <h4 className="text-[14px] font-bold text-[#1a1a1a] mb-2">
-                Description
+                {t("description")}
               </h4>
               <p className="text-[13px] text-gray-600 leading-relaxed bg-gray-50 rounded-xl px-4 py-3">
-                {ticket.description || "No description provided."}
+                {ticket.description || t("noDescription")}
               </p>
             </div>
 
             {/* Status Timeline */}
             <div>
               <h4 className="text-[14px] font-bold text-[#1a1a1a] mb-4">
-                Status
+                {t("status")}
               </h4>
               <div className="space-y-4 relative">
                 <div className="absolute left-[9px] top-5 bottom-3 w-px bg-gray-200" />
                 <TimelineStep
-                  label="Ticket Created"
+                  label={t("timeline.ticketCreated")}
                   time={createdDate}
                   iconType="done"
                 />
                 {ticket.status === "IN_PROGRESS" ||
                 ticket.status === "RESOLVED" ? (
                   <TimelineStep
-                    label="Agent Assigned"
-                    time="—"
+                    label={t("timeline.agentAssigned")}
+                    time={t("timeline.dash")}
                     iconType="done"
                   />
                 ) : (
                   <TimelineStep
-                    label="Agent Assigned"
-                    time="Pending"
+                    label={t("timeline.agentAssigned")}
+                    time={t("timeline.pending")}
                     iconType="pending"
                   />
                 )}
                 {ticket.status === "RESOLVED" ? (
-                  <TimelineStep label="Resolved" time="—" iconType="done" />
+                  <TimelineStep label={t("timeline.resolved")} time={t("timeline.dash")} iconType="done" />
                 ) : ticket.status === "IN_PROGRESS" ? (
                   <TimelineStep
-                    label="Awaiting Response"
-                    time="Now"
+                    label={t("timeline.awaitingResponse")}
+                    time={t("timeline.now")}
                     iconType="active"
                   />
                 ) : (
                   <TimelineStep
-                    label="Awaiting Response"
-                    time="—"
+                    label={t("timeline.awaitingResponse")}
+                    time={t("timeline.dash")}
                     iconType="pending"
                   />
                 )}
                 {ticket.status !== "RESOLVED" && (
                   <TimelineStep
-                    label="Resolution"
-                    time="—"
+                    label={t("timeline.resolution")}
+                    time={t("timeline.dash")}
                     iconType="pending"
                   />
                 )}

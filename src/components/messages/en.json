@@ -1350,5 +1350,902 @@
       "account_settings": "Account Settings",
       "sign_out": "Sign Out"
     }
-  }
+   
+  },
+   "RestaurantDashboard": {
+      "Sidebar": {
+        "sections": {
+          "main": "MAIN",
+          "management": "MANAGEMENT",
+          "settings": "SETTINGS"
+        },
+        "items": {
+          "dashboard": "Dashboard",
+          "pos": "POS",
+          "orders": "Orders",
+          "menuManagement": "Menu Management",
+          "items": "Items",
+          "categories": "Categories",
+          "variants": "Variant Groups",
+          "marketing": "Marketing",
+          "reviews": "Ratings & Reviews",
+          "users": "Users & Roles",
+          "finance": "Finance",
+          "reports": "Reports",
+          "apis": "APIs",
+          "support": "Support Center",
+          "settings": "Settings"
+        },
+        "logout": "Logout"
+      },
+      "greeting": {
+        "morning": "Good morning",
+        "afternoon": "Good afternoon",
+        "evening": "Good evening",
+        "night": "Good night",
+        "fallbackName": "JOHN DOE",
+        "subtitle": "Your restaurant is ready to receive orders"
+      },
+      "Settings": {
+        "sidebar": {
+          "menuTitle": "Settings Menu",
+          "profile": "Profile",
+          "location": "Location",
+          "hours": "Hours",
+          "finance": "Finance",
+          "notifications": "Notifications",
+          "security": "Security",
+          "documents": "Documents & Verification"
+        },
+        "profile": {
+          "title": "Restaurant Profile",
+          "subtitle": "Details visible to customers on your page",
+          "logo": "Logo",
+          "logoHint": "PNG, JPG up to 5MB",
+          "cover": "Cover Image",
+          "coverHint": "1200×400px recommended",
+          "name": "Restaurant Name",
+          "namePlaceholder": "e.g. The Royal Gourmet",
+          "website": "Website URL",
+          "websitePlaceholder": "https://example.com",
+          "description": "Description",
+          "descriptionPlaceholder": "Describe your restaurant, styling, and ambiance...",
+          "cuisines": "Cuisines",
+          "cuisinePlaceholder": "Add a cuisine (e.g. Kurdish, BBQ)",
+          "addBtn": "ADD",
+          "saving": "Saving...",
+          "saveBtn": "Save Changes"
+        },
+        "location": {
+          "successMsg": "Location update request submitted.",
+          "errorMsg": "Failed to update location.",
+          "unexpectedErr": "An unexpected error occurred.",
+          "title": "Location & Contact",
+          "subtitle": "Where customers can find your restaurant",
+          "updatePendingTitle": "Update Pending",
+          "updatePendingDesc": "YOUR CHANGES ARE SUBMITTED, WE ARE REVIEWING IT AND WILL APPROVE SHORTLY.",
+          "restaurantLocation": "Restaurant Location",
+          "phone": "Phone Number",
+          "email": "Email Address",
+          "saveBtn": "Save Location"
+        },
+        "hours": {
+          "title": "Operating Hours",
+          "subtitle": "Set your weekly opening and closing times.",
+          "tableDay": "Day",
+          "tableOpen": "Open Time",
+          "tableClose": "Close Time",
+          "tableStatus": "Status",
+          "to": "to",
+          "saveBtn": "Save Schedule"
+        },
+        "finance": {
+          "successMsg": "Bank details update requested.",
+          "errorMsg": "Failed to update bank details.",
+          "title": "Finance Details",
+          "subtitle": "Manage your banking information for payouts",
+          "bankDetails": "Bank Account Details",
+          "bankName": "Bank Name",
+          "accountHolder": "Account Holder Name",
+          "iban": "IBAN / Account Number",
+          "saveBtn": "Save Finance Details"
+        },
+        "documents": {
+          "title": "Documents & Verification",
+          "subtitle": "View and manage your business verification documents.",
+          "updatePendingTitle": "Verification Pending",
+          "uploadTitle": "Upload New Document",
+          "docType": "Document Type",
+          "selectType": "Select type",
+          "typeGovId": "Government ID",
+          "typeLicense": "Driving License",
+          "typePassport": "Passport",
+          "typeFoodLicense": "Food License",
+          "selectFile": "Select File",
+          "uploading": "Uploading...",
+          "uploadBtn": "Upload Document",
+          "docsOnFile": "Documents on File",
+          "noDocs": "No documents uploaded yet.",
+          "verifiedOn": "Verified on {date}"
+        },
+        "notifications": {
+          "title": "Notifications",
+          "subtitle": "Manage your alerts and notification preferences",
+          "soundTitle": "New Order Sound",
+          "soundDesc": "Play a sound when a new order arrives",
+          "emailTitle": "Email Receipts",
+          "emailDesc": "Receive daily summary via email",
+          "smsTitle": "SMS Alerts",
+          "smsDesc": "Get critical updates via SMS",
+          "saveBtn": "Save Preferences"
+        },
+        "security": {
+          "title": "Security",
+          "googleUserMsg": "You are logged in via Google ({email}). You can set a password for this account.",
+          "standardUserMsg": "Update your password securely.",
+          "newPassword": "New Password",
+          "confirmPassword": "Confirm Password",
+          "confirmPlaceholder": "Confirm New Password",
+          "setBtn": "Set Password",
+          "currentPassword": "Current Password",
+          "updateBtn": "Update Password"
+        }
+      },
+      "Menu": {
+        "Categories": {
+          "stats": {
+            "title": "Organize Your Menu",
+            "subtitle": "Create categories to group your menu items.",
+            "countLabel": "Categories"
+          },
+          "addCard": {
+            "createNew": "Create New Category",
+            "title": "Add New Category",
+            "placeholder": "e.g. Appetizers",
+            "saving": "Saving...",
+            "createBtn": "Create Category",
+            "cancel": "Cancel"
+          },
+          "card": {
+            "itemsCount": "0 items"
+          },
+          "deleteModal": {
+            "title": "Delete Category",
+            "description": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+            "cancel": "Cancel",
+            "deleting": "Deleting...",
+            "deleteBtn": "Delete Category"
+          }
+        },
+        "Items": {
+          "views": {
+            "addNewTitle": "Add New Item",
+            "searchPlaceholder": "Search items...",
+            "columns": {
+              "item": "Item",
+              "category": "Category",
+              "price": "Price",
+              "status": "Status",
+              "actions": "Actions"
+            },
+            "noItems": "No items found. Click \"Add New Item\" to create one.",
+            "deleteTitle": "Delete Item",
+            "loadingDetails": "Loading item details...",
+            "discardBtn": "Discard Changes",
+            "saveBtn": "Save Item",
+            "saveChangesBtn": "Save Changes",
+            "processing": "Processing..."
+          },
+          "addItemModal": {
+            "titleNew": "Add New Item",
+            "titleBulk": "Bulk Import Items"
+          },
+          "stepSelection": {
+            "manualTitle": "Manual Entry",
+            "manualDesc": "Fill out a form to add a single item with full details.",
+            "bulkTitle": "Bulk Import",
+            "bulkDesc": "Upload a CSV file to add multiple items at once."
+          },
+          "stepBulk": {
+            "back": "Back",
+            "template": "Template",
+            "clickOrDrag": "Click or Drag CSV here",
+            "supportedFormat": "Supported formats: .csv"
+          },
+          "stepPreview": {
+            "back": "Back",
+            "previewTitle": "Preview ({length} items)",
+            "noData": "No data parsed",
+            "row": "Row {index}",
+            "cancel": "Cancel",
+            "importing": "Importing...",
+            "importBtn": "Import All"
+          },
+          "basicInfo": {
+            "sectionTitle": "Basic Information",
+            "itemName": "Item Name",
+            "itemPlaceholder": "e.g., Chicken Shawarma",
+            "description": "Description",
+            "optional": "(optional)",
+            "descPlaceholder": "Describe your item to help customers...",
+            "basePrice": "Base Price",
+            "category": "Category",
+            "selectCategory": "Select category",
+            "dietaryType": "Dietary Type",
+            "selectType": "Select type",
+            "dietaryNone": "None",
+            "dietaryVeg": "Vegetarian",
+            "dietaryNonVeg": "Non-Vegetarian",
+            "dietaryHelp": "Dietary labels help customers filter items"
+          },
+          "imageUpload": {
+            "sectionTitle": "Item Image",
+            "preview": "Preview",
+            "clickToUpload": "Click to upload or drag and drop",
+            "imageHelp": "PNG, JPG up to 5MB • Recommended 800x600px",
+            "noImage": "No Image"
+          },
+          "livePreview": {
+            "title": "Live Preview",
+            "defaultCategory": "CATEGORY",
+            "defaultName": "Item Name",
+            "proTip": "✨ Customer view preview. Your item will look exactly like this in the app."
+          },
+          "variantGroups": {
+            "sectionTitle": "Variant Groups",
+            "helpText": "Add variant groups to this item (e.g., Sizes, Spices).",
+            "selectPlaceholder": "Select a variant group...",
+            "addBtn": "Add Group",
+            "noGroups": "No variant groups added yet"
+          },
+          "stats": {
+            "Total Items": "Total Items",
+            "Active": "Active",
+            "Inactive": "Inactive",
+            "Categories": "Categories"
+          }
+        },
+        "VariantGroups": {
+          "views": {
+            "createNew": "Create New Variant Group",
+            "createNewDesc": "Add sizes, toppings, spice levels and more",
+            "noGroups": "No variant groups created yet.",
+            "deleteTitle": "Delete Variant Group",
+            "deleteDesc": "Are you sure you want to delete \"{name}\"? This action cannot be undone."
+          },
+          "card": {
+            "optionsCount": "{count} options"
+          },
+          "form": {
+            "groupName": "Group Name",
+            "namePlaceholder": "e.g., Size Options, Toppings",
+            "options": "Options",
+            "optionPlaceholder": "Option name",
+            "addOption": "Add Option",
+            "saving": "Saving...",
+            "updateBtn": "Update Group",
+            "createBtn": "Create Group",
+            "cancel": "Cancel"
+          },
+          "header": {
+            "title": "Manage Your Item Variants",
+            "subtitle": "Create reusable variant groups like sizes, spice levels, or add-ons. Apply them to multiple menu items for consistent pricing.",
+            "groupsCount": "Groups",
+            "optionsCount": "Options"
+          }
+        }
+      },
+      "Orders": {
+        "details": {
+          "rejectBtn": "Reject",
+          "acceptBtn": "Accept Order",
+          "startPrepareBtn": "Start Preparing",
+          "markReadyBtn": "Mark as Ready",
+          "orderTitle": "Order {id}",
+          "status": "Status",
+          "customer": "Customer",
+          "items": "Items",
+          "paymentSummary": "Payment Summary",
+          "subtotal": "Subtotal",
+          "tax": "Tax",
+          "total": "Total"
+        },
+        "filters": {
+          "liveOrders": "Live Orders",
+          "pastOrders": "Past Orders",
+          "show": "Show:"
+        },
+        "stats": {
+          "totalToday": "Total Today",
+          "liveOrders": "Live Orders",
+          "revenue": "Revenue"
+        },
+        "table": {
+          "orderId": "ORDER ID",
+          "customer": "CUSTOMER",
+          "summary": "SUMMARY",
+          "total": "TOTAL",
+          "dateTime": "DATE & TIME",
+          "status": "STATUS",
+          "action": "ACTION"
+        }
+      },
+      "Payments": {
+        "header": {
+          "title": "Finance Overview",
+          "exportBtn": "Export Report",
+          "exportingBtn": "Exporting...",
+          "filterAllTime": "All Time",
+          "filter1Month": "Last 1 Month",
+          "filter3Months": "Last 3 Months",
+          "filter6Months": "Last 6 Months",
+          "filter12Months": "Last 12 Months"
+        },
+        "stats": {
+          "totalRevenue": "Total Revenue",
+          "netProfit": "Net Profit",
+          "platformFees": "Platform Fees",
+          "avgOrderValue": "Avg Order Value"
+        },
+        "revenueTrend": {
+          "title": "Revenue Trend",
+          "subtitle": "Daily revenue across current vs. previous period",
+          "currentPeriod": "Current Period",
+          "previousPeriod": "Previous Period"
+        },
+        "paymentMethods": {
+          "title": "Payment Methods",
+          "total": "Total"
+        },
+        "taxCommissions": {
+          "title": "Tax & Commissions Breakdown",
+          "subtitle": "Detailed look at your deductibles",
+          "taxCollected": "Tax Collected (Sales)",
+          "platformCommission": "Platform Commission",
+          "paymentProcessing": "Payment Processing (2.9% + 30¢)",
+          "deliveryCosts": "Delivery Fulfillment Costs",
+          "netEarnings": "Net Earnings (To reconcile)"
+        },
+        "payouts": {
+          "title": "Recent Payouts",
+          "subtitle": "Your latest bank transfers",
+          "viewAllBtn": "View all payouts →",
+          "date": "Date",
+          "amount": "Amount",
+          "bank": "Bank",
+          "status": "Status",
+          "eta": "ETA",
+          "noPayouts": "No payouts found for the selected period."
+        },
+        "transactions": {
+          "title": "Transactions",
+          "countSubtitle": "Showing {count} of {total} recent activities",
+          "allTypesBtn": "All Types",
+          "transaction": "Transaction",
+          "type": "Type",
+          "date": "Date & Time",
+          "method": "Method",
+          "netAmount": "Net Amount",
+          "fee": "Fee",
+          "total": "Total"
+        },
+        "allPayoutsSheet": {
+          "title": "All Payouts",
+          "subtitle": "Showing {count} payouts in this period",
+          "totalPayouts": "Total ({count} Payouts)",
+          "payoutId": "Payout ID",
+          "date": "Date",
+          "amount": "Amount",
+          "bank": "Bank",
+          "status": "Status",
+          "eta": "ETA"
+        },
+        "payoutDetailSheet": {
+          "title": "Payout {id}",
+          "subtitle": "Initiated {date}",
+          "amount": "Payout Amount",
+          "status": "Status",
+          "period": "Period",
+          "periodValue": "Jan 1 - Jan 7, 2026",
+          "ordersIncluded": "Orders Included",
+          "ordersValue": "{count} Orders",
+          "bankAccount": "Bank Account",
+          "initiated": "Initiated",
+          "initiatedValue": "Jan 8, 2026",
+          "grossRevenue": "Gross Revenue",
+          "platformCommission": "Platform Commission (10%)",
+          "netPayout": "Net Payout",
+          "payoutTimeline": "Payout Timeline",
+          "payoutDeposited": "Payout Deposited",
+          "inTransit": "In Transit to Bank",
+          "payoutInitiated": "Payout Initiated",
+          "pending": "Pending"
+        },
+        "transactionSidebar": {
+          "orderTotal": "Order Total",
+          "type": "Type",
+          "dateTime": "Date & Time",
+          "paymentMethod": "Payment Method",
+          "customer": "Customer",
+          "orderItems": "Order Items",
+          "qty": "Qty: {qty}",
+          "subtotal": "Subtotal",
+          "platformFee": "Platform Fee",
+          "netAmount": "Net Amount",
+          "activity": "Activity"
+        },
+        "pdf": {
+          "title": "Finance Summary Report",
+          "period": "Period: {label}",
+          "generatedDate": "Generated Date: {date}",
+          "restaurantName": "Jayak Hub Partner",
+          "dashboard": "Restaurant Finance Dashboard",
+          "totalRevenue": "Total Revenue",
+          "netProfit": "Net Profit",
+          "platformFees": "Platform Fees",
+          "avgOrderValue": "Avg Order Value",
+          "taxBreakdown": "Tax & Commissions Breakdown",
+          "taxCollected": "Tax Collected",
+          "platformCommission": "Platform Commission",
+          "paymentProcessing": "Payment Processing",
+          "deliveryCosts": "Delivery Costs",
+          "transactionHistory": "Transaction History",
+          "id": "ID",
+          "date": "Date",
+          "type": "Type",
+          "method": "Method",
+          "fee": "Fee",
+          "total": "Total",
+          "confidential": "CONFIDENTIAL FINANCE REPORT - SECURELY GENERATED BY JAYAK HUB"
+        }
+      },
+      "Marketing": {
+        "heroTitle": "Grow Your Business with JayakHub",
+        "heroSubtitle": "Reach more customers, increase your visibility, and drive sales with our targeted marketing packages. Cancel anytime.",
+        "availablePackages": "Available Packages",
+        "storefrontVisibility": {
+          "title": "Storefront Visibility Boost",
+          "description": "Get featured at the top of category lists and search results in your area.",
+          "price": "$29",
+          "period": "/month",
+          "features": {
+            "0": "Priority placement in matching categories",
+            "1": "Featured tag on your restaurant profile",
+            "2": "Top 3 appearance in local search results",
+            "3": "Basic performance analytics"
+          },
+          "button": "Select Visibility Package"
+        },
+        "growthPartner": {
+          "badge": "Recommended",
+          "title": "Growth Partner Bundle",
+          "description": "The ultimate package for aggressive growth, including featured placements and custom promotions.",
+          "price": "$79",
+          "period": "/month",
+          "features": {
+            "0": "Everything in Visibility Boost",
+            "1": "Placement in 'Featured Restaurants' carousel",
+            "2": "1 Push notification to local users per month",
+            "3": "Ability to run exclusive JayakHub promos",
+            "4": "Advanced conversion analytics"
+          },
+          "button": "Get Growth Partner"
+        }
+      },
+      "Reports": {
+        "header": {
+          "noData": "No report data available.",
+          "last30Days": "Last 30 Days"
+        },
+        "stats": {
+          "totalSales": "Total Sales",
+          "totalOrders": "Total Orders",
+          "avgOrderValue": "Avg Order Value",
+          "repeatCustomerRate": "Repeat Customer Rate",
+          "vsLastPeriod": "vs last period"
+        },
+        "charts": {
+          "sales": {
+            "title": "Sales Over Time",
+            "subtitle": "Revenue trend with previous period comparison",
+            "currentPeriod": "Current Period",
+            "previousPeriod": "Previous Period",
+            "noData": "No Data"
+          },
+          "sources": {
+            "title": "Order Sources",
+            "subtitle": "Where your orders come from",
+            "walkIn": "Walk-in / Dine-in",
+            "online": "Online Ordering"
+          },
+          "peakHours": {
+            "title": "Peak Hours",
+            "subtitle": "Busiest times today",
+            "orders": "orders"
+          }
+        },
+        "topProducts": {
+          "title": "Top Products",
+          "subtitle": "By units sold",
+          "viewAll": "View All",
+          "allProducts": "All Products",
+          "rankedSubtitle": "{count} products ranked by units sold",
+          "products": "Products",
+          "columns": {
+            "product": "Product",
+            "units": "Units",
+            "revenue": "Revenue",
+            "rating": "Rating"
+          },
+          "detail": {
+            "unitsSold": "Units Sold",
+            "totalRevenue": "Total Revenue",
+            "price": "Price",
+            "cost": "Cost",
+            "profit": "Profit",
+            "profitMargin": "Profit Margin",
+            "customerRating": "Customer Rating",
+            "category": "Category",
+            "avgRevenue": "Avg Revenue Per Unit",
+            "unitsSoldLabel": "units sold"
+          }
+        },
+        "recentOrders": {
+          "title": "Recent Orders",
+          "subtitle": "Click any order for details",
+          "allOrders": "All Orders",
+          "columns": {
+            "order": "ORDER",
+            "status": "STATUS",
+            "customer": "CUSTOMER",
+            "items": "ITEMS",
+            "source": "SOURCE",
+            "total": "TOTAL"
+          },
+          "pagination": "Showing {start}-{end} of {total}",
+          "guest": "Guest",
+          "noDetails": "No details",
+          "detail": {
+            "orderTotal": "Order Total",
+            "status": "Status",
+            "customer": "Customer",
+            "orderSource": "Order Source",
+            "paymentMethod": "Payment Method",
+            "prepDuration": "Prep Duration",
+            "orderItems": "Order Items",
+            "qty": "Qty:",
+            "subtotal": "Subtotal",
+            "tax": "Tax (5%)",
+            "total": "Total",
+            "completed": "Completed",
+            "preparing": "Preparing",
+            "cancelled": "Cancelled"
+          }
+        }
+      },
+      "Reviews": {
+        "header": {
+          "last30Days": "Last 30 Days"
+        },
+        "stats": {
+          "averageRating": "Average Rating",
+          "live": "Live",
+          "totalReviews": "Total Reviews",
+          "allTime": "All time",
+          "unreplied": "Unreplied",
+          "needsAttention": "Needs attention"
+        },
+        "charts": {
+          "trend": {
+            "title": "Rating Trend",
+            "subtitle": "Average ratings over selected period",
+            "label": "Average Rating",
+            "noData": "No Data"
+          },
+          "distribution": {
+            "title": "Rating Distribution",
+            "subtitle": "Breakdown by stars",
+            "noReviews": "No Reviews",
+            "stars5": "5 Stars",
+            "stars4": "4 Stars",
+            "stars3": "3 Stars",
+            "stars2": "2 Stars",
+            "stars1": "1 Stars"
+          }
+        },
+        "filters": {
+          "allReviews": "All Reviews",
+          "unreplied": "Unreplied",
+          "stars5": "5 Stars",
+          "critical": "Critical (1-3)"
+        },
+        "list": {
+          "noReviews": "No reviews found.",
+          "order": "Order",
+          "reply": "Reply",
+          "restaurantReply": "Restaurant Reply",
+          "recently": "Recently"
+        },
+        "detail": {
+          "success": "Reply submitted successfully!",
+          "errorEmpty": "Reply text cannot be empty.",
+          "newCustomer": "New Customer",
+          "lifetimeOrders": "lifetime orders",
+          "title": "Review Detail",
+          "order": "Order",
+          "history": "History",
+          "avgSpend": "Avg Spend",
+          "reviewLabel": "Review",
+          "yourReply": "Your Reply",
+          "sentRecently": "Sent Recently",
+          "writeReply": "Write a Reply",
+          "placeholder": "Type your public response here...",
+          "sending": "Sending...",
+          "sendReply": "Send Reply"
+        }
+      },
+      "Status": {
+        "titleRejected": "Application Rejected",
+        "descriptionRejected": "Unfortunately, your application to join JayakHub was not approved at this time. Please contact support for more details.",
+        "titlePending": "Application Pending",
+        "descriptionPending": "Your application is currently under review by our team. We will notify you once a decision has been made.",
+        "currentStatus": "CURRENT STATUS",
+        "titleSubmitted": "Application submitted!",
+        "descriptionSubmitted": "Thank you for applying to join JayakHub. We've received your application and our team will review it shortly.",
+        "whatHappensNext": "WHAT HAPPENS NEXT",
+        "timeline": {
+          "step1": {
+            "title": "Application Submitted",
+            "description": "Your application is in our queue"
+          },
+          "step2": {
+            "title": "Team Review",
+            "description": "Usually takes 1-2 business days"
+          },
+          "step3": {
+            "title": "Confirmation Email",
+            "description": "You'll receive an email once approved"
+          },
+          "step4": {
+            "title": "Go Live",
+            "description": "Start accepting orders on JayakHub"
+          }
+        }
+      },
+      "Support": {
+        "header": {
+          "newTicket": "New Ticket"
+        },
+        "contact": {
+          "liveChat": "Live Chat",
+          "liveChatDesc": "Online – Avg 2 min wait",
+          "phoneSupport": "Phone Support",
+          "phoneDesc": "+964 750 000 0000",
+          "emailUs": "Email Us",
+          "emailDesc": "support@jayakhub.com"
+        },
+        "createTicket": {
+          "errorEmpty": "Please fill in all required fields.",
+          "success": "Ticket created successfully!",
+          "errorFailed": "Failed to create ticket",
+          "errorUnexpected": "An unexpected error occurred.",
+          "title": "Create New Ticket",
+          "description": "Fill out the form below to submit a new support ticket.",
+          "subjectLabel": "Subject",
+          "subjectPlaceholder": "Brief summary of your issue",
+          "priorityLabel": "Priority",
+          "prioritySelect": "Select priority",
+          "priorities": {
+            "low": "Low",
+            "medium": "Medium",
+            "high": "High"
+          },
+          "categoryLabel": "Category",
+          "categorySelect": "Select a category",
+          "categories": {
+            "general": "General Inquiry",
+            "technical": "Technical Issue",
+            "billing": "Billing",
+            "feature": "Feature Request"
+          },
+          "descLabel": "Description",
+          "descPlaceholder": "Describe your issue in detail...",
+          "cancel": "Cancel",
+          "submitting": "Submitting...",
+          "submit": "Submit Ticket"
+        },
+        "faq": {
+          "title": "Frequently Asked Questions",
+          "q1": "How do I change my restaurant logo?",
+          "a1": "Navigate to Settings > Profile and click on the camera icon to upload a new logo picture.",
+          "q2": "When do I get paid?",
+          "a2": "Payouts are processed weekly. You can expect funds to arrive in your designated bank account every Wednesday.",
+          "q3": "Can I set different hours for weekends?",
+          "a3": "Yes, go to Settings > Opening Hours. You can define specific time slots for each day of the week.",
+          "q4": "How do I add a new menu item?",
+          "a4": "Go to Menu Management, select a category, and click the 'Add Item' button to enter the item details and price.",
+          "q5": "What happens when I mark an order as 'Ready'?",
+          "a5": "The customer and delivery driver are notified immediately that the order is prepared and ready for pickup.",
+          "q6": "How do I handle a customer complaint?",
+          "a6": "Please reach out to our Support team via Live Chat or Phone. We will mediate the process.",
+          "q7": "Can I export my financial data?",
+          "a7": "Yes, you can export your payout and transaction history as a CSV file from the Finance tab.",
+          "q8": "How do I add team members?",
+          "a8": "Go to Account & Settings > Team roles, and click 'Invite Member' to assign them specific access permissions."
+        },
+        "knowledgeBase": {
+          "title": "Knowledge Base",
+          "subtitle": "Browse help topics",
+          "articlesCount": "{count} articles",
+          "cat1Name": "Getting Started",
+          "cat1Desc": "Setup guide, onboarding, first steps",
+          "cat2Name": "Orders & Delivery",
+          "cat2Desc": "Order flow, tracking, delivery",
+          "cat3Name": "Payments & Billing",
+          "cat3Desc": "Payouts, invoices, billing info",
+          "cat4Name": "Menu Management",
+          "cat4Desc": "Items, categories, variants, photos",
+          "cat5Name": "Account & Settings",
+          "cat5Desc": "Profile, team roles, notifications",
+          "cat6Name": "Troubleshooting",
+          "cat6Desc": "Common issues, error codes, fixes"
+        },
+        "statusBadge": {
+          "open": "OPEN",
+          "inProgress": "IN PROGRESS",
+          "resolved": "RESOLVED"
+        },
+        "searchBanner": {
+          "title": "How can we help you today?",
+          "subtitle": "Search for articles, FAQs, or browse our knowledge base.",
+          "placeholder": "e.g. How to change opening hours.."
+        },
+        "ticketDetail": {
+          "priority": "Priority",
+          "created": "Created",
+          "description": "Description",
+          "noDescription": "No description provided.",
+          "status": "Status",
+          "timeline": {
+            "ticketCreated": "Ticket Created",
+            "agentAssigned": "Agent Assigned",
+            "resolved": "Resolved",
+            "awaitingResponse": "Awaiting Response",
+            "resolution": "Resolution",
+            "pending": "Pending",
+            "now": "Now",
+            "dash": "—"
+          }
+        },
+        "ticketsTable": {
+          "title": "Support Tickets",
+          "subtitle": "Your recent inquiries",
+          "colTicket": "Ticket",
+          "colSubject": "Subject",
+          "colStatus": "Status",
+          "colPriority": "Priority",
+          "colUpdated": "Updated",
+          "noTickets": "No tickets found. Create one to get started.",
+          "timeAgo": {
+            "minutes": "{count}m ago",
+            "hours": "{count}h ago",
+            "days": "{count}d ago"
+          }
+        }
+      },
+      "Users": {
+        "form": {
+          "roles": {
+            "admin": "Admin",
+            "manager": "Manager",
+            "cashier": "Cashier",
+            "kitchen": "Kitchen"
+          },
+          "titleAdd": "Add New User",
+          "titleEdit": "Edit User",
+          "cancel": "Cancel",
+          "saving": "Saving...",
+          "saveChanges": "Save Changes",
+          "personalInfo": "Personal Information",
+          "active": "Active",
+          "inactive": "Inactive",
+          "personalDesc": "Basic identification details for this user.",
+          "firstName": "First Name",
+          "firstNamePlaceholder": "e.g. John",
+          "lastName": "Last Name",
+          "lastNamePlaceholder": "e.g. Doe",
+          "email": "Email Address",
+          "emailPlaceholder": "e.g. name@restaurant.com",
+          "accessSecurity": "Access & Security",
+          "accessDesc": "Manage role permissions and login credentials.",
+          "assignedRole": "Assigned Role",
+          "selectRole": "Select a role",
+          "password": "Password",
+          "createPassword": "Create password",
+          "leaveBlank": "Leave blank to keep current",
+          "confirmPasswordLabel": "Confirm Password",
+          "confirmPasswordPlaceholder": "Confirm password"
+        },
+        "list": {
+          "showing": "Showing {start}-{end} of {total}",
+          "deleteTitle": "Delete User",
+          "deleteDesc": "Are you sure you want to delete this user? This action cannot be undone.",
+          "cancel": "Cancel",
+          "deleting": "Deleting...",
+          "delete": "Delete"
+        },
+        "filters": {
+          "addUser": "Add User"
+        },
+        "table": {
+          "colUser": "User",
+          "colRole": "Role",
+          "colStatus": "Status",
+          "colLastActive": "Last Active",
+          "colActions": "Actions",
+          "noUsers": "No users found in this category."
+        }
+      },
+      "status": {
+        "online": "Online",
+        "offline": "Offline",
+        "updateSuccess": "Restaurant is now {status}",
+        "updateFailed": "Failed to update status"
+      },
+      "metrics": {
+        "todaysOrders": "Today's Orders",
+        "revenueToday": "Revenue Today",
+        "avgRating": "Avg Rating",
+        "prepTime": "Prep Time",
+        "vsYesterday": "vs yesterday",
+        "thisWeek": "this week",
+        "vsAvg": "vs avg"
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "subtitle": "Everything happening now",
+        "noActivity": "No recent activity to show",
+        "timeAgo": {
+          "mins": "{count} min ago",
+          "hours": "{count} hr ago",
+          "yesterday": "Yesterday",
+          "days": "{count} days ago"
+        }
+      },
+      "recentOrders": {
+        "title": "Recent Orders",
+        "subtitle": "Active and completed today",
+        "viewAll": "View all",
+        "noOrders": "No recent orders",
+        "itemsCount": "{count} items",
+        "status": {
+          "new": "NEW",
+          "preparing": "PREPARING",
+          "delivered": "DELIVERED",
+          "rejected": "REJECTED"
+        },
+        "columns": {
+          "order": "Order",
+          "customer": "Customer",
+          "items": "Items",
+          "total": "Total",
+          "status": "Status"
+        }
+      },
+      "revenueChart": {
+        "title": "Revenue Overview",
+        "subtitle": "Last 7 Days",
+        "thisWeek": "This Week",
+        "gatheringData": "Gathering data...",
+        "days": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat",
+          "sun": "Sun"
+        }
+      }
+    }
 }

@@ -9,24 +9,7 @@ import { getProfile } from "@/app/actions/customer/userprofile";
 import { logoutAction } from "@/app/actions/auth/auth";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-// Map paths to readable names
-const PAGE_NAMES: Record<string, string> = {
-  dashboard: "Dashboard",
-  orders: "Orders",
-  menu: "Menu Management",
-  items: "Items",
-  categories: "Categories",
-  variants: "Variant Groups",
-  settings: "Settings",
-  marketing: "Marketing",
-  reviews: "Ratings & Reviews",
-  users: "Users & Roles",
-  payments: "Payment History",
-  reports: "Reports",
-  apis: "APIs",
-  support: "Support Center",
-};
+import { useTranslations } from "next-intl";
 
 export default function RestaurantHeader() {
   const pathname = usePathname();
@@ -42,9 +25,29 @@ export default function RestaurantHeader() {
     fetchProfile();
   }, []);
 
+  const t = useTranslations("RestaurantDashboard.Sidebar.items");
+
   const segments = pathname?.split("/") || [];
   const lastSegment = segments.length > 0 ? segments[segments.length - 1] : "";
-  const pageTitle = PAGE_NAMES[lastSegment] || "Dashboard";
+  
+  const PAGE_NAMES: Record<string, string> = {
+    dashboard: t("dashboard"),
+    orders: t("orders"),
+    menu: t("menuManagement"),
+    items: t("items"),
+    categories: t("categories"),
+    variants: t("variants"),
+    settings: t("settings"),
+    marketing: t("marketing"),
+    reviews: t("reviews"),
+    users: t("users"),
+    payments: t("finance"),
+    reports: t("reports"),
+    apis: t("apis"),
+    support: t("support"),
+  };
+  
+  const pageTitle = PAGE_NAMES[lastSegment] || t("dashboard");
 
   return (
     <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">

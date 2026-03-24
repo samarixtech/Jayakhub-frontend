@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { X, Loader2, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,8 @@ export default function ProfileView({
     profile,
   } = useProfileSettings(settings);
 
+  const t = useTranslations("RestaurantDashboard.Settings.profile");
+
   if (!settings) {
     return <SettingsSkeleton />;
   }
@@ -57,17 +60,17 @@ export default function ProfileView({
   return (
     <Card className="py-6">
       <CardHeader>
-        <CardTitle className="text-lg font-bold">Restaurant Profile</CardTitle>
+        <CardTitle className="text-lg font-bold">{t("title")}</CardTitle>
         <CardDescription className="text-gray-500">
-          Details visible to customers on your page
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Image Upload Areas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <ProfileImageUpload
-            label="Logo"
-            subLabel="PNG, JPG up to 5MB"
+            label={t("logo")}
+            subLabel={t("logoHint")}
             imagePreview={profileImagePreview}
             existingImage={profile?.profileImage}
             imageBaseUrl={imageBaseUrl}
@@ -76,8 +79,8 @@ export default function ProfileView({
           />
 
           <ProfileImageUpload
-            label="Cover Image"
-            subLabel="1200×400px recommended"
+            label={t("cover")}
+            subLabel={t("coverHint")}
             imagePreview={bannerImagePreview}
             existingImage={profile?.bannerImage}
             imageBaseUrl={imageBaseUrl}
@@ -91,12 +94,12 @@ export default function ProfileView({
           {/* Restaurant Name */}
           <div className="space-y-1.5">
             <Label className="text-sm font-medium text-foreground block">
-              Restaurant Name <span className="text-red-500">*</span>
+              {t("name")} <span className="text-red-500">*</span>
             </Label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. The Royal Gourmet"
+              placeholder={t("namePlaceholder")}
               className="h-11 bg-background"
             />
           </div>
@@ -104,14 +107,14 @@ export default function ProfileView({
           {/* Website URL */}
           <div className="space-y-1.5">
             <Label className="text-sm font-medium text-foreground block">
-              Website URL
+              {t("website")}
             </Label>
             <div className="relative">
               <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={websiteUrl}
                 onChange={(e) => setWebsiteUrl(e.target.value)}
-                placeholder="https://example.com"
+                placeholder={t("websitePlaceholder")}
                 className="pl-9 h-11 bg-background"
               />
             </div>
@@ -121,13 +124,13 @@ export default function ProfileView({
         {/* Description */}
         <div className="space-y-1.5">
           <Label className="text-sm font-medium text-foreground block">
-            Description
+            {t("description")}
           </Label>
           <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
-            placeholder="Describe your restaurant, styling, and ambiance..."
+            placeholder={t("descriptionPlaceholder")}
             className="resize-none bg-background"
           />
         </div>
@@ -135,7 +138,7 @@ export default function ProfileView({
         {/* Cuisines */}
         <div className="space-y-2">
           <Label className="text-sm font-medium text-foreground block">
-            Cuisines
+            {t("cuisines")}
           </Label>
           <div className="flex flex-wrap gap-2 mb-3">
             {cuisines.map((cuisine) => (
@@ -156,7 +159,7 @@ export default function ProfileView({
           </div>
           <div className="flex gap-2">
             <Input
-              placeholder="Add a cuisine (e.g. Kurdish, BBQ)"
+              placeholder={t("cuisinePlaceholder")}
               value={cuisineInput}
               onChange={(e) => setCuisineInput(e.target.value)}
               onKeyDown={(e) => {
@@ -172,7 +175,7 @@ export default function ProfileView({
               onClick={addCuisine}
               className="h-11 px-6 font-medium"
             >
-              ADD
+              {t("addBtn")}
             </Button>
           </div>
         </div>
@@ -188,10 +191,10 @@ export default function ProfileView({
           {isPending ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Saving...
+              {t("saving")}
             </>
           ) : (
-            "Save Changes"
+            t("saveBtn")
           )}
         </Button>
       </CardFooter>

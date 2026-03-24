@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { ChevronDown, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { exportToPDF } from "@/lib/utils/pdfs/pdf-export";
-import { filterOptions } from "../constants";
+import { getFilterOptions } from "../constants";
+import { useTranslations } from "next-intl";
 
 interface FinanceHeaderProps {
   filter: string;
@@ -17,11 +18,14 @@ const FinanceHeader = ({
   reportRef,
   restaurantName,
 }: FinanceHeaderProps) => {
+  const t = useTranslations("RestaurantDashboard.Payments.header");
+  const filterOptions = getFilterOptions(t);
+  
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
   const currentFilterLabel =
-    filterOptions.find((o) => o.value === filter)?.label || "All Time";
+    filterOptions.find((o) => o.value === filter)?.label || t("filterAllTime");
 
   const handleExportPDF = async () => {
     if (!reportRef.current) return;
@@ -49,7 +53,7 @@ const FinanceHeader = ({
 
   return (
     <div className="flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-bold text-gray-900">Finance Dashboard</h1>
+      <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
       <div className="flex justify-end items-center gap-3 relative">
         <div className="relative">
           <Button
@@ -95,7 +99,7 @@ const FinanceHeader = ({
           ) : (
             <Download className="mr-2 w-4 h-4" />
           )}
-          {isExporting ? "Exporting..." : "Export PDF"}
+          {isExporting ? t("exportingBtn") : t("exportBtn")}
         </Button>
       </div>
     </div>

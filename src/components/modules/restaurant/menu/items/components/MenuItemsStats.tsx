@@ -2,6 +2,7 @@ import React from "react";
 import { Utensils, CheckCircle, PauseCircle, Shapes } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface MenuItemsStatsProps {
   stats: { label: string; value: number }[];
@@ -27,6 +28,8 @@ const ICON_MAP: Record<string, any> = {
 };
 
 export const MenuItemsStats: React.FC<MenuItemsStatsProps> = ({ stats }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.stats");
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {stats.map((stat, idx) => {
@@ -54,7 +57,7 @@ export const MenuItemsStats: React.FC<MenuItemsStatsProps> = ({ stats }) => {
                 variant="p"
                 className="text-gray-500 text-[10px] sm:text-xs font-medium uppercase tracking-wide truncate text-center sm:text-left w-full"
               >
-                {stat.label}
+                {t(stat.label as any)}
               </Typography>
             </div>
           </Card>

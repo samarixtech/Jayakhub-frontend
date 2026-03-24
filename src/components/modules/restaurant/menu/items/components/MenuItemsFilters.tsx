@@ -2,6 +2,7 @@ import React from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 interface MenuItemsFiltersProps {
   searchQuery: string;
@@ -18,12 +19,14 @@ export const MenuItemsFilters: React.FC<MenuItemsFiltersProps> = ({
   selectedCategory,
   setSelectedCategory,
 }) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.views");
+
   return (
     <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
       <div className="relative w-full sm:w-[250px] shrink-0">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
         <Input
-          placeholder="Search items..."
+          placeholder={t("searchPlaceholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-9 bg-white border-gray-200 h-10 shadow-sm rounded-lg w-full"

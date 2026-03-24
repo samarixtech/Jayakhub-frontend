@@ -3,6 +3,7 @@
 import React from "react";
 import { X, Check, Utensils, Receipt } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useTranslations } from "next-intl";
 
 interface OrderItem {
     name: string;
@@ -62,6 +63,8 @@ const getActivityIcon = (type: ActivityEvent["type"]) => {
 };
 
 const TransactionDetailSidebar = ({ open, onOpenChange, transaction }: TransactionDetailSidebarProps) => {
+    const t = useTranslations("RestaurantDashboard.Payments.transactionSidebar");
+
     if (!transaction) return null;
 
     // Use dummy data if detailed items are missing
@@ -110,11 +113,11 @@ const TransactionDetailSidebar = ({ open, onOpenChange, transaction }: Transacti
                         <div className="grid grid-cols-2 gap-3">
                             {/* Order Total / Type */}
                             <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
-                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Order Total</span>
+                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t("orderTotal")}</span>
                                 <span className="text-[20px] font-bold text-[#1b2d22]">{subtotal}</span>
                             </div>
                             <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center items-start">
-                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Type</span>
+                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t("type")}</span>
                                 <span className={`px-3 py-1 rounded-full text-[12px] font-bold ${transaction.type === "Refund" ? "bg-red-50 text-red-600" : "bg-gray-100 text-gray-600"}`}>
                                     {transaction.type}
                                 </span>
@@ -122,30 +125,30 @@ const TransactionDetailSidebar = ({ open, onOpenChange, transaction }: Transacti
 
                             {/* Date & Time / Payment Method */}
                             <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
-                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Date & Time</span>
+                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t("dateTime")}</span>
                                 <span className="text-[14px] font-bold text-[#1b2d22]">{transaction.date}, {transaction.time || "3:15 PM"}</span>
                             </div>
                             <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
-                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Payment Method</span>
+                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t("paymentMethod")}</span>
                                 <span className="text-[14px] font-bold text-[#1b2d22]">{transaction.paymentMethod}</span>
                             </div>
 
                             {/* Customer (Full Width if needed, but mockup shows it taking a slot) */}
                             <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center col-span-1">
-                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Customer</span>
+                                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">{t("customer")}</span>
                                 <span className="text-[14px] font-bold text-[#1b2d22]">{transaction.customer}</span>
                             </div>
                         </div>
 
                         {/* Order Items */}
                         <div>
-                            <h3 className="text-[13px] font-bold text-[#1b2d22] mb-3">Order Items</h3>
+                            <h3 className="text-[13px] font-bold text-[#1b2d22] mb-3">{t("orderItems")}</h3>
                             <div className="space-y-4">
                                 {items.map((item, idx) => (
                                     <div key={idx} className="flex justify-between items-start">
                                         <div>
                                             <p className="text-[13px] font-bold text-[#1b2d22]">{item.name}</p>
-                                            <p className="text-[11px] text-gray-400 mt-0.5">Qty: {item.qty}</p>
+                                            <p className="text-[11px] text-gray-400 mt-0.5">{t("qty", { qty: item.qty })}</p>
                                         </div>
                                         <span className="text-[13px] font-bold text-[#1b2d22]">${item.total.toFixed(2)}</span>
                                     </div>
@@ -156,22 +159,22 @@ const TransactionDetailSidebar = ({ open, onOpenChange, transaction }: Transacti
                         {/* Summary */}
                         <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm space-y-3">
                             <div className="flex justify-between items-center">
-                                <span className="text-[12px] text-gray-500">Subtotal</span>
+                                <span className="text-[12px] text-gray-500">{t("subtotal")}</span>
                                 <span className="text-[12px] font-bold text-[#1b2d22]">{subtotal}</span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-[12px] text-gray-500">Platform Fee</span>
+                                <span className="text-[12px] text-gray-500">{t("platformFee")}</span>
                                 <span className="text-[12px] font-bold text-red-500">{feeFormatted}</span>
                             </div>
                             <div className="flex justify-between items-center pt-2">
-                                <span className="text-[13px] font-bold text-[#2d6a4f]">Net Amount</span>
+                                <span className="text-[13px] font-bold text-[#2d6a4f]">{t("netAmount")}</span>
                                 <span className="text-[15px] font-black text-[#2d6a4f]">{netAmount}</span>
                             </div>
                         </div>
 
                         {/* Activity Timeline */}
                         <div>
-                            <h3 className="text-[13px] font-bold text-[#1b2d22] mb-4">Activity</h3>
+                            <h3 className="text-[13px] font-bold text-[#1b2d22] mb-4">{t("activity")}</h3>
                             <div className="relative border-l border-gray-200 ml-3 pl-5 space-y-6">
                                 {activities.map((act, index) => (
                                     <div key={act.id} className="relative">

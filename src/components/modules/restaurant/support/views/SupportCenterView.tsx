@@ -11,8 +11,10 @@ import { KnowledgeBaseCategories } from "../components/KnowledgeBaseCategories";
 import { FAQSection } from "../components/FAQSection";
 import CreateTicketDialog from "../components/CreateTicketDialog";
 import TicketDetailSheet from "../components/TicketDetailSheet";
+import { useTranslations } from "next-intl";
 
 const SupportCenterView = () => {
+  const t = useTranslations("RestaurantDashboard.Support");
   const { tickets, isLoading, refreshTickets } = useSupportTickets();
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
@@ -32,7 +34,7 @@ const SupportCenterView = () => {
           className="flex items-center gap-1.5 bg-[#2E6B56] hover:bg-[#255745] text-white text-[12px] font-bold px-5 py-2 rounded-full transition-colors shadow-sm tracking-wide"
         >
           <Plus className="w-3.5 h-3.5" strokeWidth={3} />
-          New Ticket
+          {t("header.newTicket")}
         </button>
       </div>
 

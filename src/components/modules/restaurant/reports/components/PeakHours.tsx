@@ -2,6 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface PeakHour {
   timeRange: string;
@@ -42,6 +43,8 @@ const DEFAULT_PEAK_HOURS: PeakHour[] = [
 ];
 
 const PeakHours = ({ peakHours }: PeakHoursProps) => {
+  const t = useTranslations("RestaurantDashboard.Reports.charts.peakHours");
+
   const data: PeakHour[] = Array.isArray(peakHours)
     ? peakHours.slice(0, 4).map((item, index) => {
         const maxOrders = Math.max(...peakHours.map((p: any) => p.orders || 1));
@@ -59,9 +62,9 @@ const PeakHours = ({ peakHours }: PeakHoursProps) => {
   return (
     <div className="w-full">
       <div className="mb-8">
-        <h2 className="text-[18px] font-black text-[#1b2d22]">Peak Hours</h2>
+        <h2 className="text-[18px] font-black text-[#1b2d22]">{t("title")}</h2>
         <p className="text-[14px] font-bold text-[#94a3b8] mt-0.5">
-          Busiest times today
+          {t("subtitle")}
         </p>
       </div>
 
@@ -70,7 +73,7 @@ const PeakHours = ({ peakHours }: PeakHoursProps) => {
           <div key={index} className="space-y-2.5">
             <div className="flex justify-between items-center text-[15px] font-black text-[#1b2d22]">
               <span>{item.timeRange}</span>
-              <span>{item.orders} orders</span>
+              <span>{item.orders} {t("orders")}</span>
             </div>
             <div className="w-full bg-[#f1f5f9] h-2 rounded-full overflow-hidden">
               <div

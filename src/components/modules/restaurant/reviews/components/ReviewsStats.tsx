@@ -1,6 +1,7 @@
 import { Star, MessageSquare, Flag, ArrowUpRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 interface ReviewsStatsProps {
   summary: {
@@ -50,6 +51,7 @@ const StatCard: React.FC<StatCardProps> = ({
 };
 
 export default function ReviewsStats({ summary }: ReviewsStatsProps) {
+  const t = useTranslations("RestaurantDashboard.Reviews.stats");
   // Safety check just in case
   const safeSummary = summary || {
     averageRating: 0,
@@ -60,40 +62,40 @@ export default function ReviewsStats({ summary }: ReviewsStatsProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <StatCard
-        title="Average Rating"
+        title={t("averageRating")}
         value={safeSummary.averageRating}
         icon={<Star className="w-4 h-4" />}
         iconBgColor="bg-[#fff6e5]"
         iconColor="text-[#f5a623]"
         footer={
           <div className="flex items-center gap-1 text-[#1eb589] font-bold text-[11px]">
-            <ArrowUpRight className="w-3.5 h-3.5 stroke-3" /> Live
+            <ArrowUpRight className="w-3.5 h-3.5 stroke-3" /> {t("live")}
           </div>
         }
       />
 
       <StatCard
-        title="Total Reviews"
+        title={t("totalReviews")}
         value={safeSummary.totalReviews}
         icon={<MessageSquare className="w-4 h-4" />}
         iconBgColor="bg-[#ecf2ff]"
         iconColor="text-[#5584ff]"
         footer={
           <div className="flex items-center gap-1 text-[#1eb589] font-bold text-[11px]">
-            <ArrowUpRight className="w-3.5 h-3.5 stroke-3" /> All time
+            <ArrowUpRight className="w-3.5 h-3.5 stroke-3" /> {t("allTime")}
           </div>
         }
       />
 
       <StatCard
-        title="Unreplied"
+        title={t("unreplied")}
         value={safeSummary.unrepliedReviews}
         icon={<Flag className="w-4 h-4" />}
         iconBgColor="bg-[#f4effc]"
         iconColor="text-[#9c59f6]"
         footer={
           <div className="text-[#657a8a] font-medium text-[12px] mt-0.5">
-            Needs attention
+            {t("needsAttention")}
           </div>
         }
       />

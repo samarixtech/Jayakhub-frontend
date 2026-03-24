@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import {
   Card,
@@ -18,30 +19,32 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
   orders,
   formatCurrency,
 }) => {
+  const t = useTranslations("RestaurantDashboard");
+
   const getStatusBadge = (status: string) => {
     const s = status.toLowerCase();
     if (s === "pending")
       return (
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#fff7d1] text-[#b8860b]">
-          NEW
+          {t("recentOrders.status.new")}
         </span>
       );
     if (s === "ready")
       return (
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#e6f0ff] text-[#2b6cb0]">
-          PREPARING
+          {t("recentOrders.status.preparing")}
         </span>
       );
     if (s === "delivered")
       return (
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#e8f6f0] text-[#1eb589]">
-          DELIVERED
+          {t("recentOrders.status.delivered")}
         </span>
       );
     if (s === "rejected")
       return (
         <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#fff0f0] text-[#ef4444]">
-          REJECTED
+          {t("recentOrders.status.rejected")}
         </span>
       );
     return (
@@ -53,7 +56,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
 
   const columns: Column<any>[] = [
     {
-      header: "Order",
+      header: t("recentOrders.columns.order"),
       cell: (item) => (
         <span className="text-[13px] font-bold text-[#1b2d22]">
           {item.orderId}
@@ -63,7 +66,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
       headerClassName: "w-[25%] uppercase tracking-wider",
     },
     {
-      header: "Customer",
+      header: t("recentOrders.columns.customer"),
       cell: (item) => (
         <div className="text-[13px] font-bold text-[#1b2d22] truncate max-w-[150px]">
           {item.customerName}
@@ -73,17 +76,17 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
       headerClassName: "w-[25%] uppercase tracking-wider",
     },
     {
-      header: "Items",
+      header: t("recentOrders.columns.items"),
       cell: (item) => (
         <span className="text-[13px] font-medium text-[#1b2d22]">
-          {item.itemCount} items
+          {t("recentOrders.itemsCount", { count: item.itemCount || 0 })}
         </span>
       ),
       className: "py-4",
       headerClassName: "w-[15%] uppercase tracking-wider",
     },
     {
-      header: "Total",
+      header: t("recentOrders.columns.total"),
       cell: (item) => (
         <span className="text-[13px] font-bold text-[#1b2d22]">
           {formatCurrency(item.totalPrice)}
@@ -93,7 +96,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
       headerClassName: "w-[15%] uppercase tracking-wider",
     },
     {
-      header: "Status",
+      header: t("recentOrders.columns.status"),
       cell: (item) => getStatusBadge(item.orderStatus),
       className: "py-4",
       headerClassName: "w-[20%] uppercase tracking-wider",
@@ -105,17 +108,17 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
       <CardHeader className="flex flex-row items-start justify-between pb-6 pt-6">
         <div className="space-y-1">
           <CardTitle className="text-[16px] font-bold text-[#1b2d22]">
-            Recent Orders
+            {t("recentOrders.title")}
           </CardTitle>
           <CardDescription className="text-[12px] text-[#8ea89a] font-medium">
-            Active and completed today
+            {t("recentOrders.subtitle")}
           </CardDescription>
         </div>
         <Link
           href="/restaurant/orders"
           className="text-[13px] font-bold text-[#357252] flex items-center gap-1 hover:underline"
         >
-          View all <span>→</span>
+          {t("recentOrders.viewAll")} <span>→</span>
         </Link>
       </CardHeader>
       <CardContent className="p-0 overflow-x-auto w-full pb-4 px-6 md:px-0 lg:-mx-4 lg:w-auto">
@@ -123,7 +126,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
           <GlobalTable
             data={orders || []}
             columns={columns}
-            emptyMessage="No recent orders"
+            emptyMessage={t("recentOrders.noOrders")}
             rowClassName={() => "transition-colors"}
           />
         </div>
