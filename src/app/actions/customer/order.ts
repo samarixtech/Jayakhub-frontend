@@ -10,6 +10,8 @@ interface CreateOrderPayload {
     itemPrice: number;
     quantity: number;
     imageUrl?: string;
+    variantGroupIds?: string[];
+    variantOptionNames?: string[];
   }[];
   fullAddress: string;
   discount: number;
@@ -66,8 +68,14 @@ export async function getAllOrders(
       queryParams.append("filter", filter);
     }
 
-    const response: any = await api.get(`/all-orders?${queryParams.toString()}`);
-    return { success: true, data: response.data.data, meta: response.data.meta };
+    const response: any = await api.get(
+      `/all-orders?${queryParams.toString()}`,
+    );
+    return {
+      success: true,
+      data: response.data.data,
+      meta: response.data.meta,
+    };
   } catch (error: any) {
     return {
       success: false,

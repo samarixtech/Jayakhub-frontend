@@ -65,7 +65,7 @@ export const useMenuItems = () => {
         } else {
           setIsFrontendPaginated(true);
           updatePaginationMeta({
-            page, // preserve current page state for frontend view
+            page,
             limit: 10,
             totalCount: itemsData.length,
             totalPages: Math.ceil(itemsData.length / 10),

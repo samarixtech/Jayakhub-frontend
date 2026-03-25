@@ -84,7 +84,7 @@ export const useAddNewItem = () => {
           setFormData({
             name: itemData.name || "",
             description: itemData.description || "",
-            category: itemData.category || "",
+            category: itemData.category?._id || itemData.category?.id || itemData.categoryId || itemData.category || "",
             basePrice:
               itemData.basePrice?.toString() ||
               itemData.price?.toString() ||

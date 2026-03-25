@@ -190,9 +190,11 @@ export const useOrders = () => {
       return [
         OrderStatus.PENDING,
         OrderStatus.ACCEPTED,
+        OrderStatus.REJECTED,
         OrderStatus.PREPARE,
         OrderStatus.READY,
         OrderStatus.OUT_FOR_DELIVERY,
+        OrderStatus.DELIVERED,
       ].includes(s as OrderStatus);
     } else {
       return [OrderStatus.DELIVERED, OrderStatus.REJECTED].includes(
