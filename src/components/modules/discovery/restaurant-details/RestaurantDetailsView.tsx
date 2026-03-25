@@ -23,6 +23,8 @@ export default function RestaurantDetailsView() {
     );
   }
 
+  console.log("STATE", state.menuItems);
+
   return (
     <div className="min-h-screen bg-white font-sans lg:p-10">
       <RestaurantHero

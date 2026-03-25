@@ -117,7 +117,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
                 {categories.map((cat: any) => (
                   <SelectItem
                     key={cat.id || cat._id}
-                    value={cat.categoryName || cat.name}
+                    value={cat.id || cat._id}
                     className="rounded-xl py-2 font-medium"
                   >
                     {cat.categoryName || cat.name}

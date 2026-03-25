@@ -23,6 +23,7 @@ export interface APIMnuItem {
   image: string;
   variations: any[];
   category: string;
+  categoryData?: string;
   isAvailable: boolean;
 }
 

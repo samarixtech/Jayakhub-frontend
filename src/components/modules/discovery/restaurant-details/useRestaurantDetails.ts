@@ -48,6 +48,15 @@ export function useRestaurantDetails() {
           setRestaurant(data.restaurant);
           setCategories(data.categories || []);
           setMenuItems(data.menu || []);
+          
+          if (data.ratingSummary) {
+            setReviewsData({
+              ...data.ratingSummary,
+              totalAverageRating: data.ratingSummary.averageRating,
+              totalRatingCount: data.ratingSummary.totalReviews,
+            });
+          }
+
           if (data.categories && data.categories.length > 0) {
             setActiveTab(data.categories[0]);
           }
@@ -67,7 +76,11 @@ export function useRestaurantDetails() {
     try {
       const res = await getRestaurantReviewsAction(slugParam, filter);
       if (res.success && res.data) {
-        setReviewsData(res.data);
+        setReviewsData({
+          ...res.data,
+          totalAverageRating: res.data.averageRating ?? res.data.totalAverageRating,
+          totalRatingCount: res.data.totalReviews ?? res.data.totalRatingCount,
+        });
       }
     } catch (err) {
       console.error("Failed to fetch reviews data:", err);
@@ -90,7 +103,7 @@ export function useRestaurantDetails() {
     if (slugParam) {
       console.log("Fetching restaurant with slug:", slugParam);
       fetchRestaurant(slugParam);
-      fetchReviewsWithFilter();
+      // Removed automatic fetchReviewsWithFilter on mount as reviews are now supplied by fetchRestaurant.
     } else {
       console.log("No slug param found");
       setIsLoading(false);
@@ -131,7 +144,7 @@ export function useRestaurantDetails() {
   const menuByCategories = useMemo(() => {
     const grouped: Record<string, APIMnuItem[]> = {};
     categories.forEach((cat) => {
-      grouped[cat] = menuItems.filter((item) => item.category === cat);
+      grouped[cat] = menuItems.filter((item) => (item as any).categoryData === cat || item.category === cat);
     });
     return grouped;
   }, [categories, menuItems]);

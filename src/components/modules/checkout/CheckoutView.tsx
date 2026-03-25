@@ -77,13 +77,27 @@ const CheckoutView = () => {
     const payload = {
       paymentMethod: paymentMethod as any,
       restaurantId,
-      items: cart.map((item) => ({
-        itemId: item.id,
-        itemName: item.name,
-        itemPrice: item.price,
-        quantity: item.quantity,
-        imageUrl: item.imageUrl,
-      })),
+      items: cart.map((item) => {
+        const variantGroupIds =
+          item.selectedVariations?.map((v: any) => v.groupId).filter(Boolean) || [];
+        const variantOptionNames =
+          item.selectedVariations?.map((v: any) => v.name).filter(Boolean) || [];
+
+        const itemPayload: any = {
+          itemId: item.id,
+          itemName: item.name,
+          itemPrice: item.price,
+          quantity: item.quantity,
+          imageUrl: item.imageUrl,
+        };
+
+        if (variantGroupIds.length > 0) {
+          itemPayload.variantGroupIds = variantGroupIds;
+          itemPayload.variantOptionNames = variantOptionNames;
+        }
+
+        return itemPayload;
+      }),
       fullAddress,
       discount: 0.0,
       totalAmount,

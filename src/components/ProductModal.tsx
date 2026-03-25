@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Plus, Minus, X, Check } from "lucide-react";
 import Image from "next/image";
 import { useCLC } from "@/context/CLCContext";
@@ -39,7 +38,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
     if (!item) return;
     const basePrice = item.price || item.basePrice || 0;
     const varsPrice = vars.reduce(
-      (acc, v) => acc + (v.additionalPrice || 0),
+      (acc, v) => acc + (v.price || v.additionalPrice || 0),
       0,
     );
     setTotalPrice((basePrice + varsPrice) * qty);
@@ -60,12 +59,20 @@ const ProductModal: React.FC<ProductModalProps> = ({
   };
 
   const toggleVariation = (variation: any) => {
-    const exists = selectedVariations.find((v) => v.name === variation.name);
+    const exists = selectedVariations.find(
+      (v) => v.name === variation.name && v.groupName === variation.groupName,
+    );
     let newVars;
     if (exists) {
-      newVars = selectedVariations.filter((v) => v.name !== variation.name);
+      newVars = selectedVariations.filter(
+        (v) =>
+          !(v.name === variation.name && v.groupName === variation.groupName),
+      );
     } else {
-      newVars = [...selectedVariations, variation];
+      newVars = selectedVariations.filter(
+        (v) => v.groupName !== variation.groupName,
+      );
+      newVars = [...newVars, variation];
     }
     setSelectedVariations(newVars);
     calculateTotal(quantity, newVars);
@@ -74,7 +81,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const handleAddToCartClick = () => {
     const unitPrice =
       (item.price || item.basePrice || 0) +
-      selectedVariations.reduce((acc, v) => acc + (v.additionalPrice || 0), 0);
+      selectedVariations.reduce(
+        (acc, v) => acc + (v.price || v.additionalPrice || 0),
+        0,
+      );
 
     onAddToCart({
       ...item,
@@ -90,7 +100,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent showCloseButton={false} className="sm:max-w-[425px] p-0 overflow-hidden gap-0 border-0 rounded-2xl">
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-[425px] p-0 overflow-hidden gap-0 border-0 rounded-2xl"
+      >
         <div className="sr-only">
           <DialogTitle>{item.name}</DialogTitle>
         </div>
@@ -129,56 +142,74 @@ const ProductModal: React.FC<ProductModalProps> = ({
           </p>
 
           {/* Add Extra Section */}
-          {item.variations && item.variations.length > 0 && (
-            <div className="mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-gray-900">Add Extra</h3>
-                <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-1 rounded">
-                  Optional
-                </span>
-              </div>
-              <div className="space-y-3">
-                {item.variations.map((variation: any, index: number) => {
-                  const isSelected = !!selectedVariations.find(
-                    (v) => v.name === variation.name,
-                  );
+          {item.variantGroups && item.variantGroups.length > 0 && (
+            <div className="mb-8 space-y-6">
+              {item.variantGroups.map((group: any, groupIndex: number) => (
+                <div key={group.id || groupIndex}>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-bold text-gray-900">
+                      {group.groupName}
+                    </h3>
+                    <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                      Optional
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    {group.variants.map((variation: any, index: number) => {
+                      const isSelected = !!selectedVariations.find(
+                        (v) =>
+                          v.name === variation.name &&
+                          v.groupName === group.groupName,
+                      );
 
-                  return (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between cursor-pointer group"
-                      onClick={() => toggleVariation(variation)}
-                    >
-                      <div className="flex items-center gap-3">
+                      // Ensure price exists even if 0
+                      const price =
+                        variation.price || variation.additionalPrice || 0;
+
+                      return (
                         <div
-                          className={`w-6 h-6 rounded border transition-colors flex items-center justify-center shrink-0 ${
-                            isSelected
-                              ? "bg-[#346853] border-[#346853]"
-                              : "border-gray-300 group-hover:border-[#346853]"
-                          }`}
+                          key={index}
+                          className="flex items-center justify-between cursor-pointer group"
+                          onClick={() =>
+                            toggleVariation({
+                              ...variation,
+                              groupName: group.groupName,
+                              groupId: group.id || group._id,
+                            })
+                          }
                         >
-                          {isSelected && (
-                            <Check
-                              size={14}
-                              className="text-white"
-                              strokeWidth={3}
-                            />
-                          )}
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-5 h-5 rounded-full border transition-colors flex items-center justify-center shrink-0 ${
+                                isSelected
+                                  ? "bg-[#346853] border-[#346853]"
+                                  : "border-gray-300 group-hover:border-[#346853]"
+                              }`}
+                            >
+                              {isSelected && (
+                                <Check
+                                  size={12}
+                                  className="text-white"
+                                  strokeWidth={3}
+                                />
+                              )}
+                            </div>
+                            <span
+                              className={`text-base ${isSelected ? "text-gray-900 font-medium" : "text-gray-700"}`}
+                            >
+                              {variation.name}
+                            </span>
+                          </div>
+                          <span className="text-sm text-gray-500">
+                            + {currency}
+                            {price.toFixed(2)}
+                          </span>
                         </div>
-                        <span
-                          className={`text-base ${isSelected ? "text-gray-900 font-medium" : "text-gray-700"}`}
-                        >
-                          {variation.name}
-                        </span>
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        + {currency}
-                        {variation.additionalPrice.toFixed(2)}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 

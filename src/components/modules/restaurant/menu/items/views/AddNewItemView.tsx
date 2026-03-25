@@ -38,6 +38,9 @@ export default function AddNewItemView() {
     );
   }
 
+  console.log("FORMDATA", formData);
+  console.log("CATEGORIES", categories);
+
   return (
     <div className="w-full max-w-[1400px] mx-auto p-4 md:p-4 pb-32 animate-in fade-in duration-700">
       <form onSubmit={handleSubmit}>
