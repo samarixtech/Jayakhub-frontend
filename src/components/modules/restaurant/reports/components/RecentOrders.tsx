@@ -3,6 +3,7 @@ import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { cn } from "@/lib/utils";
 import OrderDetailSidebar, { OrderDetail } from "./OrderDetailSidebar";
 import { useTranslations } from "next-intl";
+import { GlobalPagination } from "@/components/common/GlobalPagination";
 
 interface Order {
   id: string;
@@ -41,9 +42,12 @@ const getStatusStyles = (status: string) => {
 interface RecentOrdersProps {
   orders?: any[];
   totalCount?: number;
+  page?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 }
 
-const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
+const RecentOrders = ({ orders = [], totalCount = 0, page = 1, totalPages = 1, onPageChange }: RecentOrdersProps) => {
   const t = useTranslations("RestaurantDashboard.Reports.recentOrders");
   
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -185,26 +189,15 @@ const RecentOrders = ({ orders = [], totalCount = 0 }: RecentOrdersProps) => {
       />
 
       {/* Pagination Footer */}
-      <div className="flex justify-between items-center mt-4 text-[12px] text-[#8ea89a]">
-        <span>
-          {t("pagination", {
-            start: 1,
-            end: formattedOrders.length,
-            total: totalCount || formattedOrders.length,
-          })}
-        </span>
-        <div className="flex gap-1.5">
-          <button className="w-7 h-7 flex items-center justify-center rounded border border-gray-200 text-gray-400">
-            &lt;
-          </button>
-          <button className="w-7 h-7 flex items-center justify-center rounded bg-[#1b2d22] text-white">
-            1
-          </button>
-          <button className="w-7 h-7 flex items-center justify-center rounded border border-gray-200 text-gray-400">
-            &gt;
-          </button>
+      {totalPages > 1 && onPageChange && (
+        <div className="mt-4">
+          <GlobalPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
         </div>
-      </div>
+      )}
 
       <OrderDetailSidebar
         open={sidebarOpen}

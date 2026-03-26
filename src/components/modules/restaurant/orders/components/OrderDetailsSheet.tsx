@@ -164,7 +164,9 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                 <p className="text-sm font-bold text-gray-900">
                   {order.customerName}
                 </p>
-                <p className="text-xs text-gray-500">{order.customerPhone}</p>
+                {order.customerPhone && (
+                  <p className="text-xs text-emerald-600 font-medium">{order.customerPhone}</p>
+                )}
               </div>
             </div>
           </div>
@@ -184,6 +186,11 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                       {item.quantity}x
                     </span>
                     <span className="text-sm text-gray-700">{item.name}</span>
+                    {item.price > 0 && (
+                      <span className="text-[10px] text-gray-400 font-medium ml-1 flex items-center h-full pt-1">
+                        (@{formatPrice(item.price)})
+                      </span>
+                    )}
                   </div>
                   <span className="text-sm font-medium text-gray-900">
                     {formatPrice(item.price * item.quantity) || "N/A"}
@@ -208,9 +215,9 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">{t("tax")}</span>
-                <span className="text-gray-900 font-medium">
-                  {formatPrice(order.tax) || "N/A"}
+                <span className="text-gray-500">Discount</span>
+                <span className="text-red-500 font-medium">
+                  -{formatPrice(order.discount) || "N/A"}
                 </span>
               </div>
               <div className="flex justify-between text-base font-bold mt-2 pt-2 border-t border-gray-100">

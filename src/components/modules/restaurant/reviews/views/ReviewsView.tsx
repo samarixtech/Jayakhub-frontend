@@ -11,6 +11,13 @@ import { useTranslations } from "next-intl";
 import { useReviews } from "../hooks/useReviews";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ReviewsView() {
   const t = useTranslations("RestaurantDashboard.Reviews");
@@ -22,6 +29,8 @@ export default function ReviewsView() {
     isPending,
     filter,
     setFilter,
+    months,
+    setMonths,
     selectedReview,
     handleOrderClick,
     closeDetailSheet,
@@ -31,13 +40,19 @@ export default function ReviewsView() {
     <div className="w-full max-w-[1024px] mx-auto space-y-6 px-4 md:px-0">
       {/* Top Filter */}
       <div className="flex justify-end">
-        <Button
-          variant="outline"
-          className="bg-white border-gray-200 text-gray-700 h-9"
-        >
-          <span className="text-xs font-bold">{t("header.last30Days")}</span>
-          <ChevronDown className="ml-2 w-4 h-4 text-gray-400" />
-        </Button>
+        <Select value={months} onValueChange={setMonths}>
+          <SelectTrigger className="w-[160px] bg-white border-gray-200 text-gray-700 h-9 font-bold text-xs">
+            <SelectValue placeholder={t("header.last30Days")} />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value="all">All Time</SelectItem>
+            <SelectItem value="1">30 Days</SelectItem>
+            <SelectItem value="3">3 Months</SelectItem>
+            <SelectItem value="6">6 Months</SelectItem>
+            <SelectItem value="9">9 Months</SelectItem>
+            <SelectItem value="12">1 Year</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {isPending || !data ? (

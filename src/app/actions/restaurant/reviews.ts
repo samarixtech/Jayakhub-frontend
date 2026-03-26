@@ -4,18 +4,29 @@ import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 import { cookies } from "next/headers";
 
 // ==================== GET REVIEWS ANALYTICS ACTION ====================
-export async function getReviewsAnalyticsAction(
-  filters?: any,
-): Promise<ActionResponse> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  return responseHandler(
-    async () =>
-      api.get("/rating/analytics", {
-        headers: { Authorization: `Bearer ${token}` },
-        params: filters,
-      }),
+export async function getReviewsAnalyticsAction({
+  page = 1,
+  limit = 10,
+  filter = "All",
+  months,
+}: {
+  page?: number;
+  limit?: number;
+  filter?: string;
+  months?: string;
+} = {}): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => {
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        filter,
+      });
+      if (months && months !== "all") {
+        queryParams.append("months", months);
+      }
+      return api.get(`/rating/analytics?${queryParams.toString()}`);
+    },
     "Rating analytics fetched successfully",
     async (responseData: any) => {
       return responseData;

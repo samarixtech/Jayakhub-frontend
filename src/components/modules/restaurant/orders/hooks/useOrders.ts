@@ -20,7 +20,14 @@ export enum OrderStatus {
 export interface ApiOrder {
   orderId: string;
   customerName: string;
+  customerPhone: string | number;
+  discount?: number;
   summary: string;
+  itemDetail?: {
+    name: string;
+    price: string | number;
+    quantity: number;
+  }[];
   totalPrice: number;
   status: string;
   dateTime: string;
@@ -29,6 +36,7 @@ export interface ApiOrder {
 export interface OrderStats {
   todayOrders: number;
   liveOrders: number;
+  totalDeliveredOrders: number;
   totalRevenue: string;
 }
 
@@ -47,7 +55,7 @@ export interface UIOrder {
   date: string;
   items: OrderItem[];
   subtotal: number;
-  tax: number;
+  discount: number;
   total: number;
   originalStatus?: string;
 }
@@ -70,6 +78,7 @@ export const useOrders = () => {
   const [stats, setStats] = useState<OrderStats>({
     todayOrders: 0,
     liveOrders: 0,
+    totalDeliveredOrders: 0,
     totalRevenue: "0.00",
   });
   const [loading, setLoading] = useState(true);
@@ -116,7 +125,8 @@ export const useOrders = () => {
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await getRestaurantOrdersAction(page, limit, activeTab);
+      const statusParam = activeTab === "past" ? "delivered" : undefined;
+      const res = await getRestaurantOrdersAction(page, limit, statusParam);
       const resData = res.data as any;
       if (res.success && resData?.data) {
         setStats(resData.data.stats);
@@ -125,18 +135,35 @@ export const useOrders = () => {
         }
         const apiOrders: ApiOrder[] = resData.data.orders || [];
 
-        const mappedOrders: UIOrder[] = apiOrders.map((o) => ({
-          id: o.orderId,
-          customerName: o.customerName,
-          customerPhone: "N/A",
-          status: mapApiStatusToUiStatus(o.status),
-          date: new Date(o.dateTime).toLocaleString(),
-          items: parseSummaryToItems(o.summary),
-          subtotal: o.totalPrice,
-          tax: 0,
-          total: o.totalPrice,
-          originalStatus: o.status,
-        }));
+        const mappedOrders: UIOrder[] = apiOrders.map((o) => {
+          let items: OrderItem[] = [];
+          if (o.itemDetail && o.itemDetail.length > 0) {
+            items = o.itemDetail.map((item, idx) => ({
+              id: `item-${idx}`,
+              name: item.name,
+              quantity: item.quantity,
+              price:
+                typeof item.price === "string"
+                  ? parseFloat(item.price)
+                  : item.price,
+            }));
+          } else {
+            items = parseSummaryToItems(o.summary);
+          }
+
+          return {
+            id: o.orderId,
+            customerName: o.customerName,
+            customerPhone: o.customerPhone ? o.customerPhone.toString() : "N/A",
+            status: mapApiStatusToUiStatus(o.status),
+            date: new Date(o.dateTime).toLocaleString(),
+            items,
+            subtotal: o.totalPrice + (o.discount || 0),
+            discount: o.discount || 0,
+            total: o.totalPrice,
+            originalStatus: o.status,
+          };
+        });
         setOrders(mappedOrders);
       }
     } catch (error) {
@@ -203,9 +230,8 @@ export const useOrders = () => {
     }
   });
 
-  const liveOrdersCount =
-    activeTab === "live" ? totalCount : stats.liveOrders || 0;
-  const pastOrdersCount = activeTab === "past" ? totalCount : 0; // Backend should ideally provide stats for this
+  const liveOrdersCount = stats.liveOrders || 0;
+  const pastOrdersCount = stats.totalDeliveredOrders || 0;
   const paginatedOrders = filteredOrders; // Already paginated by backend (mostly)
 
   return {

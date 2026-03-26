@@ -2,10 +2,23 @@
 
 import { serverApi } from "@/components/services/api";
 
-export async function getReportsAction() {
+export async function getReportsAction({
+  filter = "all",
+  page = 1,
+  limit = 10,
+}: {
+  filter?: string;
+  page?: number;
+  limit?: number;
+} = {}) {
   try {
     const api = await serverApi();
-    const response = await api.get("/reports");
+    const queryParams = new URLSearchParams({
+      filter,
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+    const response = await api.get(`/reports?${queryParams.toString()}`);
     return {
       success: true as const,
       data: response.data,

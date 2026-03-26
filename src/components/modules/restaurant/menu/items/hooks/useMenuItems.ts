@@ -5,7 +5,6 @@ import { useServerAction } from "@/hooks/use-server-action";
 import { usePagination } from "@/hooks/usePagination";
 import {
   getMenuItemsAction,
-  getAllCategoriesAction,
   deleteMenuItemAction,
   updateMenuItemStatusAction,
 } from "@/app/actions/restaurant/menu";
@@ -13,7 +12,7 @@ import { toast } from "react-hot-toast";
 
 export const useMenuItems = () => {
   const [items, setItems] = useState<any[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categoryStats, setCategoryStats] = useState<{name: string, count: number}[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("All Items");
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -28,19 +27,6 @@ export const useMenuItems = () => {
     handlePageChange,
     updatePaginationMeta,
   } = usePagination({ initialLimit: 10 });
-
-  const { execute: fetchCategories } = useServerAction(getAllCategoriesAction, {
-    suppressSuccessToast: true,
-    onSuccess: (data: any) => {
-      const categoriesData = data && data.data ? data.data : data;
-      if (Array.isArray(categoriesData)) {
-        const categoryNames = categoriesData
-          .map((cat: any) => cat.categoryName || cat.name)
-          .filter(Boolean);
-        setCategories(categoryNames);
-      }
-    },
-  });
 
   const { execute: fetchMenuAction, isPending } = useServerAction(
     getMenuItemsAction,
@@ -58,6 +44,12 @@ export const useMenuItems = () => {
         }
 
         setItems(itemsData);
+
+        if (data && data.categoryType && Array.isArray(data.categoryType)) {
+          setCategoryStats(data.categoryType);
+        } else if (data && data.data && data.data.categoryType && Array.isArray(data.data.categoryType)) {
+          setCategoryStats(data.data.categoryType);
+        }
 
         if (meta && meta.totalPages) {
           setIsFrontendPaginated(false);
@@ -99,11 +91,6 @@ export const useMenuItems = () => {
     }
   }, [searchQuery, selectedCategory]);
 
-  // Baseline data fetch for supporting category modules organically
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
   const { execute: deleteItem, isPending: isDeleting } = useServerAction(
     deleteMenuItemAction,
     {
@@ -139,11 +126,9 @@ export const useMenuItems = () => {
       label: "All Items",
       count: totalCount > items.length ? totalCount : items.length,
     },
-    ...categories.map((cat) => ({
-      label: cat,
-      count: isFrontendPaginated
-        ? items.filter((i) => i.category === cat).length
-        : 0,
+    ...categoryStats.map((cat) => ({
+      label: cat.name,
+      count: cat.count,
     })),
   ];
 
@@ -159,8 +144,10 @@ export const useMenuItems = () => {
       value: (isFrontendPaginated ? items : items).filter((i) => !i.isAvailable)
         .length,
     },
-    { label: "Categories", value: categories.length },
+    { label: "Categories", value: categoryStats.length },
   ];
+
+  const categories = categoryStats.map((c) => c.name);
 
   // Frontend filtering logic fallback if backend isn't paginating and searching yet
   const postProcessedItems = isFrontendPaginated
