@@ -5,15 +5,10 @@ import TopProductsList from "../components/TopProductsList";
 import OrderSources from "../components/OrderSources";
 import PeakHours from "../components/PeakHours";
 import RecentOrders from "../components/RecentOrders";
-import {
-  ChevronDown,
-  DollarSign,
-  ShoppingBag,
-  TrendingUp,
-  Award,
-} from "lucide-react";
+import { DollarSign, ShoppingBag, TrendingUp, Award } from "lucide-react";
 import { useReports } from "../hooks/useReports";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 import {
   Select,
   SelectContent,
@@ -26,7 +21,16 @@ import { ReportsSkeleton } from "@/components/skeletons/ReportsSkeleton";
 
 const ReportsView = () => {
   const t = useTranslations("RestaurantDashboard.Reports");
-  const { data, loading, filter, setFilter, page, totalPages, handlePageChange } = useReports();
+  const { formatPrice } = useCLC();
+  const {
+    data,
+    loading,
+    filter,
+    setFilter,
+    page,
+    totalPages,
+    handlePageChange,
+  } = useReports();
 
   if (loading) {
     return <ReportsSkeleton />;
@@ -62,7 +66,7 @@ const ReportsView = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ReportsStatsCard
           label={t("stats.totalSales")}
-          value={`$${Number(data.totalSales).toLocaleString()}`}
+          value={formatPrice(data.totalSales) || "N/A"}
           trend={`${data.lastPeriodSalesAverage}%`}
           isPositive={Number(data.lastPeriodSalesAverage) >= 0}
           icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
@@ -78,7 +82,7 @@ const ReportsView = () => {
         />
         <ReportsStatsCard
           label={t("stats.avgOrderValue")}
-          value={`$${Number(data.averageOrderValue).toFixed(2)}`}
+          value={formatPrice(data.averageOrderValue) || "N/A"}
           trend={`${data.lastPeriodAverageOrderValue}%`}
           isPositive={Number(data.lastPeriodAverageOrderValue) >= 0}
           icon={<TrendingUp className="w-4 h-4 text-amber-600" />}

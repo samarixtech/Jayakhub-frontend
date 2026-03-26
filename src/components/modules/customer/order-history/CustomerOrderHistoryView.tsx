@@ -29,18 +29,18 @@ export default function CustomerOrderHistoryView() {
   const [dateRange, setDateRange] = useState("all");
 
   // Pagination State
-  const { page, limit, totalPages, handlePageChange, updatePaginationMeta } = usePagination({ initialLimit: 10 });
+  const { page, limit, totalPages, handlePageChange, updatePaginationMeta } =
+    usePagination({ initialLimit: 10 });
 
   const t = useTranslations("CustomerDashboard.OrderHistory");
 
-  const { handleReorder, handleRateOrder } =
-    useOrderHistoryActions({
-      country,
-      language,
-      setCurrentPage: handlePageChange as any,
-      setCurrentOrderInfo,
-      setIsRatingModalOpen,
-    });
+  const { handleReorder, handleRateOrder } = useOrderHistoryActions({
+    country,
+    language,
+    setCurrentPage: handlePageChange as any,
+    setCurrentOrderInfo,
+    setIsRatingModalOpen,
+  });
 
   useEffect(() => {
     async function fetchOrders() {
@@ -51,7 +51,11 @@ export default function CustomerOrderHistoryView() {
         const res = await getAllOrders(page, limit, filterParam);
         if (res.success) {
           const responseData = res.data as any;
-          if (responseData && responseData.orders && Array.isArray(responseData.orders)) {
+          if (
+            responseData &&
+            responseData.orders &&
+            Array.isArray(responseData.orders)
+          ) {
             setOrders(responseData.orders);
           } else if (Array.isArray(responseData)) {
             setOrders(responseData);
@@ -84,14 +88,12 @@ export default function CustomerOrderHistoryView() {
           OrderStatus.PREPARE,
           OrderStatus.READY,
           OrderStatus.OUT_FOR_DELIVERY,
+          OrderStatus.DELIVERED,
         ].includes(status as OrderStatus);
       }
     }
     return true;
   });
-
-  // Pagination Logic
-  // Pagination metadata is now driven by the backend API.
 
   if (loading) return <OrdersSkeleton />;
 

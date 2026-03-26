@@ -14,12 +14,17 @@ function isoToOrderDateTime(isoStr: string) {
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
   const time = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric", minute: "2-digit", hour12: true,
-  }).format(d).toLowerCase();
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  })
+    .format(d)
+    .toLowerCase();
   const formatted = formatOrderDateTime(`${day}/${month}/${year}`, time);
   const [datePart, timePart] = formatted.split(" • ");
   return { date: datePart ?? formatted, time: timePart ?? "" };
 }
+import { useCLC } from "@/context/CLCContext";
 
 interface Order {
   id: string;
@@ -63,8 +68,15 @@ interface RecentOrdersProps {
   onPageChange?: (page: number) => void;
 }
 
-const RecentOrders = ({ orders = [], totalCount = 0, page = 1, totalPages = 1, onPageChange }: RecentOrdersProps) => {
+const RecentOrders = ({
+  orders = [],
+  totalCount = 0,
+  page = 1,
+  totalPages = 1,
+  onPageChange,
+}: RecentOrdersProps) => {
   const t = useTranslations("RestaurantDashboard.Reports.recentOrders");
+  const { formatPrice } = useCLC();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
@@ -80,7 +92,7 @@ const RecentOrders = ({ orders = [], totalCount = 0, page = 1, totalPages = 1, o
       customer: o.customerName || t("guest"),
       items: o.summary || t("noDetails"),
       source: o.source || "N/A",
-      total: `$${Number(o.totalPrice).toFixed(2)}`,
+      total: formatPrice(o.totalPrice) || "N/A",
       rawData: o,
     };
   });
@@ -99,7 +111,7 @@ const RecentOrders = ({ orders = [], totalCount = 0, page = 1, totalPages = 1, o
       paymentMethod: raw?.paymentMethod || "N/A",
       prepDuration: raw?.prepareTime ? `${raw.prepareTime} min` : "N/A",
       subtotal: order.total,
-      tax: "$0.00",
+      tax: formatPrice(0) || "N/A",
       itemsList: raw?.items?.map((item: any) => ({
         name: item.name,
         qty: item.quantity,
@@ -156,7 +168,12 @@ const RecentOrders = ({ orders = [], totalCount = 0, page = 1, totalPages = 1, o
     {
       header: t("columns.items"),
       cell: (item) => (
-        <span className="text-[#657a8a] text-[12px]">{item.items}</span>
+        <span
+          className="text-[#657a8a] text-[12px] max-w-[200px] lg:max-w-[300px] truncate block"
+          title={item.items}
+        >
+          {item.items}
+        </span>
       ),
     },
     {
@@ -182,9 +199,7 @@ const RecentOrders = ({ orders = [], totalCount = 0, page = 1, totalPages = 1, o
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-[16px] font-bold text-gray-900">{t("title")}</h2>
-          <p className="text-[12px] text-gray-500 mt-0.5">
-            {t("subtitle")}
-          </p>
+          <p className="text-[12px] text-gray-500 mt-0.5">{t("subtitle")}</p>
         </div>
         <button
           onClick={handleAllOrdersClick}
