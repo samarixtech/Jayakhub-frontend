@@ -5,6 +5,16 @@ import { ReviewItem } from "../../restaurant.types";
 import ReviewDetailSheet from "./ReviewDetailSheet";
 import ReviewFilterPills from "./ReviewFilterPills";
 import { useTranslations } from "next-intl";
+import { formatOrderDateTime } from "@/lib/utils/date";
+
+function isoToDateOnly(isoStr: string): string {
+  if (!isoStr) return "";
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return "";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  return formatOrderDateTime(`${day}/${month}/${d.getFullYear()}`);
+}
 
 interface ReviewListProps {
   filteredReviews: ReviewItem[];
@@ -40,10 +50,7 @@ export default function ReviewList({
         )}
         {filteredReviews.map((review) => {
           const isReplied = review.reply !== null;
-          const displayDate = new Date(review.createdAt).toLocaleDateString(
-            undefined,
-            { month: "short", day: "numeric", year: "numeric" },
-          );
+          const displayDate = isoToDateOnly(review.createdAt);
 
           const getInitials = (name: string) => {
             if (!name) return "U";

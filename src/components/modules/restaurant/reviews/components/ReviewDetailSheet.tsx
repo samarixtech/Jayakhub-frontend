@@ -7,6 +7,16 @@ import { replyToReviewAction } from "@/app/actions/restaurant/reviews";
 import { toast } from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import { useCLC } from "@/context/CLCContext";
+import { formatOrderDateTime } from "@/lib/utils/date";
+
+function isoToDateOnly(isoStr: string): string {
+  if (!isoStr) return "";
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return "";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  return formatOrderDateTime(`${day}/${month}/${d.getFullYear()}`);
+}
 
 interface ReviewDetailSheetProps {
   review: ReviewItem | null;
@@ -62,13 +72,7 @@ export default function ReviewDetailSheet({
     return name.substring(0, 2).toUpperCase();
   };
 
-  const displayDate = review?.createdAt
-    ? new Date(review.createdAt).toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    : "";
+  const displayDate = review?.createdAt ? isoToDateOnly(review.createdAt) : "";
 
   return (
     <Sheet

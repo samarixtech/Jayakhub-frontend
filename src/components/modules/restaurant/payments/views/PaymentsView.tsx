@@ -26,6 +26,20 @@ import DonutChart from "../components/DonutChart";
 import { useFinanceOverview } from "../hooks/useFinanceOverview";
 import { FinanceReportPDF } from "../components/FinanceReportPDF";
 import { useCLC } from "@/context/CLCContext";
+import { formatOrderDateTime } from "@/lib/utils/date";
+
+function isoToOrderDateTime(isoStr: string): string {
+  if (!isoStr) return "—";
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return "—";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric", minute: "2-digit", hour12: true,
+  }).format(d).toLowerCase();
+  return formatOrderDateTime(`${day}/${month}/${year}`, time);
+}
 
 /* ──────────────── Types ──────────────── */
 export interface Payout {
@@ -85,22 +99,14 @@ const PaymentsView = () => {
   }
 
   const handleTransactionClick = (t: any) => {
-    // Map API data into TransactionDetail format
-    const parsedDate = new Date(t.date);
-    const timeStr = parsedDate.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const dateStr = parsedDate.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
+    const formatted = isoToOrderDateTime(t.date);
+    const [datePart, timePart] = formatted.split(" • ");
 
     setSelectedTransaction({
       id: t.orderId,
       type: t.type,
-      date: dateStr,
-      time: timeStr,
+      date: datePart ?? formatted,
+      time: timePart ?? "",
       customer: t.customerName,
       paymentMethod: t.method,
       total: `$${Math.abs(parseFloat(t.total)).toFixed(2)}`,
@@ -456,12 +462,7 @@ const PaymentsView = () => {
                     {t.type}
                   </span>
                   <span className="text-[13px] font-medium text-gray-600">
-                    {new Date(t.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {isoToOrderDateTime(t.date)}
                   </span>
                   <span className="text-[13px] font-medium text-gray-600 capitalize">
                     {t.method}

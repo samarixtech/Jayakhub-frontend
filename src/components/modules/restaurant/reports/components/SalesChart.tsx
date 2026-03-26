@@ -87,6 +87,10 @@ const options = {
     axis: "x" as const,
     intersect: false,
   },
+  animation: {
+    duration: 700,
+    easing: "easeOutQuart" as const,
+  },
   elements: {
     point: {
       radius: 0,
@@ -103,18 +107,34 @@ interface SalesChartProps {
 }
 
 const SalesChart = ({ graphData = [] }: SalesChartProps) => {
+  const [mounted, setMounted] = React.useState(false);
   const t = useTranslations("RestaurantDashboard.Reports.charts.sales");
-  const labels = graphData.map((item) => {
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Show only last 7 days
+  const displayedData = graphData.slice(-7);
+
+  const labels = displayedData.map((item) => {
     const d = new Date(item.date);
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   });
 
-  const salesValues = graphData.map((item) => item.sales);
+  const salesValues = displayedData.map((item) => item.sales);
   const maxSales = Math.max(...salesValues, 2000);
   const stepSize = Math.ceil(maxSales / 4);
 
-  const dynamicOptions = {
+  const dynamicOptions = React.useMemo(() => ({
     ...options,
+    animation: {
+      duration: 700,
+      easing: "easeOutQuart" as const,
+      y: {
+        from: 500, // Starts from slightly below the baseline for a raising up effect
+      }
+    },
     scales: {
       ...options.scales,
       y: {
@@ -126,9 +146,9 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
         },
       },
     },
-  };
+  }), [maxSales, stepSize]);
 
-  const chartData = {
+  const chartData = React.useMemo(() => ({
     labels: labels.length > 0 ? labels : [t("noData")],
     datasets: [
       {
@@ -155,7 +175,7 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
         borderDash: [5, 5],
       },
     ],
-  };
+  }), [labels, salesValues, t]);
 
   return (
     <div className="w-full flex flex-col h-full">
@@ -168,7 +188,9 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
         </p>
       </div>
       <div className="flex-1 min-h-[250px] w-full mt-2 relative">
-        <Line options={dynamicOptions as any} data={chartData} />
+        {mounted && (
+          <Line options={dynamicOptions as any} data={chartData} redraw={true} />
+        )}
       </div>
     </div>
   );
