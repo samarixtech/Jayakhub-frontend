@@ -48,11 +48,11 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
   const trendLabels =
     safeSummary.trend.length > 0
       ? safeSummary.trend.map((t) =>
-          new Date(t.date).toLocaleDateString(undefined, {
-            month: "short",
-            day: "numeric",
-          }),
-        )
+        new Date(t.date).toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+        }),
+      )
       : ["No Data"];
 
   const trendValues =
@@ -146,12 +146,12 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
     totalDist === 0
       ? t("distribution.noReviews")
       : [
-          t("distribution.stars5"),
-          t("distribution.stars4"),
-          t("distribution.stars3"),
-          t("distribution.stars2"),
-          t("distribution.stars1"),
-        ][maxIndex];
+        t("distribution.stars5"),
+        t("distribution.stars4"),
+        t("distribution.stars3"),
+        t("distribution.stars2"),
+        t("distribution.stars1"),
+      ][maxIndex];
 
   // Dummy array if 0 so doughnut still renders a grey ring
   const hasData = totalDist > 0;
@@ -169,12 +169,12 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
         data: hasData ? distPercentages : [100],
         backgroundColor: hasData
           ? [
-              "#f5a623", // Yellow
-              "#5584ff", // Blue
-              "#9c59f6", // Purple
-              "#f97316", // Orange
-              "#ef4444", // Default red
-            ]
+            "#f5a623", // Yellow
+            "#5584ff", // Blue
+            "#9c59f6", // Purple
+            "#f97316", // Orange
+            "#ef4444", // Default red
+          ]
           : ["#f3f4f6"],
         borderWidth: 2,
         borderColor: "#ffffff",

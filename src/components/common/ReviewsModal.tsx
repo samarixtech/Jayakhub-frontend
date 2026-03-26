@@ -128,11 +128,10 @@ export function ReviewsModal({
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
-                      className={`w-4 h-4 ${
-                        star <= Math.round(totalAverageRating)
-                          ? "fill-[#f97316] text-[#f97316]"
-                          : "fill-gray-200 text-gray-200"
-                      }`}
+                      className={`w-4 h-4 ${star <= Math.round(totalAverageRating)
+                        ? "fill-[#f97316] text-[#f97316]"
+                        : "fill-gray-200 text-gray-200"
+                        }`}
                     />
                   ))}
                 </div>
@@ -168,11 +167,10 @@ export function ReviewsModal({
                 <button
                   key={filter}
                   onClick={() => handleFilterClick(filter)}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
-                    activeFilter === filter
-                      ? "bg-gray-900 text-white"
-                      : "bg-gray-50 text-gray-600 hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${activeFilter === filter
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-50 text-gray-600 hover:bg-gray-100"
+                    }`}
                 >
                   {filter}
                 </button>
@@ -217,11 +215,10 @@ export function ReviewsModal({
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star
                                 key={star}
-                                className={`w-3.5 h-3.5 ${
-                                  star <= review.rating
-                                    ? "fill-[#f97316] text-[#f97316]"
-                                    : "fill-gray-200 text-gray-200"
-                                }`}
+                                className={`w-3.5 h-3.5 ${star <= review.rating
+                                  ? "fill-[#f97316] text-[#f97316]"
+                                  : "fill-gray-200 text-gray-200"
+                                  }`}
                               />
                             ))}
                           </div>

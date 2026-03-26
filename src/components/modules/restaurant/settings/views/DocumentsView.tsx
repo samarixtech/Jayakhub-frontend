@@ -34,6 +34,16 @@ import {
   getDocIcon,
   getStatusBadge,
 } from "../utils/document.utils";
+import { formatOrderDateTime } from "@/lib/utils/date";
+
+function isoToDateOnly(isoStr: string): string {
+  if (!isoStr) return "";
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return "";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  return formatOrderDateTime(`${day}/${month}/${d.getFullYear()}`);
+}
 
 export default function DocumentsView({
   settings,
@@ -53,15 +63,6 @@ export default function DocumentsView({
     openDocument,
   } = useDocumentSettings(settings);
 
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return "";
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
 
   return (
     <Card className="py-6">
@@ -154,7 +155,7 @@ export default function DocumentsView({
                 const DocIcon = getDocIcon(doc.documentType);
                 const statusBadge = getStatusBadge(doc.status);
                 const verifiedDate = doc.updatedAt
-                  ? t("verifiedOn", { date: formatDate(doc.updatedAt) })
+                  ? t("verifiedOn", { date: isoToDateOnly(doc.updatedAt) })
                   : "";
 
                 return (

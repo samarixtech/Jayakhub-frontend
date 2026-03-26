@@ -12,7 +12,6 @@ import {
   TrendingUp,
   Award,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useReports } from "../hooks/useReports";
 import { useTranslations } from "next-intl";
 import {
@@ -23,16 +22,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { ReportsSkeleton } from "@/components/skeletons/ReportsSkeleton";
+
 const ReportsView = () => {
   const t = useTranslations("RestaurantDashboard.Reports");
   const { data, loading, filter, setFilter, page, totalPages, handlePageChange } = useReports();
 
   if (loading) {
-    return (
-      <div className="w-full h-[400px] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1B4332]"></div>
-      </div>
-    );
+    return <ReportsSkeleton />;
   }
 
   if (!data) {

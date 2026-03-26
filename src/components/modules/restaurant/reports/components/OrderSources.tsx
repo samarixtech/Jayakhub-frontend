@@ -41,7 +41,7 @@ const OrderSources = ({
                 {item.source}
               </span>
               <span className="text-[13px] font-bold text-gray-900 leading-none">
-                {item.percentage}%
+                {item.percentage.toFixed(2)}%
               </span>
             </div>
 

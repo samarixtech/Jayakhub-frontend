@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -37,10 +38,15 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
   chartData,
   maxDataPoint,
 }) => {
+  const [mounted, setMounted] = React.useState(false);
   const t = useTranslations("RestaurantDashboard");
 
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { formatPrice, currency } = useCLC();
-  const chartOptions = {
+  const chartOptions = React.useMemo(() => ({
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -79,7 +85,28 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
         grid: { display: false },
       },
     },
-  };
+    interaction: {
+      mode: "nearest" as const,
+      axis: "x" as const,
+      intersect: false,
+    },
+    animation: {
+      duration: 700,
+      easing: "easeOutQuart" as const,
+      y: {
+        from: 500, // Raising up effect
+      }
+    },
+    elements: {
+      point: {
+        radius: 0,
+        hoverRadius: 6,
+      },
+      line: {
+        tension: 0.1, // very slight curve but mostly straight between points
+      },
+    },
+  }), [maxDataPoint, currency, formatPrice]);
 
   const hasData = chartData?.datasets?.[0]?.data?.length > 0;
 
@@ -105,7 +132,9 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
       <CardContent className="flex-1 pb-6 w-full relative">
         {hasData ? (
           <div className="h-full w-full">
-            <Line data={chartData} options={chartOptions} />
+            {mounted && (
+              <Line data={chartData} options={chartOptions} redraw={true} />
+            )}
           </div>
         ) : (
           <div className="h-full w-full flex flex-col items-center justify-center space-y-2">

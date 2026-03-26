@@ -6,6 +6,21 @@ import {
   updateOrderStatusAction,
 } from "@/app/actions/restaurant/orders";
 import { toast } from "react-hot-toast";
+import { formatOrderDateTime } from "@/lib/utils/date";
+
+// Convert an ISO/datetime string to the format expected by formatOrderDateTime
+function isoToOrderDateTime(isoStr: string): string {
+  if (!isoStr) return "—";
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return "—";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric", minute: "2-digit", hour12: true,
+  }).format(d).toLowerCase();
+  return formatOrderDateTime(`${day}/${month}/${year}`, time);
+}
 
 export enum OrderStatus {
   PENDING = "pending",
@@ -156,7 +171,7 @@ export const useOrders = () => {
             customerName: o.customerName,
             customerPhone: o.customerPhone ? o.customerPhone.toString() : "N/A",
             status: mapApiStatusToUiStatus(o.status),
-            date: new Date(o.dateTime).toLocaleString(),
+            date: isoToOrderDateTime(o.dateTime),
             items,
             subtotal: o.totalPrice + (o.discount || 0),
             discount: o.discount || 0,

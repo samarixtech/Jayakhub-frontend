@@ -4,6 +4,22 @@ import { cn } from "@/lib/utils";
 import OrderDetailSidebar, { OrderDetail } from "./OrderDetailSidebar";
 import { useTranslations } from "next-intl";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
+import { formatOrderDateTime } from "@/lib/utils/date";
+
+function isoToOrderDateTime(isoStr: string) {
+  if (!isoStr) return { date: "—", time: "" };
+  const d = new Date(isoStr);
+  if (isNaN(d.getTime())) return { date: "—", time: "" };
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric", minute: "2-digit", hour12: true,
+  }).format(d).toLowerCase();
+  const formatted = formatOrderDateTime(`${day}/${month}/${year}`, time);
+  const [datePart, timePart] = formatted.split(" • ");
+  return { date: datePart ?? formatted, time: timePart ?? "" };
+}
 
 interface Order {
   id: string;
@@ -49,21 +65,17 @@ interface RecentOrdersProps {
 
 const RecentOrders = ({ orders = [], totalCount = 0, page = 1, totalPages = 1, onPageChange }: RecentOrdersProps) => {
   const t = useTranslations("RestaurantDashboard.Reports.recentOrders");
-  
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
 
   const formattedOrders: Order[] = orders.map((o: any) => {
-    const d = new Date(o.createdAt);
+    const { date, time } = isoToOrderDateTime(o.createdAt);
     return {
       id: o.orderId,
       orderId: o.orderId,
-      date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      time: d.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true,
-      }),
+      date,
+      time,
       status: o.status.charAt(0).toUpperCase() + o.status.slice(1),
       customer: o.customerName || t("guest"),
       items: o.summary || t("noDetails"),
