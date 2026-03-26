@@ -7,10 +7,12 @@ export async function getReviewsAnalyticsAction({
   page = 1,
   limit = 10,
   filter = "All",
+  months,
 }: {
   page?: number;
   limit?: number;
   filter?: string;
+  months?: string;
 } = {}): Promise<ActionResponse> {
   return executeRestaurantAction(
     (api) => {
@@ -19,6 +21,9 @@ export async function getReviewsAnalyticsAction({
         limit: limit.toString(),
         filter,
       });
+      if (months && months !== "all") {
+        queryParams.append("months", months);
+      }
       return api.get(`/rating/analytics?${queryParams.toString()}`);
     },
     "Rating analytics fetched successfully",

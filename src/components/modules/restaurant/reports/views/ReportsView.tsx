@@ -15,10 +15,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { useReports } from "../hooks/useReports";
 import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ReportsView = () => {
   const t = useTranslations("RestaurantDashboard.Reports");
-  const { data, loading } = useReports();
+  const { data, loading, filter, setFilter, page, totalPages, handlePageChange } = useReports();
 
   if (loading) {
     return (
@@ -40,13 +47,18 @@ const ReportsView = () => {
     <div className="w-full max-w-[1200px] mx-auto space-y-6">
       {/* Header - Date Filter Only */}
       <div className="flex justify-end pt-2">
-        <Button
-          variant="outline"
-          className="bg-white border-gray-200 text-gray-700 h-9"
-        >
-          <ChevronDown className="mr-2 w-4 h-4 text-gray-400" />
-          <span className="text-xs font-bold">{t("header.last30Days")}</span>
-        </Button>
+        <Select value={filter} onValueChange={setFilter}>
+          <SelectTrigger className="w-[160px] bg-white border-gray-200 text-gray-700 h-9 font-bold text-xs">
+            <SelectValue placeholder={t("header.last30Days")} />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value="all">All Time</SelectItem>
+            <SelectItem value="1">30 Days</SelectItem>
+            <SelectItem value="3">3 Months</SelectItem>
+            <SelectItem value="6">6 Months</SelectItem>
+            <SelectItem value="12">1 Year</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Stats Cards Row */}
@@ -113,6 +125,9 @@ const ReportsView = () => {
         <RecentOrders
           orders={data.orders?.items || []}
           totalCount={data.orders?.totalCount}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
         />
       </div>
     </div>

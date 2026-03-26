@@ -10,6 +10,7 @@ export const useReviews = () => {
   const [data, setData] = useState<any>(null);
   const [selectedReview, setSelectedReview] = useState<ReviewItem | null>(null);
   const [filter, setFilter] = useState("All");
+  const [months, setMonths] = useState("1");
 
   const {
     page,
@@ -38,19 +39,19 @@ export const useReviews = () => {
   );
 
   const loadReviews = useCallback(() => {
-    fetchAnalytics({ page, limit, filter });
-  }, [fetchAnalytics, page, limit, filter]);
+    fetchAnalytics({ page, limit, filter, months });
+  }, [fetchAnalytics, page, limit, filter, months]);
 
   useEffect(() => {
     loadReviews();
   }, [loadReviews]);
 
-  // Reset to page 1 when filter changes
+  // Reset to page 1 when filter or months changes
   useEffect(() => {
     if (page !== 1) {
       handlePageChange(1);
     }
-  }, [filter, handlePageChange]);
+  }, [filter, months]);
 
   const stats = useMemo(() => data?.summary || null, [data]);
 
@@ -71,6 +72,8 @@ export const useReviews = () => {
     isPending,
     filter,
     setFilter,
+    months,
+    setMonths,
     selectedReview,
     handleOrderClick,
     closeDetailSheet,

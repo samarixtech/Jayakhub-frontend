@@ -26,20 +26,20 @@ const ReviewFilterPills: React.FC<ReviewFilterPillsProps> = ({
         {t("allReviews")}
       </button>
       <button
-        onClick={() => onFilterChange("Unreplied")}
-        className={getPillClass("Unreplied")}
+        onClick={() => onFilterChange("unreplied")}
+        className={getPillClass("unreplied")}
       >
         {t("unreplied")}
       </button>
       <button
-        onClick={() => onFilterChange("5 Stars")}
-        className={getPillClass("5 Stars")}
+        onClick={() => onFilterChange("5_star")}
+        className={getPillClass("5_star")}
       >
         {t("stars5")}
       </button>
       <button
-        onClick={() => onFilterChange("Critical")}
-        className={getPillClass("Critical") + " flex items-center gap-1"}
+        onClick={() => onFilterChange("critical")}
+        className={getPillClass("critical") + " flex items-center gap-1"}
       >
         {t("critical")} <span className="text-[10px]">▼</span>
       </button>

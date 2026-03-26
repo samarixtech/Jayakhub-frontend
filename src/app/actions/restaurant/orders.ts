@@ -5,7 +5,7 @@ import { serverApi } from "@/components/services/api";
 export async function getRestaurantOrdersAction(
   page: number = 1,
   limit: number = 10,
-  status?: "live" | "past"
+  status?: "live" | "past" | "delivered"
 ) {
   try {
     const api = await serverApi();
