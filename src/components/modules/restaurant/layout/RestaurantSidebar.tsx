@@ -45,7 +45,11 @@ const NAV_SECTIONS = [
   {
     labelKey: "main",
     items: [
-      { nameKey: "dashboard", href: "/restaurant/dashboard", icon: LayoutDashboard },
+      {
+        nameKey: "dashboard",
+        href: "/restaurant/dashboard",
+        icon: LayoutDashboard,
+      },
       { nameKey: "pos", href: "/restaurant/pos", icon: Store },
       { nameKey: "orders", href: "/restaurant/orders", icon: ShoppingCart },
       {
@@ -64,7 +68,6 @@ const NAV_SECTIONS = [
   {
     labelKey: "management",
     items: [
-      { nameKey: "marketing", href: "/restaurant/marketing", icon: Megaphone },
       { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
       { nameKey: "users", href: "/restaurant/users", icon: Users },
       { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard },
@@ -74,7 +77,6 @@ const NAV_SECTIONS = [
   {
     labelKey: "settings",
     items: [
-      { nameKey: "apis", href: "/restaurant/apis", icon: Database },
       { nameKey: "support", href: "/restaurant/support", icon: HelpCircle },
       { nameKey: "settings", href: "/restaurant/settings", icon: Settings },
     ],
@@ -171,7 +173,9 @@ export function RestaurantSidebar() {
                             className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-sidebar-foreground/80 group-data-[state=open]/collapsible:bg-sidebar-accent text-base ${isActiveGroup ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold" : ""}`}
                           >
                             <item.icon className="w-5 h-5" />
-                            <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
+                            <span>
+                              {t(`Sidebar.items.${item.nameKey}` as any)}
+                            </span>
                             <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
@@ -186,7 +190,11 @@ export function RestaurantSidebar() {
                                     className={`h-10 pl-12 rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/60 ${isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : ""}`}
                                   >
                                     <Link href={subItem.href}>
-                                      <span>{t(`Sidebar.items.${subItem.nameKey}` as any)}</span>
+                                      <span>
+                                        {t(
+                                          `Sidebar.items.${subItem.nameKey}` as any,
+                                        )}
+                                      </span>
                                     </Link>
                                   </SidebarMenuSubButton>
                                 </SidebarMenuSubItem>

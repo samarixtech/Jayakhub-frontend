@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Star, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface TopProductsListProps {
   products?: any[];
@@ -12,6 +13,7 @@ interface TopProductsListProps {
 
 const TopProductsList = ({ products = [] }: TopProductsListProps) => {
   const t = useTranslations("RestaurantDashboard.Reports.topProducts");
+  const { formatPrice } = useCLC();
   const [activeView, setActiveView] = useState<"all" | "detail" | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
 
@@ -26,7 +28,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
     name: p.name,
     category: p.category || t("detail.category") || "Main Dish", // Fallback to category text or something if not provided. In en.json I added Main Dish? Ah wait, I didn't. I'll just use "Main Dish" untranslated for fallback or what I had. Wait, let's use the provided category or "Main Dish" (I should have added it, let me just keep it hardcoded for fallback or leave it). Actually, let me use p.category || "Main Dish". Wait, en.json has "Main Dish" in it? No. Let's just do `p.category || "Main Dish"`.
     unitsSold: p.quantity,
-    revenue: `$${(p.revenue || p.total || 0).toLocaleString()}`,
+    revenue: formatPrice(p.revenue || p.total || 0),
     numericRevenue: p.revenue || p.total || 0,
     image: p.image || "",
     rankColor:
@@ -46,9 +48,9 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
             ? "bg-orange-50"
             : "bg-slate-100",
     rating: typeof p.rating === "number" ? p.rating : 4.5,
-    price: `$${(p.price !== undefined ? p.price : p.total / (p.quantity || 1)).toFixed(2)}`,
-    cost: `$${(p.cost || 0).toLocaleString()}`,
-    profit: `$${(p.profit || p.total || 0).toLocaleString()}`,
+    price: formatPrice(p.price !== undefined ? p.price : p.total / (p.quantity || 1)),
+    cost: formatPrice(p.cost || 0),
+    profit: formatPrice(p.profit || p.total || 0),
     profitMargin: p.profitMargin || "100%",
   }));
 
@@ -168,7 +170,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                     {formattedProducts.length} {t("products")}
                   </span>
                   <span className="text-[20px] font-black text-[#2d6a4f]">
-                    ${totalRevenue.toLocaleString()}
+                    {formatPrice(totalRevenue)}
                   </span>
                 </div>
 

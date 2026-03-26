@@ -1,9 +1,8 @@
 "use client";
-
-import React from "react";
 import { X } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface OrderItem {
   name: string;
@@ -69,6 +68,7 @@ const OrderDetailSidebar = ({
   order,
 }: OrderDetailSidebarProps) => {
   const t = useTranslations("RestaurantDashboard.Reports.recentOrders.detail");
+  const { formatPrice } = useCLC();
   if (!order) return null;
 
   const items = order.itemsList || [];
@@ -174,11 +174,11 @@ const OrderDetailSidebar = ({
                         {item.name}
                       </p>
                       <p className="text-[11px] text-gray-400 mt-0.5">
-                        {t("qty")} {item.qty} × ${item.price.toFixed(2)}
+                        {t("qty")} {item.qty} × {formatPrice(item.price)}
                       </p>
                     </div>
                     <span className="text-[13px] font-bold text-[#1b2d22]">
-                      ${item.total.toFixed(2)}
+                      {formatPrice(item.total)}
                     </span>
                   </div>
                 ))}
@@ -188,7 +188,9 @@ const OrderDetailSidebar = ({
             {/* Summary */}
             <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm space-y-3 mt-auto">
               <div className="flex justify-between items-center">
-                <span className="text-[12px] text-gray-500">{t("subtotal")}</span>
+                <span className="text-[12px] text-gray-500">
+                  {t("subtotal")}
+                </span>
                 <span className="text-[12px] font-bold text-[#1b2d22]">
                   {subtotal}
                 </span>
