@@ -54,7 +54,7 @@ export default function CustomerAddressView() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [addressToDelete, setAddressToDelete] = useState<Address | null>(null);
 
-  const t = useTranslations("CustomerDashboard.Addresses");
+  const t = useTranslations("CustomerDashboard.MyAddress");
 
   const fetchAddresses = async () => {
     setLoading(true);
@@ -185,7 +185,7 @@ export default function CustomerAddressView() {
       header: t("actions"),
       className: "text-right",
       cell: (address) => (
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-start gap-1">
           <Button
             variant="ghost"
             size="icon"

@@ -37,7 +37,7 @@ export function PaymentHistoryTable({
   userEmail,
   userName,
 }: PaymentHistoryTableProps) {
-  const t = useTranslations("CustomerDashboard.PaymentHistory");
+  const t = useTranslations("CustomerDashboard.Billing");
   const { formatPrice } = useCLC();
   const currentOrders = orders;
 

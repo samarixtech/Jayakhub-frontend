@@ -30,7 +30,6 @@ export async function executeRestaurantAction(
       if (revalidatePathUrl) {
         revalidatePath(revalidatePathUrl);
       }
-      console.log("bulk imports", data || "undefined");
 
       return data;
     },

@@ -29,7 +29,7 @@ export default function PartnerForm() {
       ...form,
       phone: form.phone.replace(/\D/g, ""),
     };
-    console.log("Submitted Data:", sanitizedData);
+   
   };
 
   return (

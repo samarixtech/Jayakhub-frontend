@@ -43,7 +43,7 @@ export default function LoginView() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-5 mx-1"
+            className="space-y-6 mx-1"
           >
             <FormField
               control={form.control}
@@ -63,7 +63,7 @@ export default function LoginView() {
               )}
             />
 
-            <div className="space-y-1">
+            <div className="space-y-2">
               <FormField
                 control={form.control}
                 name="password"
@@ -76,7 +76,7 @@ export default function LoginView() {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end mt-1">
+              <div className="flex justify-end mt-2">
                 <Link
                   href="/forget-password"
                   className="text-xs text-gray-400 hover:text-emerald-bg transition-colors font-bold"
@@ -100,7 +100,7 @@ export default function LoginView() {
           </form>
         </Form>
 
-        <Typography variant="small" className="mt-6 text-center text-gray-600">
+        <Typography variant="small" className="mt-8 text-center text-gray-600">
           Don&apos;t have an account?{" "}
           <Link
             href="/register"

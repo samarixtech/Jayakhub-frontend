@@ -95,12 +95,7 @@ export default function useLocale(): Locale {
           expires: 365,
         });
 
-        console.log("🌍 Locale detected (Client Fallback):", {
-          country: data.country,
-          code: data.code,
-          language: lang,
-          dir: direction,
-        });
+        
       } catch (err: any) {
         console.error("❌ Locale detection failed (Client):", err.message);
         setError(err.message);

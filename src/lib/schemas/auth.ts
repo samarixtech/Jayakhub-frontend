@@ -3,7 +3,7 @@ import { z } from "zod";
 // ========== LOGIN SCHEMA ==========
 export const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 // ========== REGISTER SCHEMA ==========
@@ -47,10 +47,10 @@ export const forgotPasswordSchema = z.object({
 // ========== RESET PASSWORD SCHEMA ==========
 export const resetPasswordSchema = z
   .object({
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z
       .string()
-      .min(6, "Password must be at least 6 characters"),
+      .min(8, "Password must be at least 8 characters"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

@@ -34,7 +34,7 @@ export function RestaurantOnboardingView() {
 
   return (
     <div className="min-h-screen p-4 sm:p-6 flex flex-col items-center justify-center bg-gray-50/50">
-      <Card className="w-full max-w-4xl border-none shadow-xl rounded-[40px] bg-white overflow-hidden p-8 sm:p-12 lg:p-16">
+      <Card className="w-full max-w-4xl border-none shadow-xl rounded-[40px] bg-white overflow-hidden p-4 sm:p-12 lg:p-16">
         <OnboardingHeader
           logoPreview={logoPreview}
           onBack={prevStep}
@@ -43,7 +43,7 @@ export function RestaurantOnboardingView() {
 
         <StepperProgress currentStep={currentStep} onStepClick={goToStep} />
 
-        <CardContent className="p-0 mt-12 bg-white">{renderStep()}</CardContent>
+        <CardContent className="p-0 mt-4 sm:mt-12 bg-white">{renderStep()}</CardContent>
       </Card>
 
       <footer className="mt-8 text-center text-gray-400 text-xs">

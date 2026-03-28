@@ -35,11 +35,22 @@ export const brandAssetsSchema = z.object({
 });
 
 // ========== DAY SCHEDULE SCHEMA ==========
-const dayScheduleSchema = z.object({
-  isOpen: z.boolean().default(true),
-  openTime: z.string().optional(),
-  closeTime: z.string().optional(),
-});
+const dayScheduleSchema = z
+  .object({
+    isOpen: z.boolean().default(true),
+    openTime: z.string().optional(),
+    closeTime: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (!data.isOpen || !data.openTime || !data.closeTime) return true;
+      return data.openTime < data.closeTime;
+    },
+    {
+      message: "End time must be after start time",
+      path: ["closeTime"],
+    }
+  );
 
 // ========== SCHEDULE SCHEMA ==========
 export const scheduleSchema = z.object({

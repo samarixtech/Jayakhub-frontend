@@ -1243,8 +1243,8 @@
       "updating": "Updating...",
       "password_placeholder": "••••••••"
     },
-    "Addresses": {
-      "title": "Addresses",
+    "MyAddress": {
+      "title": "My Address",
       "subtitle": "Manage your delivery locations",
       "add_new": "Add New",
       "type": "Type",
@@ -1290,8 +1290,8 @@
       "work": "Work",
       "other": "Other"
     },
-    "PaymentHistory": {
-      "title": "Payment History",
+    "Billing": {
+      "title": "Billing",
       "subtitle": "View your payment transactions and billing",
       "export_pdf": "Export PDF",
       "total_spent": "Total Spent",
@@ -1340,7 +1340,7 @@
       "orders": "Orders",
       "profile": "Profile",
       "addresses": "Addresses",
-      "payment_history": "Payment History",
+      "Billing": "Billing",
       "wallet": "Wallet",
       "dashboard": "Dashboard",
       "my_profile": "My Profile",

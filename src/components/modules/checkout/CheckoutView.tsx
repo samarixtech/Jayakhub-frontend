@@ -108,7 +108,7 @@ const CheckoutView = () => {
 
     try {
       const res: any = await createOrderAction(payload);
-      console.log("Order Response:", res);
+    
 
       if (res.meta?.status === 200 || res.success) {
         if (paymentMethod === "cod") {
@@ -146,7 +146,6 @@ const CheckoutView = () => {
   const fetchAddresses = async () => {
     try {
       const addressRes: any = await getUserAddresses();
-      console.log("Address Res:", addressRes);
       if (addressRes && addressRes.data) {
         setSavedAddresses(addressRes.data);
 
@@ -168,7 +167,6 @@ const CheckoutView = () => {
   const fetchCards = async () => {
     try {
       const cardsRes: any = await getMyCardsAction();
-      console.log("Cards Res:", cardsRes);
       if (cardsRes.success && cardsRes.data) {
         setSavedCards(cardsRes.data);
       } else if (cardsRes.meta?.status === 200 && cardsRes.data) {
@@ -185,8 +183,6 @@ const CheckoutView = () => {
       // Try to fetch profile to check auth status
       try {
         const profileRes: any = await getProfile();
-        console.log("Profile Res:", profileRes);
-
         if (profileRes.success && profileRes.data) {
           setIsLoggedIn(true);
           setUserProfile(profileRes.data);

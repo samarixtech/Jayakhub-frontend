@@ -58,7 +58,7 @@ export default function ForgotPasswordView() {
               {isPending ? (
                 <Loader2 className="mr-2 h-6 w-6 animate-spin" />
               ) : (
-                "Send Reset Code"
+                "Send OTP"
               )}
             </Button>
           </form>

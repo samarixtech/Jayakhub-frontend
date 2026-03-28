@@ -77,7 +77,7 @@ export async function verifyOtpAction(payload: {
         }
       }
       cookieStore.delete("tempUserId"); // Clean up temp cookie
-      console.log(data);
+     
 
       return data;
     },

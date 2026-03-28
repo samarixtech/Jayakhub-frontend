@@ -40,7 +40,7 @@ export async function detectLocationAction(
 
   // 2. Fetch from API if Cookies missing
   try {
-    console.log("Server Action: Detecting locale using API helper");
+   
 
     // Using api helper instance
     const api = await serverApi();

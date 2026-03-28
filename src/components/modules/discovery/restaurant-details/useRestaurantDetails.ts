@@ -101,11 +101,11 @@ export function useRestaurantDetails() {
     setCLC({ country: c.toUpperCase(), currency: cur, language: l });
 
     if (slugParam) {
-      console.log("Fetching restaurant with slug:", slugParam);
+      
       fetchRestaurant(slugParam);
       // Removed automatic fetchReviewsWithFilter on mount as reviews are now supplied by fetchRestaurant.
     } else {
-      console.log("No slug param found");
+     
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

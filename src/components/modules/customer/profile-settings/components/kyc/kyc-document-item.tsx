@@ -64,6 +64,7 @@ export function DocumentItem({
           item={item}
           kycData={kycData}
           isSelected={isSelected}
+          selectedFile={selectedFile}
           activeTypeId={activeTypeId}
           isUploading={isUploading}
           fetching={fetching}
@@ -80,6 +81,7 @@ interface DocumentActionAreaProps {
   item: (typeof KYC_DOCUMENTS)[0];
   kycData: KycRecord[];
   isSelected: boolean;
+  selectedFile: File | null;
   activeTypeId: string | null;
   isUploading: boolean;
   fetching: boolean;
@@ -92,6 +94,7 @@ function DocumentActionArea({
   item,
   kycData,
   isSelected,
+  selectedFile,
   activeTypeId,
   isUploading,
   fetching,
@@ -123,8 +126,11 @@ function DocumentActionArea({
           disabled={isUploading}
           className="bg-[#2D6A4F] hover:bg-[#1B4332] text-white text-xs font-bold rounded-xl px-4 h-9 whitespace-nowrap"
         >
-          {isUploading && <Loader2 className="animate-spin mr-2" size={14} />}
-          {isUploading ? t('uploading') : t('confirm')}
+          {isUploading ? (
+            <Loader2 className="animate-spin" size={14} />
+          ) : (
+            t("confirm")
+          )}
         </Button>
       </div>
     );
@@ -134,7 +140,7 @@ function DocumentActionArea({
     <Button
       variant="ghost"
       onClick={() => onSelectClick(item.id)}
-      disabled={!!activeTypeId || fetching}
+      disabled={!!selectedFile || fetching}
       className="text-gray-600 text-xs font-bold flex gap-2 border border-gray-100 rounded-xl px-4 py-2 h-auto hover:bg-gray-50 whitespace-nowrap"
     >
       <Upload size={14} /> {t('select')}

@@ -133,7 +133,6 @@ export function useAddressGeocoding(
             country,
             zip,
           }));
-          toast.success("Address updated!");
         } else {
           console.error("Geocoder failed due to: " + status);
           toast.error("Could not fetch address details.");

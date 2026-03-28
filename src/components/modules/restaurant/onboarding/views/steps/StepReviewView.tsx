@@ -24,7 +24,7 @@ import {
 } from "../../components/ReviewComponents";
 
 export default function StepReviewView() {
-  const { data, loading, isPending, handleSubmit, onBack, pathPrefix } =
+  const { data, loading, isPending, handleSubmit,  pathPrefix } =
     useStepReview();
   const [agreed, setAgreed] = useState(false);
 
@@ -237,15 +237,7 @@ export default function StepReviewView() {
         </label>
       </div>
 
-      <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-6">
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          className="text-gray-400 font-bold hover:bg-transparent"
-        >
-          Back
-        </Button>
-
+      <div className="flex flex-col-reverse md:flex-row justify-end items-center gap-6">
         <Button
           onClick={handleSubmit}
           disabled={isPending || loading || !agreed}

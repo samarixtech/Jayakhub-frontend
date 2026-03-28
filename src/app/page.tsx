@@ -13,10 +13,7 @@ export default async function HomePage() {
     language = result.data.language.toLowerCase();
   }
 
-  console.log(
-    "HomePage Redirecting to:",
-    `/${country}/${language}/restaurants`,
-  );
+  
 
   redirect(`/${country}/${language}/restaurants`);
 }
