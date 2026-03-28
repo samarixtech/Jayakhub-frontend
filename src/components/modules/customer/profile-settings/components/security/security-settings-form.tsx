@@ -98,10 +98,7 @@ function SetPasswordForm({ t }: { t: any }) {
             className="rounded-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white px-8 h-12 font-bold min-w-[180px]"
           >
             {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("updating")}
-              </>
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               "Set Password"
             )}
@@ -192,10 +189,7 @@ function ChangePasswordForm({ t }: { t: any }) {
             className="rounded-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white px-8 h-12 font-bold min-w-[180px]"
           >
             {isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("updating")}
-              </>
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               t("update_password")
             )}

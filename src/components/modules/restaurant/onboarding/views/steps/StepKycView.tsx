@@ -52,7 +52,7 @@ export default function StepKycView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Identity Section */}
-        <div className="space-y-4">
+        <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-emerald-bg text-white flex items-center justify-center text-[10px] font-bold">
@@ -76,19 +76,21 @@ export default function StepKycView() {
             ))}
           </div>
 
-          <DocumentUploadArea
-            title="Owner Identity"
-            description={activeKyc.description}
-            sub={activeKyc.sub}
-            file={kycFile}
-            onFileChange={handleKycFileChange}
-            onRemove={removeKycFile}
-            themeColor="blue"
-          />
+          <div className="flex-1">
+            <DocumentUploadArea
+              title="Owner Identity"
+              description={activeKyc.description}
+              sub={activeKyc.sub}
+              file={kycFile}
+              onFileChange={handleKycFileChange}
+              onRemove={removeKycFile}
+              themeColor="blue"
+            />
+          </div>
         </div>
 
         {/* Business Section */}
-        <div className="space-y-4">
+        <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-emerald-bg text-white flex items-center justify-center text-[10px] font-bold">
@@ -115,15 +117,17 @@ export default function StepKycView() {
             ))}
           </div>
 
-          <DocumentUploadArea
-            title="Restaurant Documents"
-            description={activeDoc.description}
-            sub={activeDoc.sub}
-            file={docFile}
-            onFileChange={handleDocFileChange}
-            onRemove={removeDocFile}
-            themeColor="emerald"
-          />
+          <div className="flex-1">
+            <DocumentUploadArea
+              title="Restaurant Documents"
+              description={activeDoc.description}
+              sub={activeDoc.sub}
+              file={docFile}
+              onFileChange={handleDocFileChange}
+              onRemove={removeDocFile}
+              themeColor="emerald"
+            />
+          </div>
         </div>
       </div>
 

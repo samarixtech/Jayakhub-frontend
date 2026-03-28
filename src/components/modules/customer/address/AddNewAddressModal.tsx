@@ -51,7 +51,7 @@ export default function AddNewAddressModal({
   );
   const [otherLabel, setOtherLabel] = useState("");
   const [loading, setLoading] = useState(false);
-  const t = useTranslations('CustomerDashboard.Addresses');
+  const t = useTranslations('CustomerDashboard.MyAddress');
 
   const [formData, setFormData] = useState({
     street: "",
@@ -174,6 +174,7 @@ export default function AddNewAddressModal({
     <GlobalModal
       open={open}
       onOpenChange={onOpenChange}
+      isOutsideDisabled={true}
       trigger={trigger}
       className="max-w-[700px] p-0 overflow-hidden"
     >

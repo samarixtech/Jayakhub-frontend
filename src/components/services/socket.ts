@@ -20,9 +20,9 @@ let socket: Socket | null = null;
  */
 export const getSocket = (token?: string): Socket => {
   if (!socket) {
-    console.log("🔧 [SOCKET] Creating new connection...");
-    console.log("🔧 [SOCKET] URL:", SOCKET_URL);
-    console.log("🔧 [SOCKET] Token present:", !!token);
+    // console.log("🔧 [SOCKET] Creating new connection...");
+    // console.log("🔧 [SOCKET] URL:", SOCKET_URL);
+    // console.log("🔧 [SOCKET] Token present:", !!token);
     socket = io(SOCKET_URL, {
       auth: {
         token: token ? `Bearer ${token}` : undefined,
@@ -36,7 +36,7 @@ export const getSocket = (token?: string): Socket => {
     });
 
     socket.on("connect", () => {
-      console.log("🔌 [SOCKET] Connected:", socket?.id);
+      // console.log("🔌 [SOCKET] Connected:", socket?.id);
     });
 
     socket.on("connect_error", (err) => {
@@ -44,7 +44,7 @@ export const getSocket = (token?: string): Socket => {
     });
 
     socket.on("disconnect", (reason) => {
-      console.log("❌ [SOCKET] Disconnected:", reason);
+      // console.log("❌ [SOCKET] Disconnected:", reason);
     });
   }
 

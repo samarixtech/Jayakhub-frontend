@@ -24,8 +24,8 @@ export default function SocketProvider({
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    console.log("🚀 [SOCKET PROVIDER] Mounted — initializing socket...");
-    console.log("🔑 [SOCKET PROVIDER] Token present:", !!token);
+    // console.log("🚀 [SOCKET PROVIDER] Mounted — initializing socket...");
+    // console.log("🔑 [SOCKET PROVIDER] Token present:", !!token);
     if (!token) {
       console.warn(
         "⚠️ [SOCKET] No auth token found, skipping socket connection.",
@@ -35,14 +35,14 @@ export default function SocketProvider({
 
     const socket = getSocket(token);
     socketRef.current = socket;
-    console.log(
-      "📡 [SOCKET PROVIDER] Socket state:",
-      socket.connected ? "CONNECTED" : "CONNECTING...",
-    );
+    // console.log(
+    //   "📡 [SOCKET PROVIDER] Socket state:",
+    //   socket.connected ? "CONNECTED" : "CONNECTING...",
+    // );
 
     // 🔍 DEBUG: Log ALL incoming events from server
     socket.onAny((eventName: string, ...args: any[]) => {
-      console.log(`📨 [SOCKET EVENT] "${eventName}"`, ...args);
+      // console.log(`📨 [SOCKET EVENT] "${eventName}"`, ...args);
     });
 
     // Listen for HANDSHAKE_SUCCESS
@@ -52,7 +52,7 @@ export default function SocketProvider({
 
     // 🔔 Listen for NEW_ORDER_RECEIVED globally
     socket.on("NEW_ORDER_RECEIVED", (data: any) => {
-      console.log("🔔 [SOCKET] New Order Received:", data);
+      // console.log("🔔 [SOCKET] New Order Received:", data);
 
       toast.custom(
         (t) => (

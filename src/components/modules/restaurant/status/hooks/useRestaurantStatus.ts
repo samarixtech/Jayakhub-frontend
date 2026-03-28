@@ -37,7 +37,7 @@ export function useRestaurantStatus() {
     if (fetchedRef.current) return;
 
     fetchedRef.current = true;
-    console.log("Restaurant status check triggered");
+   
     execute();
   }, []);
 

@@ -19,7 +19,7 @@ export const generatePaymentHistoryPDF = (
 
   doc.setFontSize(24);
   doc.setTextColor(220); // Light gray
-  doc.text("PAYMENT HISTORY", 195, 25, { align: "right" });
+  doc.text("BILLING", 195, 25, { align: "right" });
 
   // Separator
   doc.setLineWidth(0.5);
@@ -208,5 +208,5 @@ export const generatePaymentHistoryPDF = (
   });
 
   // Save
-  doc.save(`Payment_History_${new Date().toISOString().split("T")[0]}.pdf`);
+  doc.save(`Billing_${new Date().toISOString().split("T")[0]}.pdf`);
 };

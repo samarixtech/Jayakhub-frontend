@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { FaMoneyBill } from "react-icons/fa";
 
 export function PaymentHistoryMetrics({ summary }: { summary: any }) {
-  const t = useTranslations("CustomerDashboard.PaymentHistory");
+  const t = useTranslations("CustomerDashboard.Billing");
   const { formatPrice } = useCLC();
 
   return (

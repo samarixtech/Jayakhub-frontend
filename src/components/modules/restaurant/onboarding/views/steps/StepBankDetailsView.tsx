@@ -91,7 +91,7 @@ export default function StepBankDetailsView() {
                         <SelectValue placeholder="Select Bank" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-gray-50">
+                    <SelectContent className="bg-gray-50" position="popper" sideOffset={4}>
                       {BANKS.map((bank) => (
                         <SelectItem key={bank} value={bank}>
                           {bank}
@@ -118,7 +118,7 @@ export default function StepBankDetailsView() {
                         <SelectValue placeholder="Select Type" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-gray-50">
+                    <SelectContent className="bg-gray-50" position="popper" sideOffset={4}>
                       {ACCOUNT_TYPES.map((type) => (
                         <SelectItem key={type} value={type}>
                           {type}

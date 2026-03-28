@@ -54,8 +54,8 @@ const CustomerHeader = () => {
 
   return (
     <header className="w-full z-50 shrink-0 relative">
-      <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4">
-        {/* ROW 1 Auth | Logo + Location (Desktop) | Lang */}
+      <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4 relative">
+        {/* ROW 1 Auth | Logo (Desktop) | Lang */}
         <div className="bg-emerald-bg px-4 py-2 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4 shrink-0">
           {/* MOBILE ROW 1: LOGO (LEFT) | PROFILE + LANG (RIGHT) */}
           <div className="flex items-center justify-between w-full md:hidden">
@@ -106,23 +106,23 @@ const CustomerHeader = () => {
                 priority
               />
             </Link>
-
-            {/* Location Switcher */}
-            <div className="hidden md:block">
-              <LocationSwitcher
-                currentAddress={currentAddress}
-                onAddressChange={setCurrentAddress}
-                isLoggedIn={isLoggedIn}
-                className="md:min-w-[180px] md:max-w-sm"
-                onLocationChange={(lat, lng) => {
-                  const params = new URLSearchParams(searchParams.toString());
-                  params.set("lat", lat.toString());
-                  params.set("lng", lng.toString());
-                  router.push(`${pathname}?${params.toString()}`);
-                }}
-              />
-            </div>
           </div>
+        </div>
+
+        {/* Desktop Centered Location Switcher */}
+        <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <LocationSwitcher
+            currentAddress={currentAddress}
+            onAddressChange={setCurrentAddress}
+            isLoggedIn={isLoggedIn}
+            className="md:min-w-[180px] md:max-w-sm"
+            onLocationChange={(lat, lng) => {
+              const params = new URLSearchParams(searchParams.toString());
+              params.set("lat", lat.toString());
+              params.set("lng", lng.toString());
+              router.push(`${pathname}?${params.toString()}`);
+            }}
+          />
         </div>
 
         {/* MOBILE ROW 2: SIDEBAR TRIGGER | LOCATION SWITCHER (MOBILE) | CART (MOBILE) */}

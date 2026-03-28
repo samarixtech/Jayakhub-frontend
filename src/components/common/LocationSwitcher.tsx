@@ -233,13 +233,12 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
       }
 
       if (!lat || !lng) {
-        console.log("LocationSwitcher: Auto-detecting location...");
+       
         autoDetectRef.current = true;
         getCurrentLocation(true);
       } else {
-        console.log(
-          "LocationSwitcher: Detecting address from URL coordinates...",
-        );
+        
+        
         autoDetectRef.current = true;
 
         const pos = { lat: Number(lat), lng: Number(lng) };

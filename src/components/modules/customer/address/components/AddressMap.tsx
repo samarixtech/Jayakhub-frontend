@@ -29,7 +29,7 @@ export const AddressMap = ({
   onMapClick,
   onLocateMe,
 }: AddressMapProps) => {
-  const t = useTranslations('CustomerDashboard.Addresses');
+  const t = useTranslations('CustomerDashboard.MyAddress');
 
   return (
     <div className="relative w-full h-60 rounded-2xl overflow-hidden bg-gray-100 border border-gray-200 shrink-0">

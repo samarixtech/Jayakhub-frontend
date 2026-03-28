@@ -40,10 +40,10 @@ export function useVerifyOtp() {
     startResendTransition(async () => {
       const result = await resendOtpAction(email);
       if (result.success) {
-        toast.success(result.message || "Code resent!");
+        toast.success(result.message || "OTP Sent Successfully");
         setTimer(60);
       } else {
-        toast.error(result.message || "Failed to resend code");
+        toast.error(result.message || "Failed to resend OTP");
       }
     });
   };

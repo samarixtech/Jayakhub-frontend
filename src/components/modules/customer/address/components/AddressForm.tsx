@@ -25,7 +25,7 @@ export const AddressForm = ({
   otherLabel,
   setOtherLabel,
 }: AddressFormProps) => {
-  const t = useTranslations('CustomerDashboard.Addresses');
+  const t = useTranslations('CustomerDashboard.MyAddress');
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

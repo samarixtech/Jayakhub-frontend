@@ -14,6 +14,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 ChartJS.register(
   CategoryScale,
@@ -72,10 +73,6 @@ const options = {
           size: 10,
           weight: "bold" as const,
         },
-        callback: function (value: any) {
-          return "$" + value;
-        },
-        stepSize: 495,
       },
       border: { display: false },
       min: 0,
@@ -86,10 +83,6 @@ const options = {
     mode: "nearest" as const,
     axis: "x" as const,
     intersect: false,
-  },
-  animation: {
-    duration: 700,
-    easing: "easeOutQuart" as const,
   },
   elements: {
     point: {
@@ -108,6 +101,7 @@ interface SalesChartProps {
 
 const SalesChart = ({ graphData = [] }: SalesChartProps) => {
   const [mounted, setMounted] = React.useState(false);
+  const { formatPrice } = useCLC();
   const t = useTranslations("RestaurantDashboard.Reports.charts.sales");
 
   React.useEffect(() => {
@@ -128,11 +122,13 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
 
   const dynamicOptions = React.useMemo(() => ({
     ...options,
-    animation: {
-      duration: 700,
-      easing: "easeOutQuart" as const,
-      y: {
-        from: 500, // Starts from slightly below the baseline for a raising up effect
+    animation: false as const,
+    transitions: {
+      show: {
+        animations: {
+          x: { from: 0 },
+          y: { from: 500 }
+        }
       }
     },
     scales: {
@@ -143,10 +139,11 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
         ticks: {
           ...options.scales.y.ticks,
           stepSize: stepSize,
+          callback: (value: any) => formatPrice(value),
         },
       },
     },
-  }), [maxSales, stepSize]);
+  }), [maxSales, stepSize, formatPrice]);
 
   const chartData = React.useMemo(() => ({
     labels: labels.length > 0 ? labels : [t("noData")],
@@ -189,7 +186,7 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
       </div>
       <div className="flex-1 min-h-[250px] w-full mt-2 relative">
         {mounted && (
-          <Line options={dynamicOptions as any} data={chartData} redraw={true} />
+          <Line options={dynamicOptions as any} data={chartData} />
         )}
       </div>
     </div>

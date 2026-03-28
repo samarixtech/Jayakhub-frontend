@@ -7,7 +7,7 @@ interface AuthDividerProps {
 
 export function AuthDivider({ text }: AuthDividerProps) {
   return (
-    <div className="relative mb-6 text-center">
+    <div className="relative mb-8 text-center">
       <div className="absolute inset-0 flex items-center">
         <Separator className="w-full border-gray-100" />
       </div>

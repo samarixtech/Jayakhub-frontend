@@ -27,8 +27,8 @@ const navItems = [
   { key: "overview", href: "/customer/dashboard", icon: LayoutDashboard },
   { key: "orders", href: "/customer/order-history", icon: ReceiptText },
   { key: "profile", href: "/customer/profile-settings", icon: User },
-  { key: "addresses", href: "/customer/address", icon: MapPin },
-  { key: "payment_history", href: "/customer/payment-history", icon: CreditCard },
+  { key: "my_address", href: "/customer/address", icon: MapPin },
+  { key: "Billing", href: "/customer/payment-history", icon: CreditCard },
   { key: "wallet", href: "/customer/wallet", icon: Wallet },
 ];
 

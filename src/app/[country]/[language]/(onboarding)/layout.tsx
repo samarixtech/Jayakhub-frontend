@@ -64,7 +64,7 @@ const OnboardingLayoutContent = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] p-6 flex flex-col items-center justify-center">
+    <div className="min-h-screen bg-[#F9FAFB] p-0 sm:p-6 flex flex-col items-center justify-center">
       <div className="w-full max-w-4xl mb-8 text-center">
         <Typography
           variant="h2"
@@ -77,7 +77,7 @@ const OnboardingLayoutContent = ({
         </Typography>
       </div>
 
-      <Card className="w-full max-w-4xl border-none shadow-xl shadow-gray-200/50 rounded-[40px] bg-white overflow-hidden p-8 md:p-12">
+      <Card className="w-full max-w-4xl border-none shadow-xl shadow-gray-200/50 rounded-[40px] bg-white overflow-hidden p-4 sm:p-12">
         <OnboardingHeader
           logoPreview={logoPreview}
           onBack={() => router.back()}

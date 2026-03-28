@@ -40,7 +40,10 @@ export default function VerifyOtpView() {
           Verify OTP
         </Typography>
         <Typography variant="muted" className="mb-4">
-          Enter the 6-digit code sent to <strong>{email}</strong>
+          Enter the 6-digit code sent to <br />
+          <span className="text-gray-900 font-bold break-all block mt-1">
+            {email}
+          </span>
         </Typography>
       </CardHeader>
 
@@ -72,7 +75,7 @@ export default function VerifyOtpView() {
           <Button
             onClick={handleVerify}
             disabled={isVerifying || otpValue.length < 6}
-            className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white rounded-xl text-lg font-bold shadow-lg transition-all active:scale-[0.98] mb-4"
+            className="w-full h-14 text-white bg-emerald-bg hover:bg-emerald-bg-hover rounded-xl text-lg font-bold shadow-lg transition-all active:scale-[0.98] mb-4"
           >
             {isVerifying ? (
               <Loader2 className="mr-2 h-6 w-6 animate-spin" />

@@ -26,8 +26,7 @@ export async function middleware(request: NextRequest) {
   // 3. If cookies are missing, call detect API
   if (!country || !language) {
     try {
-      // const ip = await getClientIp(request.headers);
-      // console.log("IP FROM MIDDLEWARE", ip);
+     
 
       const detectRes = (await api.get(
         "/detect",

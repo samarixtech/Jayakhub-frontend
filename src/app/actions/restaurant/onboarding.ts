@@ -7,17 +7,12 @@ export async function registerRestaurantOnboardingAction(
   formData: FormData,
 ): Promise<ActionResponse> {
   try {
-    // Log form data keys for debugging
-    console.log(
-      "Server Action Received FormData keys:",
-      Array.from(formData.keys()),
-    );
+ 
 
     const api = await serverApi();
     const response = await api.post("/onboarding/register", formData);
 
-    console.log("Server Action Response:", response);
-    console.log(formData);
+   
 
     return {
       success: true,

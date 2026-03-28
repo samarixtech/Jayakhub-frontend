@@ -183,11 +183,11 @@ export default function RestaurantDetailsView() {
     setCLC({ country: c.toUpperCase(), currency: cur, language: l });
 
     if (slugParam) {
-      console.log("Fetching restaurant with slug:", slugParam);
+      
       fetchRestaurant(slugParam);
       fetchReviews(slugParam);
     } else {
-      console.log("No slug param found");
+     
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

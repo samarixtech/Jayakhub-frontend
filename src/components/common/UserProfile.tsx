@@ -73,9 +73,9 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
   useEffect(() => {
     async function fetchNotifications() {
       try {
-        console.log("UserProfile: Fetching notifications...");
+       
         const response: any = await getNotifications();
-        console.log("UserProfile: Notification response:", response);
+        
         if (response.success && Array.isArray(response.data)) {
           setNotifications(response.data);
         } else {

@@ -12,7 +12,7 @@ export const StepperProgress = ({
 }: StepperProgressProps) => {
   return (
     <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
-      <div className="relative flex justify-between min-w-[800px] w-full my-7 px-10">
+      <div className="relative flex justify-between min-w-[800px] w-full my-4 sm:my-7 px-4 sm:px-10">
         <div className="absolute top-4 left-20 right-20 h-px bg-emerald-100 z-0" />
         {STEPS.map((step) => (
           <div

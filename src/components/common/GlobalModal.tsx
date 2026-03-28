@@ -20,6 +20,7 @@ interface GlobalModalProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   customStyle?: boolean;
+  isOutsideDisabled?: boolean;
 }
 
 export function GlobalModal({
@@ -31,11 +32,18 @@ export function GlobalModal({
   open,
   onOpenChange,
   customStyle,
+  isOutsideDisabled = false,
 }: GlobalModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent
+        onInteractOutside={(e) => {
+          if (isOutsideDisabled) e.preventDefault();
+        }}
+        onPointerDownOutside={(e) => {
+          if (isOutsideDisabled) e.preventDefault();
+        }}
         className={cn(
           "sm:max-w-[480px] rounded-2xl p-5 border-none shadow-2xl bg-white",
           className,

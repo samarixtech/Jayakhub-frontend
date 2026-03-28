@@ -43,7 +43,7 @@ export function StatusTimeline() {
   ];
 
   return (
-    <div className="relative space-y-8 text-left">
+    <div className="relative space-y-3 sm:space-y-6 lg:space-y-5 text-left">
       <div className="absolute left-[19px] top-4 bottom-4 w-[2px] bg-gray-100 z-0" />
       {TIMELINE_STEPS.map((step, index) => {
         const Icon = step.icon;

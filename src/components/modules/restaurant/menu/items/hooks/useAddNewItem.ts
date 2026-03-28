@@ -57,7 +57,6 @@ export const useAddNewItem = () => {
     {
       suppressSuccessToast: true,
       onSuccess: (data: any) => {
-        console.log("FETCH ITEM SUCCESS", data);
 
         const itemData = data?.item || data?.data?.item || data?.data || data;
 

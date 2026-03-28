@@ -18,7 +18,7 @@ export function PaymentHistoryHeader({
   userEmail,
   userName,
 }: PaymentHistoryHeaderProps) {
-  const t = useTranslations("CustomerDashboard.PaymentHistory");
+  const t = useTranslations("CustomerDashboard.Billing");
   return (
     <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
       <div>

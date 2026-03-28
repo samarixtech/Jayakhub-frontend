@@ -168,7 +168,7 @@ export default function CustomerRegisterView() {
 
         <Typography
           variant="small"
-          className="mt-6 text-center text-gray-600 pb-0.5"
+          className="mt-8 text-center text-gray-600 pb-0.5"
         >
           {t("existingAccount")}{" "}
           <Link

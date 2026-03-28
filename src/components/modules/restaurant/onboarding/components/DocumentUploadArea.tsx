@@ -38,7 +38,7 @@ export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
   }[themeColor];
 
   return (
-    <div className="border border-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-white shadow-sm min-h-[320px]">
+    <div className="border border-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-white shadow-sm min-h-[320px] h-full">
       <div
         className={`w-16 h-16 ${colors.bg} rounded-full flex items-center justify-center mb-4 ${colors.text}`}
       >
