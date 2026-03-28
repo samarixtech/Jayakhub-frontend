@@ -11,7 +11,7 @@ export default function OrderConfirmedView() {
   const params = useParams();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-  const { country, language, id } = params;
+  const { id } = params;
 
   // Clear cart on mount when order successfully placed
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function OrderConfirmedView() {
         {/* Actions */}
         <div className="space-y-4 w-full px-8">
           <Button
-            onClick={() => router.push(`/${country}/${language}/order/${id}`)}
+            onClick={() => router.push(`/order/${id}`)}
             className="w-full h-12 bg-[#346853] hover:bg-[#2a5443] text-white font-bold rounded-lg shadow-lg shadow-[#346853]/20"
           >
             Track Order
@@ -50,7 +50,7 @@ export default function OrderConfirmedView() {
 
           <Button
             variant="ghost"
-            onClick={() => router.push(`/${country}/${language}/restaurants`)}
+            onClick={() => router.push("/restaurants")}
             className="w-full text-xs font-bold text-gray-500 hover:text-gray-900 hover:bg-transparent"
           >
             Continue Order

@@ -1,7 +1,5 @@
 "use client";
-
 import { usePathname, useRouter } from "next/navigation";
-import useLocale from "@/hooks/useLocals";
 import { Card, CardContent } from "@/components/ui/card";
 import { OnboardingHeader } from "@/components/modules/restaurant/onboarding/OnboardingHeader";
 import { StepperProgress } from "@/components/modules/restaurant/onboarding/StepperProgress";
@@ -21,7 +19,6 @@ const OnboardingLayoutContent = ({
   const { logoPreview } = useOnboarding();
 
   const router = useRouter();
-  const { country, language } = useLocale();
 
   // Determine current step based on pathname
   let currentStep = 1;
@@ -60,7 +57,7 @@ const OnboardingLayoutContent = ({
       default:
         return;
     }
-    router.push(`/${country}/${language}/restaurant/onboarding/${path}`);
+    router.push(`/restaurant/onboarding/${path}`);
   };
 
   return (

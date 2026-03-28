@@ -1,5 +1,4 @@
 "use client";
-
 import { Mail, Loader2 } from "lucide-react";
 import { CustomerProfileData } from "@/types";
 import { Input } from "@/components/ui/input";
@@ -18,10 +17,14 @@ import { useTranslations } from "next-intl";
 
 interface PersonalInfoFormProps {
   profile: CustomerProfileData;
+  updateProfile: (data: Partial<CustomerProfileData>) => void;
 }
 
-export function PersonalInfoForm({ profile }: PersonalInfoFormProps) {
-  const { form, isPending, onSubmit } = usePersonalInfo(profile);
+export function PersonalInfoForm({
+  profile,
+  updateProfile,
+}: PersonalInfoFormProps) {
+  const { form, isPending, onSubmit } = usePersonalInfo(profile, updateProfile);
   const t = useTranslations("CustomerDashboard.ProfileSettings");
 
   return (

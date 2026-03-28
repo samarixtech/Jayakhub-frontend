@@ -1,6 +1,6 @@
 "use client";
 
-import Banner from "@/app/banner/page";
+// import Banner from "@/app/banner/page";
 import Hero from "@/components/modules/public-website/home/Hero";
 import HowItWorks from "@/components/modules/public-website/home/HowItWorks";
 import Restaurants from "@/components/modules/public-website/home/Restaurants";

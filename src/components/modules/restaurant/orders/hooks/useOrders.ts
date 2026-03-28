@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState, useCallback } from "react";
 import {
   getRestaurantOrdersAction,
@@ -17,8 +16,12 @@ function isoToOrderDateTime(isoStr: string): string {
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
   const time = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric", minute: "2-digit", hour12: true,
-  }).format(d).toLowerCase();
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  })
+    .format(d)
+    .toLowerCase();
   return formatOrderDateTime(`${day}/${month}/${year}`, time);
 }
 
@@ -78,14 +81,8 @@ export interface UIOrder {
 import { usePagination } from "@/hooks/usePagination";
 
 export const useOrders = () => {
-  const {
-    page,
-    limit,
-    totalPages,
-    totalCount,
-    handlePageChange,
-    updatePaginationMeta,
-  } = usePagination({ initialLimit: 10 });
+  const { page, limit, totalPages, handlePageChange, updatePaginationMeta } =
+    usePagination({ initialLimit: 10 });
   const [activeTab, setActiveTab] = useState<"live" | "past">("live");
   const [selectedOrder, setSelectedOrder] = useState<UIOrder | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -247,8 +244,7 @@ export const useOrders = () => {
 
   const liveOrdersCount = stats.liveOrders || 0;
   const pastOrdersCount = stats.totalDeliveredOrders || 0;
-  const paginatedOrders = filteredOrders; // Already paginated by backend (mostly)
-
+  const paginatedOrders = filteredOrders;
   return {
     orders,
     stats,

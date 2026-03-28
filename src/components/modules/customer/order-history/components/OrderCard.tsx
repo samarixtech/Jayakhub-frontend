@@ -94,12 +94,7 @@ export const OrderCard = ({
             </span>
 
             {isRejected ? (
-              <Button
-                variant="outline"
-                className="rounded-full h-9 px-5 bg-white border-gray-200 text-gray-600 text-[11px] font-bold hover:bg-gray-50"
-              >
-                {t("help")}
-              </Button>
+              <></>
             ) : isDelivered ? (
               <Button
                 className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"

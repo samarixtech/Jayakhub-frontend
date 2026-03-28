@@ -1,5 +1,6 @@
 import React from "react";
 import { Utensils } from "lucide-react";
+import { useCLC } from "@/context/CLCContext";
 
 interface OrderSummaryTableProps {
   items: any[];
@@ -14,6 +15,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
   deliveryFee,
   total,
 }) => {
+  const { formatPrice } = useCLC();
   return (
     <div className="border border-gray-100 rounded-2xl p-6 bg-white">
       <div className="flex items-center gap-2 mb-6">
@@ -64,7 +66,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
                   </div>
                 </div>
                 <span className="font-bold text-gray-900 shrink-0 ml-4">
-                  ${Number(item.price).toFixed(2)}
+                  {formatPrice(item.price)}
                 </span>
               </div>
             );
@@ -74,18 +76,18 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
       <div className="border-t border-dashed border-gray-200 pt-4 space-y-2 mb-4">
         <div className="flex justify-between text-gray-500 text-sm">
           <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>{formatPrice(subtotal)}</span>
         </div>
         <div className="flex justify-between text-[#346853] text-sm font-medium">
           <span>Delivery Fee</span>
-          <span>{deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : "$10"}</span>
+          <span>{deliveryFee > 0 ? formatPrice(deliveryFee) : "N/A"}</span>
         </div>
       </div>
 
       <div className="flex justify-between items-end border-t border-gray-100 pt-4">
         <span className="font-bold text-lg text-gray-900">Total</span>
         <span className="font-bold text-xl text-gray-900">
-          ${total.toFixed(2)}
+          {formatPrice(total + 10)}
         </span>
       </div>
     </div>

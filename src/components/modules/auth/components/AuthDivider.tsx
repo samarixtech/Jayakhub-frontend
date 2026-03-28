@@ -1,13 +1,20 @@
 import { Separator } from "@/components/ui/separator";
 import { Typography } from "@/components/ui/typography";
+import { cn } from "@/lib/utils";
 
 interface AuthDividerProps {
   text: string;
+  compact?: boolean;
 }
 
-export function AuthDivider({ text }: AuthDividerProps) {
+export function AuthDivider({ text, compact }: AuthDividerProps) {
   return (
-    <div className="relative mb-8 text-center">
+    <div
+      className={cn(
+        "relative text-center transition-all",
+        compact ? "mb-3" : "mb-6",
+      )}
+    >
       <div className="absolute inset-0 flex items-center">
         <Separator className="w-full border-gray-100" />
       </div>

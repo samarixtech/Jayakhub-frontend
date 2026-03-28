@@ -1,7 +1,7 @@
 "use client";
 import { Star, Clock, Bike, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { toggleWishlistAction } from "@/app/actions/customer/wishlist";
 import { toast } from "react-hot-toast";
@@ -21,13 +21,12 @@ const DiscoveryRestaurantCard = ({
   const [internalIsWishlist, setInternalIsWishlist] = useState(data.isWishlist);
   const [isWishlistPending, setIsWishlistPending] = useState(false);
   const router = useRouter();
-  const params = useParams();
-  const { country, language, currency } = useCLC();
+  const { currency } = useCLC();
   const isCompact = variant === "compact";
 
   const handleClick = () => {
-    if (country && language && data.slug) {
-      router.push(`/${country}/${language}/restaurants/${data.slug}`);
+    if (data.slug) {
+      router.push(`/restaurants/${data.slug}`);
     }
   };
 

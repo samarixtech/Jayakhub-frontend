@@ -5,14 +5,12 @@ import {
   Store,
   ShoppingCart,
   UtensilsCrossed,
-  Megaphone,
   Star,
   Users,
   CreditCard,
   BarChart2,
   Settings,
   HelpCircle,
-  Database,
   LogOut,
   ChevronDown,
 } from "lucide-react";
@@ -40,6 +38,7 @@ import {
 import Image from "next/image";
 
 // TODO: add role based secure navigation items
+
 // Navigation Items Structure
 const NAV_SECTIONS = [
   {
@@ -85,7 +84,6 @@ const NAV_SECTIONS = [
 
 import { logoutAction } from "@/app/actions/auth/auth";
 import { deleteCookie } from "cookies-next";
-import useLocale from "@/hooks/useLocals";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import { useTranslations } from "next-intl";
 
@@ -94,7 +92,6 @@ export function RestaurantSidebar() {
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed" && !isMobile;
-  const { country, language } = useLocale();
 
   const handleLogout = async () => {
     try {
@@ -104,7 +101,7 @@ export function RestaurantSidebar() {
     }
     deleteCookie("token");
     deleteCookie("role");
-    window.location.href = `/${country}/${language}/login`;
+    window.location.href = `/login`;
   };
 
   return (
@@ -126,7 +123,7 @@ export function RestaurantSidebar() {
       {/* HEADER */}
       <SidebarHeader className="h-16 flex items-center justify-center border-b border-white/10 mb-2">
         <Link
-          href={`/${country}/${language}/restaurants`}
+          href={`/restaurants`}
           className="w-full flex items-center justify-center"
         >
           {!isCollapsed ? (
@@ -159,7 +156,7 @@ export function RestaurantSidebar() {
               {section.items.map((item: any) => {
                 if (item.isCollapsible) {
                   const isActiveGroup =
-                    pathname?.startsWith("/restaurant/menu");
+                    pathname?.startsWith(`/restaurant/menu`);
                   return (
                     <Collapsible
                       key={item.nameKey}
@@ -189,7 +186,9 @@ export function RestaurantSidebar() {
                                     asChild
                                     className={`h-10 pl-12 rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/60 ${isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : ""}`}
                                   >
-                                    <Link href={subItem.href}>
+                                    <Link
+                                      href={subItem.href}
+                                    >
                                       <span>
                                         {t(
                                           `Sidebar.items.${subItem.nameKey}` as any,

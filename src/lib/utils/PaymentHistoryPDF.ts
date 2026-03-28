@@ -108,8 +108,8 @@ export const generatePaymentHistoryPDF = (
         styles: { fontStyle: "bold", textColor: 40 },
       },
       {
-        content: `$${Number(order.totalAmount || 0).toFixed(2)}`,
-        styles: { fontStyle: "bold", textColor: 40, halign: "right" },
+        content: `$${(Number(order.totalAmount || 0) + 10).toFixed(2)}`,
+        styles: { fontStyle: "bold", textColor: 40 },
       },
     ]);
 
@@ -118,7 +118,6 @@ export const generatePaymentHistoryPDF = (
 
     if (items.length > 0) {
       items.forEach((item: any, index: number) => {
-        // We pad the description with a prefix symbol for visual heirarchy
         const prefix = index === items.length - 1 ? "   " : "   ";
         const bullet = index === items.length - 1 ? "└" : "├";
 
@@ -133,16 +132,28 @@ export const generatePaymentHistoryPDF = (
             styles: { textColor: 100, fontSize: 8 },
           },
           {
-            content: `Unit: $${Number(item.price || 0).toFixed(2)}`,
+            content: `$${Number(item.price || 0).toFixed(2)}`,
             styles: { textColor: 100, fontSize: 8 },
           },
           {
             content: `$${(Number(item.price || 0) * (item.quantity || 0)).toFixed(2)}`,
-            styles: { textColor: 100, fontSize: 8, halign: "right" },
+            styles: { textColor: 100, fontSize: 8 },
           },
         ]);
       });
-      // Add a small spacer row for readability between orders if it isn't the last order
+
+      // Add Delivery Fee
+      tableData.push([
+        {
+          content: `   └ Delivery Fee`,
+          colSpan: 5,
+          styles: { textColor: 100, fontSize: 8 },
+        },
+        {
+          content: `$10.00`,
+          styles: { textColor: 100, fontSize: 8 },
+        },
+      ]);
     } else {
       tableData.push([
         {
@@ -161,9 +172,9 @@ export const generatePaymentHistoryPDF = (
         "ORDER ID / ITEM",
         "DATE",
         "RESTAURANT",
-        "METHOD / QTY",
-        "STATUS / UNIT",
-        "AMOUNT",
+        "METHOD / Qty",
+        "STATUS / PRICE",
+        "TOTAL",
       ],
     ],
     body: tableData,
@@ -181,14 +192,13 @@ export const generatePaymentHistoryPDF = (
     },
     columnStyles: {
       0: { cellWidth: 35 },
-      1: { cellWidth: 30 },
-      2: { cellWidth: 45 },
-      3: { cellWidth: 25 },
-      4: { cellWidth: 20 },
-      5: { cellWidth: 25, halign: "right" },
+      1: { cellWidth: 25 },
+      2: { cellWidth: 35 },
+      3: { cellWidth: 30 },
+      4: { cellWidth: 30 },
+      5: { cellWidth: 25 },
     },
     willDrawCell: function (data) {
-      // If it's the start of an order (bold row), draw a top border to separate it from previous orders
       if (
         data.row.raw &&
         Array.isArray(data.row.raw) &&

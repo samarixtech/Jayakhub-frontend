@@ -26,7 +26,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
     id: String(index + 1),
     rank: index + 1,
     name: p.name,
-    category: p.category || t("detail.category") || "Main Dish", // Fallback to category text or something if not provided. In en.json I added Main Dish? Ah wait, I didn't. I'll just use "Main Dish" untranslated for fallback or what I had. Wait, let's use the provided category or "Main Dish" (I should have added it, let me just keep it hardcoded for fallback or leave it). Actually, let me use p.category || "Main Dish". Wait, en.json has "Main Dish" in it? No. Let's just do `p.category || "Main Dish"`.
+    category: p.category || t("detail.category") || "N/A",
     unitsSold: p.quantity,
     revenue: formatPrice(p.revenue || p.total || 0),
     numericRevenue: p.revenue || p.total || 0,
@@ -48,7 +48,9 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
             ? "bg-orange-50"
             : "bg-slate-100",
     rating: typeof p.rating === "number" ? p.rating : 4.5,
-    price: formatPrice(p.price !== undefined ? p.price : p.total / (p.quantity || 1)),
+    price: formatPrice(
+      p.price !== undefined ? p.price : p.total / (p.quantity || 1),
+    ),
     cost: formatPrice(p.cost || 0),
     profit: formatPrice(p.profit || p.total || 0),
     profitMargin: p.profitMargin || "100%",

@@ -11,35 +11,30 @@ import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
-interface QuickActionsProps {
-  country: string;
-  language: string;
-}
-
-export const QuickActions = ({ country, language }: QuickActionsProps) => {
-  const t = useTranslations('CustomerDashboard.QuickActions');
+export const QuickActions = () => {
+  const t = useTranslations("CustomerDashboard.QuickActions");
 
   const QUICK_ACTIONS = [
     {
-      label: t('order_food'),
+      label: t("order_food"),
       icon: UtensilsCrossed,
       color: "text-emerald-600",
       hrefSuffix: "/restaurants",
     },
     {
-      label: t('reorder'),
+      label: t("reorder"),
       icon: RotateCcw,
       color: "text-blue-500",
       hrefSuffix: null,
     },
     {
-      label: t('kyc_verify'),
+      label: t("kyc_verify"),
       icon: ShieldCheck,
       color: "text-amber-600",
       hrefSuffix: "/customer/profile-settings",
     },
     {
-      label: t('payment_methods'),
+      label: t("payment_methods"),
       icon: CreditCard,
       color: "text-purple-600",
       hrefSuffix: "/customer/wallet",
@@ -49,7 +44,7 @@ export const QuickActions = ({ country, language }: QuickActionsProps) => {
   return (
     <Card className="border-none shadow-sm rounded-4xl bg-white p-8 h-fit">
       <Typography className="text-lg font-black text-gray-900 mb-6">
-        {t('quick_actions')}
+        {t("quick_actions")}
       </Typography>
       <div className="space-y-3">
         {QUICK_ACTIONS.map((action) => {
@@ -73,9 +68,7 @@ export const QuickActions = ({ country, language }: QuickActionsProps) => {
                 className="w-full justify-between h-14 px-5 rounded-2xl border-gray-50 bg-white hover:bg-gray-50 group transition-all"
                 asChild
               >
-                <Link href={`/${country}/${language}${action.hrefSuffix}`}>
-                  {content}
-                </Link>
+                <Link href={`/${action.hrefSuffix}`}>{content}</Link>
               </Button>
             );
           }

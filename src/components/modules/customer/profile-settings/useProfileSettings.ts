@@ -51,6 +51,10 @@ export function useProfileSettings() {
     setAvatarFile(null);
   };
 
+  const updateProfile = (data: Partial<CustomerProfileData>) => {
+    setProfile((prev) => (prev ? { ...prev, ...data } : null));
+  };
+
   const handleSave = async () => {
     if (!profile) return;
     const formData = new FormData();
@@ -64,9 +68,8 @@ export function useProfileSettings() {
       const result = await updateProfileAction(formData);
       if (result.success) {
         toast.success("Profile updated!");
-        setProfile(result.data.user);
-        setInitialProfile(result.data.user);
-        setAvatarFile(null);
+        // Force full page reload to update all UI elements globally
+        window.location.reload();
       } else {
         toast.error(result.message);
       }
@@ -81,6 +84,7 @@ export function useProfileSettings() {
     hasChanges,
     handleSave,
     handleCancel,
+    updateProfile,
     activeView,
     setActiveView,
   };

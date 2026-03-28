@@ -1,6 +1,4 @@
-import { useRouter, useParams } from "next/navigation";
-import useLocale from "@/hooks/useLocals";
-
+import { useRouter } from "next/navigation";
 export interface Notification {
   id: string;
   title: string;
@@ -11,11 +9,6 @@ export interface Notification {
 
 export function useNotifications(userRole: string, onNavigate?: () => void) {
   const router = useRouter();
-  const { country: localeCountry, language: localeLanguage } = useLocale();
-  const params = useParams();
-
-  const country = (params?.country as string) || localeCountry || "pk";
-  const language = (params?.language as string) || localeLanguage || "en";
 
   const handleNotificationClick = (notification: Notification) => {
     // Determine route based on notification content
@@ -24,7 +17,7 @@ export function useNotifications(userRole: string, onNavigate?: () => void) {
 
     let path = "";
     const isRestaurant = userRole === "restaurant_owner";
-    const basePath = `/${country}/${language}/${isRestaurant ? "restaurant" : "customer"}`;
+    const basePath = `/${isRestaurant ? "restaurant" : "customer"}`;
 
     if (
       title.includes("rating") ||

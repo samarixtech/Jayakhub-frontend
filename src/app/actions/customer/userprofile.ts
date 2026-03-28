@@ -74,8 +74,6 @@ export async function updateProfileAction(
         phone: Number(formData.get("phone")?.toString().replace(/\D/g, "")),
       });
 
-      // 2. If an avatar is present, send a SECOND request via FormData (WITHOUT text fields)
-      // This prevents the backend from validating a stringified phone number during file upload
       if (avatar && avatar instanceof File && avatar.size > 0) {
         const avatarFormData = new FormData();
         avatarFormData.append("avatar", avatar);
@@ -86,10 +84,8 @@ export async function updateProfileAction(
     },
     "Profile updated successfully",
     async (data) => {
-      // Revalidate to force a rerender and refresh data on client
       revalidatePath("/", "layout");
 
-      // Harmonize role field with getProfile (ensure it's a string from cookies)
       const { cookies } = await import("next/headers");
       const cookieStore = await cookies();
       const role = cookieStore.get("role")?.value;

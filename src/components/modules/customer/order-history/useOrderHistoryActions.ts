@@ -56,8 +56,6 @@ export const getStatusLabel = (status: string) => {
 };
 
 export function useOrderHistoryActions({
-  country,
-  language,
   setCurrentPage,
   setCurrentOrderInfo,
   setIsRatingModalOpen,
@@ -83,13 +81,16 @@ export function useOrderHistoryActions({
         price: parseFloat(item.price),
         quantity: item.quantity,
         image: item.image,
+        imageUrl: getImageUrl(item.image),
+        restaurantId: (order as any).restaurantId,
+        restaurantName: (order as any).restaurantName,
         selectedVariations: item.selectedVariations || [],
         cartId: `reorder-${order.orderId}-${item.id || item.name}-${Date.now()}`,
       };
       dispatch(addToCart(cartItem));
     });
 
-    router.push(`/${country}/${language}/checkout`);
+    router.push("/checkout");
   };
 
   const handleRateOrder = (order: Order) => {

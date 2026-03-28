@@ -30,7 +30,11 @@ export default function CustomerRegisterView() {
 
   return (
     <Card className="border-none shadow-none bg-transparent overflow-hidden m-0 p-0">
-      <AuthHeader title={t("createAccount")} description={t("freeDelivery")} />
+      <AuthHeader
+        title={t("createAccount")}
+        description={t("freeDelivery")}
+        compact={true}
+      />
 
       <CardContent className="px-0">
         <SocialAuthButtons
@@ -40,12 +44,12 @@ export default function CustomerRegisterView() {
           isPending={isPending}
         />
 
-        <AuthDivider text="Or register with email" />
+        <AuthDivider text="Or register with email" compact={true} />
 
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 mx-1"
+            className="space-y-3 mx-1 transition-all"
           >
             <FormField
               control={form.control}
@@ -55,7 +59,7 @@ export default function CustomerRegisterView() {
                   <FormControl>
                     <Input
                       placeholder="Full Name"
-                      className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                      className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
                   </FormControl>
@@ -71,7 +75,7 @@ export default function CustomerRegisterView() {
                   <FormControl>
                     <Input
                       placeholder="Email Address"
-                      className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                      className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
                   </FormControl>
@@ -90,7 +94,7 @@ export default function CustomerRegisterView() {
                       placeholder="Phone Number"
                       maxLength={14}
                       defaultCountry="PK"
-                      className="h-13 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                      className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
                   </FormControl>
@@ -104,7 +108,7 @@ export default function CustomerRegisterView() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <PasswordField field={field} />
+                    <PasswordField field={field} compact={true} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -119,6 +123,7 @@ export default function CustomerRegisterView() {
                     <PasswordField
                       field={field}
                       placeholder="Confirm Password"
+                      compact={true}
                     />
                   </FormControl>
                   <FormMessage />
@@ -129,14 +134,14 @@ export default function CustomerRegisterView() {
               control={form.control}
               name="terms"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 py-2">
+                <FormItem className="flex flex-row items-center space-x-2 space-y-0 py-2">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <div className="space-y-1 leading-none">
+                  <div className="space-y-1 leading-none ">
                     <FormLabel className="text-sm font-normal text-gray-500">
                       I agree to the{" "}
                       <Link
@@ -155,7 +160,7 @@ export default function CustomerRegisterView() {
             <Button
               type="submit"
               disabled={isPending || !form.watch("terms")}
-              className="w-full h-13 bg-emerald-bg text-white text-lg font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+              className="w-full h-11 bg-emerald-bg text-white text-lg font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
             >
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -168,7 +173,7 @@ export default function CustomerRegisterView() {
 
         <Typography
           variant="small"
-          className="mt-8 text-center text-gray-600 pb-0.5"
+          className="mt-3 text-center text-gray-600 mb-0 p-0"
         >
           {t("existingAccount")}{" "}
           <Link

@@ -18,7 +18,6 @@ import { RootState, AppDispatch } from "@/redux/store/store";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
-import useLocale from "@/hooks/useLocals";
 import { useCLC } from "@/context/CLCContext";
 
 import {
@@ -46,7 +45,6 @@ const CheckoutView = () => {
     "cod",
   );
 
-  const { country, language } = useLocale();
   const { currencyCode } = useCLC();
 
   // ACTIONS
@@ -79,9 +77,11 @@ const CheckoutView = () => {
       restaurantId,
       items: cart.map((item) => {
         const variantGroupIds =
-          item.selectedVariations?.map((v: any) => v.groupId).filter(Boolean) || [];
+          item.selectedVariations?.map((v: any) => v.groupId).filter(Boolean) ||
+          [];
         const variantOptionNames =
-          item.selectedVariations?.map((v: any) => v.name).filter(Boolean) || [];
+          item.selectedVariations?.map((v: any) => v.name).filter(Boolean) ||
+          [];
 
         const itemPayload: any = {
           itemId: item.id,
@@ -116,7 +116,7 @@ const CheckoutView = () => {
           toast.success("Order placed successfully!");
           dispatch(clearCart());
           const orderId = res.data?.orderId || "new";
-          router.push(`/${country}/${language}/order-confirmation/${orderId}`);
+          router.push(`/order-confirmation/${orderId}`);
         } else {
           if (res.data?.url) {
             window.location.assign(res.data.url);
@@ -125,9 +125,7 @@ const CheckoutView = () => {
             toast.success("Payment successful!");
             dispatch(clearCart());
             const orderId = res.data?.orderId || "new";
-            router.push(
-              `/${country}/${language}/order-confirmation/${orderId}`,
-            );
+            router.push(`/order-confirmation/${orderId}`);
           } else {
             toast.error("Stripe URL not found.");
           }

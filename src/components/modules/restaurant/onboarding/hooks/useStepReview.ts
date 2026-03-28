@@ -1,15 +1,11 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import useLocale from "@/hooks/useLocals";
 import { useOnboarding } from "../OnboardingContext";
 import { registerRestaurantOnboardingAction } from "@/app/actions/restaurant/onboarding";
 import { useServerAction } from "@/hooks/use-server-action";
 
 export const useStepReview = () => {
-  const { country, language } = useLocale();
   const router = useRouter();
   const {
     prevStep: contextPrevStep,
@@ -161,6 +157,6 @@ export const useStepReview = () => {
       contextPrevStep();
       router.back();
     },
-    pathPrefix: `/${country}/${language}/restaurant/onboarding`,
+    pathPrefix: "/restaurant/onboarding",
   };
 };
