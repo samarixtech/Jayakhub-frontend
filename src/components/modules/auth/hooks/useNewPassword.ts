@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -24,7 +23,7 @@ export function useNewPassword() {
   const { execute, isPending } = useServerAction(resetPasswordAction, {
     onSuccess: () => {
       sessionStorage.clear();
-      router.push(`/${country}/${language}/login`);
+      router.push("/login");
     },
   });
 
@@ -34,7 +33,7 @@ export function useNewPassword() {
 
     if (!email || !otp) {
       toast.error("Session expired. Please start over.");
-      router.push(`/${country}/${language}/forgot-password`);
+      router.push("/forgot-password");
     }
   }, [country, language, router]);
 

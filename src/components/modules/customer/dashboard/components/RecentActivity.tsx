@@ -22,8 +22,6 @@ interface RecentActivityProps {
 export const RecentActivity = ({
   recentOrders,
   loading,
-  country,
-  language,
 }: RecentActivityProps) => {
   const t = useTranslations("CustomerDashboard.RecentActivity");
   const { formatPrice } = useCLC();
@@ -39,9 +37,7 @@ export const RecentActivity = ({
           className="text-emerald-600 font-bold text-xs p-0 h-auto"
           asChild
         >
-          <Link href={`/${country}/${language}/customer/order-history`}>
-            {t("view_all")}
-          </Link>
+          <Link href={"/customer/order-history"}>{t("view_all")}</Link>
         </Button>
       </CardHeader>
 

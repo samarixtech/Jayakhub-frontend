@@ -45,7 +45,6 @@ export const generateInvoicePDF = (
   doc.setTextColor(100);
 
   // Use actual address from order with fallback check
-  // User requested N/A instead of mock data
   const rawAddress = String(
     order.address || order.fullAddress || order.shippingAddress || "N/A",
   );
@@ -71,7 +70,7 @@ export const generateInvoicePDF = (
 
   doc.setFontSize(10);
   doc.setTextColor(100);
-  // User requested: Use "Invoice Number" label and show Order ID there
+  // Invoice Number label and show Order ID there
   doc.text("Invoice Number", detailsX, currentY);
   doc.setTextColor(0);
   doc.text(String(order.orderId || "N/A"), valuesX, currentY, {
@@ -98,7 +97,6 @@ export const generateInvoicePDF = (
   doc.setTextColor(0);
 
   // Very robust transaction ID check
-  // User requested N/A instead of generated/mock data
   doc.text(
     String(order.transactionId || "N/A").substring(0, 20),
     valuesX,
@@ -119,7 +117,7 @@ export const generateInvoicePDF = (
 
   autoTable(doc, {
     startY: tableStartY,
-    head: [["ITEM DESCRIPTION", "QTY", "UNIT PRICE", "TOTAL"]],
+    head: [["ITEM DESCRIPTION", "Qty", "UNIT PRICE", "TOTAL"]],
     body: tableData,
     theme: "plain",
     styles: {
@@ -135,9 +133,9 @@ export const generateInvoicePDF = (
     },
     columnStyles: {
       0: { cellWidth: 80 }, // Description
-      1: { cellWidth: 20, halign: "center" }, // Qty
-      2: { cellWidth: 40, halign: "right" }, // Unit Price
-      3: { cellWidth: 40, halign: "right" }, // Total
+      1: { cellWidth: 25 }, // Qty
+      2: { cellWidth: 35 }, // Unit Price
+      3: { cellWidth: 40 }, // Total
     },
   });
 
@@ -151,7 +149,9 @@ export const generateInvoicePDF = (
       acc + Number(item.price || 0) * (item.quantity || 0),
     0,
   );
-  const finalTotalAmount = Number(order.totalAmount || subTotalAmount);
+  const deliveryFee = 10;
+  const finalTotalAmount =
+    Number(order.totalAmount || subTotalAmount) + deliveryFee;
 
   // Right align totals
   const rightColLabelX = 140;
@@ -171,6 +171,14 @@ export const generateInvoicePDF = (
   doc.text("Tax (0%)", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
   doc.text("$0.00", rightColValueX, summaryLineY, { align: "right" });
+
+  summaryLineY += 8;
+  doc.setTextColor(100);
+  doc.text("Delivery Fee", rightColLabelX, summaryLineY);
+  doc.setTextColor(0);
+  doc.text(`$${deliveryFee.toFixed(2)}`, rightColValueX, summaryLineY, {
+    align: "right",
+  });
 
   // Divider
   doc.setDrawColor(230);

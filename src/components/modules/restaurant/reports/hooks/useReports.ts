@@ -8,14 +8,8 @@ export const useReports = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("1");
 
-  const {
-    page,
-    limit,
-    totalPages,
-    totalCount,
-    handlePageChange,
-    updatePaginationMeta,
-  } = usePagination({ initialLimit: 10 });
+  const { page, limit, totalPages, handlePageChange, updatePaginationMeta } =
+    usePagination({ initialLimit: 10 });
 
   const fetchReports = useCallback(async () => {
     setLoading(true);
@@ -25,10 +19,10 @@ export const useReports = () => {
         const payload = (result as any).data;
         // Depending on api config, it might be nested
         const actualData = payload.data ? payload.data : payload;
-        const actualMeta = payload.meta ? payload.meta : ((result as any).meta);
-        
+        const actualMeta = payload.meta ? payload.meta : (result as any).meta;
+
         setData(actualData);
-        
+
         if (actualMeta && actualMeta.totalPages !== undefined) {
           updatePaginationMeta({
             page: Number(actualMeta.page || page),
@@ -36,7 +30,10 @@ export const useReports = () => {
             totalCount: Number(actualMeta.totalCount || 0),
             totalPages: Number(actualMeta.totalPages),
           });
-        } else if (actualData.orders && actualData.orders.totalPages !== undefined) {
+        } else if (
+          actualData.orders &&
+          actualData.orders.totalPages !== undefined
+        ) {
           updatePaginationMeta({
             page: Number(actualData.orders.page || page),
             limit: Number(actualData.orders.limit || limit),
@@ -45,7 +42,6 @@ export const useReports = () => {
           });
         }
       }
-
     } catch (error) {
       console.error("Failed to fetch reports:", error);
     } finally {

@@ -110,10 +110,10 @@ export function useChangePasswordForm() {
       });
 
       if (res.success) {
-        toast.success(res.message);
+        toast.success(res.message || "Password Updated Successfully");
         form.reset();
       } else {
-        toast.error(res.message);
+        toast.error(res.message || "Something went wrong");
       }
     } catch (error: any) {
       toast.error(error.message || "Something went wrong");

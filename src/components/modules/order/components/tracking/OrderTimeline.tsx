@@ -1,13 +1,16 @@
 import React from "react";
 import { TimelineItem } from "./TimelineItem";
 import { Check, Utensils, Bike, MapPin } from "lucide-react";
+import { formatOrderDateTime } from "@/lib/utils/date";
 
 interface OrderTimelineProps {
+  orderDate: string;
   orderTime: string;
   orderStatus: string;
 }
 
 export const OrderTimeline: React.FC<OrderTimelineProps> = ({
+  orderDate,
   orderTime,
   orderStatus,
 }) => {
@@ -20,7 +23,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
           icon={Check}
           title="Order Confirmed"
           description="We've received your order and the restaurant is starting soon."
-          time={orderTime}
+          time={formatOrderDateTime(orderDate, orderTime)}
           status={
             orderStatus === "pending"
               ? "pending"

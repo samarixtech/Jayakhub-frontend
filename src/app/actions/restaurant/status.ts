@@ -13,7 +13,6 @@ export async function getRestaurantStatusAction(): Promise<ActionResponse> {
     "Restaurant status fetched successfully",
     async (data: any) => {
       if (data?.id) {
-        // TODO: use setCookies from lib/utils/cookies
         const cookieStore = await cookies();
         cookieStore.set("restaurantId", data.id, {
           path: "/",

@@ -29,7 +29,6 @@ export function useProfileSettings(settings: SettingsData | null) {
   const profileInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
-  // Sync state with props when settings load
   useEffect(() => {
     if (profile) {
       setName(profile.name || "");
@@ -39,7 +38,7 @@ export function useProfileSettings(settings: SettingsData | null) {
     }
   }, [profile]);
 
-  // Dirty State Check
+  // State Check
   useEffect(() => {
     if (!profile) return;
 

@@ -1,11 +1,10 @@
 "use server";
-
 import { serverApi } from "@/components/services/api";
 
 export async function getRestaurantOrdersAction(
   page: number = 1,
   limit: number = 10,
-  status?: "live" | "past" | "delivered"
+  status?: "live" | "past" | "delivered",
 ) {
   try {
     const api = await serverApi();
@@ -18,7 +17,9 @@ export async function getRestaurantOrdersAction(
       queryParams.append("status", status);
     }
 
-    const response: any = await api.get(`/restaurant-orders?${queryParams.toString()}`);
+    const response: any = await api.get(
+      `/restaurant-orders?${queryParams.toString()}`,
+    );
     return {
       success: true as const,
       data: response.data,

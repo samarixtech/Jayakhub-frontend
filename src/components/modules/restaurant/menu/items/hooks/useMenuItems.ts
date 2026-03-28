@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useCallback } from "react";
 import { useServerAction } from "@/hooks/use-server-action";
 import { usePagination } from "@/hooks/usePagination";
@@ -12,7 +11,9 @@ import { toast } from "react-hot-toast";
 
 export const useMenuItems = () => {
   const [items, setItems] = useState<any[]>([]);
-  const [categoryStats, setCategoryStats] = useState<{name: string, count: number}[]>([]);
+  const [categoryStats, setCategoryStats] = useState<
+    { name: string; count: number }[]
+  >([]);
   const [selectedCategory, setSelectedCategory] = useState("All Items");
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -47,7 +48,12 @@ export const useMenuItems = () => {
 
         if (data && data.categoryType && Array.isArray(data.categoryType)) {
           setCategoryStats(data.categoryType);
-        } else if (data && data.data && data.data.categoryType && Array.isArray(data.data.categoryType)) {
+        } else if (
+          data &&
+          data.data &&
+          data.data.categoryType &&
+          Array.isArray(data.data.categoryType)
+        ) {
           setCategoryStats(data.data.categoryType);
         }
 
@@ -166,7 +172,6 @@ export const useMenuItems = () => {
     ? postProcessedItems.slice((page - 1) * limit, page * limit)
     : items;
 
-  // React to front-end filter bounds exclusively
   useEffect(() => {
     if (isFrontendPaginated) {
       updatePaginationMeta({

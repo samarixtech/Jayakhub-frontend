@@ -165,7 +165,9 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                   {order.customerName}
                 </p>
                 {order.customerPhone && (
-                  <p className="text-xs text-emerald-600 font-medium">{order.customerPhone}</p>
+                  <p className="text-xs text-emerald-600 font-medium">
+                    {order.customerPhone}
+                  </p>
                 )}
               </div>
             </div>

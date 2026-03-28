@@ -29,7 +29,6 @@ export default function PartnerForm() {
       ...form,
       phone: form.phone.replace(/\D/g, ""),
     };
-   
   };
 
   return (

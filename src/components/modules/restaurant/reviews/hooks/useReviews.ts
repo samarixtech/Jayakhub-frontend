@@ -12,14 +12,8 @@ export const useReviews = () => {
   const [filter, setFilter] = useState("All");
   const [months, setMonths] = useState("1");
 
-  const {
-    page,
-    limit,
-    totalPages,
-    totalCount,
-    handlePageChange,
-    updatePaginationMeta,
-  } = usePagination({ initialLimit: 10 });
+  const { page, limit, totalPages, handlePageChange, updatePaginationMeta } =
+    usePagination({ initialLimit: 10 });
 
   const { execute: fetchAnalytics, isPending } = useServerAction(
     getReviewsAnalyticsAction,

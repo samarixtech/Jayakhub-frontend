@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import HeroBanner from "@/components/modules/discovery/restaurants/components/HeroBanner";
 import DiscoverySidebar from "@/components/modules/discovery/restaurants/components/DiscoverySidebar";
@@ -12,8 +11,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useRestaurantDiscovery } from "@/hooks/use-restaurant-discovery";
-
-// Sections
 import { PopularRestaurantsSection } from "./sections/PopularRestaurantsSection";
 import { CuisinesSection } from "./sections/CuisinesSection";
 import { CuratedSection } from "./sections/CuratedSection";
@@ -26,10 +23,10 @@ const AllRestaurantsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans pb-20">
-      {/* Hero Banner */}
+      {/* HERO BANNER */}
       <HeroBanner />
 
-      {/* Sidebar + Main Content */}
+      {/* SIDEBAR + MAIN CONTENT */}
       <div className="flex gap-8 px-3 sm:px-6 mt-6 items-start relative">
         {/* ===== LEFT SIDEBAR ===== */}
         <aside className="w-[240px] shrink-0 hidden lg:block sticky top-[96px] h-[calc(100vh-96px)] overflow-hidden mr-0 sm:mr-5">

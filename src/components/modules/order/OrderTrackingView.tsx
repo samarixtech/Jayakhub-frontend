@@ -17,6 +17,9 @@ import { OrderTimeline } from "./components/tracking/OrderTimeline";
 import { RiderCard } from "./components/tracking/RiderCard";
 import { OrderSummaryTable } from "./components/tracking/OrderSummaryTable";
 import { DeliveryDetails } from "./components/tracking/DeliveryDetails";
+import { formatOrderDateTime } from "@/lib/utils/date";
+import EmptyState from "@/components/common/EmptyState";
+import { Utensils } from "lucide-react";
 
 export default function OrderTrackingView({ params }: { params: any }) {
   const unwrappedParams = params ? React.use(params as any) : {};
@@ -31,9 +34,11 @@ export default function OrderTrackingView({ params }: { params: any }) {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        Order not found.
-      </div>
+      <EmptyState
+        icon={Utensils}
+        title={"Order not found"}
+        message={"NO order found for this order ID"}
+      />
     );
   }
 
@@ -66,7 +71,8 @@ export default function OrderTrackingView({ params }: { params: any }) {
               Live Order Tracking
             </h1>
             <p className="text-gray-500">
-              Order #{order.orderId} • Place at {order.orderTime}
+              Order #{order.orderId} • Place at{" "}
+              {formatOrderDateTime(order.orderDate, order.orderTime)}
             </p>
           </div>
           <div className="flex gap-3">
@@ -87,6 +93,7 @@ export default function OrderTrackingView({ params }: { params: any }) {
           <div className="lg:col-span-8 space-y-8">
             <OrderMap address={order.address} />
             <OrderTimeline
+              orderDate={order.orderDate}
               orderTime={order.orderTime}
               orderStatus={order.orderStatus}
             />

@@ -1,6 +1,5 @@
 "use client";
 import { useTranslations } from "next-intl";
-
 import { X, Loader2, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +10,6 @@ import { SettingsData } from "@/types";
 import { useProfileSettings } from "../hooks/useProfileSettings";
 import { ProfileImageUpload } from "../components/ProfileImageUpload";
 import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
-
 import {
   Card,
   CardHeader,

@@ -1,6 +1,7 @@
 export function formatOrderDateTime(
   orderDate?: string,
   orderTime?: string,
+  useUTC: boolean = false,
 ): string {
   if (!orderDate) return "Invalid Date";
 
@@ -36,7 +37,6 @@ export function formatOrderDateTime(
     }
   }
 
-  // Create UTC date
   const utcDate = new Date(Date.UTC(year, month - 1, day, hours, minutes));
 
   if (isNaN(utcDate.getTime())) return "Invalid Date";
@@ -45,13 +45,15 @@ export function formatOrderDateTime(
     month: "short",
     day: "numeric",
     year: "numeric",
+    timeZone: useUTC ? "UTC" : undefined,
   }).format(utcDate);
 
   const formattedTime = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
+    timeZone: useUTC ? "UTC" : undefined,
   }).format(utcDate);
 
-  return `${formattedDate} • ${formattedTime}`;
+  return `${formattedDate} • ${formattedTime}${useUTC ? " (UTC)" : ""}`;
 }

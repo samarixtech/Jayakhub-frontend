@@ -16,6 +16,7 @@ export default function CustomerProfileSettingsView() {
     hasChanges,
     handleSave,
     handleCancel,
+    updateProfile,
   } = useProfileSettings();
 
   if (!profile) return <ProfileSkeleton />;
@@ -46,7 +47,10 @@ export default function CustomerProfileSettingsView() {
 
           {/* Main Content Area (Right) */}
           <main className="lg:col-span-8 space-y-6 w-full">
-            <PersonalInfoCard profile={profile} />
+            <PersonalInfoCard
+              profile={profile}
+              updateProfile={updateProfile}
+            />
             <PaymentMethodsCard />
             <IdentityVerificationCard />
             <SecuritySettingsCard profile={profile} />

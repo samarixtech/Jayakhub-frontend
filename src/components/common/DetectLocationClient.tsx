@@ -32,14 +32,14 @@ export default function DetectLocationClient() {
           // Fallback anyway after delay?
           setTimeout(() => {
             const currentParams = searchParams.toString();
-            const url = `/${country}/${language}/restaurants${currentParams ? `?${currentParams}` : ""}`;
+            const url = `/restaurants${currentParams ? `?${currentParams}` : ""}`;
             router.replace(url);
           }, 2000);
           return;
         }
 
         const currentParams = searchParams.toString();
-        const url = `/${country}/${language}/restaurants${currentParams ? `?${currentParams}` : ""}`;
+        const url = `/restaurants${currentParams ? `?${currentParams}` : ""}`;
         router.replace(url);
       } catch (err) {
         console.error("Client detection error:", err);

@@ -1,6 +1,6 @@
 "use client";
-
 import { Check, ChevronDown } from "lucide-react";
+import { getCookie } from "cookies-next";
 import * as React from "react";
 import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
@@ -35,9 +35,12 @@ const PhoneInput = React.forwardRef<
   React.ElementRef<typeof RPNInput.default>,
   PhoneInputProps
 >(({ className, onChange, value, ...props }, ref) => {
+  const userCountry = getCookie("USER_COUNTRY") as RPNInput.Country;
+
   const processedValue = React.useMemo(() => {
     if (!value) return "";
     const str = String(value).trim();
+    if (str === "+") return "";
     if (str && !str.startsWith("+") && /^\d+$/.test(str) && str.length > 0) {
       return `+${str}`;
     }
@@ -45,9 +48,6 @@ const PhoneInput = React.forwardRef<
   }, [value]);
 
   return (
-    /* The wrapper div below acts as the visual "Input". 
-      focus-within handles the blue ring for the entire group.
-    */
     <div
       className={cn(
         "flex h-10 w-full rounded-md border border-input bg-background text-sm ring-offset-background transition-all focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
@@ -61,8 +61,18 @@ const PhoneInput = React.forwardRef<
         countrySelectComponent={CountrySelect}
         inputComponent={InputComponent}
         smartCaret={false}
+        international={true}
+        withCountryCallingCode={true}
+        defaultCountry={userCountry || "PK"}
         value={processedValue as RPNInput.Value}
-        onChange={(v) => onChange?.(v || ("" as RPNInput.Value))}
+        onChange={(v) => {
+          const val = v || "";
+          if (val === "+") {
+            onChange?.("" as RPNInput.Value);
+          } else {
+            onChange?.(val as RPNInput.Value);
+          }
+        }}
         {...props}
       />
     </div>
@@ -73,17 +83,40 @@ PhoneInput.displayName = "PhoneInput";
 const InputComponent = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<"input">
->(({ className, ...props }, ref) => (
-  <Input
-    /* Removed borders and focus rings to let the parent container handle them */
-    className={cn(
-      "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-full w-full bg-transparent rounded-none rounded-e-lg",
-      className,
-    )}
-    {...props}
-    ref={ref}
-  />
-));
+>(({ className, value, onChange, ...props }, ref) => {
+  const displayValue =
+    typeof value === "string" && value.startsWith("+") ? value.slice(1) : value;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVal = e.target.value;
+    if (newVal && !newVal.startsWith("+")) {
+      onChange?.({
+        ...e,
+        target: { ...e.target, value: `+${newVal}` },
+      } as any);
+    } else {
+      onChange?.(e);
+    }
+  };
+
+  return (
+    <div className="flex-1 flex items-center relative">
+      <span className="absolute left-3 text-muted-foreground pointer-events-none">
+        +
+      </span>
+      <Input
+        className={cn(
+          "border-0 focus-visible:ring-0 focus-visible:ring-offset-0 h-full w-full bg-transparent rounded-none rounded-e-lg pl-6",
+          className,
+        )}
+        value={displayValue}
+        onChange={handleChange}
+        {...props}
+        ref={ref}
+      />
+    </div>
+  );
+});
 InputComponent.displayName = "InputComponent";
 
 type CountrySelectOption = { label: string; value: RPNInput.Country };
@@ -113,23 +146,20 @@ const CountrySelect = ({
       <PopoverTrigger asChild>
         <Button
           type="button"
-          variant="ghost" /* Using ghost to remove the button's own border */
+          variant="ghost"
           className={cn(
             "flex gap-1 rounded-none rounded-s-lg px-3 border-r focus:z-10 h-full hover:bg-muted/50 transition-none",
             disabled && "opacity-50",
           )}
           disabled={disabled}
         >
-          <FlagComponent country={value} countryName={value} />
-          <span className="text-muted-foreground text-sm ml-1">
-            {value && `+${RPNInput.getCountryCallingCode(value)}`}
-          </span>
           <ChevronDown
             className={cn(
               "-mr-1 h-4 w-4 opacity-50",
               disabled ? "hidden" : "opacity-100",
             )}
           />
+          <FlagComponent country={value} countryName={value} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
