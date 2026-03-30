@@ -216,13 +216,14 @@ export interface MenuItem {
   name: string;
   description: string;
   price: number;
+  discount?: string | null;
+  basePrice?: number;
   imageUrl?: string;
   image?: string;
   category?: string;
   isAvailable?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variations?: any[];
-  basePrice?: number;
 }
 
 // A MenuItem that is currently stored inside the User Cart.
@@ -230,6 +231,7 @@ export interface CartItem extends MenuItem {
   cartId?: string;
   quantity: number;
   productId?: string;
+  originalPrice?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedVariations?: any[];
   selectedVariation?: { name: string; additionalPrice: number };

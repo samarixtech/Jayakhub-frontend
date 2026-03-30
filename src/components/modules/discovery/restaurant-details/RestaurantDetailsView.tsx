@@ -68,6 +68,7 @@ export default function RestaurantDetailsView() {
               ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${state.selectedItem.image.replace(/\\/g, "/")}`
               : "",
             price: state.selectedItem.basePrice,
+            discount: state.selectedItem.discount,
           }}
           isOpen={!!state.selectedItem}
           onClose={() => actions.setSelectedItem(null)}

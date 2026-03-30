@@ -179,6 +179,7 @@ export function useRestaurantDiscovery() {
           discount: undefined,
           isFavorite: false,
           isWishlist: !!item.isWishlist,
+          averageDiscount: item.averageDiscount || 0,
         }));
         setPreviousOrders(mapped);
         setIsPreviousOrdersLoading(false);
@@ -224,6 +225,7 @@ export function useRestaurantDiscovery() {
           discount: undefined,
           isFavorite: false,
           isWishlist: !!item.isWishlist,
+          averageDiscount: item.averageDiscount || 0,
         }));
       };
 

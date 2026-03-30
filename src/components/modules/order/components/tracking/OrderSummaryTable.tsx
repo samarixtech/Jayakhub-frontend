@@ -58,6 +58,16 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
                         {item.name}
                       </span>
                     </div>
+                    {item.discount && (
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1 py-0.5 rounded">
+                          -{formatPrice(parseFloat(item.discount))}
+                        </span>
+                        <span className="text-[10px] text-gray-400 line-through">
+                          {formatPrice(item.originalPrice || item.price)}
+                        </span>
+                      </div>
+                    )}
                     {item.description && (
                       <p className="text-xs text-gray-400 mt-0.5">
                         {item.description}
@@ -65,7 +75,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
                     )}
                   </div>
                 </div>
-                <span className="font-bold text-gray-900 shrink-0 ml-4">
+                <span className="font-bold text-[#346853] shrink-0 ml-4">
                   {formatPrice(item.price)}
                 </span>
               </div>
@@ -87,7 +97,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
       <div className="flex justify-between items-end border-t border-gray-100 pt-4">
         <span className="font-bold text-lg text-gray-900">Total</span>
         <span className="font-bold text-xl text-gray-900">
-          {formatPrice(total + 10)}
+          {formatPrice(total)}
         </span>
       </div>
     </div>

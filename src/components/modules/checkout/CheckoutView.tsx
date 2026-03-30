@@ -69,7 +69,7 @@ const CheckoutView = () => {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
-    const deliveryFee = 10;
+    const deliveryFee = 0;
     const totalAmount = subtotal + deliveryFee;
 
     const payload = {
@@ -285,13 +285,13 @@ const CheckoutView = () => {
                     (sum, item) => sum + item.price * item.quantity,
                     0,
                   )}
-                  deliveryFee={10}
+                  deliveryFee={0}
                   tax={0}
                   total={
                     cart.reduce(
                       (sum, item) => sum + item.price * item.quantity,
                       0,
-                    ) + 10
+                    ) + 0
                   }
                   cartItems={cart}
                   onPlaceOrder={handlePlaceOrder}

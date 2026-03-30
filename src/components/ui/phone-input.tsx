@@ -148,7 +148,7 @@ const CountrySelect = ({
           type="button"
           variant="ghost"
           className={cn(
-            "flex gap-1 rounded-none rounded-s-lg px-3 border-r focus:z-10 h-full hover:bg-muted/50 transition-none",
+            "flex gap-1 rounded-none rounded-s-lg px-3 focus:z-10 h-full hover:bg-muted/50 transition-none",
             disabled && "opacity-50",
           )}
           disabled={disabled}

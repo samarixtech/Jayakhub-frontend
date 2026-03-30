@@ -112,11 +112,19 @@ export function useRestaurantDetails() {
   }, [slugParam, params?.country, params?.language]);
 
   const handleAddToCart = (item: APIMnuItem) => {
+    const discountAmount = item.discount ? parseFloat(item.discount) : 0;
+    const isDiscounted = discountAmount > 0;
+    const finalPrice = isDiscounted
+      ? Math.max(0, item.basePrice - discountAmount)
+      : item.basePrice;
+
     const cartItem: any = {
       id: item.id,
       productId: item.id,
       name: item.name,
-      price: item.basePrice,
+      price: finalPrice,
+      originalPrice: item.basePrice,
+      discount: item.discount,
       imageUrl: item.image
         ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL?.replace(/\/+$/, "")}/${item.image.replace(/^\/+/, "").replace(/\\/g, "/")}`
         : "",
@@ -130,9 +138,18 @@ export function useRestaurantDetails() {
   };
 
   const handleAddToCartFromModal = (item: any) => {
+    const discountAmount = item.discount ? parseFloat(item.discount) : 0;
+    const isDiscounted = discountAmount > 0;
+    
+    const finalPrice = isDiscounted 
+      ? Math.max(0, item.price - discountAmount)
+      : item.price;
+
     dispatch(
       addToCart({
         ...item,
+        price: finalPrice,
+        originalPrice: item.price,
         restaurantName: restaurant?.name,
         restaurantId: restaurant?.id,
         restaurantImage: restaurant?.profileImage,

@@ -77,8 +77,33 @@ export async function verifyOtpAction(payload: {
         }
       }
       cookieStore.delete("tempUserId"); // Clean up temp cookie
-     
 
+      return data;
+    },
+  );
+}
+
+// ==================== VERIFY RESET OTP ACTION ====================
+export async function verifyResetOtpAction(payload: {
+  otp: string;
+  identifier: string;
+}): Promise<ActionResponse> {
+  return responseHandler(
+    async () => api.post("/reset-password", payload),
+    "OTP verified successfully!",
+    async (data: any) => {
+      if (data?.accessToken) {
+        const cookieStore = await cookies();
+        cookieStore.set("token", data.accessToken, {
+          httpOnly: true,
+          secure:
+            process.env.NODE_ENV === "production" &&
+            process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https"),
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+      }
       return data;
     },
   );

@@ -74,7 +74,7 @@ export default function CustomerDashboardView() {
             country={country}
             language={language}
           />
-          <QuickActions country={country} language={language} />
+          <QuickActions />
         </div>
       </div>
     </div>

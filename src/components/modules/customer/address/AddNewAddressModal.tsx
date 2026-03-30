@@ -75,6 +75,7 @@ export default function AddNewAddressModal({
     onUnmount,
     handleMapClick,
     handleLocateMe,
+    autoDetectLocation,
   } = useAddressGeocoding(formData, setFormData);
 
   // Populate form for Edit Mode
@@ -123,8 +124,9 @@ export default function AddNewAddressModal({
       setOtherLabel("");
       setCenter(defaultCenter);
       setMarkerPosition(defaultCenter);
+      autoDetectLocation();
     }
-  }, [open, addressToEdit, setCenter, setMarkerPosition]);
+  }, [open, addressToEdit, setCenter, setMarkerPosition, autoDetectLocation]);
 
   const handleSaveAddress = async () => {
     if (!formData.street || !formData.city || !formData.country) {

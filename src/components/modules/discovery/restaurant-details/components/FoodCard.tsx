@@ -17,6 +17,11 @@ export const FoodCard: React.FC<FoodCardProps> = ({
     : "/pizza-palace.jpg";
 
   const isUnavailable = item.isAvailable === false;
+  const discountAmount = item.discount ? parseFloat(item.discount) : 0;
+  const hasDiscount = discountAmount > 0;
+  const discountedPrice = hasDiscount
+    ? Math.max(0, item.basePrice - discountAmount)
+    : item.basePrice;
 
   return (
     <div
@@ -36,6 +41,11 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           alt={item.name}
           className="w-full h-full object-cover"
         />
+        {hasDiscount && !isUnavailable && (
+          <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-sm z-10">
+            {currency} {discountAmount.toFixed(0)} OFF
+          </div>
+        )}
         {!isUnavailable && (
           <button
             onClick={(e) => {
@@ -73,9 +83,16 @@ export const FoodCard: React.FC<FoodCardProps> = ({
               Unavailable
             </span>
           ) : (
-            <p className="text-gray-900 font-bold text-sm md:text-base">
-              {currency} {item.basePrice}
-            </p>
+            <div className="flex flex-col">
+              {hasDiscount && (
+                <span className="text-gray-400 line-through text-[10px] md:text-xs">
+                  {currency} {item.basePrice.toFixed(2)}
+                </span>
+              )}
+              <p className="text-[#346853] font-bold text-sm md:text-base">
+                {currency} {discountedPrice.toFixed(2)}
+              </p>
+            </div>
           )}
         </div>
       </div>

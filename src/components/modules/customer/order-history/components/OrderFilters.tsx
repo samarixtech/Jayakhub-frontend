@@ -11,16 +11,16 @@ import { useTranslations } from "next-intl";
 
 interface OrderFiltersProps {
   showFilters: boolean;
-  statusFilter: string;
-  setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
+  statusFilters: string[];
+  setStatusFilters: React.Dispatch<React.SetStateAction<string[]>>;
   dateRange: string;
   setDateRange: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const OrderFilters = ({
   showFilters,
-  statusFilter,
-  setStatusFilter,
+  statusFilters,
+  setStatusFilters,
   dateRange,
   setDateRange,
 }: OrderFiltersProps) => {
@@ -42,8 +42,8 @@ export const OrderFilters = ({
           <Checkbox
             id="filter-all"
             className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
-            checked={statusFilter === "all"}
-            onCheckedChange={() => setStatusFilter("all")}
+            checked={statusFilters.length === 0}
+            onCheckedChange={() => setStatusFilters([])}
           />
           <label
             htmlFor="filter-all"
@@ -57,8 +57,14 @@ export const OrderFilters = ({
           <Checkbox
             id="filter-active"
             className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
-            checked={statusFilter === "active"}
-            onCheckedChange={() => setStatusFilter("active")}
+            checked={statusFilters.includes("active")}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                setStatusFilters(prev => [...prev, "active"]);
+              } else {
+                setStatusFilters(prev => prev.filter(s => s !== "active"));
+              }
+            }}
           />
           <label
             htmlFor="filter-active"
@@ -72,8 +78,14 @@ export const OrderFilters = ({
           <Checkbox
             id="filter-delivered"
             className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
-            checked={statusFilter === "delivered"}
-            onCheckedChange={() => setStatusFilter("delivered")}
+            checked={statusFilters.includes("delivered")}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                setStatusFilters(prev => [...prev, "delivered"]);
+              } else {
+                setStatusFilters(prev => prev.filter(s => s !== "delivered"));
+              }
+            }}
           />
           <label
             htmlFor="filter-delivered"
@@ -87,8 +99,14 @@ export const OrderFilters = ({
           <Checkbox
             id="filter-cancelled"
             className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
-            checked={statusFilter === "cancelled"}
-            onCheckedChange={() => setStatusFilter("cancelled")}
+            checked={statusFilters.includes("rejected")}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                setStatusFilters(prev => [...prev, "rejected"]);
+              } else {
+                setStatusFilters(prev => prev.filter(s => s !== "rejected"));
+              }
+            }}
           />
           <label
             htmlFor="filter-cancelled"

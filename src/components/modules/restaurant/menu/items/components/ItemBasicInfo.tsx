@@ -82,7 +82,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
           </div>
         </div>
 
-        {/* PRICE AND CATEGORY */}
+        {/* PRICE, DISCOUNT AND CATEGORY */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label className="text-sm font-bold text-gray-700">
@@ -103,6 +103,25 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
           </div>
 
           <div className="space-y-2">
+            <Label className="text-sm font-bold text-gray-700">
+              {t("discount")}{" "}
+              <span className="text-gray-400 font-normal">{t("optional")}</span>
+            </Label>
+            <div className="relative group">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">
+                {currency}
+              </span>
+              <Input
+                type="number"
+                placeholder={t("discountPlaceholder")}
+                className="h-12 pl-10 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-bold"
+                value={formData.discount}
+                onChange={(e) => onChange("discount", e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
             <Label className="text-sm font-bold text-gray-700">
               {t("category")} <span className="text-red-500">*</span>
             </Label>

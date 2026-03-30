@@ -31,6 +31,7 @@ export const useAddNewItem = () => {
     isVeg: false,
     dietaryType: "None" as "Veg" | "Non-Veg" | "None",
     variantGroups: [] as string[],
+    discount: "" as string,
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -93,6 +94,7 @@ export const useAddNewItem = () => {
             isVeg: itemData.isVeg ?? false,
             dietaryType: normalizedDietaryType as any,
             variantGroups: mappedGroups,
+            discount: itemData.discount?.toString() || "",
           });
 
           const imgToPreview = itemData.itemImage || itemData.image;
@@ -228,6 +230,8 @@ export const useAddNewItem = () => {
       } else if (key === "dietaryType") {
         const mappedType = value.toString().toUpperCase().replace("-", "_");
         submitData.append(key, mappedType);
+      } else if (key === "discount") {
+        submitData.append(key, value ? Number(value).toString() : "0");
       } else {
         submitData.append(key, value.toString());
       }

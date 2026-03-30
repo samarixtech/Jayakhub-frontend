@@ -80,7 +80,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     (total, item) => total + item.price * item.quantity,
     0,
   );
-  const deliveryFee = 10; // Mock
+  const deliveryFee = 0; // Set to 0 per request
   const total = subtotal + deliveryFee;
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
@@ -241,9 +241,16 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                           <h5 className="font-medium text-gray-900 text-xs line-clamp-1">
                             {item.quantity}x {item.name}
                           </h5>
-                          <p className="font-bold text-[#346853] text-xs">
-                            {currency} {item.price.toFixed(2)}
-                          </p>
+                          <div className="flex items-center gap-2">
+                            {item.discount && (
+                              <span className="text-gray-400 line-through text-[10px]">
+                                {currency} {(item.originalPrice || 0).toFixed(2)}
+                              </span>
+                            )}
+                            <p className="font-bold text-[#346853] text-xs">
+                              {currency} {item.price.toFixed(2)}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -291,9 +298,16 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             </p>
                           )}
                       </div>
-                      <p className="font-bold text-[#346853] text-sm">
-                        {currency} {item.price.toFixed(2)}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        {item.discount && (
+                          <span className="text-gray-400 line-through text-xs">
+                            {currency} {(item.originalPrice || 0).toFixed(2)}
+                          </span>
+                        )}
+                        <p className="font-bold text-[#346853] text-sm">
+                          {currency} {item.price.toFixed(2)}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex items-center gap-3 self-center">
                       <button

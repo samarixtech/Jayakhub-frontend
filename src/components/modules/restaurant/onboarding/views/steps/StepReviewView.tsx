@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import {
   User,
@@ -8,7 +8,6 @@ import {
   Clock,
   MapPin,
   FileText,
-  CreditCard,
   Image as ImageIcon,
   Edit,
 } from "lucide-react";
@@ -24,7 +23,7 @@ import {
 } from "../../components/ReviewComponents";
 
 export default function StepReviewView() {
-  const { data, loading, isPending, handleSubmit,  pathPrefix } =
+  const { data, loading, isPending, handleSubmit, pathPrefix } =
     useStepReview();
   const [agreed, setAgreed] = useState(false);
 
