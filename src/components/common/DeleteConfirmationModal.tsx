@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import { GlobalModal } from "./GlobalModal";
 
 interface DeleteConfirmationModalProps {
@@ -29,6 +30,7 @@ export function DeleteConfirmationModal({
       title={title}
       description={description}
       trigger={trigger}
+      isOutsideDisabled={true}
     >
       <div className="flex justify-end gap-3">
         <Button
@@ -43,9 +45,13 @@ export function DeleteConfirmationModal({
           variant="destructive"
           onClick={onConfirm}
           disabled={isDeleting}
-          className="bg-red-500 hover:bg-red-600 cursor-pointer"
+          className="bg-red-500 hover:bg-red-600 cursor-pointer min-w-[90px]"
         >
-          {isDeleting ? "Deleting..." : "Delete"}
+          {isDeleting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            "Delete"
+          )}
         </Button>
       </div>
     </GlobalModal>

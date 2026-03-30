@@ -1,5 +1,6 @@
 "use client";
 import { useTranslations } from "next-intl";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -81,9 +82,9 @@ export default function MenuCategoriesView() {
         onOpenChange={setIsDeleteModalOpen}
         title={t("title")}
         description={t("description", { name: deleteName })}
-        trigger={null}
+        isOutsideDisabled={true}
       >
-        <div className="flex justify-end gap-3 mt-6">
+        <div className="flex justify-end gap-3">
           <Button
             variant="ghost"
             onClick={() => setIsDeleteModalOpen(false)}
@@ -95,9 +96,13 @@ export default function MenuCategoriesView() {
             variant="destructive"
             onClick={confirmDelete}
             disabled={isDeleting}
-            className="bg-red-500 hover:bg-red-600"
+            className="bg-red-500 hover:bg-red-600 min-w-[100px]"
           >
-            {isDeleting ? t("deleting") : t("deleteBtn")}
+            {isDeleting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              t("deleteBtn")
+            )}
           </Button>
         </div>
       </GlobalModal>

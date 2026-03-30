@@ -40,7 +40,6 @@ export const useMenuCategories = () => {
     addCategoryAction,
     {
       onSuccess: () => {
-        toast.success("Category created");
         fetchCategories();
         resetCreate();
       },
@@ -51,7 +50,6 @@ export const useMenuCategories = () => {
     updateCategoryAction,
     {
       onSuccess: () => {
-        toast.success("Category updated");
         fetchCategories();
         setEditingIndex(null);
       },
@@ -62,7 +60,6 @@ export const useMenuCategories = () => {
     deleteCategoryAction,
     {
       onSuccess: () => {
-        toast.success("Category deleted");
         fetchCategories();
         setIsDeleteModalOpen(false);
       },

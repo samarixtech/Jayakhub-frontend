@@ -17,12 +17,10 @@ export const restaurantInfoSchema = z.object({
   cuisineTypes: z.array(z.string()).min(1, "Select at least one cuisine type"),
   country: z.string().min(1, "Country is required"),
   address: z.string().min(5, "Address is required"),
-  location: z
-    .object({
-      lat: z.number(),
-      lng: z.number(),
-    })
-    .optional(),
+  location: z.object({
+    lat: z.number(),
+    lng: z.number(),
+  }),
 
   logo: z.any().optional(),
   banner: z.any().optional(),

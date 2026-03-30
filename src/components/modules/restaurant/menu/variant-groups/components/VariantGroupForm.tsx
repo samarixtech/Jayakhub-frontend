@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -100,11 +100,13 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
             className="bg-[#1F4D36] hover:bg-[#183d2b] text-white px-6"
             disabled={isSaving}
           >
-            {isSaving
-              ? t("saving")
-              : isEditing
-                ? t("updateBtn")
-                : t("createBtn")}
+            {isSaving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : isEditing ? (
+              t("updateBtn")
+            ) : (
+              t("createBtn")
+            )}
           </Button>
           <Button
             onClick={onCancel}
