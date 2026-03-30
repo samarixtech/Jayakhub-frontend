@@ -1576,7 +1576,9 @@
             "dietaryNone": "None",
             "dietaryVeg": "Vegetarian",
             "dietaryNonVeg": "Non-Vegetarian",
-            "dietaryHelp": "Dietary labels help customers filter items"
+            "dietaryHelp": "Dietary labels help customers filter items",
+            "discount": "Discount Amount",
+            "discountPlaceholder": "e.g., 5.00"
           },
           "imageUpload": {
             "sectionTitle": "Item Image",

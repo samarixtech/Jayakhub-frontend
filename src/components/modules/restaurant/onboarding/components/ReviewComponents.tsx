@@ -79,7 +79,7 @@ export const ReviewField = ({
     <Typography className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
       {label}
     </Typography>
-    <Typography className="text-sm font-bold text-gray-900 break-all">
+    <Typography className="text-sm font-medium text-gray-900 break-all">
       {value || "—"}
     </Typography>
   </div>

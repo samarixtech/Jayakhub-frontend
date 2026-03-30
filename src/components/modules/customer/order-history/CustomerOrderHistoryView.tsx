@@ -25,7 +25,7 @@ export default function CustomerOrderHistoryView() {
   const { country, language } = useLocale();
 
   // Filters
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [dateRange, setDateRange] = useState("all");
 
   // Pagination State
@@ -47,7 +47,14 @@ export default function CustomerOrderHistoryView() {
       setLoading(true);
       try {
         const { getAllOrders } = await import("@/app/actions/customer/order");
-        const filterParam = dateRange !== "all" ? dateRange : undefined;
+
+        const filterParts = [...statusFilters];
+        if (dateRange !== "all") {
+          filterParts.push(dateRange);
+        }
+
+        const filterParam =
+          filterParts.length > 0 ? filterParts.join(",") : undefined;
         const res = await getAllOrders(page, limit, filterParam);
         if (res.success) {
           const responseData = res.data as any;
@@ -73,28 +80,9 @@ export default function CustomerOrderHistoryView() {
       }
     }
     fetchOrders();
-  }, [dateRange, page, limit]);
+  }, [dateRange, statusFilters, page, limit]);
 
-  // Filter Logic
-  const filteredOrders = orders.filter((order) => {
-    if (statusFilter !== "all") {
-      const status = order.OrderStatus?.toLowerCase() || "";
-      if (statusFilter === "delivered") return status === OrderStatus.DELIVERED;
-      if (statusFilter === "cancelled") return status === OrderStatus.REJECTED;
-      if (statusFilter === "active") {
-        return [
-          OrderStatus.PENDING,
-          OrderStatus.ACCEPTED,
-          OrderStatus.PREPARE,
-          OrderStatus.READY,
-          OrderStatus.OUT_FOR_DELIVERY,
-          OrderStatus.DELIVERED,
-        ].includes(status as OrderStatus);
-      }
-    }
-    return true;
-  });
-
+  // Filter Logic (Removed client-side filtering, now handled server-side)
   if (loading) return <OrdersSkeleton />;
 
   return (
@@ -107,8 +95,8 @@ export default function CustomerOrderHistoryView() {
 
         <OrderFilters
           showFilters={showFilters}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
+          statusFilters={statusFilters}
+          setStatusFilters={setStatusFilters}
           dateRange={dateRange}
           setDateRange={setDateRange}
         />
@@ -121,14 +109,14 @@ export default function CustomerOrderHistoryView() {
         </div>
 
         <div className="space-y-4">
-          {filteredOrders.length === 0 ? (
+          {orders.length === 0 ? (
             <EmptyState
               icon={FileDown}
               title={t("no_orders_yet")}
               message={t("no_orders_message")}
             />
           ) : (
-            filteredOrders.map((order) => (
+            orders.map((order) => (
               <OrderCard
                 key={order.orderId}
                 order={order}

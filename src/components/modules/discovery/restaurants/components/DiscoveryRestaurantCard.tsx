@@ -77,9 +77,10 @@ const DiscoveryRestaurantCard = ({
         />
 
         {/* Discount Badge */}
-        {data.discount && (
-          <Badge className="absolute top-3 left-3 bg-[#346853] hover:bg-[#346853] text-white border-0 font-bold px-2 py-0.5 text-[10px] uppercase">
-            {data.discount}
+        {(data.discount ||
+          (data.averageDiscount && data.averageDiscount > 0)) && (
+          <Badge className="absolute top-3 left-3 bg-[#EE3F43] hover:bg-[#EE3F43] text-white border-0 font-bold px-2 py-1 text-[10px] sm:text-[11px] uppercase rounded-md shadow-md z-10">
+            {data.discount || `${data.averageDiscount}% OFF`}
           </Badge>
         )}
 

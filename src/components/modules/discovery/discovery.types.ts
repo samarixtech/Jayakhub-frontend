@@ -19,10 +19,11 @@ export interface APIMnuItem {
   name: string;
   description: string;
   basePrice: number;
+  discount?: string | null;
   dietaryType: string;
   image: string;
   variations: any[];
-  category: string;
+  category: string | null;
   categoryData?: string;
   isAvailable: boolean;
 }
@@ -87,6 +88,7 @@ export interface RestaurantProps {
   discount?: string;
   isFavorite?: boolean;
   isWishlist?: boolean;
+  averageDiscount?: number;
 }
 
 export interface CardProps {

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { useUserForm } from "../hooks/useUserForm";
 import { useTranslations } from "next-intl";
+import { LoaderIcon } from "react-hot-toast";
 
 export default function UserFormView({
   mode = "add",
@@ -62,11 +63,13 @@ export default function UserFormView({
           <Button
             onClick={actions.handleSave}
             disabled={status.isCreating || status.isUpdating}
-            className="bg-[#1F4D36] hover:bg-[#183d2b] text-white font-medium min-w-[120px]"
+            className="bg-[#1F4D36] hover:bg-[#183d2b] text-white font-medium min-w-[120px] cursor-pointer"
           >
-            {status.isCreating || status.isUpdating
-              ? t("saving")
-              : t("saveChanges")}
+            {status.isCreating || status.isUpdating ? (
+              <LoaderIcon />
+            ) : (
+              t("saveChanges")
+            )}
           </Button>
         </div>
       </div>
@@ -161,7 +164,9 @@ export default function UserFormView({
 
         <div className="grid gap-6">
           <div className="grid gap-2">
-            <Label className="font-medium text-gray-700">{t("assignedRole")}</Label>
+            <Label className="font-medium text-gray-700">
+              {t("assignedRole")}
+            </Label>
             <Select value={state.role} onValueChange={actions.setRole}>
               <SelectTrigger className="bg-gray-50/50 border-gray-200">
                 <SelectValue placeholder={t("selectRole")} />
@@ -191,9 +196,7 @@ export default function UserFormView({
                   onChange={(e) => actions.setPassword(e.target.value)}
                   className="pl-9 bg-gray-50/50 border-gray-200"
                   placeholder={
-                    mode === "add"
-                      ? t("createPassword")
-                      : t("leaveBlank")
+                    mode === "add" ? t("createPassword") : t("leaveBlank")
                   }
                 />
               </div>

@@ -149,7 +149,7 @@ export const generateInvoicePDF = (
       acc + Number(item.price || 0) * (item.quantity || 0),
     0,
   );
-  const deliveryFee = 10;
+  const deliveryFee = 0;
   const finalTotalAmount =
     Number(order.totalAmount || subTotalAmount) + deliveryFee;
 

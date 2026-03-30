@@ -36,12 +36,14 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   const calculateTotal = (qty: number, vars: any[]) => {
     if (!item) return;
+    const discountAmount = item.discount ? parseFloat(item.discount) : 0;
     const basePrice = item.price || item.basePrice || 0;
     const varsPrice = vars.reduce(
       (acc, v) => acc + (v.price || v.additionalPrice || 0),
       0,
     );
-    setTotalPrice((basePrice + varsPrice) * qty);
+    const unitPrice = Math.max(0, basePrice + varsPrice - discountAmount);
+    setTotalPrice(unitPrice * qty);
   };
 
   const handleIncrement = () => {
@@ -132,10 +134,23 @@ const ProductModal: React.FC<ProductModalProps> = ({
             <h2 className="text-2xl font-bold text-gray-900 leading-tight">
               {item.name}
             </h2>
-            <span className="text-xl font-bold text-[#346853]">
-              {currency}
-              {(item.price || item.basePrice || 0).toFixed(2)}
-            </span>
+            <div className="flex flex-col items-end shrink-0">
+              {item.discount && parseFloat(item.discount) > 0 && (
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm font-medium text-gray-400 line-through">
+                    {currency}
+                    {(item.price || item.basePrice || 0).toFixed(2)}
+                  </span>
+                  <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
+                    -{currency} {parseFloat(item.discount).toFixed(0)}
+                  </span>
+                </div>
+              )}
+              <span className="text-xl font-bold text-[#346853]">
+                {currency}
+                {Math.max(0, (item.price || item.basePrice || 0) - (item.discount ? parseFloat(item.discount) : 0)).toFixed(2)}
+              </span>
+            </div>
           </div>
           <p className="text-gray-500 text-sm leading-relaxed mb-6">
             {item.description}

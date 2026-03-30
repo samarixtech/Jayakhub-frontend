@@ -158,7 +158,40 @@ export function useAddressGeocoding(
     [reverseGeocode],
   );
 
-  const handleLocateMe = () => {
+  const checkLocalStorageLocation = useCallback(() => {
+    try {
+      const stored = localStorage.getItem("userLocation");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.lat && parsed.lng) {
+          const pos = { lat: Number(parsed.lat), lng: Number(parsed.lng) };
+          setCenter(pos);
+          setMarkerPosition(pos);
+
+          if (parsed.address) {
+            const addressParts = parsed.address.split(",").map((p: string) => p.trim());
+            const street = addressParts[0] || "";
+            // Heuristic for Street, City, (State), Country
+            const city = addressParts.length > 2 ? addressParts[1] : (addressParts.length === 2 ? addressParts[0] : "");
+            const country = addressParts.length >= 2 ? addressParts[addressParts.length - 1] : "";
+
+            setFormData((prev) => ({
+              ...prev,
+              street: street || prev.street,
+              city: city || prev.city,
+              country: country || prev.country,
+            }));
+          }
+          return true;
+        }
+      }
+    } catch (e) {
+      console.error("Failed to parse userLocation from localStorage", e);
+    }
+    return false;
+  }, [setFormData]);
+
+  const handleLocateMe = useCallback(() => {
     if (navigator.geolocation) {
       const toastId = toast.loading("Locating...");
       navigator.geolocation.getCurrentPosition(
@@ -183,7 +216,32 @@ export function useAddressGeocoding(
     } else {
       toast.error("Error: Your browser doesn't support geolocation.");
     }
-  };
+  }, [map, reverseGeocode]);
+
+  const autoDetectLocation = useCallback(() => {
+    const foundInStorage = checkLocalStorageLocation();
+    if (!foundInStorage) {
+      // Re-implementing silent version of locate me for auto-detect
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            setCenter(pos);
+            setMarkerPosition(pos);
+            map?.panTo(pos);
+            isMapInteraction.current = true;
+            reverseGeocode(pos.lat, pos.lng);
+          },
+          (error) => {
+            console.error("Auto-detect failed:", error);
+          }
+        );
+      }
+    }
+  }, [checkLocalStorageLocation, map, reverseGeocode]);
 
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
     setMap(mapInstance);
@@ -205,5 +263,6 @@ export function useAddressGeocoding(
     onUnmount,
     handleMapClick,
     handleLocateMe,
+    autoDetectLocation,
   };
 }

@@ -64,9 +64,10 @@ export default function StepRestaurantInfoView() {
                   </label>
                   <FormControl>
                     <PhoneInput
-                      placeholder="+964 750 999 8888"
-                      defaultCountry="IQ"
-                      className="h-12 rounded-xl bg-gray-50/50 border-gray-100"
+                      placeholder="Phone Number"
+                      maxLength={14}
+                      defaultCountry="PK"
+                      className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
                   </FormControl>

@@ -28,14 +28,27 @@ export const useStepOwnerInfo = () => {
   });
 
   useEffect(() => {
-    async function fetchEmail() {
+    async function fetchProfileData() {
       const res = await getProfile();
-      if (res.success && res.data?.email) {
-        setEmail(res.data.email);
+      if (res.success && res.data) {
+        if (res.data.email) {
+          setEmail(res.data.email);
+        }
+
+        const savedData = localStorage.getItem("onboarding_owner_info");
+        // Only pre-fill if no data is saved in localStorage
+        if (!savedData) {
+          if (res.data.name) {
+            form.setValue("ownerName", res.data.name);
+          }
+          if (res.data.phone) {
+            form.setValue("ownerPhone", String(res.data.phone));
+          }
+        }
       }
     }
-    fetchEmail();
-  }, []);
+    fetchProfileData();
+  }, [form]);
 
   useEffect(() => {
     try {

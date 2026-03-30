@@ -22,6 +22,7 @@ export async function handleApiRequest<T>(
     };
   } catch (error: any) {
     console.error("API Error:", error);
+    // console.error("API Error:", error.message);
 
     const message =
       error.response?.data?.meta?.message ||

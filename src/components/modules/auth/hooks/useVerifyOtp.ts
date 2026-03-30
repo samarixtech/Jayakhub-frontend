@@ -3,7 +3,11 @@
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { resendOtpAction, verifyOtpAction } from "@/app/actions/auth/auth";
+import {
+  resendOtpAction,
+  verifyOtpAction,
+  verifyResetOtpAction,
+} from "@/app/actions/auth/auth";
 import { useCountdown } from "@/hooks/use-countdown";
 import { ROLE_REDIRECT_MAP, UserRole } from "@/config/role-map.config";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
@@ -56,10 +60,19 @@ export function useVerifyOtp() {
     if (!email) return;
 
     startVerifyTransition(async () => {
-      const result = await verifyOtpAction({ otp: otpValue });
+      const intent = sessionStorage.getItem(AUTH_KEYS.INTENT);
+      let result;
+
+      if (intent === "forgot-password" && email) {
+        result = await verifyResetOtpAction({
+          otp: otpValue,
+          identifier: email,
+        });
+      } else {
+        result = await verifyOtpAction({ otp: otpValue });
+      }
 
       if (result.success) {
-        const intent = sessionStorage.getItem(AUTH_KEYS.INTENT);
         if (intent === "forgot-password") {
           sessionStorage.setItem(AUTH_KEYS.PENDING_OTP, otpValue);
           router.push(`/new-password`);
