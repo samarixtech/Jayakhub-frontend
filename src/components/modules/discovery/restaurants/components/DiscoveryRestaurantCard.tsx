@@ -65,9 +65,8 @@ const DiscoveryRestaurantCard = ({
     >
       {/* Image Container */}
       <div
-        className={`relative ${
-          isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
-        } w-full overflow-hidden shadow-sm`}
+        className={`relative ${isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
+          } w-full overflow-hidden shadow-sm`}
       >
         <Image
           width={250}
@@ -92,9 +91,8 @@ const DiscoveryRestaurantCard = ({
             className="absolute top-3 right-3 p-2 rounded-full transition-all bg-black/20 backdrop-blur-sm hover:bg-black/30 shadow-sm z-10"
           >
             <Heart
-              className={`h-4 w-4 transition-colors ${
-                internalIsWishlist ? "text-red-500 fill-red-500" : "text-white"
-              }`}
+              className={`h-4 w-4 transition-colors ${internalIsWishlist ? "text-red-500 fill-red-500" : "text-white"
+                }`}
             />
           </button>
         )}
@@ -104,9 +102,8 @@ const DiscoveryRestaurantCard = ({
       <div className={`${isCompact ? "pt-2 space-y-0.5" : "pt-3 space-y-1"}`}>
         <div className="flex justify-between items-start">
           <h3
-            className={`${
-              isCompact ? "text-sm" : "text-lg"
-            } font-bold text-gray-900 truncate pr-2`}
+            className={`${isCompact ? "text-sm" : "text-lg"
+              } font-bold text-gray-900 truncate pr-2`}
           >
             {data.name}
           </h3>

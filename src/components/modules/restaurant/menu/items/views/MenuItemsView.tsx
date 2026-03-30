@@ -150,7 +150,7 @@ export default function MenuItemsView() {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1400px] mx-auto p-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4">
         <Button
           onClick={() => setIsAddModalOpen(true)}
           className="bg-emerald-bg hover:bg-emerald-bg-hover text-white gap-2 cursor-pointer"

@@ -25,7 +25,7 @@ export const useMenuVariants = () => {
   const { execute: createVariant, isPending: isCreatingVariant } =
     useServerAction(createVariantGroupAction, {
       onSuccess: () => {
-        toast.success("Variant group created");
+       
         fetchVariants();
         resetForm();
       },
@@ -34,7 +34,7 @@ export const useMenuVariants = () => {
   const { execute: updateVariant, isPending: isUpdatingVariant } =
     useServerAction(updateVariantGroupAction, {
       onSuccess: () => {
-        toast.success("Variant group updated");
+       
         fetchVariants();
         resetForm();
       },
@@ -43,7 +43,7 @@ export const useMenuVariants = () => {
   const { execute: deleteVariant, isPending: isDeletingVariant } =
     useServerAction(deleteVariantGroupAction, {
       onSuccess: () => {
-        toast.success("Variant group deleted");
+       
         fetchVariants();
         setIsDeleteModalOpen(false);
       },

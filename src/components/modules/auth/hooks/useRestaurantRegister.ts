@@ -66,7 +66,7 @@ export function useRestaurantRegister() {
       sessionStorage.removeItem("restaurant_register_form");
 
       sessionStorage.setItem(AUTH_KEYS.PENDING_EMAIL, identifier);
-      toast.success("Business account created! Verify your OTP.");
+      // toast.success("Business account created! Verify your OTP.");
 
       router.push(`/verify-otp?email=${encodeURIComponent(identifier)}`);
     },

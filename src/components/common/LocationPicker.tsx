@@ -26,6 +26,7 @@ interface LocationPickerProps {
   }) => void;
   className?: string;
   placeholder?: string;
+  error?: boolean;
 }
 
 const defaultCenter = {
@@ -45,6 +46,7 @@ export default function LocationPicker({
   onLocationChange,
   className = "",
   placeholder = "Search for a location...",
+  error = false,
 }: LocationPickerProps) {
   // State
   const [address, setAddress] = useState(initialAddress);
@@ -251,14 +253,20 @@ export default function LocationPicker({
           value={address}
           onChange={handleInputChange}
           placeholder={placeholder}
-          className="pl-10 h-11 border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary"
+          className={`pl-10 h-11 transition-colors ${
+            error
+              ? "border-red-500 focus-visible:ring-red-100"
+              : "border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary"
+          }`}
         />
         <Button
           type="button"
           size="sm"
           variant="ghost"
           onClick={handleLocateMe}
-          className="absolute right-1.5 top-1.5 h-8 w-8 p-0 text-gray-500 hover:text-primary hover:bg-primary/10 rounded-lg"
+          className={`absolute right-1.5 top-1.5 h-8 w-8 p-0 rounded-lg ${
+            error ? "text-red-500 hover:bg-red-50" : "text-gray-500 hover:text-primary hover:bg-primary/10"
+          }`}
           title="Locate Me"
         >
           <Crosshair className="h-4 w-4" />
@@ -266,7 +274,11 @@ export default function LocationPicker({
       </div>
 
       {/* Map */}
-      <div className="relative h-[300px] w-full rounded-xl overflow-hidden border border-gray-200 shadow-inner">
+      <div
+        className={`relative h-[300px] w-full rounded-xl overflow-hidden border shadow-inner transition-colors ${
+          error ? "border-red-500" : "border-gray-200"
+        }`}
+      >
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           center={center}

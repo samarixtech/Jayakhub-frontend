@@ -1,5 +1,5 @@
 import React from "react";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
@@ -61,9 +61,13 @@ export const AddCategoryCard: React.FC<AddCategoryCardProps> = ({
           <Button
             onClick={onConfirm}
             disabled={isSaving || !newCategoryName}
-            className="bg-[#1F4D36] text-white"
+            className="bg-[#1F4D36] text-white min-w-[80px]"
           >
-            {isSaving ? t("saving") : t("createBtn")}
+            {isSaving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              t("createBtn")
+            )}
           </Button>
           <Button variant="ghost" onClick={onCancel} disabled={isSaving}>
             {t("cancel")}

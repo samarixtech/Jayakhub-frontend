@@ -1,5 +1,5 @@
 import React from "react";
-import { Shapes, Edit2, Trash2, X, Check } from "lucide-react";
+import { Shapes, Edit2, Trash2, X, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -48,7 +48,11 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
             onClick={onSaveEdit}
             disabled={isUpdating}
           >
-            <Check className="w-4 h-4" />
+            {isUpdating ? (
+              <Loader2 className="w-4 h-4 animate-spin text-white" />
+            ) : (
+              <Check className="w-4 h-4" />
+            )}
           </Button>
           <Button
             size="icon"

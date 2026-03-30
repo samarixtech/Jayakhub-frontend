@@ -1,15 +1,46 @@
 "use client";
 
-import { Check, Clock, XCircle, Loader2 } from "lucide-react";
+import { Check, Clock, XCircle, Loader2, ArrowLeft } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useRestaurantStatus } from "../hooks/useRestaurantStatus";
 import { StatusTimeline } from "../components/StatusTimeline";
 import { useTranslations } from "next-intl";
+import { logoutAction } from "@/app/actions/auth/auth";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RestaurantStatusView() {
   const t = useTranslations("RestaurantDashboard.Status");
   const { status, loading, isNew } = useRestaurantStatus();
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    await logoutAction();
+    router.push("/login");
+  };
+
+  // LOGOUT BUTTON COMPONENT
+  const LogoutButton = (
+    <div className="absolute top-4 left-4 sm:top-8 sm:left-8 z-10">
+      <Button
+        onClick={handleLogout}
+        disabled={isLoggingOut}
+        variant="ghost"
+        className="text-gray-600 hover:text-gray-900 font-medium transition-all"
+      >
+        {isLoggingOut ? (
+          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+        ) : (
+          <ArrowLeft className="w-4 h-4 mr-2" />
+        )}
+        Back to Login
+      </Button>
+    </div>
+  );
 
   if (loading) {
     return (
@@ -22,7 +53,8 @@ export default function RestaurantStatusView() {
   // REJECTED VIEW
   if (status === "rejected") {
     return (
-      <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4">
+      <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4 relative">
+        {LogoutButton}
         <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center animate-in zoom-in duration-500">
@@ -35,7 +67,7 @@ export default function RestaurantStatusView() {
           >
             {t("titleRejected")}
           </Typography>
-          <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base mb-8">
+          <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base">
             {t("descriptionRejected")}
           </Typography>
         </Card>
@@ -46,7 +78,8 @@ export default function RestaurantStatusView() {
   // PENDING VIEW (Existing User)
   if (status === "pending" && !isNew) {
     return (
-      <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4">
+      <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4 relative">
+        {LogoutButton}
         <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white">
           <div className="flex justify-center mb-8">
             <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center animate-in zoom-in duration-500">
@@ -78,7 +111,8 @@ export default function RestaurantStatusView() {
 
   // SUBMITTED VIEW (New Submission)
   return (
-    <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4">
+    <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4 relative">
+      {LogoutButton}
       <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white text-balance">
         <div className="flex justify-center mb-8">
           <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200 animate-in zoom-in duration-500">
@@ -110,3 +144,4 @@ export default function RestaurantStatusView() {
     </div>
   );
 }
+

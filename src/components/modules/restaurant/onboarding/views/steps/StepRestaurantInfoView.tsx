@@ -123,23 +123,31 @@ export default function StepRestaurantInfoView() {
           </div>
 
           {/* Section 2: Location */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase text-gray-400">
-                Restaurant Location
-              </label>
-              <LocationPicker
-                initialAddress={form.getValues("address")}
-                initialLocation={form.getValues("location")}
-                onLocationChange={(loc: any) => {
-                  form.setValue("address", loc.address);
-                  form.setValue("location", { lat: loc.lat, lng: loc.lng });
-                  if (loc.country) form.setValue("country", loc.country);
-                }}
-                placeholder="Search for restaurant address..."
-              />
-            </div>
-          </div>
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field, fieldState }) => (
+              <FormItem className="space-y-2">
+                <label className="text-[10px] font-bold uppercase text-gray-400">
+                  Restaurant Location
+                </label>
+                <FormControl>
+                  <LocationPicker
+                    initialAddress={field.value}
+                    initialLocation={form.getValues("location")}
+                    onLocationChange={(loc: any) => {
+                      form.setValue("address", loc.address, { shouldValidate: true });
+                      form.setValue("location", { lat: loc.lat, lng: loc.lng }, { shouldValidate: true });
+                      if (loc.country) form.setValue("country", loc.country, { shouldValidate: true });
+                    }}
+                    placeholder="Search for restaurant address..."
+                    error={!!fieldState.error}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           {/* Section 3: Description */}
           <FormField

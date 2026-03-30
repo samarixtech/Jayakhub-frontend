@@ -8,6 +8,7 @@ import {
   useOnboarding,
 } from "@/components/modules/restaurant/onboarding/OnboardingContext";
 import { Typography } from "@/components/ui/typography";
+import { toast } from "react-hot-toast";
 
 // Inner component to consume context
 const OnboardingLayoutContent = ({
@@ -30,7 +31,34 @@ const OnboardingLayoutContent = ({
   else if (pathname.includes("step-bank-details")) currentStep = 6;
   else if (pathname.includes("step-review")) currentStep = 7;
 
+  const isStepComplete = (stepId: number) => {
+    if (typeof window === "undefined") return false;
+    switch (stepId) {
+      case 1:
+        return !!localStorage.getItem("onboarding_owner_info");
+      case 2:
+        return !!localStorage.getItem("onboarding_restaurant_info");
+      case 3:
+        return !!localStorage.getItem("onboarding_brand_assets_previews");
+      case 4:
+        return !!localStorage.getItem("onboarding_schedule_info");
+      case 5:
+        return localStorage.getItem("onboarding_kyc_completed") === "true";
+      case 6:
+        return !!localStorage.getItem("onboarding_bank_details");
+      default:
+        return true;
+    }
+  };
+
   const handleStepClick = (stepId: number) => {
+    if (stepId > currentStep) {
+      if (!isStepComplete(currentStep)) {
+        toast.error("Please complete the current step before proceeding.");
+        return;
+      }
+    }
+
     let path = "";
     switch (stepId) {
       case 1:
@@ -102,3 +130,5 @@ export default function RestaurantOnboardingLayout({
     </OnboardingProvider>
   );
 }
+
+
