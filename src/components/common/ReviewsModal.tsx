@@ -195,8 +195,8 @@ export function ReviewsModal({
                     </div>
                   ))}
                 </div>
-              ) : reviews.length > 0 ? (
-                reviews.map((review, idx) => (
+              ) : (reviews || []).length > 0 ? (
+                (reviews || []).map((review, idx) => (
                   <div key={idx} className="flex flex-col">
                     <div className="flex items-start gap-4 mb-3">
                       {/* Avatar */}
@@ -237,9 +237,8 @@ export function ReviewsModal({
                     {/* Footer: Tags and Helpful */}
                     <div className="flex items-center justify-between mt-auto">
                       <div className="flex flex-wrap gap-2">
-                        {review.orderedItems &&
-                          review.orderedItems.length > 0 &&
-                          review.orderedItems.map((item, i) => (
+                        {(review.orderedItems || []).length > 0 &&
+                          (review.orderedItems || []).map((item, i) => (
                             <div
                               key={i}
                               className="flex items-center gap-1.5 bg-emerald-50/50 text-emerald-700 px-2.5 py-1 rounded-md text-xs font-semibold border border-emerald-100/50"
@@ -257,7 +256,7 @@ export function ReviewsModal({
                     </div>
 
                     {/* Divider for all but last */}
-                    {idx < reviews.length - 1 && (
+                    {idx < (reviews || []).length - 1 && (
                       <div className="h-px w-full bg-gray-100 mt-8" />
                     )}
                   </div>

@@ -84,7 +84,7 @@ export default function LegalPageTemplate({
                         <div>
                             <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">{tocTitle}</h2>
                             <nav className="space-y-1">
-                                {sections.map((section) => (
+                                {(sections || []).map((section) => (
                                     <a
                                         key={section.id}
                                         href={`#${section.id}`}
@@ -115,7 +115,7 @@ export default function LegalPageTemplate({
                         </div>
 
                         <div className="space-y-12 max-w-3xl">
-                            {sections.map((section) => (
+                            {(sections || []).map((section) => (
                                 <section key={section.id} id={section.id} className="scroll-mt-32">
                                     <h2 className="text-2xl font-bold text-[#0a2920] mb-4">{section.title}</h2>
                                     <p className="text-[#0a2920] leading-relaxed text-lg whitespace-pre-wrap">

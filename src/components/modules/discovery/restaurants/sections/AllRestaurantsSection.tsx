@@ -28,9 +28,9 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
               />
             ))}
           </div>
-        ) : restaurants.length > 0 ? (
+        ) : (restaurants || []).length > 0 ? (
           <div className="grid gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {restaurants.map((restaurant) => (
+            {(restaurants || []).map((restaurant) => (
               <DiscoveryRestaurantCard
                 key={restaurant.id}
                 data={restaurant}
@@ -98,13 +98,13 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
               />
             ))}
           </div>
-        ) : restaurants.length > 0 ? (
+        ) : (restaurants || []).length > 0 ? (
           <div
             className={`grid gap-4 ${
               viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
             }`}
           >
-            {restaurants.map((restaurant) => (
+            {(restaurants || []).map((restaurant) => (
               <DiscoveryRestaurantCard
                 key={restaurant.id}
                 data={restaurant}

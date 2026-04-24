@@ -233,7 +233,7 @@ export const GlobalSearch = () => {
                         Clear All
                       </button>
                     </div>
-                    {recentSearches.map((term, i) => (
+                    {(recentSearches || []).map((term, i) => (
                       <div
                         key={i}
                         onClick={() => {
@@ -275,7 +275,7 @@ export const GlobalSearch = () => {
                     <h4 className="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-500">
                       <Search className="w-3.5 h-3.5" /> Suggestions
                     </h4>
-                    {suggestions.map((sug, i) => (
+                    {(suggestions || []).map((sug, i) => (
                       <div
                         key={i}
                         onClick={() => {
@@ -299,7 +299,7 @@ export const GlobalSearch = () => {
                     <h4 className="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 mt-2 border-t border-gray-100 pt-3">
                       <Utensils className="w-3.5 h-3.5" /> Restaurants
                     </h4>
-                    {restaurants.slice(0, 4).map((restaurant) => {
+                    {(restaurants || []).slice(0, 4).map((restaurant) => {
                       const image =
                         restaurant.profileImage || restaurant.bannerImage;
                       const imageUrl =
@@ -334,7 +334,7 @@ export const GlobalSearch = () => {
                               <span className="flex items-center gap-1">
                                 <span className="text-emerald-600 font-bold max-w-[120px] truncate">
                                   {Array.isArray(restaurant.type)
-                                    ? restaurant.type.join(", ")
+                                    ? (restaurant.type || []).join(", ")
                                     : restaurant.type}
                                 </span>
                               </span>

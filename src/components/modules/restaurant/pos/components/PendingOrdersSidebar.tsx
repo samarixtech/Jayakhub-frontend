@@ -59,11 +59,11 @@ export default function PendingOrdersSidebar({
             </div>
           ) : (
             pendingOrders.map((order) => {
-              const itemTotal = order.items.reduce(
+              const itemTotal = (order.items || []).reduce(
                 (acc, item) => acc + item.quantity,
                 0,
               );
-              const priceTotal = order.items.reduce((acc, item) => {
+              const priceTotal = (order.items || []).reduce((acc, item) => {
                 const itemPrice = item.selectedVariation
                   ? item.price + item.selectedVariation.additionalPrice
                   : item.price;

@@ -81,7 +81,7 @@ export default function GlobalTable<T>({
         <Table>
           <TableHeader className="bg-transparent border-b border-gray-100">
             <TableRow>
-              {columns.map((col, index) => (
+              {(columns || []).map((col, index) => (
                 <TableHead
                   key={index}
                   className={`font-semibold text-[#6B7280] px-7 ${col.headerClassName || ""}`}
@@ -95,14 +95,14 @@ export default function GlobalTable<T>({
             {loading ? (
               Array.from({ length: 5 }).map((_, rowIndex) => (
                 <TableRow key={rowIndex} className="border-none">
-                  {columns.map((_, colIndex) => (
+                  {(columns || []).map((_, colIndex) => (
                     <TableCell key={colIndex} className="border-none">
                       <Skeleton className="h-6 w-full rounded-md" />
                     </TableCell>
                   ))}
                 </TableRow>
               ))
-            ) : data.length === 0 ? (
+            ) : (data || []).length === 0 ? (
               <TableRow className="border-none">
                 <TableCell
                   colSpan={columns.length}
@@ -112,14 +112,14 @@ export default function GlobalTable<T>({
                 </TableCell>
               </TableRow>
             ) : (
-              data.map((item, rowIndex) => (
+              (data || []).map((item, rowIndex) => (
                 <TableRow
                   key={rowIndex}
                   onClick={() => onRowClick && onRowClick(item)}
                   className={`border-b border-gray-100 ${onRowClick ? "cursor-pointer hover:bg-gray-50/50" : ""
                     } ${rowClassName ? rowClassName(item) : ""}`}
                 >
-                  {columns.map((col, colIndex) => (
+                  {(columns || []).map((col, colIndex) => (
                     <TableCell
                       key={colIndex}
                       className={`px-7 border-b border-gray-50/50 ${col.className || ""}`}

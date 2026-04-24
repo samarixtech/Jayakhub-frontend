@@ -208,7 +208,7 @@ export function useRestaurantDiscovery() {
       setIsPending(true);
 
       const mapData = (data: any) => {
-        const list = Array.isArray(data) ? data : data?.data || [];
+        const list = Array.isArray(data) ? data : (data?.data && Array.isArray(data.data) ? data.data : []);
         return list.map((item: any) => ({
           id: item.id || "",
           slug: item.slug || item.id || "",

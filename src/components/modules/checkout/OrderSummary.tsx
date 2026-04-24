@@ -58,7 +58,7 @@ const OrderSummary = ({
         </p>
 
         <div className="space-y-4 mb-6">
-          {cartItems.map((item) => (
+          {(cartItems || []).map((item) => (
             <div
               key={item.cartId || item.id}
               className="flex justify-between items-start text-sm"
@@ -72,7 +72,7 @@ const OrderSummary = ({
                   {item.selectedVariations &&
                     item.selectedVariations.length > 0 && (
                       <p className="text-xs text-gray-500">
-                        {item.selectedVariations.map((v) => v.name).join(", ")}
+                        {(item.selectedVariations || []).map((v) => v.name).join(", ")}
                       </p>
                     )}
                 </div>

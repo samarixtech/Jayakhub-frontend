@@ -30,7 +30,7 @@ export default function OnlineOrdersView() {
       {/* Tabs */}
       <div className="p-4 sm:p-6 pb-4 sm:pb-6 bg-white shrink-0">
         <div className="flex gap-4">
-          {tabs.map((tab) => {
+          {(tabs || []).map((tab) => {
             const isActive = activeTab === tab.id;
             const Icon = tab.icon;
             return (
@@ -63,7 +63,7 @@ export default function OnlineOrdersView() {
 
       {/* Orders List */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 pt-0 space-y-4">
-        {currentOrders.map((order) => (
+        {(currentOrders || []).map((order) => (
           <div
             key={order.id}
             className="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm"
@@ -81,7 +81,7 @@ export default function OnlineOrdersView() {
                 </span>
               </div>
               <p className="font-medium text-gray-500 text-[13px] leading-relaxed line-clamp-2">
-                {order.items.join(", ")}
+                {(order.items || []).join(", ")}
               </p>
             </div>
 

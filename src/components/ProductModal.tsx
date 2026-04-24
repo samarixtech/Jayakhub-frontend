@@ -159,7 +159,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
           {/* Add Extra Section */}
           {item.variantGroups && item.variantGroups.length > 0 && (
             <div className="mb-8 space-y-6">
-              {item.variantGroups.map((group: any, groupIndex: number) => (
+              {(item.variantGroups || []).map((group: any, groupIndex: number) => (
                 <div key={group.id || groupIndex}>
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-bold text-gray-900">
@@ -170,7 +170,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     </span>
                   </div>
                   <div className="space-y-3">
-                    {group.variants.map((variation: any, index: number) => {
+                    {(group.variants || []).map((variation: any, index: number) => {
                       const isSelected = !!selectedVariations.find(
                         (v) =>
                           v.name === variation.name &&

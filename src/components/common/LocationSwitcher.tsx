@@ -481,12 +481,12 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                 <div className="h-10 bg-gray-100 rounded-lg animate-pulse" />
                 <div className="h-10 bg-gray-100 rounded-lg animate-pulse" />
               </div>
-            ) : addresses.length > 0 ? (
+            ) : (addresses || []).length > 0 ? (
               <div className="space-y-1">
                 <p className="px-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 mt-2">
                   Saved Addresses
                 </p>
-                {addresses.map((addr) => {
+                {(addresses || []).map((addr) => {
                   const fullAddress = `${addr.streetAddress}, ${addr.city}`;
                   const isActive = currentAddress === fullAddress;
 

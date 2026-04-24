@@ -14,7 +14,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
 }) => {
   if (
     !isLoggedIn ||
-    (!isPreviousOrdersLoading && previousOrders.length === 0)
+    (!isPreviousOrdersLoading && (!previousOrders || previousOrders.length === 0))
   ) {
     return null;
   }
@@ -38,7 +38,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
           </div>
         ) : (
           <div className="grid gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {previousOrders.map((restaurant) => (
+            {(previousOrders || []).map((restaurant) => (
               <DiscoveryRestaurantCard
                 key={restaurant.id}
                 data={restaurant}
@@ -79,7 +79,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
               viewMode === "list" ? "grid-cols-1" : "grid-cols-2"
             }`}
           >
-            {previousOrders.map((restaurant) => (
+            {(previousOrders || []).map((restaurant) => (
               <DiscoveryRestaurantCard
                 key={restaurant.id}
                 data={restaurant}

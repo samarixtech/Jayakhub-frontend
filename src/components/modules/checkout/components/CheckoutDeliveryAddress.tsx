@@ -60,7 +60,7 @@ export const CheckoutDeliveryAddress = ({
         onOpenChange={setIsAddressModalOpen}
       >
         <div className="space-y-3 max-h-[400px] overflow-y-auto">
-          {savedAddresses.map((addr) => (
+          {(savedAddresses || []).map((addr) => (
             <div
               key={addr.id}
               className={`p-4 rounded-xl border cursor-pointer flex items-start gap-3 transition-all ${
@@ -92,7 +92,7 @@ export const CheckoutDeliveryAddress = ({
               </div>
             </div>
           ))}
-          {savedAddresses.length === 0 && (
+          {(savedAddresses || []).length === 0 && (
             <p className="text-center text-gray-500 py-4">
               No addresses found.
             </p>

@@ -36,7 +36,6 @@ export async function responseHandler<T>(
       message:
         responseData.meta?.message || successMessage || "Operation successful",
       data: resolvedData,
-      suggestion: responseData.suggestion,
       statusCode: responseData.meta?.status || 200,
       meta: responseData.meta,
     };

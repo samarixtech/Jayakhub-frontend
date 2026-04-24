@@ -23,7 +23,7 @@ export default function POSSidebar() {
 
   const categories = [
     { id: "all", label: "All", icon: LayoutGrid },
-    ...globalCategories.map((catString: string) => ({
+    ...(globalCategories || []).map((catString: string) => ({
       id: catString,
       label: catString,
       icon: Sandwich,

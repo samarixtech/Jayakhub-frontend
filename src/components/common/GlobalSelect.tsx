@@ -41,7 +41,7 @@ export default function GlobalSelect({
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent className="bg-white border-gray-200 shadow-md">
-        {options.map((option) => (
+        {(options || []).map((option) => (
           <SelectItem
             key={option.value}
             value={option.value}

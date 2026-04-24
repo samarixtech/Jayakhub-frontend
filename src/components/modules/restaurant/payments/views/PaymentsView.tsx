@@ -125,7 +125,7 @@ const PaymentsView = () => {
   };
 
   // Process revenue points for the chart
-  const currentPoints = data.revenueTrend.map((d) => d.revenue);
+  const currentPoints = (data.revenueTrend || []).map((d) => d.revenue);
   // Default fallback if previous points are not in API
   const maxPrev = currentPoints.length || 7;
   const prevPoints = Array.from(
@@ -142,15 +142,15 @@ const PaymentsView = () => {
     wallet: "#ef4444",
   };
 
-  const paymentMethods = data.paymentMethods.map((pm) => ({
+  const paymentMethods = (data.paymentMethods || []).map((pm) => ({
     name: pm.method.charAt(0).toUpperCase() + pm.method.slice(1).toLowerCase(),
     pct: Math.round(pm.percentage),
     amount: formatPrice(pm.amount),
     color: pmColors[pm.method.toLowerCase()] || "#cccccc",
   }));
 
-  const donutPcts = paymentMethods.map((p) => p.pct);
-  const donutColors = paymentMethods.map((p) => p.color);
+  const donutPcts = (paymentMethods || []).map((p) => p.pct);
+  const donutColors = (paymentMethods || []).map((p) => p.color);
 
   const filterLabel =
     filterOptions.find((o) => o.value === filter)?.label ||
@@ -243,7 +243,7 @@ const PaymentsView = () => {
               />
             </div>
             <div className="space-y-3">
-              {paymentMethods.map((m) => (
+              {(paymentMethods || []).map((m) => (
                 <div key={m.name} className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <span
@@ -407,8 +407,8 @@ const PaymentsView = () => {
               </h3>
               <p className="text-[12px] text-gray-400 mt-0.5">
                 {tTransactions("countSubtitle", {
-                  count: data.transactions.items.length,
-                  total: data.transactions.totalCount,
+                  count: (data.transactions?.items || []).length,
+                  total: data.transactions?.totalCount || 0,
                 })}
               </p>
             </div>
@@ -447,7 +447,7 @@ const PaymentsView = () => {
               <div className="h-px bg-gray-100 mb-2" />
 
               {/* Table Body */}
-              {data.transactions.items.map((t) => (
+              {(data.transactions.items || []).map((t) => (
                 <div
                   key={t.orderId}
                   className="grid grid-cols-[1fr_80px_1.5fr_1fr_1fr_80px_1fr] gap-4 items-center px-4 py-4 border-b border-gray-50 last:border-0 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"

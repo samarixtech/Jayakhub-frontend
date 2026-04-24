@@ -23,8 +23,8 @@ export const PopularRestaurantsSection: React.FC<
         </div>
       ) : (
         <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide">
-          {restaurants.length > 0 ? (
-            restaurants
+          {(restaurants || []).length > 0 ? (
+            (restaurants || [])
               .slice(0, 5)
               .map((restaurant) => (
                 <DiscoveryRestaurantCard

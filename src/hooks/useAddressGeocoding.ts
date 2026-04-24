@@ -169,7 +169,7 @@ export function useAddressGeocoding(
           setMarkerPosition(pos);
 
           if (parsed.address) {
-            const addressParts = parsed.address.split(",").map((p: string) => p.trim());
+            const addressParts = (typeof parsed.address === "string" ? parsed.address.split(",") : []).map((p: string) => p.trim());
             const street = addressParts[0] || "";
             // Heuristic for Street, City, (State), Country
             const city = addressParts.length > 2 ? addressParts[1] : (addressParts.length === 2 ? addressParts[0] : "");

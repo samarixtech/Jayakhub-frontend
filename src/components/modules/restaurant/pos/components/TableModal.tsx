@@ -105,7 +105,7 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
 
       // Persist selection to DB
       try {
-        const currentStatuses = await getTableStatusesFromDB();
+        const currentStatuses = (await getTableStatusesFromDB()) || [];
         const promises = currentStatuses
           .filter((s) => s.status === "Selected")
           .map((s) => saveTableStatusToDB({ id: s.id, status: "Available" }));

@@ -49,7 +49,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
             : "bg-slate-100",
     rating: typeof p.rating === "number" ? p.rating : 4.5,
     price: formatPrice(
-      p.price !== undefined ? p.price : p.total / (p.quantity || 1),
+      p.price !== undefined ? p.price : (p.total || 0) / (p.quantity || 1),
     ),
     cost: formatPrice(p.cost || 0),
     profit: formatPrice(p.profit || p.total || 0),

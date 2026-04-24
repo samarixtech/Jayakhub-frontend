@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 // import getClientIp from "./lib/getClientIp";
 import api from "./components/services/api";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 1. Exclude static assets and API routes
@@ -26,8 +26,6 @@ export async function middleware(request: NextRequest) {
   // 3. If cookies are missing, call detect API
   if (!country || !language) {
     try {
-     
-
       const detectRes = (await api.get(
         "/detect",
         //   , {

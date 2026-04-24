@@ -169,7 +169,7 @@ const CountrySelect = ({
               <CommandInput placeholder="Search country..." />
               <CommandEmpty>No country found.</CommandEmpty>
               <CommandGroup>
-                {options
+                {(options || [])
                   .filter((x) => x.value)
                   .map((option) => (
                     <CommandItem

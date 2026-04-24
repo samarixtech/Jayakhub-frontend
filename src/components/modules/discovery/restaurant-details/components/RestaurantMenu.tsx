@@ -21,7 +21,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div className="sticky top-[80px] z-30 bg-white py-2 mb-6 border-b border-gray-100">
         <HorizontalScroller>
-          {categories.map((cat) => (
+          {(categories || []).map((cat) => (
             <button
               key={cat}
               onClick={() => onCategoryClick(cat)}
@@ -45,7 +45,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
                 Search Results
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {filteredItems?.map((item) => (
+                {(filteredItems || []).map((item) => (
                   <FoodCard
                     key={item.id}
                     item={item}
@@ -57,7 +57,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
               </div>
             </div>
           ) : (
-            categories.map(
+            (categories || []).map(
               (category) =>
                 menuByCategories[category]?.length > 0 && (
                   <div
@@ -69,7 +69,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
                       {category}
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {menuByCategories[category].map((item) => (
+                      {(menuByCategories[category] || []).map((item) => (
                         <FoodCard
                           key={item.id}
                           item={item}

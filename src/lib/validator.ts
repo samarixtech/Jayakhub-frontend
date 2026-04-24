@@ -30,6 +30,6 @@ export function validateSchema<T>(
       errors: ["Validation failed with unexpected error"],
     };
   }
-  const errors = zodError.issues.map((err: z.ZodIssue) => err.message);
+  const errors = (zodError.issues || []).map((err: z.ZodIssue) => err.message);
   return { success: false, errors };
 }

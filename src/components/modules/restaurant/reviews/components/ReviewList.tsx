@@ -50,12 +50,12 @@ export default function ReviewList({
 
       {/* Review Cards */}
       <div className="flex flex-col gap-4">
-        {filteredReviews.length === 0 && (
+        {(filteredReviews || []).length === 0 && (
           <div className="text-center py-8 text-gray-500 text-sm font-medium">
             {t("noReviews")}
           </div>
         )}
-        {filteredReviews.map((review) => {
+        {(filteredReviews || []).map((review) => {
           const isReplied = review.reply !== null;
           const displayDate = isoToDateOnly(review.createdAt);
 

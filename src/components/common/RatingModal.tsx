@@ -56,7 +56,7 @@ export function RatingModal({
     let successCount = 0;
 
     // Submit rating for each rated item
-    for (const item of orderInfo.items) {
+    for (const item of (orderInfo.items || [])) {
       const itemRating = itemRatings[item.id] || overallRating; // fallback to overall if not explicitly rated
       if (itemRating > 0) {
         const payload = {
@@ -157,7 +157,7 @@ export function RatingModal({
         <div className="bg-gray-50 rounded-2xl p-5">
           <h4 className="font-bold text-gray-900 mb-4">Rate Each Item</h4>
           <div className="space-y-6">
-            {orderInfo.items.map((item) => (
+            {(orderInfo.items || []).map((item) => (
               <div key={item.id} className="flex gap-4 items-start">
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-200 shrink-0 relative flex items-center justify-center">
                   {item.image ? (

@@ -145,7 +145,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
     setCartItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
-        return prev.map((i) =>
+        return (prev || []).map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i,
         );
       }
@@ -163,7 +163,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
 
   const updateQuantity = (id: number, delta: number) => {
     setCartItems((prev) =>
-      prev
+      (prev || [])
         .map((i) => {
           if (i.id === id) {
             const newQty = Math.max(0, i.quantity + delta);
@@ -180,7 +180,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
     variation: { name: string; additionalPrice: number },
   ) => {
     setCartItems((prev) =>
-      prev.map((i) =>
+      (prev || []).map((i) =>
         i.id === id ? { ...i, selectedVariation: variation } : i,
       ),
     );

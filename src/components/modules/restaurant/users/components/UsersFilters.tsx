@@ -28,7 +28,7 @@ export function UsersFilters({
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       {/* Filters (Pills) */}
       <div className="flex items-center gap-3 overflow-x-auto pb-2 custom-scrollbar w-full sm:w-auto">
-        {filters.map((filter) => (
+        {(filters || []).map((filter) => (
           <Button
             key={filter.value}
             variant="outline"

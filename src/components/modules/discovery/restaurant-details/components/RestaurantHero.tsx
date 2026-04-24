@@ -53,7 +53,7 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
             </div>
 
             <p className="text-sm md:text-base text-gray-500 mb-4 md:mb-5">
-              {restaurant?.type?.join(" • ")}
+              {(restaurant?.type || []).join(" • ")}
             </p>
 
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 md:gap-6 text-xs md:text-sm text-gray-600">

@@ -36,8 +36,8 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
   const t = useTranslations("RestaurantDashboard.Users.table");
   const getInitials = (name: string) => {
     return name
-      .split(" ")
-      .map((n) => n[0])
+      ?.split(" ")
+      ?.map((n) => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -104,7 +104,7 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
           </TableRow>
         ) : (
           // User List
-          users.map((user) => (
+          (users || []).map((user) => (
             <TableRow
               key={user.id}
               className="border-gray-50 hover:bg-gray-50/50 group"

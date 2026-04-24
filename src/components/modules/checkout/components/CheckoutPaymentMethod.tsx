@@ -83,7 +83,7 @@ export const CheckoutPaymentMethod = ({
               </div>
 
               {/* Saved Cards List */}
-              {savedCards.map((card: any) => (
+              {(savedCards || []).map((card: any) => (
                 <div
                   key={card.id}
                   onClick={(e) => {

@@ -40,7 +40,7 @@ const initialState: CartState = {
 
 const generateCartId = (item: CartItem) => {
   const vars = item.selectedVariations
-    ? JSON.stringify(item.selectedVariations.map((v) => v.name).sort())
+    ? JSON.stringify((item.selectedVariations || []).map((v) => v.name).sort())
     : "";
   return `${item.id}-${vars}`;
 };

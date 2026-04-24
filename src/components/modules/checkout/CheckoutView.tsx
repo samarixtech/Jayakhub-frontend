@@ -77,11 +77,9 @@ const CheckoutView = () => {
       restaurantId,
       items: cart.map((item) => {
         const variantGroupIds =
-          item.selectedVariations?.map((v: any) => v.groupId).filter(Boolean) ||
-          [];
+          (item.selectedVariations || []).map((v: any) => v.groupId).filter(Boolean);
         const variantOptionNames =
-          item.selectedVariations?.map((v: any) => v.name).filter(Boolean) ||
-          [];
+          (item.selectedVariations || []).map((v: any) => v.name).filter(Boolean);
 
         const itemPayload: any = {
           itemId: item.id,

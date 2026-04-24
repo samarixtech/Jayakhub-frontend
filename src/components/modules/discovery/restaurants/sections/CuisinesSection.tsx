@@ -24,7 +24,7 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
                 <div className="w-12 h-3 rounded bg-gray-200" />
               </div>
             ))
-          : cuisineTypes.map((cat: any, index: number) => {
+          : (cuisineTypes || []).map((cat: any, index: number) => {
               const isActive = activeFilters.includes(cat.name);
               return (
                 <button

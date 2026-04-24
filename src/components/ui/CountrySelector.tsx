@@ -46,7 +46,7 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({
   }, []);
 
   // Filter countries based on search query
-  const filteredCountries = countries.filter(
+  const filteredCountries = (countries || []).filter(
     (country) =>
       country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       country.code.toLowerCase().includes(searchQuery.toLowerCase())
@@ -108,8 +108,8 @@ const CountrySelector: React.FC<CountrySelectorProps> = ({
           </div>
 
           {/* Filtered Countries List */}
-          {filteredCountries.length > 0 ? (
-            filteredCountries.map((country) => (
+          {(filteredCountries || []).length > 0 ? (
+            (filteredCountries || []).map((country) => (
               <button
                 key={country.code}
                 onClick={() => handleCountrySelect(country)}

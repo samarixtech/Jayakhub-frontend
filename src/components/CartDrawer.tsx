@@ -192,7 +192,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
           ) : viewMode === "grouped" ? (
             <div className="space-y-6">
               <h3 className="font-bold text-gray-900 mb-4">Restaurants</h3>
-              {Object.entries(groupedCart).map(([id, group]) => (
+              {Object.entries(groupedCart || {}).map(([id, group]) => (
                 <div
                   key={id}
                   className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col"
@@ -224,7 +224,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                   {/* Items Preview */}
                   <div className="p-4 space-y-4 max-h-[220px] overflow-y-auto scrollbar-hide bg-white">
-                    {group.items.map((item) => (
+                    {(group.items || []).map((item) => (
                       <div key={item.cartId || item.id} className="flex gap-3">
                         <div className="w-12 h-12 shrink-0 rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
                           <Image
@@ -273,7 +273,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
             <div className="space-y-8">
               {/* ITEMS LIST */}
               <div className="space-y-6">
-                {currentItems.map((item) => (
+                {(currentItems || []).map((item) => (
                   <div key={item.cartId || item.id} className="flex gap-4">
                     <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden bg-gray-100">
                       <Image
@@ -292,7 +292,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                         {item.selectedVariations &&
                           item.selectedVariations.length > 0 && (
                             <p className="text-xs text-gray-500 mb-1">
-                              {item.selectedVariations
+                              {(item.selectedVariations || [])
                                 .map((v: any) => v.name)
                                 .join(", ")}
                             </p>
