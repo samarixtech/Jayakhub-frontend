@@ -1,17 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { C } from "./constants";
+import { useTranslations } from "next-intl";
 
 export function Features() {
-  const feats = [
-    { icon: "🕌", title: "Ramadan Operations Mode", desc: "Automatic Suhoor delivery 2-5 AM. Pre-scheduled Iftar orders. Auto-pause during prayer times." },
-    { icon: "🇮🇶", title: "Arabic + Kurdish Native", desc: "Full Sorani + Kurmanji + Arabic + English. RTL/LTR handled correctly." },
-    { icon: "💵", title: "Iraqi Payments", desc: "Qi Card, ZainCash, Asia Hawala, COD — all supported from Day 1." },
-    { icon: "📍", title: "Landmark Addresses", desc: '"Near the white mosque." "Behind the Karrada bridge." Iraqi addressing as it actually works.' },
-    { icon: "⚡", title: "Power Outage Handling", desc: "Offline mode for drivers and restaurants. Generator status. SMS fallback when internet fails." },
-    { icon: "📊", title: "Restaurant Coach", desc: "Plain-Arabic insights: peak hours, top items, customer patterns, recommendations." },
-  ];
+  const t = useTranslations('RestaurantDelivery.features');
+  const feats = t.raw('items') as { icon: string; title: string; desc: string }[];
+
   return (
     <section id="features" className="py-[90px] px-8 bg-white">
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">

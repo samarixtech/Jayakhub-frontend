@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { C } from "./constants";
 
 export function Mission() {
+  const t = useTranslations('RestaurantDelivery.mission');
   return (
     <section
       className="py-[90px] px-8 relative overflow-hidden border-b"
@@ -17,9 +18,7 @@ export function Mission() {
       </div>
       <div className="max-w-[980px] mx-auto text-center relative">
         <p className="font-medium leading-[1.35] tracking-[-0.015em] mb-7" style={{ fontSize: "clamp(26px,3.5vw,40px)", color: C.navy }}>
-          I'm not here to <span className="font-semibold" style={{ color: C.green }}>kill</span> small businesses.
-          <br />
-          I'm here to <span className="font-semibold" style={{ color: C.green }}>help them grow</span>.
+          {t.rich('quote', { strong: (chunks) => <span className="font-semibold" style={{ color: C.green }}>{chunks}</span> })}
         </p>
         <div className="inline-flex items-center gap-[14px] text-[15px]" style={{ color: C.muted }}>
           <div
@@ -29,12 +28,10 @@ export function Mission() {
             S
           </div>
           <div>
-            <strong className="block font-bold" style={{ color: C.ink }}>Sam</strong>
-            <div className="text-[13px] opacity-80">Founder · JayakHub</div>
+            <strong className="block font-bold" style={{ color: C.ink }}>{t('founder_name')}</strong>
+            <div className="text-[13px] opacity-80">{t('founder_title')}</div>
           </div>
         </div>
-
-
       </div>
     </section>
   );

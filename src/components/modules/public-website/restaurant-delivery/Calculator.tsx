@@ -1,23 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { C } from "./constants";
 
 export type Tier = "starter" | "pro" | "premium" | "founding";
-
-export const TIERS: { id: Tier; label: string; price: number; badge?: string; badgeStyle?: "gold" | "hot"; featured?: boolean; founding?: boolean }[] = [
-  { id: "starter", label: "Starter", price: 99 },
-  { id: "pro", label: "Pro", price: 199, badge: "RECOMMENDED", badgeStyle: "gold", featured: true },
-  { id: "premium", label: "Premium", price: 349 },
-  { id: "founding", label: "⚡ Founding 100", price: 59, badge: "LIMITED", badgeStyle: "hot", founding: true },
-];
 
 export function fmt(n: number) {
   return "$" + Math.round(n).toLocaleString();
 }
 
 export function Calculator() {
+  const t = useTranslations('RestaurantDelivery.calculator');
+  const tiersData = t.raw('tiers') as { id: Tier; label: string; price: number; badge?: string; note: string }[];
+  const platforms = t.raw('tool.platforms') as { name: string }[];
+
+  const TIERS: { id: Tier; label: string; price: number; badge?: string; badgeStyle?: "gold" | "hot"; featured?: boolean; founding?: boolean; note: string }[] = tiersData.map((td: any) => ({
+    ...td,
+    badgeStyle: td.id === "pro" ? "gold" as const : td.id === "founding" ? "hot" as const : undefined,
+    featured: td.id === "pro",
+    founding: td.id === "founding",
+  }));
+
   const [orders, setOrders] = useState(250);
   const [aov, setAov] = useState(30);
   const [restName, setRestName] = useState("");
@@ -46,12 +50,8 @@ export function Calculator() {
     founding: talabat - costs.founding,
   };
 
-  const yearlyNotes: Record<Tier, string> = {
-    starter: "Starter tier — perfect for small restaurants getting started.",
-    pro: "Pro tier — most popular. Branded app + analytics + WhatsApp support.",
-    premium: "Premium tier — full features, instant payouts, dedicated support.",
-    founding: "⚡ Founding 100 — locked in for LIFE. Limited spots.",
-  };
+  const yearlyNotes: Record<string, string> = {};
+  tiersData.forEach((td: any) => { yearlyNotes[td.id] = td.note; });
 
   return (
     <section
@@ -65,13 +65,13 @@ export function Calculator() {
       <div className="max-w-[1280px] mx-auto relative z-10">
         <div className="text-center mb-14">
           <span className="inline-block text-[13px] font-semibold tracking-[0.15em] uppercase mb-[14px]" style={{ color: C.gold }}>
-            Sales Tool · For Restaurant Owners
+            {t('badge')}
           </span>
           <h2 className="font-bold tracking-[-0.02em] mb-[18px]" style={{ fontSize: "clamp(30px,4vw,46px)", color: C.white }}>
-            Calculate your savings in 10 seconds
+            {t('title')}
           </h2>
           <p className="text-[18px] leading-[1.65] max-w-[680px] mx-auto" style={{ color: "rgba(255,255,255,.85)" }}>
-            Enter your numbers. See exactly what you'd save vs every Iraqi competitor. Print or save the result.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -84,8 +84,8 @@ export function Calculator() {
                 💰
               </div>
               <div>
-                <h3 className="text-[22px] font-bold" style={{ color: C.navy }}>Savings Calculator</h3>
-                <div className="text-[14px]" style={{ color: C.muted }}>For salesman use — restaurant-by-restaurant</div>
+                <h3 className="text-[22px] font-bold" style={{ color: C.navy }}>{t('tool.title')}</h3>
+                <div className="text-[14px]" style={{ color: C.muted }}>{t('tool.subtitle')}</div>
               </div>
             </div>
             <div className="flex gap-2">
@@ -94,14 +94,14 @@ export function Calculator() {
                 className="px-[18px] py-[10px] rounded-[8px] text-[14px] font-semibold inline-flex items-center gap-1.5 border transition-colors duration-200 hover:bg-green-600 hover:text-white"
                 style={{ background: C.cream, color: C.navy, borderColor: C.line }}
               >
-                🖨️ Print Report
+                {t('tool.print')}
               </button>
               <button
                 onClick={() => { setOrders(250); setAov(30); setRestName(""); }}
                 className="px-[18px] py-[10px] rounded-[8px] text-[14px] font-semibold transition-colors duration-200 hover:text-red-600"
                 style={{ color: C.muted }}
               >
-                ↻ Reset
+                {t('tool.reset')}
               </button>
             </div>
           </div>
@@ -110,17 +110,17 @@ export function Calculator() {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-4">
             {/* Inputs */}
             <div>
-              <h4 className="text-[13px] font-bold tracking-[0.12em] uppercase mb-5" style={{ color: C.orange }}>Restaurant Details</h4>
+              <h4 className="text-[13px] font-bold tracking-[0.12em] uppercase mb-5" style={{ color: C.orange }}>{t('tool.restaurant_details')}</h4>
 
               {/* Name */}
               <div className="mb-4">
-                <label className="block font-semibold text-[13px] mb-2" style={{ color: C.navy }}>Restaurant name (for the report)</label>
+                <label className="block font-semibold text-[13px] mb-2" style={{ color: C.navy }}>{t('tool.name_label')}</label>
                 <div className="flex items-baseline gap-3 rounded-[10px] border-2 px-[12px] py-[8px] transition-all focus-within:border-green-600 focus-within:bg-white" style={{ background: C.cream, borderColor: C.line }}>
                   <input
                     type="text"
                     value={restName}
                     onChange={(e) => setRestName(e.target.value)}
-                    placeholder="e.g. Al-Rashid Restaurant"
+                    placeholder={t('tool.name_placeholder')}
                     className="flex-1 bg-transparent border-none outline-none font-[inherit] text-[17px] font-bold"
                     style={{ color: C.ink }}
                   />
@@ -129,7 +129,7 @@ export function Calculator() {
 
               {/* Orders */}
               <div className="mb-4">
-                <label className="block font-semibold text-[13px] mb-2" style={{ color: C.navy }}>Monthly delivery orders</label>
+                <label className="block font-semibold text-[13px] mb-2" style={{ color: C.navy }}>{t('tool.orders_label')}</label>
                 <div className="flex items-baseline gap-3 rounded-[10px] border-2 px-[12px] py-[8px] transition-all focus-within:border-green-600 focus-within:bg-white" style={{ background: C.cream, borderColor: C.line }}>
                   <input
                     type="number"
@@ -140,7 +140,7 @@ export function Calculator() {
                     className="flex-1 bg-transparent border-none outline-none font-[inherit] text-[16px] font-bold min-w-0"
                     style={{ color: C.ink }}
                   />
-                  <span className="text-[16px] font-semibold" style={{ color: C.muted }}>orders/mo</span>
+                  <span className="text-[16px] font-semibold" style={{ color: C.muted }}>{t('tool.orders_suffix')}</span>
                 </div>
                 <input
                   type="range"
@@ -153,7 +153,7 @@ export function Calculator() {
 
               {/* AOV */}
               <div className="mb-4">
-                <label className="block font-semibold text-[13px] mb-2" style={{ color: C.navy }}>Average order value</label>
+                <label className="block font-semibold text-[13px] mb-2" style={{ color: C.navy }}>{t('tool.aov_label')}</label>
                 <div className="flex items-baseline gap-3 rounded-[10px] border-2 px-[12px] py-[8px] transition-all focus-within:border-green-600 focus-within:bg-white" style={{ background: C.cream, borderColor: C.line }}>
                   <span className="text-[14px] font-semibold" style={{ color: C.muted }}>$</span>
                   <input
@@ -165,7 +165,7 @@ export function Calculator() {
                     className="flex-1 bg-transparent border-none outline-none font-[inherit] text-[16px] font-bold min-w-0"
                     style={{ color: C.ink }}
                   />
-                  <span className="text-[16px] font-semibold" style={{ color: C.muted }}>per order</span>
+                  <span className="text-[16px] font-semibold" style={{ color: C.muted }}>{t('tool.aov_suffix')}</span>
                 </div>
                 <input
                   type="range"
@@ -178,7 +178,7 @@ export function Calculator() {
 
               {/* Summary box */}
               <div className="rounded-[12px] p-[18px]" style={{ background: "linear-gradient(135deg,#E8F5E9,#FFF8E1)" }}>
-                <div className="text-[12px] font-bold uppercase tracking-[0.08em] mb-1" style={{ color: C.muted }}>Total Monthly Delivery Revenue</div>
+                <div className="text-[12px] font-bold uppercase tracking-[0.08em] mb-1" style={{ color: C.muted }}>{t('tool.revenue_label')}</div>
                 <div className="text-[26px] font-bold tracking-[-0.02em]" style={{ color: C.green }}>{fmt(rev)}</div>
               </div>
             </div>
@@ -190,12 +190,12 @@ export function Calculator() {
             >
               <div className="pointer-events-none absolute" style={{ top: "-50%", right: "-20%", width: 350, height: 350, background: "radial-gradient(circle,rgba(253,184,51,.22),transparent 60%)" }} />
               <div className="relative z-10">
-                <div className="text-[12px] font-bold tracking-[0.12em] uppercase mb-[18px]" style={{ color: C.gold }}>Monthly Cost on Each Platform</div>
+                <div className="text-[12px] font-bold tracking-[0.12em] uppercase mb-[18px]" style={{ color: C.gold }}>{t('tool.results_title')}</div>
 
                 {[
-                  { name: "Talabat (28%)", cost: talabat },
-                  { name: "Careem Now (~22%)", cost: careem },
-                  { name: "Lezzoo / Toters (~20%)", cost: lezzoo },
+                  { name: platforms[0]?.name || "Talabat (28%)", cost: talabat },
+                  { name: platforms[1]?.name || "Careem Now (~22%)", cost: careem },
+                  { name: platforms[2]?.name || "Lezzoo / Toters (~20%)", cost: lezzoo },
                 ].map(({ name, cost }) => (
                   <div key={name} className="flex justify-between items-baseline py-3 border-b border-white/15">
                     <span className="text-[15px] opacity-90">{name}</span>
@@ -204,7 +204,7 @@ export function Calculator() {
                 ))}
 
                 <div className="mt-[18px] mb-3 text-[13px] font-bold tracking-[0.1em] uppercase" style={{ color: C.gold }}>
-                  ⚡ YOUR COST ON JAYAKHUB — TAP A TIER TO SEE SAVINGS
+                  {t('tool.jayakub_title')}
                 </div>
 
                 {TIERS.map((tier) => {
@@ -238,7 +238,7 @@ export function Calculator() {
                           className="absolute text-[10px] font-black tracking-[0.1em] px-[10px] py-[3px] rounded-full"
                           style={{ top: -10, right: 12, background: C.gold, color: C.navy, boxShadow: "0 2px 8px rgba(0,0,0,.25)" }}
                         >
-                          ✓ SELECTED
+                          {t('tool.selected_badge')}
                         </span>
                       )}
 
@@ -287,7 +287,7 @@ export function Calculator() {
                 {/* Yearly */}
                 <div className="mt-[18px] p-[12px] rounded-[12px] text-center" style={{ background: "rgba(0,0,0,.22)" }}>
                   <div className="text-[11px] opacity-90 mb-1 font-bold tracking-[0.1em] uppercase">
-                    Annual Difference — {TIERS.find((t) => t.id === selectedTier)?.label} Tier vs Talabat
+                    {t('yearly.label', { tier: TIERS.find((t) => t.id === selectedTier)?.label || '' })}
                   </div>
                   <div className="font-bold tracking-[-0.025em] leading-none" style={{ fontSize: "clamp(24px,2.5vw,32px)", color: C.gold }}>
                     {fmt(saves[selectedTier] * 12)}

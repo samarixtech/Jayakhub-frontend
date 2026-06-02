@@ -28,23 +28,23 @@ const Footer = () => {
   ];
 
   const companyLinks = [
-    { label: "About Us", href: "/about" },
-    { label: "Careers", href: "/careers" },
-    { label: "Blog", href: "/blogs" },
-    { label: "Press", href: "/press" },
+    { label: t("company.about"), href: "/about" },
+    { label: t("company.careers"), href: "/careers" },
+    { label: t("company.blog"), href: "/blogs" },
+    { label: t("company.press"), href: "/press" },
   ];
 
   const supportLinks = [
-    { label: "Help Center", href: "/help" },
-    { label: "Safety", href: "/safety" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Privacy Policy", href: "/privacyPolicy" },
+    { label: t("support.help_center"), href: "/help" },
+    { label: t("support.safety"), href: "/safety" },
+    { label: t("support.terms"), href: "/terms" },
+    { label: t("support.privacy"), href: "/privacyPolicy" },
   ];
 
   const partnerLinks = [
-    { label: "For Drivers", href: "/drivers" },
-    { label: "For Restaurants", href: "/restaurants" },
-    { label: "For Business", href: "/business" },
+    { label: t("partners.for_drivers"), href: "/drivers" },
+    { label: t("partners.for_restaurants"), href: "/restaurants" },
+    { label: t("partners.for_business"), href: "/business" },
   ];
 
   return (
@@ -56,29 +56,28 @@ const Footer = () => {
             <div className="flex items-start">
               <Image
                 src={image2}
-                alt="Jayak Hub Logo"
+                alt={t("brand.logo_alt")}
                 width={200}
                 className="object-contain h-auto"
               />
             </div>
 
             <p className="text-[#FFFFFF80] text-sm leading-relaxed max-w-sm">
-              Connecting you with the best restaurants in Iraq. Fast, reliable
-              delivery right to your doorstep.
+              {t("brand.description")}
             </p>
 
             <div className="space-y-3 text-sm text-[#FFFFFF80]">
               <div className="flex items-center space-x-3">
                 <Mail className="w-4 h-4" />
-                <span>info@jayakhub.com</span>
+                <span>{t("brand.email")}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-4 h-4" />
-                <span>+1 (469) 422-5944</span>
+                <span>{t("brand.phone")}</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-4 h-4" />
-                <span>Baghdad, Iraq</span>
+                <span>{t("brand.location")}</span>
               </div>
             </div>
 
@@ -99,7 +98,7 @@ const Footer = () => {
 
           {/* COMPANY COLUMN */}
           <div className="mt-4 col-span-1">
-            <h3 className="font-bold text-lg mb-4 text-white">Company</h3>
+            <h3 className="font-bold text-lg mb-4 text-white">{t("company.title")}</h3>
             <ul className="space-y-3 text-sm text-[#FFFFFF80]">
               {companyLinks.map((link) => (
                 <li key={link.label}>
@@ -116,7 +115,7 @@ const Footer = () => {
 
           {/* SUPPORT COLUMN */}
           <div className="mt-4 col-span-1">
-            <h3 className="font-bold text-lg mb-4 text-white">Support</h3>
+            <h3 className="font-bold text-lg mb-4 text-white">{t("support.title")}</h3>
             <ul className="space-y-3 text-sm text-[#FFFFFF80]">
               {supportLinks.map((link) => (
                 <li key={link.label}>
@@ -133,7 +132,7 @@ const Footer = () => {
 
           {/* PARTNERS COLUMN */}
           <div className="mt-4 col-span-1">
-            <h3 className="font-bold text-lg mb-4 text-white">Partners</h3>
+            <h3 className="font-bold text-lg mb-4 text-white">{t("partners.title")}</h3>
             <ul className="space-y-3 text-sm text-[#FFFFFF80]">
               {partnerLinks.map((link) => (
                 <li key={link.label}>
@@ -152,23 +151,23 @@ const Footer = () => {
         {/* BOTTOM BAR */}
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-[#FFFFFF80]">
           <p className="text-[#FFFFFF80]">
-            © 2026 Jayak Hub. All rights reserved.
+            {t("bottom.copyright")}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="/terms" className="hover:text-white transition-colors">
-              Terms
+              {t("bottom.terms")}
             </Link>
             <Link
               href="/privacyPolicy"
               className="hover:text-white transition-colors"
             >
-              Privacy
+              {t("bottom.privacy")}
             </Link>
             <Link
               href="/cookies"
               className="hover:text-white transition-colors"
             >
-              Cookies
+              {t("bottom.cookies")}
             </Link>
           </div>
         </div>

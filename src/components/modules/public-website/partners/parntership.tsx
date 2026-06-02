@@ -472,8 +472,16 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function Home() {
+  const t = useTranslations('PartnerPage');
+
+  const comparePlatforms = t.raw('compare.platforms') as { name: string; fee: string }[];
+  const benefitItems = t.raw('benefits.items') as { icon: string; title: string; desc: string }[];
+  const featureItems = t.raw('features.items') as { n: number; title: string; desc: string }[];
+  const pricingPlans = t.raw('pricing.plans') as { tier: string; price: number; desc: string; features: string[]; featured?: boolean }[];
+
   return (
     <main dir="ltr" className="text-[#1a1a1a] bg-white">
       {/* HERO */}
@@ -495,7 +503,7 @@ export default function Home() {
             }}
             className="inline-block bg-[#E8F5E9] text-[#2C5F2D] font-semibold text-[13px] py-[7px] px-4 rounded-[30px] mb-[22px]"
           >
-            ⚡ For restaurants across Iraq
+            {t('hero.badge')}
           </motion.span>
 
           <motion.h1
@@ -505,8 +513,8 @@ export default function Home() {
             }}
             className="text-[54px] font-bold text-[#1B3A57] leading-[1.1] tracking-tight mb-5"
           >
-            Own your delivery.<br />
-            <span className="font-serif italic font-normal text-[#FF6B35]">Keep every dinar.</span>
+            {t('hero.title_main')}<br />
+            <span className="font-serif italic font-normal text-[#FF6B35]">{t('hero.title_highlight')}</span>
           </motion.h1>
 
           <motion.p
@@ -516,7 +524,7 @@ export default function Home() {
             }}
             className="text-[20px] text-[#6b6b6b] mb-[36px] max-w-[640px] mx-auto"
           >
-            Get your own branded ordering app, keep your customers and your data, and pay a flat monthly subscription — <strong>not</strong> a cut of every order.
+            {t.rich('hero.description', { strong: (chunks) => <strong>{chunks}</strong> })}
           </motion.p>
 
           <motion.div
@@ -529,7 +537,7 @@ export default function Home() {
               href="/contact"
               className="bg-[#FF6B35] text-white py-[17px] px-[44px] rounded-[30px] font-bold text-[17px] inline-block shadow-[0_8px_24px_rgba(255,107,53,0.32)] hover:bg-[#E5532A] transition-colors"
             >
-              Become a Partner
+              {t('hero.cta')}
             </Link>
           </motion.div>
 
@@ -540,7 +548,7 @@ export default function Home() {
             }}
             className="mt-[18px] text-[14px] text-[#6b6b6b]"
           >
-            Live in 3 days · 0% commission · Your brand on Google Play &amp; the App Store
+            {t('hero.sub_text')}
           </motion.div>
         </motion.div>
       </section>
@@ -564,16 +572,10 @@ export default function Home() {
             }}
             className="text-[30px] font-bold tracking-tight mb-[26px]"
           >
-            The math is simple
+            {t('compare.title')}
           </motion.h2>
 
-          {[
-            { name: "Talabat", val: "~28% per order" },
-            { name: "Toters", val: "~15–35% per order" },
-            { name: "Lezzoo", val: "~15–35% per order" },
-            { name: "AlSaree3", val: "~15–35% per order" },
-            { name: "Careem", val: "commission / fee per order" },
-          ].map((row, i) => (
+          {comparePlatforms.map((row, i) => (
             <motion.div
               key={i}
               variants={{
@@ -582,7 +584,7 @@ export default function Home() {
               }}
               className="flex justify-between items-center bg-white/5 rounded-xl px-[22px] py-4 mb-2.5 text-[16px]"
             >
-              <span>{row.name}</span><span className="text-[#ff8a8a] font-bold">{row.val}</span>
+              <span>{row.name}</span><span className="text-[#ff8a8a] font-bold">{row.fee}</span>
             </motion.div>
           ))}
 
@@ -593,7 +595,7 @@ export default function Home() {
             }}
             className="flex justify-between items-center bg-[#7ee7871f] border border-[#7ee78759] rounded-xl px-[22px] py-4 mb-2.5 text-[16px]"
           >
-            <span><strong>JayakHub</strong></span><span className="text-[#7ee787] font-bold">0% — flat monthly fee</span>
+            <span><strong>{t('compare.jayakub_name')}</strong></span><span className="text-[#7ee787] font-bold">{t('compare.jayakub_fee')}</span>
           </motion.div>
 
           <motion.p
@@ -603,7 +605,7 @@ export default function Home() {
             }}
             className="mt-5 opacity-80 text-[14px]"
           >
-            A busy restaurant on ~28% commission can lose millions of dinars a month. With JayakHub you pay one predictable subscription and keep the rest.
+            {t('compare.description')}
           </motion.p>
           <motion.p
             variants={{
@@ -612,7 +614,7 @@ export default function Home() {
             }}
             className="mt-2.5 opacity-55 text-[11.5px]"
           >
-            Commission figures per public MENA industry reports; exact rates vary by restaurant, tier, and negotiation. Comparison shown for illustration.
+            {t('compare.disclaimer')}
           </motion.p>
         </motion.div>
       </section>
@@ -624,13 +626,13 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
             className="text-center text-[38px] font-bold text-[#1B3A57] mb-[14px] tracking-tight"
           >
-            Why partner with <span className="text-[#FF6B35]">JayakHub</span>?
+            {t.rich('benefits.title', { span: (chunks) => <span className="text-[#FF6B35]">{chunks}</span> })}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
             className="text-center text-[17px] text-[#6b6b6b] max-w-[600px] mx-auto mb-[54px]"
           >
-            Built for Iraq, on a model that puts your business first.
+            {t('benefits.subtitle')}
           </motion.p>
 
           <motion.div
@@ -641,12 +643,7 @@ export default function Home() {
             }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {[
-              { icon: "💚", title: "0% Commission", desc: "Pay a flat monthly subscription, never a percentage of your sales. Every dinar of every order is yours." },
-              { icon: "📱", title: "Your Own Branded App", desc: "Your name, your logo, your colors — published to Google Play and the App Store under your brand, not ours." },
-              { icon: "🤝", title: "Your Customers & Data", desc: "Customer relationships and order data stay with you — exportable any time. No middleman owning your audience." },
-              { icon: "⚡", title: "Fast, Flexible Payouts", desc: "Delivery fees and order revenue settled to Qi Card or ZainCash — with instant payouts on Premium." },
-            ].map((benefit, i) => (
+            {benefitItems.map((benefit, i) => (
               <motion.div
                 key={i}
                 variants={{
@@ -673,13 +670,13 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
             className="text-center text-[38px] font-bold text-[#1B3A57] mb-[14px] tracking-tight"
           >
-            Restaurant <span className="text-[#FF6B35]">portal features</span>
+            {t.rich('features.title', { span: (chunks) => <span className="text-[#FF6B35]">{chunks}</span> })}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
             className="text-center text-[17px] text-[#6b6b6b] max-w-[600px] mx-auto mb-[54px]"
           >
-            One dashboard to run your whole delivery operation.
+            {t('features.subtitle')}
           </motion.p>
 
           <motion.div
@@ -690,13 +687,7 @@ export default function Home() {
             }}
             className="max-w-[780px] mx-auto space-y-3.5"
           >
-            {[
-              { title: "Real-time Order Dashboard", desc: "Live order wall with audio alerts, status tracking, and one-click accept/ready actions." },
-              { title: "Menu Management", desc: "Update items and prices, toggle real-time availability, and control capacity with auto-stop when busy." },
-              { title: "Revenue Analytics", desc: "Daily, weekly, and monthly reports with peak-hour analysis and best-seller insights." },
-              { title: "Your Brand Identity", desc: "Set your restaurant's name, story, color, and logo — reflected instantly in your customer app." },
-              { title: "Marketing & Loyalty", desc: "Run promotions, build a loyalty program, and reach your customers directly (Pro & above)." },
-            ].map((feature, i) => (
+            {featureItems.map((feature, i) => (
               <motion.div
                 key={i}
                 variants={{
@@ -706,7 +697,7 @@ export default function Home() {
                 className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e5e0d8] flex items-center gap-5"
               >
                 <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#FF6B35] to-[#FDB833] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0">
-                  {i + 1}
+                  {feature.n}
                 </div>
                 <div>
                   <h3 className="text-[17px] font-bold text-[#1B3A57] mb-1 leading-tight">{feature.title}</h3>
@@ -725,13 +716,13 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
             className="text-center text-[38px] font-bold text-[#1B3A57] mb-[14px] tracking-tight"
           >
-            Simple <span className="text-[#FF6B35]">subscription</span> pricing
+            {t.rich('pricing.title', { span: (chunks) => <span className="text-[#FF6B35]">{chunks}</span> })}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
             className="text-center text-[17px] text-[#6b6b6b] max-w-[600px] mx-auto mb-[54px]"
           >
-            Flat monthly fee. No commission, ever. Prices in USD; billed in IQD (≈ 1,500 IQD/$).
+            {t('pricing.subtitle')}
           </motion.p>
 
           <motion.div
@@ -742,89 +733,48 @@ export default function Home() {
             }}
             className="grid grid-cols-1 md:grid-cols-3 gap-[22px] max-w-[980px] mx-auto"
           >
-            {/* Starter */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-              }}
-              className="bg-white border border-[#e5e0d8] rounded-[18px] p-8 relative flex flex-col hover:shadow-lg transition-shadow"
-            >
-              <div className="font-semibold text-[#6b6b6b] text-[14px] uppercase tracking-wider">Starter</div>
-              <div className="text-[42px] font-bold text-[#1B3A57] mt-3.5 mb-1">
-                $99<small className="text-[16px] text-[#6b6b6b] font-medium">/mo</small>
-              </div>
-              <div className="text-[14px] text-[#6b6b6b] min-h-[42px] mb-[18px]">
-                For new &amp; smaller restaurants getting online.
-              </div>
-              <ul className="mb-[22px] space-y-1 flex-1">
-                {["Order dashboard", "Menu management", "Customer ordering", "Basic analytics"].map((li, i) => (
-                  <li key={i} className="text-[14px] text-[#1a1a1a] py-[7px] pl-6 relative">
-                    <span className="absolute left-0 text-[#2C5F2D] font-bold">✓</span> {li}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/contact" className="block text-center p-[13px] rounded-[30px] font-semibold text-[15px] bg-[#F2F2ED] text-[#1B3A57] hover:bg-[#e5e0d8] transition-colors">
-                Choose Starter
-              </Link>
-            </motion.div>
-
-            {/* Pro (Featured) */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scale: 0.95 },
-                visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
-              }}
-              className="bg-white border-2 border-[#FF6B35] rounded-[18px] p-8 relative flex flex-col shadow-[0_14px_40px_rgba(255,107,53,0.16)]"
-            >
-              <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FF6B35] text-white text-[11px] font-bold px-3.5 py-1 rounded-full whitespace-nowrap">
-                MOST POPULAR
-              </span>
-              <div className="font-semibold text-[#6b6b6b] text-[14px] uppercase tracking-wider">Pro</div>
-              <div className="text-[42px] font-bold text-[#1B3A57] mt-3.5 mb-1">
-                $199<small className="text-[16px] text-[#6b6b6b] font-medium">/mo</small>
-              </div>
-              <div className="text-[14px] text-[#6b6b6b] min-h-[42px] mb-[18px]">
-                Your brand, your customers, your data.
-              </div>
-              <ul className="mb-[22px] space-y-1 flex-1">
-                {["Everything in Starter", "Branded customer app", "Marketing & coupons", "Loyalty program", "Customer data export"].map((li, i) => (
-                  <li key={i} className="text-[14px] text-[#1a1a1a] py-[7px] pl-6 relative">
-                    <span className="absolute left-0 text-[#2C5F2D] font-bold">✓</span> {li}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/contact" className="block text-center p-[13px] rounded-[30px] font-semibold text-[15px] bg-[#FF6B35] text-white hover:bg-[#E5532A] transition-colors">
-                Choose Pro
-              </Link>
-            </motion.div>
-
-            {/* Premium */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-              }}
-              className="bg-white border border-[#e5e0d8] rounded-[18px] p-8 relative flex flex-col hover:shadow-lg transition-shadow"
-            >
-              <div className="font-semibold text-[#6b6b6b] text-[14px] uppercase tracking-wider">Premium</div>
-              <div className="text-[42px] font-bold text-[#1B3A57] mt-3.5 mb-1">
-                $349<small className="text-[16px] text-[#6b6b6b] font-medium">/mo</small>
-              </div>
-              <div className="text-[14px] text-[#6b6b6b] min-h-[42px] mb-[18px]">
-                For high-volume &amp; multi-location restaurants.
-              </div>
-              <ul className="mb-[22px] space-y-1 flex-1">
-                {["Everything in Pro", "Instant payouts", "Dedicated account manager", "Multi-location support", "Priority support"].map((li, i) => (
-                  <li key={i} className="text-[14px] text-[#1a1a1a] py-[7px] pl-6 relative">
-                    <span className="absolute left-0 text-[#2C5F2D] font-bold">✓</span> {li}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/contact" className="block text-center p-[13px] rounded-[30px] font-semibold text-[15px] bg-[#F2F2ED] text-[#1B3A57] hover:bg-[#e5e0d8] transition-colors">
-                Choose Premium
-              </Link>
-            </motion.div>
+            {pricingPlans.map((plan, idx) => (
+              <motion.div
+                key={plan.tier}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+                  ...(plan.featured ? { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } } } : {})
+                }}
+                className={`
+                  rounded-[18px] p-8 relative flex flex-col
+                  ${plan.featured
+                    ? 'border-2 border-[#FF6B35] shadow-[0_14px_40px_rgba(255,107,53,0.16)]'
+                    : 'border border-[#e5e0d8] hover:shadow-lg transition-shadow'
+                  }
+                  bg-white
+                `}
+              >
+                {plan.featured && (
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FF6B35] text-white text-[11px] font-bold px-3.5 py-1 rounded-full whitespace-nowrap">
+                    {t('pricing.most_popular')}
+                  </span>
+                )}
+                <div className="font-semibold text-[#6b6b6b] text-[14px] uppercase tracking-wider">{plan.tier}</div>
+                <div className="text-[42px] font-bold text-[#1B3A57] mt-3.5 mb-1">
+                  ${plan.price}<small className="text-[16px] text-[#6b6b6b] font-medium">/mo</small>
+                </div>
+                <div className="text-[14px] text-[#6b6b6b] min-h-[42px] mb-[18px]">{plan.desc}</div>
+                <ul className="mb-[22px] space-y-1 flex-1">
+                  {plan.features.map((li, i) => (
+                    <li key={i} className="text-[14px] text-[#1a1a1a] py-[7px] pl-6 relative">
+                      <span className="absolute left-0 text-[#2C5F2D] font-bold">✓</span> {li}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/contact"
+                  className={`block text-center p-[13px] rounded-[30px] font-semibold text-[15px] ${plan.featured ? 'bg-[#FF6B35] text-white hover:bg-[#E5532A]' : 'bg-[#F2F2ED] text-[#1B3A57] hover:bg-[#e5e0d8]'} transition-colors`}
+                >
+                  {t('pricing.choose', { tier: plan.tier })}
+                </Link>
+              </motion.div>
+            ))}
           </motion.div>
 
           {/* Founding 100 */}
@@ -833,16 +783,16 @@ export default function Home() {
             className="max-w-[980px] mx-auto mt-6 bg-gradient-to-br from-[#1B3A57] to-[#2a5a85] text-white rounded-[18px] p-[30px] md:px-[34px] flex flex-col md:flex-row justify-between items-center gap-5"
           >
             <div className="text-center md:text-left">
-              <h3 className="text-[24px] font-bold mb-1.5 leading-tight">⚡ Founding 100</h3>
-              <p className="text-[15px] opacity-85">First 100 restaurants in each city lock in lifetime pricing — all Pro features included.</p>
+              <h3 className="text-[24px] font-bold mb-1.5 leading-tight">{t('pricing.founding.badge')}</h3>
+              <p className="text-[15px] opacity-85">{t('pricing.founding.desc')}</p>
             </div>
             <div className="text-center">
               <div className="text-[34px] font-bold whitespace-nowrap">
-                $59<small className="text-[15px] font-medium opacity-80">/mo — for life</small>
+                {t('pricing.founding.price')}<small className="text-[15px] font-medium opacity-80">{t('pricing.founding.period')}</small>
               </div>
             </div>
             <Link href="/contact" className="bg-[#FDB833] text-[#1B3A57] px-7 py-[13px] rounded-[30px] font-bold whitespace-nowrap hover:bg-white transition-colors">
-              Apply for Founding 100 →
+              {t('pricing.founding.cta')}
             </Link>
           </motion.div>
 
@@ -850,7 +800,7 @@ export default function Home() {
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
             className="text-center mt-6 text-[14px] text-[#6b6b6b]"
           >
-            One-time setup &amp; onboarding: <strong>$500</strong> · Live in 3 days · Cancel anytime.
+            {t.rich('pricing.setup_note', { strong: (chunks) => <strong>{chunks}</strong> })}
           </motion.p>
         </div>
       </section>
@@ -872,7 +822,7 @@ export default function Home() {
             }}
             className="text-[38px] font-bold mb-4 tracking-tight"
           >
-            Ready to own your delivery?
+            {t('cta.title')}
           </motion.h2>
 
           <motion.p
@@ -882,7 +832,7 @@ export default function Home() {
             }}
             className="text-[18px] mb-[34px] opacity-90 max-w-[600px] mx-auto"
           >
-            Join the restaurants across Iraq keeping their customers — and their revenue.
+            {t('cta.subtitle')}
           </motion.p>
 
           <motion.div
@@ -895,7 +845,7 @@ export default function Home() {
               href="/contact"
               className="bg-white text-[#2C5F2D] py-[17px] px-[46px] rounded-[30px] font-bold text-[17px] inline-block hover:bg-[#FDB833] hover:text-[#1B3A57] transition-colors shadow-lg"
             >
-              Become a Partner
+              {t('cta.button')}
             </Link>
           </motion.div>
         </motion.div>
