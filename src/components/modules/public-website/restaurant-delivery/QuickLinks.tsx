@@ -1,23 +1,21 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { C } from "./constants";
 
 export function QuickLinks() {
-  const items = [
-    { icon: "💰", title: "No Commission. Ever.", desc: "Flat $99-$349/month. $2 per delivery. Credit card fees pass-through. We never take a percentage of your sales.", link: "#pricing", linkLabel: "See full pricing" },
-    { icon: "📱", title: "Your Branded App", desc: "Customers download YOUR app, not JayakHub's. Your logo. Your colors. Your customer relationships — forever.", link: "#how", linkLabel: "See how it works" },
-    { icon: "🇮🇶", title: "Built for Iraq", desc: "Arabic + Kurdish + English. Qi Card, ZainCash, COD. Ramadan mode. Landmark addresses. Power-outage handling.", link: "#features", linkLabel: "See all features" },
-  ];
+  const t = useTranslations('RestaurantDelivery.quick_links');
+  const items = t.raw('items') as { icon: string; title: string; desc: string; link: string; link_label: string }[];
+
   return (
     <section className="py-[90px] px-8 scroll-mt-20" style={{ background: C.white }}>
       <div className="max-w-[1280px] mx-auto">
         <div className="text-center mb-14">
-          <span className="inline-block text-[13px] font-semibold tracking-[0.15em] uppercase mb-[14px]" style={{ color: C.orange }}>Why JayakHub</span>
-          <h2 className="font-bold tracking-[-0.02em]" style={{ fontSize: "clamp(30px,4vw,46px)", color: C.navy }}>Three things that make us different</h2>
+          <span className="inline-block text-[13px] font-semibold tracking-[0.15em] uppercase mb-[14px]" style={{ color: C.orange }}>{t('badge')}</span>
+          <h2 className="font-bold tracking-[-0.02em]" style={{ fontSize: "clamp(30px,4vw,46px)", color: C.navy }}>{t('title')}</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-          {items.map(({ icon, title, desc, link, linkLabel }) => (
+          {items.map(({ icon, title, desc, link, link_label }) => (
             <div
               key={title}
               className="relative overflow-hidden rounded-[18px] p-9 flex flex-col transition-all duration-300 border-2 border-transparent hover:-translate-y-1.5 group"
@@ -30,7 +28,7 @@ export function QuickLinks() {
               <h3 className="text-[22px] font-bold mb-2.5" style={{ color: C.navy }}>{title}</h3>
               <p className="text-[14px] leading-[1.6] mb-[18px] flex-grow" style={{ color: C.muted }}>{desc}</p>
               <a href={link} className="font-semibold text-[14px] inline-flex items-center gap-1.5 group-hover:gap-3 transition-all" style={{ color: C.orange }}>
-                {linkLabel} →
+                {link_label} →
               </a>
             </div>
           ))}

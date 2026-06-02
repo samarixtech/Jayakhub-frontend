@@ -12,8 +12,10 @@ import {
 import { articles, featuredArticle } from "@/lib/data/blogs";
 import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function BlogPostPage() {
+  const t = useTranslations("Newsroom");
   const params = useParams();
   const { slug } = params;
 
@@ -28,7 +30,7 @@ export default function BlogPostPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Loading...</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{t("post.loading")}</h1>
         </div>
       </div>
     );
@@ -45,7 +47,7 @@ export default function BlogPostPage() {
           className="inline-flex items-center text-[#94A3B8] hover:text-primary mb-8 font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Blog
+          {t("post.back_to_blog")}
         </Link>
 
         <div className="flex items-center gap-4 text-sm font-semibold mb-6">
@@ -91,7 +93,7 @@ export default function BlogPostPage() {
           {/* Social Share (Inline) */}
           <div className="flex items-center gap-4 mb-12 border-b border-[#E2E8F0] pb-8">
             <span className="text-sm font-bold text-foreground">
-              Share this article:
+              {t("post.share_article")}
             </span>
             <button className="w-9 h-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#64748B] hover:bg-[#1DA1F2] hover:text-white transition-colors">
               <Twitter className="w-4 h-4" />
@@ -105,7 +107,7 @@ export default function BlogPostPage() {
             <div className="w-px h-6 bg-[#E2E8F0] mx-2" />
             <button className="flex items-center gap-2 text-sm font-semibold text-[#64748B] hover:text-primary transition-colors">
               <Share2 className="w-4 h-4" />
-              Copy Link
+              {t("post.copy_link")}
             </button>
           </div>
 
@@ -118,13 +120,13 @@ export default function BlogPostPage() {
           <div className="mt-16 pt-8 border-t border-[#E2E8F0]">
             <div className="flex flex-wrap gap-2">
               <span className="px-4 py-2 bg-[#F1F5F9] rounded-lg text-sm font-semibold text-[#64748B] hover:bg-[#E2E8F0] cursor-pointer">
-                Artificial Intelligence
+                {t("post.tags.artificial_intelligence")}
               </span>
               <span className="px-4 py-2 bg-[#F1F5F9] rounded-lg text-sm font-semibold text-[#64748B] hover:bg-[#E2E8F0] cursor-pointer">
-                Logistics
+                {t("post.tags.logistics")}
               </span>
               <span className="px-4 py-2 bg-[#F1F5F9] rounded-lg text-sm font-semibold text-[#64748B] hover:bg-[#E2E8F0] cursor-pointer">
-                Product Updates
+                {t("post.tags.product_updates")}
               </span>
             </div>
           </div>
@@ -135,7 +137,7 @@ export default function BlogPostPage() {
       <section className="py-24 bg-[#FAFAFA] border-t border-[#E2E8F0] px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-foreground mb-12">
-            Read next
+            {t("post.read_next")}
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {relatedArticles.map((article, index) => (

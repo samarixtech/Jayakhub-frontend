@@ -1,22 +1,19 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { C } from "./constants";
 
 export function HowItWorks() {
-  const steps = [
-    { n: 1, title: "Sign Up & Pay Setup", desc: "Pay $500 setup, pick your tier. Our team contacts you within 24 hours.", time: "Day 1 · 5 min" },
-    { n: 2, title: "Upload Your Menu", desc: "Send menu photos and your logo. We build your catalog and branded customer app.", time: "Day 1-2" },
-    { n: 3, title: "Get Your Branded App", desc: "Your branded app appears on Google Play & App Store. We submit it for you.", time: "Day 2-3" },
-    { n: 4, title: "Start Receiving Orders", desc: "Orders come straight to your dashboard. Our drivers handle delivery. You keep every dinar.", time: "Day 3 · LIVE" },
-  ];
+  const t = useTranslations('RestaurantDelivery.how_it_works');
+  const steps = t.raw('steps') as { n: number; title: string; desc: string; time: string }[];
+
   return (
     <section id="how" className="py-[90px] px-8 scroll-mt-20" style={{ background: C.white }}>
       <div className="max-w-[1280px] mx-auto">
         <div className="text-center mb-14">
-          <span className="inline-block text-[13px] font-semibold tracking-[0.15em] uppercase mb-[14px]" style={{ color: C.orange }}>How It Works</span>
-          <h2 className="font-bold tracking-[-0.02em] mb-[18px]" style={{ fontSize: "clamp(30px,4vw,46px)", color: C.navy }}>Live in 3 days. Truly.</h2>
-          <p className="text-[18px] leading-[1.65] max-w-[680px] mx-auto" style={{ color: C.muted }}>From signup to first delivery in 72 hours. No installation. No complex training.</p>
+          <span className="inline-block text-[13px] font-semibold tracking-[0.15em] uppercase mb-[14px]" style={{ color: C.orange }}>{t('badge')}</span>
+          <h2 className="font-bold tracking-[-0.02em] mb-[18px]" style={{ fontSize: "clamp(30px,4vw,46px)", color: C.navy }}>{t('title')}</h2>
+          <p className="text-[18px] leading-[1.65] max-w-[680px] mx-auto" style={{ color: C.muted }}>{t('subtitle')}</p>
         </div>
         <div className="max-w-[980px] mx-auto">
           {steps.map((s, i) => (
