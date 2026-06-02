@@ -24,6 +24,7 @@ export default function AuthLayout({
         description:
           "Login to access your account, track orders, and enjoy our premium services.",
         showBack: true,
+        backHref: "/restaurants",
       };
     }
     if (pathname.includes("/register")) {
@@ -32,6 +33,7 @@ export default function AuthLayout({
         description:
           "Create an account to experience our premium services and free delivery.",
         showBack: true,
+        backHref: "/restaurants",
       };
     }
     if (pathname.includes("/verify-otp")) {
@@ -44,6 +46,7 @@ export default function AuthLayout({
         description:
           "One more step to keep your account safe. Please enter the verification code sent to your device.",
         showBack: false,
+        backHref: "/restaurants",
       };
     }
     if (pathname.includes("/forget-password")) {
@@ -56,6 +59,7 @@ export default function AuthLayout({
         description:
           "Don't worry! It happens. Please enter the email associated with your account.",
         showBack: false,
+        backHref: "/restaurants",
       };
     }
     if (pathname.includes("/restaurant-register")) {
@@ -68,6 +72,7 @@ export default function AuthLayout({
         description:
           "Join our network of top-rated restaurants and start reaching thousands of new customers today.",
         showBack: true,
+        backHref: "/restaurant-delivery",
       };
     }
     // DEFAULT/NEW PASSWORD
@@ -80,6 +85,7 @@ export default function AuthLayout({
       description:
         "Please choose a strong new password to keep your account safe.",
       showBack: false,
+      backHref: "/restaurants",
     };
   };
 
@@ -90,7 +96,7 @@ export default function AuthLayout({
       {/* LEFT PANEL BRANDING AND ILLUSTRATON */}
       <div className="hidden md:flex bg-emerald-bg text-white flex-col justify-between overflow-hidden relative">
         {content.showBack && (
-          <Link href="/restaurants" className="m-5 inline-block w-fit">
+          <Link href={content.backHref} className="m-5 inline-block w-fit">
             <ArrowLeft className="hover:text-emerald-400 transition-colors" />
           </Link>
         )}

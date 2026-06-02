@@ -7,7 +7,7 @@ const TopBar = ({ isScrolled }: TopBarProps) => {
     { label: "Our Business Website", href: "/home" },
     {
       label: "Sign up for a Restaurant Account",
-      href: "/restaurant-register",
+      href: "/restaurant-delivery",
     },
     {
       label: "Sign up to be a business partner",
