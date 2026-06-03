@@ -70,8 +70,8 @@ export default function AddNewItemView() {
         </div>
 
         {/* STICKY BOTTOM BAR */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 flex items-center justify-center md:justify-start gap-4">
-          <div className="max-w-[1400px] w-full flex items-center justify-start gap-3 px-4">
+        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 flex items-center justify-center md:justify-end gap-4">
+          <div className="max-w-[1400px] w-full flex items-center justify-end gap-3 px-4">
             <Button
               type="button"
               variant="secondary"

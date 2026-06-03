@@ -1,1 +1,0 @@
-{"meta":{"status":500,"message":"User not found"},"stack":"Error: User not found\n    at forgotPasswordService (D:\\ifdp-backend\\src\\modules\\auth\\auth.service.ts:507:20)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async <anonymous> (D:\\ifdp-backend\\src\\modules\\auth\\auth.controller.ts:133:20)"}

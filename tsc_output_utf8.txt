@@ -1,2 +1,0 @@
-﻿src/components/modules/restaurant/onboarding/steps/StepOwnerInfoView.tsx(29,33): error TS2307: Cannot find module '../types' or its corresponding type declarations.
-src/components/modules/restaurant/onboarding/steps/StepRestaurantInfoView.tsx(42,33): error TS2307: Cannot find module '../types' or its corresponding type declarations.

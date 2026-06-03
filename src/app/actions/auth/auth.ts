@@ -299,3 +299,31 @@ export async function logoutAction(): Promise<ActionResponse> {
     },
   );
 }
+
+// ==================== DELETE ACCOUNT ACTION ====================
+export async function deleteAccountAction(): Promise<ActionResponse> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    return {
+      success: false,
+      message: "Session expired. Please login again.",
+    };
+  }
+
+  return responseHandler(
+    async () =>
+      api.delete("/delete-account", {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    "Account deleted successfully",
+    async (data) => {
+      const cookieStore = await cookies();
+      cookieStore.delete("token");
+      cookieStore.delete("role");
+      cookieStore.delete("tempUserId");
+      return data;
+    },
+  );
+}

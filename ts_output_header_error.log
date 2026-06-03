@@ -1,6 +1,0 @@
-src/components/modules/customer/layout/CustomerHeader.tsx(77,17): error TS2322: Type '{ user: any; country: string; language: string; onLogout: () => Promise<void>; }' is not assignable to type 'IntrinsicAttributes & UserNavProps'.
-  Property 'country' does not exist on type 'IntrinsicAttributes & UserNavProps'.
-src/components/modules/customer/layout/CustomerHeader.tsx(198,17): error TS2322: Type '{ user: any; country: string; language: string; onLogout: () => Promise<void>; }' is not assignable to type 'IntrinsicAttributes & UserNavProps'.
-  Property 'country' does not exist on type 'IntrinsicAttributes & UserNavProps'.
-src/components/modules/restaurant/layout/RestaurantHeader.tsx(69,11): error TS2322: Type '{ user: any; country: string; language: string; onLogout: () => Promise<void>; }' is not assignable to type 'IntrinsicAttributes & UserNavProps'.
-  Property 'country' does not exist on type 'IntrinsicAttributes & UserNavProps'.

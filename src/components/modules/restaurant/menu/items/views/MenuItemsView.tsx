@@ -100,11 +100,31 @@ export default function MenuItemsView() {
     {
       header: t("columns.price"),
       accessorKey: "basePrice",
-      cell: (item: any) => (
-        <div className="text-left font-medium text-gray-700 font-mono">
-          {formatPrice(item.basePrice) || "N/A"}
-        </div>
-      ),
+      cell: (item: any) => {
+        const basePrice = Number(item.basePrice || 0);
+        const discount = Number(item.discount || 0);
+        const hasDiscount = discount > 0;
+        const discountedPrice = basePrice - discount;
+
+        return (
+          <div className="text-left font-mono">
+            {hasDiscount ? (
+              <div className="flex flex-col">
+                <span className="text-[10px] text-gray-400 line-through leading-none">
+                  {formatPrice(basePrice)}
+                </span>
+                <span className="text-sm font-bold text-red-600 leading-tight">
+                  {formatPrice(discountedPrice)}
+                </span>
+              </div>
+            ) : (
+              <span className="text-sm font-medium text-gray-700">
+                {formatPrice(basePrice) || "N/A"}
+              </span>
+            )}
+          </div>
+        );
+      },
     },
     {
       header: t("columns.status"),

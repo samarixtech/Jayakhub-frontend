@@ -1,4 +1,7 @@
+"use client";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import useLocale from "@/hooks/useLocals";
+import { cn } from "@/lib/utils";
 
 type DashboardShellProps = {
   header: React.ReactNode;
@@ -11,6 +14,9 @@ export default function DashboardShell({
   sidebar,
   children,
 }: DashboardShellProps) {
+  const { dir } = useLocale();
+  const isRtl = dir === "rtl";
+
   return (
     <SidebarProvider>
       <div className="flex flex-col h-screen w-full bg-[#F9FAFB] overflow-hidden">
@@ -19,7 +25,9 @@ export default function DashboardShell({
         {/* Main Layout Area */}
         <div className="flex flex-1 flex-row min-h-0 overflow-hidden">
           {/* Sidebar Area */}
-          <div className="shrink-0 h-full ml-0 sm:ml-4">{sidebar}</div>
+          <div className={cn("shrink-0 h-full", isRtl ? "mr-0 sm:mr-4" : "ml-0 sm:ml-4")}>
+            {sidebar}
+          </div>
 
           {/* SidebarInset / Content Area */}
           <SidebarInset className="flex flex-col bg-transparent flex-1 m-0 px-2 md:px-4 border-none overflow-hidden">

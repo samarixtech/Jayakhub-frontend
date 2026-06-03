@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 import {
   Sidebar,
@@ -22,6 +23,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import useLocale from "@/hooks/useLocals";
 
 const navItems = [
   { key: "overview", href: "/customer/dashboard", icon: LayoutDashboard },
@@ -36,15 +38,21 @@ export function AppSidebar() {
   const t = useTranslations('CustomerDashboard.Sidebar');
   const pathname = usePathname();
   const { state, isMobile, setOpenMobile } = useSidebar();
+  const { dir } = useLocale();
   const isCollapsed = state === "collapsed";
+  const isRtl = dir === "rtl";
 
   return (
     <Sidebar
       collapsible="icon"
+      side={isRtl ? "right" : "left"}
       className={
         isMobile
           ? "border-none bg-white h-full"
-          : "border-none bg-transparent h-fit transition-all duration-300 top-[120px] pl-4"
+          : cn(
+            "border-none bg-transparent h-fit transition-all duration-300 top-[120px]",
+            isRtl ? "pr-4" : "pl-4"
+          )
       }
     >
       <div
@@ -97,7 +105,7 @@ export function AppSidebar() {
                       <item.icon
                         size={24}
                         strokeWidth={isActive ? 2.5 : 2}
-                        className={`shrink-0 ${isCollapsed && !isMobile ? "mx-auto" : "mr-4"}`}
+                        className={`shrink-0 ${isCollapsed && !isMobile ? "mx-auto" : isRtl ? "ml-4" : "mr-4"}`}
                       />
                       {(!isCollapsed || isMobile) && (
                         <span

@@ -5,6 +5,7 @@ import PersonalInfoCard from "./components/personal-info-card";
 import PaymentMethodsCard from "./components/payment-methods-card";
 import IdentityVerificationCard from "./components/kyc-verification-card";
 import SecuritySettingsCard from "./components/security-settings-card";
+import DeleteAccountCard from "./components/delete-account-card";
 import { ProfileSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 import { useProfileSettings } from "./useProfileSettings";
 
@@ -54,6 +55,7 @@ export default function CustomerProfileSettingsView() {
             <PaymentMethodsCard />
             <IdentityVerificationCard />
             <SecuritySettingsCard profile={profile} />
+            <DeleteAccountCard />
           </main>
         </div>
       </div>
