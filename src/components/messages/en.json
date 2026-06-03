@@ -505,7 +505,19 @@
     "article": {
       "read": "Read"
     },
-    "archive_btn": "View Archive"
+    "archive_btn": "View Archive",
+    "post": {
+      "loading": "Loading...",
+      "back_to_blog": "Back to Blog",
+      "share_article": "Share this article:",
+      "copy_link": "Copy Link",
+      "tags": {
+        "artificial_intelligence": "Artificial Intelligence",
+        "logistics": "Logistics",
+        "product_updates": "Product Updates"
+      },
+      "read_next": "Read next"
+    }
   },
   "Partners": {
     "hero": {
@@ -1068,35 +1080,37 @@
   },
   "Footer": {
     "brand": {
-      "accent": "Deliver",
-      "main": "Now",
-      "description": "Empowering global food logistics with speed, security, and seamless technology. Your trusted partner in delivery."
+      "logo_alt": "Jayak Hub Logo",
+      "description": "Connecting you with the best restaurants in Iraq. Fast, reliable delivery right to your doorstep.",
+      "email": "info@jayakhub.com",
+      "phone": "+1 (469) 422-5944",
+      "location": "Baghdad, Iraq"
     },
-    "quick_links": {
-      "title": "Quick Links",
+    "company": {
+      "title": "Company",
       "about": "About Us",
-      "features": "Our Features",
-      "privacy": "Privacy & Policy",
-      "press": "Press & Media"
-    },
-    "solutions": {
-      "title": "Solutions",
-      "enterprise": "Enterprise",
-      "partner": "Partner Network",
-      "api": "Developer API",
-      "logistics": "Smart Logistics"
+      "careers": "Careers",
+      "blog": "Blog",
+      "press": "Press"
     },
     "support": {
       "title": "Support",
-      "phone": "+1 (469) 422-5944",
-      "email": "info@jayakhub.com",
-      "live_chat": "Live Chat"
+      "help_center": "Help Center",
+      "safety": "Safety",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    },
+    "partners": {
+      "title": "Partners",
+      "for_drivers": "For Drivers",
+      "for_restaurants": "For Restaurants",
+      "for_business": "For Business"
     },
     "bottom": {
-      "copyright": "Build by Samarix. All rights reserved.",
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Service",
-      "cookies": "Cookie Settings"
+      "copyright": "\u00a9 2026 Jayak Hub. All rights reserved.",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "cookies": "Cookies"
     }
   },
   "countries": {
@@ -2255,6 +2269,1564 @@
         "sat": "Sat",
         "sun": "Sun"
       }
+    }
+  },
+  "LegalPolicies": {
+    "alert": {
+      "title": "Draft for review.",
+      "description": "These policies are production-ready templates tailored to JayakHub's subscription model and Iraqi operations. They are not legal advice and must be reviewed and approved by a qualified Iraqi lawyer before publication. Replace bracketed company details and host each policy at a public URL for Google Play."
+    },
+    "tabs": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "refund": "Refund Policy",
+      "delivery": "Delivery Policy",
+      "deletion": "Account Deletion"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "effective_date": "Effective date: [DATE] · Operated by JayakHub, [legal entity], Baghdad, Iraq",
+      "intro": "JayakHub (\"we\", \"our\") operates a food-ordering and delivery platform connecting customers, restaurants, and delivery drivers in Iraq. This policy explains what data we collect and how we use it.",
+      "sections": {
+        "s1": {
+          "title": "1. Data we collect",
+          "items": [
+            "Account data: name, phone number, email (optional), profile photo.",
+            "Location data: delivery addresses and, for drivers, real-time GPS while on an active order, to enable delivery and tracking.",
+            "Order data: items ordered, prices, delivery instructions, order history.",
+            "Payment data: payment method selected (e.g. Cash on Delivery). Card/wallet details, where supported, are processed by the payment provider; we do not store full card numbers.",
+            "Restaurant & driver data: business and KYC details, documents, vehicle and inspection records, earnings and payout details.",
+            "Device & usage data: device identifiers, app interactions, and diagnostics for security and fraud prevention."
+          ]
+        },
+        "s2": {
+          "title": "2. How we use data",
+          "items": [
+            "To process and deliver orders, calculate ETAs, and route drivers.",
+            "To process payments and payouts.",
+            "To provide support, prevent fraud, and meet legal obligations.",
+            "For service communications and, with consent, marketing."
+          ]
+        },
+        "s3": {
+          "title": "3. Location tracking",
+          "content": "Driver location is collected only during active orders to enable delivery and live tracking, and stops when the driver goes offline. Customer location is used to set delivery addresses and ETAs."
+        },
+        "s4": {
+          "title": "4. Cookies & similar technologies",
+          "content": "Our website and apps use cookies/identifiers for sessions, preferences, analytics, and fraud prevention. You can manage consent in app settings."
+        },
+        "s5": {
+          "title": "5. Data sharing",
+          "content": "We share order-necessary data between the customer, the restaurant, and the assigned driver. We use service providers (hosting, mapping, payment processing) under contract. We do not sell your personal data."
+        },
+        "s6": {
+          "title": "6. Security",
+          "content": "We use encryption in transit, access controls, and monitoring. No system is perfectly secure; we will notify affected users and authorities of qualifying breaches as required by law."
+        },
+        "s7": {
+          "title": "7. Data retention",
+          "content": "We keep personal data only as long as needed for the service and legal/accounting requirements. On account deletion we remove personal data and retain limited order/financial records where law requires."
+        },
+        "s8": {
+          "title": "8. Your rights",
+          "content": "You may request access, export, correction, or deletion of your data, and manage marketing consent, in app settings or by contacting us. See the Account Deletion policy."
+        },
+        "s9": {
+          "title": "9. Contact",
+          "content": "Privacy questions: privacy@jayakhub.com · JayakHub, [address], Baghdad, Iraq."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "effective_date": "Effective date: [DATE]",
+      "intro": "By using JayakHub you agree to these terms. JayakHub is a subscription platform: restaurants pay a fixed monthly subscription and JayakHub charges no commission on orders.",
+      "sections": {
+        "s1": {
+          "title": "1. User (customer) responsibilities",
+          "items": [
+            "Provide accurate account, address, and contact details.",
+            "Pay for orders by the selected method (e.g. Cash on Delivery).",
+            "Be available to receive deliveries and treat drivers respectfully."
+          ]
+        },
+        "s2": {
+          "title": "2. Restaurant responsibilities",
+          "items": [
+            "Maintain an active subscription and accurate menu, pricing, and availability.",
+            "Honor in-app prices (price-match) and food-safety standards.",
+            "Prepare orders promptly and accurately."
+          ]
+        },
+        "s3": {
+          "title": "3. Driver responsibilities",
+          "items": [
+            "Maintain valid documents, vehicle, and inspection.",
+            "Follow traffic and safety rules; handle food and cash responsibly.",
+            "Deliver orders promptly and communicate professionally."
+          ]
+        },
+        "s4": {
+          "title": "4. Account suspension & termination",
+          "content": "We may suspend or terminate accounts for fraud, abuse, repeated violations, unsafe conduct, or non-payment of subscription, with notice where reasonable."
+        },
+        "s5": {
+          "title": "5. Platform rules",
+          "content": "No fraudulent orders, promo abuse, harassment, or unlawful use. JayakHub is an intermediary platform and is not the producer of the food."
+        },
+        "s6": {
+          "title": "6. Limitation of liability",
+          "content": "To the extent permitted by Iraqi law, JayakHub is not liable for indirect or consequential damages. Our total liability for any claim is limited as set out here. Nothing limits liability that cannot be excluded by law."
+        },
+        "s7": {
+          "title": "7. Changes & governing law",
+          "content": "We may update these terms with notice. These terms are governed by the laws of Iraq. Contact: legal@jayakhub.com."
+        }
+      }
+    },
+    "refund": {
+      "title": "Refund Policy",
+      "effective_date": "Effective date: [DATE]",
+      "sections": {
+        "s1": {
+          "title": "1. Order cancellation",
+          "content": "Orders may be cancelled before the restaurant accepts them at no charge. After preparation begins, cancellation may not be possible, or partial charges may apply."
+        },
+        "s2": {
+          "title": "2. Restaurant mistakes",
+          "content": "For wrong, missing, or unsafe items, report the issue in-app with a photo. Valid complaints receive a full or partial refund."
+        },
+        "s3": {
+          "title": "3. Driver / delivery issues",
+          "content": "For non-delivery or significant delay caused by the platform or driver, you may be eligible for a refund and/or credit."
+        },
+        "s4": {
+          "title": "4. Payment disputes",
+          "content": "Disputes are reviewed by our support team with full order context. We may request evidence (photos, messages) before resolving."
+        },
+        "s5": {
+          "title": "5. Refund timelines",
+          "items": [
+            "Cash on Delivery: refund issued as account credit or arranged return.",
+            "Card/wallet (where available): refunded to the original method, typically within 3–10 business days depending on the provider."
+          ],
+          "contact": "Contact: support@jayakhub.com."
+        }
+      }
+    },
+    "delivery_policy": {
+      "title": "Delivery Policy",
+      "effective_date": "Effective date: [DATE]",
+      "sections": {
+        "s1": {
+          "title": "1. Service areas",
+          "content": "Delivery is available within active JayakHub zones in served Iraqi cities. Availability is shown at checkout based on your address."
+        },
+        "s2": {
+          "title": "2. Delivery windows & fees",
+          "content": "Estimated delivery times are shown before you order. A delivery fee (starting at approximately $2 / equivalent in IQD) applies and is displayed at checkout. Available payment methods vary by city and merchant."
+        },
+        "s3": {
+          "title": "3. Delays",
+          "content": "Delays can occur due to traffic, weather, restaurant volume, or driver availability. We update your ETA live and notify you of significant delays."
+        },
+        "s4": {
+          "title": "4. Driver availability",
+          "content": "During peak periods or low driver supply in a zone, delivery times may increase or ordering may be temporarily limited to protect quality."
+        }
+      }
+    },
+    "deletion": {
+      "title": "Account Deletion Policy",
+      "effective_date": "Effective date: [DATE] · Public deletion request URL: jayakhub.com/delete-account",
+      "intro": "You can request deletion of your account and associated data at any time, in-app (Settings → Privacy → Delete Account) or via the public URL above, without reinstalling the app.",
+      "sections": {
+        "s1": {
+          "title": "1. Customer account deletion",
+          "content": "Deletes your profile, saved addresses, payment methods, loyalty points, and marketing data. Removes active sessions and notifications."
+        },
+        "s2": {
+          "title": "2. Driver account deletion",
+          "content": "Deletes personal profile and contact data. Some KYC, earnings, and tax records are retained for the period required by law before erasure."
+        },
+        "s3": {
+          "title": "3. Restaurant account deletion",
+          "content": "Closes the subscription and removes business profile data. Financial and invoicing records are retained as required by accounting law."
+        },
+        "s4": {
+          "title": "4. Data retention rules",
+          "items": [
+            "Personal data is deleted promptly upon a verified request.",
+            "Limited order, financial, and tax records are retained for the legally required period, then erased.",
+            "Data needed for fraud prevention or legal claims may be retained as permitted by law."
+          ]
+        },
+        "s5": {
+          "title": "5. How to request",
+          "content": "In-app: Settings → Privacy → Delete Account. Web: jayakhub.com/delete-account. Questions: privacy@jayakhub.com."
+        }
+      }
+    },
+    "Reviews": {
+      "header": {
+        "last30Days": "Last 30 Days"
+      },
+      "stats": {
+        "averageRating": "Average Rating",
+        "live": "Live",
+        "totalReviews": "Total Reviews",
+        "allTime": "All time",
+        "unreplied": "Unreplied",
+        "needsAttention": "Needs attention"
+      },
+      "charts": {
+        "trend": {
+          "title": "Rating Trend",
+          "subtitle": "Average ratings over selected period",
+          "label": "Average Rating",
+          "noData": "No Data"
+        },
+        "distribution": {
+          "title": "Rating Distribution",
+          "subtitle": "Breakdown by stars",
+          "noReviews": "No Reviews",
+          "stars5": "5 Stars",
+          "stars4": "4 Stars",
+          "stars3": "3 Stars",
+          "stars2": "2 Stars",
+          "stars1": "1 Stars"
+        }
+      },
+      "filters": {
+        "allReviews": "All Reviews",
+        "unreplied": "Unreplied",
+        "stars5": "5 Stars",
+        "critical": "Critical (1-3)"
+      },
+      "list": {
+        "noReviews": "No reviews found.",
+        "order": "Order",
+        "reply": "Reply",
+        "restaurantReply": "Restaurant Reply",
+        "recently": "Recently"
+      },
+      "detail": {
+        "success": "Reply submitted successfully!",
+        "errorEmpty": "Reply text cannot be empty.",
+        "newCustomer": "New Customer",
+        "lifetimeOrders": "lifetime orders",
+        "title": "Review Detail",
+        "order": "Order",
+        "history": "History",
+        "avgSpend": "Avg Spend",
+        "reviewLabel": "Review",
+        "yourReply": "Your Reply",
+        "sentRecently": "Sent Recently",
+        "writeReply": "Write a Reply",
+        "placeholder": "Type your public response here...",
+        "sending": "Sending...",
+        "sendReply": "Send Reply"
+      }
+    },
+    "Status": {
+      "titleRejected": "Application Rejected",
+      "descriptionRejected": "Unfortunately, your application to join JayakHub was not approved at this time. Please contact support for more details.",
+      "titlePending": "Application Pending",
+      "descriptionPending": "Your application is currently under review by our team. We will notify you once a decision has been made.",
+      "currentStatus": "CURRENT STATUS",
+      "titleSubmitted": "Application submitted!",
+      "descriptionSubmitted": "Thank you for applying to join JayakHub. We've received your application and our team will review it shortly.",
+      "whatHappensNext": "WHAT HAPPENS NEXT",
+      "timeline": {
+        "step1": {
+          "title": "Application Submitted",
+          "description": "Your application is in our queue"
+        },
+        "step2": {
+          "title": "Team Review",
+          "description": "Usually takes 1-2 business days"
+        },
+        "step3": {
+          "title": "Confirmation Email",
+          "description": "You'll receive an email once approved"
+        },
+        "step4": {
+          "title": "Go Live",
+          "description": "Start accepting orders on JayakHub"
+        }
+      }
+    },
+    "Support": {
+      "header": {
+        "newTicket": "New Ticket"
+      },
+      "contact": {
+        "liveChat": "Live Chat",
+        "liveChatDesc": "Online – Avg 2 min wait",
+        "phoneSupport": "Phone Support",
+        "phoneDesc": "+964 750 000 0000",
+        "emailUs": "Email Us",
+        "emailDesc": "support@jayakhub.com"
+      },
+      "createTicket": {
+        "errorEmpty": "Please fill in all required fields.",
+        "success": "Ticket created successfully!",
+        "errorFailed": "Failed to create ticket",
+        "errorUnexpected": "An unexpected error occurred.",
+        "title": "Create New Ticket",
+        "description": "Fill out the form below to submit a new support ticket.",
+        "subjectLabel": "Subject",
+        "subjectPlaceholder": "Brief summary of your issue",
+        "priorityLabel": "Priority",
+        "prioritySelect": "Select priority",
+        "priorities": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        },
+        "categoryLabel": "Category",
+        "categorySelect": "Select a category",
+        "categories": {
+          "general": "General Inquiry",
+          "technical": "Technical Issue",
+          "billing": "Billing",
+          "feature": "Feature Request"
+        },
+        "descLabel": "Description",
+        "descPlaceholder": "Describe your issue in detail...",
+        "cancel": "Cancel",
+        "submitting": "Submitting...",
+        "submit": "Submit Ticket"
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "q1": "How do I change my restaurant logo?",
+        "a1": "Navigate to Settings > Profile and click on the camera icon to upload a new logo picture.",
+        "q2": "When do I get paid?",
+        "a2": "Payouts are processed weekly. You can expect funds to arrive in your designated bank account every Wednesday.",
+        "q3": "Can I set different hours for weekends?",
+        "a3": "Yes, go to Settings > Opening Hours. You can define specific time slots for each day of the week.",
+        "q4": "How do I add a new menu item?",
+        "a4": "Go to Menu Management, select a category, and click the 'Add Item' button to enter the item details and price.",
+        "q5": "What happens when I mark an order as 'Ready'?",
+        "a5": "The customer and delivery driver are notified immediately that the order is prepared and ready for pickup.",
+        "q6": "How do I handle a customer complaint?",
+        "a6": "Please reach out to our Support team via Live Chat or Phone. We will mediate the process.",
+        "q7": "Can I export my financial data?",
+        "a7": "Yes, you can export your payout and transaction history as a CSV file from the Finance tab.",
+        "q8": "How do I add team members?",
+        "a8": "Go to Account & Settings > Team roles, and click 'Invite Member' to assign them specific access permissions."
+      },
+      "knowledgeBase": {
+        "title": "Knowledge Base",
+        "subtitle": "Browse help topics",
+        "articlesCount": "{count} articles",
+        "cat1Name": "Getting Started",
+        "cat1Desc": "Setup guide, onboarding, first steps",
+        "cat2Name": "Orders & Delivery",
+        "cat2Desc": "Order flow, tracking, delivery",
+        "cat3Name": "Payments & Billing",
+        "cat3Desc": "Payouts, invoices, billing info",
+        "cat4Name": "Menu Management",
+        "cat4Desc": "Items, categories, variants, photos",
+        "cat5Name": "Account & Settings",
+        "cat5Desc": "Profile, team roles, notifications",
+        "cat6Name": "Troubleshooting",
+        "cat6Desc": "Common issues, error codes, fixes"
+      },
+      "statusBadge": {
+        "open": "OPEN",
+        "inProgress": "IN PROGRESS",
+        "resolved": "RESOLVED"
+      },
+      "searchBanner": {
+        "title": "How can we help you today?",
+        "subtitle": "Search for articles, FAQs, or browse our knowledge base.",
+        "placeholder": "e.g. How to change opening hours.."
+      },
+      "ticketDetail": {
+        "priority": "Priority",
+        "created": "Created",
+        "description": "Description",
+        "noDescription": "No description provided.",
+        "status": "Status",
+        "timeline": {
+          "ticketCreated": "Ticket Created",
+          "agentAssigned": "Agent Assigned",
+          "resolved": "Resolved",
+          "awaitingResponse": "Awaiting Response",
+          "resolution": "Resolution",
+          "pending": "Pending",
+          "now": "Now",
+          "dash": "—"
+        }
+      },
+      "ticketsTable": {
+        "title": "Support Tickets",
+        "subtitle": "Your recent inquiries",
+        "colTicket": "Ticket",
+        "colSubject": "Subject",
+        "colStatus": "Status",
+        "colPriority": "Priority",
+        "colUpdated": "Updated",
+        "noTickets": "No tickets found. Create one to get started.",
+        "timeAgo": {
+          "minutes": "{count}m ago",
+          "hours": "{count}h ago",
+          "days": "{count}d ago"
+        }
+      }
+    },
+    "Users": {
+      "form": {
+        "roles": {
+          "admin": "Admin",
+          "manager": "Manager",
+          "cashier": "Cashier",
+          "kitchen": "Kitchen"
+        },
+        "titleAdd": "Add New User",
+        "titleEdit": "Edit User",
+        "cancel": "Cancel",
+        "saving": "Saving...",
+        "saveChanges": "Save Changes",
+        "personalInfo": "Personal Information",
+        "active": "Active",
+        "inactive": "Inactive",
+        "personalDesc": "Basic identification details for this user.",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "e.g. John",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "e.g. Doe",
+        "email": "Email Address",
+        "emailPlaceholder": "e.g. name@restaurant.com",
+        "accessSecurity": "Access & Security",
+        "accessDesc": "Manage role permissions and login credentials.",
+        "assignedRole": "Assigned Role",
+        "selectRole": "Select a role",
+        "password": "Password",
+        "createPassword": "Create password",
+        "leaveBlank": "Leave blank to keep current",
+        "confirmPasswordLabel": "Confirm Password",
+        "confirmPasswordPlaceholder": "Confirm password"
+      },
+      "list": {
+        "showing": "Showing {start}-{end} of {total}",
+        "deleteTitle": "Delete User",
+        "deleteDesc": "Are you sure you want to delete this user? This action cannot be undone.",
+        "cancel": "Cancel",
+        "deleting": "Deleting...",
+        "delete": "Delete"
+      },
+      "filters": {
+        "addUser": "Add User"
+      },
+      "table": {
+        "colUser": "User",
+        "colRole": "Role",
+        "colStatus": "Status",
+        "colLastActive": "Last Active",
+        "colActions": "Actions",
+        "noUsers": "No users found in this category."
+      }
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "updateSuccess": "Restaurant is now {status}",
+      "updateFailed": "Failed to update status"
+    },
+    "metrics": {
+      "todaysOrders": "Today's Orders",
+      "revenueToday": "Revenue Today",
+      "avgRating": "Avg Rating",
+      "prepTime": "Prep Time",
+      "vsYesterday": "vs yesterday",
+      "thisWeek": "this week",
+      "vsAvg": "vs avg"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "subtitle": "Everything happening now",
+      "noActivity": "No recent activity to show",
+      "timeAgo": {
+        "mins": "{count} min ago",
+        "hours": "{count} hr ago",
+        "yesterday": "Yesterday",
+        "days": "{count} days ago"
+      }
+    },
+    "recentOrders": {
+      "title": "Recent Orders",
+      "subtitle": "Active and completed today",
+      "viewAll": "View all",
+      "noOrders": "No recent orders",
+      "itemsCount": "{count} items",
+      "status": {
+        "new": "NEW",
+        "preparing": "PREPARING",
+        "delivered": "DELIVERED",
+        "rejected": "REJECTED"
+      },
+      "columns": {
+        "order": "Order",
+        "customer": "Customer",
+        "items": "Items",
+        "total": "Total",
+        "status": "Status"
+      }
+    },
+    "revenueChart": {
+      "title": "Revenue Overview",
+      "subtitle": "Last 7 Days",
+      "thisWeek": "This Week",
+      "gatheringData": "Gathering data...",
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
+    }
+  },
+  "RestaurantDelivery": {
+    "hero": {
+      "badge": "🇮🇶 Built in Iraq · Owned by Iraqis",
+      "title_p1": "Your restaurant's own delivery platform.",
+      "title_crossout": "28% commission.",
+      "title_highlight": "$0.",
+      "subtitle": "Stop paying 18-28% commission to Talabat, Careem, Lezzoo, and Toters. Get your own branded ordering app, your own customer data, and your own future — for just <strong>$99/month</strong>. Flat fee. No commission. Ever.",
+      "cta": "Get Started →",
+      "secondary_cta": "Calculate My Savings",
+      "trust_items": [
+        {
+          "value": "$0",
+          "label": "Commission, ever"
+        },
+        {
+          "value": "$99",
+          "label": "Starting per month"
+        },
+        {
+          "value": "$2",
+          "label": "Flat per delivery"
+        }
+      ],
+      "card": {
+        "label": "Example: Medium Restaurant",
+        "details": "250 orders/month at $30 avg",
+        "platforms": [
+          {
+            "name": "Talabat (28% commission)",
+            "cost": "$2,100/mo"
+          },
+          {
+            "name": "Careem Now (~22%)",
+            "cost": "$1,650/mo"
+          },
+          {
+            "name": "JayakHub Pro",
+            "cost": "$917/mo"
+          }
+        ],
+        "savings_label": "You save",
+        "savings_value": "$14,196/yr"
+      }
+    },
+    "mission": {
+      "quote": "I'm not here to <strong>kill</strong> small businesses. I'm here to <strong>help them grow</strong>.",
+      "founder_name": "Sam",
+      "founder_title": "Founder · JayakHub"
+    },
+    "calculator": {
+      "badge": "Sales Tool · For Restaurant Owners",
+      "title": "Calculate your savings in 10 seconds",
+      "subtitle": "Enter your numbers. See exactly what you'd save vs every Iraqi competitor. Print or save the result.",
+      "tool": {
+        "title": "Savings Calculator",
+        "subtitle": "For salesman use — restaurant-by-restaurant",
+        "print": "🖨️ Print Report",
+        "reset": "↻ Reset",
+        "restaurant_details": "Restaurant Details",
+        "name_label": "Restaurant name (for the report)",
+        "name_placeholder": "e.g. Al-Rashid Restaurant",
+        "orders_label": "Monthly delivery orders",
+        "orders_suffix": "orders/mo",
+        "aov_label": "Average order value",
+        "aov_suffix": "per order",
+        "revenue_label": "Total Monthly Delivery Revenue",
+        "results_title": "Monthly Cost on Each Platform",
+        "platforms": [
+          {
+            "name": "Talabat (28%)"
+          },
+          {
+            "name": "Careem Now (~22%)"
+          },
+          {
+            "name": "Lezzoo / Toters (~20%)"
+          }
+        ],
+        "jayakub_title": "⚡ YOUR COST ON JAYAKHUB — TAP A TIER TO SEE SAVINGS",
+        "selected_badge": "✓ SELECTED"
+      },
+      "tiers": [
+        {
+          "id": "starter",
+          "label": "Starter",
+          "price": 99,
+          "note": "Starter tier — perfect for small restaurants getting started."
+        },
+        {
+          "id": "pro",
+          "label": "Pro",
+          "price": 199,
+          "badge": "RECOMMENDED",
+          "note": "Pro tier — most popular. Branded app + analytics + WhatsApp support."
+        },
+        {
+          "id": "premium",
+          "label": "Premium",
+          "price": 349,
+          "note": "Premium tier — full features, instant payouts, dedicated support."
+        },
+        {
+          "id": "founding",
+          "label": "⚡ Founding 100",
+          "price": 59,
+          "badge": "LIMITED",
+          "note": "⚡ Founding 100 — locked in for LIFE. Limited spots."
+        }
+      ],
+      "yearly": {
+        "label": "Annual Difference — {tier} Tier vs Talabat",
+        "per_month": "/mo{tier}"
+      }
+    },
+    "compare": {
+      "badge": "Side-by-Side",
+      "title": "What every Iraqi delivery platform charges",
+      "subtitle": "Real numbers from real platforms operating in Iraq today. Nothing hidden.",
+      "headers": [
+        "Platform",
+        "Commission",
+        "Subscription",
+        "You Own Customers?",
+        "Branded App?",
+        "Kurdish?"
+      ],
+      "rows": [
+        {
+          "name": "Talabat",
+          "commission": "15-28%"
+        },
+        {
+          "name": "Careem Now",
+          "commission": "18-25%"
+        },
+        {
+          "name": "Lezzoo",
+          "commission": "~20%+"
+        },
+        {
+          "name": "Toters",
+          "commission": "~20%+"
+        },
+        {
+          "name": "Ziber",
+          "commission": "15-20%"
+        },
+        {
+          "name": "Weevi (white-label)",
+          "subscription": "Custom pricing",
+          "own": true,
+          "branded": true
+        },
+        {
+          "name": "JayakHub",
+          "subscription": "$99-$349",
+          "own": true,
+          "branded": true,
+          "kurdish": true,
+          "jayak": true
+        }
+      ],
+      "zero_commission": "$0 — Never",
+      "yes": "Yes",
+      "no": "No",
+      "kurdish_yes": "Yes (Sorani + Kurmanji)",
+      "limited": "Limited",
+      "source_notes": "<strong>Source notes:</strong> Talabat commission per public reports & MENA industry analyses; Careem Now historical commission tier disclosures; Lezzoo & Toters per Iraqi restaurant owner reports. Rates vary by tier, location, and promotional participation. Last reviewed May 2026."
+    },
+    "pricing": {
+      "badge": "Honest Pricing",
+      "title": "Flat fee. No commission. Forever.",
+      "subtitle": "One-time setup of $500. Then pick your monthly tier. $2 flat per delivery. Credit card fees pass through to the processor — we never take a cut of your sales.",
+      "most_popular": "MOST POPULAR",
+      "choose": "Choose {tier}",
+      "plans": [
+        {
+          "tier": "Starter",
+          "name": "For Small Restaurants",
+          "price": 99,
+          "desc": "Under 100 orders per month. Perfect for getting started.",
+          "features": [
+            "Restaurant dashboard",
+            "Order management",
+            "Driver network access",
+            "Customer app listing",
+            "Email support",
+            "Next-day payouts"
+          ]
+        },
+        {
+          "tier": "Pro",
+          "name": "For Established Restaurants",
+          "price": 199,
+          "desc": "100-400 orders/month. Your brand, customers, and data.",
+          "features": [
+            "Everything in Starter",
+            "Branded customer app",
+            "Marketing tools & coupons",
+            "Push notifications",
+            "Restaurant Coach (Arabic)",
+            "Customer data export",
+            "WhatsApp support",
+            "Built-in loyalty program"
+          ],
+          "featured": true
+        },
+        {
+          "tier": "Premium",
+          "name": "For Large Restaurants",
+          "price": 349,
+          "desc": "400+ orders/month. Full features, dedicated support.",
+          "features": [
+            "Everything in Pro",
+            "Instant payouts (real-time)",
+            "Dedicated account manager",
+            "Priority support",
+            "AI recommendations",
+            "Multi-location support",
+            "Early access features",
+            "Email & SMS automation"
+          ]
+        }
+      ]
+    },
+    "programs": {
+      "badge": "Special Programs",
+      "title": "Built for the way Iraq does business",
+      "founding": {
+        "badge": "⚡ Limited — 100 Spots Per City",
+        "title": "Founding 100",
+        "desc": "First 100 restaurants in each Iraqi city lock in lifetime pricing. All Pro features included.",
+        "price": "$59",
+        "period": "/month — for life",
+        "features": [
+          "All Pro tier features included",
+          "Lifetime price lock — never goes up",
+          "\"Founding Member\" badge",
+          "Priority support forever"
+        ],
+        "cta": "Apply for Founding 100 →"
+      },
+      "multi_business": {
+        "badge": "UNIQUE TO JAYAKHUB",
+        "title": "Multi-Business Tier",
+        "desc": "Own a restaurant AND a grocery store? One login. Multiple businesses. One consolidated bill.",
+        "price": "$249",
+        "period": "/month total",
+        "features": [
+          "All Pro features for every business",
+          "Switch businesses in one tap",
+          "Consolidated billing & reporting",
+          "Shared driver network"
+        ],
+        "cta": "Learn More →"
+      }
+    },
+    "how_it_works": {
+      "badge": "How It Works",
+      "title": "Live in 3 days. Truly.",
+      "subtitle": "From signup to first delivery in 72 hours. No installation. No complex training.",
+      "steps": [
+        {
+          "n": 1,
+          "title": "Sign Up & Pay Setup",
+          "desc": "Pay $500 setup, pick your tier. Our team contacts you within 24 hours.",
+          "time": "Day 1 · 5 min"
+        },
+        {
+          "n": 2,
+          "title": "Upload Your Menu",
+          "desc": "Send menu photos and your logo. We build your catalog and branded customer app.",
+          "time": "Day 1-2"
+        },
+        {
+          "n": 3,
+          "title": "Get Your Branded App",
+          "desc": "Your branded app appears on Google Play & App Store. We submit it for you.",
+          "time": "Day 2-3"
+        },
+        {
+          "n": 4,
+          "title": "Start Receiving Orders",
+          "desc": "Orders come straight to your dashboard. Our drivers handle delivery. You keep every dinar.",
+          "time": "Day 3 · LIVE"
+        }
+      ]
+    },
+    "features": {
+      "items": [
+        {
+          "icon": "🕌",
+          "title": "Ramadan Operations Mode",
+          "desc": "Automatic Suhoor delivery 2-5 AM. Pre-scheduled Iftar orders. Auto-pause during prayer times."
+        },
+        {
+          "icon": "🇮🇶",
+          "title": "Arabic + Kurdish Native",
+          "desc": "Full Sorani + Kurmanji + Arabic + English. RTL/LTR handled correctly."
+        },
+        {
+          "icon": "💵",
+          "title": "Iraqi Payments",
+          "desc": "Qi Card, ZainCash, Asia Hawala, COD — all supported from Day 1."
+        },
+        {
+          "icon": "📍",
+          "title": "Landmark Addresses",
+          "desc": "\"Near the white mosque.\" \"Behind the Karrada bridge.\" Iraqi addressing as it actually works."
+        },
+        {
+          "icon": "⚡",
+          "title": "Power Outage Handling",
+          "desc": "Offline mode for drivers and restaurants. Generator status. SMS fallback when internet fails."
+        },
+        {
+          "icon": "📊",
+          "title": "Restaurant Coach",
+          "desc": "Plain-Arabic insights: peak hours, top items, customer patterns, recommendations."
+        }
+      ]
+    },
+    "quick_links": {
+      "badge": "Why JayakHub",
+      "title": "Three things that make us different",
+      "items": [
+        {
+          "icon": "💰",
+          "title": "No Commission. Ever.",
+          "desc": "Flat $99-$349/month. $2 per delivery. Credit card fees pass-through. We never take a percentage of your sales.",
+          "link": "#pricing",
+          "link_label": "See full pricing"
+        },
+        {
+          "icon": "📱",
+          "title": "Your Branded App",
+          "desc": "Customers download YOUR app, not JayakHub's. Your logo. Your colors. Your customer relationships — forever.",
+          "link": "#how",
+          "link_label": "See how it works"
+        },
+        {
+          "icon": "🇮🇶",
+          "title": "Built for Iraq",
+          "desc": "Arabic + Kurdish + English. Qi Card, ZainCash, COD. Ramadan mode. Landmark addresses. Power-outage handling.",
+          "link": "#features",
+          "link_label": "See all features"
+        }
+      ]
+    }
+  },
+  "PartnerPage": {
+    "hero": {
+      "badge": "⚡ For restaurants across Iraq",
+      "title_main": "Own your delivery.",
+      "title_highlight": "Keep every dinar.",
+      "description": "Get your own branded ordering app, keep your customers and your data, and pay a flat monthly subscription — <strong>not</strong> a cut of every order.",
+      "cta": "Become a Partner",
+      "sub_text": "Live in 3 days · 0% commission · Your brand on Google Play & the App Store"
+    },
+    "compare": {
+      "title": "The math is simple",
+      "platforms": [
+        {
+          "name": "Talabat",
+          "fee": "~28% per order"
+        },
+        {
+          "name": "Toters",
+          "fee": "~15–35% per order"
+        },
+        {
+          "name": "Lezzoo",
+          "fee": "~15–35% per order"
+        },
+        {
+          "name": "AlSaree3",
+          "fee": "~15–35% per order"
+        },
+        {
+          "name": "Careem",
+          "fee": "commission / fee per order"
+        }
+      ],
+      "jayakub_name": "JayakHub",
+      "jayakub_fee": "0% — flat monthly fee",
+      "description": "A busy restaurant on ~28% commission can lose millions of dinars a month. With JayakHub you pay one predictable subscription and keep the rest.",
+      "disclaimer": "Commission figures per public MENA industry reports; exact rates vary by restaurant, tier, and negotiation. Comparison shown for illustration."
+    },
+    "benefits": {
+      "title": "Why partner with <span>JayakHub</span>?",
+      "subtitle": "Built for Iraq, on a model that puts your business first.",
+      "items": [
+        {
+          "icon": "💚",
+          "title": "0% Commission",
+          "desc": "Pay a flat monthly subscription, never a percentage of your sales. Every dinar of every order is yours."
+        },
+        {
+          "icon": "📱",
+          "title": "Your Own Branded App",
+          "desc": "Your name, your logo, your colors — published to Google Play and the App Store under your brand, not ours."
+        },
+        {
+          "icon": "🤝",
+          "title": "Your Customers & Data",
+          "desc": "Customer relationships and order data stay with you — exportable any time. No middleman owning your audience."
+        },
+        {
+          "icon": "⚡",
+          "title": "Fast, Flexible Payouts",
+          "desc": "Delivery fees and order revenue settled to Qi Card or ZainCash — with instant payouts on Premium."
+        }
+      ]
+    },
+    "features": {
+      "title": "Restaurant <span>portal features</span>",
+      "subtitle": "One dashboard to run your whole delivery operation.",
+      "items": [
+        {
+          "n": 1,
+          "title": "Real-time Order Dashboard",
+          "desc": "Live order wall with audio alerts, status tracking, and one-click accept/ready actions."
+        },
+        {
+          "n": 2,
+          "title": "Menu Management",
+          "desc": "Update items and prices, toggle real-time availability, and control capacity with auto-stop when busy."
+        },
+        {
+          "n": 3,
+          "title": "Revenue Analytics",
+          "desc": "Daily, weekly, and monthly reports with peak-hour analysis and best-seller insights."
+        },
+        {
+          "n": 4,
+          "title": "Your Brand Identity",
+          "desc": "Set your restaurant's name, story, color, and logo — reflected instantly in your customer app."
+        },
+        {
+          "n": 5,
+          "title": "Marketing & Loyalty",
+          "desc": "Run promotions, build a loyalty program, and reach your customers directly (Pro & above)."
+        }
+      ]
+    },
+    "pricing": {
+      "title": "Simple <span>subscription</span> pricing",
+      "subtitle": "Flat monthly fee. No commission, ever. Prices in USD; billed in IQD (≈ 1,500 IQD/$).",
+      "most_popular": "MOST POPULAR",
+      "choose": "Choose {tier}",
+      "plans": [
+        {
+          "tier": "Starter",
+          "price": 99,
+          "desc": "For new & smaller restaurants getting online.",
+          "features": [
+            "Order dashboard",
+            "Menu management",
+            "Customer ordering",
+            "Basic analytics"
+          ]
+        },
+        {
+          "tier": "Pro",
+          "price": 199,
+          "desc": "Your brand, your customers, your data.",
+          "features": [
+            "Everything in Starter",
+            "Branded customer app",
+            "Marketing & coupons",
+            "Loyalty program",
+            "Customer data export"
+          ],
+          "featured": true
+        },
+        {
+          "tier": "Premium",
+          "price": 349,
+          "desc": "For high-volume & multi-location restaurants.",
+          "features": [
+            "Everything in Pro",
+            "Instant payouts",
+            "Dedicated account manager",
+            "Multi-location support",
+            "Priority support"
+          ]
+        }
+      ],
+      "founding": {
+        "badge": "⚡ Founding 100",
+        "desc": "First 100 restaurants in each city lock in lifetime pricing — all Pro features included.",
+        "price": "$59",
+        "period": "/mo — for life",
+        "cta": "Apply for Founding 100 →"
+      },
+      "setup_note": "One-time setup & onboarding: <strong>$500</strong> · Live in 3 days · Cancel anytime."
+    },
+    "cta": {
+      "title": "Ready to own your delivery?",
+      "subtitle": "Join the restaurants across Iraq keeping their customers — and their revenue.",
+      "button": "Become a Partner"
+    }
+  },
+  "DriverPage": {
+    "hero": {
+      "badge": "DRIVE WITH JAYAKHUB",
+      "title_line1": "Drive your",
+      "title_line2": "way onto",
+      "title_highlight": "Financial Freedom",
+      "buttons": {
+        "partner": "Sign up to drive",
+        "learn_more": "Apply to drive"
+      }
+    },
+    "stats": {
+      "partners": "Active Drivers",
+      "revenue": "Total Deliveries",
+      "orders": "Partner Restaurants",
+      "rating": "Avg Rating"
+    },
+    "benefits": {
+      "title": "Why Drive with <span>JayakHub</span>?",
+      "subtitle": "Choose flexibility, earning power, and community support.",
+      "items": {
+        "revenue": {
+          "title": "Extra Earnings",
+          "desc": "Earn competitive rates for every delivery you make."
+        },
+        "reach": {
+          "title": "Flexible schedule",
+          "desc": "Choose your own schedule and work when it suits you."
+        },
+        "dashboard": {
+          "title": "Easy Payouts",
+          "desc": "Track your daily and weekly earnings with full transparency."
+        },
+        "analytics": {
+          "title": "Dedicated Local Support",
+          "desc": "24/7 support team based right here in Iraq to assist you."
+        },
+        "hours": {
+          "title": "Discounts and Perks",
+          "desc": "Access exclusive driver discounts and performance bonuses."
+        },
+        "support": {
+          "title": "Driver Safety",
+          "desc": "Ride with peace of mind with our dedicated safety features."
+        }
+      }
+    },
+    "how_it_works": {
+      "title": "Your journey starts here",
+      "subtitle": "Start earning in just a few simple steps.",
+      "steps": {
+        "signup": {
+          "title": "Sign Up Online",
+          "desc": "Register your details and submit the required documents online."
+        },
+        "approve": {
+          "title": "Get Verified",
+          "desc": "Our team will review your application quickly."
+        },
+        "menu": {
+          "title": "Download App",
+          "desc": "Download the JayakHub driver app and log in."
+        },
+        "orders": {
+          "title": "Start Earning",
+          "desc": "Go online, accept delivery requests, and get paid."
+        }
+      }
+    },
+    "requirements": {
+      "title": "Ready to join? Here's what you need.",
+      "subtitle": "Before you hit the road, make sure you have the following:",
+      "items": {
+        "age": {
+          "title": "18+ (Age)",
+          "desc": "Must be 18 or older with a valid ID"
+        },
+        "vehicle": {
+          "title": "Vehicle",
+          "desc": "Motorcycle, car, or scooter with proper license"
+        },
+        "phone": {
+          "title": "Smartphone",
+          "desc": "iPhone or Android device with mobile data"
+        },
+        "background": {
+          "title": "Background check",
+          "desc": "Consent to a quick and secure screening process"
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Driver Stories",
+      "subtitle": "Join a growing community of independent delivery partners.",
+      "items": {
+        "t1": {
+          "quote": "Driving with JayakHub gives me the flexibility I need for my family.",
+          "role": "Driver since 2023"
+        },
+        "t2": {
+          "quote": "The app is very easy to use and the support team is always helpful.",
+          "role": "Driver since 2024"
+        },
+        "t3": {
+          "quote": "I earn good money and I love being my own boss.",
+          "role": "Driver since 2023"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to hit the road?",
+      "subtitle": "Get started today and start earning on your own terms.",
+      "button": "Sign up to drive"
+    }
+  },
+  "Careers": {
+    "hero": {
+      "badge": "Join Our Team",
+      "title_p1": "Build the Future of",
+      "title_highlight": "Food Delivery"
+    },
+    "mission": {
+      "badge": "Our Mission",
+      "title_p1": "We're connecting Iraq's restaurants,",
+      "title_highlight": "riders, and communities",
+      "desc": "JayaKhub started with a simple idea: make great food accessible to everyone, everywhere in Iraq. Today we're a growing team of engineers, operators, designers, and storytellers working together to transform how people eat and how restaurants grow."
+    },
+    "values": {
+      "badge": "How We Work",
+      "title": "Our Values",
+      "items": {
+        "move_fast": {
+          "title": "Move Fast",
+          "desc": "We ship, learn, and iterate. Speed is a feature."
+        },
+        "people_first": {
+          "title": "People First",
+          "desc": "Every decision — product, policy, culture — starts with people's needs."
+        },
+        "raise_bar": {
+          "title": "Raise the Bar",
+          "desc": "We hold ourselves to a high standard in everything we build and deliver."
+        },
+        "think_local": {
+          "title": "Think Local, Build Global",
+          "desc": "Rooted in Iraq, built to work anywhere. We celebrate both."
+        }
+      }
+    },
+    "roles": {
+      "badge": "Open Positions",
+      "title": "Find Your Role",
+      "no_openings": "No openings in this department right now — check back soon!",
+      "apply_btn": "Apply Now",
+      "departments": {
+        "all": "All",
+        "engineering": "Engineering",
+        "operations": "Operations",
+        "marketing": "Marketing",
+        "design": "Design",
+        "finance": "Finance"
+      },
+      "openings": {
+        "job1": {
+          "title": "Senior Backend Engineer",
+          "department": "Engineering",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Build and scale the core infrastructure powering millions of food orders across Iraq."
+        },
+        "job2": {
+          "title": "Mobile Developer (React Native)",
+          "department": "Engineering",
+          "location": "Remote",
+          "type": "Full-time",
+          "description": "Craft seamless mobile experiences for our customer and delivery partner apps."
+        },
+        "job3": {
+          "title": "City Operations Manager",
+          "department": "Operations",
+          "location": "Erbil, Iraq",
+          "type": "Full-time",
+          "description": "Lead on-ground expansion and ensure smooth delivery operations in your city."
+        },
+        "job4": {
+          "title": "Restaurant Partnerships Executive",
+          "department": "Operations",
+          "location": "Basra, Iraq",
+          "type": "Full-time",
+          "description": "Onboard top restaurants and grow JayaKhub's partner ecosystem in your region."
+        },
+        "job5": {
+          "title": "Growth Marketing Manager",
+          "department": "Marketing",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Drive user acquisition and engagement campaigns across digital and offline channels."
+        },
+        "job6": {
+          "title": "Brand & Content Specialist",
+          "department": "Marketing",
+          "location": "Remote",
+          "type": "Contract",
+          "description": "Tell JayaKhub's story through compelling content, social media, and campaigns."
+        },
+        "job7": {
+          "title": "Product Designer",
+          "department": "Design",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Design intuitive, beautiful experiences for customers, restaurants, and riders."
+        },
+        "job8": {
+          "title": "Financial Analyst",
+          "department": "Finance",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Support financial planning and analysis as JayaKhub scales across new cities."
+        }
+      }
+    },
+    "benefits": {
+      "badge": "Why JayaKhub",
+      "title": "Perks & Benefits",
+      "desc": "We invest in our people because great work comes from happy, well-supported humans.",
+      "items": {
+        "grow": {
+          "title": "Grow With Us",
+          "desc": "Competitive salary, equity options, and clear career progression in a fast-growing startup."
+        },
+        "flexible": {
+          "title": "Flexible Work",
+          "desc": "Hybrid and remote-friendly roles. Work where you do your best thinking."
+        },
+        "health": {
+          "title": "Health & Wellbeing",
+          "desc": "Comprehensive health insurance for you and your family, plus mental wellness support."
+        },
+        "meals": {
+          "title": "Free Meals",
+          "desc": "Enjoy a generous monthly JayaKhub credit — yes, that means free food every day."
+        },
+        "equipment": {
+          "title": "Top Equipment",
+          "desc": "MacBook or high-spec laptop of your choice, plus a home office setup budget."
+        },
+        "learning": {
+          "title": "Learning Budget",
+          "desc": "Annual learning allowance for courses, conferences, and books to sharpen your skills."
+        }
+      }
+    },
+    "cta": {
+      "title": "Don't see the right role?",
+      "desc": "We're always looking for talented people. Send us your resume and tell us how you'd contribute to JayaKhub.",
+      "open_application": "Send Open Application",
+      "learn_more": "Learn About Us"
+    }
+  },
+  "Business": {
+    "hero": {
+      "badge": "JayaKhub for Business",
+      "title_p1": "Feed Your Team,",
+      "title_highlight": "Effortlessly"
+    },
+    "intro": {
+      "badge": "Built for Teams",
+      "title_p1": "Corporate meals, made",
+      "title_highlight": "simple",
+      "desc": "From daily office lunches to executive catering, JayaKhub Business gives companies in Iraq a smarter way to manage team food — with full spending controls, group ordering, and one consolidated invoice.",
+      "get_started": "Get Started Free",
+      "talk_to_sales": "Talk to Sales"
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Everything your team needs",
+      "items": {
+        "team_ordering": {
+          "title": "Team Ordering",
+          "desc": "Let your entire team order from the same restaurant or different ones simultaneously — all on one invoice."
+        },
+        "spending": {
+          "title": "Spending Controls",
+          "desc": "Set per-person budgets, meal allowances, and approval workflows so you stay in control."
+        },
+        "billing": {
+          "title": "Consolidated Billing",
+          "desc": "One monthly invoice for all team orders. No more chasing receipts or reimbursements."
+        },
+        "scheduled": {
+          "title": "Scheduled Deliveries",
+          "desc": "Pre-schedule meals for team lunches, board meetings, or daily office catering."
+        },
+        "account_manager": {
+          "title": "Dedicated Account Manager",
+          "desc": "A named point of contact who knows your account and resolves issues within the hour."
+        },
+        "priority": {
+          "title": "Priority Delivery",
+          "desc": "Business orders jump the queue. Your team's meals arrive on time, every time."
+        }
+      }
+    },
+    "how_it_works": {
+      "badge": "How It Works",
+      "title": "Up and running in 4 steps",
+      "steps": {
+        "signup": {
+          "title": "Sign Up",
+          "desc": "Create your JayaKhub Business account in minutes. No contracts, no setup fees."
+        },
+        "add_team": {
+          "title": "Add Your Team",
+          "desc": "Invite employees by email. Set individual budgets and permissions from your dashboard."
+        },
+        "order": {
+          "title": "Order Together",
+          "desc": "Team members order from their app. All orders are grouped and delivered together."
+        },
+        "pay": {
+          "title": "Review & Pay",
+          "desc": "Receive one clean invoice at month end. Integrate with your accounting software in one click."
+        }
+      }
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "title": "Simple, transparent plans",
+      "subtitle": "No hidden fees. Cancel anytime.",
+      "plans": {
+        "starter": {
+          "name": "Starter",
+          "price": "Free",
+          "period": "",
+          "desc": "Perfect for small teams getting started.",
+          "features": {
+            "f1": "Up to 10 team members",
+            "f2": "Monthly invoice",
+            "f3": "Basic spending controls",
+            "f4": "Email support"
+          },
+          "cta": "Get Started"
+        },
+        "business": {
+          "name": "Business",
+          "price": "$49",
+          "period": "/ month",
+          "desc": "For growing teams that need more control.",
+          "features": {
+            "f1": "Up to 100 team members",
+            "f2": "Per-person budget limits",
+            "f3": "Scheduled deliveries",
+            "f4": "Priority support",
+            "f5": "Dedicated account manager",
+            "f6": "Custom approval workflows"
+          },
+          "cta": "Start Free Trial"
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "price": "Custom",
+          "period": "",
+          "desc": "For large organizations with advanced needs.",
+          "features": {
+            "f1": "Unlimited team members",
+            "f2": "SSO & SAML integration",
+            "f3": "Accounting software sync",
+            "f4": "SLA guarantees",
+            "f5": "Custom contracts",
+            "f6": "On-site onboarding"
+          },
+          "cta": "Contact Sales"
+        }
+      }
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "Trusted by teams across Iraq",
+      "items": {
+        "t1": {
+          "quote": "JayaKhub Business transformed our team lunches. One click and 50 people are fed — different restaurants, one invoice.",
+          "name": "Sara Al-Rawi",
+          "role": "Office Manager, TechBaghdad"
+        },
+        "t2": {
+          "quote": "The spending controls saved us hours of admin every month. Our finance team loves it.",
+          "name": "Kareem Hassan",
+          "role": "CFO, Erbil Ventures"
+        },
+        "t3": {
+          "quote": "Our board meetings now always include JayaKhub. Scheduled, on time, impressive every time.",
+          "name": "Lina Mahmoud",
+          "role": "Executive Assistant, Gulf Corp Iraq"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to feed your team?",
+      "desc": "Join hundreds of Iraqi companies already using JayaKhub Business. Set up takes less than 5 minutes.",
+      "create_account": "Create Business Account",
+      "schedule_demo": "Schedule a Demo"
+    }
+  },
+  "Press": {
+    "hero": {
+      "badge": "JayaKhub Newsroom",
+      "title_p1": "News & Press",
+      "title_highlight": "Releases"
+    },
+    "stats": {
+      "founded": { "value": "2021", "label": "Founded" },
+      "partners": { "value": "5,000+", "label": "Restaurant Partners" },
+      "orders": { "value": "1M+", "label": "Orders Delivered" },
+      "cities": { "value": "8", "label": "Cities" }
+    },
+    "releases": {
+      "badge": "Latest News",
+      "title": "Press Releases",
+      "all_releases": "All Releases",
+      "read_more": "Read Full Release",
+      "items": {
+        "r1": {
+          "date": "May 2025",
+          "category": "Funding",
+          "title": "JayaKhub Raises $12M Series A to Expand Across Iraq",
+          "excerpt": "The leading Iraqi food delivery platform secures funding from regional and international investors to accelerate city expansion and technology development."
+        },
+        "r2": {
+          "date": "March 2025",
+          "category": "Expansion",
+          "title": "JayaKhub Launches in Erbil and Sulaymaniyah",
+          "excerpt": "Following strong growth in Baghdad and Basra, JayaKhub brings its food delivery service to two major Kurdish cities, adding over 300 restaurant partners."
+        },
+        "r3": {
+          "date": "January 2025",
+          "category": "Product",
+          "title": "JayaKhub Introduces Group Ordering for Business Customers",
+          "excerpt": "New B2B feature lets corporate teams order from multiple restaurants simultaneously, with consolidated billing and per-person budget controls."
+        },
+        "r4": {
+          "date": "October 2024",
+          "category": "Milestone",
+          "title": "JayaKhub Reaches 1 Million Orders Delivered",
+          "excerpt": "Just three years after launch, JayaKhub celebrates delivering its one-millionth order — a testament to Iraq's growing appetite for convenient food delivery."
+        },
+        "r5": {
+          "date": "July 2024",
+          "category": "Partnership",
+          "title": "JayaKhub Partners with Iraq's Top 50 Restaurant Chains",
+          "excerpt": "Strategic agreements with leading Iraqi restaurant groups bring exclusive menus, priority availability, and co-branded campaigns to the platform."
+        },
+        "r6": {
+          "date": "April 2024",
+          "category": "Community",
+          "title": "JayaKhub Launches Rider Welfare Program",
+          "excerpt": "Industry-first initiative provides Iraq's delivery riders with insurance coverage, financial literacy training, and emergency support funds."
+        }
+      }
+    },
+    "media": {
+      "badge": "Media Coverage",
+      "title": "JayaKhub in the News",
+      "items": {
+        "m1": { "name": "Reuters", "desc": "Iraq's fastest-growing startup" },
+        "m2": {
+          "name": "Arab News",
+          "desc": "Transforming Iraqi food culture"
+        },
+        "m3": {
+          "name": "Gulf Business",
+          "desc": "Top 10 MENA startups to watch"
+        },
+        "m4": { "name": "TechCrunch", "desc": "Seed round spotlight" },
+        "m5": {
+          "name": "Forbes ME",
+          "desc": "30 Under 30 — founder recognition"
+        },
+        "m6": { "name": "Wamda", "desc": "Iraq's digital economy pioneer" }
+      }
+    },
+    "awards": {
+      "badge": "Recognition",
+      "title": "Awards & Honors",
+      "items": {
+        "a1": {
+          "award": "Best Startup — Iraq Tech Awards 2024",
+          "body": "Iraq Tech Association"
+        },
+        "a2": {
+          "award": "Top 10 MENA Food-Tech Companies",
+          "body": "Gulf Business Magazine"
+        },
+        "a3": {
+          "award": "Forbes Middle East 30 Under 30",
+          "body": "Forbes ME, 2024"
+        },
+        "a4": {
+          "award": "People's Choice — Baghdad Digital Summit",
+          "body": "Baghdad Digital Initiative"
+        },
+        "a5": {
+          "award": "Best Delivery Experience — Consumer Choice",
+          "body": "Iraq Consumer Reports, 2023"
+        },
+        "a6": {
+          "award": "Social Impact Award — Rider Welfare",
+          "body": "MENA Startup Foundation"
+        }
+      }
+    },
+    "media_kit": {
+      "title": "Media Kit",
+      "desc": "Download our official media kit containing brand assets, logos, executive headshots, product screenshots, and company boilerplate for press use.",
+      "features": {
+        "f1": "Logo files (SVG, PNG, dark & light variants)",
+        "f2": "Executive headshots & bios",
+        "f3": "Product screenshots",
+        "f4": "Company fact sheet",
+        "f5": "Brand guidelines"
+      },
+      "download_btn": "Download Media Kit"
+    },
+    "press_contact": {
+      "title": "Press Contact",
+      "desc": "For press inquiries, interview requests, or embargoed information, please contact our communications team directly. We aim to respond to all media enquiries within 24 hours.",
+      "inquiries_label": "Media Inquiries",
+      "inquiries_email": "press@jayakhub.com",
+      "contact_name_label": "Communications Lead",
+      "contact_name": "Nour Al-Rashidi",
+      "contact_email": "nour@jayakhub.com",
+      "contact_btn": "Contact Press Team"
     }
   }
 }
