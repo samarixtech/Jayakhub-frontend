@@ -472,10 +472,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+
+const RTL_LOCALES = ["ar", "ur", "fa", "he"];
 
 export default function Home() {
   const t = useTranslations('PartnerPage');
+  const locale = useLocale();
+  const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
 
   const comparePlatforms = t.raw('compare.platforms') as { name: string; fee: string }[];
   const benefitItems = t.raw('benefits.items') as { icon: string; title: string; desc: string }[];
@@ -483,7 +487,7 @@ export default function Home() {
   const pricingPlans = t.raw('pricing.plans') as { tier: string; price: number; desc: string; features: string[]; featured?: boolean }[];
 
   return (
-    <main dir="ltr" className="text-[#1a1a1a] bg-white">
+    <main dir={dir} className="text-[#1a1a1a] bg-white">
       {/* HERO */}
       <section className="bg-gradient-to-br from-[#fff8f0] to-white pt-[90px] pb-[80px] relative overflow-hidden">
         <div className="absolute -top-[120px] -right-[120px] w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(255,107,53,0.12),transparent_70%)] pointer-events-none" />
@@ -553,7 +557,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* COMMISSION COMPARE STRIP */}
+      {/* COMMISSION COMPARE STRIP
       <section className="bg-[#1B3A57] text-white py-[50px]">
         <motion.div
           initial="hidden"
@@ -582,9 +586,9 @@ export default function Home() {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
               }}
-              className="flex justify-between items-center bg-white/5 rounded-xl px-[22px] py-4 mb-2.5 text-[16px]"
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 bg-white/5 rounded-xl px-[22px] py-4 mb-2.5 text-[16px] rtl:text-[14px]"
             >
-              <span>{row.name}</span><span className="text-[#ff8a8a] font-bold">{row.fee}</span>
+              <span className="min-w-0 flex-1">{row.name}</span><span className="shrink-0 text-[#ff8a8a] font-bold">{row.fee}</span>
             </motion.div>
           ))}
 
@@ -593,9 +597,82 @@ export default function Home() {
               hidden: { opacity: 0, scale: 0.95 },
               visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
             }}
-            className="flex justify-between items-center bg-[#7ee7871f] border border-[#7ee78759] rounded-xl px-[22px] py-4 mb-2.5 text-[16px]"
+            className="flex flex-wrap items-center gap-x-3 gap-y-1 bg-[#7ee7871f] border border-[#7ee78759] rounded-xl px-[22px] py-4 mb-2.5 text-[16px] rtl:text-[14px]"
           >
-            <span><strong>{t('compare.jayakub_name')}</strong></span><span className="text-[#7ee787] font-bold">{t('compare.jayakub_fee')}</span>
+            <span className="min-w-0 flex-1"><strong>{t('compare.jayakub_name')}</strong></span><span className="shrink-0 text-[#7ee787] font-bold">{t('compare.jayakub_fee')}</span>
+          </motion.div>
+
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+            }}
+            className="mt-5 opacity-80 text-[14px]"
+          >
+            {t('compare.description')}
+          </motion.p>
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+            }}
+            className="mt-2.5 opacity-55 text-[11.5px]"
+          >
+            {t('compare.disclaimer')}
+          </motion.p>
+        </motion.div>
+      </section> */}
+
+
+
+
+
+      <section className="bg-[#1B3A57] text-white py-[50px]">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+          }}
+          className="max-w-[760px] mx-auto px-6 text-center"
+        >
+          <motion.h2
+            variants={{
+              hidden: { opacity: 0, y: 30 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+            }}
+            className="text-[30px] font-bold tracking-tight mb-[26px]"
+          >
+            {t('compare.title')}
+          </motion.h2>
+
+          {comparePlatforms.map((row, i) => (
+            <motion.div
+              key={i}
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              }}
+
+              className="flex justify-between items-center bg-white/5 rounded-xl px-[32px] py-5 mb-2.5 text-[16px] rtl:text-[14px]"
+            >
+              <span className="min-w-0 text-left rtl:text-right font-medium">{row.name}</span>
+              <span className="shrink-0 text-[#ff8a8a] font-bold text-right rtl:text-left">{row.fee}</span>
+            </motion.div>
+          ))}
+
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, scale: 0.95 },
+              visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
+            }}
+
+            className="flex justify-between items-center bg-[#7ee7871f] border border-[#7ee78759] rounded-xl px-[32px] py-5 mb-2.5 text-[16px] rtl:text-[14px]"
+          >
+            <span className="min-w-0 text-left rtl:text-right"><strong>{t('compare.jayakub_name')}</strong></span>
+            <span className="shrink-0 text-[#7ee787] font-bold text-right rtl:text-left">{t('compare.jayakub_fee')}</span>
           </motion.div>
 
           <motion.p
@@ -618,6 +695,9 @@ export default function Home() {
           </motion.p>
         </motion.div>
       </section>
+
+
+
 
       {/* BENEFITS */}
       <section className="py-[80px] bg-[#F2F2ED]" id="benefits">
@@ -694,12 +774,12 @@ export default function Home() {
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e5e0d8] flex items-center gap-5"
+                className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e5e0d8] flex items-start gap-5"
               >
-                <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#FF6B35] to-[#FDB833] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0">
+                <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#FF6B35] to-[#FDB833] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0 mt-1">
                   {feature.n}
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h3 className="text-[17px] font-bold text-[#1B3A57] mb-1 leading-tight">{feature.title}</h3>
                   <p className="text-[14px] text-[#6b6b6b]">{feature.desc}</p>
                 </div>
@@ -762,8 +842,8 @@ export default function Home() {
                 <div className="text-[14px] text-[#6b6b6b] min-h-[42px] mb-[18px]">{plan.desc}</div>
                 <ul className="mb-[22px] space-y-1 flex-1">
                   {plan.features.map((li, i) => (
-                    <li key={i} className="text-[14px] text-[#1a1a1a] py-[7px] pl-6 relative">
-                      <span className="absolute left-0 text-[#2C5F2D] font-bold">✓</span> {li}
+                    <li key={i} className="text-[14px] text-[#1a1a1a] py-[7px] ps-6 relative">
+                      <span className="absolute start-0 text-[#2C5F2D] font-bold">✓</span> {li}
                     </li>
                   ))}
                 </ul>
@@ -780,18 +860,19 @@ export default function Home() {
           {/* Founding 100 */}
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="max-w-[980px] mx-auto mt-6 bg-gradient-to-br from-[#1B3A57] to-[#2a5a85] text-white rounded-[18px] p-[30px] md:px-[34px] flex flex-col md:flex-row justify-between items-center gap-5"
+            className="max-w-[980px] mx-auto mt-6 bg-gradient-to-br from-[#1B3A57] to-[#2a5a85] text-white rounded-[18px] p-[30px] md:px-[34px] flex flex-col lg:flex-row items-center gap-5"
           >
-            <div className="text-center md:text-left">
+            <div className="text-center lg:text-start flex-1 min-w-0">
               <h3 className="text-[24px] font-bold mb-1.5 leading-tight">{t('pricing.founding.badge')}</h3>
               <p className="text-[15px] opacity-85">{t('pricing.founding.desc')}</p>
             </div>
-            <div className="text-center">
+            <div className="text-center shrink-0">
               <div className="text-[34px] font-bold whitespace-nowrap">
-                {t('pricing.founding.price')}<small className="text-[15px] font-medium opacity-80">{t('pricing.founding.period')}</small>
+                {t('pricing.founding.price')}
               </div>
+              <div className="text-[12px] opacity-80 leading-tight max-w-[180px]">{t('pricing.founding.period')}</div>
             </div>
-            <Link href="/contact" className="bg-[#FDB833] text-[#1B3A57] px-7 py-[13px] rounded-[30px] font-bold whitespace-nowrap hover:bg-white transition-colors">
+            <Link href="/contact" className="bg-[#FDB833] text-[#1B3A57] px-7 py-[13px] rounded-[30px] font-bold whitespace-nowrap hover:bg-white transition-colors shrink-0">
               {t('pricing.founding.cta')}
             </Link>
           </motion.div>
