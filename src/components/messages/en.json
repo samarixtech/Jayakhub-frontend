@@ -2963,5 +2963,511 @@
       "subtitle": "Join the restaurants across Iraq keeping their customers — and their revenue.",
       "button": "Become a Partner"
     }
+  },
+  "DriverPage": {
+    "hero": {
+      "badge": "DRIVE WITH JAYAKHUB",
+      "title_line1": "Drive your",
+      "title_line2": "way onto",
+      "title_highlight": "Financial Freedom",
+      "buttons": {
+        "partner": "Sign up to drive",
+        "learn_more": "Apply to drive"
+      }
+    },
+    "stats": {
+      "partners": "Active Drivers",
+      "revenue": "Total Deliveries",
+      "orders": "Partner Restaurants",
+      "rating": "Avg Rating"
+    },
+    "benefits": {
+      "title": "Why Drive with <span>JayakHub</span>?",
+      "subtitle": "Choose flexibility, earning power, and community support.",
+      "items": {
+        "revenue": {
+          "title": "Extra Earnings",
+          "desc": "Earn competitive rates for every delivery you make."
+        },
+        "reach": {
+          "title": "Flexible schedule",
+          "desc": "Choose your own schedule and work when it suits you."
+        },
+        "dashboard": {
+          "title": "Easy Payouts",
+          "desc": "Track your daily and weekly earnings with full transparency."
+        },
+        "analytics": {
+          "title": "Dedicated Local Support",
+          "desc": "24/7 support team based right here in Iraq to assist you."
+        },
+        "hours": {
+          "title": "Discounts and Perks",
+          "desc": "Access exclusive driver discounts and performance bonuses."
+        },
+        "support": {
+          "title": "Driver Safety",
+          "desc": "Ride with peace of mind with our dedicated safety features."
+        }
+      }
+    },
+    "how_it_works": {
+      "title": "Your journey starts here",
+      "subtitle": "Start earning in just a few simple steps.",
+      "steps": {
+        "signup": {
+          "title": "Sign Up Online",
+          "desc": "Register your details and submit the required documents online."
+        },
+        "approve": {
+          "title": "Get Verified",
+          "desc": "Our team will review your application quickly."
+        },
+        "menu": {
+          "title": "Download App",
+          "desc": "Download the JayakHub driver app and log in."
+        },
+        "orders": {
+          "title": "Start Earning",
+          "desc": "Go online, accept delivery requests, and get paid."
+        }
+      }
+    },
+    "requirements": {
+      "title": "Ready to join? Here's what you need.",
+      "subtitle": "Before you hit the road, make sure you have the following:",
+      "items": {
+        "age": {
+          "title": "18+ (Age)",
+          "desc": "Must be 18 or older with a valid ID"
+        },
+        "vehicle": {
+          "title": "Vehicle",
+          "desc": "Motorcycle, car, or scooter with proper license"
+        },
+        "phone": {
+          "title": "Smartphone",
+          "desc": "iPhone or Android device with mobile data"
+        },
+        "background": {
+          "title": "Background check",
+          "desc": "Consent to a quick and secure screening process"
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Driver Stories",
+      "subtitle": "Join a growing community of independent delivery partners.",
+      "items": {
+        "t1": {
+          "quote": "Driving with JayakHub gives me the flexibility I need for my family.",
+          "role": "Driver since 2023"
+        },
+        "t2": {
+          "quote": "The app is very easy to use and the support team is always helpful.",
+          "role": "Driver since 2024"
+        },
+        "t3": {
+          "quote": "I earn good money and I love being my own boss.",
+          "role": "Driver since 2023"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to hit the road?",
+      "subtitle": "Get started today and start earning on your own terms.",
+      "button": "Sign up to drive"
+    }
+  },
+  "Careers": {
+    "hero": {
+      "badge": "Join Our Team",
+      "title_p1": "Build the Future of",
+      "title_highlight": "Food Delivery"
+    },
+    "mission": {
+      "badge": "Our Mission",
+      "title_p1": "We're connecting Iraq's restaurants,",
+      "title_highlight": "riders, and communities",
+      "desc": "JayaKhub started with a simple idea: make great food accessible to everyone, everywhere in Iraq. Today we're a growing team of engineers, operators, designers, and storytellers working together to transform how people eat and how restaurants grow."
+    },
+    "values": {
+      "badge": "How We Work",
+      "title": "Our Values",
+      "items": {
+        "move_fast": {
+          "title": "Move Fast",
+          "desc": "We ship, learn, and iterate. Speed is a feature."
+        },
+        "people_first": {
+          "title": "People First",
+          "desc": "Every decision — product, policy, culture — starts with people's needs."
+        },
+        "raise_bar": {
+          "title": "Raise the Bar",
+          "desc": "We hold ourselves to a high standard in everything we build and deliver."
+        },
+        "think_local": {
+          "title": "Think Local, Build Global",
+          "desc": "Rooted in Iraq, built to work anywhere. We celebrate both."
+        }
+      }
+    },
+    "roles": {
+      "badge": "Open Positions",
+      "title": "Find Your Role",
+      "no_openings": "No openings in this department right now — check back soon!",
+      "apply_btn": "Apply Now",
+      "departments": {
+        "all": "All",
+        "engineering": "Engineering",
+        "operations": "Operations",
+        "marketing": "Marketing",
+        "design": "Design",
+        "finance": "Finance"
+      },
+      "openings": {
+        "job1": {
+          "title": "Senior Backend Engineer",
+          "department": "Engineering",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Build and scale the core infrastructure powering millions of food orders across Iraq."
+        },
+        "job2": {
+          "title": "Mobile Developer (React Native)",
+          "department": "Engineering",
+          "location": "Remote",
+          "type": "Full-time",
+          "description": "Craft seamless mobile experiences for our customer and delivery partner apps."
+        },
+        "job3": {
+          "title": "City Operations Manager",
+          "department": "Operations",
+          "location": "Erbil, Iraq",
+          "type": "Full-time",
+          "description": "Lead on-ground expansion and ensure smooth delivery operations in your city."
+        },
+        "job4": {
+          "title": "Restaurant Partnerships Executive",
+          "department": "Operations",
+          "location": "Basra, Iraq",
+          "type": "Full-time",
+          "description": "Onboard top restaurants and grow JayaKhub's partner ecosystem in your region."
+        },
+        "job5": {
+          "title": "Growth Marketing Manager",
+          "department": "Marketing",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Drive user acquisition and engagement campaigns across digital and offline channels."
+        },
+        "job6": {
+          "title": "Brand & Content Specialist",
+          "department": "Marketing",
+          "location": "Remote",
+          "type": "Contract",
+          "description": "Tell JayaKhub's story through compelling content, social media, and campaigns."
+        },
+        "job7": {
+          "title": "Product Designer",
+          "department": "Design",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Design intuitive, beautiful experiences for customers, restaurants, and riders."
+        },
+        "job8": {
+          "title": "Financial Analyst",
+          "department": "Finance",
+          "location": "Baghdad, Iraq",
+          "type": "Full-time",
+          "description": "Support financial planning and analysis as JayaKhub scales across new cities."
+        }
+      }
+    },
+    "benefits": {
+      "badge": "Why JayaKhub",
+      "title": "Perks & Benefits",
+      "desc": "We invest in our people because great work comes from happy, well-supported humans.",
+      "items": {
+        "grow": {
+          "title": "Grow With Us",
+          "desc": "Competitive salary, equity options, and clear career progression in a fast-growing startup."
+        },
+        "flexible": {
+          "title": "Flexible Work",
+          "desc": "Hybrid and remote-friendly roles. Work where you do your best thinking."
+        },
+        "health": {
+          "title": "Health & Wellbeing",
+          "desc": "Comprehensive health insurance for you and your family, plus mental wellness support."
+        },
+        "meals": {
+          "title": "Free Meals",
+          "desc": "Enjoy a generous monthly JayaKhub credit — yes, that means free food every day."
+        },
+        "equipment": {
+          "title": "Top Equipment",
+          "desc": "MacBook or high-spec laptop of your choice, plus a home office setup budget."
+        },
+        "learning": {
+          "title": "Learning Budget",
+          "desc": "Annual learning allowance for courses, conferences, and books to sharpen your skills."
+        }
+      }
+    },
+    "cta": {
+      "title": "Don't see the right role?",
+      "desc": "We're always looking for talented people. Send us your resume and tell us how you'd contribute to JayaKhub.",
+      "open_application": "Send Open Application",
+      "learn_more": "Learn About Us"
+    }
+  },
+  "Business": {
+    "hero": {
+      "badge": "JayaKhub for Business",
+      "title_p1": "Feed Your Team,",
+      "title_highlight": "Effortlessly"
+    },
+    "intro": {
+      "badge": "Built for Teams",
+      "title_p1": "Corporate meals, made",
+      "title_highlight": "simple",
+      "desc": "From daily office lunches to executive catering, JayaKhub Business gives companies in Iraq a smarter way to manage team food — with full spending controls, group ordering, and one consolidated invoice.",
+      "get_started": "Get Started Free",
+      "talk_to_sales": "Talk to Sales"
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Everything your team needs",
+      "items": {
+        "team_ordering": {
+          "title": "Team Ordering",
+          "desc": "Let your entire team order from the same restaurant or different ones simultaneously — all on one invoice."
+        },
+        "spending": {
+          "title": "Spending Controls",
+          "desc": "Set per-person budgets, meal allowances, and approval workflows so you stay in control."
+        },
+        "billing": {
+          "title": "Consolidated Billing",
+          "desc": "One monthly invoice for all team orders. No more chasing receipts or reimbursements."
+        },
+        "scheduled": {
+          "title": "Scheduled Deliveries",
+          "desc": "Pre-schedule meals for team lunches, board meetings, or daily office catering."
+        },
+        "account_manager": {
+          "title": "Dedicated Account Manager",
+          "desc": "A named point of contact who knows your account and resolves issues within the hour."
+        },
+        "priority": {
+          "title": "Priority Delivery",
+          "desc": "Business orders jump the queue. Your team's meals arrive on time, every time."
+        }
+      }
+    },
+    "how_it_works": {
+      "badge": "How It Works",
+      "title": "Up and running in 4 steps",
+      "steps": {
+        "signup": {
+          "title": "Sign Up",
+          "desc": "Create your JayaKhub Business account in minutes. No contracts, no setup fees."
+        },
+        "add_team": {
+          "title": "Add Your Team",
+          "desc": "Invite employees by email. Set individual budgets and permissions from your dashboard."
+        },
+        "order": {
+          "title": "Order Together",
+          "desc": "Team members order from their app. All orders are grouped and delivered together."
+        },
+        "pay": {
+          "title": "Review & Pay",
+          "desc": "Receive one clean invoice at month end. Integrate with your accounting software in one click."
+        }
+      }
+    },
+    "pricing": {
+      "badge": "Pricing",
+      "title": "Simple, transparent plans",
+      "subtitle": "No hidden fees. Cancel anytime.",
+      "plans": {
+        "starter": {
+          "name": "Starter",
+          "price": "Free",
+          "period": "",
+          "desc": "Perfect for small teams getting started.",
+          "features": {
+            "f1": "Up to 10 team members",
+            "f2": "Monthly invoice",
+            "f3": "Basic spending controls",
+            "f4": "Email support"
+          },
+          "cta": "Get Started"
+        },
+        "business": {
+          "name": "Business",
+          "price": "$49",
+          "period": "/ month",
+          "desc": "For growing teams that need more control.",
+          "features": {
+            "f1": "Up to 100 team members",
+            "f2": "Per-person budget limits",
+            "f3": "Scheduled deliveries",
+            "f4": "Priority support",
+            "f5": "Dedicated account manager",
+            "f6": "Custom approval workflows"
+          },
+          "cta": "Start Free Trial"
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "price": "Custom",
+          "period": "",
+          "desc": "For large organizations with advanced needs.",
+          "features": {
+            "f1": "Unlimited team members",
+            "f2": "SSO & SAML integration",
+            "f3": "Accounting software sync",
+            "f4": "SLA guarantees",
+            "f5": "Custom contracts",
+            "f6": "On-site onboarding"
+          },
+          "cta": "Contact Sales"
+        }
+      }
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "Trusted by teams across Iraq",
+      "items": {
+        "t1": {
+          "quote": "JayaKhub Business transformed our team lunches. One click and 50 people are fed — different restaurants, one invoice.",
+          "name": "Sara Al-Rawi",
+          "role": "Office Manager, TechBaghdad"
+        },
+        "t2": {
+          "quote": "The spending controls saved us hours of admin every month. Our finance team loves it.",
+          "name": "Kareem Hassan",
+          "role": "CFO, Erbil Ventures"
+        },
+        "t3": {
+          "quote": "Our board meetings now always include JayaKhub. Scheduled, on time, impressive every time.",
+          "name": "Lina Mahmoud",
+          "role": "Executive Assistant, Gulf Corp Iraq"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to feed your team?",
+      "desc": "Join hundreds of Iraqi companies already using JayaKhub Business. Set up takes less than 5 minutes.",
+      "create_account": "Create Business Account",
+      "schedule_demo": "Schedule a Demo"
+    }
+  },
+  "Press": {
+    "hero": {
+      "badge": "JayaKhub Newsroom",
+      "title_p1": "News & Press",
+      "title_highlight": "Releases"
+    },
+    "stats": {
+      "founded": { "value": "2021", "label": "Founded" },
+      "partners": { "value": "5,000+", "label": "Restaurant Partners" },
+      "orders": { "value": "1M+", "label": "Orders Delivered" },
+      "cities": { "value": "8", "label": "Cities" }
+    },
+    "releases": {
+      "badge": "Latest News",
+      "title": "Press Releases",
+      "all_releases": "All Releases",
+      "read_more": "Read Full Release",
+      "items": {
+        "r1": {
+          "date": "May 2025",
+          "category": "Funding",
+          "title": "JayaKhub Raises $12M Series A to Expand Across Iraq",
+          "excerpt": "The leading Iraqi food delivery platform secures funding from regional and international investors to accelerate city expansion and technology development."
+        },
+        "r2": {
+          "date": "March 2025",
+          "category": "Expansion",
+          "title": "JayaKhub Launches in Erbil and Sulaymaniyah",
+          "excerpt": "Following strong growth in Baghdad and Basra, JayaKhub brings its food delivery service to two major Kurdish cities, adding over 300 restaurant partners."
+        },
+        "r3": {
+          "date": "January 2025",
+          "category": "Product",
+          "title": "JayaKhub Introduces Group Ordering for Business Customers",
+          "excerpt": "New B2B feature lets corporate teams order from multiple restaurants simultaneously, with consolidated billing and per-person budget controls."
+        },
+        "r4": {
+          "date": "October 2024",
+          "category": "Milestone",
+          "title": "JayaKhub Reaches 1 Million Orders Delivered",
+          "excerpt": "Just three years after launch, JayaKhub celebrates delivering its one-millionth order — a testament to Iraq's growing appetite for convenient food delivery."
+        },
+        "r5": {
+          "date": "July 2024",
+          "category": "Partnership",
+          "title": "JayaKhub Partners with Iraq's Top 50 Restaurant Chains",
+          "excerpt": "Strategic agreements with leading Iraqi restaurant groups bring exclusive menus, priority availability, and co-branded campaigns to the platform."
+        },
+        "r6": {
+          "date": "April 2024",
+          "category": "Community",
+          "title": "JayaKhub Launches Rider Welfare Program",
+          "excerpt": "Industry-first initiative provides Iraq's delivery riders with insurance coverage, financial literacy training, and emergency support funds."
+        }
+      }
+    },
+    "media": {
+      "badge": "Media Coverage",
+      "title": "JayaKhub in the News",
+      "items": {
+        "m1": { "name": "Reuters", "desc": "Iraq's fastest-growing startup" },
+        "m2": { "name": "Arab News", "desc": "Transforming Iraqi food culture" },
+        "m3": { "name": "Gulf Business", "desc": "Top 10 MENA startups to watch" },
+        "m4": { "name": "TechCrunch", "desc": "Seed round spotlight" },
+        "m5": { "name": "Forbes ME", "desc": "30 Under 30 — founder recognition" },
+        "m6": { "name": "Wamda", "desc": "Iraq's digital economy pioneer" }
+      }
+    },
+    "awards": {
+      "badge": "Recognition",
+      "title": "Awards & Honors",
+      "items": {
+        "a1": { "award": "Best Startup — Iraq Tech Awards 2024", "body": "Iraq Tech Association" },
+        "a2": { "award": "Top 10 MENA Food-Tech Companies", "body": "Gulf Business Magazine" },
+        "a3": { "award": "Forbes Middle East 30 Under 30", "body": "Forbes ME, 2024" },
+        "a4": { "award": "People's Choice — Baghdad Digital Summit", "body": "Baghdad Digital Initiative" },
+        "a5": { "award": "Best Delivery Experience — Consumer Choice", "body": "Iraq Consumer Reports, 2023" },
+        "a6": { "award": "Social Impact Award — Rider Welfare", "body": "MENA Startup Foundation" }
+      }
+    },
+    "media_kit": {
+      "title": "Media Kit",
+      "desc": "Download our official media kit containing brand assets, logos, executive headshots, product screenshots, and company boilerplate for press use.",
+      "features": {
+        "f1": "Logo files (SVG, PNG, dark & light variants)",
+        "f2": "Executive headshots & bios",
+        "f3": "Product screenshots",
+        "f4": "Company fact sheet",
+        "f5": "Brand guidelines"
+      },
+      "download_btn": "Download Media Kit"
+    },
+    "press_contact": {
+      "title": "Press Contact",
+      "desc": "For press inquiries, interview requests, or embargoed information, please contact our communications team directly. We aim to respond to all media enquiries within 24 hours.",
+      "inquiries_label": "Media Inquiries",
+      "inquiries_email": "press@jayakhub.com",
+      "contact_name_label": "Communications Lead",
+      "contact_name": "Nour Al-Rashidi",
+      "contact_email": "nour@jayakhub.com",
+      "contact_btn": "Contact Press Team"
+    }
   }
 }
