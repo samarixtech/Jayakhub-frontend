@@ -14,11 +14,16 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "192.168.100.9",
         port: "5000",
-        pathname: "/uploads/**",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "app.jayakhub.com",
+        pathname: "/**",
       },
     ],
     unoptimized: true,

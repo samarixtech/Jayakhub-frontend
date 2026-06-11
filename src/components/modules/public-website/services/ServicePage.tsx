@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight,
@@ -16,12 +18,39 @@ import {
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import PublicHeroSection from "@/components/common/public-website/publicHeroSection";
+import type { ApiPlan } from "@/app/actions/public/plans";
 
-export default function Services() {
+type Props = {
+  plans?: ApiPlan[];
+};
+
+function formatPrice(price: string): string {
+  const num = parseFloat(price);
+  if (isNaN(num)) return price;
+  return num.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+export default function Services({ plans = [] }: Props) {
   const t = useTranslations("Services");
   const [isVisible, setIsVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [activePlanIndex, setActivePlanIndex] = useState(0);
   const statsRef = useRef<HTMLDivElement>(null);
+  const plansScrollRef = useRef<HTMLDivElement>(null);
+
+  const handlePlansScroll = () => {
+    const el = plansScrollRef.current;
+    if (!el) return;
+    const cardWidth = el.scrollWidth / plans.length;
+    setActivePlanIndex(Math.round(el.scrollLeft / cardWidth));
+  };
+
+  const scrollToIndex = (i: number) => {
+    const el = plansScrollRef.current;
+    if (!el) return;
+    const cardWidth = el.scrollWidth / plans.length;
+    el.scrollTo({ left: i * cardWidth, behavior: "smooth" });
+  };
 
   const platformFeatures = [
     {
@@ -74,41 +103,16 @@ export default function Services() {
     },
   ];
 
-  const pricingPlans = [
-    {
-      name: t("pricing.plans.starter.name"),
-      price: t("pricing.plans.starter.price"),
-      period: t("pricing.plans.starter.period"),
-      features: [
-        t("pricing.plans.starter.features.f1"),
-        t("pricing.plans.starter.features.f2"),
-        t("pricing.plans.starter.features.f3"),
-      ],
-      popular: false,
-    },
-    {
-      name: t("pricing.plans.pro.name"),
-      price: t("pricing.plans.pro.price"),
-      period: t("pricing.plans.pro.period"),
-      features: [
-        t("pricing.plans.pro.features.f1"),
-        t("pricing.plans.pro.features.f2"),
-        t("pricing.plans.pro.features.f3"),
-      ],
-      popular: true,
-    },
-    {
-      name: t("pricing.plans.enterprise.name"),
-      price: t("pricing.plans.enterprise.price"),
-      period: t("pricing.plans.enterprise.period"),
-      features: [
-        t("pricing.plans.enterprise.features.f1"),
-        t("pricing.plans.enterprise.features.f2"),
-        t("pricing.plans.enterprise.features.f3"),
-      ],
-      popular: false,
-    },
-  ];
+  const pricingPlans = plans.map((plan) => ({
+    id: plan.id,
+    name: plan.name,
+    price: formatPrice(plan.monthlyPrice),
+    period: `/ ${plan.billingCycle}`,
+    billingCycle: plan.billingCycle,
+    features: plan.keywords,
+    popular: plan.planType === "premium",
+    freeTrialDays: plan.freeTrialDays,
+  }));
 
   const testimonials = [
     {
@@ -240,7 +244,7 @@ export default function Services() {
 
       {/* ===== PRICING ===== */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-primary">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-screen-xl mx-auto">
           <div className="text-center mb-16">
             <span className="inline-block bg-white/10 text-white/80 text-sm font-semibold px-4 py-2 rounded-full mb-6 border border-white/10">
               {t("pricing.badge")}
@@ -253,60 +257,106 @@ export default function Services() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {pricingPlans.map((plan) => (
+          {pricingPlans.length === 0 ? (
+            <p className="text-center text-white/50 py-8">
+              {t("pricing.no_plans") || "No plans available at the moment."}
+            </p>
+          ) : (
+            <>
               <div
-                key={plan.name}
-                className={`rounded-3xl p-8 ${plan.popular
-                  ? "bg-white shadow-2xl scale-105"
-                  : "bg-white/10 backdrop-blur-sm border border-white/10"
-                  }`}
+                ref={plansScrollRef}
+                onScroll={handlePlansScroll}
+                className="flex gap-5 overflow-x-auto pb-4 no-scrollbar snap-x snap-mandatory pr-8"
               >
-                {plan.popular && (
-                  <span className="inline-block bg-accent-yellow text-primary text-xs font-bold px-3 py-1 rounded-full mb-4">
-                    {t("pricing.most_popular")}
-                  </span>
-                )}
-                <h3
-                  className={`text-xl font-bold mb-2 ${plan.popular ? "text-foreground" : "text-white"}`}
-                >
-                  {plan.name}
-                </h3>
-                <div
-                  className={`text-4xl font-bold mb-6 ${plan.popular ? "text-primary" : "text-white"}`}
-                >
-                  {plan.price}
-                  <span
-                    className={`text-lg font-normal ${plan.popular ? "text-[#64748B]" : "text-white/60"}`}
-                  >
-                    {plan.period}
-                  </span>
-                </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className={`flex items-center gap-3 ${plan.popular ? "text-[#64748B]" : "text-white/70"}`}
-                    >
-                      <Check
-                        className={`w-5 h-5 ${plan.popular ? "text-primary" : "text-accent-yellow"}`}
-                      />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/contact"
-                  className={`w-full py-6 rounded-full font-semibold flex justify-center items-center ${plan.popular
-                    ? "bg-primary text-white hover:bg-primary/90"
-                    : "bg-white/20 text-white hover:bg-white/30"
+                {pricingPlans.map((plan, idx) => {
+                  const isLight = idx % 2 === 0;
+                  return (
+                  <div
+                    key={plan.id}
+                    className={`relative flex-none w-[calc(100%-8px)] sm:w-[calc(50%-10px)] lg:w-[calc(30%-14px)] snap-start flex flex-col rounded-2xl p-9 transition-transform duration-300 hover:-translate-y-1 ${
+                      isLight
+                        ? "bg-white shadow-[0_20px_60px_rgba(0,0,0,0.2)]"
+                        : "bg-white/[0.07] border border-white/15"
                     }`}
-                >
-                  {t("pricing.button")}
-                </Link>
+                  >
+                    {/* badges */}
+                    <div className="flex flex-wrap gap-2 mb-5 min-h-[26px]">
+                      {plan.popular && (
+                        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-3 py-1 rounded-full tracking-wide ${isLight ? "bg-primary text-white" : "bg-white/20 text-white"}`}>
+                          ★ {t("pricing.most_popular")}
+                        </span>
+                      )}
+                      {plan.freeTrialDays && (
+                        <span className={`inline-flex items-center text-[11px] font-semibold px-3 py-1 rounded-full ${isLight ? "bg-primary/10 text-primary" : "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30"}`}>
+                          {plan.freeTrialDays} days free
+                        </span>
+                      )}
+                    </div>
+
+                    {/* billing cycle label */}
+                    <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isLight ? "text-primary/60" : "text-white/40"}`}>
+                      {plan.billingCycle ?? "plan"}
+                    </p>
+
+                    {/* plan name */}
+                    <h3 className={`text-3xl font-bold mb-5 capitalize leading-tight ${isLight ? "text-foreground" : "text-white"}`}>
+                      {plan.name}
+                    </h3>
+
+                    {/* price */}
+                    <div className={`flex items-end gap-1 mb-6 pb-6 border-b ${isLight ? "border-gray-100" : "border-white/10"}`}>
+                      <span className={`text-6xl font-extrabold leading-none ${isLight ? "text-primary" : "text-white"}`}>
+                        {plan.price}
+                      </span>
+                      <span className={`text-sm font-medium mb-1 ${isLight ? "text-[#94A3B8]" : "text-white/50"}`}>
+                        {plan.period}
+                      </span>
+                    </div>
+
+                    {/* features */}
+                    <ul className="space-y-3 mb-8 flex-1">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-3">
+                          <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${isLight ? "bg-primary/10" : "bg-white/10"}`}>
+                            <Check className={`w-3 h-3 ${isLight ? "text-primary" : "text-white"}`} />
+                          </span>
+                          <span className={`text-base capitalize ${isLight ? "text-[#475569]" : "text-white/70"}`}>
+                            {feature}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* cta */}
+                    <Link
+                      href="/contact"
+                      className={`w-full py-4 rounded-xl font-semibold text-base flex justify-center items-center gap-2 transition-all mt-auto ${
+                        isLight
+                          ? "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20"
+                          : "bg-white/10 text-white hover:bg-white/20 border border-white/20"
+                      }`}
+                    >
+                      {t("pricing.button")}
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                  );
+                })}
               </div>
-            ))}
-          </div>
+
+              {/* single progress bar */}
+              {pricingPlans.length > 1 && (
+                <div className="flex justify-center mt-6">
+                  <div className="w-24 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white rounded-full transition-all duration-300"
+                      style={{ width: `${((activePlanIndex + 1) / pricingPlans.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </section>
 

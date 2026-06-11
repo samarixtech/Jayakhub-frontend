@@ -1,14 +1,17 @@
+import Blog from "@/components/modules/public-website/blogs/blogsPage";
+import { getBlogsAction } from "@/app/actions/public/blog";
 
-"use client";
+export default async function BlogsPage() {
+  const result = await getBlogsAction({ limit: 100 });
+  const blogs = result.success ? result.data?.items ?? [] : [];
 
-  import Blog from "@/components/modules/public-website/blogs/blogsPage";
+  const categories = Array.from(new Set(blogs.map((b) => b.category))).filter(
+    Boolean,
+  );
 
-export default function BlogsPage() {
   return (
     <div>
-      <Blog />
-     
-    
+      <Blog blogs={blogs} categories={categories} />
     </div>
   );
 }

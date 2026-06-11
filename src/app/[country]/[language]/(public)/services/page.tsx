@@ -1,14 +1,15 @@
+import Services from "@/components/modules/public-website/services/ServicePage";
+import { getPublicPlansAction } from "@/app/actions/public/plans";
 
-"use client";
+export default async function ServicesPage() {
+  const result = await getPublicPlansAction();
+  const plans = (result.success ? result.data ?? [] : []).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
 
-  import Services from "@/components/modules/public-website/services/ServicePage";
-
-export default function ServicesPage() {
   return (
-    <div> 
-      <Services />
-     
-    
+    <div>
+      <Services plans={plans} />
     </div>
   );
 }
