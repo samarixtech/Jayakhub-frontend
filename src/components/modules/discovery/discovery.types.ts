@@ -111,6 +111,7 @@ export interface PopularRestaurantsSectionProps {
   isPending: boolean;
   restaurants: RestaurantProps[];
   isLoggedIn?: boolean;
+  onAction?: () => void;
 }
 
 export interface CuisinesSectionProps {
@@ -126,6 +127,7 @@ export interface AllRestaurantsSectionProps {
   viewMode: "grid" | "list";
   setViewMode: (mode: "grid" | "list") => void;
   isLoggedIn?: boolean;
+  onAction?: () => void;
 }
 
 export interface ShopProps {

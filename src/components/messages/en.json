@@ -2154,6 +2154,21 @@
           "hours": "{count}h ago",
           "days": "{count}d ago"
         }
+      },
+      "ticketChat": {
+        "back": "Back to Tickets",
+        "conversation": "CONVERSATION",
+        "reply": "REPLY",
+        "placeholder": "Write a reply...",
+        "browse": "Browse for files",
+        "dragDrop": "or drag & drop here",
+        "limit": "16 MB limit · Most file types accepted",
+        "post": "Post comment",
+        "started": "Conversation started",
+        "postSuccess": "Reply posted successfully!",
+        "postFailed": "Failed to post reply.",
+        "ticketNotFound": "Ticket details could not be found.",
+        "resolvedMessage": "This ticket has been resolved. You can no longer send replies."
       }
     },
     "Users": {

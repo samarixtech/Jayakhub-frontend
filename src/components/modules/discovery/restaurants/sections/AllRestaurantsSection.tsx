@@ -10,13 +10,14 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
   viewMode,
   setViewMode,
   isLoggedIn,
+  onAction,
 }) => {
   return (
     <section className="mb-20">
       {/* Desktop View */}
       <div className="hidden md:block">
         <div className="mb-6">
-          <SectionHeader title="All Restaurants" />
+          <SectionHeader title="All Restaurants" onAction={onAction} />
         </div>
 
         {isPending ? (

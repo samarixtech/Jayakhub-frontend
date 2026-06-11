@@ -2,16 +2,15 @@ import React from "react";
 import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
 import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
 import {
-  RestaurantProps,
   PopularRestaurantsSectionProps,
 } from "@/components/modules/discovery/discovery.types";
 
 export const PopularRestaurantsSection: React.FC<
   PopularRestaurantsSectionProps
-> = ({ isPending, restaurants, isLoggedIn }) => {
+> = ({ isPending, restaurants, isLoggedIn, onAction }) => {
   return (
     <section className="mb-8">
-      <SectionHeader title="Popular Restaurants" />
+      <SectionHeader title="Popular Restaurants" onAction={onAction} />
       {isPending ? (
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {[1, 2, 3, 4].map((i) => (

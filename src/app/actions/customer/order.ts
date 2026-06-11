@@ -19,6 +19,7 @@ interface CreateOrderPayload {
   latitude?: number;
   longitude?: number;
   currency: string;
+  couponCode?: string;
 }
 
 export async function createOrderAction(payload: CreateOrderPayload) {

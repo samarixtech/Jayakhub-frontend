@@ -2,6 +2,7 @@
 import { Clock, Loader2, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCLC } from "@/context/CLCContext";
+import { toast } from "react-hot-toast";
 
 interface CartItem {
   id?: string;
@@ -22,6 +23,8 @@ interface OrderSummaryProps {
   cartItems: CartItem[];
   onPlaceOrder?: () => void;
   isPlacingOrder?: boolean;
+  couponCode: string;
+  setCouponCode: (val: string) => void;
 }
 
 const OrderSummary = ({
@@ -32,6 +35,8 @@ const OrderSummary = ({
   cartItems,
   onPlaceOrder,
   isPlacingOrder = false,
+  couponCode,
+  setCouponCode,
 }: OrderSummaryProps) => {
   const { currency } = useCLC();
   return (
@@ -127,9 +132,21 @@ const OrderSummary = ({
           <input
             type="text"
             placeholder="Promo code"
-            className="bg-transparent border-none text-sm outline-none w-full"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value)}
+            className="bg-transparent border-none text-sm outline-none w-full font-sans"
           />
-          <button className="text-xs font-bold text-[#346853] px-3 hover:underline">
+          <button 
+            type="button"
+            onClick={() => {
+              if (couponCode.trim()) {
+                toast.success(`Coupon "${couponCode}" applied!`);
+              } else {
+                toast.error("Please enter a coupon code.");
+              }
+            }}
+            className="text-xs font-bold text-[#346853] px-3 hover:underline"
+          >
             APPLY
           </button>
         </div>
@@ -147,7 +164,7 @@ const OrderSummary = ({
         </Button>
 
         <p className="text-[10px] text-gray-400 text-center mt-3 leading-tight">
-          By placing your order, you agree to JayakHub's{" "}
+          By placing your order, you agree to {"JayakHub's"}{" "}
           <span className="underline cursor-pointer">Terms & Conditions</span>.
         </p>
       </div>

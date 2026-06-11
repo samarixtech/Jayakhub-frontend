@@ -44,6 +44,7 @@ const CheckoutView = () => {
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "cod" | string>(
     "cod",
   );
+  const [couponCode, setCouponCode] = useState("");
 
   const { currencyCode } = useCLC();
 
@@ -102,6 +103,7 @@ const CheckoutView = () => {
       latitude: selectedAddress.latitude,
       longitude: selectedAddress.longitude,
       currency: currencyCode,
+      couponCode: couponCode || undefined,
     };
 
     try {
@@ -294,6 +296,8 @@ const CheckoutView = () => {
                   cartItems={cart}
                   onPlaceOrder={handlePlaceOrder}
                   isPlacingOrder={isPlacingOrder}
+                  couponCode={couponCode}
+                  setCouponCode={setCouponCode}
                 />
               </div>
             </div>

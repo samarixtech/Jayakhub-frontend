@@ -10,23 +10,21 @@ import { TicketsTable } from "../components/TicketsTable";
 import { KnowledgeBaseCategories } from "../components/KnowledgeBaseCategories";
 import { FAQSection } from "../components/FAQSection";
 import CreateTicketDialog from "../components/CreateTicketDialog";
-import TicketDetailSheet from "../components/TicketDetailSheet";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 const SupportCenterView = () => {
   const t = useTranslations("RestaurantDashboard.Support");
   const { tickets, isLoading, refreshTickets } = useSupportTickets();
   const [ticketDialogOpen, setTicketDialogOpen] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const router = useRouter();
 
   const handleTicketClick = (ticket: Ticket) => {
-    setSelectedTicket(ticket);
-    setSheetOpen(true);
+    router.push(`/restaurant/support/${ticket.id}`);
   };
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto pb-12">
+    <div className="w-full max-w-[1200px] mx-auto pb-12 animate-fadeSlide">
       {/* Page Header */}
       <div className="flex justify-end items-center mb-4">
         <button
@@ -60,13 +58,9 @@ const SupportCenterView = () => {
         onOpenChange={setTicketDialogOpen}
         onTicketCreated={refreshTickets}
       />
-      <TicketDetailSheet
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
-        ticket={selectedTicket}
-      />
     </div>
   );
 };
 
 export default SupportCenterView;
+

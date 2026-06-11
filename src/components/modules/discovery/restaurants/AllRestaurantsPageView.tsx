@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
-import HeroBanner from "@/components/modules/discovery/restaurants/components/HeroBanner";
 import DiscoverySidebar from "@/components/modules/discovery/restaurants/components/DiscoverySidebar";
+import { GlobalSearch } from "@/components/modules/discovery/components/GlobalSearch";
 import { RatingModal } from "@/components/common/RatingModal";
 import { useDiscoveryUI } from "@/context/DiscoveryUIContext";
 import {
@@ -12,24 +11,23 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useRestaurantDiscovery } from "@/hooks/use-restaurant-discovery";
-import { PopularRestaurantsSection } from "./sections/PopularRestaurantsSection";
-import { CuisinesSection } from "./sections/CuisinesSection";
-import { CuratedSection } from "./sections/CuratedSection";
 import { AllRestaurantsSection } from "./sections/AllRestaurantsSection";
-import { PreviousOrdersSection } from "./sections/PreviousOrdersSection";
 
-const AllRestaurantsPage: React.FC = () => {
-  const router = useRouter();
+const AllRestaurantsPageView: React.FC = () => {
   const { isFilterOpen, setIsFilterOpen } = useDiscoveryUI();
   const { state, actions } = useRestaurantDiscovery();
 
   return (
     <div className="min-h-screen bg-white font-sans pb-20">
-      {/* HERO BANNER */}
-      <HeroBanner />
+      {/* MINIMAL SEARCH BAR CONTAINER */}
+      <div className="w-full bg-white border-b border-gray-100 py-6 px-4 sm:px-6 relative z-30">
+        <div className="max-w-[540px] mx-auto">
+          <GlobalSearch />
+        </div>
+      </div>
 
       {/* SIDEBAR + MAIN CONTENT */}
-      <div className="flex gap-8 px-3 sm:px-6 mt-6 items-start relative">
+      <div className="flex gap-8 px-3 sm:px-6 mt-8 items-start relative">
         {/* ===== LEFT SIDEBAR ===== */}
         <aside className="w-[240px] shrink-0 hidden lg:block sticky top-[96px] h-[calc(100vh-96px)] overflow-hidden mr-0 sm:mr-5">
           <div className="h-full overflow-y-auto pr-4 pb-20 scrollbar-hide overscroll-y-contain">
@@ -52,30 +50,6 @@ const AllRestaurantsPage: React.FC = () => {
 
         {/* ===== MAIN CONTENT ===== */}
         <div className="flex-1 min-w-0">
-          <PopularRestaurantsSection
-            isPending={state.isPending}
-            restaurants={state.restaurants}
-            isLoggedIn={state.isLoggedIn}
-            onAction={() => router.push("/all-restaurants")}
-          />
-
-          <CuisinesSection
-            isCuisinesLoading={state.isCuisinesLoading}
-            cuisineTypes={state.cuisineTypes}
-            activeFilters={state.activeFilters}
-            onCuisineClick={actions.handleFilter}
-          />
-
-          <div className="mb-2">
-            <h2 className="text-xl font-bold text-gray-900">
-              {state.restaurants.length} restaurants near you
-            </h2>
-          </div>
-
-          <CuratedSection
-            selectedSort={state.selectedSort}
-            onSortChange={actions.setSelectedSort}
-          />
 
           <AllRestaurantsSection
             isPending={state.isPending}
@@ -83,14 +57,6 @@ const AllRestaurantsPage: React.FC = () => {
             viewMode={state.viewMode}
             setViewMode={actions.setViewMode}
             isLoggedIn={state.isLoggedIn}
-            onAction={() => router.push("/all-restaurants")}
-          />
-
-          <PreviousOrdersSection
-            isLoggedIn={state.isLoggedIn}
-            isPreviousOrdersLoading={state.isPreviousOrdersLoading}
-            previousOrders={state.previousOrders}
-            viewMode={state.viewMode}
           />
         </div>
       </div>
@@ -133,4 +99,4 @@ const AllRestaurantsPage: React.FC = () => {
   );
 };
 
-export default AllRestaurantsPage;
+export default AllRestaurantsPageView;
