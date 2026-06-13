@@ -49,7 +49,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-primary text-white py-10 border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12 items-start">
           {/* BRAND COLUMN (Span 2 columns on large screens) */}
           <div className="col-span-2 lg:col-span-2 space-y-6">
@@ -63,20 +63,21 @@ const Footer = () => {
             </div>
 
             <p className="text-[#FFFFFF80] text-sm leading-relaxed max-w-sm">
-              {t("brand.description")}
+              {t("brand.description_line1")}<br />
+              {t("brand.description_line2")}
             </p>
 
             <div className="space-y-3 text-sm text-[#FFFFFF80]">
-              <div className="flex items-center space-x-3">
-                <Mail className="w-4 h-4" />
+              <a href={`mailto:${t("brand.email")}`} className="flex items-center space-x-3 hover:text-white transition-colors">
+                <Mail className="w-4 h-4 shrink-0" />
                 <span>{t("brand.email")}</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="w-4 h-4" />
+              </a>
+              <a href={`tel:${t("brand.phone")}`} className="flex items-center space-x-3 hover:text-white transition-colors">
+                <Phone className="w-4 h-4 shrink-0" />
                 <span>{t("brand.phone")}</span>
-              </div>
+              </a>
               <div className="flex items-center space-x-3">
-                <MapPin className="w-4 h-4" />
+                <MapPin className="w-4 h-4 shrink-0" />
                 <span>{t("brand.location")}</span>
               </div>
             </div>

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from "@/lib/utils";
 import { useTranslations } from 'next-intl';
+import { useRouter, useParams } from 'next/navigation';
 import deliciousFoodImg from '../../../../../public/DeliciousFood.png';
 import falafelImg from '../../../../../public/Falafel.png';
 import dolmaImg from '../../../../../public/Dolma.png';
@@ -14,11 +15,25 @@ import tabboulehImg from '../../../../../public/Tabbouleh.png';
 
 export default function Hero() {
     const t = useTranslations('Home');
+    const router = useRouter();
+    const params = useParams();
     const [isVisible, setIsVisible] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         setIsVisible(true);
     }, []);
+
+    const handleSearch = () => {
+        const country = (params?.country as string) || 'iq';
+        const language = (params?.language as string) || 'en';
+        const path = `/${country}/${language}/restaurants`;
+        if (searchQuery.trim()) {
+            router.push(`${path}?search=${encodeURIComponent(searchQuery.trim())}`);
+        } else {
+            router.push(path);
+        }
+    };
 
     const STATS = [
         { value: t('stats.customers.value'), label: t('stats.customers.label'), icon: Star, color: 'text-[#fdde31]' },
@@ -37,8 +52,8 @@ export default function Hero() {
         <section id="home" className="relative min-h-screen flex flex-col justify-center pt-16 pb-16 lg:pt-20 lg:pb-10 overflow-hidden bg-primary">
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-20 left-10 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-primary/20 rounded-full blur-[80px] lg:blur-[120px] animate-pulse" />
-                <div className="absolute bottom-20 right-10 w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] bg-orange-500/10 rounded-full blur-[60px] lg:blur-[100px] animate-pulse delay-1000" />
+                <div className="absolute top-20 start-10 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-primary/20 rounded-full blur-[80px] lg:blur-[120px] animate-pulse" />
+                <div className="absolute bottom-20 end-10 w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] bg-orange-500/10 rounded-full blur-[60px] lg:blur-[100px] animate-pulse delay-1000" />
                 <div className="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:40px_40px] lg:[background-size:60px_60px]" />
             </div>
 
@@ -46,17 +61,17 @@ export default function Hero() {
                 <div className="grid lg:grid-cols-2 gap-y-16 gap-x-8 lg:gap-8 items-center min-h-[calc(100vh-160px)]">
 
                     {/* Left Content */}
-                    <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
+                    <div className="space-y-6 lg:space-y-8 text-center lg:text-start">
                         <div className={cn("inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/10", entryTransition("delay-0"))}>
                             <Sparkles className="w-4 h-4 text-orange-400" />
                             <span className="text-sm font-medium text-white/90">{t('hero_badge')}</span>
                         </div>
 
-                        <h1 className={cn("text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-[1.1] lg:leading-[1.05] tracking-tight", entryTransition("delay-100"))}>
+                        <h1 className={cn("text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.15] lg:leading-[1.1] tracking-tight", entryTransition("delay-100"))}>
                             {t('hero_title_p1')}
                             <span className="relative inline-block mx-2 lg:mx-3 text-[#FE8C34]">
                                 {t('hero_title_highlight')}
-                                <svg className="absolute -bottom-1 lg:-bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none">
+                                <svg className="absolute -bottom-1 lg:-bottom-2 start-0 w-full" viewBox="0 0 200 12" fill="none">
                                     <path d="M2 10C50 2 150 2 198 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
                                 </svg>
                             </span>
@@ -64,25 +79,35 @@ export default function Hero() {
                             <span className="text-white/90">{t('hero_title_p2')}</span>
                         </h1>
 
-                        <p className={cn("text-base sm:text-lg text-white/60 max-w-xl mx-auto lg:mx-0 leading-relaxed", entryTransition("delay-200"))}>
+                        <p className={cn("text-base sm:text-lg text-white/60 max-w-xl mx-auto lg:ms-0 leading-relaxed", entryTransition("delay-200"))}>
                             {t('hero_subtitle')}
                         </p>
 
                         {/* Search Bar */}
                         <div className={entryTransition("delay-300")}>
-                            <div className="group relative bg-white rounded-2xl p-2 shadow-2xl flex items-center focus-within:ring-4 focus-within:ring-primary/30 transition-all max-w-md mx-auto lg:max-w-none lg:mx-0">
+                            <form
+                                onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
+                                className="group relative bg-white rounded-2xl p-2 shadow-2xl flex items-center focus-within:ring-4 focus-within:ring-primary/30 transition-all max-w-md mx-auto lg:max-w-none lg:mx-0"
+                            >
                                 <div className="flex-1 flex items-center gap-2 sm:gap-3 px-3 sm:px-4">
                                     <MapPin className="w-5 h-5 text-primary shrink-0" />
                                     <Input
                                         placeholder={t('hero_search_placeholder')}
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
                                         className="border-none shadow-none focus-visible:ring-0 text-foreground placeholder:text-muted-foreground h-12 text-sm sm:text-base px-0"
                                     />
                                 </div>
-                                <Button size="lg" className="bg-primary hover:bg-primary-light text-white rounded-xl px-5 sm:px-8 font-semibold transition-transform hover:scale-105 shrink-0">
-                                    <Search className="w-5 h-5 sm:mr-2" />
+                                <Button
+                                    type="submit"
+                                    size="lg"
+                                    onClick={handleSearch}
+                                    className="bg-primary hover:bg-primary-light text-white rounded-xl px-5 sm:px-8 font-semibold transition-transform hover:scale-105 shrink-0"
+                                >
+                                    <Search className="w-5 h-5 sm:me-2" />
                                     <span className="hidden sm:inline">{t('hero_search_btn')}</span>
                                 </Button>
-                            </div>
+                            </form>
                         </div>
 
                         {/* Stats */}
@@ -92,7 +117,7 @@ export default function Hero() {
                                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/10">
                                         <stat.icon className={cn("w-5 h-5 sm:w-6 sm:h-6", stat.color)} />
                                     </div>
-                                    <div className="text-left">
+                                    <div className="text-start">
                                         <div className="text-xl sm:text-2xl font-bold text-white">{stat.value}</div>
                                         <div className="text-xs sm:text-sm text-white/50">{stat.label}</div>
                                     </div>
@@ -118,21 +143,21 @@ export default function Hero() {
                         {/* Floating Items - Responsive positioning and scaling */}
                         <FloatingCard
                             img={falafelImg} title="Falafel" price="$5.99"
-                            className="scale-90 sm:scale-100 top-0 right-0 sm:top-10 sm:right-10"
+                            className="scale-90 sm:scale-100 top-0 end-0 sm:top-10 sm:end-10"
                         />
                         <FloatingCard
                             img={dolmaImg} title="Dolma" price="$8.99"
-                            className="scale-90 sm:scale-100 bottom-0 left-0 sm:bottom-20 sm:left-10"
+                            className="scale-90 sm:scale-100 bottom-0 start-0 sm:bottom-20 sm:start-10"
                             delay="1s" reverse
                         />
                         <FloatingCard
                             img={tabboulehImg} title="Tabbouleh" price="$4.99"
-                            className="scale-90 sm:scale-100 top-1/4 -left-4 sm:top-1/3 sm:-left-5"
+                            className="scale-90 sm:scale-100 top-1/4 -start-4 sm:top-1/3 sm:-start-5"
                             delay="1.5s"
                         />
 
                         {/* Review Badge - Responsive positioning and scaling */}
-                        <div className="absolute bottom-0 right-0 sm:bottom-10 sm:right-10 scale-90 sm:scale-100 bg-white rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3">
+                        <div className="absolute bottom-0 end-0 sm:bottom-10 sm:end-10 scale-90 sm:scale-100 bg-white rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3">
                             <div className="flex -space-x-2">
                                 {[1, 2, 3].map((i) => (
                                     <div key={i} className="w-8 h-8 bg-gradient-to-br from-primary to-primary-light rounded-full border-2 border-white flex items-center justify-center text-white text-[10px] font-bold">

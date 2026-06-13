@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Star, Clock, Flame, ChevronRight, Heart } from "lucide-react";
+import { Star, Clock, Flame, ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import alMansourImg from "../../../../../public/al-mansour.jpg";
@@ -97,7 +97,6 @@ export default function Restaurants() {
   const t = useTranslations("Home.featured_restaurants");
   const [activeCategory, setActiveCategory] = useState("All");
   const [isVisible, setIsVisible] = useState(false);
-  const [favorites, setFavorites] = useState<number[]>([]);
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -117,12 +116,6 @@ export default function Restaurants() {
 
     return () => observer.disconnect();
   }, []);
-
-  const toggleFavorite = (id: number) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
-    );
-  };
 
   return (
     <section
@@ -206,22 +199,6 @@ export default function Restaurants() {
                     {t(`badges.${restaurant.badge}`)}
                   </div>
                 )}
-
-                {/* Favorite Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite(restaurant.id);
-                  }}
-                  className="absolute top-3 right-3 md:top-4 md:right-4 w-9 h-9 md:w-10 md:h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 z-10"
-                >
-                  <Heart
-                    className={`w-4 h-4 md:w-5 md:h-5 transition-colors ${favorites.includes(restaurant.id)
-                      ? "text-red-500 fill-red-500"
-                      : "text-[#64748B]"
-                      }`}
-                  />
-                </button>
 
                 {/* Delivery Info - Adjusted visibility for mobile */}
                 <div className="absolute bottom-3 left-3 right-3 md:bottom-4 md:left-4 md:right-4 flex items-center justify-between md:opacity-0 md:group-hover:opacity-100 transition-all transform md:translate-y-4 md:group-hover:translate-y-0 z-10">

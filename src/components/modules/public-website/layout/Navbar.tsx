@@ -17,6 +17,7 @@ const Navbar: React.FC = () => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<"language" | "country" | null>(null);
   const handleCloseMobileMenu = useCallback(() => {
     setIsClosing(true);
     setTimeout(() => {
@@ -40,9 +41,9 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-[#0B5D4E] shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto  lg:px-6">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex items-center h-20">
           {/* Logo */}
-          <Link href="/home">
+          <Link href="/home" className="shrink-0">
             <Image
               src={isArabic ? image : image2}
               alt="Logo"
@@ -51,8 +52,8 @@ const Navbar: React.FC = () => {
             />
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Desktop Nav Links — centered */}
+          <div className="hidden md:flex items-center gap-6 lg:gap-8 flex-1 justify-center">
             {navItems.map((item) => {
               const isActive = pathname.includes(item.to);
               return (
@@ -66,15 +67,24 @@ const Navbar: React.FC = () => {
                 </Link>
               )
             })}
+          </div>
 
-            <div className="flex items-center gap-3">
-              <LanguageSwitcher variant="navbar" />
-              <CountrySwitcher variant="navbar" />
-            </div>
+          {/* Desktop Switchers — pushed to end */}
+          <div className="hidden md:flex items-center gap-3 shrink-0 ms-auto">
+            <LanguageSwitcher
+              variant="navbar"
+              open={openDropdown === "language"}
+              onOpenChange={(o) => setOpenDropdown(o ? "language" : null)}
+            />
+            <CountrySwitcher
+              variant="navbar"
+              open={openDropdown === "country"}
+              onOpenChange={(o) => setOpenDropdown(o ? "country" : null)}
+            />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden ms-auto">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               className="text-[#E8F4F1] hover:text-[#B6932F] p-2"

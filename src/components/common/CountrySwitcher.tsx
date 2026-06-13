@@ -31,17 +31,26 @@ const fetchIPBasedDefaults = async (): Promise<{ ipCountry: string }> => {
 
 interface CountrySwitcherProps {
   variant?: "default" | "navbar";
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
   variant = "default",
+  open,
+  onOpenChange,
 }) => {
   const router = useRouter();
   const params = useParams();
 
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isCountryDropdownOpen = open !== undefined ? open : internalOpen;
+  const setIsCountryDropdownOpen = (val: boolean) => {
+    if (onOpenChange) onOpenChange(val);
+    else setInternalOpen(val);
+  };
   const [searchQuery, setSearchQuery] = useState("");
   const desktopCountryRef = useRef<HTMLDivElement | null>(null);
 
@@ -134,14 +143,14 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
   return (
     <div
       ref={desktopCountryRef}
-      className={`relative ${isNavbar ? "flex w-full" : ""}`}
+      className={`relative ${isNavbar ? "flex" : ""}`}
     >
       <button
         onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
         className={
           isNavbar
-            ? "flex w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-[#E8F4F1]/10 md:bg-[#FFF9EE] text-[#E8F4F1] md:text-[#2C2C2C] hover:bg-[#E8F4F1]/20 md:hover:bg-[#0B5D4E] md:hover:text-white transition-all md:shadow-sm"
-            : "flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all"
+            ? "group flex w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-[#E8F4F1]/10 md:bg-white text-[#E8F4F1] md:text-[#2C2C2C] hover:bg-[#E8F4F1]/20 md:hover:bg-[#0B5D4E] md:hover:text-white transition-all md:shadow-sm"
+            : "group flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all"
         }
       >
         <div className="flex items-center gap-2">
@@ -176,8 +185,10 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
         <ChevronDown
           size={isNavbar ? 16 : 14}
           className={`${
-            isNavbar ? "text-[#E8F4F1] md:text-[#0B5D4E]" : "text-gray-500"
-          } transition-transform duration-200 ${
+            isNavbar
+              ? "text-[#E8F4F1] md:text-[#0B5D4E] md:group-hover:text-white"
+              : "text-gray-500"
+          } transition-all duration-300 ${
             isCountryDropdownOpen ? "rotate-180" : ""
           }`}
         />
@@ -185,47 +196,48 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
 
       {isCountryDropdownOpen && (
         <div
-          className={`absolute ${
-            isNavbar
-              ? "left-0 mt-14 md:mt-2 md:left-auto md:right-0 z-60"
-              : "right-0 top-12 z-50"
-          } w-full md:w-64 ${
+          className={`absolute top-full mt-1 ${
+            isNavbar ? "end-0 z-60" : "end-0 z-50"
+          } w-64 flex flex-col ${
             isNavbar
               ? "bg-[#E8F4F1] text-black border border-[#0B5D4E] shadow-xl"
               : "bg-white border rounded-lg shadow-xl"
-          } rounded-lg py-2 max-h-64 overflow-y-auto animate-fade-in`}
+          } rounded-lg overflow-hidden animate-fade-in`}
+          style={{ maxHeight: "17rem" }}
         >
-          {/* Search Input */}
-          <div className="px-3 py-2 sticky top-0 bg-inherit z-10">
+          {/* Search Input — outside scroll area so it never hides behind list */}
+          <div className="px-3 pt-3 pb-2 shrink-0">
             <input
               type="text"
               placeholder="Search country..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-3 py-2 border border-[#0B5D4E]/30 rounded-md text-sm mb-2 text-black bg-white"
+              className="w-full px-3 py-2 border border-[#0B5D4E]/30 rounded-lg text-sm text-black bg-white outline-none focus:ring-2 focus:ring-[#0B5D4E]/30"
             />
           </div>
 
-          {/* Filtered Countries List */}
+          {/* Scrollable Countries List */}
+          <div className="overflow-y-auto flex-1 pb-1">
           {filteredCountries.length > 0 ? (
             filteredCountries.map((country) => (
               <button
                 key={country.code}
                 onClick={() => handleCountrySelect(country)}
-                className={`w-full flex items-center justify-between px-3 py-2 hover:bg-[#0B5D4E] hover:text-white transition ${
+                className={`w-full flex items-center justify-between px-3 py-2 mx-1 rounded-lg transition-all duration-200 ${
                   selectedCountry.code === country.code
-                    ? "bg-[#0B5D4E] text-white font-semibold"
-                    : "text-black"
+                    ? "bg-[#0B5D4E]/10 text-[#0B5D4E] font-semibold"
+                    : "text-[#2C2C2C] hover:bg-[#0B5D4E] hover:text-white"
                 }`}
+                style={{ width: "calc(100% - 0.5rem)" }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="flex items-center justify-center shrink-0 w-[30px] h-[30px] overflow-hidden">
+                  <span className="flex items-center justify-center shrink-0 w-[26px] h-[26px] overflow-hidden rounded-full">
                     <ReactCountryFlag
                       countryCode={country.code.toUpperCase()}
                       svg
                       style={{
-                        width: "30px",
-                        height: "30px",
+                        width: "26px",
+                        height: "26px",
                         objectFit: "cover",
                         display: "block",
                         borderRadius: "50%",
@@ -236,15 +248,16 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
                   <span className="text-sm">{country.name}</span>
                 </div>
                 {selectedCountry.code === country.code && (
-                  <Check size={16} className="text-[#D5AF33]" />
+                  <Check size={14} className="stroke-[3px] shrink-0" />
                 )}
               </button>
             ))
           ) : (
-            <div className="text-center text-gray-500 py-2">
+            <div className="text-center text-gray-500 py-2 text-sm">
               No countries found
             </div>
           )}
+          </div>
         </div>
       )}
     </div>

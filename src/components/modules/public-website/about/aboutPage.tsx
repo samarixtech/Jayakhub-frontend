@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import Image from 'next/image';
 import PublicHeroSection from '@/components/common/public-website/publicHeroSection';
 import engineImg from '../../../../../public/engine.png';
@@ -11,6 +11,9 @@ import forRidersImg from '../../../../../public/For-riders.png';
 
 export default function About() {
   const t = useTranslations('About');
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
+  const Arrow = isRTL ? ArrowLeft : ArrowRight;
   const [isVisible, setIsVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -201,7 +204,7 @@ export default function About() {
                 <p className="text-[#64748B] mb-4 leading-relaxed">{item.description}</p>
                 <a href="#" className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all">
                   {item.cta}
-                  <ArrowRight className="w-4 h-4" />
+                  <Arrow className="w-4 h-4" />
                 </a>
               </div>
             ))}
