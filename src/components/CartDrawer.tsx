@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateQuantity } from "@/redux/slices/cartSlice";
+import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 
 import {
   X,
@@ -27,6 +28,7 @@ interface CartDrawerProps {
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { currency, country, language } = useCLC();
   const cart = useSelector((state: RootState) => state.cart.items);
+  const selectedRestaurantMeta = useSelector((state: RootState) => state.discovery.selectedRestaurantMeta);
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const params = useParams();
@@ -63,11 +65,19 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (!isOpen) {
-      // Reset view when closed
       setViewMode("grouped");
       setSelectedRestaurantId(null);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!selectedRestaurantMeta) {
+      try {
+        const saved = localStorage.getItem("selectedRestaurantMeta");
+        if (saved) dispatch(setSelectedRestaurantMeta(JSON.parse(saved)));
+      } catch {}
+    }
+  }, []);
 
   const hasItems = cart.length > 0;
 
@@ -80,7 +90,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     (total, item) => total + item.price * item.quantity,
     0,
   );
-  const deliveryFee = 0; // Set to 0 per request
+  const deliveryFee = selectedRestaurantMeta?.deliveryFee ?? 0;
   const total = subtotal + deliveryFee;
 
   const handleUpdateQuantity = (id: string, quantity: number) => {

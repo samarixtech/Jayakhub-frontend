@@ -16,6 +16,7 @@ import CheckoutSkeleton from "@/components/skeletons/CheckoutSkeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store/store";
 import { clearCart } from "@/redux/slices/cartSlice";
+import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
 import { useCLC } from "@/context/CLCContext";
@@ -32,6 +33,7 @@ import {
 const CheckoutView = () => {
   const dispatch = useDispatch<AppDispatch>();
   const cart = useSelector((state: RootState) => state.cart.items);
+  const selectedRestaurantMeta = useSelector((state: RootState) => state.discovery.selectedRestaurantMeta);
   const router = useRouter();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,6 +47,7 @@ const CheckoutView = () => {
     "cod",
   );
   const [couponCode, setCouponCode] = useState("");
+  const [couponFinalTotal, setCouponFinalTotal] = useState<number | null>(null);
 
   const { currencyCode } = useCLC();
 
@@ -70,8 +73,8 @@ const CheckoutView = () => {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
-    const deliveryFee = 0;
-    const totalAmount = subtotal + deliveryFee;
+    const deliveryFee = selectedRestaurantMeta?.deliveryFee ?? 0;
+    const totalAmount = couponFinalTotal ?? (subtotal + deliveryFee);
 
     const payload = {
       paymentMethod: paymentMethod as any,
@@ -174,6 +177,15 @@ const CheckoutView = () => {
       console.error("Failed to fetch cards", error);
     }
   };
+
+  useEffect(() => {
+    if (!selectedRestaurantMeta) {
+      try {
+        const saved = localStorage.getItem("selectedRestaurantMeta");
+        if (saved) dispatch(setSelectedRestaurantMeta(JSON.parse(saved)));
+      } catch {}
+    }
+  }, []);
 
   // Check auth status and fetch profile & addresses
   useEffect(() => {
@@ -285,19 +297,19 @@ const CheckoutView = () => {
                     (sum, item) => sum + item.price * item.quantity,
                     0,
                   )}
-                  deliveryFee={0}
-                  tax={0}
+                  deliveryFee={selectedRestaurantMeta?.deliveryFee ?? 0}
                   total={
                     cart.reduce(
                       (sum, item) => sum + item.price * item.quantity,
                       0,
-                    ) + 0
+                    ) + (selectedRestaurantMeta?.deliveryFee ?? 0)
                   }
                   cartItems={cart}
                   onPlaceOrder={handlePlaceOrder}
                   isPlacingOrder={isPlacingOrder}
                   couponCode={couponCode}
                   setCouponCode={setCouponCode}
+                  onCouponApplied={(finalTotal) => setCouponFinalTotal(finalTotal)}
                 />
               </div>
             </div>

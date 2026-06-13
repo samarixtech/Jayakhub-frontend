@@ -33,6 +33,8 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
   let subtotal = 0;
   let total = 0;
   let deliveryFee = 0;
+  let coupon: any = null;
+  let rider: any = null;
 
   if (order && order.items) {
     subtotal = order.items.reduce(
@@ -40,7 +42,9 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
       0,
     );
     total = Number(order.totalAmount);
-    deliveryFee = total > subtotal ? total - subtotal : 0;
+    deliveryFee = order.deliveryFee ?? 0;
+    coupon = order.coupon ?? null;
+    rider = order.rider ?? null;
   }
 
   return {
@@ -49,5 +53,7 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
     subtotal,
     total,
     deliveryFee,
+    coupon,
+    rider,
   };
 }

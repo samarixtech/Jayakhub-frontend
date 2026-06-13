@@ -25,7 +25,7 @@ export default function OrderTrackingView({ params }: { params: any }) {
   const unwrappedParams = params ? React.use(params as any) : {};
   const orderIdFromUrl = (unwrappedParams as any)?.id;
 
-  const { order, loading, subtotal, total, deliveryFee } =
+  const { order, loading, subtotal, total, deliveryFee, coupon, rider } =
     useOrderTracking(orderIdFromUrl);
 
   if (loading) {
@@ -101,12 +101,13 @@ export default function OrderTrackingView({ params }: { params: any }) {
 
           {/* Right Column Sidebar info */}
           <div className="lg:col-span-4 space-y-6">
-            <RiderCard />
+            <RiderCard rider={rider} />
             <OrderSummaryTable
               items={order.items || []}
               subtotal={subtotal}
               deliveryFee={deliveryFee}
               total={total}
+              coupon={coupon}
             />
             <DeliveryDetails
               userName={order.userName}

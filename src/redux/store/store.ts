@@ -1,5 +1,6 @@
 import { configureStore, Middleware } from '@reduxjs/toolkit';
 import cartReducer from './../slices/cartSlice';
+import discoveryReducer from './../slices/discoverySlice';
 import { saveCartItemsToDB } from '@/lib/indexedDB';
 
 const cartDbMiddleware: Middleware = (storeAPI) => (next) => (action: any) => {
@@ -17,6 +18,7 @@ const cartDbMiddleware: Middleware = (storeAPI) => (next) => (action: any) => {
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
+    discovery: discoveryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(cartDbMiddleware),

@@ -122,6 +122,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={onPageChange}
+            isLoading={loading}
           />
         </div>
       )}

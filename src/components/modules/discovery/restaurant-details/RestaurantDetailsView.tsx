@@ -33,6 +33,8 @@ export default function RestaurantDetailsView() {
         profileUrl={state.profileUrl}
         reviewsData={state.reviewsData}
         onOpenReviews={() => actions.setIsReviewsModalOpen(true)}
+        deliveryFee={state.deliveryFee}
+        distance={state.distance}
       />
 
       <RestaurantMenu

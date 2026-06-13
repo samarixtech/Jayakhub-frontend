@@ -81,7 +81,7 @@ export interface UIOrder {
 import { usePagination } from "@/hooks/usePagination";
 
 export const useOrders = () => {
-  const { page, limit, totalPages, handlePageChange, updatePaginationMeta } =
+  const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } =
     usePagination({ initialLimit: 10 });
   const [activeTab, setActiveTab] = useState<"live" | "past">("live");
   const [selectedOrder, setSelectedOrder] = useState<UIOrder | null>(null);
@@ -260,6 +260,7 @@ export const useOrders = () => {
     paginatedOrders,
     filteredOrders,
     totalPages,
+    totalCount,
     handleStatusUpdate,
     handleOrderClick,
     liveOrdersCount,

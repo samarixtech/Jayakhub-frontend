@@ -7,6 +7,9 @@ import { toggleWishlistAction } from "@/app/actions/customer/wishlist";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
 import { useCLC } from "@/context/CLCContext";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store/store";
+import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 
 import { CardProps } from "@/components/modules/discovery/discovery.types";
 
@@ -21,11 +24,19 @@ const DiscoveryRestaurantCard = ({
   const [internalIsWishlist, setInternalIsWishlist] = useState(data.isWishlist);
   const [isWishlistPending, setIsWishlistPending] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const { currency } = useCLC();
   const isCompact = variant === "compact";
 
   const handleClick = () => {
     if (data.slug) {
+      const meta = {
+        id: data.id,
+        deliveryFee: data.deliveryFee ?? 0,
+        distance: (data as any).distance,
+      };
+      dispatch(setSelectedRestaurantMeta(meta));
+      localStorage.setItem("selectedRestaurantMeta", JSON.stringify(meta));
       router.push(`/restaurants/${data.slug}`);
     }
   };
@@ -79,10 +90,10 @@ const DiscoveryRestaurantCard = ({
         {/* Discount Badge */}
         {(data.discount ||
           (data.averageDiscount && data.averageDiscount > 0)) && (
-          <Badge className="absolute top-3 left-3 bg-[#EE3F43] hover:bg-[#EE3F43] text-white border-0 font-bold px-2 py-1 text-[10px] sm:text-[11px] uppercase rounded-md shadow-md z-10">
-            {data.discount || `${data.averageDiscount}% OFF`}
-          </Badge>
-        )}
+            <Badge className="absolute top-3 left-3 bg-[#EE3F43] hover:bg-[#EE3F43] text-white border-0 font-bold px-2 py-1 text-[10px] sm:text-[11px] uppercase rounded-md shadow-md z-10">
+              {data.discount || `${data.averageDiscount}% OFF`}
+            </Badge>
+          )}
 
         {/* Wishlist Toggle */}
         {isLoggedIn && (

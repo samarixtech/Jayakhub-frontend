@@ -175,7 +175,9 @@ export function useRestaurantDiscovery() {
             ? item.type.join(", ")
             : item.type || "General",
           deliveryTime: item.deliveryTime || "30-45 mins",
-          deliveryFee: 0,
+          deliveryFee: typeof item.deliveryFee === "object"
+            ? (item.deliveryFee?.deliveryCharge || 0)
+            : (item.deliveryFee || 0),
           discount: undefined,
           isFavorite: false,
           isWishlist: !!item.isWishlist,
@@ -221,7 +223,9 @@ export function useRestaurantDiscovery() {
             ? item.type.join(", ")
             : item.type || "General",
           deliveryTime: item.deliveryTime || "30-45 mins",
-          deliveryFee: 0,
+          deliveryFee: typeof item.deliveryFee === "object"
+            ? (item.deliveryFee?.deliveryCharge || 0)
+            : (item.deliveryFee || 0),
           discount: undefined,
           isFavorite: false,
           isWishlist: !!item.isWishlist,

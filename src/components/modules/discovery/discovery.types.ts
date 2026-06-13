@@ -46,6 +46,8 @@ export interface RestaurantHeroProps {
   profileUrl: string;
   reviewsData: any;
   onOpenReviews: () => void;
+  deliveryFee?: number;
+  distance?: number;
 }
 
 export interface FoodCardProps {

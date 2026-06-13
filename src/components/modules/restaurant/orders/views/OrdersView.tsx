@@ -18,11 +18,11 @@ const OrdersView = () => {
     setCurrentPage,
     paginatedOrders,
     totalPages,
+    totalCount,
     handleStatusUpdate,
     handleOrderClick,
     liveOrdersCount,
     pastOrdersCount,
-    filteredOrders,
   } = useOrders();
 
   return (
@@ -36,7 +36,7 @@ const OrdersView = () => {
           onPageReset={() => setCurrentPage(1)}
           liveOrdersCount={liveOrdersCount}
           pastOrdersCount={pastOrdersCount}
-          filteredOrdersCount={filteredOrders.length}
+          filteredOrdersCount={totalCount}
         />
 
         <div className="p-0">

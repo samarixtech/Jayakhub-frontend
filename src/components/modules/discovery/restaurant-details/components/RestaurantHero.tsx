@@ -1,11 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import { Clock, Star, MapPin } from "lucide-react";
+import { Clock, Star, MapPin, Bike } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   RestaurantHeroProps,
   // RestaurantDetails,
 } from "@/components/modules/discovery/discovery.types";
+import { useCLC } from "@/context/CLCContext";
 
 export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
   restaurant,
@@ -13,7 +14,10 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
   profileUrl,
   reviewsData,
   onOpenReviews,
+  deliveryFee,
+  distance,
 }) => {
+  const { currency } = useCLC();
   return (
     <div className="w-full relative md:rounded-2xl overflow-hidden">
       <div className="h-[200px] md:h-[350px] w-full relative overflow-hidden">
@@ -46,9 +50,11 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 tracking-tight leading-tight px-2 md:px-0">
                   {restaurant?.name}
                 </h1>
-                <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-none w-fit mx-auto md:mx-0 text-[10px] md:text-xs">
-                  FREE DELIVERY
-                </Badge>
+                {deliveryFee === 0 && (
+                  <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-none w-fit mx-auto md:mx-0 text-[10px] md:text-xs">
+                    FREE DELIVERY
+                  </Badge>
+                )}
               </div>
             </div>
 
@@ -81,10 +87,25 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
                 <Clock className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                 <span className="font-medium text-gray-700">20-30 min</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full md:bg-transparent md:p-0 md:rounded-none">
-                <MapPin className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
-                <span className="font-medium text-gray-700">1.2 km</span>
-              </div>
+              {distance != null && (
+                <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full md:bg-transparent md:p-0 md:rounded-none">
+                  <MapPin className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                  <span className="font-medium text-gray-700">{distance} km</span>
+                </div>
+              )}
+              {deliveryFee != null ? (
+                deliveryFee === 0 ? (
+                  <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full md:bg-transparent md:p-0 md:rounded-none text-emerald-600 font-bold">
+                    <Bike className="w-4 h-4 md:w-5 md:h-5" />
+                    <span>Free Delivery</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full md:bg-transparent md:p-0 md:rounded-none">
+                    <Bike className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
+                    <span className="font-medium text-gray-700">{currency}{deliveryFee} Delivery</span>
+                  </div>
+                )
+              ) : null}
             </div>
           </div>
         </div>

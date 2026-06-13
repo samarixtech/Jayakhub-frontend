@@ -94,13 +94,20 @@ export async function getServerToken(): Promise<string | null> {
   }
 }
 
-// Server-side API wrapper that auto-attaches token from cookies
+// Cache server instances per token to reuse HTTP connections instead of
+// opening a new socket on every server action call.
+const serverInstanceCache = new Map<string, ReturnType<typeof axios.create>>();
+
 export async function serverApi() {
   const token = await getServerToken();
+  const cacheKey = token ?? "__no_token__";
+
+  if (serverInstanceCache.has(cacheKey)) {
+    return serverInstanceCache.get(cacheKey)!;
+  }
 
   const instance = axios.create({
     baseURL: API_BASE_URL,
-    // timeout: 40000,
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
@@ -114,6 +121,7 @@ export async function serverApi() {
     },
   );
 
+  serverInstanceCache.set(cacheKey, instance);
   return instance;
 }
 

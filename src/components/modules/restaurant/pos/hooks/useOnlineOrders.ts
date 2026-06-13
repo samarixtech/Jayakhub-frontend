@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Bell, ChefHat, CheckCircle2 } from "lucide-react";
 import {
   getRestaurantOrdersAction,
@@ -19,10 +19,16 @@ export interface Order {
   originalStatus: string;
 }
 
+const BASE_POLL_INTERVAL = 30_000;
+const MAX_POLL_INTERVAL = 300_000; // 5 min cap
+
 export const useOnlineOrders = () => {
   const [activeTab, setActiveTab] = useState<OrderStatus>("incoming");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const isFetchingRef = useRef(false);
+  const consecutiveErrorsRef = useRef(0);
+  const pollIntervalRef = useRef(BASE_POLL_INTERVAL);
 
   const mapApiStatusToTabStatus = (status: string): OrderStatus | null => {
     const s = status.toLowerCase();
@@ -39,12 +45,16 @@ export const useOnlineOrders = () => {
   };
 
   const fetchOrders = useCallback(async () => {
+    if (isFetchingRef.current) return; // prevent concurrent requests
+    isFetchingRef.current = true;
     try {
       const res = await getRestaurantOrdersAction(1, 50, "live");
       const resData = res.data as any;
       if (res.success && resData?.data) {
-        const apiOrders = resData.data.orders || [];
+        consecutiveErrorsRef.current = 0;
+        pollIntervalRef.current = BASE_POLL_INTERVAL;
 
+        const apiOrders = resData.data.orders || [];
         const mapped: Order[] = [];
         apiOrders.forEach((o: any) => {
           const tabStatus = mapApiStatusToTabStatus(o.status);
@@ -65,29 +75,48 @@ export const useOnlineOrders = () => {
           }
         });
 
-        // Ensure that the new orders list keeps local handoffStage states
-        setOrders((current) => {
-          return mapped.map((newOrder) => {
+        setOrders((current) =>
+          mapped.map((newOrder) => {
             const existing = current.find((ex) => ex.id === newOrder.id);
-            if (existing && existing.handoffStage) {
-              return { ...newOrder, handoffStage: existing.handoffStage };
-            }
-            return newOrder;
-          });
-        });
+            return existing?.handoffStage
+              ? { ...newOrder, handoffStage: existing.handoffStage }
+              : newOrder;
+          }),
+        );
+      } else {
+        // Server returned an error response — back off
+        consecutiveErrorsRef.current += 1;
+        pollIntervalRef.current = Math.min(
+          BASE_POLL_INTERVAL * 2 ** consecutiveErrorsRef.current,
+          MAX_POLL_INTERVAL,
+        );
       }
     } catch (error) {
       console.error("Failed to fetch online orders:", error);
+      consecutiveErrorsRef.current += 1;
+      pollIntervalRef.current = Math.min(
+        BASE_POLL_INTERVAL * 2 ** consecutiveErrorsRef.current,
+        MAX_POLL_INTERVAL,
+      );
     } finally {
+      isFetchingRef.current = false;
       setLoading(false);
     }
   }, []);
 
-  // TODO: IMPROVE THIS LATER
   useEffect(() => {
     fetchOrders();
-    const interval = setInterval(fetchOrders, 30000); // 30s polling
-    return () => clearInterval(interval);
+
+    let timeoutId: ReturnType<typeof setTimeout>;
+    const schedule = () => {
+      timeoutId = setTimeout(async () => {
+        await fetchOrders();
+        schedule(); // reschedule with current (possibly backed-off) interval
+      }, pollIntervalRef.current);
+    };
+    schedule();
+
+    return () => clearTimeout(timeoutId);
   }, [fetchOrders]);
 
   const handleUpdateStatus = async (

@@ -2,11 +2,19 @@ import React from "react";
 import { Utensils } from "lucide-react";
 import { useCLC } from "@/context/CLCContext";
 
+interface Coupon {
+  code: string;
+  discountType: string;
+  discountValue: number;
+  discountAmount: number;
+}
+
 interface OrderSummaryTableProps {
   items: any[];
   subtotal: number;
   deliveryFee: number;
   total: number;
+  coupon?: Coupon | null;
 }
 
 export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
@@ -14,6 +22,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
   subtotal,
   deliveryFee,
   total,
+  coupon,
 }) => {
   const { formatPrice } = useCLC();
   return (
@@ -88,10 +97,26 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
           <span>Subtotal</span>
           <span>{formatPrice(subtotal)}</span>
         </div>
-        <div className="flex justify-between text-[#346853] text-sm font-medium">
+        <div className="flex justify-between text-gray-500 text-sm">
           <span>Delivery Fee</span>
-          <span>{deliveryFee > 0 ? formatPrice(deliveryFee) : "N/A"}</span>
+          <span className={deliveryFee === 0 ? "text-emerald-600 font-medium" : ""}>
+            {deliveryFee === 0 ? "Free" : formatPrice(deliveryFee)}
+          </span>
         </div>
+        {coupon && (
+          <div className="flex justify-between text-emerald-600 text-sm font-medium">
+            <span className="flex items-center gap-1">
+              Coupon
+              <span className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded">
+                {coupon.code}
+              </span>
+              <span className="text-gray-400 text-xs font-normal">
+                ({coupon.discountType === "percentage" ? `${coupon.discountValue}%` : formatPrice(coupon.discountValue)} off)
+              </span>
+            </span>
+            <span>- {formatPrice(coupon.discountAmount)}</span>
+          </div>
+        )}
       </div>
 
       <div className="flex justify-between items-end border-t border-gray-100 pt-4">

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store/store";
 import { addToCart } from "@/redux/slices/cartSlice";
+import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 import { useCLC } from "@/context/CLCContext";
 import { getCookie } from "cookies-next";
 import { useServerAction } from "@/hooks/use-server-action";
@@ -24,6 +25,7 @@ export function useRestaurantDetails() {
 
   const dispatch = useDispatch<AppDispatch>();
   const cart = useSelector((state: RootState) => state.cart.items);
+  const selectedRestaurantMeta = useSelector((state: RootState) => state.discovery.selectedRestaurantMeta);
 
   const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
@@ -48,7 +50,7 @@ export function useRestaurantDetails() {
           setRestaurant(data.restaurant);
           setCategories(data.categories || []);
           setMenuItems(data.menu || []);
-          
+
           if (data.ratingSummary) {
             setReviewsData({
               ...data.ratingSummary,
@@ -90,6 +92,17 @@ export function useRestaurantDetails() {
   };
 
   useEffect(() => {
+    if (!selectedRestaurantMeta) {
+      try {
+        const saved = localStorage.getItem("selectedRestaurantMeta");
+        if (saved) {
+          dispatch(setSelectedRestaurantMeta(JSON.parse(saved)));
+        }
+      } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
     let c = Array.isArray(params?.country)
       ? params.country[0]
       : params?.country || (getCookie("NEXT_COUNTRY") as string) || "US";
@@ -101,11 +114,11 @@ export function useRestaurantDetails() {
     setCLC({ country: c.toUpperCase(), currency: cur, language: l });
 
     if (slugParam) {
-      
+
       fetchRestaurant(slugParam);
       // Removed automatic fetchReviewsWithFilter on mount as reviews are now supplied by fetchRestaurant.
     } else {
-     
+
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,8 +153,8 @@ export function useRestaurantDetails() {
   const handleAddToCartFromModal = (item: any) => {
     const discountAmount = item.discount ? parseFloat(item.discount) : 0;
     const isDiscounted = discountAmount > 0;
-    
-    const finalPrice = isDiscounted 
+
+    const finalPrice = isDiscounted
       ? Math.max(0, item.price - discountAmount)
       : item.price;
 
@@ -202,6 +215,9 @@ export function useRestaurantDetails() {
     ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${restaurant.profileImage.replace(/\\/g, "/")}`
     : "/pizza-palace.jpg";
 
+  const deliveryFee = selectedRestaurantMeta?.deliveryFee;
+  const distance = selectedRestaurantMeta?.distance;
+
   return {
     state: {
       restaurant,
@@ -225,6 +241,8 @@ export function useRestaurantDetails() {
       totalCartPrice,
       bannerUrl,
       profileUrl,
+      deliveryFee,
+      distance,
     },
     actions: {
       setSearchTerm,
