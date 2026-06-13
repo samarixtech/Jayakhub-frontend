@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Star, Plus, Minus, Heart, ShoppingBag } from 'lucide-react';
+import { Star, Heart, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -62,7 +62,6 @@ const dishes = [
 export default function SpecialDishes() {
   const t = useTranslations('Home.featured_dishes');
   const [isVisible, setIsVisible] = useState(false);
-  const [quantities, setQuantities] = useState<Record<number, number>>({});
   const [favorites, setFavorites] = useState<number[]>([]);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -83,13 +82,6 @@ export default function SpecialDishes() {
 
     return () => observer.disconnect();
   }, []);
-
-  const updateQuantity = (id: number, delta: number) => {
-    setQuantities(prev => ({
-      ...prev,
-      [id]: Math.max(0, (prev[id] || 0) + delta)
-    }));
-  };
 
   const toggleFavorite = (id: number) => {
     setFavorites(prev =>
@@ -192,43 +184,13 @@ export default function SpecialDishes() {
                   {t(`items.dish${dish.id}.desc`)}
                 </p>
 
-                {/* Price & Actions */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl font-bold text-primary">${dish.price}</span>
-                    {dish.originalPrice && (
-                      <span className="text-sm text-[#94A3B8] line-through">
-                        ${dish.originalPrice}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Quantity Controls */}
-                  {quantities[dish.id] > 0 ? (
-                    <div className="flex items-center gap-2 bg-primary/10 rounded-full p-1">
-                      <button
-                        onClick={() => updateQuantity(dish.id, -1)}
-                        className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="w-6 text-center font-bold text-primary">
-                        {quantities[dish.id]}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(dish.id, 1)}
-                        className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary-light transition-colors"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => updateQuantity(dish.id, 1)}
-                      className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white hover:bg-primary-light transition-all hover:scale-110"
-                    >
-                      <Plus className="w-5 h-5" />
-                    </button>
+                {/* Price */}
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-bold text-primary">${dish.price}</span>
+                  {dish.originalPrice && (
+                    <span className="text-sm text-[#94A3B8] line-through">
+                      ${dish.originalPrice}
+                    </span>
                   )}
                 </div>
               </div>

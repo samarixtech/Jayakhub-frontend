@@ -473,6 +473,9 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
+import { useState, useEffect, useRef } from "react";
+import { getPublicPlansAction, ApiPlan } from "@/app/actions/public/plans";
+import { Check, ArrowRight, ArrowLeft } from "lucide-react";
 
 const RTL_LOCALES = ["ar", "ur", "fa", "he"];
 
@@ -481,16 +484,50 @@ export default function Home() {
   const locale = useLocale();
   const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
 
+  const [apiPlans, setApiPlans] = useState<ApiPlan[]>([]);
+  const [activePlanIndex, setActivePlanIndex] = useState(0);
+  const plansScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    getPublicPlansAction().then((res) => {
+      if (res.success && res.data) setApiPlans(res.data);
+    });
+  }, []);
+
+  const formatPrice = (price: string) => {
+    const num = parseFloat(price);
+    return isNaN(num) ? price : num.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  };
+
+  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+
+  const handlePlansScroll = () => {
+    const el = plansScrollRef.current;
+    if (!el || !apiPlans.length) return;
+    const cardWidth = el.scrollWidth / apiPlans.length;
+    setActivePlanIndex(Math.round(el.scrollLeft / cardWidth));
+  };
+
+  const pricingPlans = apiPlans.map((plan) => ({
+    id: plan.id,
+    name: plan.name,
+    price: formatPrice(plan.monthlyPrice),
+    period: `/ ${plan.billingCycle}`,
+    billingCycle: plan.billingCycle,
+    features: plan.keywords,
+    popular: plan.planType === "premium",
+    freeTrialDays: plan.freeTrialDays,
+  }));
+
   const comparePlatforms = t.raw('compare.platforms') as { name: string; fee: string }[];
   const benefitItems = t.raw('benefits.items') as { icon: string; title: string; desc: string }[];
   const featureItems = t.raw('features.items') as { n: number; title: string; desc: string }[];
-  const pricingPlans = t.raw('pricing.plans') as { tier: string; price: number; desc: string; features: string[]; featured?: boolean }[];
 
   return (
     <main dir={dir} className="text-[#1a1a1a] bg-white">
       {/* HERO */}
-      <section className="bg-gradient-to-br from-[#fff8f0] to-white pt-[90px] pb-[80px] relative overflow-hidden">
-        <div className="absolute -top-[120px] -right-[120px] w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(255,107,53,0.12),transparent_70%)] pointer-events-none" />
+      <section className="bg-gradient-to-br from-[#e8f4f1] to-white pt-[90px] pb-[80px] relative overflow-hidden">
+        <div className="absolute -top-[120px] -right-[120px] w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(11,93,78,0.12),transparent_70%)] pointer-events-none" />
         <motion.div
           initial="hidden"
           animate="visible"
@@ -505,7 +542,7 @@ export default function Home() {
               hidden: { opacity: 0, y: 30 },
               visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
             }}
-            className="inline-block bg-[#E8F5E9] text-[#2C5F2D] font-semibold text-[13px] py-[7px] px-4 rounded-[30px] mb-[22px]"
+            className="inline-block bg-[#e8f4f1] text-[#0B5D4E] font-semibold text-[13px] py-[7px] px-4 rounded-[30px] mb-[22px]"
           >
             {t('hero.badge')}
           </motion.span>
@@ -515,10 +552,10 @@ export default function Home() {
               hidden: { opacity: 0, y: 30 },
               visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
             }}
-            className="text-[54px] font-bold text-[#1B3A57] leading-[1.1] tracking-tight mb-5"
+            className="text-[54px] font-bold text-[#0B5D4E] leading-[1.1] tracking-tight mb-5"
           >
             {t('hero.title_main')}<br />
-            <span className="font-serif italic font-normal text-[#FF6B35]">{t('hero.title_highlight')}</span>
+            <span className="font-serif italic font-normal text-[#0B5D4E]">{t('hero.title_highlight')}</span>
           </motion.h1>
 
           <motion.p
@@ -539,7 +576,7 @@ export default function Home() {
           >
             <Link
               href="/contact"
-              className="bg-[#FF6B35] text-white py-[17px] px-[44px] rounded-[30px] font-bold text-[17px] inline-block shadow-[0_8px_24px_rgba(255,107,53,0.32)] hover:bg-[#E5532A] transition-colors"
+              className="bg-[#0B5D4E] text-white py-[17px] px-[44px] rounded-[30px] font-bold text-[17px] inline-block shadow-[0_8px_24px_rgba(11,93,78,0.32)] hover:bg-[#094c40] transition-colors"
             >
               {t('hero.cta')}
             </Link>
@@ -558,7 +595,7 @@ export default function Home() {
       </section>
 
       {/* COMMISSION COMPARE STRIP
-      <section className="bg-[#1B3A57] text-white py-[50px]">
+      <section className="bg-[#0B5D4E] text-white py-[50px]">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -627,7 +664,7 @@ export default function Home() {
 
 
 
-      <section className="bg-[#1B3A57] text-white py-[50px]">
+      <section className="bg-[#0B5D4E] text-white py-[50px]">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -700,13 +737,13 @@ export default function Home() {
 
 
       {/* BENEFITS */}
-      <section className="py-[80px] bg-[#F2F2ED]" id="benefits">
+      <section className="py-[80px] bg-[#f6f7f8]" id="benefits">
         <div className="max-w-[1180px] mx-auto px-6">
           <motion.h2
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="text-center text-[38px] font-bold text-[#1B3A57] mb-[14px] tracking-tight"
+            className="text-center text-[38px] font-bold text-[#0B5D4E] mb-[14px] tracking-tight"
           >
-            {t.rich('benefits.title', { span: (chunks) => <span className="text-[#FF6B35]">{chunks}</span> })}
+            {t.rich('benefits.title', { span: (chunks) => <span className="text-[#0B5D4E]">{chunks}</span> })}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
@@ -730,12 +767,12 @@ export default function Home() {
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className="bg-white p-8 rounded-[18px] border border-[#e5e0d8] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(27,58,87,0.1)]"
+                className="bg-white p-8 rounded-[18px] border border-[#e6e6e6] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(11,93,78,0.1)]"
               >
-                <div className="w-14 h-14 rounded-xl bg-[#E8F5E9] flex items-center justify-center text-[27px] mb-[18px]">
+                <div className="w-14 h-14 rounded-xl bg-[#e8f4f1] flex items-center justify-center text-[27px] mb-[18px]">
                   {benefit.icon}
                 </div>
-                <h3 className="text-[20px] font-bold text-[#1B3A57] mb-2.5 leading-tight">{benefit.title}</h3>
+                <h3 className="text-[20px] font-bold text-[#0B5D4E] mb-2.5 leading-tight">{benefit.title}</h3>
                 <p className="text-[15px] text-[#6b6b6b]">{benefit.desc}</p>
               </motion.div>
             ))}
@@ -748,9 +785,9 @@ export default function Home() {
         <div className="max-w-[1180px] mx-auto px-6">
           <motion.h2
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="text-center text-[38px] font-bold text-[#1B3A57] mb-[14px] tracking-tight"
+            className="text-center text-[38px] font-bold text-[#0B5D4E] mb-[14px] tracking-tight"
           >
-            {t.rich('features.title', { span: (chunks) => <span className="text-[#FF6B35]">{chunks}</span> })}
+            {t.rich('features.title', { span: (chunks) => <span className="text-[#0B5D4E]">{chunks}</span> })}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
@@ -774,13 +811,13 @@ export default function Home() {
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
                 }}
-                className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e5e0d8] flex items-start gap-5"
+                className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e6e6e6] flex items-start gap-5"
               >
-                <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#FF6B35] to-[#FDB833] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0 mt-1">
+                <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#0B5D4E] to-[#B6932F] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0 mt-1">
                   {feature.n}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="text-[17px] font-bold text-[#1B3A57] mb-1 leading-tight">{feature.title}</h3>
+                  <h3 className="text-[17px] font-bold text-[#0B5D4E] mb-1 leading-tight">{feature.title}</h3>
                   <p className="text-[14px] text-[#6b6b6b]">{feature.desc}</p>
                 </div>
               </motion.div>
@@ -790,77 +827,120 @@ export default function Home() {
       </section>
 
       {/* PRICING */}
-      <section className="py-[80px] bg-[#FFF8F0]" id="pricing">
-        <div className="max-w-[1180px] mx-auto px-6">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="text-center text-[38px] font-bold text-[#1B3A57] mb-[14px] tracking-tight"
-          >
-            {t.rich('pricing.title', { span: (chunks) => <span className="text-[#FF6B35]">{chunks}</span> })}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-center text-[17px] text-[#6b6b6b] max-w-[600px] mx-auto mb-[54px]"
-          >
-            {t('pricing.subtitle')}
-          </motion.p>
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-primary" id="pricing">
+        <div className="max-w-screen-xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="inline-block bg-white/10 text-white/80 text-sm font-semibold px-4 py-2 rounded-full mb-6 border border-white/10">
+              {t('pricing.subtitle')}
+            </span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+              {t.rich('pricing.title', { span: (chunks) => <span className="text-white">{chunks}</span> })}
+            </h2>
+          </div>
 
-          <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-            }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-[22px] max-w-[980px] mx-auto"
-          >
-            {pricingPlans.map((plan, idx) => (
-              <motion.div
-                key={plan.tier}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-                  ...(plan.featured ? { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } } } : {})
-                }}
-                className={`
-                  rounded-[18px] p-8 relative flex flex-col
-                  ${plan.featured
-                    ? 'border-2 border-[#FF6B35] shadow-[0_14px_40px_rgba(255,107,53,0.16)]'
-                    : 'border border-[#e5e0d8] hover:shadow-lg transition-shadow'
-                  }
-                  bg-white
-                `}
+          {pricingPlans.length === 0 ? (
+            <p className="text-center text-white/50 py-8">No plans available at the moment.</p>
+          ) : (
+            <>
+              <div
+                ref={plansScrollRef}
+                onScroll={handlePlansScroll}
+                className="flex gap-5 overflow-x-auto pb-4 no-scrollbar snap-x snap-mandatory"
               >
-                {plan.featured && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FF6B35] text-white text-[11px] font-bold px-3.5 py-1 rounded-full whitespace-nowrap">
-                    {t('pricing.most_popular')}
-                  </span>
-                )}
-                <div className="font-semibold text-[#6b6b6b] text-[14px] uppercase tracking-wider">{plan.tier}</div>
-                <div className="text-[42px] font-bold text-[#1B3A57] mt-3.5 mb-1">
-                  ${plan.price}<small className="text-[16px] text-[#6b6b6b] font-medium">/mo</small>
+                {pricingPlans.map((plan, idx) => {
+                  const isLight = idx % 2 === 0;
+                  return (
+                    <div
+                      key={plan.id}
+                      className={`relative flex-none w-[calc(100%-8px)] sm:w-[calc(50%-10px)] lg:w-[calc(30%-14px)] snap-start flex flex-col rounded-2xl p-9 transition-transform duration-300 hover:-translate-y-1 ${
+                        isLight
+                          ? "bg-white shadow-[0_20px_60px_rgba(0,0,0,0.2)]"
+                          : "bg-white/[0.07] border border-white/15"
+                      }`}
+                    >
+                      {/* badges */}
+                      <div className="flex flex-wrap gap-2 mb-5 min-h-[26px]">
+                        {plan.popular && (
+                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-3 py-1 rounded-full tracking-wide ${isLight ? "bg-primary text-white" : "bg-white/20 text-white"}`}>
+                            ★ {t('pricing.most_popular')}
+                          </span>
+                        )}
+                        {plan.freeTrialDays && (
+                          <span className={`inline-flex items-center text-[11px] font-semibold px-3 py-1 rounded-full ${isLight ? "bg-primary/10 text-primary" : "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30"}`}>
+                            {plan.freeTrialDays} days free
+                          </span>
+                        )}
+                      </div>
+
+                      {/* billing cycle */}
+                      <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isLight ? "text-primary/60" : "text-white/40"}`}>
+                        {plan.billingCycle ?? "plan"}
+                      </p>
+
+                      {/* name */}
+                      <h3 className={`text-3xl font-bold mb-5 capitalize leading-tight ${isLight ? "text-foreground" : "text-white"}`}>
+                        {plan.name}
+                      </h3>
+
+                      {/* price */}
+                      <div className={`flex items-end gap-1 mb-6 pb-6 border-b ${isLight ? "border-gray-100" : "border-white/10"}`}>
+                        <span className={`text-6xl font-extrabold leading-none ${isLight ? "text-primary" : "text-white"}`}>
+                          {plan.price}
+                        </span>
+                        <span className={`text-sm font-medium mb-1 ${isLight ? "text-[#94A3B8]" : "text-white/50"}`}>
+                          {plan.period}
+                        </span>
+                      </div>
+
+                      {/* features */}
+                      <ul className="space-y-3 mb-8 flex-1">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-center gap-3">
+                            <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${isLight ? "bg-primary/10" : "bg-white/10"}`}>
+                              <Check className={`w-3 h-3 ${isLight ? "text-primary" : "text-white"}`} />
+                            </span>
+                            <span className={`text-base capitalize ${isLight ? "text-[#475569]" : "text-white/70"}`}>
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* cta */}
+                      <Link
+                        href="/contact"
+                        className={`w-full py-4 rounded-xl font-semibold text-base flex justify-center items-center gap-2 transition-all mt-auto ${
+                          isLight
+                            ? "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20"
+                            : "bg-white/10 text-white hover:bg-white/20 border border-white/20"
+                        }`}
+                      >
+                        {t('pricing.choose', { tier: plan.name })}
+                        <Arrow className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* progress bar */}
+              {pricingPlans.length > 1 && (
+                <div className="flex justify-center mt-6">
+                  <div className="w-24 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-white rounded-full transition-all duration-300"
+                      style={{ width: `${((activePlanIndex + 1) / pricingPlans.length) * 100}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="text-[14px] text-[#6b6b6b] min-h-[42px] mb-[18px]">{plan.desc}</div>
-                <ul className="mb-[22px] space-y-1 flex-1">
-                  {plan.features.map((li, i) => (
-                    <li key={i} className="text-[14px] text-[#1a1a1a] py-[7px] ps-6 relative">
-                      <span className="absolute start-0 text-[#2C5F2D] font-bold">✓</span> {li}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/contact"
-                  className={`block text-center p-[13px] rounded-[30px] font-semibold text-[15px] ${plan.featured ? 'bg-[#FF6B35] text-white hover:bg-[#E5532A]' : 'bg-[#F2F2ED] text-[#1B3A57] hover:bg-[#e5e0d8]'} transition-colors`}
-                >
-                  {t('pricing.choose', { tier: plan.tier })}
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+              )}
+            </>
+          )}
 
           {/* Founding 100 */}
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="max-w-[980px] mx-auto mt-6 bg-gradient-to-br from-[#1B3A57] to-[#2a5a85] text-white rounded-[18px] p-[30px] md:px-[34px] flex flex-col lg:flex-row items-center gap-5"
+            className="max-w-[980px] mx-auto mt-10 bg-white/10 border border-white/20 text-white rounded-[18px] p-[30px] md:px-[34px] flex flex-col lg:flex-row items-center gap-5"
           >
             <div className="text-center lg:text-start flex-1 min-w-0">
               <h3 className="text-[24px] font-bold mb-1.5 leading-tight">{t('pricing.founding.badge')}</h3>
@@ -872,22 +952,22 @@ export default function Home() {
               </div>
               <div className="text-[12px] opacity-80 leading-tight max-w-[180px]">{t('pricing.founding.period')}</div>
             </div>
-            <Link href="/contact" className="bg-[#FDB833] text-[#1B3A57] px-7 py-[13px] rounded-[30px] font-bold whitespace-nowrap hover:bg-white transition-colors shrink-0">
+            <Link href="/contact" className="bg-[#FDB833] text-[#0B5D4E] px-7 py-[13px] rounded-[30px] font-bold whitespace-nowrap hover:bg-white transition-colors shrink-0">
               {t('pricing.founding.cta')}
             </Link>
           </motion.div>
 
           <motion.p
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-center mt-6 text-[14px] text-[#6b6b6b]"
+            className="text-center mt-6 text-[14px] text-white/50"
           >
-            {t.rich('pricing.setup_note', { strong: (chunks) => <strong>{chunks}</strong> })}
+            {t.rich('pricing.setup_note', { strong: (chunks) => <strong className="text-white">{chunks}</strong> })}
           </motion.p>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-br from-[#2C5F2D] to-[#1f4520] py-[80px] text-center text-white">
+      <section className="bg-gradient-to-br from-[#0B5D4E] to-[#094c40] py-[80px] text-center text-white">
         <motion.div
           initial="hidden" whileInView="visible" viewport={{ once: true }}
           variants={{
@@ -924,7 +1004,7 @@ export default function Home() {
           >
             <Link
               href="/contact"
-              className="bg-white text-[#2C5F2D] py-[17px] px-[46px] rounded-[30px] font-bold text-[17px] inline-block hover:bg-[#FDB833] hover:text-[#1B3A57] transition-colors shadow-lg"
+              className="bg-white text-[#0B5D4E] py-[17px] px-[46px] rounded-[30px] font-bold text-[17px] inline-block hover:bg-[#FDB833] hover:text-[#0B5D4E] transition-colors shadow-lg"
             >
               {t('cta.button')}
             </Link>

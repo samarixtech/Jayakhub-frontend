@@ -1082,6 +1082,8 @@
     "brand": {
       "logo_alt": "Jayak Hub Logo",
       "description": "Connecting you with the best restaurants in Iraq. Fast, reliable delivery right to your doorstep.",
+      "description_line1": "Connecting you with the best restaurants in Iraq.",
+      "description_line2": "Fast, reliable delivery right to your doorstep.",
       "email": "info@jayakhub.com",
       "phone": "+1 (469) 422-5944",
       "location": "Baghdad, Iraq"

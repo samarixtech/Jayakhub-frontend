@@ -27,12 +27,16 @@ interface LanguageSwitcherProps {
   variant?: "default" | "sidebar" | "navbar";
   collapsed?: boolean;
   className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const LanguageSwitcher = ({
   variant = "default",
   collapsed = false,
   className,
+  open,
+  onOpenChange,
 }: LanguageSwitcherProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -70,12 +74,12 @@ const LanguageSwitcher = ({
   const isNavbar = variant === "navbar";
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger asChild>
         <motion.div
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className={isSidebar ? "w-full" : ""}
+          className={`group ${isSidebar ? "w-full" : ""}`}
         >
           <Button
             variant="ghost"
@@ -84,7 +88,7 @@ const LanguageSwitcher = ({
                 isSidebar
                   ? "w-full justify-start hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 h-11 px-4"
                   : isNavbar
-                    ? "flex h-auto w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-[#E8F4F1]/10 md:bg-[#FFF9EE] text-[#E8F4F1] md:text-[#2C2C2C] hover:bg-[#E8F4F1]/20 md:hover:bg-[#0B5D4E] md:hover:text-white transition-all md:shadow-sm"
+                    ? "flex h-auto w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-[#E8F4F1]/10 md:bg-white text-[#E8F4F1] md:text-[#2C2C2C] hover:bg-[#E8F4F1]/20 md:hover:bg-[#0B5D4E] md:hover:text-white transition-all md:shadow-sm"
                     : "bg-none border-none hover:bg-white/10 text-white px-4 py-5 rounded-full gap-2 h-10"
               }
               ${collapsed ? "size-11! p-0! justify-center" : ""}
@@ -127,11 +131,11 @@ const LanguageSwitcher = ({
             </div>
             {!collapsed && (
               <ChevronDown
-                className={`w-3 h-3 transition-transform duration-300 ${
+                className={`w-3 h-3 transition-all duration-300 ${
                   isNavbar
-                    ? "text-[#E8F4F1] md:text-[#0B5D4E]"
+                    ? "text-[#E8F4F1] md:text-[#0B5D4E] md:group-hover:text-white"
                     : "opacity-50 group-hover:opacity-100"
-                } group-data-[state=open]:rotate-180 ${isSidebar ? "ml-auto" : ""}`}
+                } group-data-[state=open]:rotate-180 ${isSidebar ? "ms-auto" : ""}`}
               />
             )}
           </Button>

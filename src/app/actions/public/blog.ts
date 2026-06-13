@@ -62,14 +62,22 @@ export async function getBlogsAction(params?: {
 
   const api = await serverApi();
   return responseHandler(
-    async () => api.get(`/blog?${searchParams.toString()}`),
+    async () => {
+      const res = await api.get(`/blog?${searchParams.toString()}`);
+      console.log("[getBlogsAction] raw response status:", res.status);
+      console.log("[getBlogsAction] raw response data:", JSON.stringify(res.data, null, 2));
+      return res;
+    },
     undefined,
-    async (data: BlogsData) => ({
-      ...data,
-      items: data.items.map((post) => ({
-        ...post,
-        image: resolveImage(post.image, imageBaseUrl),
-      })),
-    }),
+    async (data: BlogsData) => {
+      console.log("[getBlogsAction] transformData received:", JSON.stringify(data, null, 2));
+      return {
+        ...data,
+        items: data.items.map((post) => ({
+          ...post,
+          image: resolveImage(post.image, imageBaseUrl),
+        })),
+      };
+    },
   );
 }

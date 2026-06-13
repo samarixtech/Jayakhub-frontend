@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   ArrowRight,
+  ArrowLeft,
   Smartphone,
   MapPin,
   LayoutDashboard,
@@ -15,7 +16,7 @@ import {
   Check,
   Quote,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import PublicHeroSection from "@/components/common/public-website/publicHeroSection";
 import type { ApiPlan } from "@/app/actions/public/plans";
@@ -32,6 +33,8 @@ function formatPrice(price: string): string {
 
 export default function Services({ plans = [] }: Props) {
   const t = useTranslations("Services");
+  const locale = useLocale();
+  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const [isVisible, setIsVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
   const [activePlanIndex, setActivePlanIndex] = useState(0);
@@ -337,7 +340,7 @@ export default function Services({ plans = [] }: Props) {
                       }`}
                     >
                       {t("pricing.button")}
-                      <ArrowRight className="w-4 h-4" />
+                      <Arrow className="w-4 h-4" />
                     </Link>
                   </div>
                   );
@@ -420,7 +423,7 @@ export default function Services({ plans = [] }: Props) {
                 className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/90 transition-all hover:gap-3"
               >
                 {t("cta.button")}
-                <ArrowRight className="w-5 h-5" />
+                <Arrow className="w-5 h-5" />
               </Link>
             </div>
           </div>
