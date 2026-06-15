@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Star, Clock, Flame, ChevronRight } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { Star, Clock, Flame, ChevronRight, ChevronLeft } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import alMansourImg from "../../../../../public/al-mansour.jpg";
 import baghdadBitesImg from "../../../../../public/baghdad-bites.jpg";
@@ -95,6 +95,8 @@ const restaurants = [
 
 export default function Restaurants() {
   const t = useTranslations("Home.featured_restaurants");
+  const locale = useLocale();
+  const Arrow = locale === "ar" ? ChevronLeft : ChevronRight;
   const [activeCategory, setActiveCategory] = useState("All");
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
@@ -143,7 +145,7 @@ export default function Restaurants() {
           </div>
           <button className="mt-6 md:mt-0 inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm md:text-base">
             {t('view_all_btn')}
-            <ChevronRight className="w-5 h-5" />
+            <Arrow className="w-5 h-5" />
           </button>
         </div>
 

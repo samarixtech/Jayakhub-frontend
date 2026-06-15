@@ -966,51 +966,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-gradient-to-br from-[#0B5D4E] to-[#094c40] py-[80px] text-center text-white">
-        <motion.div
-          initial="hidden" whileInView="visible" viewport={{ once: true }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
-          }}
-          className="max-w-[1180px] mx-auto px-6"
-        >
-          <motion.h2
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-            }}
-            className="text-[38px] font-bold mb-4 tracking-tight"
-          >
-            {t('cta.title')}
-          </motion.h2>
-
-          <motion.p
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-            }}
-            className="text-[18px] mb-[34px] opacity-90 max-w-[600px] mx-auto"
-          >
-            {t('cta.subtitle')}
-          </motion.p>
-
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.95 },
-              visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } }
-            }}
-          >
-            <Link
-              href="/contact"
-              className="bg-white text-[#0B5D4E] py-[17px] px-[46px] rounded-[30px] font-bold text-[17px] inline-block hover:bg-[#FDB833] hover:text-[#0B5D4E] transition-colors shadow-lg"
-            >
-              {t('cta.button')}
-            </Link>
-          </motion.div>
-        </motion.div>
-      </section>
 
     </main>
   );

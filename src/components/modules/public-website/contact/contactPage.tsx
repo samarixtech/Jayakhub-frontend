@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Mail, Send, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Send, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import PublicHeroSection from '@/components/common/public-website/publicHeroSection';
 
 export default function Contact() {
     const t = useTranslations('Contact');
+    const locale = useLocale();
+    const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
     const [isVisible, setIsVisible] = useState(false);
     const heroRef = useRef<HTMLDivElement>(null);
 
@@ -62,7 +64,7 @@ export default function Contact() {
                                         <div>
                                             <h3 className="font-bold text-slate-900 mb-1">{t('info.visit.title')}</h3>
                                             <p className="text-[#64748B] mb-2">{t('info.visit.desc')}</p>
-                                            <address className="text-slate-900 font-bold not-italic leading-relaxed">
+                                            <address dir="ltr" className="text-slate-900 font-bold not-italic leading-relaxed">
                                                 {t.rich('info.visit.address', {
                                                     br: () => <br />
                                                 })}
@@ -77,7 +79,7 @@ export default function Contact() {
                                         <div>
                                             <h3 className="font-bold text-slate-900 mb-1">{t('info.call.title')}</h3>
                                             <p className="text-[#64748B] mb-2">{t('info.call.desc')}</p>
-                                            <a href="tel:+14694225944" className="text-slate-900 font-bold hover:underline">+1 (469) 422-5944</a>
+                                            <a dir="ltr" href="tel:+14694225944" className="text-slate-900 font-bold hover:underline inline-block">+1 (469) 422-5944</a>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +90,7 @@ export default function Contact() {
                                 <h3 className="font-bold text-slate-900 mb-2">{t('faq.title')}</h3>
                                 <p className="text-[#64748B] mb-6 text-sm leading-relaxed">{t('faq.desc')}</p>
                                 <Link href="/help" className="inline-flex items-center gap-2 text-slate-900 font-bold hover:gap-3 transition-all text-sm">
-                                    {t('faq.link')} <ArrowRight className="w-4 h-4" />
+                                    {t('faq.link')} <Arrow className="w-4 h-4" />
                                 </Link>
                             </div>
                         </div>
@@ -142,7 +144,7 @@ export default function Contact() {
                                     type="submit"
                                     className="w-full bg-[#1A4D2E] hover:bg-[#143d24] text-white py-6 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#1A4D2E]/20"
                                 >
-                                    <Send className="w-4 h-4" />
+                                    <Send className={`w-4 h-4 ${locale === "ar" ? "scale-x-[-1]" : ""}`} />
                                     {t('form.submit_button')}
                                 </Button>
                             </form>
