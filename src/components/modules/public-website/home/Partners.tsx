@@ -3,16 +3,19 @@ import {
   Bike,
   Store,
   ArrowRight,
+  ArrowLeft,
   DollarSign,
   TrendingUp,
   Users,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Partner() {
   const t = useTranslations("Home.partnership");
+  const locale = useLocale();
+  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const [isVisible, setIsVisible] = useState(false);
   const [, setHoveredCard] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -169,7 +172,7 @@ export default function Partner() {
                     className="mt-auto w-full sm:w-auto bg-white text-primary hover:bg-white/90 px-8 py-3.5 rounded-xl font-semibold transition-all hover:scale-105 flex items-center justify-center gap-2 group/btn"
                   >
                     {option.cta}
-                    <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+                    <Arrow className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
                   </Link>
                 </div>
               </div>

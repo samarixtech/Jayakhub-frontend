@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, ArrowLeft, Clock } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import Image from "next/image";
 import PublicHeroSection from "@/components/common/public-website/publicHeroSection";
 import type { ApiBlogPost } from "@/app/actions/public/blog";
@@ -39,6 +39,8 @@ const ALL = "all";
 
 export default function Newsroom({ blogs = [], categories = [] }: Props) {
   const t = useTranslations("Newsroom");
+  const locale = useLocale();
+  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const [activeCategory, setActiveCategory] = useState(ALL);
 
   const getBlogUrl = (slug: string) => `/blogs/${slug}`;
@@ -98,7 +100,7 @@ export default function Newsroom({ blogs = [], categories = [] }: Props) {
                 </p>
                 <div className="flex items-center gap-2 text-foreground font-bold group-hover:gap-4 transition-all">
                   {t("featured.read_story")}
-                  <ArrowRight className="w-5 h-5 text-primary" />
+                  <Arrow className="w-5 h-5 text-primary" />
                 </div>
               </div>
             </Link>
