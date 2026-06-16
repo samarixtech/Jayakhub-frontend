@@ -13,6 +13,7 @@ import {
   HelpCircle,
   LogOut,
   ChevronDown,
+  Wallet,
 } from "lucide-react";
 
 import {
@@ -70,6 +71,7 @@ const NAV_SECTIONS = [
       { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
       { nameKey: "users", href: "/restaurant/users", icon: Users },
       { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard },
+      { nameKey: "payouts", href: "/restaurant/payouts", icon: Wallet },
       { nameKey: "reports", href: "/restaurant/reports", icon: BarChart2 },
     ],
   },

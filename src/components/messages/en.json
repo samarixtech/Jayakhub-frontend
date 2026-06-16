@@ -1394,6 +1394,7 @@
         "reviews": "Ratings & Reviews",
         "users": "Users & Roles",
         "finance": "Finance",
+        "payouts": "Payouts",
         "reports": "Reports",
         "apis": "APIs",
         "support": "Support Center",
@@ -2224,6 +2225,41 @@
         "colLastActive": "Last Active",
         "colActions": "Actions",
         "noUsers": "No users found in this category."
+      }
+    },
+    "Payouts": {
+      "requestBtn": "Request Payout",
+      "stats": {
+        "availableBalance": "Available Balance",
+        "totalWithdrawn": "Total Withdrawn",
+        "pendingPayouts": "Pending Payouts",
+        "totalEarnings": "Total Earnings"
+      },
+      "table": {
+        "title": "Payout History",
+        "recordsLabel": "payout records found",
+        "payoutId": "Payout ID",
+        "amount": "Amount",
+        "method": "Payment Method",
+        "status": "Status",
+        "requestedAt": "Requested At",
+        "processedAt": "Processed At"
+      },
+      "form": {
+        "title": "Request a Payout",
+        "description": "Enter the amount and method to request a withdrawal of your earnings.",
+        "amountLabel": "Payout Amount ($)",
+        "amountPlaceholder": "Enter amount to withdraw",
+        "methodLabel": "Payout Method",
+        "methodPlaceholder": "Select a method",
+        "bankDetailsLabel": "Bank Details",
+        "bankDetailsPlaceholder": "Bank name, Account title, IBAN/Account Number",
+        "notesLabel": "Notes",
+        "optional": "optional",
+        "notesPlaceholder": "Any additional information for the admin...",
+        "cancelBtn": "Cancel",
+        "submitBtn": "Submit Request",
+        "submitting": "Submitting Request..."
       }
     },
     "status": {

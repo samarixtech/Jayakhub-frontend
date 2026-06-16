@@ -2212,6 +2212,41 @@
         "noUsers": "لم يتم العثور على مستخدمين أو موظفين في هذه الفئة المحددة بمطعمك."
       }
     },
+    "Payouts": {
+      "requestBtn": "طلب سحب الأرباح",
+      "stats": {
+        "availableBalance": "الرصيد المتاح",
+        "totalWithdrawn": "إجمالي المبالغ المسحوبة",
+        "pendingPayouts": "سحوبات قيد الانتظار",
+        "totalEarnings": "إجمالي الأرباح"
+      },
+      "table": {
+        "title": "سجل عمليات سحب الأرباح",
+        "recordsLabel": "سجل مدفوعات تم العثور عليها",
+        "payoutId": "معرف السحب",
+        "amount": "المبلغ",
+        "method": "طريقة الدفع",
+        "status": "الحالة",
+        "requestedAt": "تاريخ الطلب",
+        "processedAt": "تاريخ المعالجة"
+      },
+      "form": {
+        "title": "طلب سحب الأرباح",
+        "description": "أدخل المبلغ والطريقة المطلوبة لطلب سحب أرباحك.",
+        "amountLabel": "مبلغ السحب ($)",
+        "amountPlaceholder": "أدخل المبلغ المراد سحبه",
+        "methodLabel": "طريقة السحب",
+        "methodPlaceholder": "اختر طريقة",
+        "bankDetailsLabel": "التفاصيل البنكية",
+        "bankDetailsPlaceholder": "اسم البنك، اسم صاحب الحساب، رقم الحساب/IBAN",
+        "notesLabel": "ملاحظات",
+        "optional": "اختياري",
+        "notesPlaceholder": "أي معلومات إضافية للمسؤول...",
+        "cancelBtn": "إلغاء",
+        "submitBtn": "تقديم الطلب",
+        "submitting": "جاري تقديم الطلب..."
+      }
+    },
     "status": {
       "online": "متصل ومستعد لاستقبال الطلبات فورا (Online)",
       "offline": "مغلق حالياً ولا يستقبل أي طلبات (Offline)",
