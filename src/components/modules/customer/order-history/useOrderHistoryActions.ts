@@ -1,13 +1,18 @@
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/redux/slices/cartSlice";
-import { Order, OrderStatus } from "../types";
+import { Order, OrderItem, OrderStatus } from "../types";
+
+
+
+import React from "react";
+import { RatingModal } from "@/components/common/RatingModal";
 
 interface UseOrderHistoryActionsProps {
   country: string;
   language: string;
-  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  setCurrentOrderInfo: React.Dispatch<React.SetStateAction<any>>;
+  setCurrentPage: (page: number) => void;
+  setCurrentOrderInfo: React.Dispatch<React.SetStateAction<React.ComponentProps<typeof RatingModal>["orderInfo"] | null>>;
   setIsRatingModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -73,7 +78,7 @@ export function useOrderHistoryActions({
   const handleReorder = (order: Order) => {
     if (!order.items || order.items.length === 0) return;
 
-    order.items.forEach((item: any) => {
+    order.items.forEach((item) => {
       const cartItem = {
         id: item.id || `temp-${Date.now()}-${Math.random()}`,
         name: item.name,
@@ -82,8 +87,8 @@ export function useOrderHistoryActions({
         quantity: item.quantity,
         image: item.image,
         imageUrl: getImageUrl(item.image),
-        restaurantId: (order as any).restaurantId,
-        restaurantName: (order as any).restaurantName,
+        restaurantId: order.restaurantId,
+        restaurantName: order.restaurantName,
         selectedVariations: item.selectedVariations || [],
         cartId: `reorder-${order.orderId}-${item.id || item.name}-${Date.now()}`,
       };
@@ -98,13 +103,13 @@ export function useOrderHistoryActions({
       rawOrder: order,
       orderNumber: `#${order.orderId?.substring(0, 8) || "Order"}`,
       restaurantName: "Restaurant Order",
-      items: (order.items || []).map((item: any) => ({
+      items: (order.items || []).map((item) => ({
         id:
           item.id ||
-          item.itemId ||
+          item.originalId ||
           item.orderItemId ||
           `temp-${Date.now()}-${Math.random()}`,
-        originalId: item.id || item.itemId || item.orderItemId || null,
+        originalId: item.id || item.originalId || item.orderItemId || null,
         orderItemId: item.orderItemId || null,
         name: item.name,
         price: parseFloat(item.price),

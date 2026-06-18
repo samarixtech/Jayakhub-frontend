@@ -111,7 +111,7 @@ const CheckoutView = () => {
 
     try {
       const res: any = await createOrderAction(payload);
-    
+
 
       if (res.meta?.status === 200 || res.success) {
         if (paymentMethod === "cod") {
@@ -138,7 +138,6 @@ const CheckoutView = () => {
       }
     } catch (error) {
       console.error("Place order error:", error);
-      toast.error("An unexpected error occurred.");
     } finally {
       setIsPlacingOrder(false);
     }
@@ -183,7 +182,7 @@ const CheckoutView = () => {
       try {
         const saved = localStorage.getItem("selectedRestaurantMeta");
         if (saved) dispatch(setSelectedRestaurantMeta(JSON.parse(saved)));
-      } catch {}
+      } catch { }
     }
   }, []);
 

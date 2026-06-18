@@ -6,7 +6,6 @@ import {
   Pencil,
   Trash2,
   Plus,
-  Bell,
   MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,7 +62,7 @@ export default function CustomerAddressView() {
       if (response && response.data) {
         setAddresses(response.data);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to load addresses");
     } finally {
       setLoading(false);
@@ -71,7 +70,9 @@ export default function CustomerAddressView() {
   };
 
   useEffect(() => {
-    fetchAddresses();
+    Promise.resolve().then(() => {
+      fetchAddresses();
+    });
   }, []);
 
   const getIcon = (label: string) => {
@@ -122,7 +123,7 @@ export default function CustomerAddressView() {
       toast.success("Address deleted successfully", { id: toastId });
       setDeleteModalOpen(false);
       setAddressToDelete(null);
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete address", { id: toastId });
     }
   };
@@ -283,19 +284,20 @@ export default function CustomerAddressView() {
           title={t("delete_title")}
           description={t("delete_desc")}
           trigger={<></>} // No external trigger needed as it's controlled by state
+          isOutsideDisabled={true}
         >
-          <div className="flex justify-end gap-3 mt-6">
+          <div className="flex justify-end gap-3">
             <Button
               variant="outline"
               onClick={() => setDeleteModalOpen(false)}
-              className="rounded-full"
+              className="rounded-full cursor-pointer"
             >
               {t("cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleConfirmDelete}
-              className="rounded-full bg-red-500 hover:bg-red-600 text-white"
+              className="rounded-full bg-red-600 hover:bg-red-500 text-white cursor-pointer"
             >
               {t("delete")}
             </Button>

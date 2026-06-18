@@ -104,6 +104,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         showCloseButton={false}
+        onPointerDownOutside={(e) => e.preventDefault()}
         className="sm:max-w-[425px] p-0 overflow-hidden gap-0 border-0 rounded-2xl"
       >
         <div className="sr-only">
@@ -121,9 +122,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
           />
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-sm hover:bg-gray-100 transition-colors"
+            className="absolute top-4 right-4 bg-white rounded-full p-1 shadow-sm hover:bg-gray-100 transition-colors cursor-pointer"
           >
-            <X size={20} className="text-black" />
+            <X size={16} className="text-black" />
           </button>
         </div>
 
@@ -195,11 +196,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
                         >
                           <div className="flex items-center gap-3">
                             <div
-                              className={`w-5 h-5 rounded-full border transition-colors flex items-center justify-center shrink-0 ${
-                                isSelected
-                                  ? "bg-[#346853] border-[#346853]"
-                                  : "border-gray-300 group-hover:border-[#346853]"
-                              }`}
+                              className={`w-5 h-5 rounded-full border transition-colors flex items-center justify-center shrink-0 ${isSelected
+                                ? "bg-[#346853] border-[#346853]"
+                                : "border-gray-300 group-hover:border-[#346853]"
+                                }`}
                             >
                               {isSelected && (
                                 <Check

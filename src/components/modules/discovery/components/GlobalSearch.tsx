@@ -7,6 +7,16 @@ import { getAllRestaurantsAction } from "@/app/actions/public/restaurants";
 import { debounce } from "lodash";
 import Image from "next/image";
 
+interface SimpleRestaurant {
+  id: string;
+  slug: string;
+  name: string;
+  profileImage?: string;
+  bannerImage?: string;
+  type?: string | string[];
+  averageRating?: number;
+}
+
 export const GlobalSearch = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -16,18 +26,60 @@ export const GlobalSearch = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const [restaurants, setRestaurants] = useState<SimpleRestaurant[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const fetchResults = async (searchQuery: string) => {
+    if (!searchQuery.trim()) {
+      setSuggestions([]);
+      setRestaurants([]);
+      setIsLoading(false);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await getAllRestaurantsAction({ query: searchQuery });
+
+      if (res.success && res.data) {
+        const payload = res.data as unknown;
+
+        // Match the provided API structure
+        if (payload) {
+          setRestaurants(Array.isArray(payload) ? payload : []);
+        } else {
+          setRestaurants([]);
+        }
+
+        if (res.suggestion) {
+          setSuggestions(Array.isArray(res.suggestion) ? res.suggestion : []);
+        } else {
+          setSuggestions([]);
+        }
+      } else {
+        setRestaurants([]);
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.error("Search failed:", error);
+      setRestaurants([]);
+      setSuggestions([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Sync with URL query param on mount
   useEffect(() => {
     const urlQuery = searchParams.get("query") || "";
     if (urlQuery) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setQuery(urlQuery);
       fetchResults(urlQuery);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Initialize recent searches from session storage
@@ -35,6 +87,7 @@ export const GlobalSearch = () => {
     try {
       const stored = sessionStorage.getItem("recentSearches");
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRecentSearches(JSON.parse(stored));
       }
     } catch (e) {
@@ -66,47 +119,7 @@ export const GlobalSearch = () => {
     setRecentSearches(updated);
     try {
       sessionStorage.setItem("recentSearches", JSON.stringify(updated));
-    } catch (e) {}
-  };
-
-  const fetchResults = async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      setSuggestions([]);
-      setRestaurants([]);
-      setIsLoading(false);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const res = await getAllRestaurantsAction({ query: searchQuery });
-
-      if (res.success && res.data) {
-        const payload = res.data as any;
-
-        // Match the provided API structure
-        if (payload) {
-          setRestaurants(Array.isArray(payload) ? payload : []);
-        } else {
-          setRestaurants([]);
-        }
-
-        if (res.suggestion) {
-          setSuggestions(Array.isArray(res.suggestion) ? res.suggestion : []);
-        } else {
-          setSuggestions([]);
-        }
-      } else {
-        setRestaurants([]);
-        setSuggestions([]);
-      }
-    } catch (error) {
-      console.error("Search failed:", error);
-      setRestaurants([]);
-      setSuggestions([]);
-    } finally {
-      setIsLoading(false);
-    }
+    } catch { }
   };
 
   // Debounced search
@@ -149,7 +162,7 @@ export const GlobalSearch = () => {
 
   return (
     <div className="relative w-full max-w-[540px]" ref={dropdownRef}>
-      <div className="w-full flex items-center bg-white rounded-full shadow-lg overflow-hidden px-3 md:px-4 py-1 md:py-0 border border-transparent focus-within:border-[#346853] transition-colors relative z-20">
+      <div className="w-full flex items-center bg-white rounded-full shadow-lg overflow-hidden pl-3 md:pl-4 pr-0 py-0 border-2 border-[#2A5443] focus-within:border-[#346853] transition-colors relative z-20">
         <Search className="w-4 h-4 md:w-5 md:h-5 text-gray-400 shrink-0" />
         <input
           type="text"
@@ -179,7 +192,7 @@ export const GlobalSearch = () => {
         )}
         <button
           onClick={() => handleSearchSubmit(query)}
-          className="bg-[#346853] hover:bg-[#2a5443] text-white text-xs md:text-sm font-semibold px-4 py-2 md:px-5 md:py-2 rounded-full transition-colors shrink-0"
+          className="h-8 md:h-9 flex items-center justify-center bg-[#346853] hover:bg-[#2a5443] text-white text-xs md:text-sm font-semibold px-4 md:px-5 mr-1 md:mr-1.5 rounded-full transition-colors shrink-0"
         >
           Search
         </button>
@@ -319,10 +332,12 @@ export const GlobalSearch = () => {
                         >
                           <div className="relative w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-gray-100 border border-gray-200">
                             {imageUrl && (
-                              <img
+                              <Image
                                 src={imageUrl}
                                 alt={restaurant.name}
-                                className="w-full h-full object-cover"
+                                fill
+                                sizes="40px"
+                                className="object-cover"
                               />
                             )}
                           </div>
@@ -338,7 +353,7 @@ export const GlobalSearch = () => {
                                     : restaurant.type}
                                 </span>
                               </span>
-                              {restaurant.averageRating > 0 && (
+                              {restaurant.averageRating !== undefined && restaurant.averageRating > 0 && (
                                 <>
                                   <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                                   <span className="font-medium">

@@ -21,7 +21,7 @@ export function useKycVerification() {
     getKycStatus,
     {
       suppressSuccessToast: true,
-      onSuccess: (data: any) => setKycData(data),
+      onSuccess: (data?: KycRecord[]) => setKycData(data || []),
     },
   );
 
@@ -31,13 +31,14 @@ export function useKycVerification() {
       onSuccess: () => {
         resetSelection();
         fetchStatus();
+        window.location.reload();
       },
     },
   );
 
   useEffect(() => {
     fetchStatus();
-  }, []);
+  }, [fetchStatus]);
 
   const handleSelectClick = (typeId: string) => {
     setActiveTypeId(typeId);

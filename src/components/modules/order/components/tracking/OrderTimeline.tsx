@@ -1,6 +1,6 @@
 import React from "react";
 import { TimelineItem } from "./TimelineItem";
-import { Check, Utensils, Bike, MapPin } from "lucide-react";
+import { Check, Utensils, Bike, MapPin, XCircle } from "lucide-react";
 import { formatOrderDateTime } from "@/lib/utils/date";
 
 interface OrderTimelineProps {
@@ -14,6 +14,32 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
   orderTime,
   orderStatus,
 }) => {
+  const isRejected = orderStatus === "rejected";
+
+  if (isRejected) {
+    return (
+      <div className="border border-gray-100 rounded-2xl p-6 md:p-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-8">Order Journey</h2>
+        <div className="pl-2">
+          <TimelineItem
+            icon={Check}
+            title="Order Confirmed"
+            description="We received your order and forwarded it to the restaurant."
+            time={formatOrderDateTime(orderDate, orderTime)}
+            status="pending"
+          />
+          <TimelineItem
+            icon={XCircle}
+            title="Order Cancelled"
+            description="This order was cancelled by the restaurant."
+            status="pending"
+            isLast={true}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="border border-gray-100 rounded-2xl p-6 md:p-8">
       <h2 className="text-xl font-bold text-gray-900 mb-8">Order Journey</h2>
@@ -43,7 +69,6 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
                 ? "completed"
                 : "pending"
           }
-          // time="Expected 12:30 PM"
         />
         <TimelineItem
           icon={Bike}

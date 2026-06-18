@@ -75,7 +75,7 @@ export default function UserFormView({
       </div>
 
       {/* Personal Information */}
-      <Card className="p-6">
+      <Card className="p-2!">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <User className="w-5 h-5 text-gray-500" />

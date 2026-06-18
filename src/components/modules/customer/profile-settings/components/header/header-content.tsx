@@ -47,19 +47,22 @@ export function HeaderContent({
         <Button
           onClick={onSave}
           disabled={isPending || saveDisabled} // DISABLED IF PENDING OR NO CHANGES IN PROFILE
-          className={`rounded-full h-11 px-6 shadow-sm text-white ${
+          className={`rounded-full h-11 px-6 shadow-sm text-white min-w-[160px] ${
             saveDisabled
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-emerald-bg hover:bg-emerald-700"
           }`}
         >
           {isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            <span className="flex items-center justify-center">
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              {t("save_changes")}
+            </span>
           ) : (
-            <>
+            <span className="flex items-center justify-center">
               <Save className="h-4 w-4 mr-2" />
               {t("save_changes")}
-            </>
+            </span>
           )}
         </Button>
       </div>

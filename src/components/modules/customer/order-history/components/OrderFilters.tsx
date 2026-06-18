@@ -60,9 +60,9 @@ export const OrderFilters = ({
             checked={statusFilters.includes("active")}
             onCheckedChange={(checked) => {
               if (checked) {
-                setStatusFilters(prev => [...prev, "active"]);
+                setStatusFilters(["active"]);
               } else {
-                setStatusFilters(prev => prev.filter(s => s !== "active"));
+                setStatusFilters([]);
               }
             }}
           />
@@ -81,9 +81,9 @@ export const OrderFilters = ({
             checked={statusFilters.includes("delivered")}
             onCheckedChange={(checked) => {
               if (checked) {
-                setStatusFilters(prev => [...prev, "delivered"]);
+                setStatusFilters(["delivered"]);
               } else {
-                setStatusFilters(prev => prev.filter(s => s !== "delivered"));
+                setStatusFilters([]);
               }
             }}
           />
@@ -102,9 +102,9 @@ export const OrderFilters = ({
             checked={statusFilters.includes("rejected")}
             onCheckedChange={(checked) => {
               if (checked) {
-                setStatusFilters(prev => [...prev, "rejected"]);
+                setStatusFilters(["rejected"]);
               } else {
-                setStatusFilters(prev => prev.filter(s => s !== "rejected"));
+                setStatusFilters([]);
               }
             }}
           />

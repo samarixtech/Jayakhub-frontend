@@ -15,18 +15,18 @@ interface OrderCardProps {
   order: Order;
   handleReorder: (order: Order) => void;
   handleRateOrder: (order: Order) => void;
+  handleCancelOrder: (order: Order) => void;
 }
 
 export const OrderCard = ({
   order,
   handleReorder,
   handleRateOrder,
+  handleCancelOrder,
 }: OrderCardProps) => {
   const t = useTranslations("CustomerDashboard.OrderHistory");
   const isRejected = order.OrderStatus.toLowerCase() === OrderStatus.REJECTED;
   const isDelivered = order.OrderStatus.toLowerCase() === OrderStatus.DELIVERED;
-  const isDeliveredOrPaid =
-    isDelivered || order.OrderStatus.toLowerCase() === "paid";
   const firstItem = order.items?.[0];
   const itemNames = order.items
     ?.map((i) => `${i.quantity}x ${i.name}`)
@@ -67,6 +67,9 @@ export const OrderCard = ({
               <p className="text-[11px] text-gray-400 font-medium tracking-wide">
                 {order.orderId} • {order.orderDate}
               </p>
+              <p className="text-[11px] text-gray-500 font-semibold mt-1 uppercase">
+                {t("payment_method")}: {order.paymentMethod}
+              </p>
             </div>
           </div>
 
@@ -104,15 +107,26 @@ export const OrderCard = ({
                 Reorder
               </Button>
             ) : (
-              <Button
-                className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
-                onClick={() => {
-                  window.location.href = `/order/${order.orderId}`;
-                }}
-              >
-                <Navigation size={12} />
-                Track
-              </Button>
+              <div className="flex gap-2 items-center">
+                {order.OrderStatus.toLowerCase() === "pending" && order.paymentMethod?.toLowerCase() === "cod" && (
+                  <Button
+                    variant="outline"
+                    className="rounded-full h-9 px-5 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300 text-[11px] font-bold shadow-sm cursor-pointer"
+                    onClick={() => handleCancelOrder(order)}
+                  >
+                    {t("cancel_order_btn")}
+                  </Button>
+                )}
+                <Button
+                  className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
+                  onClick={() => {
+                    window.location.href = `/order/${order.orderId}`;
+                  }}
+                >
+                  <Navigation size={12} />
+                  Track
+                </Button>
+              </div>
             )}
           </div>
         </div>
@@ -121,8 +135,8 @@ export const OrderCard = ({
         {isDelivered &&
           (() => {
             const ratedItem = order.items?.find(
-              (item: any) => item.rate && item.rate > 0,
-            ) as any;
+              (item) => item.rate && item.rate > 0,
+            );
             const hasGivenReview = !!ratedItem;
             const ratingValue = ratedItem?.rate || 5;
             const reviewText =
@@ -151,7 +165,7 @@ export const OrderCard = ({
                       </div>
                     </div>
                     <p className="text-[#657a8a] text-[13px] italic font-medium">
-                      "{reviewText}"
+                      &quot;{reviewText}&quot;
                     </p>
 
                     {replyText && (

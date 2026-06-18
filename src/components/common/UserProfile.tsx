@@ -66,16 +66,18 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
     ? user.name.charAt(0).toUpperCase()
     : user?.email?.substring(0, 2).toUpperCase() || "??";
 
+  const userRole = (user?.role as UserRole) || "customer";
+  const routes = ROLE_CONFIG[userRole] || ROLE_CONFIG["customer"];
+
   // Notification State
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loadingNotifications, setLoadingNotifications] = useState(true);
 
   useEffect(() => {
+    if (userRole === "customer") return;
     async function fetchNotifications() {
       try {
-       
         const response: any = await getNotifications();
-        
         if (response.success && Array.isArray(response.data)) {
           setNotifications(response.data);
         } else {
@@ -88,13 +90,9 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
       }
     }
     fetchNotifications();
-  }, []);
+  }, [userRole]);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
-
-  const userRole = (user?.role as UserRole) || "customer";
-  // Default to customer if role is not found in config
-  const routes = ROLE_CONFIG[userRole] || ROLE_CONFIG["customer"];
 
   const menuItems = [
     {
@@ -111,11 +109,6 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
       href: routes.orders,
       label: tProfile("link.myOrders"),
       icon: ShoppingBag,
-    },
-    {
-      href: "/help",
-      label: "Help Center",
-      icon: HelpCircle,
     },
   ];
 
@@ -200,28 +193,30 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
                 </DropdownMenuItem>
               ))}
 
-              {/* Notification Item */}
-              <DropdownMenuItem
-                className="p-0 focus:bg-transparent outline-none"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setView("notifications");
-                }}
-              >
-                <div className="flex items-center w-full px-3 py-2.5 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors group cursor-pointer justify-between">
-                  <div className="flex items-center">
-                    <Bell className="h-4 w-4 mr-3 text-gray-500 group-hover:text-[#346853] transition-colors" />
-                    <span className="font-medium text-sm group-hover:text-gray-900 transition-colors">
-                      Notifications
-                    </span>
+              {/* Notification Item — hidden for customers */}
+              {userRole !== "customer" && (
+                <DropdownMenuItem
+                  className="p-0 focus:bg-transparent outline-none"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setView("notifications");
+                  }}
+                >
+                  <div className="flex items-center w-full px-3 py-2.5 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors group cursor-pointer justify-between">
+                    <div className="flex items-center">
+                      <Bell className="h-4 w-4 mr-3 text-gray-500 group-hover:text-[#346853] transition-colors" />
+                      <span className="font-medium text-sm group-hover:text-gray-900 transition-colors">
+                        Notifications
+                      </span>
+                    </div>
+                    {unreadCount > 0 && (
+                      <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                        {unreadCount}
+                      </span>
+                    )}
                   </div>
-                  {unreadCount > 0 && (
-                    <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                      {unreadCount}
-                    </span>
-                  )}
-                </div>
-              </DropdownMenuItem>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator className="bg-gray-100 my-0 mx-2" />

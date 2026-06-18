@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
@@ -20,13 +20,47 @@ import { DeliveryDetails } from "./components/tracking/DeliveryDetails";
 import { formatOrderDateTime } from "@/lib/utils/date";
 import EmptyState from "@/components/common/EmptyState";
 import { Utensils } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { GlobalModal } from "@/components/common/GlobalModal";
+import { cancelOrderAction } from "@/app/actions/customer/order";
+import { toast } from "react-hot-toast";
 
 export default function OrderTrackingView({ params }: { params: any }) {
   const unwrappedParams = params ? React.use(params as any) : {};
   const orderIdFromUrl = (unwrappedParams as any)?.id;
 
-  const { order, loading, subtotal, total, deliveryFee, coupon, rider } =
+  const { order, loading, subtotal, total, deliveryFee, coupon, rider, refetch } =
     useOrderTracking(orderIdFromUrl);
+
+  const t = useTranslations("CustomerDashboard.OrderHistory");
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [canceling, setCanceling] = useState(false);
+
+  const isRejected = order?.orderStatus?.toLowerCase() === "rejected";
+
+  const isCancelable =
+    !isRejected &&
+    (order?.orderStatus || order?.status)?.toLowerCase() === "pending" &&
+    order?.paymentMethod?.toLowerCase() === "cod";
+
+  const handleConfirmCancel = async () => {
+    setCanceling(true);
+    const toastId = toast.loading("Cancelling order...");
+    try {
+      const res = await cancelOrderAction(order.orderId);
+      if (res.success) {
+        toast.success(res.message || "Order cancelled successfully", { id: toastId });
+        setCancelModalOpen(false);
+        refetch();
+      } else {
+        toast.error(res.message || "Failed to cancel order", { id: toastId });
+      }
+    } catch {
+      toast.error("Failed to cancel order", { id: toastId });
+    } finally {
+      setCanceling(false);
+    }
+  };
 
   if (loading) {
     return <OrderTrackingSkeleton />;
@@ -67,24 +101,31 @@ export default function OrderTrackingView({ params }: { params: any }) {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">
-              Live Order Tracking
-            </h1>
+            <div className="flex items-center gap-3 mb-1">
+              <h1 className="text-3xl font-bold text-gray-900">
+                {isRejected ? "Order Cancelled" : "Live Order Tracking"}
+              </h1>
+              {isRejected && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-gray-500">
+                  Cancelled
+                </span>
+              )}
+            </div>
             <p className="text-gray-500">
               Order #{order.orderId} • Place at{" "}
               {formatOrderDateTime(order.orderDate, order.orderTime)}
             </p>
           </div>
           <div className="flex gap-3">
-            <Button className="bg-[#346853] hover:bg-[#2a5443] text-white font-bold h-10 px-6 rounded-lg">
-              Contact Support
-            </Button>
-            <Button
-              variant="secondary"
-              className="bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold h-10 px-6 rounded-lg"
-            >
-              Cancel
-            </Button>
+            {isCancelable && (
+              <Button
+                variant="secondary"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold h-10 px-6 rounded-lg"
+                onClick={() => setCancelModalOpen(true)}
+              >
+                {t("cancel_order_btn")}
+              </Button>
+            )}
           </div>
         </div>
 
@@ -115,18 +156,36 @@ export default function OrderTrackingView({ params }: { params: any }) {
               paymentMethod={order.paymentMethod}
               paymentDetails={order.paymentDetails}
             />
-
-            <div className="text-center">
-              <p className="text-xs text-gray-400 mb-2">
-                Something went wrong with your order?
-              </p>
-              <button className="text-[#346853] font-bold text-sm hover:underline">
-                Report an Issue
-              </button>
-            </div>
           </div>
         </div>
       </div>
+
+      <GlobalModal
+        open={cancelModalOpen}
+        onOpenChange={setCancelModalOpen}
+        title={t("cancel_order_title")}
+        description={t("cancel_order_desc")}
+        isOutsideDisabled={true}
+      >
+        <div className="flex justify-end gap-3">
+          <Button
+            variant="outline"
+            onClick={() => setCancelModalOpen(false)}
+            className="rounded-full cursor-pointer"
+            disabled={canceling}
+          >
+            {t("cancel")}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleConfirmCancel}
+            className="rounded-full bg-red-600 hover:bg-red-500 text-white cursor-pointer"
+            disabled={canceling}
+          >
+            {canceling ? "Cancelling..." : t("cancel_order_confirm")}
+          </Button>
+        </div>
+      </GlobalModal>
     </div>
   );
 }

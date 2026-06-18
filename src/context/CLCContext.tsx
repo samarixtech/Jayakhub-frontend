@@ -1,5 +1,6 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { getDefaultCountryData } from "@/lib/utils/country";
 
 interface CLCContextType {
@@ -18,6 +19,8 @@ interface CLCContextType {
 const CLCContext = createContext<CLCContextType | undefined>(undefined);
 
 export const CLCProvider = ({ children }: { children: ReactNode }) => {
+  const pathname = usePathname();
+
   const [state, setState] = useState(() => {
     // Read USER_COUNTRY cookie on first render to avoid the $ flash on reload
     let countryCode = "US";
@@ -43,6 +46,32 @@ export const CLCProvider = ({ children }: { children: ReactNode }) => {
       language,
     };
   });
+
+  useEffect(() => {
+    if (pathname) {
+      const segments = pathname.split("/").filter(Boolean);
+      const countryCode = (segments[0] || "us").toUpperCase();
+      const lang = segments[1] || "en";
+      const dir = ["ar", "ur", "fa", "he"].includes(lang) ? "rtl" : "ltr";
+      
+      document.documentElement.dir = dir;
+      document.documentElement.lang = lang;
+
+      const countryData = getDefaultCountryData(countryCode);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setState((prev) => {
+        if (prev.language !== lang || prev.country !== countryData.code) {
+          return {
+            country: countryData.code,
+            currency: countryData.currencySymbol,
+            currencyCode: countryData.currencyCode,
+            language: lang,
+          };
+        }
+        return prev;
+      });
+    }
+  }, [pathname]);
 
   const setCLC = (data: {
     country: string;

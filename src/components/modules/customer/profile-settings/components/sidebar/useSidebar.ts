@@ -1,5 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CustomerProfileData } from "@/types";
+import { getKycStatus } from "@/app/actions/customer/userprofile";
+import { useServerAction } from "@/hooks/use-server-action";
+import { KycRecord } from "../kyc/useKycVerification";
 
 export function useSidebar(
   profile: CustomerProfileData,
@@ -7,6 +10,18 @@ export function useSidebar(
 ) {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [kycSubmitted, setKycSubmitted] = useState<boolean | null>(null);
+
+  const { execute: fetchStatus } = useServerAction(getKycStatus, {
+    suppressSuccessToast: true,
+    onSuccess: (data?: KycRecord[]) => {
+      setKycSubmitted(Array.isArray(data) && data.length > 0);
+    },
+  });
+
+  useEffect(() => {
+    fetchStatus();
+  }, [fetchStatus]);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -26,5 +41,6 @@ export function useSidebar(
     fileInputRef,
     handleFile,
     avatarSrc,
+    kycSubmitted,
   };
 }

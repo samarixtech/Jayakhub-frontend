@@ -125,7 +125,7 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
               {t("next_billing")}
             </span>
             <span className="text-[22px] font-black text-[#1E293B] leading-none tracking-tight">
-              {t("dec_01")}
+              {summary?.totalOrdersCount || "N/A"}
             </span>
           </div>
         </div>

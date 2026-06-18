@@ -1,26 +1,36 @@
 "use client";
 import { useState, useEffect } from "react";
-import { OrdersSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
+import { OrderCardsSkeleton } from "@/components/skeletons/CustomerDashboardSkeleton";
 import useLocale from "@/hooks/useLocals";
 import { RatingModal } from "@/components/common/RatingModal";
 import EmptyState from "@/components/common/EmptyState";
 import { FileDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { Order, OrderStatus } from "../types";
+import { Order } from "../types";
 import { OrderHistoryHeader } from "./components/OrderHistoryHeader";
 import { OrderFilters } from "./components/OrderFilters";
 import { OrderCard } from "./components/OrderCard";
 import { usePagination } from "@/hooks/usePagination";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { useOrderHistoryActions } from "./useOrderHistoryActions";
+import { GlobalModal } from "@/components/common/GlobalModal";
+import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
+import { cancelOrderAction } from "@/app/actions/customer/order";
 
 export default function CustomerOrderHistoryView() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
-  const [currentOrderInfo, setCurrentOrderInfo] = useState<any>(null);
+  const [currentOrderInfo, setCurrentOrderInfo] = useState<React.ComponentProps<typeof RatingModal>["orderInfo"] | null>(null);
+
+  // Cancel Order State
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState<Order | null>(null);
+  const [canceling, setCanceling] = useState(false);
+  const [triggerRefetch, setTriggerRefetch] = useState(0);
 
   const { country, language } = useLocale();
 
@@ -37,10 +47,36 @@ export default function CustomerOrderHistoryView() {
   const { handleReorder, handleRateOrder } = useOrderHistoryActions({
     country,
     language,
-    setCurrentPage: handlePageChange as any,
+    setCurrentPage: handlePageChange,
     setCurrentOrderInfo,
     setIsRatingModalOpen,
   });
+
+  const handleCancelOrderClick = (order: Order) => {
+    setOrderToCancel(order);
+    setCancelModalOpen(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!orderToCancel) return;
+    setCanceling(true);
+    const toastId = toast.loading("Cancelling order...");
+    try {
+      const res = await cancelOrderAction(orderToCancel.orderId);
+      if (res.success) {
+        toast.success(res.message || "Order cancelled successfully", { id: toastId });
+        setTriggerRefetch((prev) => prev + 1);
+        setCancelModalOpen(false);
+        setOrderToCancel(null);
+      } else {
+        toast.error(res.message || "Failed to cancel order", { id: toastId });
+      }
+    } catch {
+      toast.error("Failed to cancel order", { id: toastId });
+    } finally {
+      setCanceling(false);
+    }
+  };
 
   useEffect(() => {
     async function fetchOrders() {
@@ -57,15 +93,16 @@ export default function CustomerOrderHistoryView() {
           filterParts.length > 0 ? filterParts.join(",") : undefined;
         const res = await getAllOrders(page, limit, filterParam);
         if (res.success) {
-          const responseData = res.data as any;
+          const responseData = res.data as Record<string, unknown> | Order[] | null;
           if (
             responseData &&
-            responseData.orders &&
+            !Array.isArray(responseData) &&
+            typeof responseData === "object" &&
             Array.isArray(responseData.orders)
           ) {
-            setOrders(responseData.orders);
+            setOrders(responseData.orders as Order[]);
           } else if (Array.isArray(responseData)) {
-            setOrders(responseData);
+            setOrders(responseData as Order[]);
           } else {
             setOrders([]);
           }
@@ -80,10 +117,9 @@ export default function CustomerOrderHistoryView() {
       }
     }
     fetchOrders();
-  }, [dateRange, statusFilters, page, limit]);
+  }, [dateRange, statusFilters, page, limit, updatePaginationMeta, triggerRefetch]);
 
   // Filter Logic (Removed client-side filtering, now handled server-side)
-  if (loading) return <OrdersSkeleton />;
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] py-4 md:p-6 transition-all">
@@ -109,7 +145,9 @@ export default function CustomerOrderHistoryView() {
         </div>
 
         <div className="space-y-4">
-          {orders.length === 0 ? (
+          {loading ? (
+            <OrderCardsSkeleton />
+          ) : orders.length === 0 ? (
             <EmptyState
               icon={FileDown}
               title={t("no_orders_yet")}
@@ -122,6 +160,7 @@ export default function CustomerOrderHistoryView() {
                 order={order}
                 handleReorder={handleReorder}
                 handleRateOrder={handleRateOrder}
+                handleCancelOrder={handleCancelOrderClick}
               />
             ))
           )}
@@ -145,6 +184,36 @@ export default function CustomerOrderHistoryView() {
           onOpenChange={setIsRatingModalOpen}
           orderInfo={currentOrderInfo}
         />
+      )}
+
+      {orderToCancel && (
+        <GlobalModal
+          open={cancelModalOpen}
+          onOpenChange={setCancelModalOpen}
+          title={t("cancel_order_title")}
+          description={t("cancel_order_desc")}
+          trigger={<></>}
+          isOutsideDisabled={true}
+        >
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setCancelModalOpen(false)}
+              className="rounded-full cursor-pointer"
+              disabled={canceling}
+            >
+              {t("cancel")}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmCancel}
+              className="rounded-full bg-red-600 hover:bg-red-500 text-white cursor-pointer"
+              disabled={canceling}
+            >
+              {canceling ? "Cancelling..." : t("cancel_order_confirm")}
+            </Button>
+          </div>
+        </GlobalModal>
       )}
     </div>
   );

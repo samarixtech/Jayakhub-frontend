@@ -42,7 +42,7 @@ export function useDocumentSettings(settings: SettingsData | null) {
         toast.error(response.message || "Failed to upload document.");
       }
     } catch (error) {
-      toast.error("An unexpected error occurred.");
+      console.error("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }

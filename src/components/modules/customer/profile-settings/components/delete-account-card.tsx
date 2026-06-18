@@ -36,7 +36,7 @@ export default function DeleteAccountCard() {
 
   return (
     <>
-      <Card className="rounded-3xl p-8 border border-red-100 shadow-sm bg-white overflow-hidden">
+      <Card className="rounded-3xl p-4 border border-red-100 shadow-sm bg-white overflow-hidden">
         <CardHeader className="px-0 pt-0">
           <CardTitle className="text-lg font-bold text-gray-900">
             {t("delete_account_title")}

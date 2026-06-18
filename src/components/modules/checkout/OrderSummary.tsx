@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useCLC } from "@/context/CLCContext";
 import { toast } from "react-hot-toast";
 import { validateCouponAction } from "@/app/actions/public/coupon";
+import Link from "next/link";
 
 interface CartItem {
   id?: string;
@@ -217,7 +218,7 @@ const OrderSummary = ({
 
         <p className="text-[10px] text-gray-400 text-center mt-3 leading-tight">
           By placing your order, you agree to {"JayakHub's"}{" "}
-          <span className="underline cursor-pointer">Terms & Conditions</span>.
+          <Link href="/terms" className="underline cursor-pointer">Terms & Conditions</Link>.
         </p>
       </div>
     </div>

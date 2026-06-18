@@ -78,12 +78,7 @@ export default function CustomerPaymentHistory() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-4 md:p-6 transition-all font-sans">
       <div className="max-w-5xl mx-auto space-y-4 md:space-y-6">
-        <PaymentHistoryHeader
-          orders={orders}
-          summary={summary}
-          userEmail={userProfile?.email || ""}
-          userName={`${userProfile?.name || ""} ${userProfile?.lastName || ""}`.trim()}
-        />
+        <PaymentHistoryHeader />
 
         <PaymentHistoryMetrics summary={summary} />
 

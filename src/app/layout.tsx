@@ -27,6 +27,9 @@ interface RootLayoutProps {
 export const metadata: Metadata = {
   title: "Jayak Hub",
   description: "Iraq's premier Food Delivery Platform",
+  verification: {
+    google: "8zT1U1oQD9CWBcKSxeNEUpt2O2N-vFM2RpVjIg74o6w",
+  },
 };
 
 export default async function RootLayout({

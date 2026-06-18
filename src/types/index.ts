@@ -164,8 +164,9 @@ export interface CustomerProfileData {
   email: string;
   avatar?: string;
   isVerified?: boolean;
-  role?: string;
+  role?: string | { id: number; name: string };
   password?: boolean;
+  kycVerified?: boolean;
   verification_status?: {
     is_email_verified: boolean;
     is_phone_verified: boolean;

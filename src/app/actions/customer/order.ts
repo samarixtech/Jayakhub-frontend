@@ -111,3 +111,23 @@ export async function submitRatingAction(payload: {
     };
   }
 }
+
+export async function cancelOrderAction(orderId: string) {
+  try {
+    const api = await serverApi();
+    const response = await api.patch(`/cancel-order/${orderId}`);
+    const data = response.data as Record<string, unknown> | null;
+    return {
+      success: true,
+      data: response.data,
+      message: (data && typeof data === "object" && typeof data.message === "string") ? data.message : "Order cancelled successfully",
+    };
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { meta?: { message?: string } } }; message?: string };
+    return {
+      success: false,
+      message: err.response?.data?.meta?.message || err.message || "Failed to cancel order",
+    };
+  }
+}
+

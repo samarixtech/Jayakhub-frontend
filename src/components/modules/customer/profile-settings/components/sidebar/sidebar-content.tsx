@@ -19,11 +19,23 @@ export function SidebarContent({
   onAvatarChange,
   onNotificationClick,
 }: SidebarContentProps) {
-  const { fileInputRef, handleFile, avatarSrc } = useSidebar(
+  const { fileInputRef, handleFile, avatarSrc, kycSubmitted } = useSidebar(
     profile,
     onAvatarChange,
   );
   const t = useTranslations("CustomerDashboard.ProfileSettings");
+
+  const kycStatusLabel = profile.kycVerified
+    ? t("verified")
+    : kycSubmitted
+      ? t("pending")
+      : t("not_verified");
+
+  const kycStatusClass = profile.kycVerified
+    ? "bg-emerald-50 text-emerald-600"
+    : kycSubmitted
+      ? "bg-amber-50 text-amber-600"
+      : "bg-red-50 text-red-600";
 
   return (
     <div className="flex flex-col items-center text-center w-full">
@@ -49,15 +61,15 @@ export function SidebarContent({
         {profile.name} {profile.lastName}
       </Typography>
       <div className="flex gap-2 mt-4">
-        {profile.isVerified && (
-          <Badge className="bg-emerald-50 text-emerald-600">
-            {t("verified")}
-          </Badge>
-        )}
+        <Badge className={`uppercase ${kycStatusClass}`}>
+          {kycStatusLabel}
+        </Badge>
         <Badge className="bg-blue-50 text-blue-600 uppercase">
           {typeof profile.role === "string"
             ? profile.role
-            : (profile.role as any)?.name || "Customer"}
+            : typeof profile.role === "object"
+              ? profile.role?.name || "Customer"
+              : "Customer"}
         </Badge>
       </div>
 

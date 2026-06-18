@@ -22,8 +22,22 @@ export default function IdentityVerificationCard() {
   } = useKycVerification();
   const t = useTranslations('CustomerDashboard.ProfileSettings');
 
+  const hasActiveKyc = kycData.some(
+    (d) => d.status === "verified" || d.status === "pending"
+  );
+
+  const documentsToShow = hasActiveKyc
+    ? KYC_DOCUMENTS.filter((item) =>
+        kycData.some(
+          (d) =>
+            d.documentType === item.id &&
+            (d.status === "verified" || d.status === "pending")
+        )
+      )
+    : KYC_DOCUMENTS;
+
   return (
-    <Card className="rounded-3xl p-5 md:p-8 border-none shadow-sm bg-white overflow-hidden">
+    <Card className="rounded-3xl p-4 md:p-4 border-none shadow-sm bg-white overflow-hidden">
       <CardHeader className="px-0 pt-0 pb-6">
         <CardTitle className="text-lg font-bold text-gray-900">
           {t('identity_verification_title')}
@@ -43,7 +57,7 @@ export default function IdentityVerificationCard() {
             <Loader2 className="animate-spin text-gray-300" />
           </div>
         ) : (
-          KYC_DOCUMENTS.map((item) => (
+          documentsToShow.map((item) => (
             <DocumentItem
               key={item.id}
               item={item}

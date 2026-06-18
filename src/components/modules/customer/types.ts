@@ -14,6 +14,13 @@ export interface OrderItem {
   price: string;
   quantity: number;
   image: string;
+  id?: string;
+  originalId?: string | null;
+  orderItemId?: string | null;
+  rate?: number;
+  comment?: string;
+  reply?: string;
+  selectedVariations?: unknown[];
 }
 
 export interface PaymentDetails {
@@ -31,6 +38,8 @@ export interface Order {
   orderTime: string;
   paymentDetails: PaymentDetails;
   items: OrderItem[];
+  restaurantId?: string;
+  restaurantName?: string;
 }
 
 export interface OrderSummary {

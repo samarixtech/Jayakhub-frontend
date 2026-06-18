@@ -351,3 +351,45 @@ export function PaymentHistorySkeleton() {
         </div>
     );
 }
+
+// ==========================================
+// 7. ORDER CARDS SKELETON (JUST LIST OF CARDS)
+// ==========================================
+export function OrderCardsSkeleton() {
+    return (
+        <div className="space-y-4 animate-in fade-in duration-500">
+            {[1, 2, 3].map((i) => (
+                <Card key={i} className="border-none shadow-sm rounded-3xl overflow-hidden bg-white">
+                    <CardContent className="p-0">
+                        <div className="flex flex-col md:flex-row items-center p-5 gap-6">
+                            {/* Left: Image & Info */}
+                            <div className="flex items-center gap-4 w-full md:w-[35%]">
+                                <Skeleton className="h-16 w-16 shrink-0 rounded-2xl" />
+                                <div className="space-y-2 w-full">
+                                    <Skeleton className="h-5 w-3/4" />
+                                    <Skeleton className="h-3 w-1/2" />
+                                </div>
+                            </div>
+
+                            {/* Middle: Items Summary */}
+                            <div className="hidden md:block w-[30%]">
+                                <div className="space-y-2">
+                                    <Skeleton className="h-3 w-full" />
+                                    <Skeleton className="h-3 w-2/3" />
+                                </div>
+                            </div>
+
+                            {/* Right: Status & Actions */}
+                            <div className="flex items-center justify-end gap-6 w-full md:w-[35%] ml-auto">
+                                <Skeleton className="h-6 w-20 rounded-full" />
+                                <Skeleton className="h-5 w-16" />
+                                <Skeleton className="h-9 w-24 rounded-full" />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            ))}
+        </div>
+    );
+}
+

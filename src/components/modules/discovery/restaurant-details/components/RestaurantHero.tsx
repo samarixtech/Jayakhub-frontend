@@ -79,7 +79,7 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
                     : ""}{" "}
                   <span className="hidden md:inline px-1 text-gray-300">•</span>{" "}
                   <span className="text-[#346853] font-bold group-hover:underline hidden md:inline">
-                    See reviews ›
+                    Read Reviews ›
                   </span>
                 </span>
               </div>

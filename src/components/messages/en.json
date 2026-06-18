@@ -1206,7 +1206,7 @@
       "rate_order": "Rate Order",
       "filters_label": "Filters:",
       "filter_all": "All",
-      "filter_active": "Active",
+      "filter_active": "Pending",
       "filter_delivered": "Delivered",
       "filter_cancelled": "Rejected/Cancelled",
       "date_range": "Date Range",
@@ -1218,7 +1218,13 @@
       "subtitle": "Track your past orders",
       "filters_btn": "Filters",
       "export_csv": "Export CSV",
-      "new_order": "New Order"
+      "new_order": "New Order",
+      "cancel_order_title": "Cancel Order",
+      "cancel_order_desc": "Are you sure you want to cancel this order? This action cannot be undone",
+      "cancel_order_confirm": "Yes, Cancel Order",
+      "cancel_order_btn": "Cancel Order",
+      "cancel": "No",
+      "payment_method": "Payment Method"
     },
     "ProfileSettings": {
       "title": "Profile",
@@ -1226,6 +1232,8 @@
       "cancel": "Cancel",
       "save_changes": "Save Changes",
       "verified": "VERIFIED",
+      "pending": "PENDING",
+      "not_verified": "NOT VERIFIED",
       "total_orders": "Total Orders",
       "reviews": "Reviews",
       "notifications": "Notifications",
@@ -1321,7 +1329,7 @@
       "total_spent": "Total Spent",
       "this_month": "This Month",
       "pending": "Pending",
-      "next_billing": "Next Billing",
+      "next_billing": "Total Orders",
       "dec_01": "Dec 01",
       "transactions": "Transactions",
       "all": "All",
@@ -3759,10 +3767,22 @@
       "title_highlight": "Releases"
     },
     "stats": {
-      "founded": { "value": "2021", "label": "Founded" },
-      "partners": { "value": "5,000+", "label": "Restaurant Partners" },
-      "orders": { "value": "1M+", "label": "Orders Delivered" },
-      "cities": { "value": "8", "label": "Cities" }
+      "founded": {
+        "value": "2021",
+        "label": "Founded"
+      },
+      "partners": {
+        "value": "5,000+",
+        "label": "Restaurant Partners"
+      },
+      "orders": {
+        "value": "1M+",
+        "label": "Orders Delivered"
+      },
+      "cities": {
+        "value": "8",
+        "label": "Cities"
+      }
     },
     "releases": {
       "badge": "Latest News",
@@ -3812,7 +3832,10 @@
       "badge": "Media Coverage",
       "title": "JayaKhub in the News",
       "items": {
-        "m1": { "name": "Reuters", "desc": "Iraq's fastest-growing startup" },
+        "m1": {
+          "name": "Reuters",
+          "desc": "Iraq's fastest-growing startup"
+        },
         "m2": {
           "name": "Arab News",
           "desc": "Transforming Iraqi food culture"
@@ -3821,12 +3844,18 @@
           "name": "Gulf Business",
           "desc": "Top 10 MENA startups to watch"
         },
-        "m4": { "name": "TechCrunch", "desc": "Seed round spotlight" },
+        "m4": {
+          "name": "TechCrunch",
+          "desc": "Seed round spotlight"
+        },
         "m5": {
           "name": "Forbes ME",
           "desc": "30 Under 30 — founder recognition"
         },
-        "m6": { "name": "Wamda", "desc": "Iraq's digital economy pioneer" }
+        "m6": {
+          "name": "Wamda",
+          "desc": "Iraq's digital economy pioneer"
+        }
       }
     },
     "awards": {

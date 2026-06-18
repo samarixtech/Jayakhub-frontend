@@ -5,6 +5,7 @@ export const generateInvoicePDF = (
   order: any,
   userEmail: string = "",
   userName: string = "",
+  currencySymbol: string = "$",
 ) => {
   const doc = new jsPDF();
 
@@ -107,12 +108,16 @@ export const generateInvoicePDF = (
   // Table
   const tableStartY = Math.max(addrY + 15, 85);
 
-  const itemsArr = Array.isArray(order.items) ? order.items : [];
+  const allItems = Array.isArray(order.items) ? order.items : [];
+  // Exclude any "Delivery Fee" line item — it's shown separately in the totals
+  const itemsArr = allItems.filter(
+    (item: any) => item.name?.toLowerCase() !== "delivery fee",
+  );
   const tableData = itemsArr.map((item: any) => [
     item.name || "Item",
     item.quantity || 0,
-    `$${Number(item.price || 0).toFixed(2)}`,
-    `$${(Number(item.price || 0) * (item.quantity || 0)).toFixed(2)}`,
+    `${currencySymbol}${Number(item.price || 0).toFixed(2)}`,
+    `${currencySymbol}${(Number(item.price || 0) * (item.quantity || 0)).toFixed(2)}`,
   ]);
 
   autoTable(doc, {
@@ -149,9 +154,8 @@ export const generateInvoicePDF = (
       acc + Number(item.price || 0) * (item.quantity || 0),
     0,
   );
-  const deliveryFee = 0;
-  const finalTotalAmount =
-    Number(order.totalAmount || subTotalAmount) + deliveryFee;
+  const deliveryFee = Number(order.deliveryFee || 0);
+  const finalTotalAmount = Number(order.totalAmount || subTotalAmount + deliveryFee);
 
   // Right align totals
   const rightColLabelX = 140;
@@ -162,21 +166,15 @@ export const generateInvoicePDF = (
   doc.setTextColor(100);
   doc.text("Subtotal", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text(`$${subTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
+  doc.text(`${currencySymbol}${subTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
     align: "right",
   });
 
   summaryLineY += 8;
   doc.setTextColor(100);
-  doc.text("Tax (0%)", rightColLabelX, summaryLineY);
-  doc.setTextColor(0);
-  doc.text("$0.00", rightColValueX, summaryLineY, { align: "right" });
-
-  summaryLineY += 8;
-  doc.setTextColor(100);
   doc.text("Delivery Fee", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text(`$${deliveryFee.toFixed(2)}`, rightColValueX, summaryLineY, {
+  doc.text(`${currencySymbol}${deliveryFee.toFixed(2)}`, rightColValueX, summaryLineY, {
     align: "right",
   });
 
@@ -190,7 +188,7 @@ export const generateInvoicePDF = (
   doc.setFont("helvetica", "bold");
   doc.setTextColor(52, 104, 83); // Emerald
   doc.text("Total Paid", rightColLabelX, summaryLineY);
-  doc.text(`$${finalTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
+  doc.text(`${currencySymbol}${finalTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
     align: "right",
   });
 

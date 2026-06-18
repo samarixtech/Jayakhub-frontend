@@ -6,7 +6,7 @@ import { SectionHeaderProps } from "@/components/modules/discovery/discovery.typ
 
 const SectionHeader = ({
   title,
-  actionText = "See all",
+  actionText = "See All",
   onAction,
 }: SectionHeaderProps) => {
   return (
@@ -14,11 +14,11 @@ const SectionHeader = ({
       <h2 className="text-xl font-bold text-gray-900">{title}</h2>
       {onAction && (
         <Button
-          variant="ghost"
-          className="text-[#346853] hover:text-[#2a5443] hover:bg-emerald-50 font-bold text-sm h-8 px-2"
+          variant="link"
+          className="text-[#346853] hover:text-[#2a5443] cursor-pointer hover:underline font-bold text-sm leading-none"
           onClick={onAction}
         >
-          {actionText} <ChevronRight className="ml-1 h-4 w-4" />
+          {actionText} <ChevronRight className="h-4 w-4 text-[#346853]" />
         </Button>
       )}
     </div>

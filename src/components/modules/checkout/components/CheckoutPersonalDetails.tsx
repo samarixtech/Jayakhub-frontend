@@ -1,13 +1,23 @@
+import { useState } from "react";
 import { User } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { PhoneInput } from "@/components/ui/phone-input";
+
+interface UserProfile {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
 
 interface CheckoutPersonalDetailsProps {
-  userProfile: any;
+  userProfile: UserProfile | null | undefined;
 }
 
 export const CheckoutPersonalDetails = ({
   userProfile,
 }: CheckoutPersonalDetailsProps) => {
+  const [phone, setPhone] = useState(userProfile?.phone || "");
+
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
@@ -39,8 +49,9 @@ export const CheckoutPersonalDetails = ({
             Mobile Number
           </label>
           <div className="flex gap-2">
-            <Input
-              defaultValue={userProfile?.phone || "912 345 6789"}
+            <PhoneInput
+              value={phone}
+              onChange={setPhone}
               className="h-11 bg-white flex-1"
             />
           </div>

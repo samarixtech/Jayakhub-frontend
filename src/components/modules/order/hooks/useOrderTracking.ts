@@ -1,9 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getCurrentOrder } from "@/app/actions/customer/order";
 
 export function useOrderTracking(orderIdFromUrl: string | undefined) {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+  const refetch = useCallback(() => {
+    setRefetchTrigger((prev) => prev + 1);
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -11,7 +16,6 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
       try {
         const response = await getCurrentOrder(orderIdFromUrl);
         if (response.success && response.data) {
-          // If the backend wraps the object in a "data" property, unwrap it
           const resData = response.data as any;
           const orderData = resData.data ? resData.data : resData;
           setOrder(orderData);
@@ -28,7 +32,7 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
     };
 
     loadData();
-  }, [orderIdFromUrl]);
+  }, [orderIdFromUrl, refetchTrigger]);
 
   let subtotal = 0;
   let total = 0;
@@ -55,5 +59,6 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
     deliveryFee,
     coupon,
     rider,
+    refetch,
   };
 }

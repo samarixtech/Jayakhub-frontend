@@ -35,7 +35,8 @@ const PhoneInput = React.forwardRef<
   React.ElementRef<typeof RPNInput.default>,
   PhoneInputProps
 >(({ className, onChange, value, ...props }, ref) => {
-  const userCountry = getCookie("USER_COUNTRY") as RPNInput.Country;
+  const cookieCountry = getCookie("USER_COUNTRY") as string | undefined;
+  const userCountry = (cookieCountry?.toUpperCase()) as RPNInput.Country | undefined;
 
   const processedValue = React.useMemo(() => {
     if (!value) return "";

@@ -121,12 +121,13 @@ export function PersonalInfoForm({
           <Button
             type="submit"
             disabled={isPending || !form.formState.isDirty}
-            className="bg-emerald-bg hover:bg-emerald-bg-hover text-white font-bold rounded-xl h-12 px-8"
+            className="bg-emerald-bg hover:bg-emerald-bg-hover text-white font-bold rounded-xl h-12 px-8 min-w-[180px]"
           >
             {isPending ? (
-              <>
+              <span className="flex items-center justify-center">
                 <Loader2 className="animate-spin mr-2 h-4 w-4" />
-              </>
+                {t("save_changes")}
+              </span>
             ) : (
               t("save_changes")
             )}

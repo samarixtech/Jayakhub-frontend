@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import HeroBanner from "@/components/modules/discovery/restaurants/components/HeroBanner";
 import DiscoverySidebar from "@/components/modules/discovery/restaurants/components/DiscoverySidebar";
@@ -17,11 +17,41 @@ import { CuisinesSection } from "./sections/CuisinesSection";
 import { CuratedSection } from "./sections/CuratedSection";
 import { AllRestaurantsSection } from "./sections/AllRestaurantsSection";
 import { PreviousOrdersSection } from "./sections/PreviousOrdersSection";
+import { PromotionsModal, Campaign } from "./components/PromotionsModal";
+import { getWebappCampaignsAction } from "@/app/actions/public/marketing";
 
 const AllRestaurantsPage: React.FC = () => {
   const router = useRouter();
   const { isFilterOpen, setIsFilterOpen } = useDiscoveryUI();
   const { state, actions } = useRestaurantDiscovery();
+
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [isPromotionsModalOpen, setIsPromotionsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        const res = await getWebappCampaignsAction();
+        if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+          const hasSeen = sessionStorage.getItem("dismissed_promotions");
+          if (!hasSeen) {
+            setCampaigns(res.data);
+            setIsPromotionsModalOpen(true);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch promotions campaigns:", err);
+      }
+    };
+    fetchCampaigns();
+  }, []);
+
+  const handlePromotionsModalChange = (open: boolean) => {
+    setIsPromotionsModalOpen(open);
+    if (!open) {
+      sessionStorage.setItem("dismissed_promotions", "true");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white font-sans pb-20">
@@ -129,6 +159,13 @@ const AllRestaurantsPage: React.FC = () => {
           orderInfo={state.currentOrderInfo}
         />
       )}
+
+      {/* PROMOTIONS MODAL POPUP */}
+      <PromotionsModal
+        open={isPromotionsModalOpen}
+        onOpenChange={handlePromotionsModalChange}
+        campaigns={campaigns}
+      />
     </div>
   );
 };

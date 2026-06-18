@@ -43,7 +43,7 @@ export default function LegalPageTemplate({
     return (
         <div className="bg-white min-h-screen font-sans">
             {/* Header Section */}
-            <section className="bg-primary pt-32 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            <section className="bg-primary pt-15 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
                 <HeroBackground />
 
                 <div className="max-w-7xl mx-auto z-10 relative">

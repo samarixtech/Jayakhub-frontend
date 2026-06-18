@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   UtensilsCrossed,
-  RotateCcw,
   ShieldCheck,
   CreditCard,
   ChevronRight,
@@ -10,9 +9,11 @@ import { Card } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import useLocale from "@/hooks/useLocals";
 
 export const QuickActions = () => {
   const t = useTranslations("CustomerDashboard.QuickActions");
+  const { country, language } = useLocale();
 
   const QUICK_ACTIONS = [
     {
@@ -20,12 +21,6 @@ export const QuickActions = () => {
       icon: UtensilsCrossed,
       color: "text-emerald-600",
       hrefSuffix: "/restaurants",
-    },
-    {
-      label: t("reorder"),
-      icon: RotateCcw,
-      color: "text-blue-500",
-      hrefSuffix: null,
     },
     {
       label: t("kyc_verify"),
@@ -68,7 +63,7 @@ export const QuickActions = () => {
                 className="w-full justify-between h-14 px-5 rounded-2xl border-gray-50 bg-white hover:bg-gray-50 group transition-all"
                 asChild
               >
-                <Link href={`/${action.hrefSuffix}`}>{content}</Link>
+                <Link href={`/${country}/${language}${action.hrefSuffix}`}>{content}</Link>
               </Button>
             );
           }

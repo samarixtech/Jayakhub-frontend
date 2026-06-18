@@ -38,7 +38,7 @@ export function PaymentHistoryTable({
   userName,
 }: PaymentHistoryTableProps) {
   const t = useTranslations("CustomerDashboard.Billing");
-  const { formatPrice } = useCLC();
+  const { formatPrice, currency } = useCLC();
   const currentOrders = orders;
 
   const handlePageChange = (page: number) => {
@@ -152,7 +152,7 @@ export function PaymentHistoryTable({
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              generateInvoicePDF(order, userEmail, userName);
+              generateInvoicePDF(order, userEmail, userName, currency);
             }}
             className="h-[26px] px-3 rounded-md border border-gray-200 text-[#1E293B] font-bold text-[10px] hover:bg-gray-50 flex items-center justify-center ml-auto shadow-sm"
           >

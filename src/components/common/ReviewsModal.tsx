@@ -100,7 +100,7 @@ export function ReviewsModal({
     <Dialog.Root open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm transition-opacity" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] max-h-[90vh] bg-white rounded-3xl shadow-xl z-50 flex flex-col focus:outline-none overflow-hidden">
+        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] max-h-[90vh] bg-white rounded-3xl shadow-xl z-50 flex flex-col focus:outline-none overflow-hidden" onPointerDownOutside={(e) => e.preventDefault()}>
           {/* Header */}
           <div className="flex items-start justify-between p-6 pb-2 border-b border-gray-100 shrink-0">
             <div>
@@ -111,7 +111,7 @@ export function ReviewsModal({
                 {restaurantName}
               </Dialog.Description>
             </div>
-            <Dialog.Close className="p-2 rounded-full hover:bg-gray-100 transition-colors bg-gray-50 shrink-0">
+            <Dialog.Close className="p-2 rounded-full hover:bg-gray-200 transition-colors bg-gray-100 cursor-pointer shrink-0">
               <X className="w-5 h-5 text-gray-600" />
             </Dialog.Close>
           </div>
