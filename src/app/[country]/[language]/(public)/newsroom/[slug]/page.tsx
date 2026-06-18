@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { getBlogBySlugAction } from "@/app/actions/public/blog";
-import BlogShareButtons from "@/components/modules/public-website/blogs/BlogShareButtons";
+import BlogShareButtons from "@/components/modules/public-website/newsroom/BlogShareButtons";
 
 function estimateReadTime(html: string): string {
   const wordCount = html
@@ -43,7 +43,7 @@ export default async function BlogPostPage({
       {/* ===== HERO ===== */}
       <section className="pt-18 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <Link
-          href="/blogs"
+          href="/newsroom"
           className="inline-flex items-center text-[#94A3B8] hover:text-primary mb-8 font-medium transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />

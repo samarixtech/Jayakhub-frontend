@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/repos/Jayakhub-frontend/src/app/**)",
+      "PowerShell(Get-ChildItem -Recurse -Path \"d:\\\\repos\\\\Jayakhub-frontend\\\\src\" | Where-Object { $_.FullName -match \"restaurant-delivery|restaurantDelivery|restaurant_delivery\" } | Select-Object FullName)",
+      "PowerShell(Get-ChildItem -Recurse -Path \"d:\\\\repos\\\\Jayakhub-frontend\\\\src\" | Where-Object { $_.Name -match \"footer|Footer\" -and $_.Extension -eq \".tsx\" } | Select-Object FullName)",
+      "PowerShell(Remove-Item -LiteralPath \"D:\\\\repos\\\\Jayakhub-frontend\\\\src\\\\app\\\\[country]\\\\[language]\\\\\\(public\\)\\\\privacy-policy\\\\[tab]\\\\page.tsx\" -Force -Confirm:$false; Remove-Item -LiteralPath \"D:\\\\repos\\\\Jayakhub-frontend\\\\src\\\\app\\\\[country]\\\\[language]\\\\\\(public\\)\\\\privacy-policy\\\\[tab]\" -Force -Confirm:$false; Write-Host \"Done: $?\")"
+    ],
+    "additionalDirectories": [
+      "d:\\repos\\Jayakhub-frontend\\src\\app\\[country]\\[language]\\(public)\\privacy-policy",
+      "D:\\repos\\Jayakhub-frontend\\src\\app\\[country]\\[language]\\(public)\\privacy-policy"
+    ]
+  }
+}

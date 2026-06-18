@@ -35,19 +35,19 @@ export function CompareTable() {
                     className="transition-colors"
                     style={
                       r.jayak
-                        ? { background: "linear-gradient(90deg,rgba(44,95,45,.08),rgba(253,184,51,.08))" }
+                        ? { background: "linear-gradient(90deg,rgba(11,93,78,.08),rgba(11,93,78,.04))" }
                         : undefined
                     }
                   >
                     <td className="px-[22px] py-[18px] font-bold border-b" style={{ borderColor: C.line, color: r.jayak ? C.green : C.ink, fontSize: r.jayak ? 17 : 15 }}>
-                      {r.jayak && <span className="inline-block w-3 h-3 rounded-full mr-2.5 shrink-0" style={{ background: C.orange, boxShadow: `0 0 0 4px rgba(255,107,53,.2)` }} />}
+                      {r.jayak && <span className="inline-block w-3 h-3 rounded-full mr-2.5 shrink-0" style={{ background: C.orange, boxShadow: `0 0 0 4px rgba(11,93,78,.2)` }} />}
                       {r.name}
                     </td>
                     <td className="px-[22px] py-[18px] text-[15px] border-b" style={{ borderColor: C.line }}>
                       {r.commission ? (
                         <span className="inline-block px-[10px] py-1 rounded-[6px] text-[13px] font-semibold" style={{ background: "rgba(198,40,40,.1)", color: C.red }}>{r.commission}</span>
                       ) : (
-                        <span className="inline-block px-[10px] py-1 rounded-[6px] text-[13px] font-semibold" style={{ background: "rgba(44,95,45,.12)", color: C.green }}>{t('zero_commission')}</span>
+                        <span className="inline-block px-[10px] py-1 rounded-[6px] text-[13px] font-semibold" style={{ background: "rgba(11,93,78,.12)", color: C.green }}>{t('zero_commission')}</span>
                       )}
                     </td>
                     <td className="px-[22px] py-[18px] text-[15px] border-b" style={{ borderColor: C.line }}>{r.subscription || "$0"}</td>

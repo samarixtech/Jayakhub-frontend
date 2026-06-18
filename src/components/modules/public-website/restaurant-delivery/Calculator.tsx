@@ -59,8 +59,8 @@ export function Calculator() {
       className="py-[50px] px-8 relative overflow-hidden scroll-mt-20"
       style={{ background: C.navy, color: C.white }}
     >
-      <div className="pointer-events-none absolute" style={{ top: "-20%", left: "-10%", width: 600, height: 600, background: `radial-gradient(circle,rgba(44,95,45,.3),transparent 60%)` }} />
-      <div className="pointer-events-none absolute" style={{ bottom: "-30%", right: "-10%", width: 500, height: 500, background: `radial-gradient(circle,rgba(253,184,51,.15),transparent 60%)` }} />
+      <div className="pointer-events-none absolute" style={{ top: "-20%", left: "-10%", width: 600, height: 600, background: `radial-gradient(circle,rgba(11,93,78,.3),transparent 60%)` }} />
+      <div className="pointer-events-none absolute" style={{ bottom: "-30%", right: "-10%", width: 500, height: 500, background: `radial-gradient(circle,rgba(11,93,78,.15),transparent 60%)` }} />
 
       <div className="max-w-[1280px] mx-auto relative z-10">
         <div className="text-center mb-14">
@@ -188,7 +188,7 @@ export function Calculator() {
               className="rounded-[16px] p-7 relative overflow-hidden"
               style={{ background: `linear-gradient(135deg,${C.green} 0%,${C.greenDeep} 100%)`, color: C.white }}
             >
-              <div className="pointer-events-none absolute" style={{ top: "-50%", right: "-20%", width: 350, height: 350, background: "radial-gradient(circle,rgba(253,184,51,.22),transparent 60%)" }} />
+              <div className="pointer-events-none absolute" style={{ top: "-50%", right: "-20%", width: 350, height: 350, background: "radial-gradient(circle,rgba(11,93,78,.22),transparent 60%)" }} />
               <div className="relative z-10">
                 <div className="text-[12px] font-bold tracking-[0.12em] uppercase mb-[18px]" style={{ color: C.gold }}>{t('tool.results_title')}</div>
 
@@ -216,20 +216,20 @@ export function Calculator() {
                       className="relative flex justify-between items-center px-4 py-[8px] rounded-[10px] mb-2 cursor-pointer transition-all duration-200 select-none"
                       style={{
                         background: isSelected
-                          ? "linear-gradient(135deg,rgba(253,184,51,.3),rgba(255,107,53,.2))"
+                          ? "linear-gradient(135deg,rgba(11,93,78,.3),rgba(11,93,78,.2))"
                           : tier.featured
-                            ? "rgba(253,184,51,.18)"
+                            ? "rgba(11,93,78,.18)"
                             : tier.founding
-                              ? "rgba(255,107,53,.15)"
+                              ? "rgba(11,93,78,.15)"
                               : "rgba(255,255,255,.08)",
                         border: isSelected
                           ? `2px solid ${C.gold}`
                           : tier.featured
-                            ? `1.5px solid rgba(253,184,51,.5)`
+                            ? `1.5px solid rgba(11,93,78,.5)`
                             : tier.founding
-                              ? `1.5px solid rgba(255,107,53,.4)`
+                              ? `1.5px solid rgba(11,93,78,.4)`
                               : "1px solid rgba(255,255,255,.1)",
-                        boxShadow: isSelected ? `0 0 0 4px rgba(253,184,51,.15), 0 8px 24px rgba(0,0,0,.25)` : undefined,
+                        boxShadow: isSelected ? `0 0 0 4px rgba(11,93,78,.15), 0 8px 24px rgba(0,0,0,.25)` : undefined,
                         transform: isSelected ? "scale(1.02)" : undefined,
                       }}
                     >

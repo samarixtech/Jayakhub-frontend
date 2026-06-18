@@ -1,4 +1,4 @@
-import Blog from "@/components/modules/public-website/blogs/blogsPage";
+import Blog from "@/components/modules/public-website/newsroom/newsroomPage";
 import { getBlogsAction } from "@/app/actions/public/blog";
 
 export default async function BlogsPage() {

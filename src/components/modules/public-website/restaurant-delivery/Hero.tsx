@@ -18,14 +18,14 @@ export function Hero() {
         className="pointer-events-none absolute"
         style={{
           top: "-10%", right: "-8%", width: 600, height: 600,
-          background: "radial-gradient(circle,rgba(253,184,51,.18),transparent 60%)",
+          background: "radial-gradient(circle,rgba(11,93,78,.18),transparent 60%)",
         }}
       />
       <div
         className="pointer-events-none absolute"
         style={{
           bottom: "-40%", left: "-10%", width: 700, height: 700,
-          background: "radial-gradient(circle,rgba(255,107,53,.14),transparent 60%)",
+          background: "radial-gradient(circle,rgba(11,93,78,.10),transparent 60%)",
         }}
       />
 
@@ -34,8 +34,8 @@ export function Hero() {
           <div
             className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold mb-7"
             style={{
-              background: "rgba(253,184,51,.18)",
-              border: "1px solid rgba(253,184,51,.4)",
+              background: "rgba(11,93,78,.18)",
+              border: "1px solid rgba(11,93,78,.4)",
               color: C.gold,
             }}
           >
@@ -66,7 +66,7 @@ export function Hero() {
             <Link
               href="/restaurant-register"
               className="inline-flex items-center gap-2 px-7 py-4 rounded-[10px] font-semibold text-white text-[16px] transition-all duration-200 hover:-translate-y-0.5"
-              style={{ background: C.orange, boxShadow: "0 4px 14px rgba(255,107,53,.4)" }}
+              style={{ background: C.orange, boxShadow: "0 4px 14px rgba(11,93,78,.4)" }}
             >
               {t('cta')}
             </Link>

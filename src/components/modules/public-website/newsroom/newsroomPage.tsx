@@ -43,7 +43,7 @@ export default function Newsroom({ blogs = [], categories = [] }: Props) {
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
   const [activeCategory, setActiveCategory] = useState(ALL);
 
-  const getBlogUrl = (slug: string) => `/blogs/${slug}`;
+  const getBlogUrl = (slug: string) => `/newsroom/${slug}`;
 
   const tabs = [t("categories.all"), ...categories];
 

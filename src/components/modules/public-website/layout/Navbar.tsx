@@ -29,10 +29,10 @@ const Navbar: React.FC = () => {
   // --- Nav Items ---
   const navItems = [
     { label: t("home"), to: "/home" },
-    { label: t("about"), to: "/about" },
+    { label: t("about"), to: "/about-us" },
     { label: t("services"), to: "/services" },
     { label: t("contact"), to: "/contact" },
-    { label: t("newsroom"), to: "/blogs" },
+    { label: t("newsroom"), to: "/newsroom" },
     { label: t("partners"), to: "/partners" },
   ];
 
