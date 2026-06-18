@@ -17,7 +17,7 @@ export function Programs() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
           {/* Founding 100 */}
           <div id="founding-100" className="relative overflow-hidden rounded-[20px] p-[38px] text-white" style={{ background: `linear-gradient(135deg,${C.green} 0%,${C.greenDeep} 100%)` }}>
-            <div className="pointer-events-none absolute" style={{ top: "-30%", right: "-20%", width: 350, height: 350, background: "radial-gradient(circle,rgba(253,184,51,.18),transparent 60%)" }} />
+            <div className="pointer-events-none absolute" style={{ top: "-30%", right: "-20%", width: 350, height: 350, background: "radial-gradient(circle,rgba(11,93,78,.18),transparent 60%)" }} />
             <span className="inline-block relative z-10 text-[12px] font-bold tracking-[0.05em] px-[14px] py-1.5 rounded-full mb-[18px]" style={{ background: C.gold, color: C.navy }}>{t('founding.badge')}</span>
             <h3 className="text-[28px] font-bold mb-3 tracking-[-0.02em] relative z-10">{t('founding.title')}</h3>
             <p className="text-[15px] opacity-[0.92] leading-[1.6] mb-[22px] relative z-10">{t('founding.desc')}</p>
@@ -39,7 +39,7 @@ export function Programs() {
 
           {/* Multi-Business */}
           <div className="relative overflow-hidden rounded-[20px] p-[38px] text-white" style={{ background: "linear-gradient(135deg,#1B3A57 0%,#0d1f2f 100%)" }}>
-            <div className="pointer-events-none absolute" style={{ top: "-30%", right: "-20%", width: 350, height: 350, background: "radial-gradient(circle,rgba(253,184,51,.18),transparent 60%)" }} />
+            <div className="pointer-events-none absolute" style={{ top: "-30%", right: "-20%", width: 350, height: 350, background: "radial-gradient(circle,rgba(11,93,78,.18),transparent 60%)" }} />
             <span className="inline-block relative z-10 text-[12px] font-bold tracking-[0.05em] px-[14px] py-1.5 rounded-full mb-[18px]" style={{ background: C.gold, color: C.navy }}>{t('multi_business.badge')}</span>
             <h3 className="text-[28px] font-bold mb-3 tracking-[-0.02em] relative z-10">{t('multi_business.title')}</h3>
             <p className="text-[15px] opacity-[0.92] leading-[1.6] mb-[22px] relative z-10">{t('multi_business.desc')}</p>

@@ -145,7 +145,7 @@ export default function CustomerRegisterView() {
                     <FormLabel className="text-sm font-normal text-gray-500">
                       I agree to the{" "}
                       <Link
-                        href="/terms"
+                        href="/terms-of-service"
                         className="font-bold text-emerald-bg hover:underline"
                       >
                         Terms and Conditions

@@ -28,14 +28,14 @@ export function Pricing() {
                 background: p.featured ? `linear-gradient(180deg,#fff 0%,${C.creamWarm} 100%)` : C.cream,
                 borderColor: p.featured ? C.orange : C.line,
                 transform: p.featured ? "scale(1.04)" : undefined,
-                boxShadow: p.featured ? "0 12px 32px rgba(255,107,53,.15)" : undefined,
+                boxShadow: p.featured ? "0 12px 32px rgba(11,93,78,.15)" : undefined,
                 animationDelay: `${i * 0.1}s`,
               }}
             >
               {p.featured && (
                 <div
                   className="absolute text-[12px] font-bold tracking-[0.05em] px-4 py-1.5 rounded-[20px] text-white whitespace-nowrap"
-                  style={{ top: -14, left: "50%", transform: "translateX(-50%)", background: C.orange, boxShadow: "0 4px 12px rgba(255,107,53,.3)" }}
+                  style={{ top: -14, left: "50%", transform: "translateX(-50%)", background: C.orange, boxShadow: "0 4px 12px rgba(11,93,78,.3)" }}
                 >
                   {t('most_popular')}
                 </div>
@@ -61,7 +61,7 @@ export function Pricing() {
                 className="block text-center py-[10px] rounded-[8px] font-semibold text-[14px] transition-all duration-200"
                 style={
                   p.featured
-                    ? { background: C.orange, color: C.white, boxShadow: "0 2px 8px rgba(255,107,53,.3)" }
+                    ? { background: C.orange, color: C.white, boxShadow: "0 2px 8px rgba(11,93,78,.3)" }
                     : { background: C.white, color: C.navy, border: `2px solid ${C.line}` }
                 }
               >

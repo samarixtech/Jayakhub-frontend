@@ -21,7 +21,7 @@ export function QuickLinks() {
               className="relative overflow-hidden rounded-[18px] p-9 flex flex-col transition-all duration-300 border-2 border-transparent hover:-translate-y-1.5 group"
               style={{ background: C.cream }}
             >
-              <div className="pointer-events-none absolute top-0 right-0 w-[140px] h-[140px]" style={{ background: "radial-gradient(circle,rgba(253,184,51,.15),transparent 70%)" }} />
+              <div className="pointer-events-none absolute top-0 right-0 w-[140px] h-[140px]" style={{ background: "radial-gradient(circle,rgba(11,93,78,.15),transparent 70%)" }} />
               <div className="w-[52px] h-[52px] rounded-[12px] flex items-center justify-center text-[26px] mb-[22px] relative z-10" style={{ background: C.green }}>
                 {icon}
               </div>

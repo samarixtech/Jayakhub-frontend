@@ -28,17 +28,17 @@ const Footer = () => {
   ];
 
   const companyLinks = [
-    { label: t("company.about"), href: "/about" },
+    { label: t("company.about"), href: "/about-us" },
     { label: t("company.careers"), href: "/careers" },
-    { label: t("company.blog"), href: "/blogs" },
-    { label: t("company.press"), href: "/press" },
+    { label: t("company.newsroom"), href: "/newsroom" },
+    { label: t("company.press"), href: "/news-and-press" },
   ];
 
   const supportLinks = [
-    { label: t("support.help_center"), href: "/help" },
+    { label: t("support.help_center"), href: "/help-center" },
     { label: t("support.safety"), href: "/safety" },
-    { label: t("support.terms"), href: "/terms" },
-    { label: t("support.privacy"), href: "/privacyPolicy" },
+    { label: t("support.terms"), href: "/terms-of-service" },
+    { label: t("support.privacy"), href: "/privacy-policy" },
   ];
 
   const partnerLinks = [
@@ -155,11 +155,11 @@ const Footer = () => {
             {t("bottom.copyright")}
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="/terms" className="hover:text-white transition-colors">
+            <Link href="/terms-of-service" className="hover:text-white transition-colors">
               {t("bottom.terms")}
             </Link>
             <Link
-              href="/privacyPolicy"
+              href="/privacy-policy"
               className="hover:text-white transition-colors"
             >
               {t("bottom.privacy")}

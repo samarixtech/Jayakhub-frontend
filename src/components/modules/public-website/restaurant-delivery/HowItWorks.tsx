@@ -24,7 +24,7 @@ export function HowItWorks() {
             >
               <div
                 className="w-16 h-16 rounded-[16px] flex items-center justify-center text-[28px] font-bold text-white"
-                style={{ background: `linear-gradient(135deg,${C.green},${C.greenDeep})`, boxShadow: "0 6px 16px rgba(44,95,45,.25)" }}
+                style={{ background: `linear-gradient(135deg,${C.green},${C.greenDeep})`, boxShadow: "0 6px 16px rgba(11,93,78,.25)" }}
               >
                 {s.n}
               </div>

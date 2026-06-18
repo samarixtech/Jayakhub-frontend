@@ -1093,7 +1093,8 @@
       "about": "About Us",
       "careers": "Careers",
       "blog": "Blog",
-      "press": "Press"
+      "newsroom": "Newsroom",
+      "press": "News & Press"
     },
     "support": {
       "title": "Support",
@@ -3376,10 +3377,22 @@
       "title_highlight": "Releases"
     },
     "stats": {
-      "founded": { "value": "2021", "label": "Founded" },
-      "partners": { "value": "5,000+", "label": "Restaurant Partners" },
-      "orders": { "value": "1M+", "label": "Orders Delivered" },
-      "cities": { "value": "8", "label": "Cities" }
+      "founded": {
+        "value": "2021",
+        "label": "Founded"
+      },
+      "partners": {
+        "value": "5,000+",
+        "label": "Restaurant Partners"
+      },
+      "orders": {
+        "value": "1M+",
+        "label": "Orders Delivered"
+      },
+      "cities": {
+        "value": "8",
+        "label": "Cities"
+      }
     },
     "releases": {
       "badge": "Latest News",
@@ -3429,24 +3442,60 @@
       "badge": "Media Coverage",
       "title": "JayaKhub in the News",
       "items": {
-        "m1": { "name": "Reuters", "desc": "Iraq's fastest-growing startup" },
-        "m2": { "name": "Arab News", "desc": "Transforming Iraqi food culture" },
-        "m3": { "name": "Gulf Business", "desc": "Top 10 MENA startups to watch" },
-        "m4": { "name": "TechCrunch", "desc": "Seed round spotlight" },
-        "m5": { "name": "Forbes ME", "desc": "30 Under 30 — founder recognition" },
-        "m6": { "name": "Wamda", "desc": "Iraq's digital economy pioneer" }
+        "m1": {
+          "name": "Reuters",
+          "desc": "Iraq's fastest-growing startup"
+        },
+        "m2": {
+          "name": "Arab News",
+          "desc": "Transforming Iraqi food culture"
+        },
+        "m3": {
+          "name": "Gulf Business",
+          "desc": "Top 10 MENA startups to watch"
+        },
+        "m4": {
+          "name": "TechCrunch",
+          "desc": "Seed round spotlight"
+        },
+        "m5": {
+          "name": "Forbes ME",
+          "desc": "30 Under 30 — founder recognition"
+        },
+        "m6": {
+          "name": "Wamda",
+          "desc": "Iraq's digital economy pioneer"
+        }
       }
     },
     "awards": {
       "badge": "Recognition",
       "title": "Awards & Honors",
       "items": {
-        "a1": { "award": "Best Startup — Iraq Tech Awards 2024", "body": "Iraq Tech Association" },
-        "a2": { "award": "Top 10 MENA Food-Tech Companies", "body": "Gulf Business Magazine" },
-        "a3": { "award": "Forbes Middle East 30 Under 30", "body": "Forbes ME, 2024" },
-        "a4": { "award": "People's Choice — Baghdad Digital Summit", "body": "Baghdad Digital Initiative" },
-        "a5": { "award": "Best Delivery Experience — Consumer Choice", "body": "Iraq Consumer Reports, 2023" },
-        "a6": { "award": "Social Impact Award — Rider Welfare", "body": "MENA Startup Foundation" }
+        "a1": {
+          "award": "Best Startup — Iraq Tech Awards 2024",
+          "body": "Iraq Tech Association"
+        },
+        "a2": {
+          "award": "Top 10 MENA Food-Tech Companies",
+          "body": "Gulf Business Magazine"
+        },
+        "a3": {
+          "award": "Forbes Middle East 30 Under 30",
+          "body": "Forbes ME, 2024"
+        },
+        "a4": {
+          "award": "People's Choice — Baghdad Digital Summit",
+          "body": "Baghdad Digital Initiative"
+        },
+        "a5": {
+          "award": "Best Delivery Experience — Consumer Choice",
+          "body": "Iraq Consumer Reports, 2023"
+        },
+        "a6": {
+          "award": "Social Impact Award — Rider Welfare",
+          "body": "MENA Startup Foundation"
+        }
       }
     },
     "media_kit": {
