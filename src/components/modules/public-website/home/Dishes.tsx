@@ -3,6 +3,7 @@ import { Star, Heart, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useCurrency } from '@/hooks/useCurrency';
 import mixedGrillImg from '../../../../../public/mixed-grill.jpg';
 import gourmetImg from '../../../../../public/gourmet.jpg';
 import sausageFeastImg from '../../../../../public/sausage-feast.jpg';
@@ -61,6 +62,7 @@ const dishes = [
 
 export default function SpecialDishes() {
   const t = useTranslations('Home.featured_dishes');
+  const { symbol: currencySymbol } = useCurrency();
   const [isVisible, setIsVisible] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -186,10 +188,10 @@ export default function SpecialDishes() {
 
                 {/* Price */}
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold text-primary">${dish.price}</span>
+                  <span className="text-xl font-bold text-primary">{currencySymbol}{dish.price}</span>
                   {dish.originalPrice && (
                     <span className="text-sm text-[#94A3B8] line-through">
-                      ${dish.originalPrice}
+                      {currencySymbol}{dish.originalPrice}
                     </span>
                   )}
                 </div>

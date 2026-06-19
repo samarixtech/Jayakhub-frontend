@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { C } from "./constants";
+import { useCurrency } from "@/hooks/useCurrency";
 
 export function Pricing() {
   const t = useTranslations('RestaurantDelivery.pricing');
+  const { symbol: currencySymbol } = useCurrency();
   const plans = t.raw('plans') as { tier: string; name: string; price: number; desc: string; features: string[]; featured?: boolean }[];
 
   return (
@@ -43,7 +45,7 @@ export function Pricing() {
               <div className="text-[12px] font-semibold tracking-[0.1em] uppercase mb-1" style={{ color: C.orange }}>{p.tier}</div>
               <h3 className="text-[18px] font-bold mb-[14px]" style={{ color: C.navy }}>{p.name}</h3>
               <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-[20px] font-medium" style={{ color: C.muted }}>$</span>
+                <span className="text-[20px] font-medium" style={{ color: C.muted }}>{currencySymbol}</span>
                 <span className="font-bold leading-none tracking-[-0.035em]" style={{ fontSize: 42, color: C.ink }}>{p.price}</span>
                 <span className="text-[14px] ml-1" style={{ color: C.muted }}>/mo</span>
               </div>

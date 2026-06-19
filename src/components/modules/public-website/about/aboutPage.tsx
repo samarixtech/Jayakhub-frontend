@@ -97,9 +97,9 @@ export default function About() {
         <div className="max-w-6xl mx-auto relative">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {[
-              { value: '2018', label: t('stats.founded') },
-              { value: '5,000+', label: t('stats.partners') },
-              { value: '1M+', label: t('stats.orders') },
+              { value: '2025', label: t('stats.founded') },
+              { value: '500', label: t('stats.partners') },
+              { value: '1M', label: t('stats.orders') },
               { value: '8', label: t('stats.cities') },
             ].map((stat, index) => (
               <div

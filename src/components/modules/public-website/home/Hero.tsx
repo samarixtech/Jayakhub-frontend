@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from "@/lib/utils";
 import { useTranslations } from 'next-intl';
 import { useRouter, useParams } from 'next/navigation';
+import { useCurrency } from '@/hooks/useCurrency';
 import deliciousFoodImg from '../../../../../public/DeliciousFood.png';
 import falafelImg from '../../../../../public/Falafel.png';
 import dolmaImg from '../../../../../public/Dolma.png';
@@ -17,6 +18,7 @@ export default function Hero() {
     const t = useTranslations('Home');
     const router = useRouter();
     const params = useParams();
+    const { symbol: currencySymbol } = useCurrency();
     const [isVisible, setIsVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -142,16 +144,16 @@ export default function Hero() {
 
                         {/* Floating Items - Responsive positioning and scaling */}
                         <FloatingCard
-                            img={falafelImg} title="Falafel" price="$5.99"
+                            img={falafelImg} title="Falafel" price={`${currencySymbol}5.99`}
                             className="scale-90 sm:scale-100 top-0 end-0 sm:top-10 sm:end-10"
                         />
                         <FloatingCard
-                            img={dolmaImg} title="Dolma" price="$8.99"
+                            img={dolmaImg} title="Dolma" price={`${currencySymbol}8.99`}
                             className="scale-90 sm:scale-100 bottom-0 start-0 sm:bottom-20 sm:start-10"
                             delay="1s" reverse
                         />
                         <FloatingCard
-                            img={tabboulehImg} title="Tabbouleh" price="$4.99"
+                            img={tabboulehImg} title="Tabbouleh" price={`${currencySymbol}4.99`}
                             className="scale-90 sm:scale-100 top-1/4 -start-4 sm:top-1/3 sm:-start-5"
                             delay="1.5s"
                         />

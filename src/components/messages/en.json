@@ -17,11 +17,11 @@
     "hero_search_btn": "Find Food",
     "stats": {
       "customers": {
-        "value": "5K+",
+        "value": "5K",
         "label": "Happy Customers"
       },
       "restaurants": {
-        "value": "15+",
+        "value": "15",
         "label": "Restaurants"
       },
       "delivery": {
@@ -260,7 +260,7 @@
     "story": {
       "badge": "Our Story",
       "title": "From baghdad to the world",
-      "p1": "Founded in 2018, JayakHub was born from a simple idea: <strong>food delivery should be seamless, reliable, and accessible to everyone.</strong>",
+      "p1": "Founded in 2025, JayakHub was born from a simple idea: <strong>food delivery should be seamless, reliable, and accessible to everyone.</strong>",
       "p2": "We don't just deliver meals. We connect communities, support local restaurants, and bring people together through the food they love.",
       "p3": "Today, we're trusted by thousands of restaurants and have delivered millions of orders across Iraq."
     },
@@ -293,7 +293,7 @@
       }
     },
     "ecosystem": {
-      "badge": "For everyone",
+      "badge": "For Everyone",
       "title": "Join the ecosystem",
       "items": {
         "customers": {
@@ -444,7 +444,7 @@
   },
   "Contact": {
     "hero": {
-      "badge": "GET IN TOUCH",
+      "badge": "Get In Touch",
       "title_p1": "We'd Love To",
       "title_highlight": "Hear From You"
     },
@@ -487,7 +487,7 @@
   },
   "Newsroom": {
     "hero": {
-      "badge": "The Journal",
+      "badge": "The Newsroom",
       "title_p1": "Thinking",
       "title_highlight": "Forward"
     },
@@ -730,7 +730,7 @@
   },
   "Help": {
     "hero": {
-      "badge": "Support Center",
+      "badge": "Help Center",
       "title": "How can we help you today?",
       "search_placeholder": "Search for articles...",
       "search_button": "Search"
@@ -2329,7 +2329,7 @@
         },
         "s9": {
           "title": "9. Contact",
-          "content": "Privacy questions: privacy@jayakhub.com · JayakHub, [address], Baghdad, Iraq."
+          "content": "Privacy questions: privacy@jayakhub.com · JayakHub, 320 Decker Suite 100, Irving Texas 75062."
         }
       }
     },
@@ -2816,7 +2816,7 @@
   },
   "PartnerPage": {
     "hero": {
-      "badge": "⚡ For restaurants across Iraq",
+      "badge": "⚡ For Restaurants Across Iraq",
       "title_main": "Own your delivery.",
       "title_highlight": "Keep every dinar.",
       "description": "Get your own branded ordering app, keep your customers and your data, and pay a flat monthly subscription — <strong>not</strong> a cut of every order.",
@@ -2911,7 +2911,7 @@
     },
     "pricing": {
       "title": "Simple <span>subscription</span> pricing",
-      "subtitle": "Flat monthly fee. No commission, ever. Prices in USD; billed in IQD (≈ 1,500 IQD/$).",
+      "subtitle": "Flat monthly fee. No commissions, ever. Prices are listed in USD and charged in IQD (≈ 1,500 IQD/USD).",
       "most_popular": "MOST POPULAR",
       "choose": "Choose {tier}",
       "plans": [
@@ -3372,21 +3372,21 @@
   },
   "Press": {
     "hero": {
-      "badge": "JayaKhub Newsroom",
+      "badge": "News And Press",
       "title_p1": "News & Press",
       "title_highlight": "Releases"
     },
     "stats": {
       "founded": {
-        "value": "2021",
+        "value": "2025",
         "label": "Founded"
       },
       "partners": {
-        "value": "5,000+",
+        "value": "500",
         "label": "Restaurant Partners"
       },
       "orders": {
-        "value": "1M+",
+        "value": "1M",
         "label": "Orders Delivered"
       },
       "cities": {

@@ -17,6 +17,7 @@ import {
   Quote,
 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
+import { useCurrency } from "@/hooks/useCurrency";
 import Link from "next/link";
 import PublicHeroSection from "@/components/common/public-website/publicHeroSection";
 import type { ApiPlan } from "@/app/actions/public/plans";
@@ -35,6 +36,7 @@ export default function Services({ plans = [] }: Props) {
   const t = useTranslations("Services");
   const locale = useLocale();
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const { symbol: currencySymbol } = useCurrency();
   const [isVisible, setIsVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
   const [activePlanIndex, setActivePlanIndex] = useState(0);
@@ -106,7 +108,7 @@ export default function Services({ plans = [] }: Props) {
     },
   ];
 
-  const pricingPlans = plans.map((plan) => ({
+  const apiPlans = plans.map((plan) => ({
     id: plan.id,
     name: plan.name,
     price: formatPrice(plan.monthlyPrice),
@@ -115,7 +117,27 @@ export default function Services({ plans = [] }: Props) {
     features: plan.keywords,
     popular: plan.planType === "premium",
     freeTrialDays: plan.freeTrialDays,
+    numericPrice: !isNaN(parseFloat(plan.monthlyPrice)),
   }));
+
+  const staticPlansRaw = t.raw("pricing.plans") as Record<string, { name: string; price: string; period: string; features: Record<string, string> }>;
+  const fallbackPlans = Object.entries(staticPlansRaw).map(([id, plan]) => {
+    const rawPrice = plan.price.replace(/[$€£¥₹]/g, "").trim();
+    const isNumeric = rawPrice !== "Free" && rawPrice !== "Custom" && !isNaN(Number(rawPrice));
+    return {
+      id,
+      name: plan.name,
+      price: isNumeric ? rawPrice : plan.price,
+      period: plan.period || "/mo",
+      billingCycle: "monthly",
+      features: Object.values(plan.features),
+      popular: id === "pro",
+      freeTrialDays: null as number | null,
+      numericPrice: isNumeric,
+    };
+  });
+
+  const pricingPlans = apiPlans.length > 0 ? apiPlans : fallbackPlans;
 
   const testimonials = [
     {
@@ -163,10 +185,10 @@ export default function Services({ plans = [] }: Props) {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {[
-              { value: "200K+", label: t("stats.users") },
-              { value: "120K+", label: t("stats.deliveries") },
-              { value: "9K+", label: t("stats.partners") },
-              { value: "4.9★", label: t("stats.rating") },
+              { value: "200K", label: t("stats.users") },
+              { value: "120K", label: t("stats.deliveries") },
+              { value: "9K", label: t("stats.partners") },
+              { value: "4.9", label: t("stats.rating") },
             ].map((stat, index) => (
               <div
                 key={stat.label}
@@ -255,7 +277,7 @@ export default function Services({ plans = [] }: Props) {
             <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
               {t("pricing.title")}
             </h2>
-            <p className="text-white/60 max-w-xl mx-auto">
+            <p className="text-white/60 mx-auto whitespace-nowrap">
               {t("pricing.desc")}
             </p>
           </div>
@@ -274,75 +296,78 @@ export default function Services({ plans = [] }: Props) {
                 {pricingPlans.map((plan, idx) => {
                   const isLight = idx % 2 === 0;
                   return (
-                  <div
-                    key={plan.id}
-                    className={`relative flex-none w-[calc(100%-8px)] sm:w-[calc(50%-10px)] lg:w-[calc(30%-14px)] snap-start flex flex-col rounded-2xl p-9 transition-transform duration-300 hover:-translate-y-1 ${
-                      isLight
-                        ? "bg-white shadow-[0_20px_60px_rgba(0,0,0,0.2)]"
-                        : "bg-white/[0.07] border border-white/15"
-                    }`}
-                  >
-                    {/* badges */}
-                    <div className="flex flex-wrap gap-2 mb-5 min-h-[26px]">
-                      {plan.popular && (
-                        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-3 py-1 rounded-full tracking-wide ${isLight ? "bg-primary text-white" : "bg-white/20 text-white"}`}>
-                          ★ {t("pricing.most_popular")}
-                        </span>
-                      )}
-                      {plan.freeTrialDays && (
-                        <span className={`inline-flex items-center text-[11px] font-semibold px-3 py-1 rounded-full ${isLight ? "bg-primary/10 text-primary" : "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30"}`}>
-                          {plan.freeTrialDays} days free
-                        </span>
-                      )}
-                    </div>
-
-                    {/* billing cycle label */}
-                    <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isLight ? "text-primary/60" : "text-white/40"}`}>
-                      {plan.billingCycle ?? "plan"}
-                    </p>
-
-                    {/* plan name */}
-                    <h3 className={`text-3xl font-bold mb-5 capitalize leading-tight ${isLight ? "text-foreground" : "text-white"}`}>
-                      {plan.name}
-                    </h3>
-
-                    {/* price */}
-                    <div className={`flex items-end gap-1 mb-6 pb-6 border-b ${isLight ? "border-gray-100" : "border-white/10"}`}>
-                      <span className={`text-6xl font-extrabold leading-none ${isLight ? "text-primary" : "text-white"}`}>
-                        {plan.price}
-                      </span>
-                      <span className={`text-sm font-medium mb-1 ${isLight ? "text-[#94A3B8]" : "text-white/50"}`}>
-                        {plan.period}
-                      </span>
-                    </div>
-
-                    {/* features */}
-                    <ul className="space-y-3 mb-8 flex-1">
-                      {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-center gap-3">
-                          <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${isLight ? "bg-primary/10" : "bg-white/10"}`}>
-                            <Check className={`w-3 h-3 ${isLight ? "text-primary" : "text-white"}`} />
-                          </span>
-                          <span className={`text-base capitalize ${isLight ? "text-[#475569]" : "text-white/70"}`}>
-                            {feature}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* cta */}
-                    <Link
-                      href="/contact"
-                      className={`w-full py-4 rounded-xl font-semibold text-base flex justify-center items-center gap-2 transition-all mt-auto ${
-                        isLight
-                          ? "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20"
-                          : "bg-white/10 text-white hover:bg-white/20 border border-white/20"
-                      }`}
+                    <div
+                      key={plan.id}
+                      className={`relative flex-none w-[calc(100%-8px)] sm:w-[calc(50%-10px)] lg:w-[calc(30%-14px)] snap-start flex flex-col rounded-2xl p-9 transition-transform duration-300 hover:-translate-y-1 ${isLight
+                          ? "bg-white shadow-[0_20px_60px_rgba(0,0,0,0.2)]"
+                          : "bg-white/[0.07] border border-white/15"
+                        }`}
                     >
-                      {t("pricing.button")}
-                      <Arrow className="w-4 h-4" />
-                    </Link>
-                  </div>
+                      {/* badges */}
+                      <div className="flex flex-wrap gap-2 mb-5 min-h-[26px]">
+                        {plan.popular && (
+                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-3 py-1 rounded-full tracking-wide ${isLight ? "bg-primary text-white" : "bg-white/20 text-white"}`}>
+                            ★ {t("pricing.most_popular")}
+                          </span>
+                        )}
+                        {plan.freeTrialDays && (
+                          <span className={`inline-flex items-center text-[11px] font-semibold px-3 py-1 rounded-full ${isLight ? "bg-primary/10 text-primary" : "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30"}`}>
+                            {plan.freeTrialDays} days free
+                          </span>
+                        )}
+                      </div>
+
+                      {/* billing cycle label */}
+                      <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isLight ? "text-primary/60" : "text-white/40"}`}>
+                        {plan.billingCycle ?? "plan"}
+                      </p>
+
+                      {/* plan name */}
+                      <h3 className={`text-3xl font-bold mb-5 capitalize leading-tight ${isLight ? "text-foreground" : "text-white"}`}>
+                        {plan.name}
+                      </h3>
+
+                      {/* price */}
+                      <div className={`flex items-end gap-1 mb-6 pb-6 border-b ${isLight ? "border-gray-100" : "border-white/10"}`}>
+                        {plan.numericPrice && (
+                          <span className={`text-2xl font-bold self-start mt-2 ${isLight ? "text-primary" : "text-white"}`}>
+                            {currencySymbol}
+                          </span>
+                        )}
+                        <span className={`text-6xl font-extrabold leading-none ${isLight ? "text-primary" : "text-white"}`}>
+                          {plan.price}
+                        </span>
+                        <span className={`text-sm font-medium mb-1 ${isLight ? "text-[#94A3B8]" : "text-white/50"}`}>
+                          {plan.period}
+                        </span>
+                      </div>
+
+                      {/* features */}
+                      <ul className="space-y-3 mb-8 flex-1">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-center gap-3">
+                            <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${isLight ? "bg-primary/10" : "bg-white/10"}`}>
+                              <Check className={`w-3 h-3 ${isLight ? "text-primary" : "text-white"}`} />
+                            </span>
+                            <span className={`text-base capitalize ${isLight ? "text-[#475569]" : "text-white/70"}`}>
+                              {feature}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* cta */}
+                      <Link
+                        href="/contact"
+                        className={`w-full py-4 rounded-xl font-semibold text-base flex justify-center items-center gap-2 transition-all mt-auto ${isLight
+                            ? "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20"
+                            : "bg-white/10 text-white hover:bg-white/20 border border-white/20"
+                          }`}
+                      >
+                        {t("pricing.button")}
+                        <Arrow className="w-4 h-4" />
+                      </Link>
+                    </div>
                   );
                 })}
               </div>
@@ -420,7 +445,7 @@ export default function Services({ plans = [] }: Props) {
               </p>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/90 transition-all hover:gap-3"
+                className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-full font-semibold text-sm hover:bg-white/90 transition-all hover:gap-3"
               >
                 {t("cta.button")}
                 <Arrow className="w-5 h-5" />
