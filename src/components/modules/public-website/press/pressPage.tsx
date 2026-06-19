@@ -86,9 +86,8 @@ export default function PressPage() {
       >
         <div className="max-w-6xl mx-auto">
           <div
-            className={`grid grid-cols-2 lg:grid-cols-4 gap-8 text-center transition-all duration-700 ${
-              visibleSections.stats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-            }`}
+            className={`grid grid-cols-2 lg:grid-cols-4 gap-8 text-center transition-all duration-700 ${visibleSections.stats ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
           >
             {statKeys.map((key) => (
               <div key={key}>
@@ -121,7 +120,7 @@ export default function PressPage() {
               variant="outline"
               className="border-primary text-primary hover:bg-primary hover:text-white"
             >
-              <Link href="/blogs">
+              <Link href="/newsroom">
                 <Newspaper className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2" />
                 {t("releases.all_releases")}
               </Link>
@@ -134,16 +133,14 @@ export default function PressPage() {
               return (
                 <article
                   key={key}
-                  className={`group bg-white border border-gray-100 rounded-2xl p-6 hover:border-primary/30 hover:shadow-lg transition-all duration-500 ${
-                    visibleSections.releases ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                  }`}
+                  className={`group bg-white border border-gray-100 rounded-2xl p-6 hover:border-primary/30 hover:shadow-lg transition-all duration-500 ${visibleSections.releases ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                    }`}
                   style={{ transitionDelay: `${index * 80}ms` }}
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <span
-                      className={`text-xs font-semibold px-3 py-1 rounded-full ${
-                        categoryColors[category] ?? "bg-gray-100 text-gray-600"
-                      }`}
+                      className={`text-xs font-semibold px-3 py-1 rounded-full ${categoryColors[category] ?? "bg-gray-100 text-gray-600"
+                        }`}
                     >
                       {category}
                     </span>
@@ -189,9 +186,8 @@ export default function PressPage() {
             {mediaKeys.map((key, index) => (
               <div
                 key={key}
-                className={`bg-white border border-gray-100 rounded-2xl p-6 flex items-center gap-4 hover:border-primary/30 hover:shadow-md transition-all duration-500 group ${
-                  visibleSections.media ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
+                className={`bg-white border border-gray-100 rounded-2xl p-6 flex items-center gap-4 hover:border-primary/30 hover:shadow-md transition-all duration-500 group ${visibleSections.media ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  }`}
                 style={{ transitionDelay: `${index * 80}ms` }}
               >
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -230,9 +226,8 @@ export default function PressPage() {
             {awardKeys.map((key, index) => (
               <div
                 key={key}
-                className={`bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 flex gap-4 items-start transition-all duration-700 ${
-                  visibleSections.awards ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                }`}
+                className={`bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-5 flex gap-4 items-start transition-all duration-700 ${visibleSections.awards ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  }`}
                 style={{ transitionDelay: `${index * 80}ms` }}
               >
                 <Award className="w-6 h-6 text-[#FE8C34] flex-shrink-0 mt-0.5" />
@@ -256,9 +251,8 @@ export default function PressPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {/* Media Kit */}
             <div
-              className={`bg-[#FAFAFA] rounded-3xl p-8 transition-all duration-700 ${
-                visibleSections.contact ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
-              }`}
+              className={`bg-[#FAFAFA] rounded-3xl p-8 transition-all duration-700 ${visibleSections.contact ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-8"
+                }`}
             >
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
                 <Download className="w-7 h-7 text-primary" />
@@ -274,7 +268,7 @@ export default function PressPage() {
                 ))}
               </ul>
               <Button asChild className="bg-primary text-white hover:bg-primary/90">
-                <Link href="/contact">
+                <Link href="#">
                   <Download className="w-4 h-4 mr-2 rtl:mr-0 rtl:ml-2" />
                   {t("media_kit.download_btn")}
                 </Link>
@@ -283,9 +277,8 @@ export default function PressPage() {
 
             {/* Press Contact */}
             <div
-              className={`bg-primary rounded-3xl p-8 text-white transition-all duration-700 ${
-                visibleSections.contact ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
-              }`}
+              className={`bg-primary rounded-3xl p-8 text-white transition-all duration-700 ${visibleSections.contact ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
+                }`}
             >
               <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6">
                 <Mail className="w-7 h-7 text-white" />

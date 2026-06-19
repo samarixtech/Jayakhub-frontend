@@ -187,9 +187,9 @@ export default function Partner() {
               }`}
           >
             {[
-              { value: "500+", label: t("stats.drivers") },
-              { value: "15+", label: t("stats.restaurants") },
-              { value: "50K+", label: t("stats.orders") },
+              { value: "500", label: t("stats.drivers") },
+              { value: "15", label: t("stats.restaurants") },
+              { value: "50K", label: t("stats.orders") },
               { value: "8", label: t("stats.cities") },
             ].map((stat) => (
               <div key={stat.label} className="text-center">

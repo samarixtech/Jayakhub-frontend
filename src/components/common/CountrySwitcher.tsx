@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { setCookie, getCookie } from "cookies-next";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, usePathname } from "next/navigation";
 import ReactCountryFlag from "react-country-flag";
 import { getNames, getCode } from "country-list";
 import emojiFlags from "emoji-flags";
@@ -42,6 +42,7 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
 }) => {
   const router = useRouter();
   const params = useParams();
+  const pathname = usePathname();
 
   const [countries, setCountries] = useState<Country[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
@@ -130,10 +131,10 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
     });
     setIsCountryDropdownOpen(false);
 
-    // Redirect globally to new country namespace
-    const locale = params?.locale || "en";
-    const newPath = `/${country.code.toLowerCase()}/${locale}/restaurants`;
-    router.replace(newPath);
+    // Replace the country segment in the current URL, staying on the same page
+    const segments = pathname.split("/");
+    segments[1] = country.code.toLowerCase();
+    router.replace(segments.join("/"));
   };
 
   const isNavbar = variant === "navbar";

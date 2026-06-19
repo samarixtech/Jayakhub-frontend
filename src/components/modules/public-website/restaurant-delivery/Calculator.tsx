@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { C } from "./constants";
+import { useCurrency } from "@/hooks/useCurrency";
 
 export type Tier = "starter" | "pro" | "premium" | "founding";
 
-export function fmt(n: number) {
-  return "$" + Math.round(n).toLocaleString();
-}
-
 export function Calculator() {
   const t = useTranslations('RestaurantDelivery.calculator');
+  const { symbol: currencySymbol } = useCurrency();
+  const fmt = (n: number) => currencySymbol + Math.round(n).toLocaleString();
   const tiersData = t.raw('tiers') as { id: Tier; label: string; price: number; badge?: string; note: string }[];
   const platforms = t.raw('tool.platforms') as { name: string }[];
 
@@ -155,7 +154,7 @@ export function Calculator() {
               <div className="mb-4">
                 <label className="block font-semibold text-[13px] mb-2" style={{ color: C.navy }}>{t('tool.aov_label')}</label>
                 <div className="flex items-baseline gap-3 rounded-[10px] border-2 px-[12px] py-[8px] transition-all focus-within:border-green-600 focus-within:bg-white" style={{ background: C.cream, borderColor: C.line }}>
-                  <span className="text-[14px] font-semibold" style={{ color: C.muted }}>$</span>
+                  <span className="text-[14px] font-semibold" style={{ color: C.muted }}>{currencySymbol}</span>
                   <input
                     type="number"
                     value={aov}
@@ -259,7 +258,7 @@ export function Calculator() {
                           )}
                         </span>
                         <span className="text-[11px] font-semibold uppercase tracking-[0.05em] opacity-70">
-                          ${tier.price}/mo{tier.founding ? " for life" : ""}
+                          {currencySymbol}{tier.price}/mo{tier.founding ? " for life" : ""}
                         </span>
                       </div>
 

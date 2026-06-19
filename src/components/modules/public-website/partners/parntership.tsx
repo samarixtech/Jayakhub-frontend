@@ -476,12 +476,14 @@ import { useTranslations, useLocale } from "next-intl";
 import { useState, useEffect, useRef } from "react";
 import { getPublicPlansAction, ApiPlan } from "@/app/actions/public/plans";
 import { Check, ArrowRight, ArrowLeft } from "lucide-react";
+import { useCurrency } from "@/hooks/useCurrency";
 
 const RTL_LOCALES = ["ar", "ur", "fa", "he"];
 
 export default function Home() {
   const t = useTranslations('PartnerPage');
   const locale = useLocale();
+  const { symbol: currencySymbol } = useCurrency();
   const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
 
   const [apiPlans, setApiPlans] = useState<ApiPlan[]>([]);
@@ -884,6 +886,9 @@ export default function Home() {
 
                       {/* price */}
                       <div className={`flex items-end gap-1 mb-6 pb-6 border-b ${isLight ? "border-gray-100" : "border-white/10"}`}>
+                        <span className={`text-2xl font-bold self-start mt-2 ${isLight ? "text-primary" : "text-white"}`}>
+                          {currencySymbol}
+                        </span>
                         <span className={`text-6xl font-extrabold leading-none ${isLight ? "text-primary" : "text-white"}`}>
                           {plan.price}
                         </span>

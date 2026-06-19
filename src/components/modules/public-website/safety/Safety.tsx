@@ -3,6 +3,7 @@
 import { ArrowRight, Shield, UserCheck, Activity, Lock, Truck, Smartphone, Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import Link from 'next/link';
 import WaveDivider from '@/components/common/public-website/WaveDivider';
 import safetyImg from '../../../../../public/safety.png';
 
@@ -100,8 +101,8 @@ export default function Safety() {
 
             {/* Impact Section */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-                <div className="flex flex-col lg:flex-row items-stretch gap-12 lg:gap-20">
-                    <div className="w-full lg:w-1/2 relative">
+                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                    <div className="w-full lg:w-1/2 relative flex justify-center">
                         {/* Image with strong shadow */}
                         {/* Yahan se h-full hata diya gaya hai */}
                         <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl">
@@ -174,10 +175,10 @@ export default function Safety() {
                         <p className="text-white/60 mb-10 text-lg">
                             {t('community.desc')}
                         </p>
-                        <button className="bg-white text-[#0A2920] px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-all inline-flex items-center gap-2 hover:gap-3">
+                        <Link href="/privacy-policy" className="bg-white text-[#0A2920] px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-all inline-flex items-center gap-2 hover:gap-3">
                             {t('community.button')}
                             <ArrowRight className="w-5 h-5" />
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </section>

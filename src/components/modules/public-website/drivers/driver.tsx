@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
@@ -27,10 +26,10 @@ export default function Driver() {
   const isRtl = dir === "rtl";
 
   const stats = [
-    { value: "1,500+", label: t("stats.partners") },
-    { value: "21.5K+", label: t("stats.revenue") },
-    { value: "500+", label: t("stats.orders") },
-    { value: "4.9/5", label: t("stats.rating") },
+    { value: "1,500", label: t("stats.partners") },
+    { value: "21.5K", label: t("stats.revenue") },
+    { value: "500", label: t("stats.orders") },
+    { value: "4.9", label: t("stats.rating") },
   ];
 
   const benefitsKeys = ['revenue', 'reach', 'dashboard', 'analytics', 'hours', 'support'];
@@ -105,19 +104,17 @@ export default function Driver() {
               </h1>
 
               <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link
-                  href="/contact"
+                <button
                   className="bg-[#FE8C34] hover:bg-[#e0751f] text-white py-4 px-8 rounded-full font-bold text-base transition-all hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                 >
                   {t('hero.buttons.partner')}
                   <ArrowRight className={`w-5 h-5 ${isRtl ? "rotate-180" : ""}`} />
-                </Link>
-                <Link
-                  href="/about"
+                </button>
+                <button
                   className="bg-white/10 hover:bg-white/25 border border-white/20 text-white py-4 px-8 rounded-full font-bold text-base transition-all flex items-center justify-center"
                 >
                   {t('hero.buttons.learn_more')}
-                </Link>
+                </button>
               </div>
             </motion.div>
 
@@ -223,19 +220,18 @@ export default function Driver() {
         <div className="max-w-6xl mx-auto">
           <div className="bg-[#0B5D4E] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-xl">
             <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-white/5 rounded-full blur-[80px] pointer-events-none" />
-            
+
             <div className="relative z-10 grid lg:grid-cols-12 gap-10 items-center">
               {/* Info columns */}
               <div className="lg:col-span-5 space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold leading-tight">{t('requirements.title')}</h2>
                 <p className="text-emerald-100/80 leading-relaxed text-sm md:text-base">{t('requirements.subtitle')}</p>
                 <div className="pt-4">
-                  <Link
-                    href="/contact"
+                  <button
                     className="bg-white hover:bg-emerald-50 text-[#0B5D4E] font-bold px-8 py-3.5 rounded-full inline-flex items-center justify-center transition-all hover:scale-105 text-sm"
                   >
                     {t('cta.button')}
-                  </Link>
+                  </button>
                 </div>
               </div>
 
@@ -304,12 +300,11 @@ export default function Driver() {
               <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{t('cta.title')}</h2>
               <p className="text-emerald-100/80 text-lg max-w-lg mx-auto">{t('cta.subtitle')}</p>
               <div className="pt-4">
-                <Link
-                  href="/contact"
+                <button
                   className="bg-white hover:bg-emerald-50 text-[#0B5D4E] font-bold px-8 py-4 rounded-full inline-flex items-center justify-center transition-all hover:scale-105 shadow-lg text-base"
                 >
                   {t('cta.button')}
-                </Link>
+                </button>
               </div>
             </div>
           </div>

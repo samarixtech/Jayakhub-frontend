@@ -24,7 +24,7 @@ export default function Contact() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
     };
 
     return (
@@ -89,7 +89,7 @@ export default function Contact() {
                             <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100/50">
                                 <h3 className="font-bold text-slate-900 mb-2">{t('faq.title')}</h3>
                                 <p className="text-[#64748B] mb-6 text-sm leading-relaxed">{t('faq.desc')}</p>
-                                <Link href="/help" className="inline-flex items-center gap-2 text-slate-900 font-bold hover:gap-3 transition-all text-sm">
+                                <Link href="/help-center" className="inline-flex items-center gap-2 text-slate-900 font-bold hover:gap-3 transition-all text-sm">
                                     {t('faq.link')} <Arrow className="w-4 h-4" />
                                 </Link>
                             </div>

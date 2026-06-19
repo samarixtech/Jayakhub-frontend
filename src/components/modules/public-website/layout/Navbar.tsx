@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-[#0B5D4E] shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto  lg:px-6">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex items-center h-20">
           {/* Logo */}
           <Link href="/home" className="shrink-0">
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
               src={isArabic ? image : image2}
               alt="Logo"
               width={270}
-              className="w-45 md:w-[250px] h-auto"
+              className="w-32 md:w-[180px] h-auto"
             />
           </Link>
 

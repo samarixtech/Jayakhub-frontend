@@ -69,10 +69,10 @@ export default function CareersPage() {
     activeFilter === "all"
       ? openingKeys
       : openingKeys.filter((key) => {
-          const dept = t(`roles.openings.${key}.department`);
-          const label = t(`roles.departments.${activeFilter}`);
-          return dept === label;
-        });
+        const dept = t(`roles.openings.${key}.department`);
+        const label = t(`roles.departments.${activeFilter}`);
+        return dept === label;
+      });
 
   return (
     <div className="bg-white">
@@ -90,9 +90,8 @@ export default function CareersPage() {
         className="py-20 px-4 sm:px-6 lg:px-8"
       >
         <div
-          className={`max-w-4xl mx-auto text-center transition-all duration-700 ${
-            visibleSections.mission ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`max-w-4xl mx-auto text-center transition-all duration-700 ${visibleSections.mission ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
             {t("mission.badge")}
@@ -124,9 +123,8 @@ export default function CareersPage() {
               return (
                 <div
                   key={key}
-                  className={`transition-all duration-700 ${
-                    visibleSections.values ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                  }`}
+                  className={`transition-all duration-700 ${visibleSections.values ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                    }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
@@ -165,11 +163,10 @@ export default function CareersPage() {
               <button
                 key={dept}
                 onClick={() => setActiveFilter(dept)}
-                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
-                  activeFilter === dept
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${activeFilter === dept
                     ? "bg-primary text-white shadow-md"
                     : "bg-white border border-gray-200 text-[#64748B] hover:border-primary hover:text-primary"
-                }`}
+                  }`}
               >
                 {t(`roles.departments.${dept}`)}
               </button>
@@ -181,9 +178,8 @@ export default function CareersPage() {
             {filtered.map((key, index) => (
               <div
                 key={key}
-                className={`group bg-white border border-gray-100 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary/30 hover:shadow-md transition-all duration-300 ${
-                  visibleSections.roles ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                }`}
+                className={`group bg-white border border-gray-100 rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-primary/30 hover:shadow-md transition-all duration-300 ${visibleSections.roles ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  }`}
                 style={{ transitionDelay: `${index * 60}ms` }}
               >
                 <div className="flex items-start gap-4">
@@ -257,9 +253,8 @@ export default function CareersPage() {
               return (
                 <div
                   key={key}
-                  className={`bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/15 transition-all duration-700 ${
-                    visibleSections.benefits ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-                  }`}
+                  className={`bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/15 transition-all duration-700 ${visibleSections.benefits ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                    }`}
                   style={{ transitionDelay: `${index * 80}ms` }}
                 >
                   <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-4">
@@ -296,7 +291,7 @@ export default function CareersPage() {
               variant="outline"
               className="border-primary text-primary hover:bg-primary hover:text-white px-8"
             >
-              <Link href="/about">
+              <Link href="/about-us">
                 {t("cta.learn_more")}
                 <ChevronDown className="w-4 h-4 ml-1 rtl:ml-0 rtl:mr-1" />
               </Link>

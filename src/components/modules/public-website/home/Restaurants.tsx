@@ -149,9 +149,9 @@ export default function Restaurants() {
           </button>
         </div>
 
-        {/* Category Filter - Added horizontal scroll for mobile */}
+        {/* Category Filter */}
         <div
-          className={`flex overflow-x-auto pb-4 md:pb-0 md:flex-wrap gap-3 mb-10 no-scrollbar transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          className={`flex overflow-x-auto py-2 md:flex-wrap gap-3 mb-10 no-scrollbar transition-all duration-700 delay-100 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
         >
           {categories.map((category) => (
@@ -159,7 +159,7 @@ export default function Restaurants() {
               key={category.name}
               onClick={() => setActiveCategory(category.name)}
               className={`flex items-center gap-2 px-5 py-2.5 md:py-3 rounded-full font-medium transition-all duration-300 whitespace-nowrap ${activeCategory === category.name
-                ? "bg-primary text-white shadow-lg shadow-primary/25 scale-105"
+                ? "bg-primary text-white"
                 : "bg-secondary text-muted-foreground hover:bg-secondary/80 hover:text-foreground"
                 }`}
             >
