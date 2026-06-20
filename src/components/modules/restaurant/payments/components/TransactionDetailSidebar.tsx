@@ -4,6 +4,7 @@ import React from "react";
 import { X, Check, Utensils, Receipt } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface OrderItem {
   name: string;
@@ -28,7 +29,8 @@ export interface TransactionDetail {
   paymentMethod: string;
   total: string;
   netAmount?: string;
-  fee?: string;
+  commission?: string;
+  deliveryFee?: string;
   items?: OrderItem[];
   activities?: ActivityEvent[];
 }
@@ -68,6 +70,7 @@ const TransactionDetailSidebar = ({
   transaction,
 }: TransactionDetailSidebarProps) => {
   const t = useTranslations("RestaurantDashboard.Payments.transactionSidebar");
+  const { formatPrice } = useCLC();
 
   if (!transaction) return null;
 
@@ -100,12 +103,15 @@ const TransactionDetailSidebar = ({
   ];
 
   const subtotal = transaction.total;
-  const feeFormatted = transaction.fee
-    ? `${transaction.fee.startsWith("-") ? "" : "-"}$${Math.abs(parseFloat(transaction.fee)).toFixed(2)}`
-    : "-$2.60";
+  const commissionFormatted = transaction.commission
+    ? `-${Math.abs(parseFloat(transaction.commission)).toFixed(2)}`
+    : "—";
+  const deliveryFeeFormatted = transaction.deliveryFee
+    ? parseFloat(transaction.deliveryFee).toFixed(2)
+    : "—";
   const netAmount = transaction.netAmount
-    ? `$${Math.abs(parseFloat(transaction.netAmount)).toFixed(2)}`
-    : "$49.40";
+    ? Math.abs(parseFloat(transaction.netAmount)).toFixed(2)
+    : "—";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -203,7 +209,7 @@ const TransactionDetailSidebar = ({
                       </p>
                     </div>
                     <span className="text-[13px] font-bold text-[#1b2d22]">
-                      ${item.total.toFixed(2)}
+                      {formatPrice(item.total)}
                     </span>
                   </div>
                 ))}
@@ -222,10 +228,18 @@ const TransactionDetailSidebar = ({
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[12px] text-gray-500">
-                  {t("platformFee")}
+                  Commission
                 </span>
                 <span className="text-[12px] font-bold text-red-500">
-                  {feeFormatted}
+                  {commissionFormatted}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[12px] text-gray-500">
+                  Delivery Fee
+                </span>
+                <span className="text-[12px] font-bold text-[#1b2d22]">
+                  {deliveryFeeFormatted}
                 </span>
               </div>
               <div className="flex justify-between items-center pt-2">

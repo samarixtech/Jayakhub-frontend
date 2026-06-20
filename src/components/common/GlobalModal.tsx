@@ -64,7 +64,7 @@ export function GlobalModal({
           </DialogHeader>
         )}
 
-        {customStyle ? children : <div className="mt-4">{children}</div>}
+        {customStyle ? children : <div className="">{children}</div>}
       </DialogContent>
     </Dialog>
   );

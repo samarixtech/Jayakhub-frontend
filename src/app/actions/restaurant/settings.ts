@@ -6,10 +6,11 @@ import { revalidatePath } from "next/cache";
 
 // ==================== GET ACCOUNT SETTINGS ====================
 export async function getAccountSettingsAction(): Promise<ActionResponse> {
-  return executeRestaurantAction(
+  const res = await executeRestaurantAction(
     (api) => api.get("/account-settings"),
     "Account settings fetched successfully",
   );
+  return res;
 }
 
 // ==================== UPDATE RESTAURANT PROFILE ====================
@@ -72,7 +73,7 @@ export async function updateLocationAction(data: {
 }): Promise<ActionResponse> {
   return executeRestaurantAction(
     (api) => api.put("/settings/update-request", data),
-    "Location update request submitted successfully",
+    "Restaurant Info Updated Successfully",
   );
 }
 
@@ -100,5 +101,13 @@ export async function updateKycAction(
         },
       }),
     "Document upload request submitted successfully",
+  );
+}
+
+// ==================== GET BANKS LIST ====================
+export async function getBanksAction(): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.get("/banks"),
+    "Banks fetched successfully",
   );
 }

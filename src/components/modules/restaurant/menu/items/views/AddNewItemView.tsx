@@ -74,16 +74,16 @@ export default function AddNewItemView() {
           <div className="max-w-[1400px] w-full flex items-center justify-end gap-3 px-4">
             <Button
               type="button"
-              variant="secondary"
+              variant="default"
               onClick={() => router.push("/restaurant/menu/items")}
-              className="bg-gray-100/50 hover:bg-gray-100 text-gray-600 font-bold h-14 px-8 rounded-2xl transition-all"
+              className="bg-gray-100 hover:bg-gray-100/90 border border-[#D0D0D0] text-gray-600 font-bold h-14 px-8 rounded-2xl transition-all cursor-pointer"
             >
               {t("discardBtn")}
             </Button>
             <Button
               type="submit"
               disabled={isSaving}
-              className="bg-[#2D5A43] hover:bg-[#234735] text-white font-black h-14 px-12 rounded-2xl shadow-xl shadow-emerald-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2"
+              className="bg-[#2D5A43] hover:bg-[#234735] text-white font-black h-14 px-12 rounded-2xl shadow-xl shadow-emerald-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
             >
               {isSaving ? (
                 t("processing")

@@ -1,7 +1,9 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { toast } from "react-hot-toast";
+import { format } from "date-fns";
 import { usePagination } from "@/hooks/usePagination";
+import { useDateFilter } from "@/components/providers/DateFilterProvider";
 import {
   getPayoutStatsAction,
   getPayoutsAction,
@@ -32,6 +34,12 @@ export const usePayouts = () => {
   const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } =
     usePagination({ initialLimit: 10 });
 
+  const { startDate, endDate } = useDateFilter();
+  const prevDatesRef = useRef<{ startDate: Date | undefined; endDate: Date | undefined }>({
+    startDate: undefined,
+    endDate: undefined,
+  });
+
   const [payouts, setPayouts] = useState<Payout[]>([]);
   const [stats, setStats] = useState<PayoutStats>({
     availableBalance: 0,
@@ -43,12 +51,14 @@ export const usePayouts = () => {
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchPayouts = useCallback(async () => {
+  const fetchPayouts = useCallback(async (fetchPage = page) => {
+    const formattedStart = startDate ? format(startDate, "yyyy-MM-dd") : undefined;
+    const formattedEnd = endDate ? format(endDate, "yyyy-MM-dd") : undefined;
     try {
       setLoading(true);
       const [statsRes, historyRes] = await Promise.all([
-        getPayoutStatsAction(),
-        getPayoutsAction(page, limit),
+        getPayoutStatsAction(formattedStart, formattedEnd),
+        getPayoutsAction(fetchPage, limit, undefined, formattedStart, formattedEnd),
       ]);
 
       if (statsRes.success && statsRes.data) {
@@ -66,12 +76,22 @@ export const usePayouts = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, limit, updatePaginationMeta]);
+  }, [page, limit, startDate, endDate, updatePaginationMeta]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchPayouts();
-  }, [fetchPayouts]);
+    const datesChanged =
+      prevDatesRef.current.startDate !== startDate ||
+      prevDatesRef.current.endDate !== endDate;
+    prevDatesRef.current = { startDate, endDate };
+
+    if (datesChanged) {
+      handlePageChange(1);
+      fetchPayouts(1);
+    } else {
+      fetchPayouts(page);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startDate, endDate, page]);
 
   const handlePayoutRequest = async (payload: RequestPayoutPayload) => {
     try {
@@ -80,7 +100,7 @@ export const usePayouts = () => {
       if (res.success) {
         toast.success(res.message || "Payout request submitted");
         setIsRequestModalOpen(false);
-        await fetchPayouts();
+        await fetchPayouts(page);
       } else {
         toast.error(res.message || "Failed to submit payout request");
       }

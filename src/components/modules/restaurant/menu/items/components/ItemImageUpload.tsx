@@ -31,7 +31,7 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
   return (
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-8">
       {/* SECTION HEADER */}
-      <div className="flex items-center gap-3 border-b border-gray-50 pb-5">
+      <div className="flex items-center gap-3 border-b border-gray-50">
         <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
           <ImageIcon className="w-5 h-5" />
         </div>
@@ -44,11 +44,10 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
-          className={`relative w-full aspect-video md:aspect-[2.5/1] border-2 border-dashed rounded-[24px] flex flex-col items-center justify-center transition-all overflow-hidden bg-gray-50/50 group ${
-            imagePreview
+          className={`relative w-full aspect-video md:aspect-[2.5/1] border-2 border-dashed rounded-[24px] flex flex-col items-center justify-center transition-all overflow-hidden bg-gray-50/50 group ${imagePreview
               ? "border-emerald-500/50"
               : "border-gray-100 hover:border-emerald-500/50 hover:bg-emerald-50/10"
-          }`}
+            }`}
         >
           {imagePreview ? (
             <>

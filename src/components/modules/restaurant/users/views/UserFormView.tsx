@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Lock, User, Mail } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
+import { ArrowLeft, Lock, User, Mail, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,6 +21,17 @@ import { useUserForm } from "../hooks/useUserForm";
 import { useTranslations } from "next-intl";
 import { LoaderIcon } from "react-hot-toast";
 
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  .regex(/[0-9]/, "Password must contain at least one number")
+  .regex(
+    /[^A-Za-z0-9]/,
+    "Password must contain at least one special character (e.g. @, #, $, %, etc.)",
+  );
+
 export default function UserFormView({
   mode = "add",
   userId,
@@ -28,6 +41,33 @@ export default function UserFormView({
 }) {
   const t = useTranslations("RestaurantDashboard.Users.form");
   const { state, actions, status } = useUserForm({ mode, userId });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState<{ password?: string; confirmPassword?: string }>({});
+
+  const handleSave = () => {
+    const newErrors: { password?: string; confirmPassword?: string } = {};
+
+    if (mode === "add" && !state.password) {
+      newErrors.password = "Password is required for new users.";
+    } else if (state.password) {
+      const result = passwordSchema.safeParse(state.password);
+      if (!result.success) {
+        newErrors.password =
+          result.error.issues?.[0]?.message ?? "Invalid password.";
+      } else if (state.password !== state.confirmPassword) {
+        newErrors.confirmPassword = "Passwords do not match.";
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    actions.handleSave();
+  };
 
   const ROLES = [
     { label: t("roles.admin"), value: "ADMIN" },
@@ -61,7 +101,7 @@ export default function UserFormView({
             </Button>
           </Link>
           <Button
-            onClick={actions.handleSave}
+            onClick={handleSave}
             disabled={status.isCreating || status.isUpdating}
             className="bg-[#1F4D36] hover:bg-[#183d2b] text-white font-medium min-w-[120px] cursor-pointer"
           >
@@ -191,15 +231,26 @@ export default function UserFormView({
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={state.password}
-                  onChange={(e) => actions.setPassword(e.target.value)}
-                  className="pl-9 bg-gray-50/50 border-gray-200"
+                  onChange={(e) => { actions.setPassword(e.target.value); setErrors((prev) => ({ ...prev, password: undefined })); }}
+                  className={`pl-9 pr-9 bg-gray-50/50 ${errors.password ? "border-red-400" : "border-gray-200"}`}
                   placeholder={
                     mode === "add" ? t("createPassword") : t("leaveBlank")
                   }
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-0.5">{errors.password}</p>
+              )}
             </div>
             <div className="grid gap-2">
               <Label
@@ -213,13 +264,24 @@ export default function UserFormView({
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   id="confirmPassword"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   value={state.confirmPassword}
-                  onChange={(e) => actions.setConfirmPassword(e.target.value)}
-                  className="pl-9 bg-gray-50/50 border-gray-200"
+                  onChange={(e) => { actions.setConfirmPassword(e.target.value); setErrors((prev) => ({ ...prev, confirmPassword: undefined })); }}
+                  className={`pl-9 pr-9 bg-gray-50/50 ${errors.confirmPassword ? "border-red-400" : "border-gray-200"}`}
                   placeholder={t("confirmPasswordPlaceholder")}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+              {errors.confirmPassword && (
+                <p className="text-xs text-red-500 mt-0.5">{errors.confirmPassword}</p>
+              )}
             </div>
           </div>
         </div>

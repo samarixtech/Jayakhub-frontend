@@ -7,11 +7,12 @@ import { useTranslations } from "next-intl";
 
 interface Payout {
     id: string;
-    date: string;
     amount: string;
-    bank: string;
-    status: "In Transit" | "Paid";
-    eta?: string;
+    status: "approved" | "rejected" | "pending";
+    requestType: string;
+    stripeTransferId: string | null;
+    processedAt: string;
+    createdAt: string;
 }
 
 interface AllPayoutsSheetProps {
@@ -21,12 +22,15 @@ interface AllPayoutsSheetProps {
     onPayoutClick: (p: Payout) => void;
 }
 
+const formatDate = (isoStr: string) => {
+    if (!isoStr) return "—";
+    const d = new Date(isoStr);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+};
+
 const AllPayoutsSheet = ({ open, onOpenChange, payouts, onPayoutClick }: AllPayoutsSheetProps) => {
     const t = useTranslations("RestaurantDashboard.Payments.allPayoutsSheet");
-    const total = payouts.reduce((sum, p) => {
-        const num = parseFloat(p.amount.replace(/[$,]/g, ""));
-        return sum + num;
-    }, 0);
+    const total = payouts.reduce((sum, p) => sum + parseFloat(p.amount || "0"), 0);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
@@ -56,35 +60,38 @@ const AllPayoutsSheet = ({ open, onOpenChange, payouts, onPayoutClick }: AllPayo
                         {/* Total bar */}
                         <div className="bg-[#f0f9f4] rounded-xl px-5 py-4 mb-6 flex justify-between items-center">
                             <span className="text-[14px] font-semibold text-[#2d6a4f]">{t("totalPayouts", { count: payouts.length })}</span>
-                            <span className="text-[22px] font-black text-[#2d6a4f]">${total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+                            <span className="text-[22px] font-black text-[#2d6a4f]">{total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
                         </div>
 
-                        {/* Table Header */}
+                        {/* Table */}
                         <div className="overflow-x-auto">
-                            <div className="min-w-[500px]">
-                                <div className="grid grid-cols-[minmax(60px,1fr)_minmax(70px,1fr)_minmax(72px,1fr)_minmax(90px,1.2fr)_minmax(56px,0.8fr)_minmax(52px,0.8fr)] gap-3 items-center mb-3">
+                            <div className="min-w-[420px]">
+                                <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] gap-3 items-center mb-3">
                                     <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest">{t("payoutId")}</span>
                                     <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest">{t("date")}</span>
-                                    <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest">{t("amount")}</span>
-                                    <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest">{t("bank")}</span>
-                                    <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest">{t("status")}</span>
-                                    <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest text-right">{t("eta")}</span>
+                                    <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest text-right">{t("amount")}</span>
+                                    <span className="text-[10px] font-semibold text-[#a0a0a0] uppercase tracking-widest text-right">{t("status")}</span>
                                 </div>
                                 <div className="h-px bg-gray-100 mb-1" />
 
-                                {/* Payout Rows */}
                                 {payouts.map((p) => (
                                     <div
                                         key={p.id}
-                                        className="grid grid-cols-[minmax(60px,1fr)_minmax(70px,1fr)_minmax(72px,1fr)_minmax(90px,1.2fr)_minmax(56px,0.8fr)_minmax(52px,0.8fr)] gap-3 items-center py-4 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50/80 rounded-lg transition-colors -mx-2 px-2"
+                                        className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] gap-3 items-center py-4 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50/80 rounded-lg transition-colors -mx-2 px-2"
                                         onClick={() => onPayoutClick(p)}
                                     >
-                                        <span className="text-[13px] font-bold text-[#1a1a1a]">{p.id}</span>
-                                        <span className="text-[13px] text-gray-500">{p.date}</span>
-                                        <span className="text-[13px] font-bold text-[#1a1a1a]">{p.amount}</span>
-                                        <span className="text-[12px] text-gray-400">{p.bank}</span>
-                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded w-fit ${p.status === "In Transit" ? "bg-orange-100 text-orange-600" : "bg-emerald-50 text-emerald-600"}`}>{p.status}</span>
-                                        <span className="text-[12px] text-gray-400 text-right">{p.eta || "–"}</span>
+                                        <span className="text-[12px] font-bold text-emerald-700 truncate">{p.id}</span>
+                                        <span className="text-[12px] text-gray-500">{formatDate(p.processedAt || p.createdAt)}</span>
+                                        <span className="text-[13px] font-bold text-[#1a1a1a] text-right">{p.amount}</span>
+                                        <div className="flex justify-end">
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded w-fit ${
+                                                p.status === "approved" ? "bg-emerald-50 text-emerald-600" :
+                                                p.status === "rejected" ? "bg-red-50 text-red-500" :
+                                                "bg-orange-100 text-orange-600"
+                                            }`}>
+                                                {p.status}
+                                            </span>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

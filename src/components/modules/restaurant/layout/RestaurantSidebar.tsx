@@ -37,6 +37,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import Image from "next/image";
+import logo from "../../../../../public/EngLogo (2).png"
 
 // TODO: add role based secure navigation items
 
@@ -68,8 +69,8 @@ const NAV_SECTIONS = [
   {
     labelKey: "management",
     items: [
-      { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
       { nameKey: "users", href: "/restaurant/users", icon: Users },
+      { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
       { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard },
       { nameKey: "payouts", href: "/restaurant/payouts", icon: Wallet },
       { nameKey: "reports", href: "/restaurant/reports", icon: BarChart2 },
@@ -132,7 +133,7 @@ export function RestaurantSidebar() {
             <div className="flex items-center gap-2 px-4 w-full justify-center">
               {/* LOGO */}
               <Image
-                src="/EngLogo (2).png"
+                src={logo}
                 alt="Logo"
                 width={180}
                 height={200}
@@ -215,11 +216,10 @@ export function RestaurantSidebar() {
                       asChild
                       tooltip={t(`Sidebar.items.${item.nameKey}` as any)}
                       isActive={isActive}
-                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${
-                        isActive
-                          ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                          : "text-sidebar-foreground/80"
-                      }`}
+                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${isActive
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
+                        : "text-sidebar-foreground/80"
+                        }`}
                     >
                       <Link href={item.href}>
                         <item.icon className="w-5 h-5" />

@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getFinanceDashboardAction } from "@/app/actions/restaurant/finance";
+import { useDateFilter } from "@/components/providers/DateFilterProvider";
+import { format } from "date-fns";
 
 export interface FinanceData {
     restaurantName: string;
@@ -26,34 +28,49 @@ export interface FinanceData {
         amount: string;
         percentage: number;
     }[];
-    transactions: {
-        items: {
-            orderId: string;
-            customerName: string;
-            type: string;
-            date: string;
-            method: string;
-            netAmount: string;
-            fee: string;
-            total: string;
-        }[];
-        totalCount: number;
-        page: number;
-        limit: number;
-        totalPages: number;
+    netEarnings: string;
+    breakdown: {
+        totalCommission: string;
+        totalDeliveryFees: string;
+        totalWithdrawals: string;
+        requestedWithdrawals: string;
+        taxBreakdown: { total: string };
     };
+    payouts: {
+        id: string;
+        amount: string;
+        status: "approved" | "rejected" | "pending";
+        requestType: string;
+        stripeTransferId: string | null;
+        processedAt: string;
+        createdAt: string;
+    }[];
 }
 
-export function useFinanceOverview(filter?: string) {
+export function useFinanceOverview() {
     const [data, setData] = useState<FinanceData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { startDate, endDate } = useDateFilter();
+
+    const prevDatesRef = useRef<{ startDate: Date | undefined; endDate: Date | undefined }>({
+        startDate: undefined,
+        endDate: undefined,
+    });
 
     useEffect(() => {
+        const datesChanged =
+            prevDatesRef.current.startDate !== startDate ||
+            prevDatesRef.current.endDate !== endDate;
+        prevDatesRef.current = { startDate, endDate };
+
         async function fetchData() {
             try {
                 setLoading(true);
-                const res = await getFinanceDashboardAction(filter);
+                const res = await getFinanceDashboardAction(
+                    startDate ? format(startDate, "yyyy-MM-dd") : undefined,
+                    endDate ? format(endDate, "yyyy-MM-dd") : undefined,
+                );
                 if (res.success && (res as any).data?.data) {
                     setData((res as any).data.data);
                 } else {
@@ -67,7 +84,8 @@ export function useFinanceOverview(filter?: string) {
         }
 
         fetchData();
-    }, [filter]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [startDate, endDate]);
 
     return { data, loading, error };
 }

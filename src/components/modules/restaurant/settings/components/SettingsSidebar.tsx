@@ -7,7 +7,6 @@ import {
   MapPin,
   Clock,
   DollarSign,
-  Bell,
   Shield,
   FileCheck,
 } from "lucide-react";
@@ -34,11 +33,6 @@ const tabs = [
     id: "finance",
     icon: DollarSign,
     href: "/restaurant/settings/finance",
-  },
-  {
-    id: "notifications",
-    icon: Bell,
-    href: "/restaurant/settings/notifications",
   },
   {
     id: "security",
@@ -71,10 +65,9 @@ export function SettingsSidebar() {
               href={tab.href}
               className={`
                 flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
-                ${
-                  isActive
-                    ? "bg-primary/10 text-primary border-primary/20"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900 border-transparent"
+                ${isActive
+                  ? "bg-primary/10 text-primary border-primary/20"
+                  : "text-gray-500 hover:bg-gray-50 hover:text-gray-900 border-transparent"
                 }
                 border md:border-0
               `}

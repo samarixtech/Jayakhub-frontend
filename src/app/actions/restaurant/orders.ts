@@ -4,7 +4,10 @@ import { serverApi } from "@/components/services/api";
 export async function getRestaurantOrdersAction(
   page: number = 1,
   limit: number = 10,
-  status?: "live" | "past" | "delivered",
+  status?: string,
+  startDate?: string,
+  endDate?: string,
+  search?: string,
 ) {
   try {
     const api = await serverApi();
@@ -17,6 +20,19 @@ export async function getRestaurantOrdersAction(
       queryParams.append("status", status);
     }
 
+    if (startDate) {
+      queryParams.append("startDate", startDate);
+    }
+
+    if (endDate) {
+      queryParams.append("endDate", endDate);
+    }
+
+    if (search) {
+      queryParams.append("search", search);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const response: any = await api.get(
       `/restaurant-orders?${queryParams.toString()}`,
     );
@@ -25,6 +41,7 @@ export async function getRestaurantOrdersAction(
       data: response.data,
       meta: response.data.meta || null,
     };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Fetch restaurant orders error:", error);
     return {
@@ -42,6 +59,7 @@ export async function updateOrderStatusAction(orderId: string, status: string) {
       success: true,
       data: response.data,
     };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Update order status error:", error);
     return {

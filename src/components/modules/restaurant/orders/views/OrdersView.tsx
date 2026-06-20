@@ -9,8 +9,10 @@ const OrdersView = () => {
   const {
     stats,
     loading,
-    activeTab,
-    setActiveTab,
+    selectedStatus,
+    setSelectedStatus,
+    searchQuery,
+    setSearchQuery,
     selectedOrder,
     isSheetOpen,
     setIsSheetOpen,
@@ -21,8 +23,6 @@ const OrdersView = () => {
     totalCount,
     handleStatusUpdate,
     handleOrderClick,
-    liveOrdersCount,
-    pastOrdersCount,
   } = useOrders();
 
   return (
@@ -31,11 +31,10 @@ const OrdersView = () => {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <OrdersFilters
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          onPageReset={() => setCurrentPage(1)}
-          liveOrdersCount={liveOrdersCount}
-          pastOrdersCount={pastOrdersCount}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
           filteredOrdersCount={totalCount}
         />
 

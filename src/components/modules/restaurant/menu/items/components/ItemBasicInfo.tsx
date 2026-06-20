@@ -31,7 +31,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
   return (
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-8">
       {/* SECTION HEADER */}
-      <div className="flex items-center gap-3 border-b border-gray-50 pb-5">
+      <div className="flex items-center gap-3 border-b border-gray-50">
         <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
           <LayoutList className="w-5 h-5" />
         </div>
@@ -82,7 +82,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
           </div>
         </div>
 
-        {/* PRICE, DISCOUNT AND CATEGORY */}
+        {/* PRICE AND DISCOUNT */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label className="text-sm font-bold text-gray-700">
@@ -120,8 +120,11 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
               />
             </div>
           </div>
+        </div>
 
-          <div className="space-y-2 md:col-span-2">
+        {/* CATEGORY AND DIETARY TYPE */}
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-2">
             <Label className="text-sm font-bold text-gray-700">
               {t("category")} <span className="text-red-500">*</span>
             </Label>
@@ -129,10 +132,10 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
               value={formData.category}
               onValueChange={(v: string) => onChange("category", v)}
             >
-              <SelectTrigger className="h-12 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-medium">
+              <SelectTrigger className="h-12! bg-gray-50/50 border-gray-100 rounded-xl w-full focus:bg-white transition-all font-medium">
                 <SelectValue placeholder={t("selectCategory")} />
               </SelectTrigger>
-              <SelectContent className="rounded-2xl bg-gray-50 border-gray-100 shadow-xl p-1">
+              <SelectContent className="rounded-2xl bg-gray-50 border-gray-100 shadow-xl p-1" position="popper">
                 {categories.map((cat: any) => (
                   <SelectItem
                     key={cat.id || cat._id}
@@ -145,43 +148,42 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
               </SelectContent>
             </Select>
           </div>
-        </div>
 
-        {/* DIETARY TYPE */}
-        <div className="space-y-2 pt-2">
-          <Label className="text-sm font-bold text-gray-700">
-            {t("dietaryType")}{" "}
-            <span className="text-gray-400 font-normal">{t("optional")}</span>
-          </Label>
-          <Select
-            value={formData.dietaryType || "None"}
-            onValueChange={(v: "Veg" | "Non-Veg" | "None") =>
-              onChange("dietaryType", v)
-            }
-          >
-            <SelectTrigger className="h-12 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-medium">
-              <SelectValue placeholder={t("selectType")} />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl bg-gray-50 border-gray-100 shadow-xl p-1">
-              <SelectItem value="None" className="rounded-xl py-2 font-medium">
-                {t("dietaryNone")}
-              </SelectItem>
-              <SelectItem value="Veg" className="rounded-xl py-2 font-medium">
-                {t("dietaryVeg")}
-              </SelectItem>
-              <SelectItem
-                value="Non-Veg"
-                className="rounded-xl py-2 font-medium"
-              >
-                {t("dietaryNonVeg")}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="flex items-center gap-1.5 pt-1">
-            <Info className="w-3.5 h-3.5 text-gray-400" />
-            <Typography className="text-[11px] font-medium text-gray-400">
-              {t("dietaryHelp")}
-            </Typography>
+          <div className="space-y-2">
+            <Label className="text-sm font-bold text-gray-700">
+              {t("dietaryType")}{" "}
+              <span className="text-gray-400 font-normal">{t("optional")}</span>
+            </Label>
+            <Select
+              value={formData.dietaryType || "None"}
+              onValueChange={(v: "Veg" | "Non-Veg" | "None") =>
+                onChange("dietaryType", v)
+              }
+            >
+              <SelectTrigger className="h-12! bg-gray-50/50 border-gray-100 rounded-xl w-full focus:bg-white transition-all font-medium">
+                <SelectValue placeholder={t("selectType")} />
+              </SelectTrigger>
+              <SelectContent className="rounded-2xl bg-gray-50 border-gray-100 shadow-xl p-1" position="popper">
+                <SelectItem value="None" className="rounded-xl py-2 font-medium">
+                  {t("dietaryNone")}
+                </SelectItem>
+                <SelectItem value="Veg" className="rounded-xl py-2 font-medium">
+                  {t("dietaryVeg")}
+                </SelectItem>
+                <SelectItem
+                  value="Non-Veg"
+                  className="rounded-xl py-2 font-medium"
+                >
+                  {t("dietaryNonVeg")}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <div className="flex items-center gap-1.5 pt-1">
+              <Info className="w-3.5 h-3.5 text-gray-400" />
+              <Typography className="text-[11px] font-medium text-gray-400">
+                {t("dietaryHelp")}
+              </Typography>
+            </div>
           </div>
         </div>
       </div>

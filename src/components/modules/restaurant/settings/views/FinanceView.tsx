@@ -1,16 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SettingsData } from "@/types";
-import { updateBankDetailsAction } from "@/app/actions/restaurant/settings";
+import { updateBankDetailsAction, getBanksAction } from "@/app/actions/restaurant/settings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, Check, ChevronDown } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 import {
   Card,
@@ -34,6 +38,27 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
     accountHolderName: bank?.accountHolderName || "",
     iban: bank?.iban || "",
   });
+
+  const [banks, setBanks] = useState<string[]>([]);
+  const [loadingBanks, setLoadingBanks] = useState(false);
+  const [openBankSelect, setOpenBankSelect] = useState(false);
+
+  useEffect(() => {
+    const fetchBanks = async () => {
+      setLoadingBanks(true);
+      try {
+        const response = await getBanksAction();
+        if (response.success && response.data?.banks) {
+          setBanks(response.data.banks);
+        }
+      } catch (err) {
+        console.error("Failed to load banks", err);
+      } finally {
+        setLoadingBanks(false);
+      }
+    };
+    fetchBanks();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -96,14 +121,51 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
                 <Label className="text-xs text-muted-foreground mb-1 block">
                   {t("bankName")}
                 </Label>
-                <Input
-                  name="bankName"
-                  value={formData.bankName}
-                  onChange={handleChange}
-                  placeholder={t("bankName")}
-                  className="bg-background"
-                  disabled={isPending}
-                />
+                <Popover open={openBankSelect} onOpenChange={setOpenBankSelect}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={openBankSelect}
+                      disabled={isPending || loadingBanks}
+                      className="w-full justify-between bg-background border-input font-normal text-left h-10 px-3 hover:bg-muted/50"
+                    >
+                      {formData.bankName || (loadingBanks ? "Loading banks..." : t("bankName"))}
+                      <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-white" align="start">
+                    <Command className="bg-white">
+                      <CommandInput placeholder="Search bank..." className="h-9" />
+                      <CommandList>
+                        <ScrollArea className="h-72">
+                          <CommandEmpty>No bank found.</CommandEmpty>
+                          <CommandGroup>
+                            {banks.map((bankName) => (
+                              <CommandItem
+                                key={bankName}
+                                value={bankName}
+                                onSelect={() => {
+                                  setFormData((prev) => ({ ...prev, bankName }));
+                                  setOpenBankSelect(false);
+                                }}
+                                className="flex items-center justify-between text-sm cursor-pointer"
+                              >
+                                {bankName}
+                                <Check
+                                  className={cn(
+                                    "h-4 w-4",
+                                    formData.bankName === bankName ? "opacity-100" : "opacity-0"
+                                  )}
+                                />
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </ScrollArea>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </div>
               <div>
                 <Label className="text-xs text-muted-foreground mb-1 block">

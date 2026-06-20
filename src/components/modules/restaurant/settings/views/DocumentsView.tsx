@@ -1,4 +1,5 @@
 "use client";
+import React, { useState } from "react";
 import {
   CreditCard,
   FileText,
@@ -21,6 +22,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useDocumentSettings } from "../hooks/useDocumentSettings";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { updateKycAction } from "@/app/actions/restaurant/settings";
 import {
   Card,
   CardHeader,
@@ -51,18 +55,100 @@ export default function DocumentsView({
   settings: SettingsData | null;
 }) {
   const t = useTranslations("RestaurantDashboard.Settings.documents");
-  const {
-    kyc,
-    isPending,
-    loading,
-    docType,
-    setDocType,
-    file,
-    handleFileChange,
-    handleUpload,
-    openDocument,
-  } = useDocumentSettings(settings);
+  const router = useRouter();
+  const { kyc, isPending, openDocument } = useDocumentSettings(settings);
 
+  // Group 1: Identity Documents (ID Card, Passport, Driving License)
+  const [docType1, setDocType1] = useState("government_id");
+  const [file1, setFile1] = useState<File | null>(null);
+  const [loading1, setLoading1] = useState(false);
+
+  // Group 2: Operational & Tax Documents (Food License, Tax Certificate)
+  const [docType2, setDocType2] = useState("food_license");
+  const [file2, setFile2] = useState<File | null>(null);
+  const [loading2, setLoading2] = useState(false);
+
+  const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile1(e.target.files[0]);
+    }
+  };
+
+  const handleFileChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile2(e.target.files[0]);
+    }
+  };
+
+  const handleUpload1 = async () => {
+    if (!file1) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
+    setLoading1(true);
+    const formData = new FormData();
+    formData.append("documentType", docType1);
+    formData.append("documentFile", file1);
+
+    try {
+      const response = await updateKycAction(formData);
+      if (response.success) {
+        toast.success(response.message || "Document uploaded successfully.");
+        setFile1(null);
+        router.refresh();
+      } else {
+        toast.error(response.message || "Failed to upload document.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setLoading1(false);
+    }
+  };
+
+  const handleUpload2 = async () => {
+    if (!file2) {
+      toast.error("Please select a file to upload.");
+      return;
+    }
+    setLoading2(true);
+    const formData = new FormData();
+    formData.append("documentType", docType2);
+    formData.append("documentFile", file2);
+
+    try {
+      const response = await updateKycAction(formData);
+      if (response.success) {
+        toast.success(response.message || "Document uploaded successfully.");
+        setFile2(null);
+        router.refresh();
+      } else {
+        toast.error(response.message || "Failed to upload document.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setLoading2(false);
+    }
+  };
+
+  // Filter Group 1 docs & check status
+  const group1Docs = kyc.filter((doc: any) =>
+    ["government_id", "passport", "driving_license"].includes(doc.documentType)
+  );
+  const hasActiveGroup1 = group1Docs.some(
+    (doc: any) => doc.status === "pending" || doc.status === "verified" || doc.status === "approved"
+  );
+
+  // Filter Group 2 docs & check status
+  const group2Docs = kyc.filter((doc: any) =>
+    ["food_license", "tax_certificate"].includes(doc.documentType)
+  );
+  const hasActiveGroup2 = group2Docs.some(
+    (doc: any) => doc.status === "pending" || doc.status === "verified" || doc.status === "approved"
+  );
 
   return (
     <Card className="py-6">
@@ -86,57 +172,112 @@ export default function DocumentsView({
           </Alert>
         )}
 
-        {/* Upload Section */}
-        <div
-          className={`p-5 border border-dashed border-border rounded-xl bg-muted/30 ${isPending ? "opacity-60 pointer-events-none" : ""}`}
-        >
-          <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
-            <UploadCloud className="w-4 h-4" /> {t("uploadTitle")}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-            <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">
-                {t("docType")}
-              </Label>
-              <Select
-                disabled={isPending}
-                value={docType}
-                onValueChange={setDocType}
-              >
-                <SelectTrigger className="bg-background">
-                  <SelectValue placeholder={t("selectType")} />
-                </SelectTrigger>
-                <SelectContent className="bg-background">
-                  <SelectItem value="government_id">{t("typeGovId")}</SelectItem>
-                  <SelectItem value="driving_license">
-                    {t("typeLicense")}
-                  </SelectItem>
-                  <SelectItem value="passport">{t("typePassport")}</SelectItem>
-                  <SelectItem value="food_license">{t("typeFoodLicense")}</SelectItem>
-                </SelectContent>
-              </Select>
+        {/* Upload Sections Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Dropdown One: Identity Documents */}
+          {!hasActiveGroup1 && (
+            <div className={`p-5 border border-dashed border-border rounded-xl bg-muted/30 ${isPending ? "opacity-60 pointer-events-none" : ""}`}>
+              <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+                <UploadCloud className="w-4 h-4 text-emerald-600" />
+                {t("uploadIdentityProof", { defaultMessage: "Upload Identity Proof" })}
+              </h3>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    {t("docType")}
+                  </Label>
+                  <Select
+                    disabled={isPending}
+                    value={docType1}
+                    onValueChange={setDocType1}
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder={t("selectType")} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background">
+                      <SelectItem value="government_id">{t("typeGovId")}</SelectItem>
+                      <SelectItem value="passport">{t("typePassport")}</SelectItem>
+                      <SelectItem value="driving_license">{t("typeLicense")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    {t("selectFile")}
+                  </Label>
+                  <Input
+                    type="file"
+                    className="bg-background cursor-pointer file:text-primary file:font-semibold"
+                    onChange={handleFileChange1}
+                    disabled={isPending}
+                    accept="image/*,.pdf"
+                  />
+                </div>
+                <div className="flex justify-end pt-2">
+                  <Button
+                    onClick={handleUpload1}
+                    disabled={loading1 || isPending || !file1}
+                    className="w-full md:w-auto"
+                  >
+                    {loading1 ? t("uploading") : t("uploadBtn")}
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">
-                {t("selectFile")}
-              </Label>
-              <Input
-                type="file"
-                className="bg-background cursor-pointer file:text-primary file:font-semibold"
-                onChange={handleFileChange}
-                disabled={isPending}
-                accept="image/*,.pdf"
-              />
+          )}
+
+          {/* Dropdown Two: Operational Documents */}
+          {!hasActiveGroup2 && (
+            <div className={`p-5 border border-dashed border-border rounded-xl bg-muted/30 ${isPending ? "opacity-60 pointer-events-none" : ""}`}>
+              <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+                <UploadCloud className="w-4 h-4 text-emerald-600" />
+                {t("uploadOperationalDoc", { defaultMessage: "Upload Business & Tax Documents" })}
+              </h3>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    {t("docType")}
+                  </Label>
+                  <Select
+                    disabled={isPending}
+                    value={docType2}
+                    onValueChange={setDocType2}
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue placeholder={t("selectType")} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-background">
+                      <SelectItem value="food_license">{t("typeFoodLicense")}</SelectItem>
+                      <SelectItem value="tax_certificate">
+                        {t("typeTaxCertificate", { defaultMessage: "Tax Certificate" })}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    {t("selectFile")}
+                  </Label>
+                  <Input
+                    type="file"
+                    className="bg-background cursor-pointer file:text-primary file:font-semibold"
+                    onChange={handleFileChange2}
+                    disabled={isPending}
+                    accept="image/*,.pdf"
+                  />
+                </div>
+                <div className="flex justify-end pt-2">
+                  <Button
+                    onClick={handleUpload2}
+                    disabled={loading2 || isPending || !file2}
+                    className="w-full md:w-auto"
+                  >
+                    {loading2 ? t("uploading") : t("uploadBtn")}
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="mt-4 flex justify-end">
-            <Button
-              onClick={handleUpload}
-              disabled={loading || isPending || !file}
-            >
-              {loading ? t("uploading") : t("uploadBtn")}
-            </Button>
-          </div>
+          )}
         </div>
 
         <div className="space-y-4">

@@ -1,15 +1,24 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Download, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { format } from "date-fns";
 import PayoutsStats from "../components/PayoutsStats";
 import PayoutsTable from "../components/PayoutsTable";
 import RequestPayoutModal from "../components/RequestPayoutModal";
 import { usePayouts } from "../hooks/usePayouts";
+import GlobalDateFilter from "@/components/modules/restaurant/layout/GlobalDateFilter";
+import { useExport } from "@/utils/use-export";
+import { useDateFilter } from "@/components/providers/DateFilterProvider";
 
 const PayoutsView = () => {
   const t = useTranslations("RestaurantDashboard.Payouts");
+  const { startDate, endDate } = useDateFilter();
+  const { isExporting, handleExport } = useExport({
+    successMessage: "Payouts exported successfully!",
+    errorMessage: "Failed to export payouts.",
+  });
   const {
     stats,
     payouts,
@@ -24,8 +33,35 @@ const PayoutsView = () => {
     handlePayoutRequest,
   } = usePayouts();
 
+  const onExport = () => {
+    const dateStr = new Date().toISOString().split("T")[0];
+    const filename = `Payouts_${dateStr}.csv`;
+    handleExport("payout/history/export", filename, {
+      startDate: startDate ? format(startDate, "yyyy-MM-dd") : undefined,
+      endDate: endDate ? format(endDate, "yyyy-MM-dd") : undefined,
+    });
+  };
+
   return (
     <div className="p-3 space-y-6 bg-gray-50/50 min-h-screen font-sans">
+      {/* Page header with date filter + export */}
+      <div className="flex justify-end items-center gap-3 pt-1">
+        <GlobalDateFilter />
+        <Button
+          variant="outline"
+          className="bg-[#346853] text-white hover:bg-[#2a5644] hover:text-white border-0 h-9 text-[13px]"
+          onClick={onExport}
+          disabled={isExporting}
+        >
+          {isExporting ? (
+            <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+          ) : (
+            <Download className="mr-2 w-4 h-4" />
+          )}
+          {isExporting ? "Exporting..." : "Export CSV"}
+        </Button>
+      </div>
+
       <PayoutsStats stats={stats} loading={loading} />
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

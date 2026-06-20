@@ -1428,7 +1428,7 @@
         "finance": "Finance",
         "notifications": "Notifications",
         "security": "Security",
-        "documents": "Documents & Verification"
+        "documents": "KYC & Verification"
       },
       "profile": {
         "title": "Restaurant Profile",
@@ -1494,6 +1494,9 @@
         "typeLicense": "Driving License",
         "typePassport": "Passport",
         "typeFoodLicense": "Food License",
+        "typeTaxCertificate": "Tax Certificate",
+        "uploadIdentityProof": "Upload Identity Proof",
+        "uploadOperationalDoc": "Upload Business & Tax Documents",
         "selectFile": "Select File",
         "uploading": "Uploading...",
         "uploadBtn": "Upload Document",
@@ -1624,7 +1627,8 @@
           "title": "Live Preview",
           "defaultCategory": "CATEGORY",
           "defaultName": "Item Name",
-          "proTip": "✨ Customer view preview. Your item will look exactly like this in the app."
+          "proTip": "✨ Customer view preview. Your item will look exactly like this in the app.",
+          "noImage": "No Image"
         },
         "variantGroups": {
           "sectionTitle": "Variant Groups",
@@ -1686,14 +1690,23 @@
         "total": "Total"
       },
       "filters": {
-        "liveOrders": "Live Orders",
-        "pastOrders": "Past Orders",
-        "show": "Show:"
+        "show": "Show:",
+        "allStatus": "All Statuses",
+        "searchPlaceholder": "Search orders...",
+        "statusPending": "Pending",
+        "statusPrepare": "Prepare",
+        "statusReady": "Ready",
+        "statusAccepted": "Accepted",
+        "statusOutOfDelivery": "Out for Delivery",
+        "statusDelivered": "Delivered",
+        "statusRejected": "Rejected",
+        "apply": "Apply"
       },
       "stats": {
-        "totalToday": "Total Today",
+        "totalToday": "Total Today Orders",
         "liveOrders": "Live Orders",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "totalOrders": "Total Orders"
       },
       "table": {
         "orderId": "ORDER ID",
@@ -1739,12 +1752,15 @@
         "platformCommission": "Platform Commission",
         "paymentProcessing": "Payment Processing (2.9% + 30¢)",
         "deliveryCosts": "Delivery Fulfillment Costs",
-        "netEarnings": "Net Earnings (To reconcile)"
+        "totalWithdrawals": "Total Withdrawals",
+        "requestedWithdrawals": "Requested Withdrawals",
+        "netEarnings": "Net Earnings (To Reconcile)"
       },
       "payouts": {
         "title": "Recent Payouts",
         "subtitle": "Your latest bank transfers",
         "viewAllBtn": "View all payouts →",
+        "payoutId": "Payout ID",
         "date": "Date",
         "amount": "Amount",
         "bank": "Bank",
@@ -1761,7 +1777,8 @@
         "date": "Date & Time",
         "method": "Method",
         "netAmount": "Net Amount",
-        "fee": "Fee",
+        "commission": "Commission",
+        "deliveryFee": "Delivery Fee",
         "total": "Total"
       },
       "allPayoutsSheet": {
@@ -1824,6 +1841,7 @@
         "platformCommission": "Platform Commission",
         "paymentProcessing": "Payment Processing",
         "deliveryCosts": "Delivery Costs",
+        "paymentMethods": "Payment Methods",
         "transactionHistory": "Transaction History",
         "id": "ID",
         "date": "Date",
@@ -1928,7 +1946,7 @@
       "recentOrders": {
         "title": "Recent Orders",
         "subtitle": "Click any order for details",
-        "allOrders": "All Orders",
+        "allOrders": "All Orders →",
         "columns": {
           "order": "ORDER",
           "status": "STATUS",
@@ -2055,7 +2073,7 @@
         "liveChat": "Live Chat",
         "liveChatDesc": "Online – Avg 2 min wait",
         "phoneSupport": "Phone Support",
-        "phoneDesc": "+964 750 000 0000",
+        "phoneDesc": "+1 (469) 422-5944",
         "emailUs": "Email Us",
         "emailDesc": "support@jayakhub.com"
       },
@@ -2627,7 +2645,7 @@
         "liveChat": "Live Chat",
         "liveChatDesc": "Online – Avg 2 min wait",
         "phoneSupport": "Phone Support",
-        "phoneDesc": "+964 750 000 0000",
+        "phoneDesc": "+1 (469) 422-5944",
         "emailUs": "Email Us",
         "emailDesc": "support@jayakhub.com"
       },

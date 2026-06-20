@@ -5,32 +5,41 @@ import TopProductsList from "../components/TopProductsList";
 import OrderSources from "../components/OrderSources";
 import PeakHours from "../components/PeakHours";
 import RecentOrders from "../components/RecentOrders";
-import { DollarSign, ShoppingBag, TrendingUp, Award } from "lucide-react";
+import { DollarSign, ShoppingBag, TrendingUp, Award, Download, Loader2 } from "lucide-react";
 import { useReports } from "../hooks/useReports";
 import { useTranslations } from "next-intl";
 import { useCLC } from "@/context/CLCContext";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
+import GlobalDateFilter from "@/components/modules/restaurant/layout/GlobalDateFilter";
 import { ReportsSkeleton } from "@/components/skeletons/ReportsSkeleton";
+import { Button } from "@/components/ui/button";
+import { useExport } from "@/utils/use-export";
+import { useDateFilter } from "@/components/providers/DateFilterProvider";
+import { format } from "date-fns";
 
 const ReportsView = () => {
   const t = useTranslations("RestaurantDashboard.Reports");
   const { formatPrice } = useCLC();
+  const { startDate, endDate } = useDateFilter();
+  const { isExporting, handleExport } = useExport({
+    successMessage: "Reports exported successfully!",
+    errorMessage: "Failed to export reports.",
+  });
   const {
     data,
     loading,
-    filter,
-    setFilter,
     page,
     totalPages,
     handlePageChange,
   } = useReports();
+
+  const onExport = () => {
+    const dateStr = new Date().toISOString().split("T")[0];
+    const filename = `Reports_${dateStr}.csv`;
+    handleExport("reports/export", filename, {
+      startDate: startDate ? format(startDate, "yyyy-MM-dd") : undefined,
+      endDate: endDate ? format(endDate, "yyyy-MM-dd") : undefined,
+    });
+  };
 
   if (loading) {
     return <ReportsSkeleton />;
@@ -46,20 +55,22 @@ const ReportsView = () => {
 
   return (
     <div className="w-full max-w-[1200px] mx-auto space-y-6">
-      {/* Header - Date Filter Only */}
-      <div className="flex justify-end pt-2">
-        <Select value={filter} onValueChange={setFilter}>
-          <SelectTrigger className="w-[160px] bg-white border-gray-200 text-gray-700 h-9 font-bold text-xs">
-            <SelectValue placeholder={t("header.last30Days")} />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="all">All Time</SelectItem>
-            <SelectItem value="1">30 Days</SelectItem>
-            <SelectItem value="3">3 Months</SelectItem>
-            <SelectItem value="6">6 Months</SelectItem>
-            <SelectItem value="12">1 Year</SelectItem>
-          </SelectContent>
-        </Select>
+      {/* Header */}
+      <div className="flex justify-end items-center gap-3 pt-2">
+        <GlobalDateFilter />
+        <Button
+          variant="outline"
+          className="bg-[#346853] text-white hover:bg-[#2a5644] hover:text-white border-0 h-9 text-[13px]"
+          onClick={onExport}
+          disabled={isExporting}
+        >
+          {isExporting ? (
+            <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+          ) : (
+            <Download className="mr-2 w-4 h-4" />
+          )}
+          {isExporting ? "Exporting..." : "Export CSV"}
+        </Button>
       </div>
 
       {/* Stats Cards Row */}

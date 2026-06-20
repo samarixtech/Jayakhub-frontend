@@ -10,6 +10,7 @@ import {
   getRestaurantUserByIdAction,
 } from "@/app/actions/restaurant/users";
 
+
 export function useUserForm({
   mode = "add",
   userId,
@@ -74,16 +75,6 @@ export function useUserForm({
   const handleSave = () => {
     if (!firstName || !lastName || !email || !role) {
       toast.error("Please fill in all required fields.");
-      return;
-    }
-
-    if (mode === "add" && !password) {
-      toast.error("Password is required for new users.");
-      return;
-    }
-
-    if (password && password !== confirmPassword) {
-      toast.error("Passwords do not match.");
       return;
     }
 

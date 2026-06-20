@@ -6,6 +6,8 @@ import {
 } from "@/app/actions/restaurant/orders";
 import { toast } from "react-hot-toast";
 import { formatOrderDateTime } from "@/lib/utils/date";
+import { format } from "date-fns";
+import { useDateFilter } from "@/components/providers/DateFilterProvider";
 
 // Convert an ISO/datetime string to the format expected by formatOrderDateTime
 function isoToOrderDateTime(isoStr: string): string {
@@ -52,9 +54,8 @@ export interface ApiOrder {
 }
 
 export interface OrderStats {
-  todayOrders: number;
+  totalOrders: number;
   liveOrders: number;
-  totalDeliveredOrders: number;
   totalRevenue: string;
 }
 
@@ -81,19 +82,32 @@ export interface UIOrder {
 import { usePagination } from "@/hooks/usePagination";
 
 export const useOrders = () => {
+  const { startDate, endDate } = useDateFilter();
   const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } =
     usePagination({ initialLimit: 10 });
-  const [activeTab, setActiveTab] = useState<"live" | "past">("live");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
   const [selectedOrder, setSelectedOrder] = useState<UIOrder | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [orders, setOrders] = useState<UIOrder[]>([]);
   const [stats, setStats] = useState<OrderStats>({
-    todayOrders: 0,
+    totalOrders: 0,
     liveOrders: 0,
-    totalDeliveredOrders: 0,
     totalRevenue: "0.00",
   });
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    handlePageChange(1);
+  }, [searchQuery, selectedStatus, handlePageChange]);
 
   const mapApiStatusToUiStatus = (apiStatus: string) => {
     const s = apiStatus.toLowerCase();
@@ -137,11 +151,25 @@ export const useOrders = () => {
   const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
-      const statusParam = activeTab === "past" ? "delivered" : undefined;
-      const res = await getRestaurantOrdersAction(page, limit, statusParam);
+      const startStr = startDate ? format(startDate, "yyyy-MM-dd") : undefined;
+      const endStr = endDate ? format(endDate, "yyyy-MM-dd") : undefined;
+      const res = await getRestaurantOrdersAction(
+        page,
+        limit,
+        selectedStatus || undefined,
+        startStr,
+        endStr,
+        debouncedSearchQuery || undefined,
+      );
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const resData = res.data as any;
       if (res.success && resData?.data) {
-        setStats(resData.data.stats);
+        const apiStats = resData.data.stats || {};
+        setStats({
+          totalOrders: apiStats.totalOrders || 0,
+          liveOrders: apiStats.liveOrders || 0,
+          totalRevenue: (apiStats.deliveredRevenue || 0).toString(),
+        });
         if (res.meta) {
           updatePaginationMeta(res.meta);
         }
@@ -183,10 +211,13 @@ export const useOrders = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, limit, activeTab, updatePaginationMeta]);
+  }, [page, limit, selectedStatus, debouncedSearchQuery, updatePaginationMeta, startDate, endDate]);
 
   useEffect(() => {
-    fetchOrders();
+    const timer = setTimeout(() => {
+      fetchOrders();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [fetchOrders]);
 
   const handleStatusUpdate = async (orderId: string, newStatus: string) => {
@@ -221,36 +252,17 @@ export const useOrders = () => {
     setIsSheetOpen(true);
   };
 
-  // If backend implements status=live|past perfectly, 'orders' already filtered.
-  // We still do a safety filter if the backend didn't filter it correctly.
-  const filteredOrders = orders.filter((order) => {
-    const s = order.originalStatus || order.status.toLowerCase();
-    if (activeTab === "live") {
-      return [
-        OrderStatus.PENDING,
-        OrderStatus.ACCEPTED,
-        OrderStatus.REJECTED,
-        OrderStatus.PREPARE,
-        OrderStatus.READY,
-        OrderStatus.OUT_FOR_DELIVERY,
-        OrderStatus.DELIVERED,
-      ].includes(s as OrderStatus);
-    } else {
-      return [OrderStatus.DELIVERED, OrderStatus.REJECTED].includes(
-        s as OrderStatus,
-      );
-    }
-  });
+  const paginatedOrders = orders;
+  const filteredOrders = orders;
 
-  const liveOrdersCount = stats.liveOrders || 0;
-  const pastOrdersCount = stats.totalDeliveredOrders || 0;
-  const paginatedOrders = filteredOrders;
   return {
     orders,
     stats,
     loading,
-    activeTab,
-    setActiveTab,
+    selectedStatus,
+    setSelectedStatus,
+    searchQuery,
+    setSearchQuery,
     selectedOrder,
     setSelectedOrder,
     isSheetOpen,
@@ -263,7 +275,5 @@ export const useOrders = () => {
     totalCount,
     handleStatusUpdate,
     handleOrderClick,
-    liveOrdersCount,
-    pastOrdersCount,
   };
 };

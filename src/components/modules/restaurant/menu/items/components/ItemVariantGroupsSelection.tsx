@@ -35,7 +35,7 @@ export const ItemVariantGroupsSelection: React.FC<
   return (
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-8">
       {/* SECTION HEADER */}
-      <div className="flex items-center gap-3 border-b border-gray-50 pb-5">
+      <div className="flex items-center gap-3 border-b border-gray-50">
         <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
           <Layers className="w-5 h-5" />
         </div>
@@ -47,7 +47,7 @@ export const ItemVariantGroupsSelection: React.FC<
       <div className="space-y-6">
         <div className="flex items-center gap-1.5 opacity-60">
           <Info className="w-3.5 h-3.5 text-gray-400" />
-          <Typography className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+          <Typography className="text-[11px] font-bold text-gray-700 uppercase tracking-widest">
             {t("helpText")}
           </Typography>
         </div>

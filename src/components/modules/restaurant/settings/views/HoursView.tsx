@@ -4,12 +4,12 @@ import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { SettingsData } from "@/types";
 import { useServerAction } from "@/hooks/use-server-action";
 import { updateRestaurantScheduleAction } from "@/app/actions/restaurant/settings";
 import { toast } from "react-hot-toast";
+import { TimePicker } from "@/components/ui/time-picker";
 import { useRouter } from "next/navigation";
 import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
 
@@ -133,35 +133,30 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
       <CardContent>
         <div className="space-y-0 text-sm">
           {/* Header Row */}
-          <div className="flex items-center gap-4 pb-2 mb-2 border-b border-border text-muted-foreground font-medium px-2">
-            <span className="w-[120px]">{t("tableDay")}</span>
-            <span className="w-[120px] text-center">{t("tableOpen")}</span>
+          <div className="grid grid-cols-[1.5fr_1.5fr_auto_1.5fr_1.5fr] gap-x-4 pb-2 mb-2 border-b border-border text-muted-foreground font-medium px-2 items-center">
+            <span>{t("tableDay")}</span>
+            <span className="text-center">{t("tableOpen")}</span>
             <span className="w-4"></span>
-            <span className="w-[120px] text-center">{t("tableClose")}</span>
-            <div className="flex-1" />
-            <span className="w-[60px] text-right">{t("tableStatus")}</span>
+            <span className="text-center">{t("tableClose")}</span>
+            <span className="text-right">{t("tableStatus")}</span>
           </div>
 
           {schedules.map((schedule, index) => (
             <div
               key={schedule.dayOfWeek}
-              className={`flex items-center gap-4 py-3 border-b border-border/50 last:border-b-0 px-2 transition-colors rounded-lg hover:bg-muted/50 ${schedule.isClosed ? "opacity-60" : ""}`}
+              className={`grid grid-cols-[1.5fr_1.5fr_auto_1.5fr_1.5fr] gap-x-4 py-3 border-b border-border/50 last:border-b-0 px-2 transition-colors rounded-lg hover:bg-muted/50 items-center ${schedule.isClosed ? "opacity-60" : ""}`}
             >
               {/* Day */}
-              <span className="w-[120px] font-medium text-foreground">
+              <span className="font-medium text-foreground">
                 {schedule.dayOfWeek}
               </span>
 
               {/* Open Time */}
               <div className="relative">
-                <Input
-                  type="time"
+                <TimePicker
                   value={formatTimeForInput(schedule.openTime)}
-                  onChange={(e) =>
-                    handleTimeChange(index, "openTime", e.target.value)
-                  }
+                  onChange={(val) => handleTimeChange(index, "openTime", val)}
                   disabled={schedule.isClosed}
-                  className="h-9 w-[120px] text-center bg-background"
                 />
               </div>
 
@@ -171,22 +166,15 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
 
               {/* Close Time */}
               <div className="relative">
-                <Input
-                  type="time"
+                <TimePicker
                   value={formatTimeForInput(schedule.closeTime)}
-                  onChange={(e) =>
-                    handleTimeChange(index, "closeTime", e.target.value)
-                  }
+                  onChange={(val) => handleTimeChange(index, "closeTime", val)}
                   disabled={schedule.isClosed}
-                  className="h-9 w-[120px] text-center bg-background"
                 />
               </div>
 
-              {/* Spacer */}
-              <div className="flex-1" />
-
               {/* Toggle */}
-              <div className="w-[60px] flex justify-end">
+              <div className="flex justify-end">
                 <Switch
                   checked={!schedule.isClosed}
                   onCheckedChange={() => handleToggleClosed(index)}

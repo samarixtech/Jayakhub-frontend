@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SettingsData } from "@/types";
 import LocationPicker from "@/components/common/LocationPicker";
+import { PhoneInput } from "@/components/ui/phone-input";
 
 import { updateLocationAction } from "@/app/actions/restaurant/settings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -31,6 +32,8 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
   const profile = settings?.profile;
   const updateStatus = settings?.onboardingUpdate?.location || "none";
   const isPending = updateStatus === "pending";
+
+  const [phone, setPhone] = useState(profile?.phone || "");
 
   // State from settings
   const [locationData, setLocationData] = useState({
@@ -66,7 +69,7 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
         address: locationData.address,
         latitude: locationData.latitude,
         longitude: locationData.longitude,
-        phone: profile.phone,
+        phone,
       });
 
       if (response.success) {
@@ -95,21 +98,10 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
-        {isPending && (
-          <Alert className="bg-blue-50 border-blue-200">
-            <InfoIcon className="h-4 w-4 text-blue-600" />
-            <AlertTitle className="text-blue-800 font-semibold">
-              {t("updatePendingTitle")}
-            </AlertTitle>
-            <AlertDescription className="text-blue-700">
-              {t("updatePendingDesc")}
-            </AlertDescription>
-          </Alert>
-        )}
 
         {/* Location Picker (Map + Address) */}
         <div
-          className={`space-y-3 ${isPending ? "opacity-60 pointer-events-none" : ""}`}
+          className={`space-y-3`}
         >
           <Label className="text-sm font-medium text-foreground block">
             {t("restaurantLocation")} <span className="text-red-500">*</span>
@@ -130,16 +122,16 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
         <div className="grid grid-cols-2 gap-4">
           <div
             className={
-              isPending ? "opacity-60 pointer-events-none" : "space-y-1.5"
+              "space-y-1.5"
             }
           >
             <Label className="text-sm font-medium text-foreground block">
               {t("phone")} <span className="text-red-500">*</span>
             </Label>
-            <Input
-              defaultValue={profile?.phone || ""}
+            <PhoneInput
+              value={phone}
+              onChange={(val) => setPhone(val || "")}
               className="bg-background"
-              disabled={isPending}
             />
           </div>
           <div className="space-y-1.5">
@@ -155,7 +147,7 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end border-t border-border pt-6 mt-2">
-        <Button disabled={loading || isPending} onClick={handeSave}>
+        <Button disabled={loading} onClick={handeSave}>
           {loading ? "Saving..." : t("saveBtn")}
         </Button>
       </CardFooter>

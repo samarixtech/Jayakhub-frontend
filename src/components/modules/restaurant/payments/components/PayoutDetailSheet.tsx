@@ -7,12 +7,19 @@ import { useTranslations } from "next-intl";
 
 interface Payout {
     id: string;
-    date: string;
     amount: string;
-    bank: string;
-    status: "In Transit" | "Paid";
-    eta?: string;
+    status: "approved" | "rejected" | "pending";
+    requestType: string;
+    stripeTransferId: string | null;
+    processedAt: string;
+    createdAt: string;
 }
+
+const formatDate = (isoStr: string) => {
+    if (!isoStr) return "—";
+    const d = new Date(isoStr);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+};
 
 interface PayoutDetailSheetProps {
     open: boolean;
@@ -50,9 +57,9 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
 
     if (!payout) return null;
 
-    const amountNum = parseFloat(payout.amount.replace(/[$,]/g, ""));
-    const commission = amountNum * 0.1;
-    const gross = amountNum + commission;
+    const amountNum = parseFloat(payout.amount || "0");
+    const processedDate = formatDate(payout.processedAt || payout.createdAt);
+    const createdDate = formatDate(payout.createdAt);
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
@@ -66,7 +73,7 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
                         <div className="flex justify-between items-start">
                             <div>
                                 <SheetTitle className="text-[20px] font-bold text-[#1a1a1a] leading-tight">{t("title", { id: payout.id })}</SheetTitle>
-                                <p className="text-[13px] text-gray-400 font-normal mt-1">{t("subtitle", { date: payout.date })}</p>
+                                <p className="text-[13px] text-gray-400 font-normal mt-1">{t("subtitle", { date: processedDate })}</p>
                             </div>
                             <button
                                 onClick={() => onOpenChange(false)}
@@ -87,7 +94,11 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
                             </div>
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
                                 <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1">{t("status")}</span>
-                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-bold ${payout.status === "In Transit" ? "bg-orange-100 text-orange-600" : "bg-emerald-50 text-emerald-600"}`}>{payout.status}</span>
+                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-bold ${
+                                    payout.status === "approved" ? "bg-emerald-50 text-emerald-600" :
+                                    payout.status === "rejected" ? "bg-red-50 text-red-500" :
+                                    "bg-orange-100 text-orange-600"
+                                }`}>{payout.status}</span>
                             </div>
                         </div>
 
@@ -103,32 +114,23 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
                             </div>
                         </div>
 
-                        {/* Bank + Initiated */}
+                        {/* Dates */}
                         <div className="grid grid-cols-2 gap-3">
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">{t("bankAccount")}</span>
-                                <span className="text-[14px] font-bold text-[#1a1a1a]">{payout.bank}</span>
+                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">Requested</span>
+                                <span className="text-[14px] font-bold text-[#1a1a1a]">{createdDate}</span>
                             </div>
                             <div className="border border-gray-200 rounded-xl px-4 py-3">
-                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">{t("initiated")}</span>
-                                <span className="text-[14px] font-bold text-[#1a1a1a]">{t("initiatedValue")}</span>
+                                <span className="text-[10px] font-semibold text-blue-500 uppercase tracking-wider block mb-1">Processed</span>
+                                <span className="text-[14px] font-bold text-[#1a1a1a]">{processedDate}</span>
                             </div>
                         </div>
 
                         {/* Breakdown */}
                         <div className="bg-gray-50 rounded-xl px-5 py-3 space-y-2">
                             <div className="flex justify-between items-center">
-                                <span className="text-[13px] text-gray-500">{t("grossRevenue")}</span>
-                                <span className="text-[13px] font-semibold text-[#1a1a1a]">${gross.toFixed(2)}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-[13px] text-gray-500">{t("platformCommission")}</span>
-                                <span className="text-[13px] font-semibold text-red-500">-${commission.toFixed(2)}</span>
-                            </div>
-                            <div className="h-px bg-gray-200" />
-                            <div className="flex justify-between items-center">
                                 <span className="text-[13px] font-bold text-[#1a1a1a]">{t("netPayout")}</span>
-                                <span className="text-[15px] font-black text-[#1a1a1a]">{payout.amount}</span>
+                                <span className="text-[15px] font-black text-[#1a1a1a]">{amountNum.toFixed(2)}</span>
                             </div>
                         </div>
 
@@ -137,17 +139,22 @@ const PayoutDetailSheet = ({ open, onOpenChange, payout }: PayoutDetailSheetProp
                             <h4 className="text-[14px] font-bold text-[#1a1a1a] mb-3">{t("payoutTimeline")}</h4>
                             <div className="space-y-3 relative">
                                 <div className="absolute left-[9px] top-5 bottom-2 w-px bg-gray-200" />
-                                {payout.status === "Paid" ? (
+                                {payout.status === "approved" ? (
                                     <>
-                                        <TimelineStep label={t("payoutDeposited")} time={payout.date} iconType="done" />
-                                        <TimelineStep label={t("inTransit")} time={t("initiatedValue")} iconType="done" />
-                                        <TimelineStep label={t("payoutInitiated")} time={t("initiatedValue")} iconType="done" />
+                                        <TimelineStep label={t("payoutDeposited")} time={processedDate} iconType="done" />
+                                        <TimelineStep label={t("inTransit")} time={createdDate} iconType="done" />
+                                        <TimelineStep label={t("payoutInitiated")} time={createdDate} iconType="done" />
+                                    </>
+                                ) : payout.status === "rejected" ? (
+                                    <>
+                                        <TimelineStep label="Rejected" time={processedDate} iconType="pending" />
+                                        <TimelineStep label={t("payoutInitiated")} time={createdDate} iconType="done" />
                                     </>
                                 ) : (
                                     <>
                                         <TimelineStep label={t("payoutDeposited")} time={t("pending")} iconType="pending" />
-                                        <TimelineStep label={t("inTransit")} time={t("initiatedValue")} iconType="active" />
-                                        <TimelineStep label={t("payoutInitiated")} time={t("initiatedValue")} iconType="done" />
+                                        <TimelineStep label={t("inTransit")} time={createdDate} iconType="active" />
+                                        <TimelineStep label={t("payoutInitiated")} time={createdDate} iconType="done" />
                                     </>
                                 )}
                             </div>

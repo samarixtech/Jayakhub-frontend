@@ -5,10 +5,14 @@ export async function getReportsAction({
   filter = "all",
   page = 1,
   limit = 10,
+  startDate,
+  endDate,
 }: {
   filter?: string;
   page?: number;
   limit?: number;
+  startDate?: string;
+  endDate?: string;
 } = {}) {
   try {
     const api = await serverApi();
@@ -17,6 +21,12 @@ export async function getReportsAction({
       page: page.toString(),
       limit: limit.toString(),
     });
+    if (startDate) {
+      queryParams.append("startDate", startDate);
+    }
+    if (endDate) {
+      queryParams.append("endDate", endDate);
+    }
     const response = await api.get(`/reports?${queryParams.toString()}`);
     return {
       success: true as const,

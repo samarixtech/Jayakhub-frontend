@@ -24,8 +24,8 @@ const DonutChart = ({ pcts, colors, totalValue }: { pcts: number[], colors: stri
                 offset += dash;
                 return seg;
             })}
-            <text x={cx} y={cy - 6} textAnchor="middle" fill="#1a1a1a" fontSize="18" fontWeight="900">{totalValue}</text>
-            <text x={cx} y={cy + 10} textAnchor="middle" fill="#a0a0a0" fontSize="9" fontWeight="600">{t("total")}</text>
+            <text x={cx} y={cy - 2} textAnchor="middle" dominantBaseline="middle" fill="#1a1a1a" fontSize="18" fontWeight="900">{totalValue}</text>
+            <text x={cx} y={cy + 15} textAnchor="middle" dominantBaseline="middle" fill="#a0a0a0" fontSize="9" fontWeight="600">{t("total")}</text>
         </svg>
     );
 };

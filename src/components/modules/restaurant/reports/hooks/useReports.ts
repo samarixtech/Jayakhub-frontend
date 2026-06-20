@@ -2,11 +2,13 @@
 import { useEffect, useState, useCallback } from "react";
 import { getReportsAction } from "@/app/actions/restaurant/reports";
 import { usePagination } from "@/hooks/usePagination";
+import { useDateFilter } from "@/components/providers/DateFilterProvider";
+import { format } from "date-fns";
 
 export const useReports = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("1");
+  const { startDate, endDate } = useDateFilter();
 
   const { page, limit, totalPages, handlePageChange, updatePaginationMeta } =
     usePagination({ initialLimit: 10 });
@@ -14,10 +16,15 @@ export const useReports = () => {
   const fetchReports = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await getReportsAction({ filter, page, limit });
+      const result = await getReportsAction({
+        filter: "all",
+        page,
+        limit,
+        startDate: startDate ? format(startDate, "yyyy-MM-dd") : undefined,
+        endDate: endDate ? format(endDate, "yyyy-MM-dd") : undefined,
+      });
       if (result.success) {
         const payload = (result as any).data;
-        // Depending on api config, it might be nested
         const actualData = payload.data ? payload.data : payload;
         const actualMeta = payload.meta ? payload.meta : (result as any).meta;
 
@@ -47,24 +54,22 @@ export const useReports = () => {
     } finally {
       setLoading(false);
     }
-  }, [filter, page, limit]);
+  }, [startDate, endDate, page, limit]);
 
   useEffect(() => {
     fetchReports();
   }, [fetchReports]);
 
-  // Reset to page 1 when filter changes
+  // Reset to page 1 when dates change
   useEffect(() => {
     if (page !== 1) {
       handlePageChange(1);
     }
-  }, [filter]);
+  }, [startDate, endDate]);
 
   return {
     data,
     loading,
-    filter,
-    setFilter,
     page,
     totalPages,
     handlePageChange,

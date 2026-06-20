@@ -8,7 +8,7 @@ import { useCLC } from "@/context/CLCContext";
 
 interface OrdersStatsProps {
   stats: {
-    todayOrders: number;
+    totalOrders: number;
     liveOrders: number;
     totalRevenue: string;
   };
@@ -23,8 +23,8 @@ const OrdersStats: React.FC<OrdersStatsProps> = ({ stats, loading }) => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <StatsCard
         icon={<Receipt className="w-6 h-6" />}
-        value={stats.todayOrders.toString()}
-        label={t("totalToday")}
+        value={stats.totalOrders.toString()}
+        label={t("totalOrders")}
         iconBgColor="bg-emerald-50"
         iconColor="text-emerald-700"
         loading={loading}
@@ -40,7 +40,7 @@ const OrdersStats: React.FC<OrdersStatsProps> = ({ stats, loading }) => {
       <StatsCard
         icon={<Wallet className="w-6 h-6" />}
         value={formatPrice(parseFloat(stats.totalRevenue) || 0)}
-        label="Revenue"
+        label={t("revenue")}
         iconBgColor="bg-blue-50"
         iconColor="text-blue-600"
         loading={loading}

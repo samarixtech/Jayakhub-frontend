@@ -2,10 +2,21 @@
 
 import { serverApi } from "@/components/services/api";
 
-export async function getDashboardAnalyticsAction() {
+export async function getDashboardAnalyticsAction(
+    startDate?: string,
+    endDate?: string,
+) {
     try {
         const api = await serverApi();
-        const response = await api.get("/dashboard-analytics");
+        const queryParams = new URLSearchParams();
+        if (startDate) {
+            queryParams.append("startDate", startDate);
+        }
+        if (endDate) {
+            queryParams.append("endDate", endDate);
+        }
+        const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
+        const response = await api.get(`/dashboard-analytics${queryString}`);
         return {
             success: true as const,
             data: response.data,

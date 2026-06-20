@@ -30,13 +30,12 @@ ChartJS.register(
 interface RevenueChartProps {
   points: number[];
   prevPoints: number[];
+  labels: string[];
 }
 
-const RevenueChart = ({ points, prevPoints }: RevenueChartProps) => {
+const RevenueChart = ({ points, prevPoints, labels }: RevenueChartProps) => {
   const { currency } = useCLC();
   const tTrend = useTranslations("RestaurantDashboard.Payments.revenueTrend");
-
-  const labels = ["Jan 29", "Feb 1", "Feb 5", "Feb 9", "Feb 13", "Feb 17", "Feb 21"];
 
   const options = {
     responsive: true,

@@ -1487,6 +1487,9 @@
         "typeLicense": "رخصة القيادة",
         "typePassport": "جواز السفر",
         "typeFoodLicense": "الرخصة الصحية للمأكولات",
+        "typeTaxCertificate": "شهادة ضريبية",
+        "uploadIdentityProof": "تحميل إثبات الهوية",
+        "uploadOperationalDoc": "تحميل المستندات التجارية والضريبية",
         "selectFile": "اختر الملف",
         "uploading": "جاري التحميل...",
         "uploadBtn": "تحميل المستند",
@@ -1617,7 +1620,8 @@
           "title": "معاينة مباشرة حية",
           "defaultCategory": "الفئة",
           "defaultName": "اسم الصنف",
-          "proTip": "✨ معاينة مظهر العميل الفعلي. سيظهر صنفك بهذا الشكل تماماً داخل التطبيق."
+          "proTip": "✨ معاينة مظهر العميل الفعلي. سيظهر صنفك بهذا الشكل تماماً داخل التطبيق.",
+          "noImage": "لا توجد صورة"
         },
         "variantGroups": {
           "sectionTitle": "مجموعات الخيارات والمتغيرات",
@@ -1679,14 +1683,23 @@
         "total": "الإجمالي"
       },
       "filters": {
-        "liveOrders": "الطلبات المباشرة الحالية",
-        "pastOrders": "الطلبات السابقة المكتملة",
-        "show": "عرض:"
+        "show": "عرض:",
+        "allStatus": "جميع الحالات",
+        "searchPlaceholder": "البحث عن الطلبات...",
+        "statusPending": "معلق",
+        "statusPrepare": "تحضير",
+        "statusReady": "جاهز",
+        "statusAccepted": "مقبول",
+        "statusOutOfDelivery": "خارج للتوصيل",
+        "statusDelivered": "تم التوصيل",
+        "statusRejected": "مرفوض",
+        "apply": "تطبيق"
       },
       "stats": {
         "totalToday": "إجمالي اليوم",
         "liveOrders": "الطلبات الحالية المباشرة",
-        "revenue": "الإيرادات"
+        "revenue": "الإيرادات",
+        "totalOrders": "إجمالي الطلبات"
       },
       "table": {
         "orderId": "رقم الطلب",
@@ -1732,12 +1745,15 @@
         "platformCommission": "عمولة المنصة",
         "paymentProcessing": "معالجة الدفع والعمليات الإلكترونية (2.9% + 30¢)",
         "deliveryCosts": "تكاليف تلبية وإنجاز التوصيل",
+        "totalWithdrawals": "إجمالي السحوبات",
+        "requestedWithdrawals": "السحوبات المطلوبة",
         "netEarnings": "صافي الأرباح (الجاهزة للتسوية والتحويل)"
       },
       "payouts": {
         "title": "عمليات التحويل والعوائد الأخيرة",
         "subtitle": "آخر التحويلات المصرفية التي تم إرسالها إليك",
         "viewAllBtn": "عرض جميع التحويلات المالية عوائد المطعم ←",
+        "payoutId": "رقم التحويل",
         "date": "التاريخ",
         "amount": "المبلغ",
         "bank": "البنك المصرفي",
@@ -1754,7 +1770,8 @@
         "date": "التاريخ والوقت",
         "method": "طريقة الدفع",
         "netAmount": "صافي المبلغ",
-        "fee": "الرسوم مقتطعة",
+        "commission": "العمولة",
+        "deliveryFee": "رسوم التوصيل",
         "total": "الإجمالي العام"
       },
       "allPayoutsSheet": {
@@ -1817,6 +1834,7 @@
         "platformCommission": "عمولة المنصة",
         "paymentProcessing": "معالجة الدفع الإلكتروني",
         "deliveryCosts": "تكاليف التوصيل الميداني",
+        "paymentMethods": "طرق ووسائل الدفع",
         "transactionHistory": "سجل وتاريخ المعاملات المالية",
         "id": "المعرف",
         "date": "التاريخ",
@@ -1921,7 +1939,7 @@
       "recentOrders": {
         "title": "الطلبات الأخيرة",
         "subtitle": "انقر فوق أي طلب لعرض تفاصيله الكاملة",
-        "allOrders": "جميع الطلبات",
+        "allOrders": "جميع الطلبات →",
         "columns": {
           "order": "الطلب",
           "status": "الحالة",
@@ -2048,7 +2066,7 @@
         "liveChat": "المحادثة الفورية الحية",
         "liveChatDesc": "متصل الآن – متوسط وقت الانتظار دقيقتان فقط",
         "phoneSupport": "الدعم عبر الهاتف الجوال",
-        "phoneDesc": "+964 750 000 0000",
+        "phoneDesc": "+1 (469) 422-5944",
         "emailUs": "راسلنا عبر البريد الإلكتروني",
         "emailDesc": "support@jayakhub.com"
       },

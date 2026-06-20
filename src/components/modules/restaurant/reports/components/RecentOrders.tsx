@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { cn } from "@/lib/utils";
 import OrderDetailSidebar, { OrderDetail } from "./OrderDetailSidebar";
@@ -25,6 +26,7 @@ function isoToOrderDateTime(isoStr: string) {
   return { date: datePart ?? formatted, time: timePart ?? "" };
 }
 import { useCLC } from "@/context/CLCContext";
+import Link from "next/link";
 
 interface Order {
   id: string;
@@ -77,6 +79,8 @@ const RecentOrders = ({
 }: RecentOrdersProps) => {
   const t = useTranslations("RestaurantDashboard.Reports.recentOrders");
   const { formatPrice } = useCLC();
+  const router = useRouter();
+  const params = useParams();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
@@ -123,9 +127,7 @@ const RecentOrders = ({
   };
 
   const handleAllOrdersClick = () => {
-    if (formattedOrders.length > 0) {
-      handleOrderClick(formattedOrders[0]);
-    }
+    router.push(`/${params.country}/${params.language}/restaurant/orders`);
   };
 
   const columns: Column<Order>[] = [
@@ -201,12 +203,12 @@ const RecentOrders = ({
           <h2 className="text-[16px] font-bold text-gray-900">{t("title")}</h2>
           <p className="text-[12px] text-gray-500 mt-0.5">{t("subtitle")}</p>
         </div>
-        <button
-          onClick={handleAllOrdersClick}
-          className="text-[12px] font-bold text-gray-600 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+        <Link
+          href={"/restaurant/orders"}
+          className="text-[12px] font-bold text-green-800 hover:underline transition-colors"
         >
           {t("allOrders")}
-        </button>
+        </Link>
       </div>
 
       <GlobalTable
