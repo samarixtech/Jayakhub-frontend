@@ -5,8 +5,6 @@ import {
   LayoutDashboard,
   Settings,
   ShoppingBag,
-  User,
-  HelpCircle,
   LogOut,
   Bell,
 } from "lucide-react";
@@ -42,6 +40,21 @@ const ROLE_CONFIG = {
     settings: "/restaurant/settings",
     orders: "/restaurant/orders",
   },
+  admin: {
+    dashboard: "/restaurant/dashboard",
+    settings: "/restaurant/settings",
+    orders: "/restaurant/orders",
+  },
+  manager: {
+    dashboard: "/restaurant/dashboard",
+    settings: "/restaurant/settings",
+    orders: "/restaurant/orders",
+  },
+  cashier: {
+    dashboard: "/restaurant/pos",
+    settings: "/restaurant/settings",
+    orders: "/restaurant/pos/orders",
+  },
   customer: {
     dashboard: "/customer/dashboard",
     settings: "/customer/profile-settings",
@@ -66,7 +79,7 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
     ? user.name.charAt(0).toUpperCase()
     : user?.email?.substring(0, 2).toUpperCase() || "??";
 
-  const userRole = (user?.role as UserRole) || "customer";
+  const userRole = ((user?.role || "customer") as string).toLowerCase() as UserRole;
   const routes = ROLE_CONFIG[userRole] || ROLE_CONFIG["customer"];
 
   // Notification State

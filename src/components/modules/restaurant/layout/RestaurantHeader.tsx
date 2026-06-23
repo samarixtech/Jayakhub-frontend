@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import UserProfile from "@/components/common/UserProfile";
 import { getProfile } from "@/app/actions/customer/userprofile";
 import { logoutAction } from "@/app/actions/auth/auth";
-import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
@@ -28,8 +27,7 @@ export default function RestaurantHeader() {
   const t = useTranslations("RestaurantDashboard.Sidebar.items");
 
   const segments = pathname?.split("/") || [];
-  const lastSegment = segments.length > 0 ? segments[segments.length - 1] : "";
-  
+
   const PAGE_NAMES: Record<string, string> = {
     dashboard: t("dashboard"),
     orders: t("orders"),
@@ -46,8 +44,17 @@ export default function RestaurantHeader() {
     apis: t("apis"),
     support: t("support"),
   };
-  
-  const pageTitle = PAGE_NAMES[lastSegment] || t("dashboard");
+
+  let activeSegment = "";
+  for (let i = segments.length - 1; i >= 0; i--) {
+    const seg = segments[i];
+    if (PAGE_NAMES[seg]) {
+      activeSegment = seg;
+      break;
+    }
+  }
+
+  const pageTitle = PAGE_NAMES[activeSegment] || t("dashboard");
 
   return (
     <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">
@@ -63,7 +70,6 @@ export default function RestaurantHeader() {
           size="icon"
           className="text-gray-500 hover:bg-gray-100 rounded-full"
         >
-          <Bell className="w-5 h-5" />
         </Button>
         <UserProfile
           user={user}

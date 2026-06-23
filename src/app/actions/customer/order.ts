@@ -52,6 +52,8 @@ export async function getAllOrders(
   page: number = 1,
   limit: number = 10,
   filter?: string,
+  startDate?: string,
+  endDate?: string,
 ): Promise<{
   success: boolean;
   data: any;
@@ -67,6 +69,12 @@ export async function getAllOrders(
 
     if (filter) {
       queryParams.append("filter", filter);
+    }
+    if (startDate) {
+      queryParams.append("startDate", startDate);
+    }
+    if (endDate) {
+      queryParams.append("endDate", endDate);
     }
 
     const response: any = await api.get(

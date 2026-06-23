@@ -12,6 +12,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { usePOS } from "@/context/POSContext";
+import { useCLC } from "@/context/CLCContext";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { RootState, AppDispatch } from "@/redux/store/store";
@@ -30,52 +31,92 @@ export default function PaymentModal({
   open,
   onOpenChange,
 }: PaymentModalProps) {
-  const { subtotal, tax, total } = usePOS();
+  const { selectedTable } = usePOS();
+  const { formatPrice } = useCLC();
   const dispatch = useDispatch<AppDispatch>();
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const { orderType } = useSelector((state: RootState) => state.cart);
 
   const [method, setMethod] = useState<PaymentMethod>(null);
   const [step, setStep] = useState<PaymentStep>("select");
-  const [amountTendered, setAmountTendered] = useState<string>("100");
+  const [deliveryCharges, setDeliveryCharges] = useState<string>("0");
+  const [paidAmount, setPaidAmount] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [receiptData, setReceiptData] = useState<any>(null);
 
-  // Total logic wrapper for rendering safely
-  const displayTotal = total > 0 ? total : 17.32;
-  const displaySubtotal = subtotal > 0 ? subtotal : 16.5;
-  const displayTax = tax > 0 ? tax : 0.83;
+  // Calculate totals directly from Redux cart (same source as POSCartPanel)
+  const displaySubtotal = cartItems.reduce((acc, item) => {
+    const extraPrice = item.selectedVariations?.length
+      ? item.selectedVariations.reduce((s: number, v: any) => s + (v.additionalPrice ?? 0), 0)
+      : (item.selectedVariation?.additionalPrice ?? 0);
+    return acc + (item.price + extraPrice) * item.quantity;
+  }, 0);
+  const displayTotal = displaySubtotal;
+  const deliveryChargesNum = parseFloat(deliveryCharges) || 0;
+  const actualTotal = orderType === "Delivery" ? displayTotal + deliveryChargesNum : displayTotal;
 
-  // Reset state when modal is toggled
+  // Reset state only when modal opens (not on cart changes while open)
   React.useEffect(() => {
     if (open) {
       setMethod(null);
       setStep("select");
-      setAmountTendered(displayTotal.toFixed(2));
+      setDeliveryCharges("0");
+      setReceiptData(null);
     }
-  }, [open, displayTotal]);
+  }, [open]);
+
+  // Sync paid amount when modal first opens with current cart total
+  React.useEffect(() => {
+    if (open && step === "select") {
+      setPaidAmount(displayTotal.toFixed(2));
+    }
+  }, [open, displayTotal, step]);
 
   const handleConfirm = async () => {
     if (method && cartItems.length > 0) {
       setIsProcessing(true);
 
-      const payload = cartItems.map((item) => ({
-        cashierItemId: item.cashierItemId || item.id,
-        quantity: item.quantity,
-        tableName: item.tableName || "Table 5",
-        orderType: item.orderType || "Dine-In",
+      const payload: Record<string, any> = {
         paymentMethod: method.charAt(0).toUpperCase() + method.slice(1),
-      }));
+        orderType,
+        items: cartItems.map((item) => {
+          const entry: Record<string, any> = {
+            itemId: item.cashierItemId || item.id,
+            quantity: item.quantity,
+          };
+          const vars: any[] = item.selectedVariations?.length
+            ? item.selectedVariations
+            : item.selectedVariation
+            ? [item.selectedVariation]
+            : [];
+          if (vars.length === 1) {
+            const vgId = vars[0].variantGroupId || vars[0].id;
+            if (vgId) entry.variantGroupId = vgId;
+            entry.variantOptionName = vars[0].name;
+          } else if (vars.length > 1) {
+            entry.variantGroupIds = vars.map((v) => v.variantGroupId || v.id).filter(Boolean);
+            entry.variantOptionNames = vars.map((v) => v.name);
+          }
+          return entry;
+        }),
+      };
+      if (selectedTable?.name) payload.tableName = selectedTable.name;
+      if (orderType === "Delivery" && deliveryChargesNum > 0)
+        payload.deliveryFee = deliveryChargesNum;
 
       try {
         const result = await addCartItemsAction(payload);
         if (result.success) {
           toast.success("Payment successful!");
+          setReceiptData(result.data);
           dispatch(clearCart());
           setStep("receipt");
         } else {
           toast.error(result.message || "Failed to process payment");
         }
-      } catch (err) {
-        toast.error("An error occurred during payment.");
+      } catch (err: any) {
+        console.error("Payment error:", err);
+        toast.error(err?.message || "An error occurred during payment.");
       } finally {
         setIsProcessing(false);
       }
@@ -87,6 +128,102 @@ export default function PaymentModal({
   };
 
   if (step === "receipt") {
+    const receiptItems: any[] = receiptData?.items || [];
+    const firstItem = receiptItems[0];
+    const receiptOrderId = firstItem?.id ? `#${firstItem.id.slice(-6).toUpperCase()}` : "#——";
+    const receiptDate = firstItem?.createdAt
+      ? new Date(firstItem.createdAt).toLocaleString("en-GB", {
+          day: "2-digit", month: "2-digit", year: "numeric",
+          hour: "2-digit", minute: "2-digit",
+        })
+      : "——";
+    const receiptTableName = firstItem?.tableName || selectedTable?.name || "——";
+    const receiptPaymentMethod = firstItem?.paymentMethod || method || "——";
+    const receiptOrderType = firstItem?.orderType || orderType;
+    const receiptItemsTotal: number = receiptData?.itemsTotal ?? 0;
+    const receiptDeliveryFee: number = receiptData?.deliveryFee ?? 0;
+    const receiptGrandTotal: number = receiptData?.grandTotal ?? 0;
+
+    const handlePrint = () => {
+      const printWindow = window.open("", "_blank", "width=420,height=700");
+      if (!printWindow) return;
+
+      const itemsHtml = receiptItems.map((item: any) => {
+        const discountAmt = parseFloat(item.discount) || 0;
+        const baseTotal = item.itemPrice * item.quantity;
+        const discountedItemTotal = (item.itemPrice - discountAmt) * item.quantity;
+        const totalAmt = parseFloat(item.totalAmount) || 0;
+
+        const discountRow = discountAmt > 0
+          ? `<tr>
+               <td style="color:#999;font-size:11px;padding:1px 0 0 8px;">After discount</td>
+               <td style="text-align:right;font-size:11px;padding:1px 0 0;">
+                 <s style="color:#bbb;">${formatPrice(baseTotal)}</s>
+                 <span style="color:#357252;margin-left:4px;">${formatPrice(discountedItemTotal)}</span>
+               </td>
+             </tr>`
+          : "";
+
+        const variantRows = (item.variantDetails || []).map((v: any) =>
+          `<tr>
+             <td style="color:#888;font-size:11px;padding:1px 0 0 8px;">${v.groupName}: <b>${v.optionName}</b></td>
+             <td style="color:#1eb589;font-size:11px;text-align:right;padding:1px 0 0;">${v.price > 0 ? `+${formatPrice(v.price)}` : ""}</td>
+           </tr>`
+        ).join("");
+
+        return `
+          <tr>
+            <td style="font-weight:700;padding:6px 0 0;font-size:13px;">${item.quantity}x ${item.itemName}</td>
+            <td style="font-weight:700;text-align:right;padding:6px 0 0;font-size:13px;">${formatPrice(totalAmt)}</td>
+          </tr>
+          ${discountRow}
+          ${variantRows}`;
+      }).join("");
+
+      const deliveryRow = receiptDeliveryFee > 0
+        ? `<tr>
+             <td style="color:#666;padding:3px 0;">Delivery Fee</td>
+             <td style="text-align:right;padding:3px 0;">${formatPrice(receiptDeliveryFee)}</td>
+           </tr>`
+        : "";
+
+      printWindow.document.write(`
+        <!DOCTYPE html><html><head><title>Receipt</title>
+        <style>
+          *{margin:0;padding:0;box-sizing:border-box;}
+          body{font-family:'Courier New',Courier,monospace;font-size:13px;padding:24px 20px;max-width:340px;margin:0 auto;}
+          h1{text-align:center;font-size:20px;color:#357252;margin-bottom:2px;font-weight:900;}
+          .sub{text-align:center;color:#999;font-size:12px;margin-bottom:14px;}
+          .meta{display:flex;justify-content:space-between;font-size:11px;color:#666;margin-bottom:8px;}
+          hr{border:none;border-top:1px dashed #ccc;margin:10px 0;}
+          table{width:100%;border-collapse:collapse;}
+          .total-row td{font-weight:900;font-size:15px;padding-top:8px;}
+          .footer{text-align:center;color:#aaa;font-size:11px;margin-top:18px;line-height:1.6;}
+          @media print{body{padding:8px;}}
+        </style></head><body>
+        <h1>Receipt</h1>
+        <p class="sub">${receiptOrderType} &middot; ${receiptTableName}</p>
+        <div class="meta"><span>${receiptOrderId}</span><span>${receiptDate}</span></div>
+        <hr>
+        <table>${itemsHtml}</table>
+        <hr>
+        <table>
+          <tr><td style="color:#666;padding:3px 0;">Subtotal</td><td style="text-align:right;padding:3px 0;">${formatPrice(receiptItemsTotal)}</td></tr>
+          ${deliveryRow}
+        </table>
+        <hr>
+        <table>
+          <tr class="total-row"><td>Grand Total</td><td style="text-align:right;">${formatPrice(receiptGrandTotal)}</td></tr>
+        </table>
+        <p class="footer">Paid via <b>${receiptPaymentMethod}</b><br>Thank you for dining with us!</p>
+        </body></html>
+      `);
+
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => { printWindow.print(); printWindow.close(); }, 300);
+    };
+
     return (
       <GlobalModal
         open={open}
@@ -95,69 +232,100 @@ export default function PaymentModal({
         className="sm:max-w-[400px] p-6 flex flex-col items-center bg-white border-none shadow-2xl rounded-2xl text-center"
       >
         <div className="flex flex-col items-center w-full pb-6">
-          <h2 className="text-[22px] font-black text-[#357252] tracking-tight mb-1">
-            JayakHub
+          {/* Check icon */}
+          <div className="w-12 h-12 rounded-full bg-[#e6f4ef] flex items-center justify-center mb-3">
+            <Check className="w-6 h-6 text-[#357252] stroke-[3px]" />
+          </div>
+          <h2 className="text-[20px] font-black text-[#1b2d22] tracking-tight mb-0.5">
+            Payment Successful
           </h2>
-          <p className="text-[13px] text-[#8ea89a] font-medium mb-6">
-            Restaurant POS
+          <p className="text-[12px] text-[#8ea89a] font-medium mb-5">
+            {receiptOrderType} · {receiptTableName}
           </p>
 
-          <div className="flex justify-between w-full text-[13px] text-[#1b2d22] font-semibold mb-6">
-            <span>#1004</span>
-            <span>21/02/2026 12:18</span>
+          {/* Order meta */}
+          <div className="flex justify-between w-full text-[12px] text-[#556977] font-semibold mb-4 border-b border-dashed border-gray-200 pb-4">
+            <span>{receiptOrderId}</span>
+            <span>{receiptDate}</span>
           </div>
 
-          <div className="w-full space-y-3 mb-6">
-            {cartItems.length > 0 ? (
-              cartItems.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex justify-between text-[14px] text-[#1b2d22] font-medium"
-                >
-                  <span>
-                    {item.quantity}x {item.name}
-                  </span>
-                  <span>${(item.price * item.quantity).toFixed(2)}</span>
-                </div>
-              ))
+          {/* Line items */}
+          <div className="w-full space-y-3 mb-4">
+            {receiptItems.length > 0 ? (
+              receiptItems.map((item: any, idx: number) => {
+                const discountAmt = parseFloat(item.discount) || 0;
+                const baseTotal = item.itemPrice * item.quantity;
+                const discountedItemTotal = (item.itemPrice - discountAmt) * item.quantity;
+                const totalAmt = parseFloat(item.totalAmount) || 0;
+                return (
+                  <div key={idx} className="w-full">
+                    {/* Item name + total */}
+                    <div className="flex justify-between text-[13px] text-[#1b2d22] font-bold">
+                      <span>{item.quantity}x {item.itemName}</span>
+                      <span className="shrink-0 ml-2">{formatPrice(totalAmt)}</span>
+                    </div>
+
+                    {/* Discounted price row */}
+                    {discountAmt > 0 && (
+                      <div className="flex justify-between text-[11px] mt-0.5">
+                        <span className="text-[#8ea89a]">Price (after discount)</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-gray-400 line-through">{formatPrice(baseTotal)}</span>
+                          <span className="text-[#357252] font-semibold">{formatPrice(discountedItemTotal)}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Variant details */}
+                    {item.variantDetails?.map((v: any, vi: number) => (
+                      <div key={vi} className="flex justify-between text-[11px] text-[#8ea89a] mt-0.5">
+                        <span>{v.groupName}: <span className="font-semibold text-[#556977]">{v.optionName}</span></span>
+                        {v.price > 0 && (
+                          <span className="text-[#1eb589] font-semibold">+{formatPrice(v.price)}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })
             ) : (
-              <div className="flex justify-between text-[14px] text-[#1b2d22] font-medium">
-                <span>1x BBQ Chicken Pizza</span>
-                <span>$16.50</span>
+              <p className="text-[13px] text-[#8ea89a]">No items</p>
+            )}
+          </div>
+
+          {/* Subtotal / delivery / total */}
+          <div className="w-full space-y-1.5 mb-3">
+            <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
+              <span>Subtotal</span>
+              <span>{formatPrice(receiptItemsTotal)}</span>
+            </div>
+            {receiptDeliveryFee > 0 && (
+              <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
+                <span>Delivery Fee</span>
+                <span>{formatPrice(receiptDeliveryFee)}</span>
               </div>
             )}
           </div>
 
-          <div className="w-full space-y-2 mb-4">
-            <div className="flex justify-between text-[14px] text-[#3e5648] font-medium">
-              <span>Subtotal</span>
-              <span>${displaySubtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-[14px] text-[#3e5648] font-medium">
-              <span>Tax (5%)</span>
-              <span>${displayTax.toFixed(2)}</span>
-            </div>
+          <div className="flex justify-between w-full text-[17px] text-[#111] font-black mb-5 border-t border-dashed border-gray-200 pt-3">
+            <span>Grand Total</span>
+            <span>{formatPrice(receiptGrandTotal)}</span>
           </div>
 
-          <div className="flex justify-between w-full text-[18px] text-[#111] font-black mb-8">
-            <span>Total</span>
-            <span>${displayTotal.toFixed(2)}</span>
-          </div>
-
-          <div className="text-center mb-6">
-            <p className="text-[14px] text-[#3e5648] font-medium mb-2">
+          <div className="text-center mb-5">
+            <p className="text-[13px] text-[#3e5648] font-medium mb-1">
               Paid via{" "}
               <span className="font-black text-[#111] capitalize">
-                {method}
+                {receiptPaymentMethod}
               </span>
             </p>
-            <p className="text-[12px] text-[#8ea89a] font-medium">
+            <p className="text-[11px] text-[#8ea89a] font-medium">
               Thank you for dining with us!
             </p>
           </div>
 
           <div className="flex w-full gap-3">
-            <button className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
+            <button onClick={handlePrint} className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
               <Printer className="w-4 h-4 stroke-[2.5px]" /> Print
             </button>
             <button
@@ -189,48 +357,41 @@ export default function PaymentModal({
         {/* Header Total */}
         <div className="bg-[#f2fbf5] rounded-xl flex flex-col items-center justify-center py-4 mb-4">
           <span className="text-[32px] font-black text-[#357252] leading-none mb-1">
-            ${displayTotal.toFixed(2)}
+            {formatPrice(actualTotal)}
           </span>
           <span className="text-[12px] text-[#789684] font-semibold">
             Total Payable
           </span>
         </div>
 
-        {/* Discount Input */}
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            placeholder="Discount"
-            className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-[14px] focus:outline-none focus:border-[#357252] text-[#111] font-medium placeholder:text-gray-400"
-          />
-          <button className="w-[45px] bg-white border border-gray-200 text-gray-700 font-bold rounded-lg flex items-center justify-center text-[14px] hover:bg-gray-50 transition-colors">
-            %
-          </button>
-          <button className="px-5 bg-white border border-gray-200 text-[#111] font-bold rounded-lg flex items-center justify-center text-[13px] hover:bg-gray-50 transition-colors shadow-sm">
-            Apply
-          </button>
-        </div>
-
         {/* Breakdown */}
         <div className="space-y-1.5 mb-3">
           <div className="flex justify-between text-[#556977] text-[13px] font-medium">
             <span>Subtotal</span>
-            <span>${displaySubtotal.toFixed(2)}</span>
+            <span>{formatPrice(displaySubtotal)}</span>
           </div>
-          <div className="flex justify-between text-[#556977] text-[13px] font-medium">
-            <span>Tax (5%)</span>
-            <span>${displayTax.toFixed(2)}</span>
-          </div>
+          {orderType === "Delivery" && (
+            <div className="flex justify-between text-[#556977] text-[13px] font-medium items-center">
+              <span>Delivery Charges</span>
+              <input
+                type="number"
+                min="0"
+                value={deliveryCharges}
+                onChange={(e) => setDeliveryCharges(e.target.value)}
+                className="w-24 border border-gray-200 text-right rounded-md px-2 py-0.5 text-[13px] font-bold text-[#111] focus:outline-none focus:border-[#357252]"
+              />
+            </div>
+          )}
         </div>
         <div className="border-t border-dashed border-gray-200 pt-3 flex justify-between items-center mb-4">
           <span className="text-[15px] font-black text-[#111]">Total</span>
           <span className="text-[15px] font-black text-[#111]">
-            ${displayTotal.toFixed(2)}
+            {formatPrice(actualTotal)}
           </span>
         </div>
 
         {/* Method Selection */}
-        <div className="grid grid-cols-3 gap-3 mb-4">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           <button
             onClick={() => setMethod("cash")}
             className={`relative flex flex-col items-center justify-center py-3 rounded-xl border ${method === "cash" ? "bg-[#357252] border-[#357252] text-white" : "bg-white border-gray-200 text-[#111] hover:border-gray-300"} transition-all`}
@@ -264,58 +425,39 @@ export default function PaymentModal({
               Card
             </span>
           </button>
-
-          <button
-            onClick={() => setMethod("online")}
-            className={`relative flex flex-col items-center justify-center py-3 rounded-xl border ${method === "online" ? "bg-[#357252] border-[#357252] text-white" : "bg-white border-gray-200 text-[#111] hover:border-gray-300"} transition-all`}
-          >
-            {method === "online" && (
-              <Check className="absolute top-1.5 right-1.5 w-3.5 h-3.5 text-white stroke-[3px]" />
-            )}
-            <Smartphone
-              className={`w-5 h-5 mb-1.5 ${method === "online" ? "text-white" : "text-[#2a3c30]"} stroke-[2px]`}
-            />
-            <span
-              className={`text-[12px] font-bold ${method === "online" ? "text-white" : "text-[#111]"}`}
-            >
-              Online
-            </span>
-          </button>
         </div>
 
-        {/* Amount Tendered (Cash only) */}
-        {method === "cash" && (
-          <div className="bg-[#fcfdfd] border border-gray-100 p-3 rounded-xl mb-4 flex flex-col items-center">
-            <span className="text-[#657a8a] text-[11px] font-bold mb-1.5 w-full text-left">
-              Amount Tendered
-            </span>
-            <input
-              type="text"
-              value={amountTendered}
-              onChange={(e) => setAmountTendered(e.target.value)}
-              className="w-full border border-gray-200 text-center rounded-lg py-1.5 text-[16px] font-black text-[#111] focus:outline-none focus:border-[#357252] mb-2"
-            />
-            {(() => {
-              const change = parseFloat(amountTendered) - displayTotal;
-              return (
-                <span
-                  className={`text-[14px] font-black ${change >= 0 ? "text-[#1eb589]" : "text-red-500"}`}
-                >
-                  Change: ${change >= 0 ? change.toFixed(2) : "0.00"}
-                </span>
-              );
-            })()}
-          </div>
-        )}
+        {/* Paid Amount */}
+        <div className="bg-[#fcfdfd] border border-gray-100 p-3 rounded-xl mb-4 flex flex-col items-center">
+          <span className="text-[#657a8a] text-[11px] font-bold mb-1.5 w-full text-left">
+            Paid Amount
+          </span>
+          <input
+            type="number"
+            min="0"
+            value={paidAmount}
+            onChange={(e) => setPaidAmount(e.target.value)}
+            className="w-full border-2 border-[#357252] text-center rounded-lg py-1.5 text-[16px] outline-none focus:border-[#357252] font-black text-[#111] mb-2"
+          />
+          {(() => {
+            const change = parseFloat(paidAmount) - actualTotal;
+            return (
+              <span
+                className={`text-[14px] font-black ${change >= 0 ? "text-[#1eb589]" : "text-red-500"}`}
+              >
+                Change: {change >= 0 ? formatPrice(change) : formatPrice(0)}
+              </span>
+            );
+          })()}
+        </div>
 
         <button
           onClick={handleConfirm}
           disabled={!method || isProcessing}
-          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${
-            !method || isProcessing
-              ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
-              : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
-          }`}
+          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${!method || isProcessing
+            ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
+            : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
+            }`}
         >
           {isProcessing ? (
             <Loader2 className="w-5 h-5 animate-spin" />

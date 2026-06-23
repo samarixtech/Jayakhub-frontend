@@ -53,7 +53,8 @@ export async function proxy(request: NextRequest) {
 
   // Auth Protection
   const token = request.cookies.get("token")?.value;
-  const role = request.cookies.get("role")?.value;
+  const rawRole = request.cookies.get("role")?.value;
+  const role = rawRole ? rawRole.toLowerCase() : undefined;
 
   const isCustomerRoute = pathSegments.some(
     (segment) => segment === "customer",
@@ -81,7 +82,7 @@ export async function proxy(request: NextRequest) {
     // Role-based access control
     if (isCustomerRoute && role !== "customer") {
       let redirectPath = "login";
-      if (role === "restaurant_owner") redirectPath = "restaurant/dashboard";
+      if (role === "restaurant_owner" || role === "admin" || role === "manager") redirectPath = "restaurant/dashboard";
       if (role === "cashier") redirectPath = "restaurant/pos";
 
       return NextResponse.redirect(
@@ -90,7 +91,12 @@ export async function proxy(request: NextRequest) {
     }
 
     if (isRestaurantRoute) {
-      if (role !== "restaurant_owner" && role !== "cashier") {
+      if (
+        role !== "restaurant_owner" &&
+        role !== "cashier" &&
+        role !== "admin" &&
+        role !== "manager"
+      ) {
         const redirectPath =
           role === "customer" ? "customer/dashboard" : "login";
         return NextResponse.redirect(

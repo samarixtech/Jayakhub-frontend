@@ -25,6 +25,24 @@ export async function getPosItems(category?: string): Promise<{
   }
 }
 
+export async function getItemVariantsAction(itemId: string): Promise<{
+  success: boolean;
+  data: any;
+  message?: string;
+}> {
+  try {
+    const api = await serverApi();
+    const response = await api.get(`/item-variants/${itemId}`) as any;
+    return { success: true, data: response.data?.data ?? response.data };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data?.message || error?.message || "Failed to fetch item variants",
+      data: null,
+    };
+  }
+}
+
 export async function getPOSDashboardAction(): Promise<{
   success: boolean;
   data: any;

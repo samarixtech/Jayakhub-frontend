@@ -73,7 +73,7 @@ export async function verifyOtpAction(payload: {
         });
 
         if (data.user?.role) {
-          cookieStore.set("role", data.user.role, { path: "/" });
+          cookieStore.set("role", data.user.role.toLowerCase(), { path: "/" });
         }
       }
       cookieStore.delete("tempUserId"); // Clean up temp cookie
@@ -113,7 +113,7 @@ export async function verifyResetOtpAction(payload: {
 export async function resendOtpAction(email: string): Promise<ActionResponse> {
   return responseHandler(
     async () => api.post("/resend-otp", { identifier: email }),
-    "OTP resent successfully",
+    "OTP Sent Successfully",
   );
 }
 
@@ -275,7 +275,7 @@ export async function googleAuthAction(payload: {
           sameSite: "lax",
           path: "/",
         });
-        cookieStore.set("role", assignedRole, { path: "/" });
+        cookieStore.set("role", assignedRole.toLowerCase(), { path: "/" });
 
         return { role: assignedRole };
       }

@@ -182,7 +182,7 @@ function ChangePasswordForm({ t }: { t: any }) {
           </div>
         </div>
 
-        <div className="flex justify-end pt-4">
+        <div className="flex justify-end">
           <Button
             type="submit"
             disabled={isPending}

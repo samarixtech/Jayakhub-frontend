@@ -10,9 +10,11 @@ import {
   Bike,
 } from "lucide-react";
 import Image from "next/image";
+import { useCLC } from "@/context/CLCContext";
 import { useOnlineOrders } from "../hooks/useOnlineOrders";
 
 export default function OnlineOrdersView() {
+  const { formatPrice } = useCLC();
   const {
     activeTab,
     setActiveTab,
@@ -106,7 +108,7 @@ export default function OnlineOrdersView() {
 
               <div className="flex items-center gap-4 shrink-0 px-2 sm:px-4">
                 <span className="font-black text-[#111827] text-[16px] sm:text-[18px]">
-                  ${order.total.toFixed(2)}
+                  {formatPrice(order.total)}
                 </span>
               </div>
 

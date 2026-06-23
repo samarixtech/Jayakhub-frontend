@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useCLC } from "@/context/CLCContext";
 
 interface CloseRegisterPaymentSummaryProps {
   paymentSummary: any;
@@ -9,6 +10,7 @@ interface CloseRegisterPaymentSummaryProps {
 export const CloseRegisterPaymentSummary = ({
   paymentSummary,
 }: CloseRegisterPaymentSummaryProps) => {
+  const { formatPrice } = useCLC();
   return (
     <div className="border-t border-gray-100 pt-5 mb-2">
       <h3 className="text-[11px] font-bold text-[#556977] tracking-wide mb-3 uppercase">
@@ -21,7 +23,7 @@ export const CloseRegisterPaymentSummary = ({
             Cash Payments
           </span>
           <span className="text-[12.5px] font-bold text-[#1b2d22]">
-            ${paymentSummary?.cash?.toFixed(2) || "0.00"}
+            {formatPrice(paymentSummary?.cash ?? 0)}
           </span>
         </div>
         <div className="flex justify-between items-center">
@@ -29,7 +31,7 @@ export const CloseRegisterPaymentSummary = ({
             Card Payments
           </span>
           <span className="text-[12.5px] font-bold text-[#1b2d22]">
-            ${paymentSummary?.card?.toFixed(2) || "0.00"}
+            {formatPrice(paymentSummary?.card ?? 0)}
           </span>
         </div>
         <div className="flex justify-between items-center">
@@ -37,7 +39,7 @@ export const CloseRegisterPaymentSummary = ({
             Online Orders
           </span>
           <span className="text-[12.5px] font-bold text-[#1b2d22]">
-            ${paymentSummary?.online?.toFixed(2) || "0.00"}
+            {formatPrice(paymentSummary?.online ?? 0)}
           </span>
         </div>
       </div>

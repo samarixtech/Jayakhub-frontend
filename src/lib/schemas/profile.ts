@@ -4,7 +4,11 @@ import { z } from "zod";
 export const updateProfileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   lastName: z.string().optional(),
-  phone: z.string().min(10, "Phone number must be valid"),
+  phone: z
+    .string()
+    .min(10, "Phone number must be valid")
+    .or(z.literal(""))
+    .optional(),
   avatar: z.any().optional(),
 });
 

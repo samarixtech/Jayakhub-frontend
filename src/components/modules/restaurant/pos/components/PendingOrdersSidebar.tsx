@@ -10,6 +10,7 @@ import { RootState, AppDispatch } from "@/redux/store/store";
 import { restoreFromPendingThunk } from "@/redux/slices/cartSlice";
 import { ShoppingCart } from "lucide-react";
 import toast from "react-hot-toast";
+import { useCLC } from "@/context/CLCContext";
 
 interface PendingOrdersSidebarProps {
   open: boolean;
@@ -20,6 +21,7 @@ export default function PendingOrdersSidebar({
   open,
   onOpenChange,
 }: PendingOrdersSidebarProps) {
+  const { formatPrice } = useCLC();
   const dispatch = useDispatch<AppDispatch>();
   const pendingOrders = useSelector(
     (state: RootState) => state.cart.pendingOrders,
@@ -64,10 +66,10 @@ export default function PendingOrdersSidebar({
                 0,
               );
               const priceTotal = (order.items || []).reduce((acc, item) => {
-                const itemPrice = item.selectedVariation
-                  ? item.price + item.selectedVariation.additionalPrice
-                  : item.price;
-                return acc + itemPrice * item.quantity;
+                const extraPrice = item.selectedVariations?.length
+                  ? item.selectedVariations.reduce((s: number, v: any) => s + (v.additionalPrice ?? 0), 0)
+                  : (item.selectedVariation?.additionalPrice ?? 0);
+                return acc + (item.price + extraPrice) * item.quantity;
               }, 0);
 
               const displayName =
@@ -98,7 +100,7 @@ export default function PendingOrdersSidebar({
                   </div>
                   <div className="text-[11px] text-[#556977] font-medium flex justify-between items-center mt-2">
                     <span>
-                      {itemTotal} items · ${priceTotal.toFixed(2)}
+                      {itemTotal} items · {formatPrice(priceTotal)}
                     </span>
                     <div className="text-[#357252] group-hover:bg-[#e6f4ef] p-1.5 rounded-md transition-colors flex items-center gap-1.5 font-bold">
                       <ShoppingCart className="w-3.5 h-3.5" />

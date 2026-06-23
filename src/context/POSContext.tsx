@@ -192,8 +192,8 @@ export function POSProvider({ children }: { children: ReactNode }) {
       : item.price;
     return acc + itemPrice * item.quantity;
   }, 0);
-  const tax = subtotal * 0.05; // 5% tax
-  const total = subtotal + tax;
+  const tax = 0;
+  const total = subtotal;
 
   return (
     <POSContext.Provider

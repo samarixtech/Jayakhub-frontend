@@ -16,6 +16,7 @@ import {
   User,
   ShieldAlert,
 } from "lucide-react";
+import driverImge from "../../../../../public/drive your way on to financial freedom.png"
 
 const RTL_LOCALES = ["ar", "ur", "fa", "he"];
 
@@ -126,7 +127,7 @@ export default function Driver() {
               className="relative aspect-[4/3] w-full rounded-[2rem] overflow-hidden border-[6px] border-white/10 shadow-2xl"
             >
               <Image
-                src="/drive your way on to financial freedom.png"
+                src={driverImge}
                 alt="Driver with pizza boxes"
                 fill
                 priority

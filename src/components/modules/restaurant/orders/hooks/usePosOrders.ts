@@ -1,10 +1,15 @@
+"use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Bell, ChefHat, CheckCircle2 } from "lucide-react";
-import {
-  getRestaurantOrdersAction,
-  updateOrderStatusAction,
-} from "@/app/actions/restaurant/orders";
+import { getCartListAction, updateCartStatusAction } from "@/app/actions/restaurant/cart";
 import toast from "react-hot-toast";
+
+export enum PosOrderStatus {
+  COMPLETE = "complete",
+  PENDING = "pending",
+  PREPARE = "prepare",
+  CANCELLED = "cancelled"
+}
 
 export type OrderStatus = "incoming" | "preparing" | "ready";
 
@@ -22,7 +27,7 @@ export interface Order {
 const BASE_POLL_INTERVAL = 30_000;
 const MAX_POLL_INTERVAL = 300_000; // 5 min cap
 
-export const useOnlineOrders = () => {
+export const usePosOrders = () => {
   const [activeTab, setActiveTab] = useState<OrderStatus>("incoming");
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,9 +37,9 @@ export const useOnlineOrders = () => {
 
   const mapApiStatusToTabStatus = (status: string): OrderStatus | null => {
     const s = status.toLowerCase();
-    if (s === "pending") return "incoming";
-    if (s === "accepted" || s === "prepare") return "preparing";
-    if (s === "ready") return "ready";
+    if (s === PosOrderStatus.PENDING) return "incoming";
+    if (s === PosOrderStatus.PREPARE || s === "preparing" || s === "accepted") return "preparing";
+    if (s === PosOrderStatus.COMPLETE) return "ready";
     return null;
   };
 
@@ -48,43 +53,35 @@ export const useOnlineOrders = () => {
     if (isFetchingRef.current) return; // prevent concurrent requests
     isFetchingRef.current = true;
     try {
-      const res = await getRestaurantOrdersAction(1, 50);
-      const resData = res.data as any;
-      if (res.success && resData?.data) {
+      const res = await getCartListAction();
+      if (res.success && Array.isArray(res.data)) {
         consecutiveErrorsRef.current = 0;
         pollIntervalRef.current = BASE_POLL_INTERVAL;
 
-        const apiOrders = resData.data.orders || [];
         const mapped: Order[] = [];
-        apiOrders.forEach((o: any) => {
-          const tabStatus = mapApiStatusToTabStatus(o.status);
+        res.data.forEach((order: any) => {
+          const tabStatus = mapApiStatusToTabStatus(order.orderStatus || PosOrderStatus.PENDING);
           if (tabStatus) {
+            const formattedItems = (order.items || []).map((it: any) => {
+              const variantNames = (it.variants || []).map((v: any) => v.optionName);
+              const nameWithOptions = it.itemName + (variantNames.length > 0 ? ` (${variantNames.join(", ")})` : "");
+              return it.quantity > 1 ? `${nameWithOptions} x${it.quantity}` : nameWithOptions;
+            });
+            
             mapped.push({
-              id: o.orderId,
-              customerName: o.customerName || "Customer",
-              timeAgo: calculateTimeAgo(o.dateTime),
-              items: o.summary
-                ? o.summary.split(",").map((i: string) => i.trim())
-                : [],
-              total: o.totalPrice || 0,
+              id: order.id,
+              customerName: order.tableName ? `Table ${order.tableName}` : (order.orderType || "Walk-In"),
+              timeAgo: calculateTimeAgo(order.createdAt),
+              items: formattedItems,
+              total: parseFloat(order.grandTotal || "0"),
               status: tabStatus,
-              originalStatus: o.status,
-              handoffStage:
-                tabStatus === "ready" ? "rider_assigned" : undefined,
+              originalStatus: order.orderStatus || PosOrderStatus.PENDING,
             });
           }
         });
 
-        setOrders((current) =>
-          mapped.map((newOrder) => {
-            const existing = current.find((ex) => ex.id === newOrder.id);
-            return existing?.handoffStage
-              ? { ...newOrder, handoffStage: existing.handoffStage }
-              : newOrder;
-          }),
-        );
+        setOrders(mapped);
       } else {
-        // Server returned an error response — back off
         consecutiveErrorsRef.current += 1;
         pollIntervalRef.current = Math.min(
           BASE_POLL_INTERVAL * 2 ** consecutiveErrorsRef.current,
@@ -92,7 +89,7 @@ export const useOnlineOrders = () => {
         );
       }
     } catch (error) {
-      console.error("Failed to fetch online orders:", error);
+      console.error("Failed to fetch POS orders:", error);
       consecutiveErrorsRef.current += 1;
       pollIntervalRef.current = Math.min(
         BASE_POLL_INTERVAL * 2 ** consecutiveErrorsRef.current,
@@ -111,7 +108,7 @@ export const useOnlineOrders = () => {
     const schedule = () => {
       timeoutId = setTimeout(async () => {
         await fetchOrders();
-        schedule(); // reschedule with current (possibly backed-off) interval
+        schedule();
       }, pollIntervalRef.current);
     };
     schedule();
@@ -119,76 +116,35 @@ export const useOnlineOrders = () => {
     return () => clearTimeout(timeoutId);
   }, [fetchOrders]);
 
-  const handleUpdateStatus = async (
-    orderId: string,
-    newApiStatus: string,
-    localUiStatus?: OrderStatus,
-    localHandoffStage?: "rider_assigned" | "handoff_code",
-  ) => {
-    // Optimistic UI update
-    if (localUiStatus) {
-      setOrders((prev) =>
-        prev.map((o) =>
-          o.id === orderId
-            ? {
-              ...o,
-              status: localUiStatus,
-              handoffStage: localHandoffStage ?? o.handoffStage,
-            }
-            : o,
-        ),
-      );
-    } else {
-      setOrders((prev) => prev.filter((o) => o.id !== orderId));
-    }
-
+  const handleUpdateStatus = async (orderId: string, newApiStatus: string) => {
     try {
-      const res = await updateOrderStatusAction(orderId, newApiStatus);
-      if (!res.success) {
-        toast.error(res.message || "Failed to update order status");
-        fetchOrders(); // Revert on failure
-      } else {
-        toast.success(`Order updated`);
+      const res = await updateCartStatusAction(orderId, newApiStatus);
+      if (res.success) {
+        toast.success(`Order status updated`);
         fetchOrders();
+      } else {
+        toast.error(res.message || "Failed to update order status");
       }
     } catch (err) {
-      toast.error("Error updating order");
-      fetchOrders();
+      console.error("Status update error:", err);
+      toast.error("Error updating order status");
     }
   };
 
   const handleAccept = (orderId: string) => {
-    handleUpdateStatus(orderId, "prepare", "preparing");
+    handleUpdateStatus(orderId, PosOrderStatus.PREPARE);
   };
 
   const handleReject = (orderId: string) => {
-    handleUpdateStatus(orderId, "rejected");
+    handleUpdateStatus(orderId, PosOrderStatus.CANCELLED);
   };
 
   const handleMarkReady = (orderId: string) => {
-    handleUpdateStatus(orderId, "ready", "ready", "rider_assigned");
+    handleUpdateStatus(orderId, PosOrderStatus.COMPLETE);
   };
 
-  const handleHandoffToggle = (orderId: string) => {
-    setOrders((prev) =>
-      prev.map((o) => {
-        if (o.id === orderId && o.status === "ready") {
-          return {
-            ...o,
-            handoffStage:
-              o.handoffStage === "rider_assigned"
-                ? "handoff_code"
-                : "rider_assigned",
-          };
-        }
-        return o;
-      }),
-    );
-  };
-
-  const handleCompleteHandoff = (orderId: string) => {
-    handleUpdateStatus(orderId, "out_of_delivery");
-  };
+  const handleHandoffToggle = () => {};
+  const handleCompleteHandoff = () => {};
 
   const incomingOrders = orders.filter((o) => o.status === "incoming");
   const preparingOrders = orders.filter((o) => o.status === "preparing");
@@ -209,7 +165,7 @@ export const useOnlineOrders = () => {
     },
     {
       id: "ready" as const,
-      label: "Ready",
+      label: "Completed",
       count: readyOrders.length,
       icon: CheckCircle2,
     },

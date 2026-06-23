@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import api from "@/components/services/api";
+import { useLocale as useNextIntlLocale } from "next-intl";
 
 /* ---------- API TYPES ---------- */
 
@@ -34,12 +35,23 @@ interface Locale {
 const RTL_LANGS = ["ar", "ur", "fa", "he"];
 
 export default function useLocale(): Locale {
+  const nextIntlLocale = useNextIntlLocale();
   const [country, setCountry] = useState("");
   const [countryCode, setCountryCode] = useState("");
-  const [language, setLanguage] = useState("en");
-  const [dir, setDir] = useState<"rtl" | "ltr">("ltr");
+  const [language, setLanguage] = useState(nextIntlLocale);
+  const [dir, setDir] = useState<"rtl" | "ltr">(
+    RTL_LANGS.includes(nextIntlLocale) ? "rtl" : "ltr"
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
+
+  // Reactively synchronize language and direction when the next-intl locale changes
+  useEffect(() => {
+    if (nextIntlLocale) {
+      setLanguage(nextIntlLocale);
+      setDir(RTL_LANGS.includes(nextIntlLocale) ? "rtl" : "ltr");
+    }
+  }, [nextIntlLocale]);
 
   function applyFallback() {
     setCountry("pk");

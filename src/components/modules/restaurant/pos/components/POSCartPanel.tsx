@@ -13,6 +13,7 @@ import {
   Clock,
 } from "lucide-react";
 import { usePOS } from "@/context/POSContext";
+import { useCLC } from "@/context/CLCContext";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateQuantity,
@@ -34,6 +35,7 @@ import PaymentModal from "./PaymentModal";
 import toast from "react-hot-toast";
 
 export default function POSCartPanel() {
+  const { formatPrice } = useCLC();
   const { isCartOpen, setIsCartOpen, setActiveModifierItemId, selectedTable } =
     usePOS();
 
@@ -82,13 +84,12 @@ export default function POSCartPanel() {
   }, [cartItems.length, dispatch, selectedTable]);
 
   const subtotal = cartItems.reduce((acc, item) => {
-    const itemPrice = item.selectedVariation
-      ? item.price + item.selectedVariation.additionalPrice
-      : item.price;
-    return acc + itemPrice * item.quantity;
+    const extraPrice = item.selectedVariations?.length
+      ? item.selectedVariations.reduce((s, v) => s + (v.additionalPrice ?? 0), 0)
+      : (item.selectedVariation?.additionalPrice ?? 0);
+    return acc + (item.price + extraPrice) * item.quantity;
   }, 0);
-  const tax = subtotal * 0.05; // 5% tax
-  const total = subtotal + tax;
+  const total = subtotal;
 
   const handleUpdateQuantity = (id: string, delta: number) => {
     const item = cartItems.find((i) => i.cartId === id || i.id === id);
@@ -209,23 +210,42 @@ export default function POSCartPanel() {
                   key={item.id}
                   className="relative flex flex-col p-3 border border-[#f5e1c4] bg-[#fffbf4] transition-colors rounded-xl shadow-[0_1px_3px_rgba(245,166,35,0.1)]"
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex items-center gap-2 flex-1 pr-2 flex-wrap">
-                      <span className="font-black text-[#111827] text-[13px] leading-tight">
-                        {item.name}
-                      </span>
-                      {item.selectedVariation && (
-                        <span className="px-[5px] py-[2px] rounded-[3px] bg-[#edf6f1] text-[#357252] text-[9px] font-black uppercase tracking-wider whitespace-nowrap">
-                          {item.selectedVariation.name}
-                        </span>
-                      )}
-                    </div>
-                    <span className="font-black text-[#111827] text-[13px]">
-                      ${(item.price * item.quantity).toFixed(2)}
+                  <div className="flex justify-between items-start mb-1">
+                    <span className="font-black text-[#111827] text-[13px] leading-tight flex-1 pr-2">
+                      {item.name}
+                    </span>
+                    <span className="font-black text-[#111827] text-[13px] shrink-0">
+                      {(() => {
+                        const extra = item.selectedVariations?.length
+                          ? item.selectedVariations.reduce((s: number, v: any) => s + (v.additionalPrice ?? 0), 0)
+                          : (item.selectedVariation?.additionalPrice ?? 0);
+                        return formatPrice((item.price + extra) * item.quantity);
+                      })()}
                     </span>
                   </div>
 
-                  <div className="flex items-center justify-start gap-3 mb-3">
+                  {/* Selected variants */}
+                  {(item.selectedVariations?.length
+                    ? item.selectedVariations
+                    : item.selectedVariation
+                      ? [item.selectedVariation]
+                      : []
+                  ).map((v: any, vi: number) => (
+                    <div key={vi} className="flex justify-between items-center mb-0.5">
+                      <span className="text-[10px] text-[#357252] font-semibold">
+                        {v.name}
+                      </span>
+                      {v.additionalPrice > 0 && (
+                        <span className="text-[10px] text-[#357252] font-semibold">
+                          +{formatPrice(v.additionalPrice)}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+
+                  <div className="mt-1.5" />
+
+                  <div className="flex items-center justify-start gap-3 mb-3 mt-0">
                     <div className="flex items-center bg-[#f0f4ff] rounded p-0.5 mt-1 border border-blue-50">
                       <button
                         onClick={() =>
@@ -247,29 +267,33 @@ export default function POSCartPanel() {
                         <Plus className="w-3 h-3 stroke-[2.5px]" />
                       </button>
                     </div>
-                    <span className="text-[#6b7280] font-medium text-[11px] mt-1">
-                      @ ${item.price.toFixed(2)}
-                    </span>
+                    <div className="flex items-center gap-1 mt-1">
+                      <span className="text-[#6b7280] font-medium text-[11px]">
+                        @ {formatPrice(item.price)}
+                      </span>
+                      {item.basePrice && item.basePrice !== item.price && (
+                        <span className="text-gray-400 text-[10px] line-through">
+                          {formatPrice(item.basePrice)}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
                         setActiveModifierItemId(item.cartId || item.id);
                         setIsModifiersOpen(true);
                       }}
-                      className="text-[#357252] hover:text-[#2a5a41] text-[10px] font-bold transition-colors"
+                      className="flex-1 py-1 rounded-md bg-[#edf6f1] text-[#357252] hover:bg-[#d6efe6] text-[10px] font-bold transition-colors"
                     >
                       Modifiers
-                    </button>
-                    <button className="text-[#357252] hover:text-[#2a5a41] text-[10px] font-bold transition-colors">
-                      Note
                     </button>
                     <button
                       onClick={() =>
                         handleRemoveFromCart(item.cartId || item.id)
                       }
-                      className="text-[#ef4444] hover:text-[#dc2626] text-[10px] font-bold transition-colors"
+                      className="flex-1 py-1 rounded-md bg-red-50 text-[#ef4444] hover:bg-red-100 text-[10px] font-bold transition-colors"
                     >
                       Remove
                     </button>
@@ -292,11 +316,7 @@ export default function POSCartPanel() {
           </div>
           <div className="flex justify-between text-gray-400 font-medium">
             <span>Subtotal</span>
-            <span className="text-gray-700">${subtotal.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between text-gray-400 font-medium">
-            <span>Tax (5%)</span>
-            <span className="text-gray-700">${tax.toFixed(2)}</span>
+            <span className="text-gray-700">{formatPrice(subtotal)}</span>
           </div>
         </div>
 
@@ -305,7 +325,7 @@ export default function POSCartPanel() {
             Total
           </span>
           <span className="font-black text-gray-900 text-[15px] sm:text-[16px]">
-            ${total.toFixed(2)}
+            {formatPrice(total)}
           </span>
         </div>
 

@@ -57,15 +57,25 @@ export function useProfileSettings() {
 
   const handleSave = async () => {
     if (!profile) return;
-    const formData = new FormData();
-    formData.append("name", profile.name);
-    formData.append("lastName", profile.lastName || "");
-    // Strip non-digits for backend numeric validation
-    formData.append("phone", profile.phone.replace(/\D/g, ""));
-    if (avatarFile) formData.append("avatar", avatarFile);
+
+    let avatarBase64: string | undefined;
+    if (avatarFile) {
+      avatarBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(avatarFile);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+      });
+    }
 
     startTransition(async () => {
-      const result = await updateProfileAction(formData);
+      const result = await updateProfileAction({
+        name: profile.name,
+        lastName: profile.lastName || undefined,
+        phone: profile.phone.replace(/\D/g, "") || undefined,
+        avatarBase64,
+        avatarName: avatarFile?.name,
+      });
       if (result.success) {
         toast.success("Profile updated!");
         // Force full page reload to update all UI elements globally

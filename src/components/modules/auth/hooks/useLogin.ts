@@ -28,7 +28,7 @@ export function useLogin() {
         sessionStorage.setItem(AUTH_KEYS.PENDING_EMAIL, identifier);
         router.push(`/verify-otp?email=${encodeURIComponent(identifier)}`);
       } else if (data?.data?.user?.role || data?.user?.role) {
-        const role = (data.data?.user?.role || data.user?.role) as UserRole;
+        const role = ((data.data?.user?.role || data.user?.role) as string).toLowerCase() as UserRole;
 
         if (role === "restaurant_owner") {
           getRestaurantStatusAction()

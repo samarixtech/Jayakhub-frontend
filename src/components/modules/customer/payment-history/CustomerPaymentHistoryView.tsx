@@ -6,6 +6,8 @@ import { PaymentHistoryMetrics } from "./components/payment-history-metrics";
 import { PaymentHistoryTable } from "./components/payment-history-table";
 import { usePagination } from "@/hooks/usePagination";
 
+import { format } from "date-fns";
+
 export default function CustomerPaymentHistory() {
   const [orders, setOrders] = useState<any[]>([]);
   const [summary, setSummary] = useState<any>({});
@@ -14,6 +16,10 @@ export default function CustomerPaymentHistory() {
 
   // Tabs for transaction table
   const [activeTab, setActiveTab] = useState("All");
+
+  // Date filters
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date("2025-01-01"));
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 
   // Pagination State
   const {
@@ -38,8 +44,11 @@ export default function CustomerPaymentHistory() {
         if (activeTab === "Cards") filterParam = "card";
         if (activeTab === "Cash") filterParam = "cod";
 
+        const formattedStart = startDate ? format(startDate, "yyyy-MM-dd") : undefined;
+        const formattedEnd = endDate ? format(endDate, "yyyy-MM-dd") : undefined;
+
         const [ordersRes, profileRes] = await Promise.all([
-          getAllOrders(page, limit, filterParam),
+          getAllOrders(page, limit, filterParam, formattedStart, formattedEnd),
           getProfile(),
         ]);
 
@@ -69,7 +78,7 @@ export default function CustomerPaymentHistory() {
       }
     }
     loadData();
-  }, [activeTab, page, limit]);
+  }, [activeTab, page, limit, startDate, endDate]);
 
   const startIndex = (page - 1) * limit;
 
@@ -78,7 +87,12 @@ export default function CustomerPaymentHistory() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-4 md:p-6 transition-all font-sans">
       <div className="max-w-5xl mx-auto space-y-4 md:space-y-6">
-        <PaymentHistoryHeader />
+        <PaymentHistoryHeader
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+        />
 
         <PaymentHistoryMetrics summary={summary} />
 

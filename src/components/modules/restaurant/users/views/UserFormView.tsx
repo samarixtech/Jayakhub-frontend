@@ -73,7 +73,7 @@ export default function UserFormView({
     { label: t("roles.admin"), value: "ADMIN" },
     { label: t("roles.manager"), value: "MANAGER" },
     { label: t("roles.cashier"), value: "CASHIER" },
-    { label: t("roles.kitchen"), value: "KITCHEN" },
+    // { label: t("roles.kitchen"), value: "KITCHEN" },
   ];
 
   return (

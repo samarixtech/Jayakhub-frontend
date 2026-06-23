@@ -40,23 +40,28 @@ export async function getProfile(): Promise<ActionResponse> {
   );
 }
 
+export interface UpdateProfileInputData {
+  name: string;
+  lastName?: string;
+  phone?: string;
+  avatarBase64?: string;
+  avatarName?: string;
+}
+
 // ==================== UPDATE USER PROFILE ====================
 export async function updateProfileAction(
-  formData: FormData,
+  payload: UpdateProfileInputData,
 ): Promise<ActionResponse> {
-  const payload = {
-    name: formData.get("name")?.toString() || "",
-    lastName: formData.get("lastName")?.toString() || undefined,
-    phone: formData.get("phone")?.toString() || "",
-  };
   const validation = validateSchema(
     updateProfileSchema.omit({ avatar: true }),
     payload,
   );
   if (!validation.success) {
+    console.log("====================");
+    console.log(validation.errors);
     return {
       success: false,
-      message: "Validation failed",
+      message: validation.errors[0],
       errors: validation.errors,
     };
   }
@@ -64,19 +69,32 @@ export async function updateProfileAction(
   return responseHandler(
     async () => {
       const api = await serverApi();
-      const avatar = formData.get("avatar");
 
       // 1. ALWAYS send JSON first to update text fields properly
       // This bypasses FormData stringification and satisfies backend's strict numeric type requirement for phone
-      const profileResult = await api.put("/update-profile", {
-        name: formData.get("name"),
-        lastName: formData.get("lastName"),
-        phone: Number(formData.get("phone")?.toString().replace(/\D/g, "")),
-      });
+      const rawPhone = payload.phone?.replace(/\D/g, "");
+      const updatePayload: any = {
+        name: payload.name,
+        lastName: payload.lastName,
+      };
+      if (rawPhone) {
+        updatePayload.phone = Number(rawPhone);
+      }
 
-      if (avatar && avatar instanceof File && avatar.size > 0) {
+      console.log("update payload", updatePayload);
+
+
+      const profileResult = await api.put("/update-profile", updatePayload);
+
+      if (payload.avatarBase64) {
+        const base64Data = payload.avatarBase64.split(",")[1];
+        const mimeType = payload.avatarBase64.split(",")[0].split(":")[1].split(";")[0];
+        const buffer = Buffer.from(base64Data, "base64");
+
+        // Reconstruct Blob and FormData on server side to submit file to backend API
+        const blob = new Blob([buffer], { type: mimeType });
         const avatarFormData = new FormData();
-        avatarFormData.append("avatar", avatar);
+        avatarFormData.append("avatar", blob, payload.avatarName || "avatar.jpg");
         return api.put("/update-profile", avatarFormData);
       }
 
@@ -134,8 +152,22 @@ export async function uploadKycAction(
 ): Promise<ActionResponse> {
   return responseHandler(
     async () => {
+      const file = formData.get("documentFile") as File;
+      const documentType = formData.get("documentType") as string;
+
+      if (!file) {
+        throw new Error("KYC Document (PDF or Image) is required");
+      }
+
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const blob = new Blob([buffer], { type: file.type });
+
+      const sendData = new FormData();
+      sendData.append("documentType", documentType);
+      sendData.append("documentFile", blob, file.name);
+
       const api = await serverApi();
-      return api.post("/kyc", formData);
+      return api.post("/kyc", sendData);
     },
     "Document uploaded successfully",
     (data) => {

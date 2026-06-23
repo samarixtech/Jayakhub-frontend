@@ -11,7 +11,7 @@ const PaymentMethodsCard = () => {
 
   return (
     <Card className="rounded-3xl p-4 border-none shadow-sm bg-white overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between p-0 mb-6">
+      <CardHeader className="flex flex-row items-center justify-between p-0">
         <div>
           <CardTitle className="text-lg font-bold text-gray-900">
             {t('payment_methods_title')}

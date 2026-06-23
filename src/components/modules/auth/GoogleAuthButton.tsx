@@ -45,7 +45,7 @@ export function GoogleAuthButton({ loading, role }: any) {
           return;
         }
 
-        const targetSubPath = ROLE_REDIRECT_MAP[data.role as UserRole];
+        const targetSubPath = ROLE_REDIRECT_MAP[(data.role as string)?.toLowerCase() as UserRole];
         const finalUrl = `${targetSubPath}`;
         router.push(finalUrl);
       }

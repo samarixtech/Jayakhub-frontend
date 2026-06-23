@@ -93,7 +93,25 @@ const cartSlice = createSlice({
 
       if (itemIndex >= 0) {
         state.items[itemIndex].selectedVariation = variation;
-        // Optionally update the cartId if we consider variations part of the identity in the cart
+        state.items[itemIndex].cartId = generateCartId(state.items[itemIndex]);
+      }
+    },
+
+    updateItemVariations: (
+      state,
+      action: PayloadAction<{ id: string; variations: any[] }>,
+    ) => {
+      const { id, variations } = action.payload;
+      const itemIndex = state.items.findIndex(
+        (item) => item.cartId === id || item.id === id,
+      );
+
+      if (itemIndex >= 0) {
+        state.items[itemIndex].selectedVariations = variations;
+        // Keep selectedVariation in sync with first entry for backward compat
+        state.items[itemIndex].selectedVariation = variations[0]
+          ? { name: variations[0].name, additionalPrice: variations[0].additionalPrice }
+          : undefined;
         state.items[itemIndex].cartId = generateCartId(state.items[itemIndex]);
       }
     },
@@ -169,7 +187,7 @@ export const restoreFromPendingThunk = createAsyncThunk(
   }
 );
 
-export const { addToCart, updateQuantity, updateItemVariation, clearCart, setCart, setOrderType, saveToPendingOrders, restoreFromPending } =
+export const { addToCart, updateQuantity, updateItemVariation, updateItemVariations, clearCart, setCart, setOrderType, saveToPendingOrders, restoreFromPending } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

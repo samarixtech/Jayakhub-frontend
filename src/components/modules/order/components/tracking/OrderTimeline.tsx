@@ -1,6 +1,6 @@
 import React from "react";
 import { TimelineItem } from "./TimelineItem";
-import { Check, Utensils, Bike, MapPin, XCircle } from "lucide-react";
+import { Check, Utensils, Bike, MapPin, XCircle, ShoppingBag } from "lucide-react";
 import { formatOrderDateTime } from "@/lib/utils/date";
 
 interface OrderTimelineProps {
@@ -22,10 +22,16 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
         <h2 className="text-xl font-bold text-gray-900 mb-8">Order Journey</h2>
         <div className="pl-2">
           <TimelineItem
+            icon={ShoppingBag}
+            title="Order Placed"
+            description="Your order has been successfully placed."
+            time={formatOrderDateTime(orderDate, orderTime)}
+            status="completed"
+          />
+          <TimelineItem
             icon={Check}
             title="Order Confirmed"
             description="We received your order and forwarded it to the restaurant."
-            time={formatOrderDateTime(orderDate, orderTime)}
             status="pending"
           />
           <TimelineItem
@@ -46,10 +52,16 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
 
       <div className="pl-2">
         <TimelineItem
+          icon={ShoppingBag}
+          title="Order Placed"
+          description="Your order has been successfully placed."
+          time={formatOrderDateTime(orderDate, orderTime)}
+          status="completed"
+        />
+        <TimelineItem
           icon={Check}
           title="Order Confirmed"
           description="We've received your order and the restaurant is starting soon."
-          time={formatOrderDateTime(orderDate, orderTime)}
           status={
             orderStatus === "pending"
               ? "pending"

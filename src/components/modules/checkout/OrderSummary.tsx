@@ -218,7 +218,7 @@ const OrderSummary = ({
 
         <p className="text-[10px] text-gray-400 text-center mt-3 leading-tight">
           By placing your order, you agree to {"JayakHub's"}{" "}
-          <Link href="/terms" className="underline cursor-pointer">Terms & Conditions</Link>.
+          <Link href="/terms-of-service" className="underline cursor-pointer">Terms & Conditions</Link>.
         </p>
       </div>
     </div>

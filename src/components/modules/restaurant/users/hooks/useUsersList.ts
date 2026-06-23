@@ -75,11 +75,6 @@ export function useUsersList() {
       count: users.filter((u) => u.role === "MANAGER").length,
     },
     {
-      label: "Kitchen",
-      value: "KITCHEN",
-      count: users.filter((u) => u.role === "KITCHEN").length,
-    },
-    {
       label: "Cashier",
       value: "CASHIER",
       count: users.filter((u) => u.role === "CASHIER").length,

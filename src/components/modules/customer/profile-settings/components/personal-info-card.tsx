@@ -18,7 +18,7 @@ export default function PersonalInfoCard({
 
   return (
     <Card className="rounded-3xl p-4 border-none shadow-sm bg-white overflow-hidden">
-      <CardHeader className="px-0 pt-0 pb-6">
+      <CardHeader className="px-0 pt-0">
         <CardTitle className="text-lg font-bold text-gray-900">
           {t("personal_info_title")}
         </CardTitle>

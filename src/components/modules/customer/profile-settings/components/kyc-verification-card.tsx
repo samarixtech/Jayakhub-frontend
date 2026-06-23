@@ -28,17 +28,17 @@ export default function IdentityVerificationCard() {
 
   const documentsToShow = hasActiveKyc
     ? KYC_DOCUMENTS.filter((item) =>
-        kycData.some(
-          (d) =>
-            d.documentType === item.id &&
-            (d.status === "verified" || d.status === "pending")
-        )
+      kycData.some(
+        (d) =>
+          d.documentType === item.id &&
+          (d.status === "verified" || d.status === "pending")
       )
+    )
     : KYC_DOCUMENTS;
 
   return (
-    <Card className="rounded-3xl p-4 md:p-4 border-none shadow-sm bg-white overflow-hidden">
-      <CardHeader className="px-0 pt-0 pb-6">
+    <Card className="rounded-3xl p-3 border-none shadow-sm bg-white overflow-hidden">
+      <CardHeader className="px-0 pt-0">
         <CardTitle className="text-lg font-bold text-gray-900">
           {t('identity_verification_title')}
         </CardTitle>

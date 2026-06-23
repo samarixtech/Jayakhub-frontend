@@ -79,7 +79,7 @@ export function useVerifyOtp() {
           return;
         }
 
-        const role = result.data?.user?.role as UserRole | undefined;
+        const role = (result.data?.user?.role as string | undefined)?.toLowerCase() as UserRole | undefined;
         const targetSubPath = role ? ROLE_REDIRECT_MAP[role] : null;
 
         if (!targetSubPath) {

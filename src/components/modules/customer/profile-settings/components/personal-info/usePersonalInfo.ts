@@ -40,11 +40,11 @@ export function usePersonalInfo(
   });
 
   function onSubmit(data: UpdateProfileInput) {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    if (data.lastName) formData.append("lastName", data.lastName);
-    formData.append("phone", data.phone.replace(/\D/g, ""));
-    execute(formData);
+    execute({
+      name: data.name,
+      lastName: data.lastName || undefined,
+      phone: (data.phone || "").replace(/\D/g, "") || undefined,
+    });
   }
 
   useEffect(() => {
