@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { MapPin, Search, Sparkles, Flame, Clock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { cn } from "@/lib/utils";
 import { useTranslations } from 'next-intl';
 import { useRouter, useParams } from 'next/navigation';
@@ -20,7 +19,6 @@ export default function Hero() {
     const params = useParams();
     const { symbol: currencySymbol } = useCurrency();
     const [isVisible, setIsVisible] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         setIsVisible(true);
@@ -29,12 +27,7 @@ export default function Hero() {
     const handleSearch = () => {
         const country = (params?.country as string) || 'iq';
         const language = (params?.language as string) || 'en';
-        const path = `/${country}/${language}/restaurants`;
-        if (searchQuery.trim()) {
-            router.push(`${path}?search=${encodeURIComponent(searchQuery.trim())}`);
-        } else {
-            router.push(path);
-        }
+        router.push(`/${country}/${language}/restaurants`);
     };
 
     const STATS = [
@@ -87,29 +80,25 @@ export default function Hero() {
 
                         {/* Search Bar */}
                         <div className={entryTransition("delay-300")}>
-                            <form
-                                onSubmit={(e) => { e.preventDefault(); handleSearch(); }}
-                                className="group relative bg-white rounded-2xl p-2 shadow-2xl flex items-center focus-within:ring-4 focus-within:ring-primary/30 transition-all max-w-md mx-auto lg:max-w-none lg:mx-0"
+                            <div
+                                onClick={handleSearch}
+                                className="group relative bg-white rounded-2xl p-2 shadow-2xl flex items-center transition-all max-w-md mx-auto lg:max-w-none lg:mx-0 cursor-pointer hover:ring-4 hover:ring-primary/30"
                             >
                                 <div className="flex-1 flex items-center gap-2 sm:gap-3 px-3 sm:px-4">
                                     <MapPin className="w-5 h-5 text-primary shrink-0" />
-                                    <Input
-                                        placeholder={t('hero_search_placeholder')}
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="border-none shadow-none focus-visible:ring-0 text-foreground placeholder:text-muted-foreground h-12 text-sm sm:text-base px-0"
-                                    />
+                                    <span className="h-12 flex items-center text-sm sm:text-base text-muted-foreground select-none">
+                                        {t('hero_search_placeholder')}
+                                    </span>
                                 </div>
                                 <Button
-                                    type="submit"
+                                    type="button"
                                     size="lg"
-                                    onClick={handleSearch}
                                     className="bg-primary hover:bg-primary-light text-white rounded-xl px-5 sm:px-8 font-semibold transition-transform hover:scale-105 shrink-0"
                                 >
                                     <Search className="w-5 h-5 sm:me-2" />
                                     <span className="hidden sm:inline">{t('hero_search_btn')}</span>
                                 </Button>
-                            </form>
+                            </div>
                         </div>
 
                         {/* Stats */}
