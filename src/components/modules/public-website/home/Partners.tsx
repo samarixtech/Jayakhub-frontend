@@ -35,7 +35,7 @@ export default function Partner() {
         { icon: Users, text: t("driver.benefits.drivers") },
       ],
       gradient: "from-primary to-emerald-500",
-      href: "/privacy-policy",
+      href: "/drivers",
     },
     {
       id: 2,

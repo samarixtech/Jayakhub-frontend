@@ -62,11 +62,9 @@ export default function Help() {
                     {/* Search Bar */}
                     <div className="relative max-w-2xl mx-auto bg-white rounded-full shadow-xl flex items-center p-2">
                         <Search className="w-5 h-5 text-gray-400 ml-4 mr-3" />
-                        <input
-                            type="text"
-                            placeholder={t('hero.search_placeholder')}
-                            className="flex-1 bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 h-full py-2"
-                        />
+                        <span className="flex-1 text-gray-400 py-2 select-none text-left">
+                            {t('hero.search_placeholder')}
+                        </span>
                         <button className="bg-[#1C4A3C] text-white px-6 py-2.5 rounded-full font-medium hover:bg-[#15382d] transition-colors">
                             {t('hero.search_button')}
                         </button>
@@ -118,9 +116,9 @@ export default function Help() {
                     </aside>
 
                     {/* Content Area */}
-                    <div className="flex-1 space-y-8">
+                    <div className="flex-1 space-y-0">
                         {/* Selected Category Header */}
-                        <div className="bg-white rounded-[2rem] p-8 flex items-start gap-6">
+                        <div className="bg-white rounded-[2rem] px-8 pt-8 pb-4 flex items-start gap-6">
                             <div className="w-12 h-12 rounded-2xl bg-[#E8F4F1] flex items-center justify-center flex-shrink-0">
                                 <currentCategory.icon className="w-6 h-6 text-[#0B5D4E]" />
                             </div>
@@ -131,15 +129,15 @@ export default function Help() {
                         </div>
 
                         {/* FAQ Section */}
-                        <div className="space-y-6">
+                        <div className="space-y-3">
                             <h3 className="text-lg font-bold text-gray-900">{t('faq.title')}</h3>
 
-                            <div className="space-y-4">
+                            <div className="space-y-1">
                                 {faqs.map((faq) => (
                                     <div key={faq.id} className="bg-white rounded-2xl overflow-hidden hover:bg-gray-50 transition-colors">
                                         <button
                                             onClick={() => toggleFaq(faq.id)}
-                                            className="w-full flex items-center justify-between p-6 text-left"
+                                            className="w-full flex items-center justify-between px-6 py-4 text-left"
                                         >
                                             <span className="font-semibold text-gray-900">{faq.question}</span>
                                             {openFaq === faq.id ? (
