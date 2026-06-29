@@ -12,6 +12,7 @@ export function useRestaurantStatus() {
   >(null);
   const [loading, setLoading] = useState(true);
   const [isNew, setIsNew] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const fetchedRef = useRef(false);
 
   const { execute } = useServerAction(getRestaurantStatusAction, {
@@ -43,9 +44,16 @@ export function useRestaurantStatus() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setIsNew(
-        new URLSearchParams(window.location.search).get("new") === "true",
-      );
+      const newFlag =
+        new URLSearchParams(window.location.search).get("new") === "true";
+      setIsNew(newFlag);
+      if (newFlag) {
+        const msg = sessionStorage.getItem("onboarding_success_message");
+        if (msg) {
+          setSuccessMessage(msg);
+          sessionStorage.removeItem("onboarding_success_message");
+        }
+      }
     }
   }, []);
 
@@ -53,5 +61,6 @@ export function useRestaurantStatus() {
     status,
     loading,
     isNew,
+    successMessage,
   };
 }

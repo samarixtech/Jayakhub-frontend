@@ -21,6 +21,7 @@ import {
   ReviewField,
   ReviewDocField,
 } from "../../components/ReviewComponents";
+import Link from "next/link";
 
 export default function StepReviewView() {
   const { data, loading, isPending, handleSubmit, pathPrefix } =
@@ -194,7 +195,7 @@ export default function StepReviewView() {
         >
           <ReviewDocField
             label="Owner's Government ID (KYC)"
-            status={data.kyc?.kycName ? "VERIFIED" : "PENDING"}
+            status={data.kyc?.kycName ? "UPLOADED" : "PENDING"}
           />
           <ReviewDocField
             label="Food License / Health Permit"
@@ -219,18 +220,28 @@ export default function StepReviewView() {
           className="text-[11px] md:text-xs text-emerald-800/70 leading-relaxed font-medium cursor-pointer"
         >
           I confirm that all information provided is accurate and I agree to
-          JajakiHub's{" "}
-          <span className="text-emerald-700 font-bold underline">
+          JayakHub's{" "}
+          <Link
+            href="/terms-of-service"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-700 font-bold underline hover:text-emerald-900"
+          >
             Terms of Service
-          </span>
+          </Link>
           ,{" "}
-          <span className="text-emerald-700 font-bold underline">
-            Merchant Agreement
-          </span>
+
+          Merchant Agreement
+
           , and{" "}
-          <span className="text-emerald-700 font-bold underline">
+          <Link
+            href="/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-700 font-bold underline hover:text-emerald-900"
+          >
             Privacy Policy
-          </span>
+          </Link>
           . I understand that false information may result in account
           suspension.
         </label>

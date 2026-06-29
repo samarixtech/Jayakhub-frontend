@@ -13,7 +13,7 @@ import { useState } from "react";
 
 export default function RestaurantStatusView() {
   const t = useTranslations("RestaurantDashboard.Status");
-  const { status, loading, isNew } = useRestaurantStatus();
+  const { status, loading, isNew, successMessage } = useRestaurantStatus();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -128,7 +128,7 @@ export default function RestaurantStatusView() {
         </Typography>
 
         <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base">
-          {t("descriptionSubmitted")}
+          {successMessage || t("descriptionSubmitted")}
         </Typography>
 
         <div className="w-full border-t border-gray-100 mb-1 mt-3 sm:mt-8" />

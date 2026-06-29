@@ -1,8 +1,8 @@
 "use server";
 
 import { executeRestaurantAction } from "@/lib/utils/execute-restaurant-action";
-import { ActionResponse } from "@/lib/utils/response-handler";
-import { revalidatePath } from "next/cache";
+import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
+import { serverApi } from "@/components/services/api";
 
 // ==================== GET ACCOUNT SETTINGS ====================
 export async function getAccountSettingsAction(): Promise<ActionResponse> {
@@ -105,9 +105,19 @@ export async function updateKycAction(
 }
 
 // ==================== GET BANKS LIST ====================
-export async function getBanksAction(): Promise<ActionResponse> {
-  return executeRestaurantAction(
-    (api) => api.get("/banks"),
+// Uses serverApi directly — /banks is not restaurant-specific,
+// so executeRestaurantAction (which requires restaurantId cookie) would fail during onboarding.
+export async function getBanksAction(): Promise<ActionResponse<string[]>> {
+  return responseHandler(
+    async () => {
+      const api = await serverApi();
+      return api.get("/banks");
+    },
     "Banks fetched successfully",
+    async (data: any) => {
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(data?.banks)) return data.banks;
+      return [];
+    },
   );
 }

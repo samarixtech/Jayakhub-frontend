@@ -11,10 +11,12 @@ import { usePayouts } from "../hooks/usePayouts";
 import GlobalDateFilter from "@/components/modules/restaurant/layout/GlobalDateFilter";
 import { useExport } from "@/utils/use-export";
 import { useDateFilter } from "@/components/providers/DateFilterProvider";
+import { usePlanAccess } from "@/hooks/use-plan-access";
 
 const PayoutsView = () => {
   const t = useTranslations("RestaurantDashboard.Payouts");
   const { startDate, endDate } = useDateFilter();
+  const { can } = usePlanAccess();
   const { isExporting, handleExport } = useExport({
     successMessage: "Payouts exported successfully!",
     errorMessage: "Failed to export payouts.",
@@ -74,14 +76,16 @@ const PayoutsView = () => {
               </p>
             )}
           </div>
-          <Button
-            onClick={() => setIsRequestModalOpen(true)}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
-            size="sm"
-          >
-            <Plus className="w-4 h-4" />
-            {t("requestBtn")}
-          </Button>
+          {can("instant_payouts") && (
+            <Button
+              onClick={() => setIsRequestModalOpen(true)}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+              size="sm"
+            >
+              <Plus className="w-4 h-4" />
+              {t("requestBtn")}
+            </Button>
+          )}
         </div>
 
         <PayoutsTable

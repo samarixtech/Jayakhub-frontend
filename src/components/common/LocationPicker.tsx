@@ -259,18 +259,6 @@ export default function LocationPicker({
               : "border-gray-200 focus-visible:ring-primary/20 focus-visible:border-primary"
           }`}
         />
-        <Button
-          type="button"
-          size="sm"
-          variant="ghost"
-          onClick={handleLocateMe}
-          className={`absolute right-1.5 top-1.5 h-8 w-8 p-0 rounded-lg ${
-            error ? "text-red-500 hover:bg-red-50" : "text-gray-500 hover:text-primary hover:bg-primary/10"
-          }`}
-          title="Locate Me"
-        >
-          <Crosshair className="h-4 w-4" />
-        </Button>
       </div>
 
       {/* Map */}
@@ -295,6 +283,17 @@ export default function LocationPicker({
         >
           <Marker position={markerPosition} />
         </GoogleMap>
+
+        {/* Locate Me button overlaid on the map */}
+        <Button
+          type="button"
+          size="sm"
+          onClick={handleLocateMe}
+          className="absolute bottom-3 left-3 z-10 bg-white text-gray-700 hover:bg-gray-50 shadow-md border border-gray-200 h-8 px-2.5 rounded-lg text-xs font-semibold gap-1.5"
+        >
+          <Crosshair className="h-3.5 w-3.5" />
+          Locate Me
+        </Button>
 
         {loading && (
           <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">

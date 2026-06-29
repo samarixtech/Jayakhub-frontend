@@ -9,10 +9,13 @@ import { getProfile } from "@/app/actions/customer/userprofile";
 import { logoutAction } from "@/app/actions/auth/auth";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { usePlanAccess } from "@/hooks/use-plan-access";
 
 export default function RestaurantHeader() {
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
+  const { isExpired } = usePlanAccess();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -57,6 +60,18 @@ export default function RestaurantHeader() {
   const pageTitle = PAGE_NAMES[activeSegment] || t("dashboard");
 
   return (
+    <>
+    {isExpired && (
+      <div className="w-full bg-red-500 text-white text-xs font-semibold text-center py-2 px-4 flex items-center justify-center gap-2 shrink-0">
+        <span>Your subscription has expired.</span>
+        <Link
+          href="/restaurant/subscription"
+          className="underline underline-offset-2 hover:text-red-100 transition-colors font-bold"
+        >
+          Go to Subscription Management to renew.
+        </Link>
+      </div>
+    )}
     <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">
       <SidebarTrigger className="-ml-2 text-gray-500 hover:bg-gray-100" />
 
@@ -81,5 +96,6 @@ export default function RestaurantHeader() {
         />
       </div>
     </header>
+    </>
   );
 }

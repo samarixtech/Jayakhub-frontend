@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Star } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -8,6 +10,7 @@ import { toast } from "react-hot-toast";
 import { useTranslations } from "next-intl";
 import { useCLC } from "@/context/CLCContext";
 import { formatOrderDateTime } from "@/lib/utils/date";
+import { usePlanAccess } from "@/hooks/use-plan-access";
 
 function isoToDateOnly(isoStr: string): string {
   if (!isoStr) return "";
@@ -31,6 +34,7 @@ export default function ReviewDetailSheet({
 }: ReviewDetailSheetProps) {
   const t = useTranslations("RestaurantDashboard.Reviews.detail");
   const { formatPrice } = useCLC();
+  const { can } = usePlanAccess();
   const [replyText, setReplyText] = useState("");
 
   const { execute: submitReply, isPending } = useServerAction(
@@ -194,7 +198,7 @@ export default function ReviewDetailSheet({
                   </span>
                 </div>
               </div>
-            ) : (
+            ) : can("reviews_manage") ? (
               <div className="flex flex-col gap-3">
                 <h3 className="text-[13px] font-bold text-[#1b2d22]">
                   {t("writeReply")}
@@ -216,7 +220,7 @@ export default function ReviewDetailSheet({
                   </button>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         )}
       </SheetContent>

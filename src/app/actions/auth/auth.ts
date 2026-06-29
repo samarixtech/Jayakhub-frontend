@@ -75,6 +75,25 @@ export async function verifyOtpAction(payload: {
         if (data.user?.role) {
           cookieStore.set("role", data.user.role.toLowerCase(), { path: "/" });
         }
+
+        // Store plan keywords for ABAC feature-gating on client & server
+        const keywords = data.user?.planDetails?.plan?.keywords;
+        if (Array.isArray(keywords) && keywords.length > 0) {
+          cookieStore.set(
+            "planKeywords",
+            encodeURIComponent(JSON.stringify(keywords)),
+            { path: "/", maxAge: 60 * 60 * 24 * 7 },
+          );
+        } else {
+          cookieStore.delete("planKeywords");
+        }
+
+        // Store subscription expiry for sidebar / header gating
+        const isExpired = data.user?.planDetails?.isExpired;
+        cookieStore.set("isExpired", isExpired ? "true" : "false", {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
       }
       cookieStore.delete("tempUserId"); // Clean up temp cookie
 
@@ -295,6 +314,8 @@ export async function logoutAction(): Promise<ActionResponse> {
     async (data) => {
       cookieStore.delete("token");
       cookieStore.delete("role");
+      cookieStore.delete("planKeywords");
+      cookieStore.delete("isExpired");
       return data;
     },
   );

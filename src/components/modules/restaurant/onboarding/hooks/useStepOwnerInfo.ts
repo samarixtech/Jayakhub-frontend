@@ -64,7 +64,7 @@ export const useStepOwnerInfo = () => {
 
   const onSubmit = (data: OwnerInfoInput) => {
     try {
-      localStorage.setItem("onboarding_owner_info", JSON.stringify(data));
+      localStorage.setItem("onboarding_owner_info", JSON.stringify({ ...data, ownerEmail: email }));
       toast.success("Owner info saved");
       nextStep();
       router.push(`/restaurant/onboarding/step-restaurant-info`);

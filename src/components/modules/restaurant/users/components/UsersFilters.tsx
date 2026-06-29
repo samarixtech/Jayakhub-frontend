@@ -5,6 +5,7 @@ import { Plus, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
+import { usePlanAccess } from "@/hooks/use-plan-access";
 
 interface FilterOption {
   label: string;
@@ -16,14 +17,26 @@ interface UsersFiltersProps {
   filters: FilterOption[];
   selectedFilter: string;
   onFilterChange: (value: string) => void;
+  totalUsers: number;
 }
 
 export function UsersFilters({
   filters,
   selectedFilter,
   onFilterChange,
+  totalUsers,
 }: UsersFiltersProps) {
   const t = useTranslations("RestaurantDashboard.Users.filters");
+  const { hasKeyword } = usePlanAccess();
+
+  const staffLimit = hasKeyword("multi_role_unlimited")
+    ? Infinity
+    : hasKeyword("multi_role_5_staff")
+      ? 5
+      : hasKeyword("multi_role_2_staff")
+        ? 2
+        : 0;
+  const canAddUser = totalUsers < staffLimit;
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
       {/* Filters (Pills) */}
@@ -65,12 +78,14 @@ export function UsersFilters({
         <Button variant="ghost" size="icon" className="text-gray-500">
           <Bell className="w-5 h-5" />
         </Button>
-        <Link href="/restaurant/users/new">
-          <Button className="bg-[#1F4D36] hover:bg-[#183d2b] text-white gap-2">
-            <Plus className="w-4 h-4" />
-            {t("addUser")}
-          </Button>
-        </Link>
+        {canAddUser && (
+          <Link href="/restaurant/users/new">
+            <Button className="bg-[#1F4D36] hover:bg-[#183d2b] text-white gap-2">
+              <Plus className="w-4 h-4" />
+              {t("addUser")}
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );

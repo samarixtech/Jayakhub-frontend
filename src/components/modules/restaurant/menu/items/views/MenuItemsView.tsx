@@ -16,9 +16,11 @@ import { MenuItemsStats } from "../components/MenuItemsStats";
 import { MenuItemsFilters } from "../components/MenuItemsFilters";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { useCLC } from "@/context/CLCContext";
+import { usePlanAccess } from "@/hooks/use-plan-access";
 
 export default function MenuItemsView() {
   const { formatPrice } = useCLC();
+  const { hasKeyword } = usePlanAccess();
 
   const {
     selectedCategory,
@@ -40,8 +42,18 @@ export default function MenuItemsView() {
     stats,
     page,
     totalPages,
+    totalCount,
     handlePageChange,
   } = useMenuItems();
+
+  const menuLimit = hasKeyword("menu_items_unlimited")
+    ? Infinity
+    : hasKeyword("menu_items_200")
+      ? 200
+      : hasKeyword("menu_items_50")
+        ? 50
+        : 0;
+  const canAddItem = totalCount < menuLimit;
 
   const t = useTranslations("RestaurantDashboard.Menu.Items.views");
 
@@ -171,13 +183,15 @@ export default function MenuItemsView() {
   return (
     <div className="flex flex-col gap-6 w-full max-w-[1400px] mx-auto p-4">
       <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4">
-        <Button
-          onClick={() => setIsAddModalOpen(true)}
-          className="bg-emerald-bg hover:bg-emerald-bg-hover text-white gap-2 cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          {t("addNewTitle")}
-        </Button>
+        {canAddItem && (
+          <Button
+            onClick={() => setIsAddModalOpen(true)}
+            className="bg-emerald-bg hover:bg-emerald-bg-hover text-white gap-2 cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            {t("addNewTitle")}
+          </Button>
+        )}
       </div>
 
       <MenuItemsStats stats={stats} />

@@ -37,6 +37,7 @@ export default function UsersListView() {
         filters={filters}
         selectedFilter={selectedFilter}
         onFilterChange={setSelectedFilter}
+        totalUsers={users.length}
       />
 
       <Card className="border-none shadow-sm overflow-hidden bg-white">

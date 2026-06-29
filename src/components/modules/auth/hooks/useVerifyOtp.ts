@@ -31,11 +31,14 @@ export function useVerifyOtp() {
     }
   }, [router]);
 
-  const resolveRestaurantPath = (status?: string | null) => {
-    if (status === "active") return "/restaurant/dashboard";
-    if (status === "pending" || status === "rejected")
-      return "/restaurant/status";
-    return "/restaurant/onboarding";
+  const resolveRestaurantPath = (data?: any) => {
+    const isOnboarded = data?.isOnboarded;
+    const activePlan = data?.activePlan;
+    const status = data?.status;
+    if (!isOnboarded) return "/restaurant/onboarding";
+    if (!activePlan) return "/restaurant/purchase-plan";
+    if (status === "approved") return "/restaurant/dashboard";
+    return "/restaurant/status";
   };
 
   const handleResend = () => {
@@ -94,12 +97,15 @@ export function useVerifyOtp() {
 
         if (role === "restaurant_owner") {
           try {
+            const otpUser = result.data?.user;
             const statusRes = await getRestaurantStatusAction();
-            const status =
-              statusRes.success && statusRes.data
-                ? statusRes.data.status
-                : null;
-            router.replace(resolveRestaurantPath(status));
+            const base = statusRes.success && statusRes.data ? statusRes.data : null;
+            // Use activePlan from the OTP response as the authoritative value —
+            // /my-restaurant may return activePlan: false for expired subscriptions
+            const restaurantData = base
+              ? { ...base, activePlan: otpUser?.activePlan ?? base.activePlan }
+              : null;
+            router.replace(resolveRestaurantPath(restaurantData));
             return;
           } catch (err) {
             router.replace("/restaurant/onboarding");

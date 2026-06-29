@@ -205,6 +205,7 @@ export const useMenuItems = () => {
     stats: statsList,
     page,
     totalPages,
+    totalCount,
     handlePageChange,
   };
 };

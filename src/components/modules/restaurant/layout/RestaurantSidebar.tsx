@@ -14,6 +14,7 @@ import {
   LogOut,
   ChevronDown,
   Wallet,
+  Layers,
 } from "lucide-react";
 
 import {
@@ -39,19 +40,14 @@ import {
 import Image from "next/image";
 import logo from "../../../../../public/EngLogo (2).png"
 
-// TODO: add role based secure navigation items
-
-// Navigation Items Structure
+// Only tabs explicitly described in the plan spec are gated.
+// All other tabs are always visible.
 const NAV_SECTIONS = [
   {
     labelKey: "main",
     items: [
-      {
-        nameKey: "dashboard",
-        href: "/restaurant/dashboard",
-        icon: LayoutDashboard,
-      },
-      { nameKey: "pos", href: "/restaurant/pos", icon: Store },
+      { nameKey: "dashboard", href: "/restaurant/dashboard", icon: LayoutDashboard },
+      { nameKey: "pos", href: "/restaurant/pos", icon: Store, feature: "pos" },
       { nameKey: "orders", href: "/restaurant/orders", icon: ShoppingCart },
       {
         nameKey: "menuManagement",
@@ -71,15 +67,16 @@ const NAV_SECTIONS = [
     items: [
       { nameKey: "users", href: "/restaurant/users", icon: Users },
       { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
-      { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard },
+      { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard, feature: "finance_tab" },
       { nameKey: "payouts", href: "/restaurant/payouts", icon: Wallet },
-      { nameKey: "reports", href: "/restaurant/reports", icon: BarChart2 },
+      { nameKey: "reports", href: "/restaurant/reports", icon: BarChart2, feature: "reports_tab" },
     ],
   },
   {
     labelKey: "settings",
     items: [
-      { nameKey: "support", href: "/restaurant/support", icon: HelpCircle },
+      { nameKey: "support", href: "/restaurant/support", icon: HelpCircle, feature: "support_tab" },
+      { nameKey: "subscription", href: "/restaurant/subscription", icon: Layers },
       { nameKey: "settings", href: "/restaurant/settings", icon: Settings },
     ],
   },
@@ -89,12 +86,26 @@ import { logoutAction } from "@/app/actions/auth/auth";
 import { deleteCookie } from "cookies-next";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import { useTranslations } from "next-intl";
+import { usePlanAccess } from "@/hooks/use-plan-access";
+import { canAccess, type PlanFeature } from "@/lib/utils/abac";
 
 export function RestaurantSidebar() {
   const t = useTranslations("RestaurantDashboard");
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed" && !isMobile;
+  const { keywords, isExpired } = usePlanAccess();
+
+  const filteredSections = isExpired
+    ? NAV_SECTIONS
+    : NAV_SECTIONS.map((section) => ({
+        ...section,
+        items: section.items.filter(
+          (item: any) => !item.feature || canAccess(item.feature as PlanFeature, keywords),
+        ),
+      })).filter((section) => section.items.length > 0);
+
+  const isNavDisabled = (nameKey: string) => isExpired && nameKey !== "subscription";
 
   const handleLogout = async () => {
     try {
@@ -148,7 +159,7 @@ export function RestaurantSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="px-2 custom-scrollbar">
-        {NAV_SECTIONS.map((section, idx) => (
+        {filteredSections.map((section, idx) => (
           <div key={idx} className="mb-6">
             {!isCollapsed && (
               <Typography className="text-[10px] font-bold uppercase tracking-widest text-white/50 mb-2 px-4">
@@ -160,11 +171,12 @@ export function RestaurantSidebar() {
                 if (item.isCollapsible) {
                   const isActiveGroup =
                     pathname?.startsWith(`/restaurant/menu`);
+                  const disabled = isNavDisabled(item.nameKey);
                   return (
                     <Collapsible
                       key={item.nameKey}
-                      defaultOpen={isActiveGroup}
-                      className="group/collapsible"
+                      defaultOpen={!disabled && isActiveGroup}
+                      className={`group/collapsible ${disabled ? "pointer-events-none opacity-40" : ""}`}
                     >
                       <SidebarMenuItem>
                         <CollapsibleTrigger asChild>
@@ -210,21 +222,32 @@ export function RestaurantSidebar() {
                 }
 
                 const isActive = pathname === item.href;
+                const disabled = isNavDisabled(item.nameKey);
                 return (
-                  <SidebarMenuItem key={item.nameKey}>
+                  <SidebarMenuItem key={item.nameKey} className={disabled ? "pointer-events-none opacity-40" : ""}>
                     <SidebarMenuButton
-                      asChild
+                      asChild={!disabled}
                       tooltip={t(`Sidebar.items.${item.nameKey}` as any)}
-                      isActive={isActive}
-                      className={`h-11 rounded-lg px-4 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-all text-base ${isActive
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold"
-                        : "text-sidebar-foreground/80"
-                        }`}
+                      isActive={!disabled && isActive}
+                      className={`h-11 rounded-lg px-4 transition-all text-base ${
+                        disabled
+                          ? "cursor-not-allowed text-sidebar-foreground/80"
+                          : isActive
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-semibold hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                            : "text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      }`}
                     >
-                      <Link href={item.href}>
-                        <item.icon className="w-5 h-5" />
-                        <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
-                      </Link>
+                      {disabled ? (
+                        <>
+                          <item.icon className="w-5 h-5" />
+                          <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
+                        </>
+                      ) : (
+                        <Link href={item.href}>
+                          <item.icon className="w-5 h-5" />
+                          <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
+                        </Link>
+                      )}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );

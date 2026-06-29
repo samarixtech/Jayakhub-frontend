@@ -48,8 +48,8 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
       setLoadingBanks(true);
       try {
         const response = await getBanksAction();
-        if (response.success && response.data?.banks) {
-          setBanks(response.data.banks);
+        if (response.success && Array.isArray(response.data)) {
+          setBanks(response.data);
         }
       } catch (err) {
         console.error("Failed to load banks", err);

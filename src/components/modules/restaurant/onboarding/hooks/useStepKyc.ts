@@ -45,54 +45,86 @@ export const DOC_TYPES = [
 export const useStepKyc = () => {
   const router = useRouter();
   const { country, language } = useLocale();
-  const { kycFile, setKycFile, docFile, setDocFile } = useOnboarding();
+  const { setKycFile, setDocFile } = useOnboarding();
 
-  const [kycType, setKycType] = useState("id_card");
-  const [docType, setDocType] = useState("food_license");
-  const [savedKycName, setSavedKycName] = useState<string | null>(null);
-  const [savedDocName, setSavedDocName] = useState<string | null>(null);
+  const [kycType, setKycTypeState] = useState("id_card");
+  const [docType, setDocTypeState] = useState("food_license");
+
+  // Isolated file per KYC type — switching tabs never cross-contaminates
+  const [kycFiles, setKycFiles] = useState<Record<string, File | null>>({});
+  const [savedKycInfo, setSavedKycInfo] = useState<{ name: string; type: string } | null>(null);
+
+  // Isolated file per doc type — same pattern as KYC
+  const [docFiles, setDocFiles] = useState<Record<string, File | null>>({});
+  const [savedDocInfo, setSavedDocInfo] = useState<{ name: string; type: string } | null>(null);
 
   useEffect(() => {
-    const savedKyc = localStorage.getItem("onboarding_kyc_name");
-    const savedDoc = localStorage.getItem("onboarding_doc_name");
+    const savedKycName = localStorage.getItem("onboarding_kyc_name");
     const savedKycType = localStorage.getItem("onboarding_kyc_type");
+    const savedDocName = localStorage.getItem("onboarding_doc_name");
     const savedDocType = localStorage.getItem("onboarding_doc_type");
 
-    if (savedKyc) setSavedKycName(savedKyc);
-    if (savedDoc) setSavedDocName(savedDoc);
-    if (savedKycType) setKycType(savedKycType);
-    if (savedDocType) setDocType(savedDocType);
+    if (savedKycName && savedKycType) {
+      setSavedKycInfo({ name: savedKycName, type: savedKycType });
+      setKycTypeState(savedKycType);
+    }
+    if (savedDocName && savedDocType) {
+      setSavedDocInfo({ name: savedDocName, type: savedDocType });
+      setDocTypeState(savedDocType);
+    }
   }, []);
 
+  // Switching KYC tabs syncs the context to the new tab's file (or null if empty)
+  const setKycType = (newType: string) => {
+    setKycTypeState(newType);
+    setKycFile(kycFiles[newType] || null);
+  };
+
+  // Switching doc tabs syncs the context to the new tab's file (or null if empty)
+  const setDocType = (newType: string) => {
+    setDocTypeState(newType);
+    setDocFile(docFiles[newType] || null);
+  };
+
   const handleKycFileChange = (file: File) => {
+    // Upload for the current type and discard any file from all other types
+    setKycFiles({ [kycType]: file });
     setKycFile(file);
-    setSavedKycName(file.name);
+    setSavedKycInfo({ name: file.name, type: kycType });
     localStorage.setItem("onboarding_kyc_name", file.name);
+    localStorage.setItem("onboarding_kyc_type", kycType);
     toast.success("Identity document attached");
   };
 
   const handleDocFileChange = (file: File) => {
+    // Upload for the current doc type and discard any file from all other types
+    setDocFiles({ [docType]: file });
     setDocFile(file);
-    setSavedDocName(file.name);
+    setSavedDocInfo({ name: file.name, type: docType });
     localStorage.setItem("onboarding_doc_name", file.name);
+    localStorage.setItem("onboarding_doc_type", docType);
     toast.success("Business document attached");
   };
 
   const removeKycFile = () => {
+    setKycFiles((prev) => ({ ...prev, [kycType]: null }));
     setKycFile(null);
-    setSavedKycName(null);
+    setSavedKycInfo(null);
     localStorage.removeItem("onboarding_kyc_name");
+    localStorage.removeItem("onboarding_kyc_type");
   };
 
   const removeDocFile = () => {
+    setDocFiles((prev) => ({ ...prev, [docType]: null }));
     setDocFile(null);
-    setSavedDocName(null);
+    setSavedDocInfo(null);
     localStorage.removeItem("onboarding_doc_name");
+    localStorage.removeItem("onboarding_doc_type");
   };
 
   const handleComplete = () => {
-    const hasKyc = kycFile || savedKycName;
-    const hasDoc = docFile || savedDocName;
+    const hasKyc = kycFiles[kycType] || savedKycInfo?.type === kycType;
+    const hasDoc = docFiles[docType] || savedDocInfo?.type === docType;
 
     if (!hasKyc || !hasDoc) {
       toast.error("Please upload both identity and business documents.");
@@ -107,19 +139,22 @@ export const useStepKyc = () => {
     router.push(`/restaurant/onboarding/step-bank-details`);
   };
 
+  // File shown in the upload area — only the current tab's file, never another tab's
+  const currentKycFile =
+    kycFiles[kycType] ??
+    (savedKycInfo?.type === kycType ? { name: savedKycInfo.name } : null);
+
+  const currentDocFile =
+    docFiles[docType] ??
+    (savedDocInfo?.type === docType ? { name: savedDocInfo.name } : null);
+
   return {
     kycType,
     setKycType,
     docType,
     setDocType,
-    kycFile:
-      kycFile || savedKycName
-        ? { name: kycFile?.name || savedKycName || "" }
-        : null,
-    docFile:
-      docFile || savedDocName
-        ? { name: docFile?.name || savedDocName || "" }
-        : null,
+    kycFile: currentKycFile,
+    docFile: currentDocFile,
     handleKycFileChange,
     handleDocFileChange,
     removeKycFile,

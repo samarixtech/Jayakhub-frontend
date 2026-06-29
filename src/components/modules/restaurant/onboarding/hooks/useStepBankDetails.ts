@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
@@ -10,21 +10,16 @@ import {
   BankDetailsInput,
 } from "@/lib/schemas/restaurant-onboarding";
 import useLocale from "@/hooks/useLocals";
-
-export const BANKS = [
-  "Bank of America",
-  "Chase",
-  "Wells Fargo",
-  "Citibank",
-  "HSBC",
-  "Other",
-];
+import { getBanksAction } from "@/app/actions/restaurant/settings";
 
 export const ACCOUNT_TYPES = ["Current", "Savings"];
 
 export const useStepBankDetails = () => {
   const { country, language } = useLocale();
   const router = useRouter();
+
+  const [banks, setBanks] = useState<string[]>([]);
+  const [loadingBanks, setLoadingBanks] = useState(false);
 
   const form = useForm<BankDetailsInput>({
     resolver: zodResolver(bankDetailsSchema),
@@ -35,6 +30,23 @@ export const useStepBankDetails = () => {
       iban: "",
     },
   });
+
+  useEffect(() => {
+    const fetchBanks = async () => {
+      setLoadingBanks(true);
+      try {
+        const response = await getBanksAction();
+        if (response.success && Array.isArray(response.data)) {
+          setBanks(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to load banks", err);
+      } finally {
+        setLoadingBanks(false);
+      }
+    };
+    fetchBanks();
+  }, []);
 
   useEffect(() => {
     const savedData = localStorage.getItem("onboarding_bank_details");
@@ -57,5 +69,7 @@ export const useStepBankDetails = () => {
   return {
     form,
     onSubmit,
+    banks,
+    loadingBanks,
   };
 };

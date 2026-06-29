@@ -21,12 +21,11 @@ import {
 } from "@/components/ui/select";
 import {
   useStepBankDetails,
-  BANKS,
   ACCOUNT_TYPES,
 } from "../../hooks/useStepBankDetails";
 
 export default function StepBankDetailsView() {
-  const { form, onSubmit } = useStepBankDetails();
+  const { form, onSubmit, banks, loadingBanks } = useStepBankDetails();
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -76,7 +75,7 @@ export default function StepBankDetailsView() {
             )}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="bankName"
@@ -85,14 +84,14 @@ export default function StepBankDetailsView() {
                   <FormLabel className="text-[10px] font-bold uppercase text-gray-400">
                     Bank Name
                   </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value} disabled={loadingBanks}>
                     <FormControl>
-                      <SelectTrigger className="h-12 bg-gray-50/50 border-gray-100 rounded-xl">
-                        <SelectValue placeholder="Select Bank" />
+                      <SelectTrigger className="h-12! bg-gray-50/50 border-gray-100 rounded-xl w-full">
+                        <SelectValue placeholder={loadingBanks ? "Loading..." : "Select Bank"} />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent className="bg-gray-50" position="popper" sideOffset={4}>
-                      {BANKS.map((bank) => (
+                    <SelectContent className="bg-gray-50" position="popper">
+                      {banks.map((bank) => (
                         <SelectItem key={bank} value={bank}>
                           {bank}
                         </SelectItem>
@@ -114,7 +113,7 @@ export default function StepBankDetailsView() {
                   </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className="h-12 bg-gray-50/50 border-gray-100 rounded-xl">
+                      <SelectTrigger className="h-12! bg-gray-50/50 border-gray-100 rounded-xl w-full">
                         <SelectValue placeholder="Select Type" />
                       </SelectTrigger>
                     </FormControl>

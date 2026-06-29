@@ -77,7 +77,7 @@ export function useFinanceOverview() {
                     setError("message" in res ? res.message as string : "Failed to load finance data");
                 }
             } catch (err: any) {
-                setError(err.message || "An unexpected error occurred");
+                setError(err.message || "");
             } finally {
                 setLoading(false);
             }

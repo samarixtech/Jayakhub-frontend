@@ -66,7 +66,7 @@ export function useTransactions() {
                     setError("message" in res ? res.message as string : "Failed to load transactions");
                 }
             } catch (err: any) {
-                setError(err.message || "An unexpected error occurred");
+                setError(err.message || "");
             } finally {
                 setLoading(false);
             }

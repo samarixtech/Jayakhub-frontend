@@ -29,7 +29,11 @@ export const useStepReview = () => {
   const { execute, isPending } = useServerAction(
     registerRestaurantOnboardingAction,
     {
-      onSuccess: () => {
+      onSuccess: (data: any) => {
+        const apiMessage = data?.meta?.message || "";
+        if (apiMessage) {
+          sessionStorage.setItem("onboarding_success_message", apiMessage);
+        }
         const keys = [
           "onboarding_owner_info",
           "onboarding_restaurant_info",
@@ -42,7 +46,7 @@ export const useStepReview = () => {
           "onboarding_doc_type",
         ];
         keys.forEach((key) => localStorage.removeItem(key));
-        router.push(`/restaurant/status?new=true`);
+        router.push(`/restaurant/purchase-plan`);
       },
       onError: (err) => {
         console.error("Submission Error:", err);
@@ -135,7 +139,7 @@ export const useStepReview = () => {
     }
 
     formData.append("schedules", JSON.stringify(schedules));
-    formData.append("Ownerphone", data.owner?.ownerPhone || "");
+    formData.append("ownerPhone", data.owner?.ownerPhone || "");
     formData.append("ownerName", data.owner?.ownerName || "");
     formData.append("accountHolderName", data.bank?.accountTitle || "");
     formData.append("accountType", data.bank?.accountType || "");
@@ -144,6 +148,12 @@ export const useStepReview = () => {
 
     if (logoFile) formData.append("profileImage", logoFile);
     if (bannerFile) formData.append("bannerImage", bannerFile);
+
+    const payload: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      payload[key] = value instanceof File ? `[File: ${value.name}, ${value.size}b]` : value;
+    });
+    console.log("=== ONBOARDING SUBMIT PAYLOAD ===", JSON.stringify(payload, null, 2));
 
     await execute(formData);
   };

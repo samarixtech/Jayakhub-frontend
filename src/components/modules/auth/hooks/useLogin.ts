@@ -33,14 +33,19 @@ export function useLogin() {
         if (role === "restaurant_owner") {
           getRestaurantStatusAction()
             .then((statusRes) => {
-              if (statusRes.success && statusRes.data?.status === "active") {
-                router.push(`/restaurant/dashboard`);
+              const d = statusRes.success && statusRes.data ? statusRes.data : null;
+              if (!d?.isOnboarded) {
+                router.push("/restaurant/onboarding");
+              } else if (!d?.activePlan) {
+                router.push("/restaurant/purchase-plan");
+              } else if (d?.status === "approved") {
+                router.push("/restaurant/dashboard");
               } else {
-                router.push(`/restaurant/status`);
+                router.push("/restaurant/status");
               }
             })
             .catch(() => {
-              router.push(`/restaurant/status`);
+              router.push("/restaurant/onboarding");
             });
           return;
         }

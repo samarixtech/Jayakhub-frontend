@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
 import { Switch } from "@/components/ui/switch";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { TimePicker } from "@/components/ui/time-picker";
 import { useStepSchedule } from "../../hooks/useStepSchedule";
 
 export default function StepScheduleView() {
@@ -21,6 +21,7 @@ export default function StepScheduleView() {
           <div className="space-y-3">
             {days.map((day) => {
               const dayKey = day.toLowerCase();
+              const isOpen = form.watch(`${dayKey}.isOpen` as any);
 
               return (
                 <div
@@ -53,12 +54,12 @@ export default function StepScheduleView() {
                       control={form.control}
                       name={`${dayKey}.openTime` as any}
                       render={({ field }) => (
-                        <FormItem className="relative pb-2 flex-1 max-w-[145px] sm:max-w-none">
+                        <FormItem className="relative pb-2 flex-1 max-w-[145px] sm:max-w-[160px]">
                           <FormControl>
-                            <Input
-                              type="time"
-                              className="w-full sm:w-[140px] h-11 sm:h-10 bg-gray-50 text-center text-[12px] sm:text-sm border-none rounded-xl px-2"
-                              {...field}
+                            <TimePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                              disabled={!isOpen}
                             />
                           </FormControl>
                           <FormMessage className="text-[9px] sm:text-[10px] text-red-500 absolute -bottom-3 left-1/2 -translate-x-1/2 text-center w-[160px] leading-tight" />
@@ -74,12 +75,12 @@ export default function StepScheduleView() {
                       control={form.control}
                       name={`${dayKey}.closeTime` as any}
                       render={({ field }) => (
-                        <FormItem className="relative pb-2 flex-1 max-w-[145px] sm:max-w-none">
+                        <FormItem className="relative pb-2 flex-1 max-w-[145px] sm:max-w-[160px]">
                           <FormControl>
-                            <Input
-                              type="time"
-                              className="w-full sm:w-[140px] h-11 sm:h-10 bg-gray-50 text-center text-[12px] sm:text-sm border-none rounded-xl px-2"
-                              {...field}
+                            <TimePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                              disabled={!isOpen}
                             />
                           </FormControl>
                           <FormMessage className="text-[9px] sm:text-[10px] text-red-500 absolute -bottom-3 left-1/2 -translate-x-1/2 text-center w-[160px] leading-tight" />

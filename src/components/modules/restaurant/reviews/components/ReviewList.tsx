@@ -7,6 +7,7 @@ import ReviewFilterPills from "./ReviewFilterPills";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { useTranslations } from "next-intl";
 import { formatOrderDateTime } from "@/lib/utils/date";
+import { usePlanAccess } from "@/hooks/use-plan-access";
 
 function isoToDateOnly(isoStr: string): string {
   if (!isoStr) return "";
@@ -43,6 +44,7 @@ export default function ReviewList({
   onPageChange,
 }: ReviewListProps) {
   const t = useTranslations("RestaurantDashboard.Reviews.list");
+  const { can } = usePlanAccess();
   return (
     <div className="flex flex-col gap-4 mt-8">
       {/* Filter Pills */}
@@ -101,7 +103,7 @@ export default function ReviewList({
                 {review.comment}
               </p>
 
-              {!isReplied && (
+              {!isReplied && can("reviews_manage") && (
                 <div className="flex mt-2">
                   <button
                     className="flex items-center gap-2 text-[#357252] text-[12px] font-bold hover:underline"

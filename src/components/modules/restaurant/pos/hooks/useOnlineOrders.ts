@@ -8,19 +8,37 @@ import toast from "react-hot-toast";
 
 export type OrderStatus = "incoming" | "preparing" | "ready";
 
+export interface OrderItem {
+  name: string;
+  price: string;
+  quantity: number;
+}
+
+export interface OrderRider {
+  name: string;
+  phone: number;
+  image: string;
+  vehicleNumber: string;
+  vehicleType: string;
+}
+
 export interface Order {
   id: string;
   customerName: string;
+  customerPhone: number;
   timeAgo: string;
   items: string[];
+  itemDetail: OrderItem[];
   total: number;
   status: OrderStatus;
-  handoffStage?: "rider_assigned" | "handoff_code";
   originalStatus: string;
+  riderOrderId: string;
+  prepareTime: string;
+  rider: OrderRider | null;
 }
 
 const BASE_POLL_INTERVAL = 30_000;
-const MAX_POLL_INTERVAL = 300_000; // 5 min cap
+const MAX_POLL_INTERVAL = 300_000;
 
 export const useOnlineOrders = () => {
   const [activeTab, setActiveTab] = useState<OrderStatus>("incoming");
@@ -45,7 +63,7 @@ export const useOnlineOrders = () => {
   };
 
   const fetchOrders = useCallback(async () => {
-    if (isFetchingRef.current) return; // prevent concurrent requests
+    if (isFetchingRef.current) return;
     isFetchingRef.current = true;
     try {
       const res = await getRestaurantOrdersAction(1, 50);
@@ -62,29 +80,24 @@ export const useOnlineOrders = () => {
             mapped.push({
               id: o.orderId,
               customerName: o.customerName || "Customer",
+              customerPhone: o.customerPhone || 0,
               timeAgo: calculateTimeAgo(o.dateTime),
               items: o.summary
                 ? o.summary.split(",").map((i: string) => i.trim())
                 : [],
+              itemDetail: o.itemDetail || [],
               total: o.totalPrice || 0,
               status: tabStatus,
               originalStatus: o.status,
-              handoffStage:
-                tabStatus === "ready" ? "rider_assigned" : undefined,
+              riderOrderId: o.riderOrderId || "",
+              prepareTime: o.prepareTime || "",
+              rider: o.rider || null,
             });
           }
         });
 
-        setOrders((current) =>
-          mapped.map((newOrder) => {
-            const existing = current.find((ex) => ex.id === newOrder.id);
-            return existing?.handoffStage
-              ? { ...newOrder, handoffStage: existing.handoffStage }
-              : newOrder;
-          }),
-        );
+        setOrders(mapped);
       } else {
-        // Server returned an error response — back off
         consecutiveErrorsRef.current += 1;
         pollIntervalRef.current = Math.min(
           BASE_POLL_INTERVAL * 2 ** consecutiveErrorsRef.current,
@@ -111,7 +124,7 @@ export const useOnlineOrders = () => {
     const schedule = () => {
       timeoutId = setTimeout(async () => {
         await fetchOrders();
-        schedule(); // reschedule with current (possibly backed-off) interval
+        schedule();
       }, pollIntervalRef.current);
     };
     schedule();
@@ -123,19 +136,11 @@ export const useOnlineOrders = () => {
     orderId: string,
     newApiStatus: string,
     localUiStatus?: OrderStatus,
-    localHandoffStage?: "rider_assigned" | "handoff_code",
   ) => {
-    // Optimistic UI update
     if (localUiStatus) {
       setOrders((prev) =>
         prev.map((o) =>
-          o.id === orderId
-            ? {
-              ...o,
-              status: localUiStatus,
-              handoffStage: localHandoffStage ?? o.handoffStage,
-            }
-            : o,
+          o.id === orderId ? { ...o, status: localUiStatus } : o,
         ),
       );
     } else {
@@ -146,7 +151,7 @@ export const useOnlineOrders = () => {
       const res = await updateOrderStatusAction(orderId, newApiStatus);
       if (!res.success) {
         toast.error(res.message || "Failed to update order status");
-        fetchOrders(); // Revert on failure
+        fetchOrders();
       } else {
         toast.success(`Order updated`);
         fetchOrders();
@@ -166,28 +171,7 @@ export const useOnlineOrders = () => {
   };
 
   const handleMarkReady = (orderId: string) => {
-    handleUpdateStatus(orderId, "ready", "ready", "rider_assigned");
-  };
-
-  const handleHandoffToggle = (orderId: string) => {
-    setOrders((prev) =>
-      prev.map((o) => {
-        if (o.id === orderId && o.status === "ready") {
-          return {
-            ...o,
-            handoffStage:
-              o.handoffStage === "rider_assigned"
-                ? "handoff_code"
-                : "rider_assigned",
-          };
-        }
-        return o;
-      }),
-    );
-  };
-
-  const handleCompleteHandoff = (orderId: string) => {
-    handleUpdateStatus(orderId, "out_of_delivery");
+    handleUpdateStatus(orderId, "ready", "ready");
   };
 
   const incomingOrders = orders.filter((o) => o.status === "incoming");
@@ -229,8 +213,6 @@ export const useOnlineOrders = () => {
     handleAccept,
     handleReject,
     handleMarkReady,
-    handleHandoffToggle,
-    handleCompleteHandoff,
     tabs,
     currentOrders,
     loading,
