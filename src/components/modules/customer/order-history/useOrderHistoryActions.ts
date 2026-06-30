@@ -34,6 +34,7 @@ export const getStatusColor = (status: string) => {
     case OrderStatus.DELIVERED:
       return "bg-emerald-100 text-emerald-700";
     case OrderStatus.REJECTED:
+    case OrderStatus.CANCELLED:
       return "bg-red-100 text-red-600";
     case OrderStatus.OUT_FOR_DELIVERY:
       return "bg-purple-100 text-purple-700";

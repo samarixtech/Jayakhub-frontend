@@ -7,6 +7,7 @@ import { generateInvoicePDF } from "@/lib/utils/InvoicePDF";
 import { useTranslations } from "next-intl";
 import { formatOrderDateTime } from "@/lib/utils/date";
 import { useCLC } from "@/context/CLCContext";
+import { getStatusColor, getStatusLabel } from "../../order-history/useOrderHistoryActions";
 
 interface PaymentHistoryTableProps {
   orders: any[];
@@ -38,7 +39,7 @@ export function PaymentHistoryTable({
   userName,
 }: PaymentHistoryTableProps) {
   const t = useTranslations("CustomerDashboard.Billing");
-  const { formatPrice, currency } = useCLC();
+  const { formatPrice } = useCLC();
   const currentOrders = orders;
 
   const handlePageChange = (page: number) => {
@@ -100,6 +101,18 @@ export function PaymentHistoryTable({
       ),
     },
     {
+      header: "Status",
+      headerClassName:
+        "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[120px]",
+      cell: (order) => (
+        <span
+          className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(order.OrderStatus)}`}
+        >
+          {getStatusLabel(order.OrderStatus)}
+        </span>
+      ),
+    },
+    {
       header: t("table_method"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[120px]",
@@ -152,7 +165,7 @@ export function PaymentHistoryTable({
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              generateInvoicePDF(order, userEmail, userName, currency);
+              generateInvoicePDF(order, userEmail, userName, formatPrice);
             }}
             className="h-[26px] px-3 rounded-md border border-gray-200 text-[#1E293B] font-bold text-[10px] hover:bg-gray-50 flex items-center justify-center ml-auto shadow-sm"
           >

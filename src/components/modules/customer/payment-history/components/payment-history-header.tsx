@@ -107,6 +107,9 @@ export function PaymentHistoryHeader({
                 <Calendar
                   mode="single"
                   selected={tempStartDate}
+                  modifiersClassNames={{
+                    today: "!bg-[#346853]/10 !text-[#346853] font-bold rounded-md",
+                  }}
                   onSelect={(date) => {
                     setTempStartDate(date);
                     setIsStartOpen(false);
@@ -135,6 +138,7 @@ export function PaymentHistoryHeader({
                 <Calendar
                   mode="single"
                   selected={tempEndDate}
+                  disabled={tempStartDate ? { before: tempStartDate } : undefined}
                   onSelect={(date) => {
                     setTempEndDate(date);
                     setIsEndOpen(false);
@@ -160,7 +164,7 @@ export function PaymentHistoryHeader({
             disabled={isDeleteDisabled}
             className="h-9 rounded-lg border border-red-200 text-red-500 hover:text-red-600 hover:bg-red-50 font-bold text-[13px] px-5 shadow-sm cursor-pointer"
           >
-            Delete
+            Clear
           </Button>
         </div>
 

@@ -25,7 +25,7 @@ export const OrderCard = ({
   handleCancelOrder,
 }: OrderCardProps) => {
   const t = useTranslations("CustomerDashboard.OrderHistory");
-  const isRejected = order.OrderStatus.toLowerCase() === OrderStatus.REJECTED;
+  const isRejected = order.OrderStatus.toLowerCase() === OrderStatus.REJECTED || order.OrderStatus.toLowerCase() === OrderStatus.CANCELLED;
   const isDelivered = order.OrderStatus.toLowerCase() === OrderStatus.DELIVERED;
   const firstItem = order.items?.[0];
   const itemNames = order.items

@@ -34,6 +34,11 @@ api.interceptors.request.use(
       }
     }
 
+    // Handle FormData content type
+    if (config.data instanceof FormData && config.headers) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
+
     return config;
   },
   (error) => Promise.reject(error),

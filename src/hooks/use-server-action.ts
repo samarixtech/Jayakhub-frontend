@@ -46,10 +46,11 @@ export function useServerAction<TInput, TResponse>(
             toast.error(response.message);
             optionsRef.current.onError?.(response.message);
           }
-        } catch (error) {
-          const msg = "An unexpected error occurred";
-          toast.error(msg);
+        } catch (error: any) {
+          const msg = error?.response?.data?.message || error?.message;
+          // toast.error(msg);
           optionsRef.current.onError?.(msg);
+          console.error(msg);
         }
       });
     },

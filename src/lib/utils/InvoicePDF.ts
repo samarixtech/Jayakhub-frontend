@@ -5,7 +5,7 @@ export const generateInvoicePDF = (
   order: any,
   userEmail: string = "",
   userName: string = "",
-  currencySymbol: string = "$",
+  formatPrice: (amount: number) => string = (n) => `$${n.toFixed(2)}`,
 ) => {
   const doc = new jsPDF();
 
@@ -116,8 +116,8 @@ export const generateInvoicePDF = (
   const tableData = itemsArr.map((item: any) => [
     item.name || "Item",
     item.quantity || 0,
-    `${currencySymbol}${Number(item.price || 0).toFixed(2)}`,
-    `${currencySymbol}${(Number(item.price || 0) * (item.quantity || 0)).toFixed(2)}`,
+    formatPrice(Number(item.price || 0)),
+    formatPrice(Number(item.price || 0) * (item.quantity || 0)),
   ]);
 
   autoTable(doc, {
@@ -166,7 +166,7 @@ export const generateInvoicePDF = (
   doc.setTextColor(100);
   doc.text("Subtotal", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text(`${currencySymbol}${subTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
+  doc.text(formatPrice(subTotalAmount), rightColValueX, summaryLineY, {
     align: "right",
   });
 
@@ -174,7 +174,7 @@ export const generateInvoicePDF = (
   doc.setTextColor(100);
   doc.text("Delivery Fee", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text(`${currencySymbol}${deliveryFee.toFixed(2)}`, rightColValueX, summaryLineY, {
+  doc.text(formatPrice(deliveryFee), rightColValueX, summaryLineY, {
     align: "right",
   });
 
@@ -188,7 +188,7 @@ export const generateInvoicePDF = (
   doc.setFont("helvetica", "bold");
   doc.setTextColor(52, 104, 83); // Emerald
   doc.text("Total Paid", rightColLabelX, summaryLineY);
-  doc.text(`${currencySymbol}${finalTotalAmount.toFixed(2)}`, rightColValueX, summaryLineY, {
+  doc.text(formatPrice(finalTotalAmount), rightColValueX, summaryLineY, {
     align: "right",
   });
 

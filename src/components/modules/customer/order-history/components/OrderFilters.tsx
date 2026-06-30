@@ -97,12 +97,33 @@ export const OrderFilters = ({
 
         <div className="flex items-center gap-2">
           <Checkbox
-            id="filter-cancelled"
+            id="filter-rejected"
             className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
             checked={statusFilters.includes("rejected")}
             onCheckedChange={(checked) => {
               if (checked) {
                 setStatusFilters(["rejected"]);
+              } else {
+                setStatusFilters([]);
+              }
+            }}
+          />
+          <label
+            htmlFor="filter-rejected"
+            className="text-sm font-medium text-gray-700 cursor-pointer select-none"
+          >
+            {t("filter_rejected")}
+          </label>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="filter-cancelled"
+            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+            checked={statusFilters.includes("cancelled")}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                setStatusFilters(["cancelled"]);
               } else {
                 setStatusFilters([]);
               }
