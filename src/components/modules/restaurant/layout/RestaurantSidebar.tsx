@@ -67,8 +67,8 @@ const NAV_SECTIONS = [
     items: [
       { nameKey: "users", href: "/restaurant/users", icon: Users },
       { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
-      { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard, feature: "finance_tab" },
-      { nameKey: "payouts", href: "/restaurant/payouts", icon: Wallet },
+      { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard, feature: "finance_tab", hideForManager: true },
+      { nameKey: "payouts", href: "/restaurant/payouts", icon: Wallet, hideForManager: true },
       { nameKey: "reports", href: "/restaurant/reports", icon: BarChart2, feature: "reports_tab" },
     ],
   },
@@ -76,14 +76,14 @@ const NAV_SECTIONS = [
     labelKey: "settings",
     items: [
       { nameKey: "support", href: "/restaurant/support", icon: HelpCircle, feature: "support_tab" },
-      { nameKey: "subscription", href: "/restaurant/subscription", icon: Layers },
+      { nameKey: "subscription", href: "/restaurant/subscription", icon: Layers, hideForManager: true },
       { nameKey: "settings", href: "/restaurant/settings", icon: Settings },
     ],
   },
 ];
 
 import { logoutAction } from "@/app/actions/auth/auth";
-import { deleteCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import { useTranslations } from "next-intl";
 import { usePlanAccess } from "@/hooks/use-plan-access";
@@ -95,14 +95,16 @@ export function RestaurantSidebar() {
   const { state, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed" && !isMobile;
   const { keywords, isExpired } = usePlanAccess();
+  const isManager = getCookie("role") === "manager";
 
   const filteredSections = isExpired
     ? NAV_SECTIONS
     : NAV_SECTIONS.map((section) => ({
         ...section,
-        items: section.items.filter(
-          (item: any) => !item.feature || canAccess(item.feature as PlanFeature, keywords),
-        ),
+        items: section.items.filter((item: any) => {
+          if (isManager && item.hideForManager) return false;
+          return !item.feature || canAccess(item.feature as PlanFeature, keywords);
+        }),
       })).filter((section) => section.items.length > 0);
 
   const isNavDisabled = (nameKey: string) => isExpired && nameKey !== "subscription";

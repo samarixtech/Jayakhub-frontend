@@ -147,27 +147,41 @@ export async function changePasswordAction(
 }
 
 // ==================== UPLOAD KYC ====================
-export async function uploadKycAction(
-  formData: FormData,
-): Promise<ActionResponse> {
+// Accepts base64-encoded file data to avoid Next.js Server Action
+// multipart deserialization issues on production (file.arrayBuffer()
+// can silently return empty on some Node.js/proxy configurations).
+export async function uploadKycAction(payload: {
+  documentType: string;
+  documentFile: string; // base64
+  fileName: string;
+  fileType: string;
+}): Promise<ActionResponse> {
   return responseHandler(
     async () => {
-      const file = formData.get("documentFile") as File;
-      const documentType = formData.get("documentType") as string;
+      const { documentType, documentFile, fileName, fileType } = payload;
 
-      if (!file) {
+      if (!documentFile) {
         throw new Error("KYC Document (PDF or Image) is required");
       }
 
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const blob = new Blob([buffer], { type: file.type });
+      const buffer = Buffer.from(documentFile, "base64");
 
-      const sendData = new FormData();
+      // Use the form-data package so axios gets a proper multipart
+      // Content-Type header with boundary — native Node.js FormData
+      // doesn't expose the boundary, which breaks some backends.
+      const { default: NodeFormData } = await import("form-data");
+      const sendData = new NodeFormData();
       sendData.append("documentType", documentType);
-      sendData.append("documentFile", blob, file.name);
+      sendData.append("documentFile", buffer, {
+        filename: fileName,
+        contentType: fileType || "application/octet-stream",
+        knownLength: buffer.length,
+      });
 
       const api = await serverApi();
-      return api.post("/kyc", sendData);
+      return api.post("/kyc", sendData, {
+        headers: sendData.getHeaders(),
+      });
     },
     "Document uploaded successfully",
     (data) => {

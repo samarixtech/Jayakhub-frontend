@@ -73,8 +73,8 @@ export const useAddNewItem = () => {
           const rawGroups = itemData.variantGroups || itemData.variations || [];
           const mappedGroups = Array.isArray(rawGroups)
             ? rawGroups
-                .map((g: any) => (typeof g === "object" ? g.id || g._id : g))
-                .filter(Boolean)
+              .map((g: any) => (typeof g === "object" ? g.id || g._id : g))
+              .filter(Boolean)
             : [];
 
           if (Array.isArray(rawGroups) && rawGroups.length > 0) {
@@ -159,7 +159,6 @@ export const useAddNewItem = () => {
     createItemAction,
     {
       onSuccess: () => {
-        toast.success("Item created successfully");
         router.push("/restaurant/menu/items");
       },
     },
@@ -203,49 +202,86 @@ export const useAddNewItem = () => {
       return;
     }
 
-    const submitData = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === "variantGroups") {
-        submitData.append("variantGroups", JSON.stringify(value));
-
-        const selectedGroupIds = value as string[];
-        const selectedGroupObjs = variantGroups.filter((g) =>
-          selectedGroupIds.includes(g.id || g._id),
-        );
-        const variationsPayload: any[] = [];
-
-        selectedGroupObjs.forEach((g) => {
-          g.options?.forEach((opt: any) => {
-            variationsPayload.push({
-              name: opt.name,
-              additionalPrice:
-                opt.isFree || opt.price === "Free"
-                  ? 0
-                  : Number(opt.price?.toString().replace(/[^0-9.]/g, "")) || 0,
-            });
-          });
+    // Build variations payload from selected variant groups
+    const selectedGroupObjs = variantGroups.filter((g) =>
+      formData.variantGroups.includes(g.id || g._id),
+    );
+    const variationsPayload: { name: string; additionalPrice: number }[] = [];
+    selectedGroupObjs.forEach((g) => {
+      g.options?.forEach((opt: any) => {
+        variationsPayload.push({
+          name: opt.name,
+          additionalPrice:
+            opt.isFree || opt.price === "Free"
+              ? 0
+              : Number(opt.price?.toString().replace(/[^0-9.]/g, "")) || 0,
         });
-
-        submitData.append("variations", JSON.stringify(variationsPayload));
-      } else if (key === "dietaryType") {
-        const mappedType = value.toString().toUpperCase().replace("-", "_");
-        submitData.append(key, mappedType);
-      } else if (key === "discount") {
-        submitData.append(key, value ? Number(value).toString() : "0");
-      } else {
-        submitData.append(key, value.toString());
-      }
+      });
     });
 
+    // Read and compress image as base64 on the client.
+    // Compression is critical on Hostinger: nginx has a low client_max_body_size,
+    // and an uncompressed PNG screenshot (2-5 MB → 3-7 MB base64) exceeds it,
+    // causing a 413 before Next.js even sees the request.
+    let imageBase64 = "";
+    let imageName = "";
+    let imageType = "image/jpeg";
     if (imageFile) {
-      submitData.append("itemImage", imageFile);
+      imageBase64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            let { width, height } = img;
+            const MAX_DIM = 1920;
+            if (width > MAX_DIM || height > MAX_DIM) {
+              if (width >= height) {
+                height = Math.round((height * MAX_DIM) / width);
+                width = MAX_DIM;
+              } else {
+                width = Math.round((width * MAX_DIM) / height);
+                height = MAX_DIM;
+              }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d")!;
+            ctx.drawImage(img, 0, 0, width, height);
+            const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+            resolve(dataUrl.split(",")[1] ?? "");
+          };
+          img.onerror = reject;
+          img.src = ev.target?.result as string;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(imageFile);
+      });
+      imageName = imageFile.name.replace(/\.[^.]+$/, ".jpg");
     }
 
+    const payload = {
+      name: formData.name,
+      description: formData.description,
+      category: formData.category,
+      basePrice: formData.basePrice,
+      itemImage: formData.itemImage,
+      isAvailable: formData.isAvailable.toString(),
+      isVeg: formData.isVeg.toString(),
+      dietaryType: formData.dietaryType.toUpperCase().replace("-", "_"),
+      variantGroups: JSON.stringify(formData.variantGroups),
+      variations: JSON.stringify(variationsPayload),
+      discount: formData.discount ? Number(formData.discount).toString() : "0",
+      imageBase64,
+      imageName,
+      imageType,
+      ...(isEditMode ? { id: itemId } : {}),
+    };
+
     if (isEditMode) {
-      submitData.append("id", itemId);
-      await updateItem(submitData);
+      await updateItem(payload);
     } else {
-      await createItem(submitData);
+      await createItem(payload);
     }
   };
 

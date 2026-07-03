@@ -32,7 +32,7 @@ interface Locale {
 }
 
 /* ---------- RTL LANGUAGES ---------- */
-const RTL_LANGS = ["ar", "ur", "fa", "he"];
+const RTL_LANGS = ["ar", "fa", "he"];
 
 export default function useLocale(): Locale {
   const nextIntlLocale = useNextIntlLocale();

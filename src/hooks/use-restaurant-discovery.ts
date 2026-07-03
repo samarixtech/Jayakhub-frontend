@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useSearchParams, useParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useParams, useRouter, usePathname } from "next/navigation";
 import { getCookie } from "cookies-next";
 import { useCLC } from "@/context/CLCContext";
 import { getProfile } from "@/app/actions/customer/userprofile";
@@ -15,6 +15,8 @@ import { RestaurantProps } from "@/components/modules/discovery/discovery.types"
 export function useRestaurantDiscovery() {
   const params = useParams();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const { setCLC } = useCLC();
 
   // Core Data States
@@ -31,56 +33,78 @@ export function useRestaurantDiscovery() {
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const [currentOrderInfo, setCurrentOrderInfo] = useState<any>(null);
 
-  // Filter & View States
-  const [selectedSort, setSelectedSort] = useState("recommended");
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [selectedPrice, setSelectedPrice] = useState<string | null>(null);
+  // UI-only state (not in URL)
   const [showAllCuisines, setShowAllCuisines] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Handlers
-  const resetFilters = () => {
-    setSelectedSort("recommended");
-    setActiveFilters([]);
-    setSelectedPrice(null);
-    setShowAllCuisines(false);
+  // ── Filter values derived from URL (single source of truth) ──
+  const selectedSort = searchParams.get("sort") || "recommended";
+  const activeFilters = searchParams.get("cuisineType")?.split(",").filter(Boolean) ?? [];
+  const selectedRating = searchParams.get("minRating") ? Number(searchParams.get("minRating")) : null;
+  const discounted = searchParams.get("discounted") === "true";
+  const isWishlist = searchParams.get("isWishlist") === "true";
 
-    // Remove from URL while keeping lat/lng
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("query");
-    params.delete("type");
-    params.delete("rating");
-    params.delete("priceTier");
-    window.history.replaceState(null, "", `?${params.toString()}`);
+  // ── URL param updater ──
+  // Reads from window.location.search (not searchParams) so lat/lng synced
+  // via window.history.replaceState() aren't lost when filters change.
+  const updateParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const base =
+        typeof window !== "undefined" ? window.location.search : searchParams.toString();
+      const p = new URLSearchParams(base);
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === null || value === "") p.delete(key);
+        else p.set(key, value);
+      });
+      router.replace(`${pathname}?${p.toString()}`);
+    },
+    [searchParams, pathname, router],
+  );
+
+  // ── Filter handlers ──
+  const setSelectedSort = (sort: string) => {
+    updateParams({ sort: sort === "recommended" ? null : sort });
   };
 
   const handleFilter = (id: string) => {
-    setActiveFilters((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id],
-    );
+    const updated = activeFilters.includes(id)
+      ? activeFilters.filter((f) => f !== id)
+      : [...activeFilters, id];
+    updateParams({ cuisineType: updated.length > 0 ? updated.join(",") : null });
   };
 
-  const handlePrice = (price: string) => {
-    setSelectedPrice((prev) => (prev === price ? null : price));
+  const handleRating = (rating: number) => {
+    updateParams({ minRating: selectedRating === rating ? null : String(rating) });
+  };
+
+  const setDiscounted = (value: boolean) => {
+    updateParams({ discounted: value ? "true" : null });
+  };
+
+  const setIsWishlist = (value: boolean) => {
+    updateParams({ isWishlist: value ? "true" : null });
+  };
+
+  const resetFilters = () => {
+    const p = new URLSearchParams(searchParams.toString());
+    ["sort", "cuisineType", "minRating", "discounted", "isWishlist", "query"].forEach((k) =>
+      p.delete(k),
+    );
+    router.replace(`${pathname}?${p.toString()}`);
   };
 
   // 1. Fetch CLC config
   useEffect(() => {
-    const fetchData = () => {
-      let c = params?.country;
-      if (Array.isArray(c)) c = c[0];
-      if (!c) c = (getCookie("NEXT_COUNTRY") as string) || "US";
+    let c = params?.country;
+    if (Array.isArray(c)) c = c[0];
+    if (!c) c = (getCookie("NEXT_COUNTRY") as string) || "US";
 
-      let l = params?.language;
-      if (Array.isArray(l)) l = l[0];
-      if (!l) l = (getCookie("NEXT_LOCALE") as string) || "en";
+    let l = params?.language;
+    if (Array.isArray(l)) l = l[0];
+    if (!l) l = (getCookie("NEXT_LOCALE") as string) || "en";
 
-      const cur = (getCookie("NEXT_CURRENCY") as string) || "$";
-
-      setCLC({ country: c.toUpperCase(), currency: cur, language: l });
-    };
-
-    fetchData();
+    const cur = (getCookie("NEXT_CURRENCY") as string) || "$";
+    setCLC({ country: c.toUpperCase(), currency: cur, language: l });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params?.country, params?.language]);
 
@@ -89,9 +113,7 @@ export function useRestaurantDiscovery() {
     const fetchCuisines = async () => {
       try {
         const res = await getCuisineTypesAction();
-        if (res?.data) {
-          setCuisineTypes(res.data);
-        }
+        if (res?.data) setCuisineTypes(res.data);
       } catch (error) {
         console.error("Failed to fetch cuisines:", error);
       } finally {
@@ -108,18 +130,13 @@ export function useRestaurantDiscovery() {
       if (response.success && response.data) {
         setIsLoggedIn(true);
         setUser(response.data);
-
-        // Fetch current order to check for rating popup
         try {
           const orderRes = await getCurrentOrder(null);
           if (orderRes.success && orderRes.data) {
             const rawData = orderRes.data as any;
             const orderData = rawData.data ? rawData.data : rawData;
-
-            const isDelivered =
-              orderData.orderStatus?.toLowerCase() === "delivered";
+            const isDelivered = orderData.orderStatus?.toLowerCase() === "delivered";
             const noFeedback = String(orderData.hasFeedback) === "false";
-
             if (isDelivered && noFeedback) {
               setCurrentOrderInfo({
                 rawOrder: orderData,
@@ -171,13 +188,12 @@ export function useRestaurantDiscovery() {
           rating: item.averageRating || 0,
           totalRatings: item.totalRatings || 0,
           priceLevel: "$$",
-          cuisine: Array.isArray(item.type)
-            ? item.type.join(", ")
-            : item.type || "General",
+          cuisine: Array.isArray(item.type) ? item.type.join(", ") : item.type || "General",
           deliveryTime: item.deliveryTime || "30-45 mins",
-          deliveryFee: typeof item.deliveryFee === "object"
-            ? (item.deliveryFee?.deliveryCharge || 0)
-            : (item.deliveryFee || 0),
+          deliveryFee:
+            typeof item.deliveryFee === "object"
+              ? item.deliveryFee?.deliveryCharge || 0
+              : item.deliveryFee || 0,
           discount: undefined,
           isFavorite: false,
           isWishlist: !!item.isWishlist,
@@ -194,23 +210,24 @@ export function useRestaurantDiscovery() {
   );
 
   useEffect(() => {
-    if (isLoggedIn) {
-      fetchPreviousOrders({});
-    } else {
-      setIsPreviousOrdersLoading(false);
-    }
+    if (isLoggedIn) fetchPreviousOrders({});
+    else setIsPreviousOrdersLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
-  // 5. Advanced Geographic Orchestrator Fetching
+  // 5. Fetch Restaurants — searchParams is the single trigger
   useEffect(() => {
     let mounted = true;
 
     const fetchOptimistically = async () => {
       setIsPending(true);
 
-      const mapData = (data: any) => {
-        const list = Array.isArray(data) ? data : (data?.data && Array.isArray(data.data) ? data.data : []);
+      const mapData = (data: any): RestaurantProps[] => {
+        const list = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.data)
+            ? data.data
+            : [];
         return list.map((item: any) => ({
           id: item.id || "",
           slug: item.slug || item.id || "",
@@ -219,13 +236,12 @@ export function useRestaurantDiscovery() {
           rating: item.averageRating || 0,
           totalRatings: item.totalRatings || 0,
           priceLevel: "$$",
-          cuisine: Array.isArray(item.type)
-            ? item.type.join(", ")
-            : item.type || "General",
+          cuisine: Array.isArray(item.type) ? item.type.join(", ") : item.type || "General",
           deliveryTime: item.deliveryTime || "30-45 mins",
-          deliveryFee: typeof item.deliveryFee === "object"
-            ? (item.deliveryFee?.deliveryCharge || 0)
-            : (item.deliveryFee || 0),
+          deliveryFee:
+            typeof item.deliveryFee === "object"
+              ? item.deliveryFee?.deliveryCharge || 0
+              : item.deliveryFee || 0,
           discount: undefined,
           isFavorite: false,
           isWishlist: !!item.isWishlist,
@@ -233,55 +249,47 @@ export function useRestaurantDiscovery() {
         }));
       };
 
+      // Build filter params from URL
+      const buildFilterParams = () => {
+        const p: any = {};
+        const urlQuery = searchParams.get("query");
+        const urlSort = searchParams.get("sort");
+        const urlCuisines = searchParams.get("cuisineType")?.split(",").filter(Boolean);
+        const urlMinRating = searchParams.get("minRating");
+        const urlDiscounted = searchParams.get("discounted");
+        const urlIsWishlist = searchParams.get("isWishlist");
+
+        if (urlQuery) p.query = urlQuery;
+        if (urlCuisines?.length) p.cuisineType = urlCuisines;
+        if (urlMinRating) p.minRating = Number(urlMinRating);
+        if (urlDiscounted === "true") p.discounted = true;
+        if (urlIsWishlist === "true") p.isWishlist = true;
+        if (urlSort === "fastestDelivery") p.fastestDelivery = true;
+        else if (urlSort === "nearestRestaurant") p.nearestRestaurant = true;
+        else if (urlSort === "lowestPrice") p.lowestPrice = true;
+        else if (urlSort === "highestPrice") p.highestPrice = true;
+        return p;
+      };
+
       try {
-        let queryParams: {
-          lat?: number;
-          lng?: number;
-          query?: string;
-          type?: string;
-          rating?: string;
-          priceTier?: string;
-        } | null = null;
+        const urlLat = searchParams.get("lat");
+        const urlLng = searchParams.get("lng");
+        const urlQuery = searchParams.get("query");
+        const filterParams = buildFilterParams();
 
-        let urlLat = searchParams.get("lat");
-        let urlLng = searchParams.get("lng");
-        let urlQuery = searchParams.get("query");
-        let urlType = searchParams.get("type");
-        let urlRating = searchParams.get("rating");
-        let urlPriceTier = searchParams.get("priceTier");
-
-        // Prepare the base request with current filters
-        const getFilterParams = () => {
-          const p: any = {};
-          if (urlQuery) p.query = urlQuery;
-          if (activeFilters.length > 0) p.type = activeFilters.join(",");
-          if (selectedSort === "highest") p.rating = "high";
-          if (selectedPrice) {
-            if (selectedPrice === "$") p.priceTier = "low";
-            else if (selectedPrice === "$$") p.priceTier = "mid";
-            else if (selectedPrice === "$$$") p.priceTier = "high";
-          }
-          return p;
-        };
-
-        const currentFilters = getFilterParams();
-        const allRestaurantsReq = getAllRestaurantsAction(currentFilters);
+        let locationParams: { lat: number; lng: number } | null = null;
 
         if (urlLat && urlLng) {
-          queryParams = {
-            lat: parseFloat(urlLat),
-            lng: parseFloat(urlLng),
-            ...currentFilters,
-          };
+          locationParams = { lat: parseFloat(urlLat), lng: parseFloat(urlLng) };
         }
 
-        if (!queryParams) {
+        if (!locationParams) {
           try {
             const cachedLoc = localStorage.getItem("userLocation");
             if (cachedLoc) {
               const parsed = JSON.parse(cachedLoc);
               if (Date.now() - parsed.timestamp < 300000) {
-                queryParams = { lat: parsed.lat, lng: parsed.lng };
+                locationParams = { lat: parsed.lat, lng: parsed.lng };
               }
             }
           } catch (e) {
@@ -289,26 +297,20 @@ export function useRestaurantDiscovery() {
           }
         }
 
-        if (!queryParams && navigator.geolocation) {
+        if (!locationParams && navigator.geolocation) {
           try {
-            const pos = await new Promise<GeolocationPosition>(
-              (resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(resolve, reject, {
-                  enableHighAccuracy: false,
-                  maximumAge: 300000,
-                  timeout: 10000,
-                });
-              },
-            );
-            queryParams = {
-              lat: pos.coords.latitude,
-              lng: pos.coords.longitude,
-            };
-
+            const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: false,
+                maximumAge: 300000,
+                timeout: 10000,
+              });
+            });
+            locationParams = { lat: pos.coords.latitude, lng: pos.coords.longitude };
             try {
               localStorage.setItem(
                 "userLocation",
-                JSON.stringify({ ...queryParams, timestamp: Date.now() }),
+                JSON.stringify({ ...locationParams, timestamp: Date.now() }),
               );
             } catch (e) {
               console.warn("Could not cache location:", e);
@@ -318,58 +320,46 @@ export function useRestaurantDiscovery() {
           }
         }
 
-        if (queryParams && urlQuery) {
-          queryParams.query = urlQuery;
+        // Sync lat/lng to URL if discovered via geolocation
+        if (locationParams && mounted && (!urlLat || !urlLng)) {
+          const p = new URLSearchParams(searchParams.toString());
+          p.set("lat", String(locationParams.lat));
+          p.set("lng", String(locationParams.lng));
+          window.history.replaceState(null, "", `${pathname}?${p.toString()}`);
         }
 
-        if (queryParams && mounted) {
-          if (
-            urlLat !== String(queryParams.lat) ||
-            urlLng !== String(queryParams.lng)
-          ) {
-            const params = new URLSearchParams();
-            if (queryParams.lat) params.set("lat", String(queryParams.lat));
-            if (queryParams.lng) params.set("lng", String(queryParams.lng));
-            if (urlQuery) params.set("query", urlQuery);
-            if (queryParams.type) params.set("type", queryParams.type);
-            if (queryParams.rating) params.set("rating", queryParams.rating);
-            if (queryParams.priceTier)
-              params.set("priceTier", queryParams.priceTier);
+        const queryParams = locationParams
+          ? { ...locationParams, ...filterParams }
+          : filterParams;
 
-            window.history.replaceState(null, "", `?${params.toString()}`);
-          }
+        if (mounted) {
+          const res = await getAllRestaurantsAction(
+            Object.keys(queryParams).length > 0 ? queryParams : undefined,
+          );
+          const mapped = mapData(res?.data);
 
-          const resNearby = await getAllRestaurantsAction(queryParams);
-          const mappedNearby = mapData(resNearby?.data);
-
-          if (mappedNearby.length > 0) {
-            setRestaurants(mappedNearby);
+          // Fallback: if geo gave no results, try without location
+          if (mapped.length === 0 && locationParams) {
+            const fallback = await getAllRestaurantsAction(
+              Object.keys(filterParams).length > 0 ? filterParams : undefined,
+            );
+            setRestaurants(mapData(fallback?.data));
           } else {
-            const resAll = await allRestaurantsReq;
-            setRestaurants(mapData(resAll?.data));
+            setRestaurants(mapped);
           }
-        } else if (mounted) {
-          const resAll = await allRestaurantsReq;
-          setRestaurants(mapData(resAll?.data));
         }
       } catch (error) {
         console.error("Failed to fetch restaurants:", error);
-        if (mounted) {
-          setRestaurants([]);
-        }
+        if (mounted) setRestaurants([]);
       } finally {
-        if (mounted) {
-          setIsPending(false);
-        }
+        if (mounted) setIsPending(false);
       }
     };
 
     fetchOptimistically();
-
-    return () => {
-      mounted = false;
-    };
-  }, [searchParams, activeFilters, selectedPrice, selectedSort]);
+    return () => { mounted = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams.toString()]); // string comparison — reliable even if object ref is reused
 
   return {
     state: {
@@ -385,7 +375,9 @@ export function useRestaurantDiscovery() {
       currentOrderInfo,
       selectedSort,
       activeFilters,
-      selectedPrice,
+      selectedRating,
+      discounted,
+      isWishlist,
       showAllCuisines,
       viewMode,
     },
@@ -393,7 +385,9 @@ export function useRestaurantDiscovery() {
       setIsRatingModalOpen,
       setSelectedSort,
       handleFilter,
-      handlePrice,
+      handleRating,
+      setDiscounted,
+      setIsWishlist,
       setShowAllCuisines,
       setViewMode,
       resetFilters,

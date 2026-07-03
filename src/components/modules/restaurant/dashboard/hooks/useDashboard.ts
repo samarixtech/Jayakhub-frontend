@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { getDashboardAnalyticsAction } from "@/app/actions/restaurant/dashboard";
-import { updateRestaurantProfileAction } from "@/app/actions/restaurant/settings";
+import { updateOnlineStatusAction } from "@/app/actions/restaurant/settings";
 import toast from "react-hot-toast";
 
 export function useDashboard() {
@@ -32,10 +32,7 @@ export function useDashboard() {
     setIsToggling(true);
 
     try {
-      const formData = new FormData();
-      formData.append("isOnline", newStatus.toString());
-
-      const res = await updateRestaurantProfileAction(formData);
+      const res = await updateOnlineStatusAction(newStatus);
       if (!res.success) {
         // Revert on failure
         setIsOnline(!newStatus);

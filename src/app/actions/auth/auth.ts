@@ -76,12 +76,28 @@ export async function verifyOtpAction(payload: {
           cookieStore.set("role", data.user.role.toLowerCase(), { path: "/" });
         }
 
+        const role = data.user?.role?.toLowerCase();
+        const restaurantRoles = ["restaurant_owner", "admin", "manager", "cashier"];
+        if (restaurantRoles.includes(role) ) {
+          const restaurantId =
+            data.user?.restaurantId ||
+            data.user?.restaurant?.id ||
+            data.user?.restaurant?._id ||
+            data.restaurantId;
+          if (restaurantId) {
+            cookieStore.set("restaurantId", restaurantId, {
+              path: "/",
+              maxAge: 60 * 60 * 24 * 7,
+            });
+          }
+        }
+
         // Store plan keywords for ABAC feature-gating on client & server
         const keywords = data.user?.planDetails?.plan?.keywords;
         if (Array.isArray(keywords) && keywords.length > 0) {
           cookieStore.set(
             "planKeywords",
-            encodeURIComponent(JSON.stringify(keywords)),
+            JSON.stringify(keywords),
             { path: "/", maxAge: 60 * 60 * 24 * 7 },
           );
         } else {

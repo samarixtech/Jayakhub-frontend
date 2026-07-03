@@ -67,8 +67,12 @@ export interface DiscoverySidebarProps {
   onSortChange: (sort: string) => void;
   activeFilters: string[];
   onFilterToggle: (id: string) => void;
-  selectedPrice: string | null;
-  onPriceToggle: (price: string) => void;
+  selectedRating: number | null;
+  onRatingChange: (rating: number) => void;
+  discounted: boolean;
+  onDiscountedToggle: () => void;
+  isWishlist: boolean;
+  onWishlistToggle: () => void;
   showAllCuisines: boolean;
   onToggleCuisines: () => void;
   onResetFilters: () => void;

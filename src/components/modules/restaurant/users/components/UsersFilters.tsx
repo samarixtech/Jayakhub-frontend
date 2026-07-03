@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Plus, Bell } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from "next-intl";
@@ -35,7 +35,7 @@ export function UsersFilters({
       ? 5
       : hasKeyword("multi_role_2_staff")
         ? 2
-        : 0;
+        : Infinity;
   const canAddUser = totalUsers < staffLimit;
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -48,11 +48,10 @@ export function UsersFilters({
             onClick={() => onFilterChange(filter.value)}
             className={`
                 rounded-full px-4 h-9 border
-                ${
-                  selectedFilter === filter.value
-                    ? "bg-[#1F4D36] text-white border-[#1F4D36] hover:bg-[#183d2b] hover:text-white"
-                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-                }
+                ${selectedFilter === filter.value
+                ? "bg-[#1F4D36] text-white border-[#1F4D36] hover:bg-[#183d2b] hover:text-white"
+                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+              }
               `}
           >
             {filter.label}
@@ -60,11 +59,10 @@ export function UsersFilters({
               variant="secondary"
               className={`
                   ml-2 px-1.5 py-0 text-[10px] h-5 min-w-[20px] flex items-center justify-center rounded-full
-                  ${
-                    selectedFilter === filter.value
-                      ? "bg-white/20 text-white"
-                      : "bg-gray-100 text-gray-500"
-                  }
+                  ${selectedFilter === filter.value
+                  ? "bg-white/20 text-white"
+                  : "bg-gray-100 text-gray-500"
+                }
                 `}
             >
               {filter.count}
@@ -73,11 +71,8 @@ export function UsersFilters({
         ))}
       </div>
 
-      {/* Actions (Bell + Add User) */}
+      {/* Actions: (Add User) */}
       <div className="flex items-center gap-4 shrink-0">
-        <Button variant="ghost" size="icon" className="text-gray-500">
-          <Bell className="w-5 h-5" />
-        </Button>
         {canAddUser && (
           <Link href="/restaurant/users/new">
             <Button className="bg-[#1F4D36] hover:bg-[#183d2b] text-white gap-2">

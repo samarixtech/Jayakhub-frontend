@@ -52,7 +52,7 @@ export default function MenuItemsView() {
       ? 200
       : hasKeyword("menu_items_50")
         ? 50
-        : 0;
+        : Infinity;
   const canAddItem = totalCount < menuLimit;
 
   const t = useTranslations("RestaurantDashboard.Menu.Items.views");

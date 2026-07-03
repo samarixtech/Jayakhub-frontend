@@ -6,8 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SettingsData } from "@/types";
 import { updateBankDetailsAction, getBanksAction } from "@/app/actions/restaurant/settings";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { InfoIcon, Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkeleton";
@@ -29,8 +28,6 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
   const t = useTranslations("RestaurantDashboard.Settings.finance");
   const router = useRouter();
   const bank = settings?.bankAccount;
-  const updateStatus = settings?.onboardingUpdate?.bankDetails || "none";
-  const isPending = updateStatus === "pending";
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -95,27 +92,12 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {isPending && (
-          <Alert className="bg-blue-50 border-blue-200">
-            <InfoIcon className="h-4 w-4 text-blue-600" />
-            <AlertTitle className="text-blue-800 font-semibold">
-              Update Pending
-            </AlertTitle>
-            <AlertDescription className="text-blue-700">
-              YOUR CHANGES ARE SUBMITTED, WE ARE REVIEWING IT AND WILL APPROVE
-              SHORTLY.
-            </AlertDescription>
-          </Alert>
-        )}
-
         <div className="space-y-4 mt-6">
           <h3 className="text-sm font-semibold text-gray-800">
             {t("bankDetails")}
           </h3>
 
-          <div
-            className={`border border-border bg-muted/20 rounded-xl p-5 ${isPending ? "opacity-60 pointer-events-none" : ""}`}
-          >
+          <div className="border border-border bg-muted/20 rounded-xl p-5">
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <Label className="text-xs text-muted-foreground mb-1 block">
@@ -127,7 +109,7 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
                       variant="outline"
                       role="combobox"
                       aria-expanded={openBankSelect}
-                      disabled={isPending || loadingBanks}
+                      disabled={loadingBanks}
                       className="w-full justify-between bg-background border-input font-normal text-left h-10 px-3 hover:bg-muted/50"
                     >
                       {formData.bankName || (loadingBanks ? "Loading banks..." : t("bankName"))}
@@ -177,7 +159,6 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
                   onChange={handleChange}
                   placeholder={t("accountHolder")}
                   className="bg-background"
-                  disabled={isPending}
                 />
               </div>
             </div>
@@ -191,14 +172,13 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
                 onChange={handleChange}
                 placeholder={t("iban")}
                 className="bg-background"
-                disabled={isPending}
               />
             </div>
           </div>
         </div>
       </CardContent>
       <CardFooter className="flex justify-end pt-6 border-t border-border mt-2">
-        <Button onClick={handleSave} disabled={loading || isPending}>
+        <Button onClick={handleSave} disabled={loading}>
           {loading ? "Saving..." : t("saveBtn")}
         </Button>
       </CardFooter>

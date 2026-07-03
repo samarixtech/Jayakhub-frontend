@@ -32,9 +32,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { getUserAddresses } from "@/app/actions/customer/address";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import Cookies from "js-cookie";
+import { countryCurrencyMap } from "@/lib/utils/country";
+
+const COUNTRY_DEFAULT_LANGUAGE: Record<string, string> = {
+  AE: "ar", SA: "ar", IQ: "ar", EG: "ar", QA: "ar", KW: "ar",
+  BH: "ar", OM: "ar", JO: "ar", SY: "ar", LB: "ar", YE: "ar",
+  LY: "ar", TN: "ar", DZ: "ar", MA: "ar", SD: "ar",
+  PK: "ur",
+  IT: "it",
+  FR: "fr", BE: "fr",
+  ES: "es", MX: "es", AR: "es", CO: "es",
+  PT: "pt", BR: "pt",
+  CN: "zh", TW: "zh", HK: "zh",
+  JP: "ja",
+  RU: "ru",
+};
 
 interface LocationSwitcherProps {
   currentAddress: string;
@@ -95,6 +111,44 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   const [inputValue, setInputValue] = useState("");
   const [mapRef, setMapRef] = useState<google.maps.Map | null>(null);
 
+  const [selectedCountryCode, setSelectedCountryCode] = useState<string>("");
+
+  const applyCountry = (
+    countryCode: string,
+    location?: { lat: number; lng: number } | null,
+  ) => {
+    if (!countryCode) return;
+    const code = countryCode.toLowerCase();
+    const language = COUNTRY_DEFAULT_LANGUAGE[code.toUpperCase()] || "en";
+    const currencySymbol = countryCurrencyMap[code.toUpperCase()]?.symbol || "$";
+
+    Cookies.set("USER_COUNTRY", code, { expires: 365 });
+    Cookies.set("NEXT_CURRENCY", currencySymbol, { expires: 365 });
+    Cookies.set("NEXT_LOCALE", language, { expires: 365 });
+
+    const currentCountry = (params.country as string)?.toLowerCase();
+    const currentLanguage = (params.language as string)?.toLowerCase();
+
+    const segments = pathname.split("/");
+    // URL structure: / {country} / {language} / rest...  → indices 1 and 2
+    if (segments.length >= 3) {
+      segments[1] = code;
+      segments[2] = language;
+    }
+    const newPathname = segments.join("/");
+
+    const searchParams = new URLSearchParams(window.location.search);
+    if (location) {
+      searchParams.set("lat", location.lat.toString());
+      searchParams.set("lng", location.lng.toString());
+    }
+
+    const hasChanged = code !== currentCountry || language !== currentLanguage;
+    if (hasChanged) {
+      router.replace(`${newPathname}?${searchParams.toString()}`);
+    }
+  };
+
   const searchBoxRef = React.useRef<google.maps.places.SearchBox | null>(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -104,6 +158,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
   });
 
   const params = useParams();
+  const pathname = usePathname();
 
   const getCountryFromUrl = () => {
     const country = (params.country as string)?.toLowerCase();
@@ -169,6 +224,11 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
           (results, status) => {
             if (status === "OK" && results && results[0]) {
               const address = results[0].formatted_address;
+              const countryComp = results[0].address_components?.find((c) =>
+                c.types.includes("country"),
+              );
+              const cc = countryComp?.short_name.toLowerCase() || "";
+              setSelectedCountryCode(cc);
               setDetectedLocation(address);
               setTempAddress(address);
               try {
@@ -176,7 +236,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                   "userLocation",
                   JSON.stringify({ lat: latitude, lng: longitude, address }),
                 );
-              } catch (e) {}
+              } catch (e) { }
               if (view === "list") {
                 onAddressChange(address);
               }
@@ -233,12 +293,12 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
       }
 
       if (!lat || !lng) {
-       
+
         autoDetectRef.current = true;
         getCurrentLocation(true);
       } else {
-        
-        
+
+
         autoDetectRef.current = true;
 
         const pos = { lat: Number(lat), lng: Number(lng) };
@@ -268,7 +328,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                   address,
                 }),
               );
-            } catch (e) {}
+            } catch (e) { }
           } else {
             console.error("Geocoder failed: " + status);
             getCurrentLocation(true); // Fallback to browser geolocation
@@ -293,6 +353,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
           if (status === "OK" && results && results[0]) {
             setTempAddress(results[0].formatted_address);
             setInputValue(results[0].formatted_address);
+            const countryComp = results[0].address_components?.find((c) =>
+              c.types.includes("country"),
+            );
+            setSelectedCountryCode(countryComp?.short_name.toLowerCase() || "");
           }
         });
       }
@@ -318,6 +382,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
         const addressName = place.formatted_address || place.name || "";
         setTempAddress(addressName);
         setInputValue(addressName);
+        const countryComp = place.address_components?.find((c) =>
+          c.types.includes("country"),
+        );
+        setSelectedCountryCode(countryComp?.short_name.toLowerCase() || "");
 
         if (mapRef) {
           mapRef.panTo(newPos);
@@ -340,10 +408,14 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
               address: tempAddress,
             }),
           );
-        } catch (e) {}
+        } catch (e) { }
       }
     }
-    if (selectedLocation && onLocationChange) {
+    if (selectedCountryCode) {
+      // applyCountry handles full URL update (country + language + lat/lng) in one navigation
+      applyCountry(selectedCountryCode, selectedLocation);
+    } else if (selectedLocation && onLocationChange) {
+      // Same country — just update lat/lng via the existing handler
       onLocationChange(selectedLocation.lat, selectedLocation.lng);
     }
     setIsOpen(false);
@@ -512,7 +584,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                                 address: fullAddress,
                               }),
                             );
-                          } catch (e) {}
+                          } catch (e) { }
+                        }
+                        if (addr.country) {
+                          applyCountry(addr.country);
                         }
                         setIsOpen(false);
                       }}

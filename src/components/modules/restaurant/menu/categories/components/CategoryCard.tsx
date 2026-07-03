@@ -32,7 +32,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
   const t = useTranslations("RestaurantDashboard.Menu.Categories.card");
 
   return (
-    <Card className="px-3 py-4 flex items-center justify-between border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+    <Card className="px-3 pt-4 pb-2 flex items-center justify-between border-gray-100 shadow-sm hover:shadow-md transition-shadow">
       {isEditing ? (
         <div className="flex items-center gap-2 w-full">
           <Input
@@ -65,22 +65,16 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col w-full gap-0.5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-[#E2F1E8] rounded-lg flex items-center justify-center text-[#1F4D36] shrink-0">
               <Shapes className="w-5 h-5" />
             </div>
-            <div className="min-w-0">
-              <Typography className="font-bold text-gray-900 leading-tight truncate">
-                {category.categoryName || category.name}
-              </Typography>
-              <Typography className="text-xs text-gray-400 font-medium mt-0.5">
-                {t("itemsCount")}
-              </Typography>
-            </div>
+            <Typography className="font-bold text-gray-900 leading-tight truncate">
+              {category.categoryName || category.name}
+            </Typography>
           </div>
-
-          <div className="flex items-center gap-0.5 shrink-0">
+          <div className="flex items-center justify-end gap-0.5">
             <Button
               variant="ghost"
               size="icon"

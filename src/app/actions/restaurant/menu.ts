@@ -139,13 +139,65 @@ export async function updateCategoryAction(
 
 // ==================== ITEM ACTIONS ====================
 
+interface MenuItemPayload {
+  name: string;
+  description: string;
+  category: string;
+  basePrice: string;
+  itemImage: string;
+  isAvailable: string;
+  isVeg: string;
+  dietaryType: string;
+  variantGroups: string;
+  variations: string;
+  discount: string;
+  imageBase64?: string;
+  imageName?: string;
+  imageType?: string;
+  id?: string;
+}
+
+async function buildMenuFormData(payload: MenuItemPayload, restaurantId: string) {
+  const { default: NodeFormData } = await import("form-data");
+  const sendData = new NodeFormData();
+
+  sendData.append("restaurantId", restaurantId);
+  sendData.append("name", payload.name);
+  sendData.append("description", payload.description);
+  sendData.append("category", payload.category);
+  sendData.append("basePrice", payload.basePrice);
+  sendData.append("isAvailable", payload.isAvailable);
+  sendData.append("isVeg", payload.isVeg);
+  sendData.append("dietaryType", payload.dietaryType);
+  sendData.append("variantGroups", payload.variantGroups);
+  sendData.append("variations", payload.variations);
+  sendData.append("discount", payload.discount);
+
+  if (payload.imageBase64) {
+    const buffer = Buffer.from(payload.imageBase64, "base64");
+    sendData.append("itemImage", buffer, {
+      filename: payload.imageName || "item.jpg",
+      contentType: payload.imageType || "image/jpeg",
+      knownLength: buffer.length,
+    });
+  } else if (payload.itemImage) {
+    sendData.append("itemImage", payload.itemImage);
+  }
+
+  if (payload.id) {
+    sendData.append("id", payload.id);
+  }
+
+  return sendData;
+}
+
 export async function createItemAction(
-  formData: FormData,
+  payload: MenuItemPayload,
 ): Promise<ActionResponse> {
   return executeRestaurantAction(
-    (api, restaurantId) => {
-      formData.append("restaurantId", restaurantId);
-      return api.post("/item-add", formData);
+    async (api, restaurantId) => {
+      const sendData = await buildMenuFormData(payload, restaurantId);
+      return api.post("/item-add", sendData, { headers: sendData.getHeaders() });
     },
     "Item created successfully",
     "/restaurant/menu/items",
@@ -175,12 +227,12 @@ export async function getMenuItemsAction({
 }
 
 export async function updateItemAction(
-  formData: FormData,
+  payload: MenuItemPayload,
 ): Promise<ActionResponse> {
   return executeRestaurantAction(
-    (api, restaurantId) => {
-      formData.append("restaurantId", restaurantId);
-      return api.put("/update-item", formData);
+    async (api, restaurantId) => {
+      const sendData = await buildMenuFormData(payload, restaurantId);
+      return api.put("/update-item", sendData, { headers: sendData.getHeaders() });
     },
     "Item updated successfully",
     "/restaurant/menu/items",

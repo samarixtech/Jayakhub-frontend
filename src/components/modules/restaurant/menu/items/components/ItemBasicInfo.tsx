@@ -29,7 +29,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
 
   const { currency } = useCLC();
   return (
-    <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-8">
+    <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-4">
       {/* SECTION HEADER */}
       <div className="flex items-center gap-3 border-b border-gray-50">
         <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
@@ -40,13 +40,16 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
         </Typography>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* ITEM NAME */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label className="text-sm font-bold text-gray-700">
               {t("itemName")} <span className="text-red-500">*</span>
             </Label>
+            <Typography className="text-[10px] font-bold text-gray-400">
+              {formData.name?.length || 0}/60
+            </Typography>
           </div>
           <Input
             placeholder={t("itemPlaceholder")}
@@ -54,19 +57,19 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
             onChange={(e) => onChange("name", e.target.value.slice(0, 60))}
             className="h-12 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-medium"
           />
-          <div className="flex justify-end">
-            <Typography className="text-[10px] font-bold text-gray-400">
-              {formData.name?.length || 0}/60
-            </Typography>
-          </div>
         </div>
 
         {/* DESCRIPTION */}
         <div className="space-y-2">
-          <Label className="text-sm font-bold text-gray-700">
-            {t("description")}{" "}
-            <span className="text-gray-400 font-normal">{t("optional")}</span>
-          </Label>
+          <div className="flex justify-between items-center">
+            <Label className="text-sm font-bold text-gray-700">
+              {t("description")}{" "}
+              <span className="text-gray-400 font-normal">{t("optional")}</span>
+            </Label>
+            <Typography className="text-[10px] font-bold text-gray-400">
+              {formData.description?.length || 0}/200
+            </Typography>
+          </div>
           <Textarea
             placeholder={t("descPlaceholder")}
             className="min-h-[120px] resize-none bg-gray-50/50 border-gray-100 rounded-2xl focus:bg-white transition-all font-medium py-4 px-4"
@@ -75,11 +78,6 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
               onChange("description", e.target.value?.slice(0, 200))
             }
           />
-          <div className="flex justify-end">
-            <Typography className="text-[10px] font-bold text-gray-400">
-              {formData.description?.length || 0}/200
-            </Typography>
-          </div>
         </div>
 
         {/* PRICE AND DISCOUNT */}

@@ -52,7 +52,7 @@ export const CLCProvider = ({ children }: { children: ReactNode }) => {
       const segments = pathname.split("/").filter(Boolean);
       const countryCode = (segments[0] || "us").toUpperCase();
       const lang = segments[1] || "en";
-      const dir = ["ar", "ur", "fa", "he"].includes(lang) ? "rtl" : "ltr";
+      const dir = ["ar", "fa", "he"].includes(lang) ? "rtl" : "ltr";
       
       document.documentElement.dir = dir;
       document.documentElement.lang = lang;

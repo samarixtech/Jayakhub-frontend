@@ -11,7 +11,6 @@ import {
   Minus,
   ShoppingBag,
   Info,
-  Trash2,
   ArrowLeft,
   ChevronRight,
 } from "lucide-react";
@@ -162,17 +161,10 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
             </button>
           </div>
           {viewMode === "detail" && (
-            <div className="flex justify-between items-center mt-2">
+            <div className="flex items-center mt-2">
               <p className="text-sm text-gray-500">
                 {currentItems.length} items
               </p>
-              <button
-                onClick={() => handleClearRestaurantCart(selectedRestaurantId!)}
-                className="text-sm font-semibold text-red-500 hover:text-red-600 transition-colors flex items-center gap-1"
-              >
-                <Trash2 size={14} />
-                Clear
-              </button>
             </div>
           )}
         </div>

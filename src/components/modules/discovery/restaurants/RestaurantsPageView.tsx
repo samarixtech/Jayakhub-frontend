@@ -68,8 +68,12 @@ const AllRestaurantsPage: React.FC = () => {
               onSortChange={actions.setSelectedSort}
               activeFilters={state.activeFilters}
               onFilterToggle={actions.handleFilter}
-              selectedPrice={state.selectedPrice}
-              onPriceToggle={actions.handlePrice}
+              selectedRating={state.selectedRating}
+              onRatingChange={actions.handleRating}
+              discounted={state.discounted}
+              onDiscountedToggle={() => actions.setDiscounted(!state.discounted)}
+              isWishlist={state.isWishlist}
+              onWishlistToggle={() => actions.setIsWishlist(!state.isWishlist)}
               showAllCuisines={state.showAllCuisines}
               onToggleCuisines={() =>
                 actions.setShowAllCuisines(!state.showAllCuisines)
@@ -139,8 +143,12 @@ const AllRestaurantsPage: React.FC = () => {
             onSortChange={actions.setSelectedSort}
             activeFilters={state.activeFilters}
             onFilterToggle={actions.handleFilter}
-            selectedPrice={state.selectedPrice}
-            onPriceToggle={actions.handlePrice}
+            selectedRating={state.selectedRating}
+            onRatingChange={actions.handleRating}
+            discounted={state.discounted}
+            onDiscountedToggle={() => actions.setDiscounted(!state.discounted)}
+            isWishlist={state.isWishlist}
+            onWishlistToggle={() => actions.setIsWishlist(!state.isWishlist)}
             showAllCuisines={state.showAllCuisines}
             onToggleCuisines={() =>
               actions.setShowAllCuisines(!state.showAllCuisines)

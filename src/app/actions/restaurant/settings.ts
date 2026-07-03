@@ -14,16 +14,55 @@ export async function getAccountSettingsAction(): Promise<ActionResponse> {
 }
 
 // ==================== UPDATE RESTAURANT PROFILE ====================
+
+interface ProfileUpdatePayload {
+  name: string;
+  description: string;
+  websiteUrl: string;
+  type: string[];
+  profileImageBase64?: string;
+  profileImageName?: string;
+  profileImageType?: string;
+  bannerImageBase64?: string;
+  bannerImageName?: string;
+  bannerImageType?: string;
+}
+
 export async function updateRestaurantProfileAction(
-  formData: FormData,
+  payload: ProfileUpdatePayload,
 ): Promise<ActionResponse> {
   return executeRestaurantAction(
-    (api) =>
-      api.put("/update-Account-Profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }),
+    async (api) => {
+      const { default: NodeFormData } = await import("form-data");
+      const sendData = new NodeFormData();
+
+      sendData.append("name", payload.name);
+      sendData.append("description", payload.description);
+      sendData.append("websiteUrl", payload.websiteUrl);
+      payload.type.forEach((cuisine) => sendData.append("type", cuisine));
+
+      if (payload.profileImageBase64) {
+        const buffer = Buffer.from(payload.profileImageBase64, "base64");
+        sendData.append("profile", buffer, {
+          filename: payload.profileImageName || "profile.jpg",
+          contentType: payload.profileImageType || "image/jpeg",
+          knownLength: buffer.length,
+        });
+      }
+
+      if (payload.bannerImageBase64) {
+        const buffer = Buffer.from(payload.bannerImageBase64, "base64");
+        sendData.append("banner", buffer, {
+          filename: payload.bannerImageName || "banner.jpg",
+          contentType: payload.bannerImageType || "image/jpeg",
+          knownLength: buffer.length,
+        });
+      }
+
+      return api.put("/update-Account-Profile", sendData, {
+        headers: sendData.getHeaders(),
+      });
+    },
     "Restaurant Profile Updated Successfully",
     "/restaurant/settings/profile",
   );
@@ -77,6 +116,16 @@ export async function updateLocationAction(data: {
   );
 }
 
+// ==================== UPDATE ONLINE STATUS ====================
+export async function updateOnlineStatusAction(
+  isOnline: boolean,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.put("/update-Account-Profile", { isOnline }),
+    "Status updated successfully",
+  );
+}
+
 // ==================== UPDATE BANK DETAILS ====================
 export async function updateBankDetailsAction(data: {
   bankName: string;
@@ -85,7 +134,7 @@ export async function updateBankDetailsAction(data: {
 }): Promise<ActionResponse> {
   return executeRestaurantAction(
     (api) => api.put("/settings/update-request", data),
-    "Bank details update request submitted successfully",
+    "Bank Details Updated Successfully",
   );
 }
 
@@ -105,8 +154,6 @@ export async function updateKycAction(
 }
 
 // ==================== GET BANKS LIST ====================
-// Uses serverApi directly — /banks is not restaurant-specific,
-// so executeRestaurantAction (which requires restaurantId cookie) would fail during onboarding.
 export async function getBanksAction(): Promise<ActionResponse<string[]>> {
   return responseHandler(
     async () => {

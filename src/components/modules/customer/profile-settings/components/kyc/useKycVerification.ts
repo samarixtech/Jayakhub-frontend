@@ -56,10 +56,26 @@ export function useKycVerification() {
 
   const handleFinalUpload = async () => {
     if (!selectedFile || !activeTypeId) return;
-    const formData = new FormData();
-    formData.append("documentType", activeTypeId);
-    formData.append("documentFile", selectedFile);
-    uploadFile(formData);
+
+    // Read file as base64 on the client so the server action receives
+    // a plain string — avoids Next.js Server Action multipart
+    // deserialization failures on production hosting environments.
+    const base64 = await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target?.result as string;
+        resolve(dataUrl.split(",")[1] ?? "");
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(selectedFile);
+    });
+
+    uploadFile({
+      documentType: activeTypeId,
+      documentFile: base64,
+      fileName: selectedFile.name,
+      fileType: selectedFile.type || "image/jpeg",
+    });
   };
 
   const resetSelection = () => {

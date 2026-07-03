@@ -22,6 +22,7 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
   onCancel,
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.Items.stepPreview");
+  const uniqueItemCount = new Set(parsedData.map((r) => r.name).filter(Boolean)).size;
 
   return (
     <div className="space-y-4 flex flex-col h-full overflow-hidden">
@@ -35,7 +36,7 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
           {t("back")}
         </Button>
         <Typography variant="h4" className="font-bold text-gray-900">
-          {t("previewTitle", { length: parsedData.length })}
+          {t("previewTitle", { length: uniqueItemCount })}
         </Typography>
       </div>
 

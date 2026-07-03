@@ -1,9 +1,25 @@
-name,image,description,price,dietryType,category,variantGroup,variantOption,variantPrice
-Chicken Biryani,biryani.jpg,Aromatic basmati rice cooked with tender chicken and spices,12.99,Halal,Main Course,Spiciness,Medium,0
-Chicken Biryani,biryani.jpg,Aromatic basmati rice cooked with tender chicken and spices,12.99,Halal,Main Course,Spiciness,Spicy,0
-Hummus,hummus.jpg,Creamy chickpea dip with tahini garlic and olive oil,5.99,Vegan,Appetizers,Portion Size,Small,0
-Hummus,hummus.jpg,Creamy chickpea dip with tahini garlic and olive oil,5.99,Vegan,Appetizers,Portion Size,Large,2.00
-Grilled Salmon,salmon.jpg,Fresh Atlantic salmon grilled to perfection served with vegetables,18.50,Gluten-Free,Seafood,Cooking Style,Well-Done,0
-Grilled Salmon,salmon.jpg,Fresh Atlantic salmon grilled to perfection served with vegetables,18.50,Gluten-Free,Seafood,Cooking Style,Medium-Rare,0
-Chocolate Lava Cake,lava_cake.jpg,Rich chocolate cake with a molten center served with vanilla ice cream,7.50,Vegetarian,Desserts,Toppings,Extra Chocolate Sauce,1.50
-Chocolate Lava Cake,lava_cake.jpg,Rich chocolate cake with a molten center served with vanilla ice cream,7.50,Vegetarian,Desserts,Toppings,Whipped Cream,0.50
+name,description,category,dietaryType,price,variantGroup,variantOption,variantPrice
+Chicken Burger,Juicy grilled chicken patty with lettuce tomato and mayo,Burgers,NON_VEG,8.99,Size,Regular,0
+Chicken Burger,Juicy grilled chicken patty with lettuce tomato and mayo,Burgers,NON_VEG,8.99,Size,Large,2.00
+Chicken Burger,Juicy grilled chicken patty with lettuce tomato and mayo,Burgers,NON_VEG,8.99,Size,Extra Large,4.00
+Margherita Pizza,Classic pizza with fresh tomatoes mozzarella and basil,Pizza,VEG,11.99,Size,Small,0
+Margherita Pizza,Classic pizza with fresh tomatoes mozzarella and basil,Pizza,VEG,11.99,Size,Medium,3.00
+Margherita Pizza,Classic pizza with fresh tomatoes mozzarella and basil,Pizza,VEG,11.99,Size,Large,5.00
+Grilled Salmon,Fresh Atlantic salmon grilled with lemon butter sauce,Seafood,NON_VEG,16.99,Cooking Style,Well Done,0
+Grilled Salmon,Fresh Atlantic salmon grilled with lemon butter sauce,Seafood,NON_VEG,16.99,Cooking Style,Medium Rare,0
+Caesar Salad,Crispy romaine lettuce with Caesar dressing and croutons,Salads,VEG,7.99,Dressing,Regular,0
+Caesar Salad,Crispy romaine lettuce with Caesar dressing and croutons,Salads,VEG,7.99,Dressing,Extra,1.00
+Beef Tacos,Seasoned ground beef in corn tortillas with salsa and sour cream,Mexican,NON_VEG,9.99,Spice Level,Mild,0
+Beef Tacos,Seasoned ground beef in corn tortillas with salsa and sour cream,Mexican,NON_VEG,9.99,Spice Level,Medium,0
+Beef Tacos,Seasoned ground beef in corn tortillas with salsa and sour cream,Mexican,NON_VEG,9.99,Spice Level,Hot,0
+Chocolate Lava Cake,Warm chocolate cake with a gooey center and vanilla ice cream,Desserts,VEG,6.99,Toppings,Whipped Cream,0.50
+Chocolate Lava Cake,Warm chocolate cake with a gooey center and vanilla ice cream,Desserts,VEG,6.99,Toppings,Extra Chocolate Sauce,1.00
+Mango Smoothie,Fresh mango blended with yogurt and honey,Beverages,VEG,4.99,Size,Regular,0
+Mango Smoothie,Fresh mango blended with yogurt and honey,Beverages,VEG,4.99,Size,Large,1.50
+Garlic Bread,Crispy bread with garlic butter and mixed herbs,Starters,VEG,3.99,Portion,Half,0
+Garlic Bread,Crispy bread with garlic butter and mixed herbs,Starters,VEG,3.99,Portion,Full,2.00
+Mushroom Risotto,Creamy arborio rice with wild mushrooms and parmesan,Main Course,VEG,13.99,Portion,Regular,0
+Mushroom Risotto,Creamy arborio rice with wild mushrooms and parmesan,Main Course,VEG,13.99,Portion,Large,3.00
+Spicy Chicken Wings,Crispy chicken wings tossed in signature buffalo sauce,Starters,NON_VEG,12.99,Sauce,Buffalo,0
+Spicy Chicken Wings,Crispy chicken wings tossed in signature buffalo sauce,Starters,NON_VEG,12.99,Sauce,BBQ,0
+Spicy Chicken Wings,Crispy chicken wings tossed in signature buffalo sauce,Starters,NON_VEG,12.99,Sauce,Honey Garlic,0

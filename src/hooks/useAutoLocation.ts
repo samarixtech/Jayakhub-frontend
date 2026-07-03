@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { countryCurrencyMap } from "@/lib/utils/country";
 
 interface AutoLocationData {
   city: string;
@@ -8,6 +10,7 @@ interface AutoLocationData {
   latitude: string;
   longitude: string;
   postalCode: string;
+  countryCode: string;
   loading: boolean;
   error: string;
 }
@@ -19,6 +22,7 @@ export function useAutoLocation() {
     latitude: "",
     longitude: "",
     postalCode: "",
+    countryCode: "",
     loading: true,
     error: "",
   });
@@ -48,6 +52,7 @@ export function useAutoLocation() {
                   let city = "";
                   let area = "";
                   let postalCode = "";
+                  let countryCode = "";
 
                   for (const component of addressComponents) {
                     if (component.types.includes("locality")) {
@@ -62,6 +67,19 @@ export function useAutoLocation() {
                     if (component.types.includes("postal_code")) {
                       postalCode = component.long_name;
                     }
+                    if (component.types.includes("country")) {
+                      countryCode = component.short_name.toLowerCase();
+                    }
+                  }
+
+                  if (countryCode) {
+                    const currencySymbol =
+                      countryCurrencyMap[countryCode.toUpperCase()]?.symbol ||
+                      "$";
+                    Cookies.set("USER_COUNTRY", countryCode, { expires: 365 });
+                    Cookies.set("NEXT_CURRENCY", currencySymbol, {
+                      expires: 365,
+                    });
                   }
 
                   setData({
@@ -70,6 +88,7 @@ export function useAutoLocation() {
                     latitude: latitude.toString(),
                     longitude: longitude.toString(),
                     postalCode,
+                    countryCode,
                     loading: false,
                     error: "",
                   });
@@ -81,6 +100,7 @@ export function useAutoLocation() {
                     latitude: latitude.toString(),
                     longitude: longitude.toString(),
                     postalCode: "",
+                    countryCode: "",
                     loading: false,
                     error: "",
                   });
@@ -95,6 +115,7 @@ export function useAutoLocation() {
               latitude: latitude.toString(),
               longitude: longitude.toString(),
               postalCode: "",
+              countryCode: "",
               loading: false,
               error: "",
             });
@@ -106,6 +127,7 @@ export function useAutoLocation() {
             latitude: latitude.toString(),
             longitude: longitude.toString(),
             postalCode: "",
+            countryCode: "",
             loading: false,
             error: "",
           });

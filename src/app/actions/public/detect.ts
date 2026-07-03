@@ -1,7 +1,8 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { serverApi } from "@/components/services/api";
+import { countryCurrencyMap } from "@/lib/utils/country";
 
 interface DetectApiResult {
   country: string;
@@ -40,11 +41,20 @@ export async function detectLocationAction(
 
   // 2. Fetch from API if Cookies missing
   try {
-   
+    const headerStore = await headers();
+    const clientIp =
+      headerStore.get("x-forwarded-for")?.split(",")[0].trim() ||
+      headerStore.get("x-real-ip") ||
+      "";
 
-    // Using api helper instance
+    console.log("[detectLocationAction] client IP:", clientIp || "unknown");
+
     const api = await serverApi();
-    const res = await api.get<{ data: DetectApiResult }>("/detect");
+    const res = await api.get<{ data: DetectApiResult }>("/detect", {
+      headers: clientIp
+        ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
+        : {},
+    });
     const json = res.data;
     const data = json.data;
 
@@ -66,10 +76,13 @@ export async function detectLocationAction(
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
         });
-        cookieStore.set("NEXT_CURRENCY", "$", {
-          // Assuming default currency, API might provide it later
+        const currencySymbol =
+          countryCurrencyMap[code.toUpperCase()]?.symbol || "$";
+        cookieStore.set("NEXT_CURRENCY", currencySymbol, {
           path: "/",
           maxAge: 60 * 60 * 24 * 365,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
         });
       }
       return {

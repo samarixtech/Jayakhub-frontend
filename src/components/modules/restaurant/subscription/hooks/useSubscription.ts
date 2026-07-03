@@ -82,7 +82,7 @@ export function useSubscription() {
     : 0;
 
   const featureLabels =
-    subscription?.plan.keywords.map(
+    subscription?.plan?.keywords?.map(
       (k) => KEYWORD_LABELS[k] ?? k.replace(/_/g, " "),
     ) ?? [];
 

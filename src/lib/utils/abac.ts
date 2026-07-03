@@ -56,21 +56,35 @@ export const canAccess = (
   return required.some((k) => userKeywords.includes(k));
 };
 
-/** Parses the planKeywords cookie value into a string array. */
+/** Parses the planKeywords cookie value into a string array.
+ *  Handles raw JSON, single-encoded, or double-encoded values
+ *  (double-encoding was a bug in earlier app versions). */
 export const parseKeywordsFromCookie = (cookieValue: string | undefined): string[] => {
   if (!cookieValue) return [];
-  try {
-    return JSON.parse(decodeURIComponent(cookieValue)) as string[];
-  } catch {
-    return [];
+  let val = cookieValue;
+  for (let i = 0; i <= 2; i++) {
+    try {
+      const parsed = JSON.parse(val);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      // not valid JSON yet — try one more decode
+    }
+    try {
+      const decoded = decodeURIComponent(val);
+      if (decoded === val) break; // no more percent-encoding left
+      val = decoded;
+    } catch {
+      break; // malformed URI component
+    }
   }
+  return [];
 };
 
 /** Client-side: reads planKeywords directly from document.cookie. */
 export const getClientPlanKeywords = (): string[] => {
   if (typeof document === "undefined") return [];
   const match = document.cookie.match(/(?:^|; )planKeywords=([^;]*)/);
-  return parseKeywordsFromCookie(match?.[1]);
+  return parseKeywordsFromCookie(match?.[1]) ?? [];
 };
 
 /** Client-side: reads the isExpired cookie value. */

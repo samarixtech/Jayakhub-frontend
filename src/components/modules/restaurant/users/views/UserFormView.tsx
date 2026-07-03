@@ -115,8 +115,8 @@ export default function UserFormView({
       </div>
 
       {/* Personal Information */}
-      <Card className="p-2!">
-        <div className="flex items-center justify-between mb-6">
+      <Card className="p-4!">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="w-5 h-5 text-gray-500" />
             <Typography
@@ -142,7 +142,7 @@ export default function UserFormView({
           {t("personalDesc")}
         </Typography>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
           <div className="grid gap-2">
             <Label htmlFor="firstName" className="font-medium text-gray-700">
               {t("firstName")}
@@ -182,14 +182,15 @@ export default function UserFormView({
               onChange={(e) => actions.setEmail(e.target.value)}
               className="pl-9 bg-gray-50/50 border-gray-200"
               placeholder={t("emailPlaceholder")}
+              disabled={mode === "edit"}
             />
           </div>
         </div>
       </Card>
 
       {/* Access & Security */}
-      <Card className="p-6">
-        <div className="flex items-center gap-2 mb-2">
+      <Card className="p-4">
+        <div className="flex items-center gap-2">
           <Lock className="w-5 h-5 text-gray-500" />
           <Typography
             variant="h3"

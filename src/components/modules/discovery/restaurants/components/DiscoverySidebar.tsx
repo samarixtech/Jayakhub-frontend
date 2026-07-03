@@ -1,35 +1,31 @@
 import React from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
-
-// ==================== SIDEBAR DATA ====================
-const SORT_OPTIONS = [
-  { id: "recommended", label: "Recommended" },
-  { id: "fastest", label: "Fastest Delivery" },
-  { id: "highest", label: "Highest Rated" },
-];
-
-const QUICK_FILTERS = [
-  { id: "free_delivery", label: "Free Delivery" },
-  { id: "offers", label: "Offers" },
-  { id: "online_payment", label: "Online Payment" },
-];
-
-const PRICE_LEVELS = ["$", "$$", "$$$"];
-
-const VISIBLE_CUISINES = 5;
-
+import { ChevronDown, ChevronUp, Star, Tag, Heart } from "lucide-react";
 import {
   CuisineType,
   DiscoverySidebarProps,
 } from "@/components/modules/discovery/discovery.types";
+
+const SORT_OPTIONS = [
+  { id: "recommended", label: "Recommended" },
+  { id: "fastestDelivery", label: "Fastest Delivery" },
+  { id: "nearestRestaurant", label: "Nearest Restaurant" },
+  { id: "lowestPrice", label: "Lowest Price" },
+  { id: "highestPrice", label: "Highest Price" },
+];
+
+const VISIBLE_CUISINES = 5;
 
 const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
   selectedSort,
   onSortChange,
   activeFilters,
   onFilterToggle,
-  selectedPrice,
-  onPriceToggle,
+  selectedRating,
+  onRatingChange,
+  discounted,
+  onDiscountedToggle,
+  isWishlist,
+  onWishlistToggle,
   showAllCuisines,
   onToggleCuisines,
   onResetFilters,
@@ -37,12 +33,11 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
   className = "",
 }) => {
   const cuisines = Array.isArray(cuisineTypes) ? cuisineTypes : [];
-  const visibleCuisines = showAllCuisines
-    ? cuisines
-    : cuisines.slice(0, VISIBLE_CUISINES);
+  const visibleCuisines = showAllCuisines ? cuisines : cuisines.slice(0, VISIBLE_CUISINES);
 
   return (
     <div className={`space-y-7 ${className}`}>
+
       {/* Sort By */}
       <div>
         <div className="flex items-center justify-between mb-4">
@@ -76,9 +71,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
               </span>
               <span
                 className={`text-[13px] ${
-                  selectedSort === opt.id
-                    ? "text-gray-900 font-medium"
-                    : "text-gray-600"
+                  selectedSort === opt.id ? "text-gray-900 font-medium" : "text-gray-600"
                 }`}
               >
                 {opt.label}
@@ -88,47 +81,67 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
         </div>
       </div>
 
+      {/* Rating Filter */}
+      <div>
+        <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
+          Minimum Rating
+        </h4>
+        <div className="flex gap-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              onClick={() => onRatingChange(star)}
+              className="p-0.5 transition-transform hover:scale-110"
+              title={`${star} star${star > 1 ? "s" : ""} & above`}
+            >
+              <Star
+                className={`w-6 h-6 transition-colors ${
+                  selectedRating !== null && star <= selectedRating
+                    ? "fill-amber-400 text-amber-400"
+                    : "fill-gray-200 text-gray-200"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+        {selectedRating !== null && (
+          <p className="text-[11px] text-gray-400 mt-1.5">
+            Showing {selectedRating}★ and above
+          </p>
+        )}
+      </div>
+
       {/* Quick Filters */}
       <div>
         <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
           Quick Filters
         </h4>
-        <div className="flex flex-wrap gap-2">
-          {QUICK_FILTERS.map((filter) => (
-            <button
-              key={filter.id}
-              onClick={() => onFilterToggle(filter.id)}
-              className={`px-3 py-1.5 rounded-full text-[12px] font-medium border transition-all ${
-                activeFilters.includes(filter.id)
-                  ? "bg-[#346853] text-white border-[#346853]"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              {filter.label}
-            </button>
-          ))}
-        </div>
-      </div>
+        <div className="space-y-2.5">
+          {/* Discounted */}
+          <button
+            onClick={onDiscountedToggle}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border text-[13px] font-medium transition-all ${
+              discounted
+                ? "bg-[#346853] text-white border-[#346853]"
+                : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            <Tag className="w-4 h-4 shrink-0" />
+            Active Discounts
+          </button>
 
-      {/* Price Range */}
-      <div>
-        <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
-          Price Range
-        </h4>
-        <div className="flex gap-0 border border-gray-200 rounded-lg overflow-hidden">
-          {PRICE_LEVELS.map((price) => (
-            <button
-              key={price}
-              onClick={() => onPriceToggle(price)}
-              className={`flex-1 h-9 text-sm font-bold transition-all ${
-                selectedPrice === price
-                  ? "bg-[#346853] text-white"
-                  : "bg-white text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              {price}
-            </button>
-          ))}
+          {/* Wishlist */}
+          <button
+            onClick={onWishlistToggle}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border text-[13px] font-medium transition-all ${
+              isWishlist
+                ? "bg-[#346853] text-white border-[#346853]"
+                : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+            }`}
+          >
+            <Heart className="w-4 h-4 shrink-0" />
+            My Wishlist
+          </button>
         </div>
       </div>
 
@@ -185,17 +198,14 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
             className="text-[#346853] text-[13px] font-medium mt-4 hover:underline flex items-center gap-1"
           >
             {showAllCuisines ? (
-              <>
-                Show less <ChevronUp className="w-3.5 h-3.5" />
-              </>
+              <>Show less <ChevronUp className="w-3.5 h-3.5" /></>
             ) : (
-              <>
-                View more <ChevronDown className="w-3.5 h-3.5" />
-              </>
+              <>View more <ChevronDown className="w-3.5 h-3.5" /></>
             )}
           </button>
         )}
       </div>
+
     </div>
   );
 };

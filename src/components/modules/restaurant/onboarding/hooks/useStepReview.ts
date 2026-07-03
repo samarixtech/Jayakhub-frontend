@@ -125,8 +125,9 @@ export const useStepReview = () => {
     formData.append("longitude", String(data.restaurant?.location?.lng || 0));
     formData.append("type", (data.restaurant?.cuisineTypes || []).join(","));
     formData.append("description", data.restaurant?.description || "");
-    if (data.restaurant?.websiteUrl)
+    if (data.restaurant?.websiteUrl) {
       formData.append("websiteUrl", data.restaurant.websiteUrl);
+    }
 
     if (kycFile && data.kyc?.kycType) {
       formData.append("documentType", mapDocTypeToBackend(data.kyc.kycType));
@@ -148,12 +149,6 @@ export const useStepReview = () => {
 
     if (logoFile) formData.append("profileImage", logoFile);
     if (bannerFile) formData.append("bannerImage", bannerFile);
-
-    const payload: Record<string, any> = {};
-    formData.forEach((value, key) => {
-      payload[key] = value instanceof File ? `[File: ${value.name}, ${value.size}b]` : value;
-    });
-    console.log("=== ONBOARDING SUBMIT PAYLOAD ===", JSON.stringify(payload, null, 2));
 
     await execute(formData);
   };

@@ -5,10 +5,8 @@ import { SettingsData } from "@/types";
 import { useServerAction } from "@/hooks/use-server-action";
 import { updateRestaurantProfileAction } from "@/app/actions/restaurant/settings";
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 export function useProfileSettings(settings: SettingsData | null) {
-  const router = useRouter();
   const profile = settings?.profile;
   const [name, setName] = useState(profile?.name || "");
   const [description, setDescription] = useState(profile?.description || "");
@@ -85,10 +83,11 @@ export function useProfileSettings(settings: SettingsData | null) {
     updateRestaurantProfileAction,
     {
       onSuccess: () => {
-        // Clear file selections on success
-        setProfileImageFile(null);
-        setBannerImageFile(null);
-        router.refresh();
+        // window.location.reload() is reliable on all hosts — router.refresh()
+        // fails on Hostinger because revalidatePath uses a path that doesn't
+        // include the [country]/[language] prefix, so the route cache never
+        // invalidates and stale data gets rendered.
+        window.location.reload();
       },
       onError: (err: any) => {
         const message =
@@ -134,31 +133,68 @@ export function useProfileSettings(settings: SettingsData | null) {
     setCuisines(cuisines.filter((c) => c !== cuisine));
   };
 
-  const handleSubmit = () => {
+  const toCompressedBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          let { width, height } = img;
+          const MAX_DIM = 1920;
+          if (width > MAX_DIM || height > MAX_DIM) {
+            if (width >= height) {
+              height = Math.round((height * MAX_DIM) / width);
+              width = MAX_DIM;
+            } else {
+              width = Math.round((width * MAX_DIM) / height);
+              height = MAX_DIM;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL("image/jpeg", 0.82).split(",")[1] ?? "");
+        };
+        img.onerror = reject;
+        img.src = ev.target?.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  const handleSubmit = async () => {
     if (!name.trim()) {
       toast.error("Restaurant Name is required");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("websiteUrl", websiteUrl);
-
-    // Append cuisines
-    cuisines.forEach((cuisine) => {
-      formData.append("type", cuisine);
-    });
-
+    let profileImageBase64 = "";
+    let profileImageName = "";
     if (profileImageFile) {
-      formData.append("profile", profileImageFile);
+      profileImageBase64 = await toCompressedBase64(profileImageFile);
+      profileImageName = profileImageFile.name.replace(/\.[^.]+$/, ".jpg");
     }
 
+    let bannerImageBase64 = "";
+    let bannerImageName = "";
     if (bannerImageFile) {
-      formData.append("banner", bannerImageFile);
+      bannerImageBase64 = await toCompressedBase64(bannerImageFile);
+      bannerImageName = bannerImageFile.name.replace(/\.[^.]+$/, ".jpg");
     }
 
-    updateProfile(formData);
+    updateProfile({
+      name,
+      description,
+      websiteUrl,
+      type: cuisines,
+      profileImageBase64,
+      profileImageName,
+      profileImageType: "image/jpeg",
+      bannerImageBase64,
+      bannerImageName,
+      bannerImageType: "image/jpeg",
+    });
   };
 
   return {

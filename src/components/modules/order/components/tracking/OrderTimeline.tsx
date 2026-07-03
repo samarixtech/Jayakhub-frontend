@@ -15,6 +15,31 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
   orderStatus,
 }) => {
   const isRejected = orderStatus === "rejected";
+  const isCancelled = orderStatus === "cancelled";
+
+  if (isCancelled) {
+    return (
+      <div className="border border-gray-100 rounded-2xl p-6 md:p-8">
+        <h2 className="text-xl font-bold text-gray-900 mb-8">Order Journey</h2>
+        <div className="pl-2">
+          <TimelineItem
+            icon={ShoppingBag}
+            title="Order Placed"
+            description="Your order has been successfully placed."
+            time={formatOrderDateTime(orderDate, orderTime)}
+            status="completed"
+          />
+          <TimelineItem
+            icon={XCircle}
+            title="Order Cancelled"
+            description="This order was cancelled."
+            status="completed"
+            isLast={true}
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (isRejected) {
     return (
