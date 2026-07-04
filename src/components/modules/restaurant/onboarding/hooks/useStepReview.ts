@@ -2,8 +2,23 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOnboarding } from "../OnboardingContext";
-import { registerRestaurantOnboardingAction } from "@/app/actions/restaurant/onboarding";
+import {
+  registerRestaurantOnboardingAction,
+  OnboardingPayload,
+} from "@/app/actions/restaurant/onboarding";
 import { useServerAction } from "@/hooks/use-server-action";
+
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      const idx = result.indexOf(",");
+      resolve(idx !== -1 ? result.slice(idx + 1) : result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 
 export const useStepReview = () => {
   const router = useRouter();
@@ -20,6 +35,7 @@ export const useStepReview = () => {
     restaurant: null,
     assets: null,
     schedule: null,
+    timezone: "",
     kyc: null,
     bank: null,
   });
@@ -81,6 +97,7 @@ export const useStepReview = () => {
       restaurant,
       assets: assetsPreviews,
       schedule,
+      timezone: schedule?.timezone || "",
       kyc: { kycName, docName, kycType, docType },
       bank,
     });
@@ -106,51 +123,76 @@ export const useStepReview = () => {
   const handleSubmit = async () => {
     setLoading(true);
 
-    const schedules = Object.entries(data.schedule || {}).map(
-      ([day, val]: [string, any]) => ({
+    const schedules = Object.entries(data.schedule || {})
+      .filter(([key]) => key !== "timezone")
+      .map(([day, val]: [string, any]) => ({
         dayOfWeek: day.charAt(0).toUpperCase() + day.slice(1),
-        openTime: val.isOpen ? `${val.openTime}:00` : "00:00:00",
-        closeTime: val.isOpen ? `${val.closeTime}:00` : "00:00:00",
+        openTime: val.isOpen ? Number(val.openTime) || 0 : 0,
+        closeTime: val.isOpen ? Number(val.closeTime) || 0 : 0,
         isClosed: !val.isOpen,
+      }));
+
+    // Convert files to base64 in parallel
+    const [
+      profileImageBase64,
+      bannerImageBase64,
+      kycDocumentBase64,
+      docDocumentBase64,
+    ] = await Promise.all([
+      logoFile ? fileToBase64(logoFile) : Promise.resolve(""),
+      bannerFile ? fileToBase64(bannerFile) : Promise.resolve(""),
+      kycFile ? fileToBase64(kycFile) : Promise.resolve(""),
+      docFile ? fileToBase64(docFile) : Promise.resolve(""),
+    ]);
+
+    const payload: OnboardingPayload = {
+      name: data.restaurant?.restaurantName || "",
+      email: data.restaurant?.restaurantEmail || "",
+      phone: data.restaurant?.restaurantPhone || "",
+      address: data.restaurant?.address || "",
+      country: data.restaurant?.country || "",
+      latitude: String(data.restaurant?.location?.lat || 0),
+      longitude: String(data.restaurant?.location?.lng || 0),
+      type: (data.restaurant?.cuisineTypes || []).join(","),
+      description: data.restaurant?.description || "",
+      websiteUrl: data.restaurant?.websiteUrl || "",
+      timezone: data.timezone || "",
+      schedules: JSON.stringify(schedules),
+      ownerPhone: data.owner?.ownerPhone || "",
+      ownerName: data.owner?.ownerName || "",
+      accountHolderName: data.bank?.accountTitle || "",
+      accountType: data.bank?.accountType || "",
+      bankName: data.bank?.bankName || "",
+      iban: data.bank?.iban || "",
+      // Profile image
+      ...(profileImageBase64 && {
+        profileImageBase64,
+        profileImageName: logoFile?.name || "profile.jpg",
+        profileImageType: logoFile?.type || "image/jpeg",
       }),
-    );
+      // Banner image
+      ...(bannerImageBase64 && {
+        bannerImageBase64,
+        bannerImageName: bannerFile?.name || "banner.jpg",
+        bannerImageType: bannerFile?.type || "image/jpeg",
+      }),
+      // KYC document
+      ...(kycDocumentBase64 && data.kyc?.kycType && {
+        kycDocumentType: mapDocTypeToBackend(data.kyc.kycType),
+        kycDocumentBase64,
+        kycDocumentName: kycFile?.name || "kyc_document",
+        kycDocumentFileType: kycFile?.type || "application/octet-stream",
+      }),
+      // Business document
+      ...(docDocumentBase64 && data.kyc?.docType && {
+        docDocumentType: mapDocTypeToBackend(data.kyc.docType),
+        docDocumentBase64,
+        docDocumentName: docFile?.name || "business_document",
+        docDocumentFileType: docFile?.type || "application/octet-stream",
+      }),
+    };
 
-    const formData = new FormData();
-    formData.append("name", data.restaurant?.restaurantName || "");
-    formData.append("email", data.restaurant?.restaurantEmail || "");
-    formData.append("phone", data.restaurant?.restaurantPhone || "");
-    formData.append("address", data.restaurant?.address || "");
-    formData.append("country", data.restaurant?.country || "");
-    formData.append("latitude", String(data.restaurant?.location?.lat || 0));
-    formData.append("longitude", String(data.restaurant?.location?.lng || 0));
-    formData.append("type", (data.restaurant?.cuisineTypes || []).join(","));
-    formData.append("description", data.restaurant?.description || "");
-    if (data.restaurant?.websiteUrl) {
-      formData.append("websiteUrl", data.restaurant.websiteUrl);
-    }
-
-    if (kycFile && data.kyc?.kycType) {
-      formData.append("documentType", mapDocTypeToBackend(data.kyc.kycType));
-      formData.append("documentFile", kycFile);
-    }
-
-    if (docFile && data.kyc?.docType) {
-      formData.append("documentType", mapDocTypeToBackend(data.kyc.docType));
-      formData.append("documentFile", docFile);
-    }
-
-    formData.append("schedules", JSON.stringify(schedules));
-    formData.append("ownerPhone", data.owner?.ownerPhone || "");
-    formData.append("ownerName", data.owner?.ownerName || "");
-    formData.append("accountHolderName", data.bank?.accountTitle || "");
-    formData.append("accountType", data.bank?.accountType || "");
-    formData.append("bankName", data.bank?.bankName || "");
-    formData.append("iban", data.bank?.iban || "");
-
-    if (logoFile) formData.append("profileImage", logoFile);
-    if (bannerFile) formData.append("bannerImage", bannerFile);
-
-    await execute(formData);
+    await execute(payload);
   };
 
   return {

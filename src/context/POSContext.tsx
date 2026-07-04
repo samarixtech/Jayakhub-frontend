@@ -119,7 +119,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
 
         if (result.success && result.data?.data) {
           if (isMounted) {
-            setPosItems(result.data.data.items || []);
+            setPosItems((result.data.data.items || []).filter((item: any) => item.isAvailable !== false));
 
             // Categories from API to dynamically build sidebar (only pull "categories" array from response root if present)
             if (result.data.data.categories) {

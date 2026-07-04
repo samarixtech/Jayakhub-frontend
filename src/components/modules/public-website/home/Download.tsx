@@ -157,7 +157,7 @@ export default function DownloadApp() {
                 </div>
               </a>
               <a
-                href="https://play.google.com"
+                href="https://play.google.com/store/apps/details?id=com.jayakhub.customer"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center sm:justify-start gap-3 bg-primary text-white px-6 py-3.5 rounded-2xl hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto"

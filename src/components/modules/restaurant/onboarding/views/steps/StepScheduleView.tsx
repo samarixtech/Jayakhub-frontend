@@ -1,20 +1,85 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { Switch } from "@/components/ui/switch";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { TimePicker } from "@/components/ui/time-picker";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { ChevronsUpDown, Check, Globe } from "lucide-react";
+import { Label } from "@/components/ui/label";
 import { useStepSchedule } from "../../hooks/useStepSchedule";
+import { cn } from "@/lib/utils";
 
 export default function StepScheduleView() {
-  const { form, onSubmit, days } = useStepSchedule();
+  const { form, onSubmit, days, timezones, timezone, setTimezone, isLoadingTimezones } = useStepSchedule();
+  const [tzOpen, setTzOpen] = useState(false);
+
+  const selectedTz = timezones.find((tz) => tz.name === timezone);
 
   return (
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-500">
       <Typography variant="h4" className="font-bold text-gray-900">
         Operating Hours
       </Typography>
+
+      {/* Timezone Selector */}
+      <div className="space-y-2">
+        <Label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
+          <Globe className="w-4 h-4 text-gray-400" />
+          Timezone
+        </Label>
+        <Popover open={tzOpen} onOpenChange={setTzOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={tzOpen}
+              className="w-full justify-between h-11 rounded-xl border-gray-200 text-sm font-normal"
+              disabled={isLoadingTimezones}
+            >
+              <span className={cn(!selectedTz && "text-gray-400")}>
+                {isLoadingTimezones
+                  ? "Loading timezones..."
+                  : selectedTz
+                    ? selectedTz.label
+                    : "Select timezone"}
+              </span>
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 text-gray-400" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-white" align="start">
+            <Command>
+              <CommandInput placeholder="Search timezone..." className="h-9" />
+              <CommandList className="max-h-64">
+                <CommandEmpty>No timezone found.</CommandEmpty>
+                <CommandGroup>
+                  {timezones.map((tz) => (
+                    <CommandItem
+                      key={tz.name}
+                      value={tz.label}
+                      onSelect={() => {
+                        setTimezone(tz.name);
+                        setTzOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          timezone === tz.name ? "opacity-100" : "opacity-0",
+                        )}
+                      />
+                      {tz.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

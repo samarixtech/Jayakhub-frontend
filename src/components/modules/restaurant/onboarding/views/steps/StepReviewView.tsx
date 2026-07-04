@@ -23,6 +23,15 @@ import {
 } from "../../components/ReviewComponents";
 import Link from "next/link";
 
+const epochToDisplayTime = (epoch: number | string | null | undefined): string => {
+  const num = Number(epoch);
+  if (!num || num < 86400000) return "";
+  const d = new Date(num);
+  const h = d.getUTCHours().toString().padStart(2, "0");
+  const m = d.getUTCMinutes().toString().padStart(2, "0");
+  return `${h}:${m}`;
+};
+
 export default function StepReviewView() {
   const { data, loading, isPending, handleSubmit, pathPrefix } =
     useStepReview();
@@ -160,25 +169,31 @@ export default function StepReviewView() {
           title="Operations Schedule"
           stepPath={`${pathPrefix}/step-schedule`}
         >
+          {data.timezone && (
+            <ReviewField label="Timezone" value={data.timezone} fullWidth />
+          )}
           <ReviewField
             label="Operating Hours"
             fullWidth
             value={
               <div className="space-y-1 mt-1">
-                {Object.entries(data.schedule || {}).filter(
-                  ([_, h]: any) => h.isOpen,
-                ).length > 0 ? (
-                  Object.entries(data.schedule || {}).map(
-                    ([day, hours]: [string, any]) =>
-                      hours.isOpen && (
-                        <div key={day} className="flex justify-between text-xs">
-                          <span className="capitalize">{day}</span>
-                          <span>
-                            {hours.openTime} - {hours.closeTime}
-                          </span>
-                        </div>
-                      ),
-                  )
+                {Object.entries(data.schedule || {})
+                  .filter(([key, h]: any) => key !== "timezone" && h?.isOpen)
+                  .length > 0 ? (
+                  Object.entries(data.schedule || {})
+                    .filter(([key]) => key !== "timezone")
+                    .map(
+                      ([day, hours]: [string, any]) =>
+                        hours.isOpen && (
+                          <div key={day} className="flex justify-between text-xs">
+                            <span className="capitalize">{day}</span>
+                            <span>
+                              {epochToDisplayTime(hours.openTime)} -{" "}
+                              {epochToDisplayTime(hours.closeTime)}
+                            </span>
+                          </div>
+                        ),
+                    )
                 ) : (
                   <span className="text-gray-500">Not set</span>
                 )}

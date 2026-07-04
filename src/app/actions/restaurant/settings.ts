@@ -10,6 +10,7 @@ export async function getAccountSettingsAction(): Promise<ActionResponse> {
     (api) => api.get("/account-settings"),
     "Account settings fetched successfully",
   );
+  console.log('🚀 ~ getAccountSettingsAction ~ res:', res.data?.schedules)
   return res;
 }
 

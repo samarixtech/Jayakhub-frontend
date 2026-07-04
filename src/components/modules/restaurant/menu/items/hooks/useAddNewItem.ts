@@ -268,7 +268,7 @@ export const useAddNewItem = () => {
       itemImage: formData.itemImage,
       isAvailable: formData.isAvailable.toString(),
       isVeg: formData.isVeg.toString(),
-      dietaryType: formData.dietaryType.toUpperCase().replace("-", "_"),
+      dietaryType: formData.dietaryType === "None" ? "NON_VEG" : formData.dietaryType.toUpperCase().replace("-", "_"),
       variantGroups: JSON.stringify(formData.variantGroups),
       variations: JSON.stringify(variationsPayload),
       discount: formData.discount ? Number(formData.discount).toString() : "0",

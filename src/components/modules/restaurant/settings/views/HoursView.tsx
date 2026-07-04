@@ -15,9 +15,16 @@ import { SettingsSkeleton } from "@/components/skeletons/RestaurantSettingsSkele
 
 function formatTimeForInput(timeStr: string): string {
   if (!timeStr) return "";
-  // Ensure "HH:MM" format for input type="time"
   const [hours, minutes] = timeStr.split(":");
   return `${hours}:${minutes}`;
+}
+
+// Jan 1, 2024 00:00:00 UTC — a Monday — fixed reference week
+const BASE_MONDAY_EPOCH = 1704067200000;
+
+function timeToEpoch(dayIndex: number, timeStr: string): number {
+  const [hours = 0, minutes = 0] = (timeStr || "00:00").split(":").map(Number);
+  return BASE_MONDAY_EPOCH + dayIndex * 86400000 + hours * 3600000 + minutes * 60000;
 }
 
 const DAYS_ORDER = [
@@ -106,15 +113,15 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
   };
 
   const handleSubmit = () => {
-    // Format payload: remove extra fields if any, ensure time format
-    const payload = schedules.map(
-      ({ dayOfWeek, openTime, closeTime, isClosed }) => ({
+    const payload = schedules.map(({ dayOfWeek, openTime, closeTime, isClosed }) => {
+      const dayIndex = DAYS_ORDER.indexOf(dayOfWeek);
+      return {
         dayOfWeek,
-        openTime,
-        closeTime,
+        openTime: isClosed ? 0 : timeToEpoch(dayIndex, openTime),
+        closeTime: isClosed ? 0 : timeToEpoch(dayIndex, closeTime),
         isClosed,
-      }),
-    );
+      };
+    });
     updateSchedule(payload);
   };
 
