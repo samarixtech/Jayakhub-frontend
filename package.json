@@ -1,10 +1,10 @@
 {
-  "name": "ifdp-frontend",
+  "name": "jayakhub-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
-    "build": "next build --webpack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start -p 3001",
     "lint": "eslint",
     "docker:dev": "cross-env DOCKER_TARGET=development docker compose up --build",
