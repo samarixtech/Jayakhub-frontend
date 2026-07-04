@@ -2,6 +2,7 @@ import axios from "axios";
 // import https from "https"; // Removed for edge compatibility
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const SERVER_BASE_URL = process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL;
 
 const agent =
   typeof window === "undefined" && process.env.NEXT_RUNTIME !== "edge"
@@ -107,7 +108,7 @@ export async function serverApi() {
   }
 
   const instance = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: SERVER_BASE_URL,
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
