@@ -1,0 +1,45 @@
+services:
+  jayakhub-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: ${DOCKER_TARGET:-development}
+    container_name: jayakhub-frontend
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "https://app.jayakhub.com/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+    # ---------- Development overrides ----------
+    # Only takes effect when target=development
+    # Run with: docker compose watch
+    develop:
+      watch:
+        # Sync source code changes instantly (no rebuild)
+        - action: sync
+          path: ./src
+          target: /app/src
+
+        - action: sync
+          path: ./public
+          target: /app/public
+
+        - action: sync
+          path: ./next.config.ts
+          target: /app/next.config.ts
+
+        # Rebuild container when dependencies change
+        - action: rebuild
+          path: ./package.json
+
+        - action: rebuild
+          path: ./package-lock.json

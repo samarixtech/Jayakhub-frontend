@@ -6,7 +6,9 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start -p 3001",
-    "lint": "eslint"
+    "lint": "eslint",
+    "docker:dev": "cross-env DOCKER_TARGET=development docker compose up --build",
+    "docker:prod": "cross-env DOCKER_TARGET=production docker compose up --build -d"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -35,6 +37,7 @@
     "cmdk": "^1.1.1",
     "cookies-next": "^6.1.1",
     "country-list": "^2.4.1",
+    "cross-env": "^10.1.0",
     "date-fns": "^4.1.0",
     "emoji-flags": "^1.3.0",
     "framer-motion": "^12.23.24",

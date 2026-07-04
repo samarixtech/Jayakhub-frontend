@@ -2,13 +2,13 @@ import { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-  // output: "standalone",
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-    }
-    return config;
-  },
+  output: "standalone",
+  // webpack: (config, { isServer }) => {
+  //   if (isServer) {
+  //     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+  //   }
+  //   return config;
+  // },
   images: {
     remotePatterns: [
       {
