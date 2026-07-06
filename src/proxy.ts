@@ -26,12 +26,18 @@ export async function proxy(request: NextRequest) {
   // 3. If cookies are missing, call detect API
   if (!country || !language) {
     try {
-      const detectRes = (await api.get(
-        "/detect",
-        //   , {
-        //   headers: { "x-ip": ip || "NULL" },
-        // }
-      )) as any;
+      const clientIp =
+        request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+        request.headers.get("x-real-ip") ||
+        "";
+
+      console.log("[proxy] detecting location for IP:", clientIp || "unknown");
+
+      const detectRes = (await api.get("/detect", {
+        headers: clientIp
+          ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
+          : {},
+      })) as any;
 
       const data = detectRes.data?.data;
       if (data && data.isActive) {

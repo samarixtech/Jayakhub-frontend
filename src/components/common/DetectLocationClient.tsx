@@ -34,6 +34,8 @@ export default function DetectLocationClient() {
           const json = await res.json();
           const data = json?.data;
 
+          console.log("[DetectLocationClient] detect response:", data);
+
           if (data?.isActive) {
             country = data.code.toLowerCase();
             language = (data.language || "en").toLowerCase();
