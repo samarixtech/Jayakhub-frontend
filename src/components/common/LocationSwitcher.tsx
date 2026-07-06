@@ -249,7 +249,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
         );
       },
       (error) => {
-        console.error("LocationSwitcher: Geolocation error:", error);
+        if (error.code !== 1) console.warn("LocationSwitcher: Geolocation error:", error);
         if (!detectedLocation) onAddressChange(getCountryFromUrl());
         setLoading(false);
       },

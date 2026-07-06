@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { detectLocationAction } from "@/app/actions/public/detect";
+import Cookies from "js-cookie";
+import { countryCurrencyMap } from "@/lib/utils/country";
 
 export default function DetectLocationClient() {
   const router = useRouter();
@@ -15,39 +16,56 @@ export default function DetectLocationClient() {
 
     async function detect() {
       try {
-        const result = await detectLocationAction();
-
-        if (!mounted) return;
+        // If cookies already set, skip detection
+        const existingCountry = Cookies.get("USER_COUNTRY");
+        const existingLang = Cookies.get("NEXT_LOCALE");
 
         let country = "pk";
         let language = "en";
 
-        if (result.success && result.data) {
-          country = result.data.code.toLowerCase();
-          language = result.data.language.toLowerCase();
-        } else if (result.fallback) {
-          // Keep defaults
+        if (existingCountry && existingLang) {
+          country = existingCountry;
+          language = existingLang;
         } else {
-          setError(result.message || "Detection failed");
-          // Fallback anyway after delay?
-          setTimeout(() => {
-            const currentParams = searchParams.toString();
-            const url = `/restaurants${currentParams ? `?${currentParams}` : ""}`;
-            router.replace(url);
-          }, 2000);
-          return;
+          // Call detect directly from browser so backend sees the user's real IP
+          const baseUrl =
+            process.env.NEXT_PUBLIC_BASE_URL || "https://app.jayakhub.com/api/v1";
+          const res = await fetch(`${baseUrl}/detect`);
+          const json = await res.json();
+          const data = json?.data;
+
+          if (data?.isActive) {
+            country = data.code.toLowerCase();
+            language = (data.language || "en").toLowerCase();
+          }
+
+          const currencySymbol =
+            countryCurrencyMap[country.toUpperCase()]?.symbol || "$";
+
+          const cookieOpts = {
+            expires: 365,
+            path: "/",
+            secure: location.protocol === "https:",
+            sameSite: "Lax" as const,
+          };
+
+          Cookies.set("USER_COUNTRY", country, cookieOpts);
+          Cookies.set("NEXT_LOCALE", language, cookieOpts);
+          Cookies.set("NEXT_CURRENCY", currencySymbol, cookieOpts);
         }
 
+        if (!mounted) return;
+
         const currentParams = searchParams.toString();
-        const url = `/restaurants${currentParams ? `?${currentParams}` : ""}`;
+        const url = `/${country}/${language}/restaurants${currentParams ? `?${currentParams}` : ""}`;
         router.replace(url);
       } catch (err) {
         console.error("Client detection error:", err);
+        if (!mounted) return;
         setError("Failed to detect location. Redirecting...");
         setTimeout(() => {
           const currentParams = searchParams.toString();
-          const url = `/pk/en/restaurants${currentParams ? `?${currentParams}` : ""}`;
-          router.replace(url);
+          router.replace(`/pk/en/restaurants${currentParams ? `?${currentParams}` : ""}`);
         }, 1000);
       }
     }
@@ -71,7 +89,6 @@ export default function DetectLocationClient() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <div className="flex flex-col items-center gap-4">
-        {/* You can add a Logo here if you want */}
         <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
         <p className="text-gray-500 text-sm font-medium animate-pulse">
           Detecting your location...
