@@ -66,7 +66,7 @@ export async function verifyOtpAction(payload: {
           httpOnly: true,
           secure:
             process.env.NODE_ENV === "production" &&
-            process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https"),
+            (process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL)?.startsWith("https"),
           sameSite: "lax",
           path: "/",
           maxAge: 60 * 60 * 24 * 7,
@@ -133,7 +133,7 @@ export async function verifyResetOtpAction(payload: {
           httpOnly: true,
           secure:
             process.env.NODE_ENV === "production" &&
-            process.env.NEXT_PUBLIC_BASE_URL?.startsWith("https"),
+            (process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL)?.startsWith("https"),
           sameSite: "lax",
           path: "/",
           maxAge: 60 * 60 * 24 * 7,
