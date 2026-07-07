@@ -4,15 +4,14 @@ import type { Ticket } from "../support.types";
 import { StatusBadge } from "./StatusBadge";
 import { useTranslations } from "next-intl";
 
-interface TicketsTableProps {
+interface AllTicketsTableProps {
   tickets: Ticket[];
   isLoading: boolean;
   onTicketClick: (ticket: Ticket) => void;
-  limit?: number;
-  onViewAll?: () => void;
 }
 
 const priorityColor: Record<string, string> = {
+  URGENT: "text-rose-600 font-semibold",
   HIGH: "text-red-500",
   MEDIUM: "text-amber-500",
   LOW: "text-gray-500",
@@ -59,15 +58,12 @@ const ColHeaders = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
   </>
 );
 
-export const TicketsTable = ({
+export const AllTicketsTable = ({
   tickets,
   isLoading,
   onTicketClick,
-  limit,
-  onViewAll,
-}: TicketsTableProps) => {
+}: AllTicketsTableProps) => {
   const t = useTranslations("RestaurantDashboard.Support.ticketsTable");
-  const visibleTickets = limit ? tickets.slice(0, limit) : tickets;
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
@@ -78,21 +74,13 @@ export const TicketsTable = ({
           </h3>
           <p className="text-[12px] text-gray-400 mt-0.5">{t("subtitle")}</p>
         </div>
-        {onViewAll && (
-          <button
-            onClick={onViewAll}
-            className="text-[12px] font-semibold text-[#2E6B56] hover:text-[#255745] transition-colors shrink-0 ml-4 cursor-pointer"
-          >
-            {t("viewAll")} →
-          </button>
-        )}
       </div>
 
       {isLoading ? (
         <div className="overflow-x-auto">
           <div className="min-w-[860px]">
             <ColHeaders t={t} />
-            {Array.from({ length: 4 }).map((_, i) => (
+            {Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={i}
                 className={`grid ${COLS} gap-3 items-center px-1 py-4 border-b border-gray-50 last:border-0`}
@@ -116,7 +104,7 @@ export const TicketsTable = ({
         <div className="overflow-x-auto">
           <div className="min-w-[860px]">
             <ColHeaders t={t} />
-            {visibleTickets.map((ticket) => (
+            {tickets.map((ticket) => (
               <div
                 key={ticket.id}
                 className={`grid ${COLS} gap-3 items-center px-1 py-4 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 transition-colors`}
@@ -136,9 +124,9 @@ export const TicketsTable = ({
                 </span>
                 <StatusBadge status={ticket.status} />
                 <span
-                  className={`text-[12px] font-semibold capitalize ${priorityColor[ticket.priority] || "text-gray-500"}`}
+                  className={`text-[12px] font-semibold capitalize ${priorityColor[ticket.priority.toUpperCase()] || "text-gray-500"}`}
                 >
-                  {ticket.priority.charAt(0) + ticket.priority.slice(1).toLowerCase()}
+                  {ticket.priority.toLowerCase()}
                 </span>
                 <span className="text-[11px] text-gray-400 text-right whitespace-nowrap">
                   {formatTimeAgo(ticket.updatedAt, t)}

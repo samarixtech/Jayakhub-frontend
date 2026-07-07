@@ -16,7 +16,10 @@ export const ContactCards = () => {
         </div>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 md:py-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+      <a
+        href={`tel:${t("phoneDesc")}`}
+        className="bg-white border border-gray-100 rounded-2xl p-6 md:py-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer no-underline"
+      >
         <div className="w-10 h-10 rounded-lg bg-[#e8f3ef] flex items-center justify-center mb-4">
           <Phone className="w-5 h-5 text-[#346853] fill-current opacity-80" />
         </div>
@@ -26,9 +29,12 @@ export const ContactCards = () => {
         <p className="text-[12px] text-gray-500 font-medium">
           {t("phoneDesc")}
         </p>
-      </div>
+      </a>
 
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 md:py-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+      <a
+        href={`mailto:${t("emailDesc")}`}
+        className="bg-white border border-gray-100 rounded-2xl p-6 md:py-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow cursor-pointer no-underline"
+      >
         <div className="w-10 h-10 rounded-lg bg-[#e8f3ef] flex items-center justify-center mb-4">
           <Mail className="w-5 h-5 text-[#346853] fill-current opacity-80" />
         </div>
@@ -36,7 +42,7 @@ export const ContactCards = () => {
         <p className="text-[12px] text-gray-500 font-medium">
           {t("emailDesc")}
         </p>
-      </div>
+      </a>
     </div>
   );
 };

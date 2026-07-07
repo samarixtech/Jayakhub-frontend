@@ -2127,7 +2127,8 @@
         "q7": "Can I export my financial data?",
         "a7": "Yes, you can export your payout and transaction history as a CSV file from the Finance tab.",
         "q8": "How do I add team members?",
-        "a8": "Go to Account & Settings > Team roles, and click 'Invite Member' to assign them specific access permissions."
+        "a8": "Go to Account & Settings > Team roles, and click 'Invite Member' to assign them specific access permissions.",
+        "noFaqs": "No FAQs available."
       },
       "knowledgeBase": {
         "title": "Knowledge Base",
@@ -2153,7 +2154,7 @@
       },
       "searchBanner": {
         "title": "How can we help you today?",
-        "subtitle": "Search for articles, FAQs, or browse our knowledge base.",
+        "subtitle": "Search for articles, FAQs, or create a ticket.",
         "placeholder": "e.g. How to change opening hours.."
       },
       "ticketDetail": {
@@ -2178,9 +2179,12 @@
         "subtitle": "Your recent inquiries",
         "colTicket": "Ticket",
         "colSubject": "Subject",
+        "colCategory": "Category",
+        "colDesc": "Description",
         "colStatus": "Status",
         "colPriority": "Priority",
         "colUpdated": "Updated",
+        "viewAll": "View All Tickets",
         "noTickets": "No tickets found. Create one to get started.",
         "timeAgo": {
           "minutes": "{count}m ago",
@@ -2699,7 +2703,8 @@
         "q7": "Can I export my financial data?",
         "a7": "Yes, you can export your payout and transaction history as a CSV file from the Finance tab.",
         "q8": "How do I add team members?",
-        "a8": "Go to Account & Settings > Team roles, and click 'Invite Member' to assign them specific access permissions."
+        "a8": "Go to Account & Settings > Team roles, and click 'Invite Member' to assign them specific access permissions.",
+        "noFaqs": "No FAQs available."
       },
       "knowledgeBase": {
         "title": "Knowledge Base",
@@ -2750,9 +2755,12 @@
         "subtitle": "Your recent inquiries",
         "colTicket": "Ticket",
         "colSubject": "Subject",
+        "colCategory": "Category",
+        "colDesc": "Description",
         "colStatus": "Status",
         "colPriority": "Priority",
         "colUpdated": "Updated",
+        "viewAll": "View All Tickets",
         "noTickets": "No tickets found. Create one to get started.",
         "timeAgo": {
           "minutes": "{count}m ago",

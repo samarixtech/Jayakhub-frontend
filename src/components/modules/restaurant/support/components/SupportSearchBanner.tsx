@@ -11,20 +11,9 @@ export const SupportSearchBanner = () => {
       <h2 className="text-[22px] md:text-[24px] font-bold mb-2 relative z-10 tracking-wide text-white">
         {t("title")}
       </h2>
-      <p className="text-white/80 text-[13px] mb-6 relative z-10 font-medium">
+      <p className="text-white/80 text-[13px] relative z-10 font-medium">
         {t("subtitle")}
       </p>
-      <div className="w-full max-w-[500px] relative z-10">
-        <Search
-          className="w-[18px] h-[18px] absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-          strokeWidth={2}
-        />
-        <input
-          type="text"
-          placeholder={t("placeholder")}
-          className="w-full h-11 pl-12 pr-4 rounded-full bg-white text-[13px] text-gray-800 placeholder:text-gray-400 border-0 outline-none shadow-sm focus:ring-2 focus:ring-white/40"
-        />
-      </div>
     </div>
   );
 };

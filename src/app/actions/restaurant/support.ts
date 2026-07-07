@@ -4,10 +4,16 @@
 
 import { serverApi } from "@/components/services/api";
 
-export async function getAllTicketsAction() {
+export async function getAllTicketsAction(params?: {
+  search?: string;
+  page?: number;
+  limit?: number;
+  status?: string;
+  priority?: string;
+}) {
   try {
     const api = await serverApi();
-    const response = await api.get("/all-tickets");
+    const response = await api.get("/all-tickets", { params });
     return {
       success: true as const,
       data: response.data,
@@ -97,6 +103,42 @@ export async function getTicketMessagesAction(id: string) {
       success: false as const,
       data: null,
       message: error.response?.data?.message || "Failed to fetch messages",
+    };
+  }
+}
+
+export async function getTicketStatsAction() {
+  try {
+    const api = await serverApi();
+    const response = await api.get("/ticket-stats");
+    return {
+      success: true as const,
+      data: response.data,
+    };
+  } catch (error: any) {
+    console.error("Fetch ticket stats error:", error);
+    return {
+      success: false as const,
+      data: null,
+      message: error.response?.data?.message || "Failed to fetch ticket stats",
+    };
+  }
+}
+
+export async function getFaqsAction() {
+  try {
+    const api = await serverApi();
+    const response = await api.get("/faq");
+    return {
+      success: true as const,
+      data: response.data,
+    };
+  } catch (error: any) {
+    console.error("Fetch FAQs error:", error);
+    return {
+      success: false as const,
+      data: null,
+      message: error.response?.data?.message || "Failed to fetch FAQs",
     };
   }
 }

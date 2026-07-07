@@ -22,6 +22,7 @@ import CloseRegisterModal from "./CloseRegisterModal";
 import POSSettingsModal from "./POSSettingsModal";
 import Link from "next/link";
 import Image from "next/image";
+import logo from "../../../../../../public/EngLogo (2).png"
 
 export default function POSNavbar() {
   const pathname = usePathname();
@@ -77,7 +78,7 @@ export default function POSNavbar() {
       <div className="flex items-center gap-4 sm:gap-6 w-full lg:w-auto">
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Image
-            src="/EngLogo (2).png"
+            src={logo}
             alt="Jayak Hub Logo"
             width={120}
             height={40}

@@ -7,7 +7,6 @@ import type { Ticket } from "../support.types";
 import { SupportSearchBanner } from "../components/SupportSearchBanner";
 import { ContactCards } from "../components/ContactCards";
 import { TicketsTable } from "../components/TicketsTable";
-import { KnowledgeBaseCategories } from "../components/KnowledgeBaseCategories";
 import { FAQSection } from "../components/FAQSection";
 import CreateTicketDialog from "../components/CreateTicketDialog";
 import { useRouter } from "next/navigation";
@@ -40,14 +39,15 @@ const SupportCenterView = () => {
 
       <ContactCards />
 
-      {/* Support Tickets + Knowledge Base */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-10">
+      {/* Support Tickets */}
+      <div className="mb-10">
         <TicketsTable
           tickets={tickets}
           isLoading={isLoading}
           onTicketClick={handleTicketClick}
+          limit={5}
+          onViewAll={() => router.push("/restaurant/support/all-tickets")}
         />
-        <KnowledgeBaseCategories />
       </div>
 
       <FAQSection />

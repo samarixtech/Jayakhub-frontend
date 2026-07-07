@@ -3,9 +3,12 @@ export interface Ticket {
   restaurantId?: string;
   userId?: string;
   subject: string;
+  category: string;
   description: string;
   status: "OPEN" | "IN_PROGRESS" | "RESOLVED";
   priority: "HIGH" | "MEDIUM" | "LOW";
+  assignedTo?: string | null;
+  messageThreadId?: string | null;
   createdAt: string;
   updatedAt: string;
 }
