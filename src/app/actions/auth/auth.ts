@@ -66,7 +66,9 @@ export async function verifyOtpAction(payload: {
           httpOnly: true,
           secure:
             process.env.NODE_ENV === "production" &&
-            (process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL)?.startsWith("https"),
+            (
+              process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
+            )?.startsWith("https"),
           sameSite: "lax",
           path: "/",
           maxAge: 60 * 60 * 24 * 7,
@@ -77,8 +79,13 @@ export async function verifyOtpAction(payload: {
         }
 
         const role = data.user?.role?.toLowerCase();
-        const restaurantRoles = ["restaurant_owner", "admin", "manager", "cashier"];
-        if (restaurantRoles.includes(role) ) {
+        const restaurantRoles = [
+          "restaurant_owner",
+          "admin",
+          "manager",
+          "cashier",
+        ];
+        if (restaurantRoles.includes(role)) {
           const restaurantId =
             data.user?.restaurantId ||
             data.user?.restaurant?.id ||
@@ -95,11 +102,10 @@ export async function verifyOtpAction(payload: {
         // Store plan keywords for ABAC feature-gating on client & server
         const keywords = data.user?.planDetails?.plan?.keywords;
         if (Array.isArray(keywords) && keywords.length > 0) {
-          cookieStore.set(
-            "planKeywords",
-            JSON.stringify(keywords),
-            { path: "/", maxAge: 60 * 60 * 24 * 7 },
-          );
+          cookieStore.set("planKeywords", JSON.stringify(keywords), {
+            path: "/",
+            maxAge: 60 * 60 * 24 * 7,
+          });
         } else {
           cookieStore.delete("planKeywords");
         }
@@ -133,7 +139,9 @@ export async function verifyResetOtpAction(payload: {
           httpOnly: true,
           secure:
             process.env.NODE_ENV === "production" &&
-            (process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL)?.startsWith("https"),
+            (
+              process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
+            )?.startsWith("https"),
           sameSite: "lax",
           path: "/",
           maxAge: 60 * 60 * 24 * 7,
@@ -298,6 +306,7 @@ export async function googleAuthAction(payload: {
       }),
     "Auth Successful",
     async (data: any) => {
+      console.log("Google auth response:", data);
       const { accessToken, user } = data;
       // The backend should return the actual assigned role
       const assignedRole = user?.role || payload.role;
@@ -311,6 +320,19 @@ export async function googleAuthAction(payload: {
           path: "/",
         });
         cookieStore.set("role", assignedRole.toLowerCase(), { path: "/" });
+
+        // Google login skips OTP verification entirely, so this response is
+        // the only place to capture subscription expiry/cancellation for it.
+        const isExpired = data?.isExpired ?? user?.planDetails?.isExpired ?? false;
+        const isCancelled = data?.isCancel ?? user?.planDetails?.isCancel ?? false;
+        cookieStore.set("isExpired", isExpired ? "true" : "false", {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+        cookieStore.set("isCancelled", isCancelled ? "true" : "false", {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
 
         return { role: assignedRole };
       }
@@ -332,6 +354,8 @@ export async function logoutAction(): Promise<ActionResponse> {
       cookieStore.delete("role");
       cookieStore.delete("planKeywords");
       cookieStore.delete("isExpired");
+      cookieStore.delete("isCancelled");
+      cookieStore.delete("planCheckedAt");
       return data;
     },
   );

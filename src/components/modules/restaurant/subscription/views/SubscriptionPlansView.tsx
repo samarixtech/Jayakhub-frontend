@@ -15,7 +15,7 @@ function getPlanAction(
   plan: RestaurantPlan,
   subscription: SubscriptionDetails | null,
 ): "current" | "downgrade" | "upgrade" | "contact" {
-  if (!subscription) return "upgrade";
+  if (!subscription?.plan) return "upgrade";
   if (plan.id === subscription.plan.id) return "current";
   if (plan.type === "custom") return "contact";
   const planPrice = parseFloat(plan.monthlyPrice);

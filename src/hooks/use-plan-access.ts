@@ -5,6 +5,7 @@ import {
   canAccess,
   getClientPlanKeywords,
   getClientIsExpired,
+  getClientIsCancelled,
   type PlanFeature,
   type PlanKeyword,
 } from "@/lib/utils/abac";
@@ -21,10 +22,12 @@ import {
 export function usePlanAccess() {
   const keywords = useMemo(() => getClientPlanKeywords(), []);
   const isExpired = useMemo(() => getClientIsExpired(), []);
+  const isCancelled = useMemo(() => getClientIsCancelled(), []);
 
   return {
     keywords,
     isExpired,
+    isCancelled,
     can: (feature: PlanFeature) => canAccess(feature, keywords),
     hasKeyword: (keyword: PlanKeyword | string) => keywords.includes(keyword),
   };

@@ -35,6 +35,20 @@ export async function getRestaurantStatusAction(): Promise<ActionResponse> {
         }
       }
 
+      // /my-restaurant is the authoritative source for plan status, so
+      // always refresh these — unlike planKeywords above, they're plain
+      // booleans that should never go stale behind an "only if missing" check.
+      const isExpired = data?.isExpired ?? data?.activePlan?.isExpired ?? false;
+      const isCancelled = data?.isCancel ?? data?.activePlan?.isCancel ?? false;
+      cookieStore.set("isExpired", isExpired ? "true" : "false", {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+      cookieStore.set("isCancelled", isCancelled ? "true" : "false", {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
       return data;
     },
   );

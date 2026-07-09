@@ -1,10 +1,11 @@
 import axios from "axios";
+import { toast } from "react-hot-toast";
 // import https from "https"; // Removed for edge compatibility
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const SERVER_BASE_URL = process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL;
 
-const AUTH_COOKIE_NAMES = ["token", "role", "planKeywords", "isExpired", "restaurantId"];
+const AUTH_COOKIE_NAMES = ["token", "role", "planKeywords", "isExpired", "isCancelled", "restaurantId", "planCheckedAt"];
 
 // Backend signals a killed/expired session (e.g. user deactivated from User
 // Management) with { meta: { status: 403, message: "Session Expired" } } —
@@ -76,12 +77,18 @@ api.interceptors.request.use(
 // Client-side helper: clears auth cookies in the browser and hard-redirects
 // to /login. A hard navigation (not router.push) so proxy.ts sees a fresh
 // request and adds the correct [country]/[language] prefix itself.
+let clientSessionExpiredHandled = false;
+
 function handleClientSessionExpired() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || clientSessionExpiredHandled) return;
+  clientSessionExpiredHandled = true;
   AUTH_COOKIE_NAMES.forEach((name) => {
     document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   });
-  window.location.href = "/login";
+  toast.error("Session Expired");
+  setTimeout(() => {
+    window.location.href = "/login";
+  }, 1200);
 }
 
 // Response interceptor

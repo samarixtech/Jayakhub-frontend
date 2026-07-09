@@ -94,6 +94,13 @@ export const getClientIsExpired = (): boolean => {
   return match?.[1] === "true";
 };
 
+/** Client-side: reads the isCancelled cookie value. */
+export const getClientIsCancelled = (): boolean => {
+  if (typeof document === "undefined") return false;
+  const match = document.cookie.match(/(?:^|; )isCancelled=([^;]*)/);
+  return match?.[1] === "true";
+};
+
 /** Server-side: reads planKeywords from Next.js cookies(). */
 export const getServerPlanKeywords = async (): Promise<string[]> => {
   const { cookies } = await import("next/headers");

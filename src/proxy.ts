@@ -3,6 +3,47 @@ import type { NextRequest } from "next/server";
 // import getClientIp from "./lib/getClientIp";
 import api from "./components/services/api";
 
+// Don't hit /my-restaurant on every single request to a /restaurant/* route
+// (middleware also runs on RSC data-fetch/prefetch requests, not just full
+// page loads) — only re-check once this many ms have passed since the last check.
+const PLAN_CHECK_INTERVAL_MS = 60_000;
+
+// Refreshes isExpired/isCancelled from the authoritative /my-restaurant
+// endpoint, throttled via a timestamp cookie. Returns the cookies to set on
+// the eventual response, or null if the check was skipped/failed (in which
+// case the existing cookie values — however stale — are left untouched).
+async function getPlanCookieUpdates(
+  request: NextRequest,
+): Promise<Record<string, string> | null> {
+  const token = request.cookies.get("token")?.value;
+  if (!token) return null;
+
+  const lastChecked = request.cookies.get("planCheckedAt")?.value;
+  const isStale =
+    !lastChecked || Date.now() - Number(lastChecked) > PLAN_CHECK_INTERVAL_MS;
+  if (!isStale) return null;
+
+  try {
+    const res = (await api.get("/my-restaurant", {
+      headers: { Authorization: `Bearer ${token}` },
+    })) as any;
+    const data = res.data?.data;
+    if (!data) return null;
+
+    const isExpired = data?.isExpired ?? data?.activePlan?.isExpired ?? false;
+    const isCancelled = data?.isCancel ?? data?.activePlan?.isCancel ?? false;
+
+    return {
+      isExpired: isExpired ? "true" : "false",
+      isCancelled: isCancelled ? "true" : "false",
+      planCheckedAt: String(Date.now()),
+    };
+  } catch (error) {
+    console.error("[proxy] /my-restaurant plan check failed:", error);
+    return null;
+  }
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -85,7 +126,7 @@ export async function proxy(request: NextRequest) {
       // No valid token — ensure any stale auth cookies (e.g. left over from
       // a session killed server-side after a 403 "Session Expired") are
       // wiped too, so the client is in a fully logged-out state.
-      ["role", "planKeywords", "isExpired", "restaurantId"].forEach((name) => {
+      ["role", "planKeywords", "isExpired", "isCancelled", "restaurantId", "planCheckedAt"].forEach((name) => {
         response.cookies.delete(name);
       });
       return response;
@@ -159,6 +200,22 @@ export async function proxy(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 365,
       });
     }
+
+    // Keep isExpired/isCancelled honest for restaurant routes — throttled,
+    // so a purchase or an expiry is reflected within ~60s instead of only
+    // ever refreshing at login.
+    if (isRestaurantRoute) {
+      const planCookies = await getPlanCookieUpdates(request);
+      if (planCookies) {
+        Object.entries(planCookies).forEach(([name, value]) => {
+          response.cookies.set(name, value, {
+            path: "/",
+            maxAge: 60 * 60 * 24 * 7,
+          });
+        });
+      }
+    }
+
     return response;
   }
 

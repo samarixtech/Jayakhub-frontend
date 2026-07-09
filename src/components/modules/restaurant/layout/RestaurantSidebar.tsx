@@ -134,20 +134,21 @@ export function RestaurantSidebar() {
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
   const isCollapsed = state === "collapsed" && !isMobile;
-  const { keywords, isExpired } = usePlanAccess();
+  const { keywords, isExpired, isCancelled } = usePlanAccess();
+  const isBlocked = isExpired || isCancelled;
   const isManager = getCookie("role") === "manager";
 
   const filteredSections = NAV_SECTIONS.map((section) => ({
     ...section,
     items: section.items.filter((item: any) => {
       if (isManager && item.hideForManager) return false;
-      if (isExpired) return true;
+      if (isBlocked) return true;
       return !item.feature || canAccess(item.feature as PlanFeature, keywords);
     }),
   })).filter((section) => section.items.length > 0);
 
   const isNavDisabled = (nameKey: string) =>
-    isExpired && nameKey !== "subscription";
+    isBlocked && nameKey !== "subscription";
 
   const handleLogout = async () => {
     try {
