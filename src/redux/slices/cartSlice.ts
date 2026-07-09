@@ -19,7 +19,7 @@ export const loadCartFromDB = createAsyncThunk(
 export interface PendingOrder {
   id: string;
   items: CartItem[];
-  orderType: "Dine-In" | "Takeaway" | "Delivery";
+  orderType: "Dine-In" | "TakeAway" | "Delivery";
   timestamp: string;
   tableName?: string;
 }
@@ -27,7 +27,7 @@ export interface PendingOrder {
 interface CartState {
   items: CartItem[];
   isLoading: boolean;
-  orderType: "Dine-In" | "Takeaway" | "Delivery";
+  orderType: "Dine-In" | "TakeAway" | "Delivery";
   pendingOrders: PendingOrder[];
 }
 
@@ -124,7 +124,7 @@ const cartSlice = createSlice({
       state.items = action.payload;
     },
 
-    setOrderType: (state, action: PayloadAction<"Dine-In" | "Takeaway" | "Delivery">) => {
+    setOrderType: (state, action: PayloadAction<"Dine-In" | "TakeAway" | "Delivery">) => {
       state.orderType = action.payload;
     },
 

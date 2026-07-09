@@ -2,11 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { format } from "date-fns";
 import { useServerAction } from "@/hooks/use-server-action";
 import {
   getRestaurantUsersAction,
   deleteRestaurantUserAction,
 } from "@/app/actions/restaurant/users";
+
+function formatLastActive(value?: string): string {
+  if (!value) return "Never";
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "Never";
+  return format(date, "dd MMM yyyy, hh:mm a");
+}
 
 export function useUsersList() {
   const [selectedFilter, setSelectedFilter] = useState("ALL");
@@ -26,7 +34,7 @@ export function useUsersList() {
             email: u.email,
             role: u.role ? u.role.toUpperCase() : "CASHIER",
             status: u.status,
-            lastActive: u.lastActive || "Never",
+            lastActive: formatLastActive(u.lastActive),
             avatar: "",
           }));
           setUsers(mappedUsers);

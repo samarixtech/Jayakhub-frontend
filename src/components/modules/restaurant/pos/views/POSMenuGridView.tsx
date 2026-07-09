@@ -64,7 +64,6 @@ export default function POSMenuGrid() {
                 if (orderType === "Dine-In") {
                   if (!selectedTable) {
                     toast.error("Please select a table before adding items.");
-                    setIsCartOpen(true);
                     return;
                   }
 

@@ -47,19 +47,19 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
     <Table>
       <TableHeader className="bg-gray-50/50">
         <TableRow className="border-gray-100 hover:bg-transparent">
-          <TableHead className="font-semibold text-gray-500 text-xs uppercase w-[300px] pl-6">
+          <TableHead className="font-semibold text-gray-500 text-xs uppercase w-[300px] pl-6 pr-4">
             {t("colUser")}
           </TableHead>
-          <TableHead className="font-semibold text-gray-500 text-xs uppercase">
+          <TableHead className="font-semibold text-gray-500 text-xs uppercase px-4">
             {t("colRole")}
           </TableHead>
-          <TableHead className="font-semibold text-gray-500 text-xs uppercase text-center">
+          <TableHead className="font-semibold text-gray-500 text-xs uppercase px-4 text-center">
             {t("colStatus")}
           </TableHead>
-          <TableHead className="font-semibold text-gray-500 text-xs uppercase">
+          <TableHead className="font-semibold text-gray-500 text-xs uppercase px-4">
             {t("colLastActive")}
           </TableHead>
-          <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right pr-6">
+          <TableHead className="font-semibold text-gray-500 text-xs uppercase text-right pl-4 pr-6">
             {t("colActions")}
           </TableHead>
         </TableRow>
@@ -69,7 +69,7 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
           // Skeleton Loader
           [...Array(5)].map((_, i) => (
             <TableRow key={i} className="animate-pulse">
-              <TableCell className="py-4 pl-6">
+              <TableCell className="py-4 pl-6 pr-4">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-gray-200" />
                   <div className="space-y-2">
@@ -78,16 +78,16 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>
+              <TableCell className="px-4">
                 <div className="h-4 w-20 bg-gray-200 rounded" />
               </TableCell>
-              <TableCell className="text-center">
+              <TableCell className="px-4 text-center">
                 <div className="h-5 w-10 bg-gray-200 rounded-full mx-auto" />
               </TableCell>
-              <TableCell>
+              <TableCell className="px-4">
                 <div className="h-4 w-24 bg-gray-100 rounded" />
               </TableCell>
-              <TableCell className="text-right pr-6">
+              <TableCell className="text-right pl-4 pr-6">
                 <div className="flex justify-end gap-2">
                   <div className="h-8 w-8 bg-gray-100 rounded-lg" />
                   <div className="h-8 w-8 bg-gray-100 rounded-lg" />
@@ -110,7 +110,7 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
               className="border-gray-50 hover:bg-gray-50/50 group"
             >
               {/* User Column */}
-              <TableCell className="py-4 pl-6">
+              <TableCell className="py-4 pl-6 pr-4">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10 border border-gray-100 bg-gray-50 text-gray-500">
                     <AvatarImage src={user.avatar} />
@@ -130,14 +130,14 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
               </TableCell>
 
               {/* Role Column */}
-              <TableCell>
+              <TableCell className="px-4">
                 <span className="font-bold text-xs text-gray-900 uppercase tracking-wide">
                   {user.role}
                 </span>
               </TableCell>
 
               {/* Status Column */}
-              <TableCell className="text-center">
+              <TableCell className="px-4 text-center">
                 <div className="flex justify-center">
                   <Switch
                     checked={user.status}
@@ -147,12 +147,12 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
               </TableCell>
 
               {/* Last Active Column */}
-              <TableCell>
+              <TableCell className="px-4">
                 <span className="text-sm text-gray-500">{user.lastActive}</span>
               </TableCell>
 
               {/* Actions Column */}
-              <TableCell className="text-right pr-6">
+              <TableCell className="text-right pl-4 pr-6">
                 <div className="flex items-center justify-end gap-2">
                   <Link href={`/restaurant/users/${user.id}`}>
                     <Button

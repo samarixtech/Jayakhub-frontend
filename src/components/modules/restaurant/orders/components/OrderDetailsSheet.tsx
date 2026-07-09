@@ -142,13 +142,25 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
 
         <div className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* Status */}
-          <div>
-            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-              {t("status")}
-            </h4>
-            <span className="text-sm font-bold text-gray-900 bg-gray-100 px-3 py-1 rounded-full">
-              {order.status}
-            </span>
+          <div className="flex items-start justify-between">
+            <div>
+              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                {t("status")}
+              </h4>
+              <span className="text-sm font-bold text-gray-900 bg-gray-100 px-3 py-1 rounded-full">
+                {order.status}
+              </span>
+            </div>
+            {order.prepareTime && (
+              <div className="text-right">
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                  {t("prepareTime")}
+                </h4>
+                <span className="text-sm font-bold text-gray-900">
+                  {order.prepareTime}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Customer */}
@@ -174,6 +186,53 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           </div>
 
           <Separator />
+
+          {/* Rider */}
+          {(order.rider || order.riderOrderId) && (
+            <>
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                  {t("riderDetails")}
+                </h4>
+                {order.rider ? (
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center text-gray-500 font-bold text-sm">
+                      {order.rider.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={order.rider.image}
+                          alt={order.rider.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        order.rider.name.charAt(0)
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">
+                        {order.rider.name}
+                      </p>
+                      <p className="text-xs text-gray-500 font-medium">
+                        {order.rider.phone}
+                      </p>
+                      <p className="text-xs text-gray-400 font-medium capitalize">
+                        {t("vehicle")}: {order.rider.vehicleType} · {order.rider.vehicleNumber}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-400">{t("noRiderAssigned")}</p>
+                )}
+                {order.riderOrderId && (
+                  <p className="text-xs text-gray-400 font-medium mt-2">
+                    {t("riderOrderId")}: <span className="text-gray-700">{order.riderOrderId}</span>
+                  </p>
+                )}
+              </div>
+
+              <Separator />
+            </>
+          )}
 
           {/* Items */}
           <div>
@@ -217,7 +276,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Discount</span>
+                <span className="text-gray-500">{t("discount")}</span>
                 <span className="text-red-500 font-medium">
                   -{formatPrice(order.discount) || "N/A"}
                 </span>

@@ -83,10 +83,6 @@ export function useProfileSettings(settings: SettingsData | null) {
     updateRestaurantProfileAction,
     {
       onSuccess: () => {
-        // window.location.reload() is reliable on all hosts — router.refresh()
-        // fails on Hostinger because revalidatePath uses a path that doesn't
-        // include the [country]/[language] prefix, so the route cache never
-        // invalidates and stale data gets rendered.
         window.location.reload();
       },
       onError: (err: any) => {

@@ -4,6 +4,34 @@ import axios from "axios";
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const SERVER_BASE_URL = process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BASE_URL;
 
+const AUTH_COOKIE_NAMES = ["token", "role", "planKeywords", "isExpired", "restaurantId"];
+
+// Backend signals a killed/expired session (e.g. user deactivated from User
+// Management) with { meta: { status: 403, message: "Session Expired" } } —
+// sometimes as a real HTTP 403, sometimes embedded in an HTTP 200 body.
+function isSessionExpiredPayload(data: any): boolean {
+  return (
+    !!data?.meta &&
+    data.meta.status === 403 &&
+    /session\s*expired/i.test(data.meta.message || "")
+  );
+}
+
+// Clears every auth cookie server-side (inside a Server Action's request
+// lifecycle) so the *next* request proxy.ts sees has no token — its existing
+// route guard then redirects to /login on its own.
+async function clearServerAuthCookies() {
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    for (const name of AUTH_COOKIE_NAMES) {
+      cookieStore.delete(name);
+    }
+  } catch {
+    // Not in a request context (e.g. build time) — nothing to clear.
+  }
+}
+
 const agent =
   typeof window === "undefined" && process.env.NEXT_RUNTIME !== "edge"
     ? new (require("https").Agent)({
@@ -45,10 +73,29 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
+// Client-side helper: clears auth cookies in the browser and hard-redirects
+// to /login. A hard navigation (not router.push) so proxy.ts sees a fresh
+// request and adds the correct [country]/[language] prefix itself.
+function handleClientSessionExpired() {
+  if (typeof window === "undefined") return;
+  AUTH_COOKIE_NAMES.forEach((name) => {
+    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  });
+  window.location.href = "/login";
+}
+
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (isSessionExpiredPayload(response.data)) {
+      handleClientSessionExpired();
+    }
+    return response;
+  },
   (error) => {
+    if (isSessionExpiredPayload(error.response?.data)) {
+      handleClientSessionExpired();
+    }
     if (error.response) {
       switch (error.response.status) {
         case 401:
@@ -113,8 +160,18 @@ export async function serverApi() {
   });
 
   instance.interceptors.response.use(
-    (response) => response,
-    (error) => {
+    async (response) => {
+      if (isSessionExpiredPayload(response.data)) {
+        await clearServerAuthCookies();
+        serverInstanceCache.delete(cacheKey);
+      }
+      return response;
+    },
+    async (error) => {
+      if (isSessionExpiredPayload(error.response?.data)) {
+        await clearServerAuthCookies();
+        serverInstanceCache.delete(cacheKey);
+      }
       if (error.response && error.response.status !== 401) {
         console.error("API Error:", error.response.status, error.response.data);
       }

@@ -37,6 +37,14 @@ export enum OrderStatus {
   REJECTED = "rejected",
 }
 
+export interface ApiOrderRider {
+  name: string;
+  phone: string | number;
+  image?: string;
+  vehicleNumber: string;
+  vehicleType: string;
+}
+
 export interface ApiOrder {
   orderId: string;
   customerName: string;
@@ -51,6 +59,9 @@ export interface ApiOrder {
   totalPrice: number;
   status: string;
   dateTime: string;
+  riderOrderId?: string;
+  prepareTime?: string;
+  rider?: ApiOrderRider;
 }
 
 export interface OrderStats {
@@ -77,6 +88,9 @@ export interface UIOrder {
   discount: number;
   total: number;
   originalStatus?: string;
+  riderOrderId?: string;
+  prepareTime?: string;
+  rider?: ApiOrderRider;
 }
 
 import { usePagination } from "@/hooks/usePagination";
@@ -202,6 +216,9 @@ export const useOrders = () => {
             discount: o.discount || 0,
             total: o.totalPrice,
             originalStatus: o.status,
+            riderOrderId: o.riderOrderId,
+            prepareTime: o.prepareTime,
+            rider: o.rider,
           };
         });
         setOrders(mappedOrders);

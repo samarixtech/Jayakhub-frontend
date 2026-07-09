@@ -67,3 +67,61 @@ export async function getPOSDashboardAction(): Promise<{
     };
   }
 }
+
+export async function getPosStatsAction(): Promise<{
+  success: boolean;
+  data: any;
+  message?: string;
+}> {
+  try {
+    const api = await serverApi();
+    const response = await api.get("/pos-stats");
+    const resData = response.data as any;
+    return { success: true, data: resData?.data ?? resData };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "Failed to fetch POS stats",
+      data: null,
+    };
+  }
+}
+
+export async function getPosOrdersFilteredAction(params?: {
+  page?: number;
+  limit?: number;
+  orderType?: string;
+  paymentMethod?: string;
+  search?: string;
+}): Promise<{
+  success: boolean;
+  data: any[];
+  pagination?: { page: number; limit: number; totalCount: number; totalPages: number };
+  message?: string;
+}> {
+  try {
+    const api = await serverApi();
+    const query = new URLSearchParams();
+    if (params?.page) query.set("page", String(params.page));
+    if (params?.limit) query.set("limit", String(params.limit));
+    if (params?.orderType) query.set("orderType", params.orderType);
+    if (params?.paymentMethod) query.set("paymentMethod", params.paymentMethod);
+    if (params?.search) query.set("search", params.search);
+    const qs = query.toString();
+    const url = qs ? `/pos-orders-filtered?${qs}` : "/pos-orders-filtered";
+
+    const response = await api.get(url);
+    const resData = response.data as any;
+    return {
+      success: true,
+      data: Array.isArray(resData?.data) ? resData.data : [],
+      pagination: resData?.pagination,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "Failed to fetch POS orders",
+      data: [],
+    };
+  }
+}

@@ -12,8 +12,8 @@ export async function getRestaurantStatusAction(): Promise<ActionResponse> {
     },
     "Restaurant status fetched successfully",
     async (data: any) => {
+      const cookieStore = await cookies();
       if (data?.id) {
-        const cookieStore = await cookies();
         cookieStore.set("restaurantId", data.id, {
           path: "/",
           secure: process.env.NODE_ENV === "production",
@@ -22,6 +22,19 @@ export async function getRestaurantStatusAction(): Promise<ActionResponse> {
           maxAge: 60 * 60 * 24 * 7, // 7 days
         });
       }
+
+      // Fallback: Google login skips OTP verification, so planKeywords never
+      // gets set there. Derive it from the restaurant's active plan instead.
+      if (!cookieStore.get("planKeywords")?.value) {
+        const keywords = data?.activePlan?.keywords;
+        if (Array.isArray(keywords) && keywords.length > 0) {
+          cookieStore.set("planKeywords", JSON.stringify(keywords), {
+            path: "/",
+            maxAge: 60 * 60 * 24 * 7,
+          });
+        }
+      }
+
       return data;
     },
   );

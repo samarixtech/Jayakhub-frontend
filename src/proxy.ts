@@ -82,6 +82,12 @@ export async function proxy(request: NextRequest) {
         path: "/",
         maxAge: 60 * 60 * 24 * 365,
       });
+      // No valid token — ensure any stale auth cookies (e.g. left over from
+      // a session killed server-side after a 403 "Session Expired") are
+      // wiped too, so the client is in a fully logged-out state.
+      ["role", "planKeywords", "isExpired", "restaurantId"].forEach((name) => {
+        response.cookies.delete(name);
+      });
       return response;
     }
 

@@ -61,41 +61,35 @@ export default function RestaurantHeader() {
 
   return (
     <>
-    {isExpired && (
-      <div className="w-full bg-red-500 text-white text-xs font-semibold text-center py-2 px-4 flex items-center justify-center gap-2 shrink-0">
-        <span>Your subscription has expired.</span>
-        <Link
-          href="/restaurant/subscription"
-          className="underline underline-offset-2 hover:text-red-100 transition-colors font-bold"
-        >
-          Go to Subscription Management to renew.
-        </Link>
-      </div>
-    )}
-    <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">
-      <SidebarTrigger className="-ml-2 text-gray-500 hover:bg-gray-100" />
+      {isExpired && (
+        <div className="w-full bg-red-500 text-white text-xs font-semibold text-center py-2 px-4 flex items-center justify-center gap-2 shrink-0">
+          <span>Your subscription has expired.</span>
+          <Link
+            href="/restaurant/subscription"
+            className="underline underline-offset-2 hover:text-red-100 transition-colors font-bold"
+          >
+            Go to Subscription Management to renew.
+          </Link>
+        </div>
+      )}
+      <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">
+        <SidebarTrigger className="-ml-2 text-gray-500 hover:bg-gray-100" />
 
-      <Typography variant="h3" className="font-bold text-gray-900 text-lg">
-        {pageTitle}
-      </Typography>
+        <Typography variant="h3" className="font-bold text-gray-900 text-lg">
+          {pageTitle}
+        </Typography>
 
-      <div className="ml-auto flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-gray-500 hover:bg-gray-100 rounded-full"
-        >
-        </Button>
-        <UserProfile
-          user={user}
-          onLogout={async () => {
-            await logoutAction();
-            setUser(null);
-            window.location.href = "/login";
-          }}
-        />
-      </div>
-    </header>
+        <div className="ml-auto flex items-center gap-2">
+          <UserProfile
+            user={user}
+            onLogout={async () => {
+              await logoutAction();
+              setUser(null);
+              window.location.href = "/login";
+            }}
+          />
+        </div>
+      </header>
     </>
   );
 }

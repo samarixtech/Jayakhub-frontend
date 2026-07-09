@@ -26,7 +26,8 @@ function formatHistoryDate(iso: string) {
   });
 }
 
-function capitalize(str: string) {
+function capitalize(str?: string) {
+  if (!str) return "";
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
@@ -190,7 +191,7 @@ export default function SubscriptionView() {
                 <div className="flex items-center justify-between relative z-10">
                   <div className="w-8 h-6 rounded-sm bg-gradient-to-br from-yellow-300 to-yellow-500 opacity-90" />
                   <span className="text-white text-lg font-black italic tracking-widest opacity-90">
-                    {card.brand.toUpperCase()}
+                    {card.brand?.toUpperCase() ?? ""}
                   </span>
                 </div>
 
@@ -291,7 +292,7 @@ export default function SubscriptionView() {
               <div className="flex items-center gap-4">
                 <div className="w-10 h-7 rounded bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0">
                   <span className="text-[10px] font-black text-gray-600 italic">
-                    {card.brand.toUpperCase()}
+                    {card.brand?.toUpperCase() ?? ""}
                   </span>
                 </div>
                 <div>

@@ -1388,6 +1388,7 @@
       "items": {
         "dashboard": "لوحة التحكم",
         "pos": "نظام البيع (POS)",
+        "posHistory": "سجل نظام البيع (POS)",
         "orders": "الطلبات",
         "posOrders": "طلبات نظام البيع (POS)",
         "menuManagement": "إدارة قائمة الطعام",
@@ -1398,9 +1399,11 @@
         "reviews": "التقييمات والمراجعات",
         "users": "إدارة المستخدمين",
         "finance": "المالية",
+        "payouts": "المدفوعات",
         "reports": "التقارير",
         "apis": "واجهات برمجة التطبيقات",
         "support": "مركز الدعم",
+        "subscription": "الاشتراك",
         "settings": "الإعدادات"
       },
       "logout": "تسجيل الخروج"
@@ -1680,8 +1683,14 @@
         "items": "الأصناف والعناصر",
         "paymentSummary": "ملخص الدفع",
         "subtotal": "المجموع الفرعي",
+        "discount": "الخصم",
         "tax": "الضريبة",
-        "total": "الإجمالي"
+        "total": "الإجمالي",
+        "riderDetails": "تفاصيل السائق",
+        "riderOrderId": "رقم طلب السائق",
+        "prepareTime": "وقت التحضير",
+        "vehicle": "المركبة",
+        "noRiderAssigned": "لم يتم تعيين سائق بعد"
       },
       "filters": {
         "show": "عرض:",

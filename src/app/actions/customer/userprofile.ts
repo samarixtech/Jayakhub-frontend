@@ -91,11 +91,20 @@ export async function updateProfileAction(
         const mimeType = payload.avatarBase64.split(",")[0].split(":")[1].split(";")[0];
         const buffer = Buffer.from(base64Data, "base64");
 
-        // Reconstruct Blob and FormData on server side to submit file to backend API
-        const blob = new Blob([buffer], { type: mimeType });
-        const avatarFormData = new FormData();
-        avatarFormData.append("avatar", blob, payload.avatarName || "avatar.jpg");
-        return api.put("/update-profile", avatarFormData);
+        // Use the form-data package so axios gets a proper multipart
+        // Content-Type header with boundary — native Node.js FormData
+        // doesn't expose the boundary, which breaks some backends.
+        const { default: NodeFormData } = await import("form-data");
+        const avatarFormData = new NodeFormData();
+        avatarFormData.append("avatar", buffer, {
+          filename: payload.avatarName || "avatar.jpg",
+          contentType: mimeType || "image/jpeg",
+          knownLength: buffer.length,
+        });
+
+        return api.put("/update-profile", avatarFormData, {
+          headers: avatarFormData.getHeaders(),
+        });
       }
 
       return profileResult;

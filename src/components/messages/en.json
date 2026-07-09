@@ -1395,6 +1395,7 @@
       "items": {
         "dashboard": "Dashboard",
         "pos": "POS",
+        "posHistory": "POS History",
         "orders": "Orders",
         "posOrders": "POS Orders",
         "menuManagement": "Menu Management",
@@ -1689,8 +1690,14 @@
         "items": "Items",
         "paymentSummary": "Payment Summary",
         "subtotal": "Subtotal",
+        "discount": "Discount",
         "tax": "Tax",
-        "total": "Total"
+        "total": "Total",
+        "riderDetails": "Rider Details",
+        "riderOrderId": "Rider Order ID",
+        "prepareTime": "Prepare Time",
+        "vehicle": "Vehicle",
+        "noRiderAssigned": "No rider assigned yet"
       },
       "filters": {
         "show": "Show:",

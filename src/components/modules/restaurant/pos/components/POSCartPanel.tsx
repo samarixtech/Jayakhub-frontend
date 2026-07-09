@@ -121,8 +121,8 @@ export default function POSCartPanel() {
           </button>
           <div className="w-px bg-gray-200"></div>
           <button
-            onClick={() => dispatch(setOrderType("Takeaway"))}
-            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "Takeaway" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
+            onClick={() => dispatch(setOrderType("TakeAway"))}
+            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "TakeAway" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
           >
             <ShoppingBag className="w-[13px] h-[13px]" />{" "}
             <span className="hidden lg:inline">Takeaway</span>

@@ -4,6 +4,26 @@ import { useState, useTransition, useCallback, useRef, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { ActionResponse } from "@/lib/utils/response-handler";
 
+const AUTH_COOKIE_NAMES = ["token", "role", "planKeywords", "isExpired", "restaurantId"];
+
+function isSessionExpiredResponse(response: ActionResponse<any>) {
+  return (
+    response.statusCode === 403 &&
+    /session\s*expired/i.test(response.message || "")
+  );
+}
+
+// The server action has already cleared cookies server-side (see api.ts's
+// serverApi() interceptor); this just forces an immediate client redirect
+// instead of waiting for the user's next navigation to hit proxy.ts's guard.
+function handleSessionExpired() {
+  AUTH_COOKIE_NAMES.forEach((name) => {
+    document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  });
+  toast.error("Session Expired");
+  window.location.href = "/login";
+}
+
 type ServerAction<TInput, TResponse> =
   | ((input: TInput) => Promise<ActionResponse<TResponse>>)
   | (() => Promise<ActionResponse<TResponse>>);
@@ -36,6 +56,11 @@ export function useServerAction<TInput, TResponse>(
         try {
           const response = await (actionRef.current as any)(input);
           setResult(response);
+
+          if (isSessionExpiredResponse(response)) {
+            handleSessionExpired();
+            return;
+          }
 
           if (response.success) {
             if (!optionsRef.current.suppressSuccessToast) {
