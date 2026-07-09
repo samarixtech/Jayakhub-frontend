@@ -57,12 +57,7 @@ export function PaymentHistoryTable({
       cell: (order) => {
         const firstItem =
           order.items && order.items.length > 0 ? order.items[0] : null;
-        let imageUrl = null;
-        if (firstItem?.image) {
-          imageUrl = firstItem.image.startsWith("http")
-            ? firstItem.image
-            : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${firstItem.image.replace(/\\/g, "/")}`;
-        }
+        const imageUrl = firstItem?.image || null;
 
         return (
           <div className="flex items-center gap-3">

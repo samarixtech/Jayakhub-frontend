@@ -38,7 +38,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import Image from "next/image";
-import logo from "../../../../../public/EngLogo (2).png"
+import logo from "../../../../../public/EngLogo (2).png";
 
 // Only tabs explicitly described in the plan spec are gated.
 // All other tabs are always visible.
@@ -46,8 +46,22 @@ const NAV_SECTIONS = [
   {
     labelKey: "main",
     items: [
-      { nameKey: "dashboard", href: "/restaurant/dashboard", icon: LayoutDashboard },
-      { nameKey: "pos", href: "/restaurant/pos", icon: Store, feature: "pos" },
+      {
+        nameKey: "dashboard",
+        href: "/restaurant/dashboard",
+        icon: LayoutDashboard,
+      },
+      {
+        nameKey: "pos",
+        icon: Store,
+        feature: "pos",
+        isCollapsible: true,
+        bgActive: true,
+        items: [
+          { nameKey: "pos", href: "/restaurant/pos" },
+          { nameKey: "posHistory", href: "/restaurant/pos/history" },
+        ],
+      },
       { nameKey: "orders", href: "/restaurant/orders", icon: ShoppingCart },
       {
         nameKey: "menuManagement",
@@ -67,16 +81,42 @@ const NAV_SECTIONS = [
     items: [
       { nameKey: "users", href: "/restaurant/users", icon: Users },
       { nameKey: "reviews", href: "/restaurant/reviews", icon: Star },
-      { nameKey: "finance", href: "/restaurant/payments", icon: CreditCard, feature: "finance_tab", hideForManager: true },
-      { nameKey: "payouts", href: "/restaurant/payouts", icon: Wallet, hideForManager: true },
-      { nameKey: "reports", href: "/restaurant/reports", icon: BarChart2, feature: "reports_tab" },
+      {
+        nameKey: "finance",
+        href: "/restaurant/payments",
+        icon: CreditCard,
+        feature: "finance_tab",
+        hideForManager: true,
+      },
+      {
+        nameKey: "payouts",
+        href: "/restaurant/payouts",
+        icon: Wallet,
+        hideForManager: true,
+      },
+      {
+        nameKey: "reports",
+        href: "/restaurant/reports",
+        icon: BarChart2,
+        feature: "reports_tab",
+      },
     ],
   },
   {
     labelKey: "settings",
     items: [
-      { nameKey: "support", href: "/restaurant/support", icon: HelpCircle, feature: "support_tab" },
-      { nameKey: "subscription", href: "/restaurant/subscription", icon: Layers, hideForManager: true },
+      {
+        nameKey: "support",
+        href: "/restaurant/support",
+        icon: HelpCircle,
+        feature: "support_tab",
+      },
+      {
+        nameKey: "subscription",
+        href: "/restaurant/subscription",
+        icon: Layers,
+        hideForManager: true,
+      },
       { nameKey: "settings", href: "/restaurant/settings", icon: Settings },
     ],
   },
@@ -103,11 +143,14 @@ export function RestaurantSidebar() {
         ...section,
         items: section.items.filter((item: any) => {
           if (isManager && item.hideForManager) return false;
-          return !item.feature || canAccess(item.feature as PlanFeature, keywords);
+          return (
+            !item.feature || canAccess(item.feature as PlanFeature, keywords)
+          );
         }),
       })).filter((section) => section.items.length > 0);
 
-  const isNavDisabled = (nameKey: string) => isExpired && nameKey !== "subscription";
+  const isNavDisabled = (nameKey: string) =>
+    isExpired && nameKey !== "subscription";
 
   const handleLogout = async () => {
     try {
@@ -145,12 +188,7 @@ export function RestaurantSidebar() {
           {!isCollapsed ? (
             <div className="flex items-center gap-2 px-4 w-full justify-center">
               {/* LOGO */}
-              <Image
-                src={logo}
-                alt="Logo"
-                width={180}
-                height={200}
-              />
+              <Image src={logo} alt="Logo" width={180} height={200} />
             </div>
           ) : (
             <div className="">
@@ -203,9 +241,7 @@ export function RestaurantSidebar() {
                                     asChild
                                     className={`h-10 pl-12 rounded-lg hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/60 ${isSubActive ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium" : ""}`}
                                   >
-                                    <Link
-                                      href={subItem.href}
-                                    >
+                                    <Link href={subItem.href}>
                                       <span>
                                         {t(
                                           `Sidebar.items.${subItem.nameKey}` as any,
@@ -226,7 +262,10 @@ export function RestaurantSidebar() {
                 const isActive = pathname === item.href;
                 const disabled = isNavDisabled(item.nameKey);
                 return (
-                  <SidebarMenuItem key={item.nameKey} className={disabled ? "pointer-events-none opacity-40" : ""}>
+                  <SidebarMenuItem
+                    key={item.nameKey}
+                    className={disabled ? "pointer-events-none opacity-40" : ""}
+                  >
                     <SidebarMenuButton
                       asChild={!disabled}
                       tooltip={t(`Sidebar.items.${item.nameKey}` as any)}
@@ -242,12 +281,16 @@ export function RestaurantSidebar() {
                       {disabled ? (
                         <>
                           <item.icon className="w-5 h-5" />
-                          <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
+                          <span>
+                            {t(`Sidebar.items.${item.nameKey}` as any)}
+                          </span>
                         </>
                       ) : (
                         <Link href={item.href}>
                           <item.icon className="w-5 h-5" />
-                          <span>{t(`Sidebar.items.${item.nameKey}` as any)}</span>
+                          <span>
+                            {t(`Sidebar.items.${item.nameKey}` as any)}
+                          </span>
                         </Link>
                       )}
                     </SidebarMenuButton>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 import {
   Star,
   Zap,
@@ -10,20 +11,34 @@ import {
 } from "lucide-react";
 
 // ==================== CURATED CATEGORIES ====================
-export const CURATED_CATEGORIES = [
-  { id: "top_rated", label: "Top Rated", icon: Star },
-  { id: "fastest", label: "Fastest Delivery", icon: Zap },
-  { id: "healthy", label: "Healthy", icon: Leaf },
-  { id: "new", label: "New Arrivals", icon: Sparkles },
-  { id: "trending", label: "Trending", icon: TrendingUp },
-  { id: "best_sellers", label: "Best Sellers", icon: Award },
-  { id: "vegan", label: "Vegan Options", icon: Sprout },
+const CURATED_CATEGORY_ICONS = [
+  { id: "top_rated", icon: Star },
+  { id: "fastest", icon: Zap },
+  { id: "healthy", icon: Leaf },
+  { id: "new", icon: Sparkles },
+  { id: "trending", icon: TrendingUp },
+  { id: "best_sellers", icon: Award },
+  { id: "vegan", icon: Sprout },
 ];
 
 export const CuratedSection: React.FC<{
   selectedSort: string;
   onSortChange: (sort: string) => void;
 }> = ({ selectedSort, onSortChange }) => {
+  const t = useTranslations("Discovery.curatedSection");
+  const CURATED_CATEGORIES = [
+    { id: "top_rated", label: t("categories.topRated") },
+    { id: "fastest", label: t("categories.fastest") },
+    { id: "healthy", label: t("categories.healthy") },
+    { id: "new", label: t("categories.new") },
+    { id: "trending", label: t("categories.trending") },
+    { id: "best_sellers", label: t("categories.bestSellers") },
+    { id: "vegan", label: t("categories.vegan") },
+  ].map((cat) => ({
+    ...cat,
+    icon: CURATED_CATEGORY_ICONS.find((c) => c.id === cat.id)!.icon,
+  }));
+
   const handleItemClick = (id: string) => {
     if (id === "top_rated") onSortChange("highest");
     else if (id === "fastest") onSortChange("fastest");
@@ -39,7 +54,7 @@ export const CuratedSection: React.FC<{
   const activeId = getActiveId();
   return (
     <section className="mb-8">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Curated for you</h3>
+      <h3 className="text-lg font-bold text-gray-900 mb-4">{t("title")}</h3>
       <div className="flex gap-12 md:gap-6 overflow-x-auto pb-2 pl-4.5 sm:pl-0 scrollbar-hide">
         {CURATED_CATEGORIES.map((cat) => {
           const isActive = activeId === cat.id;

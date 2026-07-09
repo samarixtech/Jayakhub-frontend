@@ -9,6 +9,7 @@ export interface RestaurantDetails {
   longitude: string;
   profileImage: string;
   bannerImage: string;
+  isOpen?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -35,6 +36,7 @@ export interface RestaurantMenuProps {
   filteredItems: APIMnuItem[] | null;
   menuByCategories: Record<string, APIMnuItem[]>;
   currency: string;
+  restaurantIsOpen?: boolean;
   onCategoryClick: (category: string) => void;
   onAddItem: (item: APIMnuItem) => void;
   onItemClick: (item: APIMnuItem) => void;
@@ -55,6 +57,7 @@ export interface FoodCardProps {
   onAddItem: (item: APIMnuItem) => void;
   onClick: () => void;
   currency: string;
+  restaurantIsOpen?: boolean;
 }
 
 export interface CuisineType {
@@ -95,6 +98,7 @@ export interface RestaurantProps {
   isFavorite?: boolean;
   isWishlist?: boolean;
   averageDiscount?: number;
+  isOpen?: boolean;
 }
 
 export interface CardProps {

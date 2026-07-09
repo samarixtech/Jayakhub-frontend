@@ -138,9 +138,7 @@ export function useRestaurantDetails() {
       price: finalPrice,
       originalPrice: item.basePrice,
       discount: item.discount,
-      imageUrl: item.image
-        ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL?.replace(/\/+$/, "")}/${item.image.replace(/^\/+/, "").replace(/\\/g, "/")}`
-        : "",
+      imageUrl: item.image || "",
       description: item.description,
       quantity: 1,
       restaurantName: restaurant?.name,
@@ -207,13 +205,9 @@ export function useRestaurantDetails() {
     0,
   );
 
-  const bannerUrl = restaurant?.bannerImage
-    ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${restaurant.bannerImage.replace(/\\/g, "/")}`
-    : "/pizza-palace.jpg";
+  const bannerUrl = restaurant?.bannerImage || "/pizza-palace.jpg";
 
-  const profileUrl = restaurant?.profileImage
-    ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${restaurant.profileImage.replace(/\\/g, "/")}`
-    : "/pizza-palace.jpg";
+  const profileUrl = restaurant?.profileImage || "/pizza-palace.jpg";
 
   const deliveryFee = selectedRestaurantMeta?.deliveryFee;
   const distance = selectedRestaurantMeta?.distance;

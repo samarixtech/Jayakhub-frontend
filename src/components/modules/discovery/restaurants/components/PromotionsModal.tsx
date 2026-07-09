@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Calendar, Tag, Check, Copy } from "lucide-re
 import { GlobalModal } from "@/components/common/GlobalModal";
 import { useCLC } from "@/context/CLCContext";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export interface Coupon {
   code: string;
@@ -38,6 +39,7 @@ export function PromotionsModal({
   onOpenChange,
   campaigns,
 }: PromotionsModalProps) {
+  const t = useTranslations("Discovery.promotionsModal");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const { formatPrice, currencyCode } = useCLC();
@@ -58,12 +60,7 @@ export function PromotionsModal({
     setCopied(false);
   };
 
-  const getImageUrl = (imagePath: string) => {
-    if (!imagePath) return "";
-    if (imagePath.startsWith("http")) return imagePath;
-    const base = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
-    return `${base.replace(/\/+$/, "")}/${imagePath.replace(/^\/+/, "").replace(/\\/g, "/")}`;
-  };
+  const getImageUrl = (imagePath: string) => imagePath || "";
 
   const formatDate = (dateStr: string) => {
     try {
@@ -90,7 +87,7 @@ export function PromotionsModal({
     if (currentCampaign.coupon?.code) {
       navigator.clipboard.writeText(currentCampaign.coupon.code);
       setCopied(true);
-      toast.success("Coupon code copied!");
+      toast.success(t("couponCopied"));
       setTimeout(() => setCopied(false), 2000);
     }
   };
@@ -116,7 +113,7 @@ export function PromotionsModal({
         ) : (
           <div className="flex flex-col items-center gap-2 text-gray-400">
             <Tag className="w-12 h-12 text-[#346853] opacity-60" />
-            <span className="text-sm font-medium">Special Promotion</span>
+            <span className="text-sm font-medium">{t("specialPromotion")}</span>
           </div>
         )}
 
@@ -126,7 +123,7 @@ export function PromotionsModal({
         {/* Promotion tag badge */}
         <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-[#346853] text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md tracking-wide">
           <Tag className="w-3.5 h-3.5" />
-          <span>PROMOTION</span>
+          <span>{t("promotionBadge")}</span>
         </div>
 
         {/* Campaign Title Overlay */}
@@ -143,7 +140,7 @@ export function PromotionsModal({
         <div className="flex items-center gap-2 text-xs font-medium text-gray-500 bg-gray-50 px-3.5 py-2.5 rounded-2xl w-full border border-gray-100">
           <Calendar className="w-4 h-4 text-[#346853] shrink-0" />
           <span className="truncate">
-            Valid: {formatDate(currentCampaign.startTime)} – {formatDate(currentCampaign.endTime)}
+            {t("validRange", { start: formatDate(currentCampaign.startTime), end: formatDate(currentCampaign.endTime) })}
           </span>
         </div>
 
@@ -170,19 +167,19 @@ export function PromotionsModal({
                 </span>
                 <h3 className="font-bold text-gray-900 text-sm mt-2">
                   {currentCampaign.coupon.discountType === "percentage"
-                    ? `${currentCampaign.coupon.discountValue}% discount on your next order!`
-                    : `Flat ${formatCouponValue(currentCampaign.coupon.discountValue)} off on your next order!`}
+                    ? t("percentageDiscount", { value: currentCampaign.coupon.discountValue })
+                    : t("flatDiscount", { value: formatCouponValue(currentCampaign.coupon.discountValue) })}
                 </h3>
 
                 <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-xs text-gray-500">
                   {currentCampaign.coupon.minOrder && (
                     <span>
-                      Min. Order: <strong className="text-gray-700">{formatCouponValue(currentCampaign.coupon.minOrder)}</strong>
+                      {t("minOrder")} <strong className="text-gray-700">{formatCouponValue(currentCampaign.coupon.minOrder)}</strong>
                     </span>
                   )}
                   {currentCampaign.coupon.maxOrderCap && (
                     <span>
-                      Max. Cap: <strong className="text-gray-700">{formatCouponValue(currentCampaign.coupon.maxOrderCap)}</strong>
+                      {t("maxCap")} <strong className="text-gray-700">{formatCouponValue(currentCampaign.coupon.maxOrderCap)}</strong>
                     </span>
                   )}
                 </div>
@@ -201,12 +198,12 @@ export function PromotionsModal({
                 {copied ? (
                   <>
                     <Check className="w-3.5 h-3.5" />
-                    <span>Copied</span>
+                    <span>{t("copied")}</span>
                   </>
                 ) : (
                   <>
                     <Copy className="w-3.5 h-3.5" />
-                    <span>Copy</span>
+                    <span>{t("copy")}</span>
                   </>
                 )}
               </button>
@@ -256,13 +253,13 @@ export function PromotionsModal({
             onClick={() => onOpenChange(false)}
             className="w-full bg-[#346853] hover:bg-[#28503f] active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
           >
-            <span>Explore Deals</span>
+            <span>{t("exploreDeals")}</span>
           </button>
           <button
             onClick={() => onOpenChange(false)}
             className="w-full text-gray-500 hover:text-gray-700 hover:bg-gray-50 font-medium py-2.5 rounded-2xl transition-all text-sm text-center"
           >
-            Dismiss
+            {t("dismiss")}
           </button>
         </div>
       </div>

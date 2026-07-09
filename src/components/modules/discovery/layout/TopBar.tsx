@@ -1,16 +1,18 @@
 "use client";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { TopBarProps } from "@/components/modules/discovery/discovery.types";
 
 const TopBar = ({ isScrolled }: TopBarProps) => {
+  const t = useTranslations("Discovery.topBar");
   const links = [
-    { label: "Our Business Website", href: "/home" },
+    { label: t("businessWebsite"), href: "/home" },
     {
-      label: "Sign up for a Restaurant Account",
+      label: t("restaurantSignup"),
       href: "/restaurant-register",
     },
     {
-      label: "Sign up to be a business partner",
+      label: t("partnerSignup"),
       href: "/partners",
     },
   ];

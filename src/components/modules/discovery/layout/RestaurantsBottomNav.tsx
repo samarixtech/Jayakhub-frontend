@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
 import { RootState } from "@/redux/store/store";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,6 +25,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
   user,
   showFilter = true,
 }) => {
+  const t = useTranslations("Discovery.bottomNav");
   const pathname = usePathname();
 
   const totalItems = useSelector((state: RootState) =>
@@ -33,10 +35,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
   const isActive = (path: string) =>
     pathname === path || pathname?.endsWith(path);
 
-  const imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
-  const avatarSrc = user?.avatar
-    ? `${imageBaseUrl}${user.avatar}`
-    : user?.image || undefined;
+  const avatarSrc = user?.avatar || user?.image || undefined;
 
   return (
     <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 py-2 px-6 flex justify-between items-center z-50 md:hidden pb-safe">
@@ -52,7 +51,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
             isActive("/restaurants") ? "text-[#346853]" : "text-gray-500"
           }`}
         >
-          Home
+          {t("home")}
         </span>
       </Link>
 
@@ -63,7 +62,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
           className="flex flex-col items-center gap-1"
         >
           <SlidersHorizontal className="w-6 h-6 text-gray-400" />
-          <span className="text-[10px] font-medium text-gray-500">Filters</span>
+          <span className="text-[10px] font-medium text-gray-500">{t("filters")}</span>
         </button>
       )}
 
@@ -80,7 +79,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
             </Badge>
           )}
         </div>
-        <span className="text-[10px] font-medium text-gray-500">Cart</span>
+        <span className="text-[10px] font-medium text-gray-500">{t("cart")}</span>
       </button>
 
       {/* Wishlist */}
@@ -103,7 +102,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
                 : "text-gray-500"
             }`}
           >
-            Wishlist
+            {t("wishlist")}
           </span>
         </Link>
       )}
@@ -138,7 +137,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
             isActive("/customer/dashboard") ? "text-[#346853]" : "text-gray-500"
           }`}
         >
-          Profile
+          {t("profile")}
         </span>
       </Link>
     </div>

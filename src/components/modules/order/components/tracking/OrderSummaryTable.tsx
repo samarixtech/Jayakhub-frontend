@@ -35,9 +35,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
       <div className="space-y-4 mb-6">
         {items &&
           items.map((item: any, idx: number) => {
-            const imageUrl = item.image
-              ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL?.replace(/\/+$/, "")}/${item.image.replace(/^\/+/, "").replace(/\\/g, "/")}`
-              : null;
+            const imageUrl = item.image || null;
 
             return (
               <div key={idx} className="flex justify-between items-start">

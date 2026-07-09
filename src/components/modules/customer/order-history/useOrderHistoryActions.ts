@@ -16,17 +16,7 @@ interface UseOrderHistoryActionsProps {
   setIsRatingModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const getImageUrl = (path: string) => {
-  if (!path) return "";
-  if (path.startsWith("http")) return path;
-  const cleanPath = path.replace(/\\/g, "/");
-  const hasLeadingSlash = cleanPath.startsWith("/");
-  const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
-  const cleanBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
-  return hasLeadingSlash
-    ? `${cleanBaseUrl}${cleanPath}`
-    : `${cleanBaseUrl}/${cleanPath}`;
-};
+export const getImageUrl = (path: string) => path || "";
 
 export const getStatusColor = (status: string) => {
   const s = status?.toLowerCase();

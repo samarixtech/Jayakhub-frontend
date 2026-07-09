@@ -54,10 +54,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
   // Helper functions for attachments and display
   const getAttachmentUrl = (filePath: string) => {
     if (!filePath) return "";
-    const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
-    const cleanBase = baseUrl.replace(/\/+$/, "");
-    const cleanPath = filePath.replace(/\\/g, "/").replace(/^\/+/, "");
-    return `${cleanBase}/${cleanPath}`;
+    return filePath;
   };
 
   const isImageUrl = (filePath: string) => {

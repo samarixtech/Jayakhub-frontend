@@ -3940,5 +3940,140 @@
       "contact_email": "nour@jayakhub.com",
       "contact_btn": "Contact Press Team"
     }
+  },
+  "Discovery": {
+    "globalSearch": {
+      "placeholder": "Search for restaurants, cuisines...",
+      "searchButton": "Search",
+      "recentSearches": "Recent Searches",
+      "clearAll": "Clear All",
+      "emptyPrompt": "Search for your favorite restaurants or cuisines!",
+      "suggestions": "Suggestions",
+      "restaurants": "Restaurants",
+      "noResults": "No results found",
+      "tryDifferentSearch": "Try searching for something else."
+    },
+    "promoBanner": {
+      "title": "Subscribe to JayakPro",
+      "description": "Get unlimited free delivery and 15% extra discount on selected restaurants",
+      "cta": "Join for {price}/mo"
+    },
+    "sectionHeader": {
+      "seeAll": "See All"
+    },
+    "topBar": {
+      "businessWebsite": "Our Business Website",
+      "restaurantSignup": "Sign up for a Restaurant Account",
+      "partnerSignup": "Sign up to be a business partner"
+    },
+    "headerActions": {
+      "login": "Login",
+      "signUp": "Sign up",
+      "userFallback": "User"
+    },
+    "bottomNav": {
+      "home": "Home",
+      "filters": "Filters",
+      "cart": "Cart",
+      "wishlist": "Wishlist",
+      "profile": "Profile"
+    },
+    "restaurantHero": {
+      "closed": "RESTAURANT CLOSED",
+      "freeDelivery": "FREE DELIVERY",
+      "new": "New",
+      "readReviews": "Read Reviews ›",
+      "estimatedTime": "20-30 min",
+      "freeDeliveryLabel": "Free Delivery"
+    },
+    "foodCard": {
+      "off": "OFF",
+      "unavailable": "Unavailable",
+      "restaurantClosed": "Restaurant Closed"
+    },
+    "restaurantMenu": {
+      "searchResults": "Search Results"
+    },
+    "restaurantCard": {
+      "wishlistLoginRequired": "Please login to manage your wishlist",
+      "addedToWishlist": "Added to wishlist",
+      "removedFromWishlist": "Removed from wishlist",
+      "wishlistUpdateFailed": "Failed to update wishlist",
+      "somethingWentWrong": "Something went wrong",
+      "closed": "Restaurant Closed",
+      "new": "New",
+      "defaultDeliveryTime": "30-45 mins",
+      "freeDelivery": "Free Delivery",
+      "deliverySuffix": "Delivery"
+    },
+    "sidebar": {
+      "sortBy": "Sort By",
+      "resetFilters": "Reset Filters",
+      "sortOptions": {
+        "recommended": "Recommended",
+        "fastestDelivery": "Fastest Delivery",
+        "nearestRestaurant": "Nearest Restaurant",
+        "lowestPrice": "Lowest Price",
+        "highestPrice": "Highest Price"
+      },
+      "minimumRating": "Minimum Rating",
+      "showingRatingAndAbove": "Showing {rating}★ and above",
+      "quickFilters": "Quick Filters",
+      "activeDiscounts": "Active Discounts",
+      "myWishlist": "My Wishlist",
+      "cuisines": "Cuisines",
+      "showLess": "Show less",
+      "viewMore": "View more"
+    },
+    "heroBanner": {
+      "title": "Food delivery and more"
+    },
+    "allRestaurantsSection": {
+      "title": "All Restaurants",
+      "noResults": "No restaurants found",
+      "adjustFilters": "Try adjusting filters or location"
+    },
+    "cuisinesSection": {
+      "title": "Cuisines"
+    },
+    "curatedSection": {
+      "title": "Curated for you",
+      "categories": {
+        "topRated": "Top Rated",
+        "fastest": "Fastest Delivery",
+        "healthy": "Healthy",
+        "new": "New Arrivals",
+        "trending": "Trending",
+        "bestSellers": "Best Sellers",
+        "vegan": "Vegan Options"
+      }
+    },
+    "popularSection": {
+      "title": "Popular Restaurants",
+      "noResults": "No restaurants found."
+    },
+    "previousOrdersSection": {
+      "title": "Order Again"
+    },
+    "promotionsModal": {
+      "specialPromotion": "Special Promotion",
+      "promotionBadge": "PROMOTION",
+      "validRange": "Valid: {start} – {end}",
+      "minOrder": "Min. Order:",
+      "maxCap": "Max. Cap:",
+      "percentageDiscount": "{value}% discount on your next order!",
+      "flatDiscount": "Flat {value} off on your next order!",
+      "copied": "Copied",
+      "copy": "Copy",
+      "couponCopied": "Coupon code copied!",
+      "exploreDeals": "Explore Deals",
+      "dismiss": "Dismiss"
+    },
+    "filterSheet": {
+      "title": "Filters"
+    },
+    "restaurantsPage": {
+      "nearbyCount": "{count} restaurants near you"
+    }
   }
 }

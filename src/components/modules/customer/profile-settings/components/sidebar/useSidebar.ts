@@ -33,9 +33,8 @@ export function useSidebar(
 
   const avatarSrc =
     preview ||
-    (profile.avatar
-      ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${profile.avatar}`
-      : "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop");
+    profile.avatar ||
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop";
 
   return {
     fileInputRef,

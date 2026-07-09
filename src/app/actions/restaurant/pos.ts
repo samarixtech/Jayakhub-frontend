@@ -1,17 +1,18 @@
 "use server";
 import { serverApi } from "@/components/services/api";
 
-export async function getPosItems(category?: string): Promise<{
+export async function getPosItems(category?: string, search?: string): Promise<{
   success: boolean;
   data: any;
   message?: string;
 }> {
   try {
     const api = await serverApi();
-    const url =
-      category && category !== "all"
-        ? `/pos-item?category=${encodeURIComponent(category)}`
-        : "/pos-item";
+    const params = new URLSearchParams();
+    if (category && category !== "all") params.set("category", category);
+    if (search) params.set("search", search);
+    const query = params.toString();
+    const url = query ? `/pos-item?${query}` : "/pos-item";
 
     const response = await api.get(url);
 

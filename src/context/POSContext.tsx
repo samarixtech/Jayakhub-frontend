@@ -43,6 +43,8 @@ interface POSContextType {
   setActiveView: (view: "menu" | "online") => void;
   activeCategory: string;
   setActiveCategory: (category: string) => void;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
   posItems: any[];
   globalCategories: string[];
   isPosLoading: boolean;
@@ -60,6 +62,8 @@ export function POSProvider({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState<"menu" | "online">("menu");
   const [activeCategory, setActiveCategory] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [activeModifierItemId, setActiveModifierItemId] = useState<
     string | number | null
   >(null);
@@ -108,6 +112,14 @@ export function POSProvider({ children }: { children: ReactNode }) {
     fetchInitialTable();
   }, []);
 
+  // Debounce search term to avoid firing a request on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   useEffect(() => {
     let isMounted = true;
     const fetchPosData = async () => {
@@ -115,7 +127,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
       try {
         // Determine whether to fetch "all" or filtered subset
         const params = activeCategory === "all" ? undefined : activeCategory;
-        const result = await getPosItems(params);
+        const result = await getPosItems(params, debouncedSearch || undefined);
 
         if (result.success && result.data?.data) {
           if (isMounted) {
@@ -139,7 +151,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, [activeCategory]);
+  }, [activeCategory, debouncedSearch]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCartItems((prev) => {
@@ -216,6 +228,8 @@ export function POSProvider({ children }: { children: ReactNode }) {
         setActiveView,
         activeCategory,
         setActiveCategory,
+        searchTerm,
+        setSearchTerm,
         posItems,
         globalCategories,
         isPosLoading,

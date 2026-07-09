@@ -3603,5 +3603,140 @@
       "contact_email": "nour@jayakhub.com",
       "contact_btn": "تواصل مع فريق الصحافة"
     }
+  },
+  "Discovery": {
+    "globalSearch": {
+      "placeholder": "ابحث عن مطاعم، أنواع المأكولات...",
+      "searchButton": "بحث",
+      "recentSearches": "عمليات البحث الأخيرة",
+      "clearAll": "مسح الكل",
+      "emptyPrompt": "ابحث عن مطاعمك أو أنواع مأكولاتك المفضلة!",
+      "suggestions": "اقتراحات",
+      "restaurants": "المطاعم",
+      "noResults": "لا توجد نتائج",
+      "tryDifferentSearch": "جرّب البحث عن شيء آخر."
+    },
+    "promoBanner": {
+      "title": "اشترك في JayakPro",
+      "description": "احصل على توصيل مجاني غير محدود وخصم إضافي 15% على مطاعم مختارة",
+      "cta": "انضم مقابل {price}/شهريًا"
+    },
+    "sectionHeader": {
+      "seeAll": "عرض الكل"
+    },
+    "topBar": {
+      "businessWebsite": "موقعنا للأعمال",
+      "restaurantSignup": "سجّل لإنشاء حساب مطعم",
+      "partnerSignup": "سجّل لتصبح شريك أعمال"
+    },
+    "headerActions": {
+      "login": "تسجيل الدخول",
+      "signUp": "إنشاء حساب",
+      "userFallback": "مستخدم"
+    },
+    "bottomNav": {
+      "home": "الرئيسية",
+      "filters": "الفلاتر",
+      "cart": "السلة",
+      "wishlist": "المفضلة",
+      "profile": "الملف الشخصي"
+    },
+    "restaurantHero": {
+      "closed": "المطعم مغلق",
+      "freeDelivery": "توصيل مجاني",
+      "new": "جديد",
+      "readReviews": "قراءة التقييمات ›",
+      "estimatedTime": "20-30 دقيقة",
+      "freeDeliveryLabel": "توصيل مجاني"
+    },
+    "foodCard": {
+      "off": "خصم",
+      "unavailable": "غير متاح",
+      "restaurantClosed": "المطعم مغلق"
+    },
+    "restaurantMenu": {
+      "searchResults": "نتائج البحث"
+    },
+    "restaurantCard": {
+      "wishlistLoginRequired": "يرجى تسجيل الدخول لإدارة قائمة المفضلة",
+      "addedToWishlist": "أُضيف إلى المفضلة",
+      "removedFromWishlist": "أُزيل من المفضلة",
+      "wishlistUpdateFailed": "فشل تحديث المفضلة",
+      "somethingWentWrong": "حدث خطأ ما",
+      "closed": "المطعم مغلق",
+      "new": "جديد",
+      "defaultDeliveryTime": "30-45 دقيقة",
+      "freeDelivery": "توصيل مجاني",
+      "deliverySuffix": "توصيل"
+    },
+    "sidebar": {
+      "sortBy": "ترتيب حسب",
+      "resetFilters": "إعادة تعيين الفلاتر",
+      "sortOptions": {
+        "recommended": "موصى به",
+        "fastestDelivery": "أسرع توصيل",
+        "nearestRestaurant": "أقرب مطعم",
+        "lowestPrice": "الأقل سعرًا",
+        "highestPrice": "الأعلى سعرًا"
+      },
+      "minimumRating": "الحد الأدنى للتقييم",
+      "showingRatingAndAbove": "عرض {rating}★ وأعلى",
+      "quickFilters": "فلاتر سريعة",
+      "activeDiscounts": "خصومات نشطة",
+      "myWishlist": "قائمتي المفضلة",
+      "cuisines": "أنواع المأكولات",
+      "showLess": "عرض أقل",
+      "viewMore": "عرض المزيد"
+    },
+    "heroBanner": {
+      "title": "توصيل الطعام والمزيد"
+    },
+    "allRestaurantsSection": {
+      "title": "جميع المطاعم",
+      "noResults": "لم يتم العثور على مطاعم",
+      "adjustFilters": "حاول تعديل الفلاتر أو الموقع"
+    },
+    "cuisinesSection": {
+      "title": "أنواع المأكولات"
+    },
+    "curatedSection": {
+      "title": "مختارات لك",
+      "categories": {
+        "topRated": "الأعلى تقييمًا",
+        "fastest": "أسرع توصيل",
+        "healthy": "صحي",
+        "new": "وصل حديثًا",
+        "trending": "الأكثر رواجًا",
+        "bestSellers": "الأكثر مبيعًا",
+        "vegan": "خيارات نباتية"
+      }
+    },
+    "popularSection": {
+      "title": "المطاعم الشائعة",
+      "noResults": "لم يتم العثور على مطاعم."
+    },
+    "previousOrdersSection": {
+      "title": "اطلب مرة أخرى"
+    },
+    "promotionsModal": {
+      "specialPromotion": "عرض خاص",
+      "promotionBadge": "عرض ترويجي",
+      "validRange": "صالح: {start} – {end}",
+      "minOrder": "الحد الأدنى للطلب:",
+      "maxCap": "الحد الأقصى:",
+      "percentageDiscount": "خصم {value}% على طلبك القادم!",
+      "flatDiscount": "خصم {value} على طلبك القادم!",
+      "copied": "تم النسخ",
+      "copy": "نسخ",
+      "couponCopied": "تم نسخ رمز الكوبون!",
+      "exploreDeals": "استكشف العروض",
+      "dismiss": "إغلاق"
+    },
+    "filterSheet": {
+      "title": "الفلاتر"
+    },
+    "restaurantsPage": {
+      "nearbyCount": "{count} مطعم بالقرب منك"
+    }
   }
 }

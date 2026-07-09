@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FiShoppingBag } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 import LanguageSwitcher from "../../../common/LanguageSwitcher";
 import UserProfile from "../../../common/UserProfile";
 import { Heart } from "lucide-react";
@@ -15,6 +16,7 @@ export const HeaderActions = ({
   onLogout,
   onCartClick,
 }: HeaderActionsProps) => {
+  const t = useTranslations("Discovery.headerActions");
   return (
     <div className="flex items-center gap-2 md:gap-3 shrink-0">
       {/* Language */}
@@ -27,25 +29,25 @@ export const HeaderActions = ({
             href="/login"
             className="text-white text-sm font-medium hover:text-white/80 transition-colors hidden md:inline"
           >
-            Login
+            {t("login")}
           </Link>
           <Link
             href="/register"
             className="bg-white text-emerald-bg text-sm font-semibold border border-emerald-bg rounded-full px-4 py-1.5 hover:bg-white/90 transition-colors hidden md:inline-block"
           >
-            Sign up
+            {t("signUp")}
           </Link>
         </div>
       ) : (
         <div className="hidden md:flex items-center gap-3">
           <div className="text-right hidden sm:block">
             <p className="text-white font-bold text-sm leading-none">
-              {user?.name || "User"}
+              {user?.name || t("userFallback")}
             </p>
             <p className="text-white/70 text-[10px] uppercase tracking-widest font-medium mt-1">
               {typeof user?.role === "string"
                 ? user.role.replace(/_/g, " ")
-                : user?.role?.name || "NULL"}
+                : user?.role?.name || ""}
             </p>
           </div>
           <UserProfile user={user} onLogout={onLogout} />

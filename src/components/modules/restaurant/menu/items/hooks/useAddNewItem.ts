@@ -99,11 +99,7 @@ export const useAddNewItem = () => {
 
           const imgToPreview = itemData.itemImage || itemData.image;
           if (imgToPreview) {
-            setImagePreview(
-              imgToPreview.startsWith("http")
-                ? imgToPreview
-                : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${imgToPreview}`,
-            );
+            setImagePreview(imgToPreview);
           }
         } else {
           toast.error("Failed to load item details properly.");
@@ -187,11 +183,7 @@ export const useAddNewItem = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview(
-        formData.itemImage
-          ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${formData.itemImage}`
-          : null,
-      );
+      setImagePreview(formData.itemImage || null);
     }
   };
 

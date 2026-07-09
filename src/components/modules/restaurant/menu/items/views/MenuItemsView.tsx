@@ -62,12 +62,7 @@ export default function MenuItemsView() {
       header: t("columns.item"),
       accessorKey: "name",
       cell: (item: any) => {
-        const rawImage = item.itemImage || item.image;
-        const imageUrl = rawImage
-          ? rawImage.startsWith("http")
-            ? rawImage
-            : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${rawImage}`
-          : null;
+        const imageUrl = item.itemImage || item.image || null;
         return (
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">

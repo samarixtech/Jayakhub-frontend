@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import { CuisinesSectionProps } from "@/components/modules/discovery/discovery.types";
 
@@ -9,9 +10,10 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
   activeFilters,
   onCuisineClick,
 }) => {
+  const t = useTranslations("Discovery.cuisinesSection");
   return (
     <section className="mb-8">
-      <h3 className="text-lg font-bold text-gray-900 mb-4">Cuisines</h3>
+      <h3 className="text-lg font-bold text-gray-900 mb-4">{t("title")}</h3>
       <div className="flex gap-12 md:gap-6 overflow-x-auto pb-2 pl-3 sm:pl-0 scrollbar-hide">
         {isCuisinesLoading
           ? // Skeleton Loading for Cuisines

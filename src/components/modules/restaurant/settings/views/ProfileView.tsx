@@ -21,10 +21,8 @@ import {
 
 export default function ProfileView({
   settings,
-  imageBaseUrl,
 }: {
   settings: SettingsData | null;
-  imageBaseUrl: string;
 }) {
   const {
     name,
@@ -71,7 +69,6 @@ export default function ProfileView({
             subLabel={t("logoHint")}
             imagePreview={profileImagePreview}
             existingImage={profile?.profileImage}
-            imageBaseUrl={imageBaseUrl}
             inputRef={profileInputRef}
             onChange={(e) => handleFileChange(e, "profile")}
           />
@@ -81,7 +78,6 @@ export default function ProfileView({
             subLabel={t("coverHint")}
             imagePreview={bannerImagePreview}
             existingImage={profile?.bannerImage}
-            imageBaseUrl={imageBaseUrl}
             inputRef={bannerInputRef}
             onChange={(e) => handleFileChange(e, "banner")}
             isCover

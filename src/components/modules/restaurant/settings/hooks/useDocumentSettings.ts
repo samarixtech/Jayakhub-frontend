@@ -49,11 +49,7 @@ export function useDocumentSettings(settings: SettingsData | null) {
   };
 
   const openDocument = (documentFile: string) => {
-    const baseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
-    const url = documentFile.startsWith("http")
-      ? documentFile
-      : `${baseUrl}${documentFile}`;
-    window.open(url, "_blank");
+    window.open(documentFile, "_blank");
   };
 
   return {

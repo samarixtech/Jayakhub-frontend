@@ -37,7 +37,7 @@ export function useVerifyOtp() {
     const status = data?.status;
     if (!isOnboarded) return "/restaurant/onboarding";
     if (!activePlan) return "/restaurant/purchase-plan";
-    if (status === "approved") return "/restaurant/dashboard";
+    if (status === "active") return "/restaurant/dashboard";
     return "/restaurant/status";
   };
 

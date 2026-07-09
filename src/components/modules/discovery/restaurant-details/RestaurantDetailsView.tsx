@@ -44,6 +44,7 @@ export default function RestaurantDetailsView() {
         filteredItems={state.filteredItems}
         menuByCategories={state.menuByCategories}
         currency={state.currency}
+        restaurantIsOpen={state.restaurant.isOpen !== false}
         onCategoryClick={actions.scrollToCategory}
         onAddItem={actions.handleAddToCart}
         onItemClick={actions.setSelectedItem}
@@ -66,9 +67,7 @@ export default function RestaurantDetailsView() {
           item={{
             ...state.selectedItem,
             productId: state.selectedItem.id,
-            imageUrl: state.selectedItem.image
-              ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${state.selectedItem.image.replace(/\\/g, "/")}`
-              : "",
+            imageUrl: state.selectedItem.image || "",
             price: state.selectedItem.basePrice,
             discount: state.selectedItem.discount,
           }}

@@ -74,18 +74,14 @@ const AllTicketsView = () => {
 
   const statusOptions = [
     { value: "all", label: "All Statuses" },
-    { value: "open", label: "Open" },
-    { value: "in_progress", label: "In Progress" },
-    { value: "resolved", label: "Resolved" },
-    { value: "closed", label: "Closed" },
+    { value: "RESOLVED", label: "Resolved" },
   ];
 
   const priorityOptions = [
     { value: "all", label: "All Priorities" },
-    { value: "low", label: "Low" },
-    { value: "medium", label: "Medium" },
-    { value: "high", label: "High" },
-    { value: "urgent", label: "Urgent" },
+    { value: "LOW", label: "Low" },
+    { value: "MEDIUM", label: "Medium" },
+    { value: "HIGH", label: "High" },
   ];
 
   const totalPages = meta?.totalPages || 1;

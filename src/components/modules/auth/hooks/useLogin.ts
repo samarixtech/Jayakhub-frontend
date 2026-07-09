@@ -38,7 +38,7 @@ export function useLogin() {
                 router.push("/restaurant/onboarding");
               } else if (!d?.activePlan) {
                 router.push("/restaurant/purchase-plan");
-              } else if (d?.status === "approved") {
+              } else if (d?.status === "active") {
                 router.push("/restaurant/dashboard");
               } else {
                 router.push("/restaurant/status");

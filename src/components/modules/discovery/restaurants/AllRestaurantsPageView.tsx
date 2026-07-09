@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useTranslations } from "next-intl";
 import DiscoverySidebar from "@/components/modules/discovery/restaurants/components/DiscoverySidebar";
 import { GlobalSearch } from "@/components/modules/discovery/components/GlobalSearch";
 import { RatingModal } from "@/components/common/RatingModal";
@@ -14,6 +15,7 @@ import { useRestaurantDiscovery } from "@/hooks/use-restaurant-discovery";
 import { AllRestaurantsSection } from "./sections/AllRestaurantsSection";
 
 const AllRestaurantsPageView: React.FC = () => {
+  const t = useTranslations("Discovery.filterSheet");
   const { isFilterOpen, setIsFilterOpen } = useDiscoveryUI();
   const { state, actions } = useRestaurantDiscovery();
 
@@ -72,7 +74,7 @@ const AllRestaurantsPageView: React.FC = () => {
           className="h-[85vh] overflow-y-auto rounded-t-2xl px-6 pt-6"
         >
           <SheetHeader className="mb-6 text-left">
-            <SheetTitle>Filters</SheetTitle>
+            <SheetTitle>{t("title")}</SheetTitle>
           </SheetHeader>
           <DiscoverySidebar
             selectedSort={state.selectedSort}

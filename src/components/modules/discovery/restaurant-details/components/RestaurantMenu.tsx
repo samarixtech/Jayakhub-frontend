@@ -1,5 +1,6 @@
 import React from "react";
 import HorizontalScroller from "@/components/HorizontalScroller";
+import { useTranslations } from "next-intl";
 import { FoodCard } from "./FoodCard";
 import {
   RestaurantMenuProps,
@@ -13,10 +14,12 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
   filteredItems,
   menuByCategories,
   currency,
+  restaurantIsOpen = true,
   onCategoryClick,
   onAddItem,
   onItemClick,
 }) => {
+  const t = useTranslations("Discovery.restaurantMenu");
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div className="sticky top-[80px] z-30 bg-white py-2 mb-6 border-b border-gray-100">
@@ -42,7 +45,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
           {searchTerm ? (
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Search Results
+                {t("searchResults")}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {(filteredItems || []).map((item) => (
@@ -52,6 +55,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
                     onAddItem={onAddItem}
                     onClick={() => onItemClick(item)}
                     currency={currency}
+                    restaurantIsOpen={restaurantIsOpen}
                   />
                 ))}
               </div>
@@ -76,6 +80,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
                           onAddItem={onAddItem}
                           onClick={() => onItemClick(item)}
                           currency={currency}
+                          restaurantIsOpen={restaurantIsOpen}
                         />
                       ))}
                     </div>

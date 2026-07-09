@@ -22,7 +22,7 @@ import CloseRegisterModal from "./CloseRegisterModal";
 import POSSettingsModal from "./POSSettingsModal";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../../../../../public/EngLogo (2).png"
+import logo from "../../../../../../public/EngLogo (2).png";
 
 export default function POSNavbar() {
   const pathname = usePathname();
@@ -37,6 +37,8 @@ export default function POSNavbar() {
     setIsCartOpen,
     activeCategory,
     setActiveCategory,
+    searchTerm,
+    setSearchTerm,
     globalCategories,
     isPosLoading,
   } = usePOS();
@@ -93,6 +95,8 @@ export default function POSNavbar() {
           <input
             ref={searchInputRef}
             type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search menu..."
             className="w-full bg-white text-gray-900 rounded-full pl-9 sm:pl-11 pr-4 py-1.5 sm:py-2 outline-none focus:ring-2 focus:ring-emerald-500 text-[12px] sm:text-[13px] font-semibold placeholder:text-gray-400 placeholder:font-normal"
           />
@@ -119,7 +123,6 @@ export default function POSNavbar() {
       </div>
 
       <div className="flex items-center gap-3 sm:gap-5">
-
         {/* BACK TO POS */}
         <Link
           href={"/restaurant/pos"}
@@ -131,10 +134,11 @@ export default function POSNavbar() {
         {/* Online Orders button */}
         <Link
           href={"/restaurant/pos/orders"}
-          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${isOnlineOrdersPage
-            ? "bg-emerald-500 text-white"
-            : "bg-white text-gray-800 hover:bg-gray-100"
-            }`}
+          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
+            isOnlineOrdersPage
+              ? "bg-emerald-500 text-white"
+              : "bg-white text-gray-800 hover:bg-gray-100"
+          }`}
         >
           <Globe className="w-[15px] h-[15px] stroke-[2.5px]" />
           Online
@@ -143,10 +147,11 @@ export default function POSNavbar() {
         {/* POS Orders button */}
         <Link
           href={"/restaurant/pos/orders/pos"}
-          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${isPosOrdersPage
-            ? "bg-emerald-500 text-white"
-            : "bg-white text-gray-800 hover:bg-gray-100"
-            }`}
+          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
+            isPosOrdersPage
+              ? "bg-emerald-500 text-white"
+              : "bg-white text-gray-800 hover:bg-gray-100"
+          }`}
         >
           <ShoppingCart className="w-[15px] h-[15px] stroke-[2.5px]" />
           POS Orders
@@ -199,10 +204,12 @@ export default function POSNavbar() {
             className="flex items-center gap-2 bg-[#f9e9cc] text-[#d68b20] px-3.5 py-1.5 rounded-md cursor-pointer text-[13px] font-bold ml-1 hover:bg-[#ffe3b5]"
           >
             <User className="w-[15px] h-[15px] stroke-[2.5px]" />
-            Register 1
+            Register
           </button>
 
-          {userRole === "restaurant_owner" || userRole === "admin" || userRole === "manager" ? (
+          {userRole === "restaurant_owner" ||
+          userRole === "admin" ||
+          userRole === "manager" ? (
             <Link
               href="/restaurant/dashboard"
               className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block"

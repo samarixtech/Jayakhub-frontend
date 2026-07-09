@@ -76,12 +76,7 @@ export const RecentActivity = ({
             );
 
             // Image URL logic
-            let imageUrl = null;
-            if (firstItem?.image) {
-              imageUrl = firstItem.image.startsWith("http")
-                ? firstItem.image
-                : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${firstItem.image.replace(/\\/g, "/")}`;
-            }
+            const imageUrl = firstItem?.image || null;
 
             return (
               <div

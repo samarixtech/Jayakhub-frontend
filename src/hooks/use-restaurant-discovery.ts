@@ -147,9 +147,7 @@ export function useRestaurantDiscovery() {
                   name: item.name,
                   price: parseFloat(item.price),
                   quantity: item.quantity,
-                  image: item.image
-                    ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL?.replace(/\/+$/, "")}/${item.image.replace(/^\/+/, "")}`
-                    : null,
+                  image: item.image || null,
                 })),
                 delivery: {
                   driverName: "Your Rider",
@@ -198,6 +196,7 @@ export function useRestaurantDiscovery() {
           isFavorite: false,
           isWishlist: !!item.isWishlist,
           averageDiscount: item.averageDiscount || 0,
+          isOpen: item.isOpen ?? true,
         }));
         setPreviousOrders(mapped);
         setIsPreviousOrdersLoading(false);
@@ -246,6 +245,7 @@ export function useRestaurantDiscovery() {
           isFavorite: false,
           isWishlist: !!item.isWishlist,
           averageDiscount: item.averageDiscount || 0,
+          isOpen: item.isOpen ?? true,
         }));
       };
 

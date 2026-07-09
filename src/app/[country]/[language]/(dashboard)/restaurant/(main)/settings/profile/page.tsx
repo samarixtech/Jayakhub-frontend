@@ -6,9 +6,8 @@ import { Suspense } from "react";
 async function ProfileData() {
   const settingsResponse = await getAccountSettingsAction();
   const settings = settingsResponse?.data || null;
-  const imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
 
-  return <ProfileView settings={settings} imageBaseUrl={imageBaseUrl} />;
+  return <ProfileView settings={settings} />;
 }
 
 export default function ProfilePage() {

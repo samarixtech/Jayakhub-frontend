@@ -1,17 +1,10 @@
 import React from "react";
 import { ChevronDown, ChevronUp, Star, Tag, Heart } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   CuisineType,
   DiscoverySidebarProps,
 } from "@/components/modules/discovery/discovery.types";
-
-const SORT_OPTIONS = [
-  { id: "recommended", label: "Recommended" },
-  { id: "fastestDelivery", label: "Fastest Delivery" },
-  { id: "nearestRestaurant", label: "Nearest Restaurant" },
-  { id: "lowestPrice", label: "Lowest Price" },
-  { id: "highestPrice", label: "Highest Price" },
-];
 
 const VISIBLE_CUISINES = 5;
 
@@ -32,6 +25,14 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
   cuisineTypes,
   className = "",
 }) => {
+  const t = useTranslations("Discovery.sidebar");
+  const SORT_OPTIONS = [
+    { id: "recommended", label: t("sortOptions.recommended") },
+    { id: "fastestDelivery", label: t("sortOptions.fastestDelivery") },
+    { id: "nearestRestaurant", label: t("sortOptions.nearestRestaurant") },
+    { id: "lowestPrice", label: t("sortOptions.lowestPrice") },
+    { id: "highestPrice", label: t("sortOptions.highestPrice") },
+  ];
   const cuisines = Array.isArray(cuisineTypes) ? cuisineTypes : [];
   const visibleCuisines = showAllCuisines ? cuisines : cuisines.slice(0, VISIBLE_CUISINES);
 
@@ -42,13 +43,13 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
       <div>
         <div className="flex items-center justify-between mb-4">
           <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-            Sort By
+            {t("sortBy")}
           </h4>
           <button
             onClick={onResetFilters}
             className="text-[11px] font-bold text-gray-400 hover:underline uppercase tracking-wider"
           >
-            Reset Filters
+            {t("resetFilters")}
           </button>
         </div>
         <div className="space-y-3">
@@ -84,7 +85,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
       {/* Rating Filter */}
       <div>
         <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
-          Minimum Rating
+          {t("minimumRating")}
         </h4>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
@@ -106,7 +107,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
         </div>
         {selectedRating !== null && (
           <p className="text-[11px] text-gray-400 mt-1.5">
-            Showing {selectedRating}★ and above
+            {t("showingRatingAndAbove", { rating: selectedRating })}
           </p>
         )}
       </div>
@@ -114,7 +115,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
       {/* Quick Filters */}
       <div>
         <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
-          Quick Filters
+          {t("quickFilters")}
         </h4>
         <div className="space-y-2.5">
           {/* Discounted */}
@@ -127,7 +128,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
             }`}
           >
             <Tag className="w-4 h-4 shrink-0" />
-            Active Discounts
+            {t("activeDiscounts")}
           </button>
 
           {/* Wishlist */}
@@ -140,7 +141,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
             }`}
           >
             <Heart className="w-4 h-4 shrink-0" />
-            My Wishlist
+            {t("myWishlist")}
           </button>
         </div>
       </div>
@@ -148,7 +149,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
       {/* Cuisines */}
       <div>
         <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-4">
-          Cuisines
+          {t("cuisines")}
         </h4>
         <div className="space-y-3">
           {visibleCuisines.map((cuisine) => (
@@ -198,9 +199,9 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
             className="text-[#346853] text-[13px] font-medium mt-4 hover:underline flex items-center gap-1"
           >
             {showAllCuisines ? (
-              <>Show less <ChevronUp className="w-3.5 h-3.5" /></>
+              <>{t("showLess")} <ChevronUp className="w-3.5 h-3.5" /></>
             ) : (
-              <>View more <ChevronDown className="w-3.5 h-3.5" /></>
+              <>{t("viewMore")} <ChevronDown className="w-3.5 h-3.5" /></>
             )}
           </button>
         )}

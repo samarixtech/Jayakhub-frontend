@@ -1,7 +1,9 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { GlobalSearch } from "../../components/GlobalSearch";
 
 const HeroBanner = () => {
+  const t = useTranslations("Discovery.heroBanner");
   return (
     <div className="relative w-full h-[180px] md:h-[220px] bg-black text-white z-20">
       {/* Background Image */}
@@ -17,7 +19,7 @@ const HeroBanner = () => {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center gap-5 px-4">
         <h1 className="text-2xl md:text-3xl font-bold text-white text-center">
-          Food delivery and more
+          {t("title")}
         </h1>
 
         {/* Search Bar */}

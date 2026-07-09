@@ -162,11 +162,7 @@ export function RatingModal({
                 <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-200 shrink-0 relative flex items-center justify-center">
                   {item.image ? (
                     <Image
-                      src={
-                        item.image.startsWith("http")
-                          ? item.image
-                          : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}/${item.image.replace(/^\/+/, "")}`
-                      }
+                      src={item.image}
                       alt={item.name}
                       fill
                       className="object-cover"

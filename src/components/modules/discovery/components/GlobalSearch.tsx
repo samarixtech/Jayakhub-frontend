@@ -6,6 +6,7 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { getAllRestaurantsAction } from "@/app/actions/public/restaurants";
 import { debounce } from "lodash";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface SimpleRestaurant {
   id: string;
@@ -18,6 +19,7 @@ interface SimpleRestaurant {
 }
 
 export const GlobalSearch = () => {
+  const t = useTranslations("Discovery.globalSearch");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -170,7 +172,7 @@ export const GlobalSearch = () => {
           onChange={handleInputChange}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search for restaurants, cuisines..."
+          placeholder={t("placeholder")}
           className="flex-1 h-10 md:h-12 px-2 md:px-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none bg-transparent"
         />
         {query && (
@@ -194,7 +196,7 @@ export const GlobalSearch = () => {
           onClick={() => handleSearchSubmit(query)}
           className="h-8 md:h-9 flex items-center justify-center bg-[#346853] hover:bg-[#2a5443] text-white text-xs md:text-sm font-semibold px-4 md:px-5 mr-1 md:mr-1.5 rounded-full transition-colors shrink-0"
         >
-          Search
+          {t("searchButton")}
         </button>
       </div>
 
@@ -237,13 +239,13 @@ export const GlobalSearch = () => {
                   <>
                     <div className="flex items-center justify-between px-3 py-2">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500">
-                        Recent Searches
+                        {t("recentSearches")}
                       </h4>
                       <button
                         onClick={clearRecentSearches}
                         className="text-xs text-gray-400 hover:text-red-500 transition-colors"
                       >
-                        Clear All
+                        {t("clearAll")}
                       </button>
                     </div>
                     {(recentSearches || []).map((term, i) => (
@@ -273,7 +275,7 @@ export const GlobalSearch = () => {
                   </>
                 ) : (
                   <div className="p-6 text-center text-gray-500 text-sm">
-                    Search for your favorite restaurants or cuisines!
+                    {t("emptyPrompt")}
                   </div>
                 )}
               </div>
@@ -286,7 +288,7 @@ export const GlobalSearch = () => {
                 {suggestions.length > 0 && (
                   <div className="mb-2">
                     <h4 className="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-500">
-                      <Search className="w-3.5 h-3.5" /> Suggestions
+                      <Search className="w-3.5 h-3.5" /> {t("suggestions")}
                     </h4>
                     {(suggestions || []).map((sug, i) => (
                       <div
@@ -310,15 +312,12 @@ export const GlobalSearch = () => {
                 {restaurants.length > 0 && (
                   <div>
                     <h4 className="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 mt-2 border-t border-gray-100 pt-3">
-                      <Utensils className="w-3.5 h-3.5" /> Restaurants
+                      <Utensils className="w-3.5 h-3.5" /> {t("restaurants")}
                     </h4>
                     {(restaurants || []).slice(0, 4).map((restaurant) => {
                       const image =
                         restaurant.profileImage || restaurant.bannerImage;
-                      const imageUrl =
-                        image && !image.startsWith("http")
-                          ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL?.replace(/\/+$/, "")}/${image.replace(/^\/+/, "").replace(/\\/g, "/")}`
-                          : image || "/placeholder-restaurant.png";
+                      const imageUrl = image || "/placeholder-restaurant.png";
 
                       return (
                         <div
@@ -375,9 +374,9 @@ export const GlobalSearch = () => {
                 {restaurants.length === 0 && suggestions.length === 0 && (
                   <div className="p-6 text-center text-gray-500">
                     <p className="text-sm font-medium text-gray-900 mb-1">
-                      No results found
+                      {t("noResults")}
                     </p>
-                    <p className="text-xs">Try searching for something else.</p>
+                    <p className="text-xs">{t("tryDifferentSearch")}</p>
                   </div>
                 )}
               </div>

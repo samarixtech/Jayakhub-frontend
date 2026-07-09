@@ -205,11 +205,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                       <Image
                         width={100}
                         height={100}
-                        src={
-                          group.image
-                            ? `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${group.image.replace(/\\/g, "/")}`
-                            : "/images/placeholder-thumb.jpg"
-                        }
+                        src={group.image || "/images/placeholder-thumb.jpg"}
                         alt={group.name}
                         className="w-full h-full object-cover"
                       />

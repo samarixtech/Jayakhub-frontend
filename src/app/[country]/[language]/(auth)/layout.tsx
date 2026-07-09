@@ -72,7 +72,7 @@ export default function AuthLayout({
         description:
           "Join our network of top-rated restaurants and start reaching thousands of new customers today.",
         showBack: true,
-        backHref: "/restaurant-delivery",
+        backHref: "/restaurants",
       };
     }
     // DEFAULT/NEW PASSWORD

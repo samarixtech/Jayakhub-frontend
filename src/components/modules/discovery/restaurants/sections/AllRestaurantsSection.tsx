@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
 import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
 import { LayoutGrid, List, Sprout } from "lucide-react";
@@ -12,12 +13,13 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
   isLoggedIn,
   onAction,
 }) => {
+  const t = useTranslations("Discovery.allRestaurantsSection");
   return (
     <section className="mb-20">
       {/* Desktop View */}
       <div className="hidden md:block">
         <div className="mb-6">
-          <SectionHeader title="All Restaurants" onAction={onAction} />
+          <SectionHeader title={t("title")} onAction={onAction} />
         </div>
 
         {isPending ? (
@@ -47,9 +49,9 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <Sprout className="w-8 h-8 text-gray-400" />
             </div>
-            <p className="text-lg font-medium">No restaurants found</p>
+            <p className="text-lg font-medium">{t("noResults")}</p>
             <p className="text-sm text-gray-400">
-              Try adjusting filters or location
+              {t("adjustFilters")}
             </p>
           </div>
         )}
@@ -59,7 +61,7 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
       <div className="md:hidden">
         {/* Mobile Header with Toggle */}
         <div className="flex items-center justify-between mb-6 pr-4">
-          <h2 className="text-xl font-bold text-gray-900">All Restaurants</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t("title")}</h2>
           <div className="flex bg-gray-100 p-1 rounded-lg">
             <button
               onClick={() => setViewMode("grid")}
@@ -120,9 +122,9 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <Sprout className="w-8 h-8 text-gray-400" />
             </div>
-            <p className="text-lg font-medium">No restaurants found</p>
+            <p className="text-lg font-medium">{t("noResults")}</p>
             <p className="text-sm text-gray-400">
-              Try adjusting filters or location
+              {t("adjustFilters")}
             </p>
           </div>
         )}

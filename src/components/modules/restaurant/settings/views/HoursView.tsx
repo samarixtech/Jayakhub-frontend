@@ -19,6 +19,24 @@ function formatTimeForInput(timeStr: string): string {
   return `${hours}:${minutes}`;
 }
 
+// Backend may return a legacy "HH:MM:SS" string or an epoch-ms timestamp
+// (time-of-day encoded against some reference date). Normalize either shape
+// into a canonical "HH:MM:SS" string so timeToEpoch() never receives a raw
+// epoch value and re-multiplies it into garbage.
+function parseIncomingTime(raw: unknown, fallback: string): string {
+  if (raw === null || raw === undefined || raw === "" || raw === 0) return fallback;
+  if (typeof raw === "string" && /^\d{1,2}:\d{2}(:\d{2})?$/.test(raw)) {
+    const [h, m] = raw.split(":");
+    return `${h.padStart(2, "0")}:${m.padStart(2, "0")}:00`;
+  }
+  const ms = Number(raw);
+  const date = new Date(ms);
+  if (!Number.isFinite(ms) || Number.isNaN(date.getTime())) return fallback;
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}:00`;
+}
+
 // Jan 1, 2024 00:00:00 UTC — a Monday — fixed reference week
 const BASE_MONDAY_EPOCH = 1704067200000;
 
@@ -54,14 +72,19 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
     const existing = settings?.schedules || [];
     return DAYS_ORDER.map((day) => {
       const found = existing.find((s) => s.dayOfWeek === day);
-      return (
-        found || {
+      if (!found) {
+        return {
           dayOfWeek: day,
           openTime: "09:00:00",
           closeTime: "22:00:00",
           isClosed: true,
-        }
-      );
+        };
+      }
+      return {
+        ...found,
+        openTime: parseIncomingTime(found.openTime, "09:00:00"),
+        closeTime: parseIncomingTime(found.closeTime, "22:00:00"),
+      };
     });
   }, [settings?.schedules]);
 

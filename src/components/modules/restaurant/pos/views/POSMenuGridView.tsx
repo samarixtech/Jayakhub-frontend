@@ -50,9 +50,7 @@ export default function POSMenuGrid() {
     <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 overflow-y-auto w-full">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3">
         {posItems.map((item) => {
-          const imageUrl = item.image?.startsWith("http")
-            ? item.image
-            : `${process.env.NEXT_PUBLIC_IMAGE_BASE_URL}${item.image?.replace(/\\/g, "/")}`;
+          const imageUrl = item.image;
 
           const discountAmt = item.discount ? parseFloat(item.discount) : 0;
           const effectivePrice = discountAmt > 0

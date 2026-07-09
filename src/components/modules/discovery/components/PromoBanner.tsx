@@ -1,8 +1,10 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Tag } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const PromoBanner = () => {
+  const t = useTranslations("Discovery.promoBanner");
   return (
     <div className="w-full bg-[#346853] rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 my-8 text-white relative overflow-hidden">
       {/* Texture/Pattern Overlay */}
@@ -13,16 +15,15 @@ const PromoBanner = () => {
           <Tag className="h-6 w-6 text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold mb-1">Subscribe to JayakPro</h2>
+          <h2 className="text-2xl font-bold mb-1">{t("title")}</h2>
           <p className="text-emerald-100 text-sm">
-            Get unlimited free delivery and 15% extra discount on selected
-            restaurants
+            {t("description")}
           </p>
         </div>
       </div>
 
       <Button className="bg-white text-[#346853] hover:bg-emerald-50 font-bold rounded-lg px-6 z-10 shrink-0">
-        Join for $9.99/mo
+        {t("cta", { price: "$9.99" })}
       </Button>
     </div>
   );

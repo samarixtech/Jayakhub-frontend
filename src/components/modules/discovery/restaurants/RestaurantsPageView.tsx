@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import HeroBanner from "@/components/modules/discovery/restaurants/components/HeroBanner";
 import DiscoverySidebar from "@/components/modules/discovery/restaurants/components/DiscoverySidebar";
 import { RatingModal } from "@/components/common/RatingModal";
@@ -21,6 +22,7 @@ import { PromotionsModal, Campaign } from "./components/PromotionsModal";
 import { getWebappCampaignsAction } from "@/app/actions/public/marketing";
 
 const AllRestaurantsPage: React.FC = () => {
+  const t = useTranslations("Discovery");
   const router = useRouter();
   const { isFilterOpen, setIsFilterOpen } = useDiscoveryUI();
   const { state, actions } = useRestaurantDiscovery();
@@ -102,7 +104,7 @@ const AllRestaurantsPage: React.FC = () => {
 
           <div className="mb-2">
             <h2 className="text-xl font-bold text-gray-900">
-              {state.restaurants.length} restaurants near you
+              {t("restaurantsPage.nearbyCount", { count: state.restaurants.length })}
             </h2>
           </div>
 
@@ -136,7 +138,7 @@ const AllRestaurantsPage: React.FC = () => {
           className="h-[85vh] overflow-y-auto rounded-t-2xl px-6 pt-6"
         >
           <SheetHeader className="mb-6 text-left">
-            <SheetTitle>Filters</SheetTitle>
+            <SheetTitle>{t("filterSheet.title")}</SheetTitle>
           </SheetHeader>
           <DiscoverySidebar
             selectedSort={state.selectedSort}

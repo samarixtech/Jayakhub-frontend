@@ -113,7 +113,7 @@ export async function getTicketStatsAction() {
     const response = await api.get("/ticket-stats");
     return {
       success: true as const,
-      data: response.data,
+      data: response.data?.data ?? response.data,
     };
   } catch (error: any) {
     console.error("Fetch ticket stats error:", error);

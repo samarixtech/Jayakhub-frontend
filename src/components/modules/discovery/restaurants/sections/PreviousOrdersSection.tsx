@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
 import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
 import {
@@ -12,6 +13,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
   previousOrders,
   viewMode,
 }) => {
+  const t = useTranslations("Discovery.previousOrdersSection");
   if (
     !isLoggedIn ||
     (!isPreviousOrdersLoading && (!previousOrders || previousOrders.length === 0))
@@ -24,7 +26,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
       {/* Desktop View */}
       <div className="hidden md:block">
         <div className="mb-6">
-          <SectionHeader title="Order Again" />
+          <SectionHeader title={t("title")} />
         </div>
 
         {isPreviousOrdersLoading ? (
@@ -55,7 +57,7 @@ export const PreviousOrdersSection: React.FC<PreviousOrdersSectionProps> = ({
       {/* Mobile View */}
       <div className="md:hidden">
         <div className="flex items-center justify-between mb-6 pr-4">
-          <h2 className="text-xl font-bold text-gray-900">Order Again</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t("title")}</h2>
         </div>
 
         {isPreviousOrdersLoading ? (

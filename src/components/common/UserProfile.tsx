@@ -66,13 +66,10 @@ type UserRole = keyof typeof ROLE_CONFIG;
 
 const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" }) => {
   const tProfile = useTranslations("profile");
-  const imageBaseUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL || "";
   const [view, setView] = useState<"menu" | "notifications">("menu");
 
   // Construct Avatar URL
-  const avatarSrc = user?.avatar
-    ? `${imageBaseUrl}${user.avatar}`
-    : user?.image || undefined;
+  const avatarSrc = user?.avatar || user?.image || undefined;
 
   // Get initials for Avatar Fallback
   const initials = user?.name

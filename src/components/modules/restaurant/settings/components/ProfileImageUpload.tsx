@@ -11,7 +11,6 @@ interface ProfileImageUploadProps {
   icon?: React.ReactNode;
   imagePreview: string | null;
   existingImage?: string | null;
-  imageBaseUrl: string;
   inputRef: React.RefObject<HTMLInputElement | null>;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isCover?: boolean;
@@ -23,13 +22,11 @@ export function ProfileImageUpload({
   icon,
   imagePreview,
   existingImage,
-  imageBaseUrl,
   inputRef,
   onChange,
   isCover = false,
 }: ProfileImageUploadProps) {
-  const displaySrc =
-    imagePreview || (existingImage ? `${imageBaseUrl}${existingImage}` : null);
+  const displaySrc = imagePreview || existingImage || null;
 
   return (
     <div className="space-y-2">
