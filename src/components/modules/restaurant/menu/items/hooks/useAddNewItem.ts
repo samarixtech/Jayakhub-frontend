@@ -36,6 +36,7 @@ export const useAddNewItem = () => {
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   // FETCH INITIAL DATA
   const { execute: fetchCategories } = useServerAction(getAllCategoriesAction, {
@@ -58,7 +59,6 @@ export const useAddNewItem = () => {
     {
       suppressSuccessToast: true,
       onSuccess: (data: any) => {
-
         const itemData = data?.item || data?.data?.item || data?.data || data;
 
         if (itemData && (itemData.name || itemData.category)) {
@@ -73,8 +73,8 @@ export const useAddNewItem = () => {
           const rawGroups = itemData.variantGroups || itemData.variations || [];
           const mappedGroups = Array.isArray(rawGroups)
             ? rawGroups
-              .map((g: any) => (typeof g === "object" ? g.id || g._id : g))
-              .filter(Boolean)
+                .map((g: any) => (typeof g === "object" ? g.id || g._id : g))
+                .filter(Boolean)
             : [];
 
           if (Array.isArray(rawGroups) && rawGroups.length > 0) {
@@ -84,7 +84,12 @@ export const useAddNewItem = () => {
           setFormData({
             name: itemData.name || "",
             description: itemData.description || "",
-            category: itemData.category?._id || itemData.category?.id || itemData.categoryId || itemData.category || "",
+            category:
+              itemData.category?._id ||
+              itemData.category?.id ||
+              itemData.categoryId ||
+              itemData.category ||
+              "",
             basePrice:
               itemData.basePrice?.toString() ||
               itemData.price?.toString() ||
@@ -164,7 +169,6 @@ export const useAddNewItem = () => {
     updateItemAction,
     {
       onSuccess: () => {
-        toast.success("Item updated successfully");
         router.push("/restaurant/menu/items");
       },
     },
@@ -177,13 +181,18 @@ export const useAddNewItem = () => {
   const handleImageChange = (file: File | null) => {
     setImageFile(file);
     if (file) {
+      setImageError(false);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
     } else {
-      setImagePreview(formData.itemImage || null);
+      // The "X" button clears the image entirely — including a previously
+      // saved one in edit mode — rather than reverting to it, so the user
+      // can actually remove/replace it instead of it silently reappearing.
+      setImagePreview(null);
+      setFormData((prev) => ({ ...prev, itemImage: "" }));
     }
   };
 
@@ -191,6 +200,20 @@ export const useAddNewItem = () => {
     e.preventDefault();
     if (!formData.name || !formData.category || !formData.basePrice) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    if (!imagePreview) {
+      setImageError(true);
+      toast.error("Please upload an item image");
+      return;
+    }
+
+    if (
+      formData.discount &&
+      Number(formData.discount) > Number(formData.basePrice)
+    ) {
+      toast.error("Discount cannot be greater than the base price");
       return;
     }
 
@@ -260,7 +283,10 @@ export const useAddNewItem = () => {
       itemImage: formData.itemImage,
       isAvailable: formData.isAvailable.toString(),
       isVeg: formData.isVeg.toString(),
-      dietaryType: formData.dietaryType === "None" ? "NON_VEG" : formData.dietaryType.toUpperCase().replace("-", "_"),
+      dietaryType:
+        formData.dietaryType === "None"
+          ? "NON_VEG"
+          : formData.dietaryType.toUpperCase().replace("-", "_"),
       variantGroups: JSON.stringify(formData.variantGroups),
       variations: JSON.stringify(variationsPayload),
       discount: formData.discount ? Number(formData.discount).toString() : "0",
@@ -295,6 +321,7 @@ export const useAddNewItem = () => {
     categories,
     variantGroups,
     imagePreview,
+    imageError,
     isFetchingItem,
     isSaving: isCreating || isUpdating,
     handleInputChange,

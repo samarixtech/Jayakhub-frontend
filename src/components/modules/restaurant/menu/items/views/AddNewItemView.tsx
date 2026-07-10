@@ -17,6 +17,7 @@ export default function AddNewItemView() {
     categories,
     variantGroups,
     imagePreview,
+    imageError,
     isFetchingItem,
     isSaving,
     handleInputChange,
@@ -54,6 +55,7 @@ export default function AddNewItemView() {
             <ItemImageUpload
               imagePreview={imagePreview}
               onImageChange={handleImageChange}
+              error={imageError}
             />
 
             <ItemVariantGroupsSelection

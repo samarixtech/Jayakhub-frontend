@@ -6,14 +6,20 @@ import {
   getMenuItemsAction,
   deleteMenuItemAction,
   updateMenuItemStatusAction,
+  getMenuStatsAction,
 } from "@/app/actions/restaurant/menu";
-import { toast } from "react-hot-toast";
 
 export const useMenuItems = () => {
   const [items, setItems] = useState<any[]>([]);
   const [categoryStats, setCategoryStats] = useState<
     { name: string; count: number }[]
   >([]);
+  const [menuStats, setMenuStats] = useState({
+    totalItems: 0,
+    active: 0,
+    inactive: 0,
+    categories: 0,
+  });
   const [selectedCategory, setSelectedCategory] = useState("All Items");
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -82,6 +88,22 @@ export const useMenuItems = () => {
     });
   }, [fetchMenuAction, page, limit, searchQuery, selectedCategory]);
 
+  const { execute: fetchMenuStatsAction } = useServerAction(getMenuStatsAction, {
+    suppressSuccessToast: true,
+    onSuccess: (data: any) => {
+      setMenuStats({
+        totalItems: data?.totalItems ?? 0,
+        active: data?.active ?? 0,
+        inactive: data?.inactive ?? 0,
+        categories: data?.categories ?? 0,
+      });
+    },
+  });
+
+  const fetchMenuStats = useCallback(() => {
+    fetchMenuStatsAction();
+  }, [fetchMenuStatsAction]);
+
   // Debounce effect to auto-fetch menu upon query change or page changes
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -89,6 +111,12 @@ export const useMenuItems = () => {
     }, 300);
     return () => clearTimeout(timer);
   }, [fetchMenu]);
+
+  // Stats reflect the whole menu, not just the current page/filter — fetch
+  // once on mount and refresh whenever an item/status mutation could change them.
+  useEffect(() => {
+    fetchMenuStats();
+  }, []);
 
   // Always reset to page 1 whenever search filter altered
   useEffect(() => {
@@ -103,9 +131,8 @@ export const useMenuItems = () => {
       onSuccess: () => {
         setDeleteId(null);
         fetchMenu();
-        toast.success("Item deleted successfully");
+        fetchMenuStats();
       },
-      onError: (err) => toast.error(err || "Failed to delete item"),
     },
   );
 
@@ -113,8 +140,8 @@ export const useMenuItems = () => {
     useServerAction(updateMenuItemStatusAction, {
       onSuccess: () => {
         fetchMenu();
+        fetchMenuStats();
       },
-      onError: (err) => toast.error(err || "Failed to update status"),
     });
 
   const confirmDelete = () => {
@@ -139,18 +166,10 @@ export const useMenuItems = () => {
   ];
 
   const statsList = [
-    { label: "Total Items", value: totalCount || items.length },
-    {
-      label: "Active",
-      value: (isFrontendPaginated ? items : items).filter((i) => i.isAvailable)
-        .length,
-    },
-    {
-      label: "Inactive",
-      value: (isFrontendPaginated ? items : items).filter((i) => !i.isAvailable)
-        .length,
-    },
-    { label: "Categories", value: categoryStats.length },
+    { label: "Total Items", value: menuStats.totalItems },
+    { label: "Active", value: menuStats.active },
+    { label: "Inactive", value: menuStats.inactive },
+    { label: "Categories", value: menuStats.categories },
   ];
 
   const categories = categoryStats.map((c) => c.name);
@@ -198,6 +217,7 @@ export const useMenuItems = () => {
     isDeleting,
     isUpdatingStatus,
     fetchMenu,
+    fetchMenuStats,
     confirmDelete,
     toggleStatus,
     filteredItems: finalPaginatedItems,

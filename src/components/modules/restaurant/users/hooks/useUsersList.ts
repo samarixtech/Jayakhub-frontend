@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
 import { format } from "date-fns";
 import { useServerAction } from "@/hooks/use-server-action";
 import {
@@ -40,7 +39,6 @@ export function useUsersList() {
           setUsers(mappedUsers);
         }
       },
-      onError: () => toast.error("Failed to fetch users"),
     },
   );
 
@@ -51,7 +49,6 @@ export function useUsersList() {
         setDeleteId(null);
         fetchUsers();
       },
-      onError: (err) => toast.error(err || "Failed to delete user"),
     },
   );
 

@@ -110,9 +110,14 @@ export async function verifyOtpAction(payload: {
           cookieStore.delete("planKeywords");
         }
 
-        // Store subscription expiry for sidebar / header gating
+        // Store subscription expiry/cancellation for sidebar / header gating
         const isExpired = data.user?.planDetails?.isExpired;
+        const isCancelled = data.user?.planDetails?.isCancel;
         cookieStore.set("isExpired", isExpired ? "true" : "false", {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+        cookieStore.set("isCancelled", isCancelled ? "true" : "false", {
           path: "/",
           maxAge: 60 * 60 * 24 * 7,
         });

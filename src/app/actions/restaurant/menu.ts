@@ -157,7 +157,10 @@ interface MenuItemPayload {
   id?: string;
 }
 
-async function buildMenuFormData(payload: MenuItemPayload, restaurantId: string) {
+async function buildMenuFormData(
+  payload: MenuItemPayload,
+  restaurantId: string,
+) {
   const { default: NodeFormData } = await import("form-data");
   const sendData = new NodeFormData();
 
@@ -197,10 +200,19 @@ export async function createItemAction(
   return executeRestaurantAction(
     async (api, restaurantId) => {
       const sendData = await buildMenuFormData(payload, restaurantId);
-      return api.post("/item-add", sendData, { headers: sendData.getHeaders() });
+      return api.post("/item-add", sendData, {
+        headers: sendData.getHeaders(),
+      });
     },
     "Item created successfully",
     "/restaurant/menu/items",
+  );
+}
+
+export async function getMenuStatsAction(): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.get("/menu-stats"),
+    "Menu stats fetched successfully",
   );
 }
 
@@ -232,7 +244,9 @@ export async function updateItemAction(
   return executeRestaurantAction(
     async (api, restaurantId) => {
       const sendData = await buildMenuFormData(payload, restaurantId);
-      return api.put("/update-item", sendData, { headers: sendData.getHeaders() });
+      return api.put("/update-item", sendData, {
+        headers: sendData.getHeaders(),
+      });
     },
     "Item updated successfully",
     "/restaurant/menu/items",

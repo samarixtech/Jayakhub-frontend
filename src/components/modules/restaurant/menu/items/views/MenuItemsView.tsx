@@ -35,6 +35,7 @@ export default function MenuItemsView() {
     isDeleting,
     isUpdatingStatus,
     fetchMenu,
+    fetchMenuStats,
     confirmDelete,
     toggleStatus,
     filteredItems,
@@ -226,7 +227,10 @@ export default function MenuItemsView() {
       <AddItemModal
         open={isAddModalOpen}
         onOpenChange={setIsAddModalOpen}
-        onImportSuccess={fetchMenu}
+        onImportSuccess={() => {
+          fetchMenu();
+          fetchMenuStats();
+        }}
       />
     </div>
   );

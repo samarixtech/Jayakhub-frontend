@@ -26,8 +26,12 @@ const nextConfig: NextConfig = {
         hostname: "app.jayakhub.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "jayakhub.s3.us-west-1.amazonaws.com",
+        pathname: "/**",
+      },
     ],
-    unoptimized: true,
   },
   experimental: {
     serverActions: {

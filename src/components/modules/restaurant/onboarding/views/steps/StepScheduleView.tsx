@@ -14,7 +14,7 @@ import { useStepSchedule } from "../../hooks/useStepSchedule";
 import { cn } from "@/lib/utils";
 
 export default function StepScheduleView() {
-  const { form, onSubmit, days, timezones, timezone, setTimezone, isLoadingTimezones } = useStepSchedule();
+  const { form, onSubmit, days, timezones, timezone, setTimezone, isLoadingTimezones, timezoneError } = useStepSchedule();
   const [tzOpen, setTzOpen] = useState(false);
 
   const selectedTz = timezones.find((tz) => tz.name === timezone);
@@ -29,7 +29,7 @@ export default function StepScheduleView() {
       <div className="space-y-2">
         <Label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
           <Globe className="w-4 h-4 text-gray-400" />
-          Timezone
+          Timezone <span className="text-red-500">*</span>
         </Label>
         <Popover open={tzOpen} onOpenChange={setTzOpen}>
           <PopoverTrigger asChild>
@@ -37,7 +37,10 @@ export default function StepScheduleView() {
               variant="outline"
               role="combobox"
               aria-expanded={tzOpen}
-              className="w-full justify-between h-11 rounded-xl border-gray-200 text-sm font-normal"
+              className={cn(
+                "w-full justify-between h-11 rounded-xl border-gray-200 text-sm font-normal",
+                timezoneError && "border-red-500 focus:ring-red-500",
+              )}
               disabled={isLoadingTimezones}
             >
               <span className={cn(!selectedTz && "text-gray-400")}>
@@ -79,6 +82,9 @@ export default function StepScheduleView() {
             </Command>
           </PopoverContent>
         </Popover>
+        {timezoneError && (
+          <p className="text-xs text-red-500 font-medium">Please select a timezone</p>
+        )}
       </div>
 
       <Form {...form}>

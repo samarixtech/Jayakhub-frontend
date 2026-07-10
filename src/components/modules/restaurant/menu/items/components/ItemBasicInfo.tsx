@@ -28,6 +28,11 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
   const t = useTranslations("RestaurantDashboard.Menu.Items.basicInfo");
 
   const { currency } = useCLC();
+  const discountExceedsBasePrice =
+    !!formData.discount &&
+    !!formData.basePrice &&
+    Number(formData.discount) > Number(formData.basePrice);
+
   return (
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-4">
       {/* SECTION HEADER */}
@@ -112,11 +117,18 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
               <Input
                 type="number"
                 placeholder={t("discountPlaceholder")}
-                className="h-12 pl-10 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-bold"
+                className={`h-12 pl-10 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-bold ${
+                  discountExceedsBasePrice ? "border-red-500 focus:border-red-500" : ""
+                }`}
                 value={formData.discount}
                 onChange={(e) => onChange("discount", e.target.value)}
               />
             </div>
+            {discountExceedsBasePrice && (
+              <p className="text-xs text-red-500 font-medium">
+                Discount cannot be greater than the base price
+              </p>
+            )}
           </div>
         </div>
 

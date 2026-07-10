@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 // import getClientIp from "./lib/getClientIp";
-import api from "./components/services/api";
+import api, { isSessionExpiredPayload, SESSION_EXPIRED_FLAG_COOKIE } from "./components/services/api";
+
+const AUTH_COOKIE_NAMES = ["role", "planKeywords", "isExpired", "isCancelled", "restaurantId", "planCheckedAt"];
 
 // Don't hit /my-restaurant on every single request to a /restaurant/* route
 // (middleware also runs on RSC data-fetch/prefetch requests, not just full
@@ -14,7 +16,7 @@ const PLAN_CHECK_INTERVAL_MS = 60_000;
 // case the existing cookie values — however stale — are left untouched).
 async function getPlanCookieUpdates(
   request: NextRequest,
-): Promise<Record<string, string> | null> {
+): Promise<Record<string, string> | null | "EXPIRED"> {
   const token = request.cookies.get("token")?.value;
   if (!token) return null;
 
@@ -27,6 +29,13 @@ async function getPlanCookieUpdates(
     const res = (await api.get("/my-restaurant", {
       headers: { Authorization: `Bearer ${token}` },
     })) as any;
+
+    // /my-restaurant is authenticated by the same token, so a killed session
+    // (e.g. deactivated from User Management) surfaces here too — this is
+    // the one path that runs without any client component around to show
+    // the toast itself, so the caller has to force a redirect instead.
+    if (isSessionExpiredPayload(res.data)) return "EXPIRED";
+
     const data = res.data?.data;
     if (!data) return null;
 
@@ -113,7 +122,16 @@ export async function proxy(request: NextRequest) {
 
   if (isProtected) {
     if (!token) {
-      const loginUrl = new URL(`/${country}/${language}/login`, request.url);
+      // A session killed server-side (SSR/Server Action detecting a 403
+      // "Session Expired") clears cookies before any client toast can fire —
+      // it leaves this short-lived flag behind so the login page can still
+      // show the toast once it loads.
+      const wasSessionExpired =
+        request.cookies.get(SESSION_EXPIRED_FLAG_COOKIE)?.value === "1";
+      const loginUrl = new URL(
+        `/${country}/${language}/login${wasSessionExpired ? "?reason=session-expired" : ""}`,
+        request.url,
+      );
       const response = NextResponse.redirect(loginUrl);
       response.cookies.set("USER_COUNTRY", country, {
         path: "/",
@@ -126,7 +144,7 @@ export async function proxy(request: NextRequest) {
       // No valid token — ensure any stale auth cookies (e.g. left over from
       // a session killed server-side after a 403 "Session Expired") are
       // wiped too, so the client is in a fully logged-out state.
-      ["role", "planKeywords", "isExpired", "isCancelled", "restaurantId", "planCheckedAt"].forEach((name) => {
+      [...AUTH_COOKIE_NAMES, SESSION_EXPIRED_FLAG_COOKIE].forEach((name) => {
         response.cookies.delete(name);
       });
       return response;
@@ -206,6 +224,17 @@ export async function proxy(request: NextRequest) {
     // ever refreshing at login.
     if (isRestaurantRoute) {
       const planCookies = await getPlanCookieUpdates(request);
+      if (planCookies === "EXPIRED") {
+        const loginUrl = new URL(
+          `/${country}/${language}/login?reason=session-expired`,
+          request.url,
+        );
+        const expiredResponse = NextResponse.redirect(loginUrl);
+        ["token", ...AUTH_COOKIE_NAMES].forEach((name) => {
+          expiredResponse.cookies.delete(name);
+        });
+        return expiredResponse;
+      }
       if (planCookies) {
         Object.entries(planCookies).forEach(([name, value]) => {
           response.cookies.set(name, value, {

@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,6 +26,16 @@ import { useLogin } from "../hooks/useLogin";
 export default function LoginView() {
   const { form, onSubmit, isPending, isGoogleLoading, setIsGoogleLoading } =
     useLogin();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (searchParams.get("reason") === "session-expired") {
+      toast.error("Session Expired");
+      router.replace(pathname);
+    }
+  }, [searchParams, pathname, router]);
 
   return (
     <Card className="border-none shadow-none bg-transparent py-2">

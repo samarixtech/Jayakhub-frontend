@@ -1,7 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import GlobalSelect from "@/components/common/GlobalSelect";
 import { useTranslations } from "next-intl";
 
 interface MenuItemsFiltersProps {
@@ -21,6 +21,11 @@ export const MenuItemsFilters: React.FC<MenuItemsFiltersProps> = ({
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.Items.views");
 
+  const categoryOptions = filters.map((filter) => ({
+    value: filter.label,
+    label: `${filter.label} (${filter.count})`,
+  }));
+
   return (
     <div className="flex flex-col sm:flex-row items-center gap-4 w-full">
       <div className="relative w-full sm:w-[250px] shrink-0">
@@ -33,30 +38,13 @@ export const MenuItemsFilters: React.FC<MenuItemsFiltersProps> = ({
         />
       </div>
 
-      <div className="flex flex-1 items-center gap-2 overflow-x-auto max-w-full pb-2 sm:pb-0 no-scrollbar w-full sm:w-auto">
-        {filters.map((filter) => (
-          <Badge
-            key={filter.label}
-            variant={selectedCategory === filter.label ? "default" : "outline"}
-            onClick={() => setSelectedCategory(filter.label)}
-            className={`h-9 px-4 rounded-full cursor-pointer transition-colors whitespace-nowrap shrink-0 ${
-              selectedCategory === filter.label
-                ? "bg-emerald-bg hover:bg-emerald-bg-hover text-white border-transparent"
-                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-900"
-            }`}
-          >
-            {filter.label}
-            <span
-              className={`ml-2 text-xs opacity-80 ${
-                selectedCategory === filter.label
-                  ? "text-white"
-                  : "text-gray-400"
-              }`}
-            >
-              {filter.count}
-            </span>
-          </Badge>
-        ))}
+      <div className="w-full sm:w-[220px] shrink-0">
+        <GlobalSelect
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+          options={categoryOptions}
+          className="h-10"
+        />
       </div>
     </div>
   );

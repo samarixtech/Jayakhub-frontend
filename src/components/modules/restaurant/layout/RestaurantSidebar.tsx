@@ -128,11 +128,14 @@ import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import { useTranslations } from "next-intl";
 import { usePlanAccess } from "@/hooks/use-plan-access";
 import { canAccess, type PlanFeature } from "@/lib/utils/abac";
+import useLocale from "@/hooks/useLocals";
 
 export function RestaurantSidebar() {
   const t = useTranslations("RestaurantDashboard");
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
+  const { dir } = useLocale();
+  const isRtl = dir === "rtl";
   const isCollapsed = state === "collapsed" && !isMobile;
   const { keywords, isExpired, isCancelled } = usePlanAccess();
   const isBlocked = isExpired || isCancelled;
@@ -164,6 +167,7 @@ export function RestaurantSidebar() {
   return (
     <Sidebar
       collapsible="icon"
+      side={isRtl ? "right" : "left"}
       className="border-none"
       style={
         {
@@ -180,7 +184,7 @@ export function RestaurantSidebar() {
       {/* HEADER */}
       <SidebarHeader className="h-16 flex items-center justify-center border-b border-white/10 mb-2">
         <Link
-          href={`/restaurants`}
+          href={`/restaurant/dashboard`}
           className="w-full flex items-center justify-center"
         >
           {!isCollapsed ? (

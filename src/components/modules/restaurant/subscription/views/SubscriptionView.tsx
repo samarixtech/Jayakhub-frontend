@@ -8,15 +8,28 @@ import {
   Settings2,
   RotateCcw,
   Loader2,
+  AlertTriangle,
+  LogOut,
 } from "lucide-react";
+import { toast } from "react-hot-toast";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import Link from "next/link";
 import { useCLC } from "@/context/CLCContext";
 import { useSubscription } from "../hooks/useSubscription";
-import { toggleAutoRenewAction } from "@/app/actions/restaurant/subscription";
+import { toggleAutoRenewAction, cancelSubscriptionAction } from "@/app/actions/restaurant/subscription";
+import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 
 function formatHistoryDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -36,6 +49,8 @@ export default function SubscriptionView() {
   const { formatPrice } = useCLC();
   const [autoRenew, setAutoRenew] = useState(false);
   const [togglingRenew, setTogglingRenew] = useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const {
     subscription,
     history,
@@ -66,6 +81,28 @@ export default function SubscriptionView() {
       setAutoRenew(!value);
     } finally {
       setTogglingRenew(false);
+    }
+  };
+
+  const handleCancelSubscription = async () => {
+    setCancelling(true);
+    try {
+      const res = await cancelSubscriptionAction();
+      if (!res.success) {
+        toast.error(res.message || "Failed to cancel subscription");
+        setCancelling(false);
+        return;
+      }
+      toast.success("Subscription cancelled successfully");
+      // /my-restaurant is the authoritative source for isCancel — refresh the
+      // cookie from it so the dashboard lockdown (header/sidebar/overlay) picks
+      // up the cancellation immediately.
+      await getRestaurantStatusAction();
+      setCancelDialogOpen(false);
+      window.location.reload();
+    } catch {
+      toast.error("Failed to cancel subscription");
+      setCancelling(false);
     }
   };
 
@@ -116,7 +153,7 @@ export default function SubscriptionView() {
         </div>
 
         {/* Three-column body */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 px-6 py-5 gap-y-5">
+        <div className="grid grid-cols-1 sm:grid-cols-[0.8fr_1.4fr_0.8fr] divide-y sm:divide-y-0 sm:divide-x divide-gray-100 px-6 py-5 gap-y-5">
           {/* Current Plan */}
           <div className="sm:pr-6 flex flex-col gap-1.5">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Current Plan</p>
@@ -136,7 +173,7 @@ export default function SubscriptionView() {
           {/* Features */}
           <div className="sm:px-6 flex flex-col gap-1.5">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Features</p>
-            <ul className="space-y-2 mt-1">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 mt-1">
               {featureLabels.length > 0 ? featureLabels.map((f, i) => (
                 <li key={i} className="flex items-center gap-2 text-[13px] text-gray-600 font-medium">
                   <span className="w-4 h-4 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
@@ -145,7 +182,7 @@ export default function SubscriptionView() {
                   {f}
                 </li>
               )) : (
-                <li className="text-xs text-gray-400">No features listed</li>
+                <li className="text-xs text-gray-400 col-span-2">No features listed</li>
               )}
             </ul>
           </div>
@@ -272,14 +309,58 @@ export default function SubscriptionView() {
             </Link>
 
             {/* Cancel */}
-            <div className="px-6 py-4">
-              <button className="text-sm font-semibold text-red-500 hover:text-red-600 transition-colors">
-                Cancel Subscription
+            <div className="p-3">
+              <button
+                onClick={() => setCancelDialogOpen(true)}
+                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-red-50 hover:bg-red-100 transition-colors"
+              >
+                <LogOut className="w-4 h-4 text-red-600" />
+                <span className="text-sm font-bold text-red-600">Cancel Subscription</span>
               </button>
             </div>
           </div>
         </Card>
       </div>
+
+      {/* ── Cancel Confirmation Dialog ───────────────────────────────────── */}
+      <Dialog open={cancelDialogOpen} onOpenChange={(open) => !cancelling && setCancelDialogOpen(open)}>
+        <DialogContent>
+          <DialogHeader>
+            <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center mb-2">
+              <AlertTriangle className="w-5 h-5 text-red-500" />
+            </div>
+            <DialogTitle>Cancel Subscription</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to cancel your subscription? Your dashboard access will be
+              restricted to the Subscription page only until you resubscribe. This action cannot
+              be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setCancelDialogOpen(false)}
+              disabled={cancelling}
+            >
+              Keep Subscription
+            </Button>
+            <Button
+              onClick={handleCancelSubscription}
+              disabled={cancelling}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              {cancelling ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Cancelling...
+                </>
+              ) : (
+                "Yes, Cancel Subscription"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* ── Connected Cards ───────────────────────────────────────────────── */}
       {card && (

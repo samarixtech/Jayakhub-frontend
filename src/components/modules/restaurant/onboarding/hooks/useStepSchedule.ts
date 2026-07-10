@@ -53,8 +53,14 @@ export const useStepSchedule = () => {
   const { nextStep } = useOnboarding();
 
   const [timezones, setTimezones] = useState<TimezoneOption[]>([]);
-  const [timezone, setTimezone] = useState<string>("");
+  const [timezone, setTimezoneState] = useState<string>("");
   const [isLoadingTimezones, setIsLoadingTimezones] = useState(false);
+  const [timezoneError, setTimezoneError] = useState(false);
+
+  const setTimezone = (value: string) => {
+    setTimezoneState(value);
+    if (value) setTimezoneError(false);
+  };
 
   const form = useForm<ScheduleInput>({
     resolver: zodResolver(scheduleSchema) as any,
@@ -121,6 +127,12 @@ export const useStepSchedule = () => {
   }, []);
 
   const onSubmit = (data: ScheduleInput) => {
+    if (!timezone) {
+      setTimezoneError(true);
+      toast.error("Please select a timezone");
+      return;
+    }
+
     // Convert HH:MM → epoch milliseconds before storing
     const epochData: any = {};
     DAYS.forEach((day, idx) => {
@@ -154,5 +166,6 @@ export const useStepSchedule = () => {
     timezone,
     setTimezone,
     isLoadingTimezones,
+    timezoneError,
   };
 };

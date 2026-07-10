@@ -58,7 +58,6 @@ export function useUserForm({
       onSuccess: () => {
         router.push("/restaurant/users");
       },
-      onError: (err) => toast.error(err || "Failed to create user"),
     },
   );
 
@@ -68,7 +67,6 @@ export function useUserForm({
       onSuccess: () => {
         router.push("/restaurant/users");
       },
-      onError: (err) => toast.error(err || "Failed to update user"),
     },
   );
 

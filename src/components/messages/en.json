@@ -2332,7 +2332,7 @@
     "recentOrders": {
       "title": "Recent Orders",
       "subtitle": "Active and completed today",
-      "viewAll": "View all",
+      "viewAll": "View All",
       "noOrders": "No recent orders",
       "itemsCount": "{count} items",
       "status": {
@@ -2858,7 +2858,7 @@
     "recentOrders": {
       "title": "Recent Orders",
       "subtitle": "Active and completed today",
-      "viewAll": "View all",
+      "viewAll": "View All",
       "noOrders": "No recent orders",
       "itemsCount": "{count} items",
       "status": {

@@ -20,7 +20,7 @@ export default function DashboardLockOverlay({
       </div>
       {isBlocked && (
         <div
-          className="absolute inset-0 bg-gray-400/10 pointer-events-none"
+          className="fixed inset-0 z-30 bg-gray-400/20 pointer-events-none"
           aria-hidden="true"
         />
       )}

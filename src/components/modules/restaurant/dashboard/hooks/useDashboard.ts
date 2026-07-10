@@ -50,18 +50,25 @@ export function useDashboard() {
   };
 
   // Chart Data Config
-  const labels = dashboardData?.revenueChart?.map((item: any) => item.day) || [
-    t("revenueChart.days.mon"),
-    t("revenueChart.days.tue"),
-    t("revenueChart.days.wed"),
-    t("revenueChart.days.thu"),
-    t("revenueChart.days.fri"),
-    t("revenueChart.days.sat"),
-    t("revenueChart.days.sun"),
-  ];
-  const dataPoints = dashboardData?.revenueChart?.map((item: any) =>
-    parseFloat(item.amount),
-  ) || [0, 0, 0, 0, 0, 0, 0];
+  // A new restaurant with no orders yet gets back revenueChart: [] (not
+  // undefined/null) from the backend — since [].map() returns [] and [] is
+  // truthy, the `||` fallback below never applied, leaving chartData
+  // permanently empty and the "Gathering data" loader stuck forever.
+  const hasRevenueChartData = Array.isArray(dashboardData?.revenueChart) && dashboardData.revenueChart.length > 0;
+  const labels = hasRevenueChartData
+    ? dashboardData.revenueChart.map((item: any) => item.day)
+    : [
+        t("revenueChart.days.mon"),
+        t("revenueChart.days.tue"),
+        t("revenueChart.days.wed"),
+        t("revenueChart.days.thu"),
+        t("revenueChart.days.fri"),
+        t("revenueChart.days.sat"),
+        t("revenueChart.days.sun"),
+      ];
+  const dataPoints = hasRevenueChartData
+    ? dashboardData.revenueChart.map((item: any) => parseFloat(item.amount))
+    : [0, 0, 0, 0, 0, 0, 0];
 
   // Add extra padding to the max value for better chart visual
   const maxDataPoint = Math.max(...dataPoints, 500);

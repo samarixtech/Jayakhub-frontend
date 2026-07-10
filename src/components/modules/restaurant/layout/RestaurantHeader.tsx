@@ -28,11 +28,14 @@ export default function RestaurantHeader() {
   }, []);
 
   const t = useTranslations("RestaurantDashboard.Sidebar.items");
+  const tSettings = useTranslations("RestaurantDashboard.Settings.sidebar");
 
   const segments = pathname?.split("/") || [];
 
   const PAGE_NAMES: Record<string, string> = {
     dashboard: t("dashboard"),
+    pos: t("pos"),
+    history: t("posHistory"),
     orders: t("orders"),
     menu: t("menuManagement"),
     items: t("items"),
@@ -43,9 +46,17 @@ export default function RestaurantHeader() {
     reviews: t("reviews"),
     users: t("users"),
     payments: t("finance"),
+    payouts: t("payouts"),
+    subscription: t("subscription"),
     reports: t("reports"),
     apis: t("apis"),
     support: t("support"),
+    profile: tSettings("profile"),
+    location: tSettings("location"),
+    hours: tSettings("hours"),
+    finance: tSettings("finance"),
+    security: tSettings("security"),
+    documents: tSettings("documents"),
   };
 
   let activeSegment = "";
@@ -66,9 +77,9 @@ export default function RestaurantHeader() {
   const isBlocked = isExpiredOrCancelled;
 
   return (
-    <>
+    <div className="sticky top-0 z-40">
       {isExpiredOrCancelled && (
-        <div className="w-full min-h-[72px] bg-red-500 text-white text-sm font-semibold text-center py-5 px-4 flex flex-col sm:flex-row items-center justify-center gap-2 shrink-0">
+        <div className="w-full min-h-[72px] bg-red-500/10 backdrop-blur-md border-b border-red-800/30 text-red-800 text-sm font-semibold text-center py-5 px-4 flex flex-col sm:flex-row items-center justify-center gap-2 shrink-0">
           <span>
             {isCancelled
               ? "Your subscription has been cancelled."
@@ -76,28 +87,21 @@ export default function RestaurantHeader() {
           </span>
           <Link
             href="/restaurant/subscription"
-            className="underline underline-offset-2 hover:text-red-100 transition-colors font-bold"
+            className="underline underline-offset-2 hover:text-red-900 transition-colors font-bold text-red-900"
           >
             Go to Subscription Management to renew.
           </Link>
         </div>
       )}
-      {isBlocked ? (
-        // Everything is disabled except the Subscription module — still show
-        // the trigger so the sidebar (and its always-enabled Subscription
-        // link) stays reachable on mobile, where it's off-canvas otherwise.
+      {isBlocked ? null : (
         <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">
-          <SidebarTrigger className="-ml-2 text-gray-500 hover:bg-gray-100" />
-        </header>
-      ) : (
-        <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">
-          <SidebarTrigger className="-ml-2 text-gray-500 hover:bg-gray-100" />
+          <SidebarTrigger className="-ms-2 text-gray-500 hover:bg-gray-100" />
 
           <Typography variant="h3" className="font-bold text-gray-900 text-lg">
             {pageTitle}
           </Typography>
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ms-auto flex items-center gap-2">
             <UserProfile
               user={user}
               onLogout={async () => {
@@ -109,6 +113,6 @@ export default function RestaurantHeader() {
           </div>
         </header>
       )}
-    </>
+    </div>
   );
 }

@@ -5,15 +5,18 @@ import { X, Image as ImageIcon } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 interface ItemImageUploadProps {
   imagePreview: string | null;
   onImageChange: (file: File | null) => void;
+  error?: boolean;
 }
 
 export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
   imagePreview,
   onImageChange,
+  error,
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.Items.imageUpload");
 
@@ -36,7 +39,7 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
           <ImageIcon className="w-5 h-5" />
         </div>
         <Typography className="font-semibold text-gray-900">
-          {t("sectionTitle")}
+          {t("sectionTitle")} <span className="text-red-500">*</span>
         </Typography>
       </div>
 
@@ -44,10 +47,14 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
-          className={`relative w-full aspect-video md:aspect-[2.5/1] border-2 border-dashed rounded-[24px] flex flex-col items-center justify-center transition-all overflow-hidden bg-gray-50/50 group ${imagePreview
+          className={cn(
+            "relative w-full aspect-video md:aspect-[2.5/1] border-2 border-dashed rounded-[24px] flex flex-col items-center justify-center transition-all overflow-hidden bg-gray-50/50 group",
+            imagePreview
               ? "border-emerald-500/50"
-              : "border-gray-100 hover:border-emerald-500/50 hover:bg-emerald-50/10"
-            }`}
+              : error
+                ? "border-red-500"
+                : "border-gray-100 hover:border-emerald-500/50 hover:bg-emerald-50/10",
+          )}
         >
           {imagePreview ? (
             <>
@@ -90,6 +97,11 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
             </label>
           )}
         </div>
+        {error && (
+          <p className="text-xs text-red-500 font-medium">
+            Please upload an item image
+          </p>
+        )}
       </div>
     </div>
   );

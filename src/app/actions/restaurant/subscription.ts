@@ -82,3 +82,17 @@ export async function toggleAutoRenewAction(autoRenew: boolean): Promise<ActionR
   }
   return result;
 }
+
+export async function cancelSubscriptionAction(): Promise<ActionResponse> {
+  const result = await responseHandler(
+    async () => {
+      const api = await serverApi();
+      return api.delete("/plan-subscriptions/my");
+    },
+    "Subscription cancelled successfully",
+  );
+  if (result.success) {
+    revalidatePath("/", "layout");
+  }
+  return result;
+}

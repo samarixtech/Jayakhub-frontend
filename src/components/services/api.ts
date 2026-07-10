@@ -7,10 +7,16 @@ const SERVER_BASE_URL = process.env.NEXT_BASE_URL || process.env.NEXT_PUBLIC_BAS
 
 const AUTH_COOKIE_NAMES = ["token", "role", "planKeywords", "isExpired", "isCancelled", "restaurantId", "planCheckedAt"];
 
+// Set alongside the cleared auth cookies (short-lived) so that even when a
+// session gets killed purely server-side — during SSR/a Server Action, with
+// no client JS around to show a toast immediately — proxy.ts can still see
+// it on the very next request and tell the login page to show one.
+export const SESSION_EXPIRED_FLAG_COOKIE = "authSessionExpired";
+
 // Backend signals a killed/expired session (e.g. user deactivated from User
 // Management) with { meta: { status: 403, message: "Session Expired" } } —
 // sometimes as a real HTTP 403, sometimes embedded in an HTTP 200 body.
-function isSessionExpiredPayload(data: any): boolean {
+export function isSessionExpiredPayload(data: any): boolean {
   return (
     !!data?.meta &&
     data.meta.status === 403 &&
@@ -28,6 +34,7 @@ async function clearServerAuthCookies() {
     for (const name of AUTH_COOKIE_NAMES) {
       cookieStore.delete(name);
     }
+    cookieStore.set(SESSION_EXPIRED_FLAG_COOKIE, "1", { path: "/", maxAge: 15 });
   } catch {
     // Not in a request context (e.g. build time) — nothing to clear.
   }
