@@ -35,10 +35,12 @@ export async function createOrderAction(payload: CreateOrderPayload) {
   }
 }
 
-export async function getCurrentOrder(orderIdFromUrl: any) {
+export async function getCurrentOrder(orderIdFromUrl?: string | null) {
   try {
     const api = await serverApi();
-    const response = await api.get("/current-order");
+    const response = orderIdFromUrl
+      ? await api.get(`/current-order?orderId=${orderIdFromUrl}`)
+      : await api.get("/current-order");
     return { success: true, data: response.data };
   } catch (error: any) {
     return {

@@ -24,6 +24,7 @@ interface User {
   status: boolean;
   lastActive: string;
   avatar: string;
+  isMe?: boolean;
 }
 
 interface UsersTableProps {
@@ -121,6 +122,9 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
                   <div>
                     <Typography className="font-semibold text-gray-900 text-sm">
                       {user.name}
+                      {user.isMe && (
+                        <span className="text-gray-400 font-medium"> (You)</span>
+                      )}
                     </Typography>
                     <Typography className="text-gray-400 text-xs">
                       {user.email}
@@ -153,25 +157,27 @@ export function UsersTable({ users, isPending, onDelete }: UsersTableProps) {
 
               {/* Actions Column */}
               <TableCell className="text-right pl-4 pr-6">
-                <div className="flex items-center justify-end gap-2">
-                  <Link href={`/restaurant/users/${user.id}`}>
+                {!user.isMe && (
+                  <div className="flex items-center justify-end gap-2">
+                    <Link href={`/restaurant/users/${user.id}`}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                    </Link>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-lg"
+                      onClick={() => onDelete(user.id)}
+                      className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
                     >
-                      <Edit2 className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4" />
                     </Button>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => onDelete(user.id)}
-                    className="h-8 w-8 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
+                  </div>
+                )}
               </TableCell>
             </TableRow>
           ))

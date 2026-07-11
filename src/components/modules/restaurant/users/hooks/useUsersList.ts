@@ -35,6 +35,7 @@ export function useUsersList() {
             status: u.status,
             lastActive: formatLastActive(u.lastActive),
             avatar: "",
+            isMe: !!u.isMe,
           }));
           setUsers(mappedUsers);
         }
