@@ -4,6 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import axios from "axios";
 import { googleAuthAction } from "@/app/actions/auth/auth";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
@@ -12,6 +13,7 @@ import { Loader2 } from "lucide-react";
 import { useServerAction } from "@/hooks/use-server-action";
 export function GoogleAuthButton({ loading, role }: any) {
   const router = useRouter();
+  const t = useTranslations("Auth.social");
 
   const { execute, isPending } = useServerAction(googleAuthAction, {
     onSuccess: (data: any) => {
@@ -73,11 +75,11 @@ export function GoogleAuthButton({ loading, role }: any) {
           role: role,
         });
       } catch (error) {
-        toast.error("Google authentication failed.");
+        toast.error(t("googleAuthFailed"));
         console.error(error);
       }
     },
-    onError: () => toast.error("Google Login Failed"),
+    onError: () => toast.error(t("googleLoginFailed")),
   });
 
   return (
@@ -93,7 +95,7 @@ export function GoogleAuthButton({ loading, role }: any) {
       ) : (
         <FcGoogle className="text-xl" />
       )}
-      Google
+      {t("google")}
     </Button>
   );
 }

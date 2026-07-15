@@ -78,7 +78,7 @@ export function useDashboard() {
     datasets: [
       {
         fill: true,
-        label: "Revenue",
+        label: t("revenueChart.datasetLabel"),
         data: dataPoints,
         borderColor: "#2e6b49",
         backgroundColor: "rgba(46, 107, 73, 0.05)",
@@ -105,7 +105,7 @@ export function useDashboard() {
     return t("recentActivity.timeAgo.days", { count: diffDays });
   };
 
-  const ownerName = dashboardData?.ownerName || "Chef";
+  const ownerName = dashboardData?.ownerName || t("greeting.chefFallback");
   const stats = dashboardData?.stats;
   const recentOrders = dashboardData?.recentOrders || [];
   const recentActivity = dashboardData?.recentActivity || [];

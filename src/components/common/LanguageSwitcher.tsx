@@ -1,4 +1,4 @@
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { setCookie } from "cookies-next";
 import { Check, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
@@ -38,7 +38,6 @@ const LanguageSwitcher = ({
   open,
   onOpenChange,
 }: LanguageSwitcherProps) => {
-  const router = useRouter();
   const pathname = usePathname();
 
   const segments = pathname ? pathname.split("/").filter(Boolean) : [];
@@ -55,19 +54,22 @@ const LanguageSwitcher = ({
       maxAge: 60 * 60 * 24 * 30,
       path: "/",
     });
-    document.documentElement.lang = lang.code;
-    document.documentElement.dir = lang.dir;
 
     const newSegments = [...segments];
+    let targetPath: string;
     if (newSegments.length >= 2) {
       newSegments[1] = newCode;
-      router.push("/" + newSegments.join("/"));
+      targetPath = "/" + newSegments.join("/");
     } else {
-      router.push(
-        `/${activeLang.countryCode.toLowerCase()}/${newCode}/restaurants`,
-      );
+      targetPath = `/${activeLang.countryCode.toLowerCase()}/${newCode}/restaurants`;
     }
-    router.refresh();
+
+    // Full reload (not router.push/refresh) so the root layout's <html dir>
+    // and NextIntlClientProvider locale are always re-rendered fresh on the
+    // server. A soft navigation can reuse a cached client-side render of the
+    // root layout in production, leaving RTL layout (sidebar, etc.) stuck on
+    // the old direction until a manual refresh.
+    window.location.href = targetPath;
   };
 
   const isSidebar = variant === "sidebar";

@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { Order, OrderItem, OrderStatus } from "../types";
 
@@ -25,6 +26,7 @@ export const getStatusColor = (status: string) => {
       return "bg-emerald-100 text-emerald-700";
     case OrderStatus.REJECTED:
     case OrderStatus.CANCELLED:
+    case OrderStatus.RIDER_NOT_ASSIGNED:
       return "bg-red-100 text-red-600";
     case OrderStatus.OUT_FOR_DELIVERY:
       return "bg-purple-100 text-purple-700";
@@ -40,11 +42,13 @@ export const getStatusColor = (status: string) => {
   }
 };
 
-export const getStatusLabel = (status: string) => {
+export const getStatusLabel = (status: string, t?: (key: string) => string) => {
   const s = status?.toLowerCase();
   switch (s) {
     case OrderStatus.OUT_FOR_DELIVERY:
-      return "Out for Delivery";
+      return t ? t("out_for_delivery") : "Out for Delivery";
+    case OrderStatus.RIDER_NOT_ASSIGNED:
+      return t ? t("rider_not_assigned_badge") : "Rider Not Assigned";
     default:
       if (!s) return "";
       return s.charAt(0).toUpperCase() + s.slice(1);
@@ -58,6 +62,7 @@ export function useOrderHistoryActions({
 }: UseOrderHistoryActionsProps) {
   const dispatch = useDispatch();
   const router = useRouter();
+  const t = useTranslations("CustomerDashboard.OrderHistory");
 
   const handlePageChange = (page: number, totalPages: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -93,7 +98,7 @@ export function useOrderHistoryActions({
     setCurrentOrderInfo({
       rawOrder: order,
       orderNumber: `#${order.orderId?.substring(0, 8) || "Order"}`,
-      restaurantName: "Restaurant Order",
+      restaurantName: t("restaurant_order_fallback"),
       items: (order.items || []).map((item) => ({
         id:
           item.id ||
@@ -108,9 +113,9 @@ export function useOrderHistoryActions({
         image: getImageUrl(item.image),
       })),
       delivery: {
-        driverName: "Your Rider",
-        vehicle: "Delivery",
-        time: order.orderTime || "Just now",
+        driverName: t("your_rider_fallback"),
+        vehicle: t("delivery_fallback"),
+        time: order.orderTime || t("just_now"),
         driverImage:
           "https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200",
       },

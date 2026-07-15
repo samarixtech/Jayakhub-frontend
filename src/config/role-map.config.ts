@@ -4,6 +4,7 @@ export const ROLE_REDIRECT_MAP = {
   cashier: "/restaurant/pos",
   admin: "/restaurant/dashboard",
   manager: "/restaurant/dashboard",
+  kitchen: "/restaurant/pos/orders",
 } as const;
 
 export type UserRole = keyof typeof ROLE_REDIRECT_MAP;

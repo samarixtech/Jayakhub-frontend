@@ -2,6 +2,7 @@
 
 import { Share2, Facebook, Twitter, Linkedin, Check } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Props = {
   shareLabel: string;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function BlogShareButtons({ shareLabel, copyLabel, title }: Props) {
+  const t = useTranslations("Newsroom.post");
   const [copied, setCopied] = useState(false);
 
   const getUrl = () =>
@@ -47,7 +49,7 @@ export default function BlogShareButtons({ shareLabel, copyLabel, title }: Props
             `https://twitter.com/intent/tweet?url=${encodeURIComponent(getUrl())}&text=${encodeURIComponent(title)}`
           )
         }
-        aria-label="Share on Twitter"
+        aria-label={t("share_twitter")}
         className="w-9 h-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#64748B] hover:bg-[#1DA1F2] hover:text-white transition-colors"
       >
         <Twitter className="w-4 h-4" />
@@ -59,7 +61,7 @@ export default function BlogShareButtons({ shareLabel, copyLabel, title }: Props
             `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getUrl())}`
           )
         }
-        aria-label="Share on Facebook"
+        aria-label={t("share_facebook")}
         className="w-9 h-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#64748B] hover:bg-[#4267B2] hover:text-white transition-colors"
       >
         <Facebook className="w-4 h-4" />
@@ -71,7 +73,7 @@ export default function BlogShareButtons({ shareLabel, copyLabel, title }: Props
             `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getUrl())}`
           )
         }
-        aria-label="Share on LinkedIn"
+        aria-label={t("share_linkedin")}
         className="w-9 h-9 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#64748B] hover:bg-[#0077B5] hover:text-white transition-colors"
       >
         <Linkedin className="w-4 h-4" />
@@ -88,7 +90,7 @@ export default function BlogShareButtons({ shareLabel, copyLabel, title }: Props
         ) : (
           <Share2 className="w-4 h-4" />
         )}
-        {copied ? "Copied!" : copyLabel}
+        {copied ? t("copied") : copyLabel}
       </button>
     </div>
   );

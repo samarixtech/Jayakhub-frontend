@@ -5,7 +5,8 @@
     "services": "Services",
     "contact": "Contact",
     "newsroom": "Newsroom",
-    "partners": "Partners"
+    "partners": "Partners",
+    "mobileMenuTitle": "Menu"
   },
   "Home": {
     "hero_badge": "#1 Food Delivery in Iraq",
@@ -73,6 +74,29 @@
       },
       "delivery": {
         "Free": "Free"
+      },
+      "reviewsWord": "reviews",
+      "cuisineTags": {
+        "Iraqi": "Iraqi",
+        "Kebab": "Kebab",
+        "Fast Food": "Fast Food",
+        "Burger": "Burger",
+        "Italian": "Italian",
+        "Pizza": "Pizza",
+        "Indian": "Indian",
+        "Curry": "Curry",
+        "Japanese": "Japanese",
+        "Sushi": "Sushi",
+        "Healthy": "Healthy",
+        "Salad": "Salad"
+      },
+      "items": {
+        "r1": "Al-Mansour Grill",
+        "r2": "Baghdad Bites",
+        "r3": "Pizza Palace",
+        "r4": "Spice Route",
+        "r5": "Sushi Master",
+        "r6": "Green Garden"
       }
     },
     "featured_dishes": {
@@ -506,11 +530,16 @@
       "read": "Read"
     },
     "archive_btn": "View Archive",
+    "no_posts": "No posts found.",
     "post": {
       "loading": "Loading...",
       "back_to_blog": "Back to Blog",
       "share_article": "Share this article:",
       "copy_link": "Copy Link",
+      "copied": "Copied!",
+      "share_twitter": "Share on Twitter",
+      "share_facebook": "Share on Facebook",
+      "share_linkedin": "Share on LinkedIn",
       "tags": {
         "artificial_intelligence": "Artificial Intelligence",
         "logistics": "Logistics",
@@ -900,7 +929,80 @@
     "welcome": "Welcome Back",
     "createAccount": "Create an Account",
     "continue": "Log in to continue ordering",
-    "freeDelivery": "Sign up to enjoy free delivery"
+    "freeDelivery": "Sign up to enjoy free delivery",
+    "orRegisterWithEmail": "Or register with email",
+    "fullNamePlaceholder": "Full Name",
+    "emailPlaceholder": "Email Address",
+    "phonePlaceholder": "Phone Number",
+    "confirmPasswordPlaceholder": "Confirm Password",
+    "agreeToThe": "I agree to the",
+    "termsAndConditions": "Terms and Conditions",
+    "createAccountBtn": "Create Account",
+    "ownerNamePlaceholder": "Owner Name",
+    "partnerWithUs": "Partner with Us",
+    "partnerSubtitle": "Grow your business by reaching more customers",
+    "registerRestaurantBtn": "Register Restaurant",
+    "alreadyPartner": "Already a partner?"
+  },
+  "Auth": {
+    "login": {
+      "title": "Login to Account",
+      "subtitle": "Enter your details to continue",
+      "orContinueWithEmail": "Or continue with email",
+      "emailSrLabel": "Email",
+      "emailPlaceholder": "Email Address",
+      "forgotPassword": "Forgot Password?",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create Account",
+      "sessionExpired": "Session Expired"
+    },
+    "verifyOtp": {
+      "title": "Verify OTP",
+      "subtitle": "Enter the 6-digit code sent to",
+      "submit": "Verify & Proceed",
+      "noCode": "Didn't receive the code?",
+      "resending": "Resending...",
+      "resendIn": "Resend in {timer}s",
+      "resendOtp": "Resend OTP",
+      "backTo": "Back to",
+      "login": "Log in"
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "subtitle": "We will send a 6-digit verification code to your email to reset your password.",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "example@mail.com",
+      "submit": "Send OTP",
+      "rememberPassword": "Remember your password?",
+      "login": "Login"
+    },
+    "newPassword": {
+      "title": "New Password",
+      "subtitle": "Enter your new security credentials",
+      "passwordPlaceholder": "New Password",
+      "confirmPasswordPlaceholder": "Confirm New Password",
+      "submit": "Update Password"
+    },
+    "social": {
+      "google": "Google",
+      "apple": "Apple",
+      "googleAuthFailed": "Google authentication failed.",
+      "googleLoginFailed": "Google Login Failed"
+    },
+    "passwordField": {
+      "defaultPlaceholder": "Password"
+    },
+    "toasts": {
+      "noVerificationEmail": "No verification email found. Redirecting...",
+      "otpSent": "OTP Sent Successfully",
+      "failedResendOtp": "Failed to resend OTP",
+      "enterFullCode": "Please enter the full 6-digit code",
+      "invalidUserRole": "Authentication error: Invalid user role",
+      "accountVerified": "Account verified!",
+      "verificationFailed": "Verification failed",
+      "sessionExpiredStartOver": "Session expired. Please start over."
+    }
   },
   "myOrders": {
     "header": "My Orders",
@@ -1167,6 +1269,371 @@
     "lb": "Lebanon",
     "iq": "Iraq"
   },
+  "Cart": {
+    "title": "Your Cart",
+    "itemsCount": "{count} items",
+    "restaurants": "Restaurants",
+    "emptyTitle": "Your cart is empty",
+    "emptyMessage": "Looks like you haven't added anything to your cart yet.",
+    "startBrowsing": "Start Browsing",
+    "unknownRestaurant": "Unknown Restaurant",
+    "viewCartBtn": "VIEW CART",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "total": "Total",
+    "goToCheckout": "Go to Checkout",
+    "floatingViewCart": "View Cart",
+    "floatingItemsLabel": "{count} items • {restaurant}",
+    "optional": "Optional",
+    "specialInstructions": "Special Instructions",
+    "specialInstructionsPlaceholder": "E.g. No onions, please",
+    "addToCart": "Add to Cart"
+  },
+  "OrderTracking": {
+    "deliveryAddress": "Delivery Address",
+    "defaultUserName": "Grand Indonesia East Mall",
+    "defaultAddress": "Level 3, Shop 10-12, Jl. M.H. Thamrin No.1, Jakarta Pusat, 10310",
+    "cod": "COD",
+    "paidVia": "Paid via {method}",
+    "cash": "Cash",
+    "card": "Card",
+    "mapTitle": "Order Location",
+    "journeyTitle": "Order Journey",
+    "placedTitle": "Order Placed",
+    "placedDesc": "Your order has been successfully placed.",
+    "cancelledTitle": "Order Cancelled",
+    "cancelledDesc": "This order was cancelled.",
+    "cancelledByRestaurantDesc": "This order was cancelled by the restaurant.",
+    "riderNotAssignedTitle": "Rider Not Assigned",
+    "riderNotAssignedDesc": "We're sorry — no rider was available to deliver your order, so it was cancelled. If you paid online, a full refund has been initiated.",
+    "confirmedTitle": "Order Confirmed",
+    "confirmedDesc": "We received your order and forwarded it to the restaurant.",
+    "confirmedDescActive": "We've received your order and the restaurant is starting soon.",
+    "preparingTitle": "Preparing your food",
+    "preparingDesc": "The chef is working their magic! Your order is being packed.",
+    "onTheWayTitle": "On the way",
+    "onTheWayDesc": "Hang tight! Your rider will be heading to you soon.",
+    "deliveredTitle": "Delivered",
+    "deliveredDesc": "Enjoy your meal! Don't forget to rate the restaurant.",
+    "yourRider": "Your Rider",
+    "riderNotAssigned": "Rider not assigned yet.",
+    "eta": "ETA",
+    "callRider": "Call Rider",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "free": "Free",
+    "coupon": "Coupon",
+    "total": "Total",
+    "confirmedHeading": "Order Placed!",
+    "yourOrderPrefix": "Your order",
+    "isConfirmedSuffix": "is confirmed.",
+    "confirmedSubMessage": "Sit tight, good food is coming!",
+    "trackOrderBtn": "Track Order",
+    "continueOrderBtn": "Continue Order"
+  },
+  "Wishlist": {
+    "title": "My Wishlist",
+    "subtitle": "Your favorite restaurants in one place",
+    "loading": "Loading your wishlist...",
+    "emptyTitle": "Your wishlist is empty",
+    "emptyMessage": "Save your favorite restaurants to find them easily next time."
+  },
+  "Onboarding": {
+    "layout": {
+      "title": "Complete Profile",
+      "subtitle": "Please finish setting up your restaurant to start accepting orders.",
+      "incompleteStepError": "Please complete the current step before proceeding."
+    },
+    "header": {
+      "back": "Back",
+      "title": "Complete Your Profile",
+      "subtitle": "Let's get your restaurant set up on JayakHub"
+    },
+    "steps": {
+      "ownerInfo": "Owner Info",
+      "restaurant": "Restaurant",
+      "brandAssets": "Brand Assets",
+      "schedule": "Schedule",
+      "kyc": "KYC",
+      "bankDetails": "Bank Details",
+      "review": "Review"
+    },
+    "cuisineSelector": {
+      "label": "Cuisine Types",
+      "selectedBadge": "{count} SELECTED",
+      "types": {
+        "fastFood": "Fast Food",
+        "casualDining": "Casual Dining",
+        "cafe": "Cafe",
+        "fineDining": "Fine Dining",
+        "bakery": "Bakery",
+        "indian": "Indian",
+        "chinese": "Chinese",
+        "italian": "Italian",
+        "mexican": "Mexican",
+        "japanese": "Japanese",
+        "thai": "Thai",
+        "mediterranean": "Mediterranean",
+        "american": "American",
+        "middleEastern": "Middle Eastern",
+        "korean": "Korean",
+        "fusion": "Fusion"
+      }
+    },
+    "documentUpload": {
+      "chooseFile": "Choose File",
+      "tagNoGlare": "No glare",
+      "tagHighQuality": "High quality",
+      "tagValidExpiry": "Valid expiry"
+    },
+    "imageUpload": {
+      "remove": "Remove",
+      "chooseImage": "Choose Image",
+      "defaultRecommendedSize": "1200 x 400 px (3:1 ratio)",
+      "tipsTitle": "Tips for a great cover:",
+      "tip1": "Show your most popular dishes",
+      "tip2": "Use natural lighting",
+      "tip3": "Keep text to a minimum",
+      "tip4": "Avoid blurry or low-quality images"
+    },
+    "reviewComponents": {
+      "edit": "Edit",
+      "uploaded": "UPLOADED",
+      "verified": "VERIFIED",
+      "pending": "PENDING"
+    },
+    "locationMap": {
+      "locating": "Locating...",
+      "locationFound": "Location found!",
+      "geoServiceFailed": "Error: The Geolocation service failed.",
+      "geoNotSupported": "Error: Your browser doesn't support geolocation.",
+      "errorLoadingMaps": "Error loading maps",
+      "checkApiKey": "Please check your API key configuration.",
+      "mapsUnavailable": "Maps Unavailable",
+      "apiKeyMissing": "Google Maps API Key is missing.",
+      "loadingMap": "Loading Map...",
+      "locateMe": "Locate Me",
+      "clickToPin": "Click on map to pin location"
+    },
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "bankDetailsView": {
+      "title": "Set up your payout account",
+      "subtitle": "Enter your bank details so we can deposit your earnings directly.",
+      "sslTitle": "256-bit SSL Encryption",
+      "sslDesc": "Your banking information is encrypted and stored securely. We never share your data.",
+      "accountTitleLabel": "Account Tile / Holder Name",
+      "accountTitlePlaceholder": "John Doe",
+      "bankNameLabel": "Bank Name",
+      "loadingBanks": "Loading...",
+      "selectBank": "Select Bank",
+      "accountTypeLabel": "Account Type",
+      "selectType": "Select Type",
+      "ibanLabel": "IBAN Number",
+      "ibanPlaceholder": "IQ00 0000 0000 0000 0000 000",
+      "payoutScheduleTitle": "Payout Schedule",
+      "weeklyPayouts": "Weekly payouts every Monday",
+      "processingTime": "Processing takes 1-2 business days",
+      "nextStep": "Next Step",
+      "toastSaved": "Bank Details Saved"
+    },
+    "brandAssetsView": {
+      "title": "Brand Assets",
+      "uploadLogo": "Upload Logo",
+      "uploadCover": "Upload Cover Image",
+      "nextStep": "Next Step",
+      "toastSaved": "Brand Assets Saved",
+      "toastTooLarge": "Images too large to save locally, but proceed anyway."
+    },
+    "kycView": {
+      "title": "Upload Documents",
+      "subtitle": "Verify your identity and business to start selling.",
+      "ownerIdentity": "Owner Identity (KYC)",
+      "restaurantDocuments": "Restaurant Documents",
+      "selectOne": "Select One",
+      "nextStep": "Next Step",
+      "types": {
+        "idCard": {
+          "label": "ID Card",
+          "description": "Upload your ID Card",
+          "sub": "Please upload a clear photo of the front and back of your Government ID."
+        },
+        "passport": {
+          "label": "Passport",
+          "description": "Upload your Passport",
+          "sub": "Please upload the data page of your valid Passport."
+        },
+        "drivingLicense": {
+          "label": "Driving License",
+          "description": "Upload your Driving License",
+          "sub": "Please upload a clear photo of your valid Driving License."
+        }
+      },
+      "docs": {
+        "foodLicense": {
+          "label": "Food License",
+          "description": "Upload Food License",
+          "sub": "Upload your valid food operating license or health permit."
+        },
+        "taxCertificate": {
+          "label": "Tax Certificate",
+          "description": "Upload Tax Certificate",
+          "sub": "Upload your valid business tax registration certificate."
+        }
+      },
+      "identityAttached": "Identity document attached",
+      "businessAttached": "Business Document Attached",
+      "uploadBothRequired": "Please upload both identity and business documents.",
+      "verificationSubmitted": "Verification Documents Submitted"
+    },
+    "ownerInfoView": {
+      "title": "Who manages this restaurant?",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "emailAddress": "Email Address",
+      "contactPhone": "Contact Phone",
+      "phonePlaceholder": "Phone Number",
+      "phoneHelper": "We will send important updates to this number.",
+      "nextStep": "Next Step",
+      "toastSaved": "Owner Info Saved",
+      "toastSaveFailed": "Failed to save owner info",
+      "toastValidationError": "Please check the form for errors"
+    },
+    "restaurantInfoView": {
+      "title": "Tell us about your place",
+      "restaurantName": "Restaurant Name",
+      "restaurantNamePlaceholder": "Tasty Bites",
+      "restaurantPhone": "Restaurant Phone",
+      "phonePlaceholder": "Phone Number",
+      "restaurantEmail": "Restaurant Email",
+      "restaurantEmailPlaceholder": "contact@tastybites.com",
+      "websiteUrl": "Website URL (Optional)",
+      "websiteUrlPlaceholder": "https://tastybites.com",
+      "location": "Restaurant Location",
+      "locationPlaceholder": "Search for restaurant address...",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe your restaurant's vibe...",
+      "nextStep": "Next Step",
+      "toastSaved": "Restaurant Info Saved"
+    },
+    "scheduleView": {
+      "title": "Operating Hours",
+      "timezone": "Timezone",
+      "loadingTimezones": "Loading timezones...",
+      "selectTimezone": "Select timezone",
+      "searchTimezone": "Search timezone...",
+      "noTimezoneFound": "No timezone found.",
+      "timezoneRequired": "Please select a timezone",
+      "to": "To",
+      "nextStep": "Next Step",
+      "toastSaved": "Restaurant Schedule Saved"
+    },
+    "reviewView": {
+      "title": "Review your application",
+      "subtitle": "Please review all information before submitting. You can edit any section if needed.",
+      "ownerInformation": "Owner Information",
+      "fullName": "Full Name",
+      "contactPhone": "Contact Phone",
+      "emailAddress": "Email Address",
+      "restaurantDetails": "Restaurant Details",
+      "restaurantName": "Restaurant Name",
+      "restaurantPhone": "Restaurant Phone",
+      "restaurantEmail": "Restaurant Email",
+      "websiteUrl": "Website URL",
+      "cuisineTypes": "Cuisine Types",
+      "description": "Description",
+      "location": "Location",
+      "fullAddress": "Full Address",
+      "brandAssets": "Brand Assets",
+      "logo": "Logo",
+      "coverImage": "Cover Image",
+      "operationsSchedule": "Operations Schedule",
+      "timezone": "Timezone",
+      "operatingHours": "Operating Hours",
+      "notSet": "Not set",
+      "legalBanking": "Legal & Banking",
+      "governmentId": "Owner's Government ID (KYC)",
+      "foodLicense": "Food License / Health Permit",
+      "accountHolder": "Account Holder",
+      "bankName": "Bank Name",
+      "ibanNo": "IBAN No",
+      "confirmPrefix": "I confirm that all information provided is accurate and I agree to JayakHub's",
+      "termsOfService": "Terms of Service",
+      "merchantAgreement": "Merchant Agreement",
+      "and": "and",
+      "privacyPolicy": "Privacy Policy",
+      "confirmSuffix": "I understand that false information may result in account suspension.",
+      "submitting": "Submitting...",
+      "submitApplication": "Submit Application"
+    }
+  },
+  "Checkout": {
+    "breadcrumbHome": "Home",
+    "breadcrumbRestaurants": "Restaurants",
+    "breadcrumbCheckout": "Checkout",
+    "heading": "Finalize Your Order",
+    "cartEmpty": "Your cart is empty.",
+    "selectAddressError": "Please select a delivery address.",
+    "orderPlacedSuccess": "Order placed successfully!",
+    "paymentSuccess": "Payment successful!",
+    "stripeUrlNotFound": "Stripe URL not found.",
+    "placeOrderFailed": "Failed to place order.",
+    "specialInstructions": "Special Instructions",
+    "specialInstructionsPlaceholder": "e.g. No onions, please. Knock twice.",
+    "promoHeading1": "Sign up to get free delivery on",
+    "promoHeading2": "your first order",
+    "promoTagline": "Iraq's Premier Food Delivery Platform",
+    "loginTitle": "Login to Place Order",
+    "loginSubtitle": "Please sign in or create an account to proceed with your order and manage your delivery details.",
+    "loginBtn": "Login / Sign Up",
+    "personalDetails": "Personal Details",
+    "email": "Email",
+    "fullName": "Full Name",
+    "mobileNumber": "Mobile Number",
+    "deliveryAddress": "Delivery Address",
+    "noAddressSelected": "No Address Selected",
+    "selectOrAddAddress": "Please select or add an address.",
+    "noteLabel": "Note",
+    "changeBtn": "Change",
+    "selectAddressTitle": "Select Delivery Address",
+    "selectAddressDesc": "Choose where you want your order delivered.",
+    "noAddressesFound": "No addresses found.",
+    "addNewAddress": "Add New Address",
+    "paymentMethod": "Payment Method",
+    "creditCardStripe": "Credit Card / Stripe",
+    "securePaymentStripe": "Secure payment via Stripe",
+    "payWithNewCard": "Pay with a new card",
+    "expires": "Expires",
+    "cashOnDelivery": "Cash on Delivery",
+    "payWhenArrives": "Pay when food arrives",
+    "estDeliveryTime": "Est. Delivery Time",
+    "estDeliveryTimeValue": "25 - 35 mins",
+    "yourItems": "Your items",
+    "fromRestaurant": "From: {name}",
+    "restaurantFallback": "Restaurant",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "discountLabel": "Discount ({code})",
+    "total": "Total",
+    "couponApplied": "{code} applied",
+    "promoPlaceholder": "Promo code",
+    "applyBtn": "APPLY",
+    "placeOrderBtn": "Place Order",
+    "agreeToOrderPrefix": "By placing your order, you agree to JayakHub's",
+    "termsAndConditions": "Terms & Conditions",
+    "couponEmptyError": "Please enter a coupon code.",
+    "couponAppliedToast": "Coupon applied successfully!",
+    "couponInvalid": "Invalid coupon code.",
+    "couponValidateFailed": "Failed to validate coupon. Please try again."
+  },
   "CustomerDashboard": {
     "DashboardView": {
       "overview": "Overview",
@@ -1190,7 +1657,8 @@
       "view_all": "View All",
       "item": "item",
       "items": "items",
-      "no_activity": "No recent activity."
+      "no_activity": "No recent activity.",
+      "out_for_delivery": "Out for Delivery"
     },
     "OrderHistory": {
       "rows_per_page": "Rows per page:",
@@ -1226,7 +1694,28 @@
       "cancel_order_confirm": "Yes, Cancel Order",
       "cancel_order_btn": "Cancel Order",
       "cancel": "No",
-      "payment_method": "Payment Method"
+      "payment_method": "Payment Method",
+      "cancelling_order": "Cancelling order...",
+      "order_cancelled_success": "Order cancelled successfully",
+      "cancel_order_failed": "Failed to cancel order",
+      "cancelling_state": "Cancelling...",
+      "breadcrumb_home": "Home",
+      "breadcrumb_orders": "Orders",
+      "track_order_id": "Track {id}",
+      "order_cancelled_heading": "Order Cancelled",
+      "live_tracking_heading": "Live Order Tracking",
+      "cancelled_badge": "Cancelled",
+      "rider_not_assigned_badge": "Rider Not Assigned",
+      "rider_not_assigned_sorry": "We're sorry — no rider was available to deliver your order. If you paid online, a full refund has been initiated.",
+      "order_placed_at": "Order #{id} • Place at {date}",
+      "order_not_found_title": "Order not found",
+      "order_not_found_message": "NO order found for this order ID",
+      "track": "Track",
+      "restaurant_order_fallback": "Restaurant Order",
+      "your_rider_fallback": "Your Rider",
+      "delivery_fallback": "Delivery",
+      "just_now": "Just now",
+      "out_for_delivery": "Out for Delivery"
     },
     "ProfileSettings": {
       "title": "Profile",
@@ -1235,6 +1724,7 @@
       "save_changes": "Save Changes",
       "verified": "VERIFIED",
       "pending": "PENDING",
+      "rejected": "REJECTED",
       "not_verified": "NOT VERIFIED",
       "total_orders": "Total Orders",
       "reviews": "Reviews",
@@ -1275,7 +1765,26 @@
       "delete_modal_description": "Your account will be deactivated and scheduled for deletion. You can retrieve your account within 30 days by logging in again.",
       "delete_modal_cancel": "Cancel",
       "delete_modal_confirm": "Delete Account",
-      "delete_modal_deleting": "Deleting..."
+      "delete_modal_deleting": "Deleting...",
+      "kyc_gov_id_title": "Government ID",
+      "kyc_gov_id_desc": "National ID Card",
+      "kyc_license_title": "Driving License",
+      "kyc_license_desc": "Valid Driver's License",
+      "kyc_passport_title": "Passport",
+      "kyc_passport_desc": "International Passport",
+      "loading_notifications": "Loading notifications...",
+      "no_new_notifications": "No new notifications",
+      "seconds_ago": "{count} seconds ago",
+      "minutes_ago": "{count} minutes ago",
+      "hours_ago": "{count} hours ago",
+      "days_ago": "{count} days ago",
+      "months_ago": "{count} months ago",
+      "years_ago": "{count} years ago",
+      "google_login_notice": "You are currently logged in with Google. Set a new password to secure your account.",
+      "set_password_btn": "Set Password",
+      "customer_fallback": "Customer",
+      "statistics": "Statistics",
+      "profile_updated": "Profile updated!"
     },
     "MyAddress": {
       "title": "My Address",
@@ -1322,7 +1831,16 @@
       "tap_on_map": "Tap on map to pin location",
       "home": "Home",
       "work": "Work",
-      "other": "Other"
+      "other": "Other",
+      "load_failed": "Failed to load addresses",
+      "deleting": "Deleting address...",
+      "deleted_success": "Address deleted successfully",
+      "delete_failed": "Failed to delete address",
+      "toast_fill_required": "Please fill in all required fields (Street, City, Country)",
+      "toast_provide_label": "Please provide a label for the address",
+      "toast_updated": "Address updated successfully!",
+      "toast_saved": "Address saved successfully!",
+      "toast_save_failed": "Failed to save address"
     },
     "Billing": {
       "title": "Billing",
@@ -1348,7 +1866,19 @@
       "pdf": "PDF",
       "no_transactions": "No transactions found",
       "showing": "Showing",
-      "of": "of"
+      "of": "of",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "pick_date": "Pick date",
+      "apply": "Apply",
+      "clear": "Clear",
+      "exporting": "Exporting...",
+      "export_csv": "Export CSV",
+      "export_success": "CSV export completed successfully!",
+      "export_error": "Failed to export CSV. Please try again.",
+      "table_status": "Status",
+      "item_fallback": "Item",
+      "out_for_delivery": "Out for Delivery"
     },
     "Wallet": {
       "title": "Wallet",
@@ -1365,7 +1895,8 @@
       "expires": "Expires",
       "remove": "Remove",
       "name_placeholder": "NAME",
-      "expiry_placeholder": "MM/YY"
+      "expiry_placeholder": "MM/YY",
+      "fetch_cards_failed": "Failed to fetch cards"
     },
     "Sidebar": {
       "menu": "Menu",
@@ -1413,7 +1944,10 @@
         "subscription": "Subscription",
         "settings": "Settings"
       },
-      "logout": "Logout"
+      "logout": "Logout",
+      "subscriptionCancelled": "Your subscription has been cancelled.",
+      "subscriptionExpired": "Your subscription has expired.",
+      "renewSubscription": "Go to Subscription Management to renew."
     },
     "greeting": {
       "morning": "Good morning",
@@ -1421,7 +1955,8 @@
       "evening": "Good evening",
       "night": "Good night",
       "fallbackName": "JOHN DOE",
-      "subtitle": "Your restaurant is ready to receive orders"
+      "subtitle": "Your restaurant is ready to receive orders",
+      "chefFallback": "Chef"
     },
     "Settings": {
       "sidebar": {
@@ -1451,7 +1986,13 @@
         "cuisinePlaceholder": "Add a cuisine (e.g. Kurdish, BBQ)",
         "addBtn": "ADD",
         "saving": "Saving...",
-        "saveBtn": "Save Changes"
+        "saveBtn": "Save Changes",
+        "uploadPrefix": "Upload {label}",
+        "toasts": {
+          "fileTooLarge": "File size must be less than 5MB",
+          "nameRequired": "Restaurant Name is required",
+          "updateFailed": "Failed to update profile"
+        }
       },
       "location": {
         "successMsg": "Location update request submitted.",
@@ -1461,6 +2002,7 @@
         "subtitle": "Where customers can find your restaurant",
         "updatePendingTitle": "Update Pending",
         "updatePendingDesc": "YOUR CHANGES ARE SUBMITTED, WE ARE REVIEWING IT AND WILL APPROVE SHORTLY.",
+        "saving": "Saving...",
         "restaurantLocation": "Restaurant Location",
         "phone": "Phone Number",
         "email": "Email Address",
@@ -1474,23 +2016,30 @@
         "tableClose": "Close Time",
         "tableStatus": "Status",
         "to": "to",
+        "saving": "Saving...",
         "saveBtn": "Save Schedule"
       },
       "finance": {
         "successMsg": "Bank details update requested.",
         "errorMsg": "Failed to update bank details.",
+        "unexpectedErr": "An unexpected error occurred.",
         "title": "Finance Details",
         "subtitle": "Manage your banking information for payouts",
         "bankDetails": "Bank Account Details",
         "bankName": "Bank Name",
         "accountHolder": "Account Holder Name",
         "iban": "IBAN / Account Number",
-        "saveBtn": "Save Finance Details"
+        "saving": "Saving...",
+        "saveBtn": "Save Finance Details",
+        "loadingBanks": "Loading banks...",
+        "searchBankPlaceholder": "Search bank...",
+        "noBankFound": "No bank found."
       },
       "documents": {
         "title": "Documents & Verification",
         "subtitle": "View and manage your business verification documents.",
         "updatePendingTitle": "Verification Pending",
+        "updatePendingDesc": "YOUR CHANGES ARE SUBMITTED, WE ARE REVIEWING IT AND WILL APPROVE SHORTLY.",
         "uploadTitle": "Upload New Document",
         "docType": "Document Type",
         "selectType": "Select type",
@@ -1506,7 +2055,31 @@
         "uploadBtn": "Upload Document",
         "docsOnFile": "Documents on File",
         "noDocs": "No documents uploaded yet.",
-        "verifiedOn": "Verified on {date}"
+        "verifiedOn": "Verified on {date}",
+        "toasts": {
+          "selectFile": "Please select a file to upload.",
+          "uploadSuccess": "Document uploaded successfully.",
+          "uploadFailed": "Failed to upload document.",
+          "unexpectedError": "An unexpected error occurred."
+        },
+        "docLabels": {
+          "government_id": "National ID Card",
+          "food_license": "Food Hygiene License",
+          "driving_license": "Driving License",
+          "passport": "Passport",
+          "tax_certificate": "Tax Certificate"
+        },
+        "docCategories": {
+          "identityProof": "Identity Proof",
+          "restaurantDocument": "Restaurant Document",
+          "financialDocument": "Financial Document",
+          "document": "Document"
+        },
+        "statusBadges": {
+          "verified": "VERIFIED",
+          "rejected": "REJECTED",
+          "pending": "PENDING"
+        }
       },
       "notifications": {
         "title": "Notifications",
@@ -1528,7 +2101,12 @@
         "confirmPlaceholder": "Confirm New Password",
         "setBtn": "Set Password",
         "currentPassword": "Current Password",
-        "updateBtn": "Update Password"
+        "updateBtn": "Update Password",
+        "toasts": {
+          "fetchFailed": "Failed to fetch security settings",
+          "somethingWrong": "Something went wrong",
+          "passwordUpdated": "Password Updated Successfully"
+        }
       }
     },
     "Menu": {
@@ -1555,6 +2133,9 @@
           "cancel": "Cancel",
           "deleting": "Deleting...",
           "deleteBtn": "Delete Category"
+        },
+        "toasts": {
+          "deleteFailed": "Failed to delete category"
         }
       },
       "Items": {
@@ -1574,11 +2155,25 @@
           "discardBtn": "Discard Changes",
           "saveBtn": "Save Item",
           "saveChangesBtn": "Save Changes",
-          "processing": "Processing..."
+          "processing": "Processing...",
+          "na": "N/A"
         },
         "addItemModal": {
           "titleNew": "Add New Item",
-          "titleBulk": "Bulk Import Items"
+          "titleBulk": "Bulk Import Items",
+          "toasts": {
+            "csvEmpty": "CSV file is empty or has no data rows",
+            "noValidItems": "No valid items found to import",
+            "importFailed": "Failed to import items"
+          }
+        },
+        "addNewItem": {
+          "toasts": {
+            "fetchFailed": "Failed to load item details properly.",
+            "fillRequired": "Please fill in all required fields",
+            "uploadImage": "Please upload an item image",
+            "discountExceeds": "Discount cannot be greater than the base price"
+          }
         },
         "stepSelection": {
           "manualTitle": "Manual Entry",
@@ -1657,7 +2252,8 @@
           "deleteDesc": "Are you sure you want to delete \"{name}\"? This action cannot be undone."
         },
         "card": {
-          "optionsCount": "{count} options"
+          "optionsCount": "{count} options",
+          "free": "Free"
         },
         "form": {
           "groupName": "Group Name",
@@ -1669,6 +2265,9 @@
           "updateBtn": "Update Group",
           "createBtn": "Create Group",
           "cancel": "Cancel"
+        },
+        "toasts": {
+          "nameRequired": "Please enter a group name"
         },
         "header": {
           "title": "Manage Your Item Variants",
@@ -1684,6 +2283,7 @@
         "acceptBtn": "Accept Order",
         "startPrepareBtn": "Start Preparing",
         "markReadyBtn": "Mark as Ready",
+        "handoffBtn": "Hand Off to Rider",
         "orderTitle": "Order {id}",
         "status": "Status",
         "customer": "Customer",
@@ -1710,7 +2310,12 @@
         "statusOutOfDelivery": "Out for Delivery",
         "statusDelivered": "Delivered",
         "statusRejected": "Rejected",
-        "apply": "Apply"
+        "apply": "Apply",
+        "from": "From",
+        "startDate": "Start Date",
+        "to": "To",
+        "endDate": "End Date",
+        "clearDates": "Clear Dates"
       },
       "stats": {
         "totalToday": "Total Today Orders",
@@ -1898,7 +2503,11 @@
     "Reports": {
       "header": {
         "noData": "No report data available.",
-        "last30Days": "Last 30 Days"
+        "last30Days": "Last 30 Days",
+        "exportSuccess": "Reports exported successfully!",
+        "exportFailed": "Failed to export reports.",
+        "exporting": "Exporting...",
+        "exportCsv": "Export CSV"
       },
       "stats": {
         "totalSales": "Total Sales",
@@ -2056,6 +2665,7 @@
       "titleSubmitted": "Application submitted!",
       "descriptionSubmitted": "Thank you for applying to join JayakHub. We've received your application and our team will review it shortly.",
       "whatHappensNext": "WHAT HAPPENS NEXT",
+      "backToLogin": "Back to Login",
       "timeline": {
         "step1": {
           "title": "Application Submitted",
@@ -2212,7 +2822,51 @@
         "postSuccess": "Reply posted successfully!",
         "postFailed": "Failed to post reply.",
         "ticketNotFound": "Ticket details could not be found.",
-        "resolvedMessage": "This ticket has been resolved. You can no longer send replies."
+        "resolvedMessage": "This ticket has been resolved. You can no longer send replies.",
+        "loadingDetails": "Loading ticket details...",
+        "ticketIdLabel": "Ticket {id}",
+        "priorityPrefix": "Priority {priority}",
+        "updatedPrefix": "Updated {date}",
+        "attachmentFallback": "Attachment",
+        "maxFiles": "You can upload a maximum of 5 files.",
+        "invalidFileType": "Only JPG, PNG, WEBP, and PDF files are allowed.",
+        "fileTooLarge": "Each file must be under 5MB."
+      },
+      "statsCards": {
+        "totalTickets": "Total Tickets",
+        "openCount": "{count} open",
+        "allHandled": "All handled",
+        "pending": "Pending",
+        "ofTotal": "{percent}% of total",
+        "resolved": "Resolved",
+        "resolvedPercent": "{percent}% resolved",
+        "byPriority": "By Priority",
+        "na": "N/A",
+        "priorities": {
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High",
+          "urgent": "Urgent"
+        }
+      },
+      "allTickets": {
+        "searchPlaceholder": "Search tickets...",
+        "statusPlaceholder": "Status",
+        "priorityPlaceholder": "Priority",
+        "statusOptions": {
+          "all": "All Statuses",
+          "resolved": "Resolved"
+        },
+        "priorityOptions": {
+          "all": "All Priorities",
+          "low": "Low",
+          "medium": "Medium",
+          "high": "High"
+        }
+      },
+      "hookToasts": {
+        "fetchFailed": "Failed to fetch tickets",
+        "unexpectedError": "An unexpected error occurred"
       }
     },
     "Users": {
@@ -2246,7 +2900,19 @@
         "createPassword": "Create password",
         "leaveBlank": "Leave blank to keep current",
         "confirmPasswordLabel": "Confirm Password",
-        "confirmPasswordPlaceholder": "Confirm password"
+        "confirmPasswordPlaceholder": "Confirm password",
+        "toasts": {
+          "fetchFailed": "Failed to fetch user details",
+          "fillRequired": "Please fill in all required fields.",
+          "passwordRequired": "Password is required for new users.",
+          "passwordInvalid": "Invalid password.",
+          "passwordMismatch": "Passwords do not match.",
+          "passwordMin": "Password must be at least 8 characters",
+          "passwordUppercase": "Password must contain at least one uppercase letter",
+          "passwordLowercase": "Password must contain at least one lowercase letter",
+          "passwordNumber": "Password must contain at least one number",
+          "passwordSpecial": "Password must contain at least one special character (e.g. @, #, $, %, etc.)"
+        }
       },
       "list": {
         "showing": "Showing {start}-{end} of {total}",
@@ -2254,10 +2920,16 @@
         "deleteDesc": "Are you sure you want to delete this user? This action cannot be undone.",
         "cancel": "Cancel",
         "deleting": "Deleting...",
-        "delete": "Delete"
+        "delete": "Delete",
+        "never": "Never"
       },
       "filters": {
-        "addUser": "Add User"
+        "addUser": "Add User",
+        "allUsers": "All Users",
+        "admin": "Admin",
+        "manager": "Manager",
+        "cashier": "Cashier",
+        "kitchen": "Kitchen"
       },
       "table": {
         "colUser": "User",
@@ -2353,6 +3025,7 @@
       "title": "Revenue Overview",
       "subtitle": "Last 7 Days",
       "thisWeek": "This Week",
+      "datasetLabel": "Revenue",
       "gatheringData": "Gathering data...",
       "days": {
         "mon": "Mon",
@@ -2529,7 +3202,8 @@
           "title": "4. Driver availability",
           "content": "During peak periods or low driver supply in a zone, delivery times may increase or ordering may be temporarily limited to protect quality."
         }
-      }
+      },
+      "contactNote": "Questions? Contact support@jayakhub.com."
     },
     "deletion": {
       "title": "Account Deletion Policy",
@@ -2560,334 +3234,6 @@
           "title": "5. How to request",
           "content": "In-app: Settings → Privacy → Delete Account. Web: jayakhub.com/delete-account. Questions: privacy@jayakhub.com."
         }
-      }
-    },
-    "Reviews": {
-      "header": {
-        "last30Days": "Last 30 Days"
-      },
-      "stats": {
-        "averageRating": "Average Rating",
-        "live": "Live",
-        "totalReviews": "Total Reviews",
-        "allTime": "All time",
-        "unreplied": "Unreplied",
-        "needsAttention": "Needs attention"
-      },
-      "charts": {
-        "trend": {
-          "title": "Rating Trend",
-          "subtitle": "Average ratings over selected period",
-          "label": "Average Rating",
-          "noData": "No Data"
-        },
-        "distribution": {
-          "title": "Rating Distribution",
-          "subtitle": "Breakdown by stars",
-          "noReviews": "No Reviews",
-          "stars5": "5 Stars",
-          "stars4": "4 Stars",
-          "stars3": "3 Stars",
-          "stars2": "2 Stars",
-          "stars1": "1 Stars"
-        }
-      },
-      "filters": {
-        "allReviews": "All Reviews",
-        "unreplied": "Unreplied",
-        "stars5": "5 Stars",
-        "critical": "Critical (1-3)"
-      },
-      "list": {
-        "noReviews": "No reviews found.",
-        "order": "Order",
-        "reply": "Reply",
-        "restaurantReply": "Restaurant Reply",
-        "recently": "Recently"
-      },
-      "detail": {
-        "success": "Reply submitted successfully!",
-        "errorEmpty": "Reply text cannot be empty.",
-        "newCustomer": "New Customer",
-        "lifetimeOrders": "lifetime orders",
-        "title": "Review Detail",
-        "order": "Order",
-        "history": "History",
-        "avgSpend": "Avg Spend",
-        "reviewLabel": "Review",
-        "yourReply": "Your Reply",
-        "sentRecently": "Sent Recently",
-        "writeReply": "Write a Reply",
-        "placeholder": "Type your public response here...",
-        "sending": "Sending...",
-        "sendReply": "Send Reply"
-      }
-    },
-    "Status": {
-      "titleRejected": "Application Rejected",
-      "descriptionRejected": "Unfortunately, your application to join JayakHub was not approved at this time. Please contact support for more details.",
-      "titlePending": "Application Pending",
-      "descriptionPending": "Your application is currently under review by our team. We will notify you once a decision has been made.",
-      "currentStatus": "CURRENT STATUS",
-      "titleSubmitted": "Application submitted!",
-      "descriptionSubmitted": "Thank you for applying to join JayakHub. We've received your application and our team will review it shortly.",
-      "whatHappensNext": "WHAT HAPPENS NEXT",
-      "timeline": {
-        "step1": {
-          "title": "Application Submitted",
-          "description": "Your application is in our queue"
-        },
-        "step2": {
-          "title": "Team Review",
-          "description": "Usually takes 1-2 business days"
-        },
-        "step3": {
-          "title": "Confirmation Email",
-          "description": "You'll receive an email once approved"
-        },
-        "step4": {
-          "title": "Go Live",
-          "description": "Start accepting orders on JayakHub"
-        }
-      }
-    },
-    "Support": {
-      "header": {
-        "newTicket": "New Ticket"
-      },
-      "contact": {
-        "liveChat": "Live Chat",
-        "liveChatDesc": "Online – Avg 2 min wait",
-        "phoneSupport": "Phone Support",
-        "phoneDesc": "+1 (469) 422-5944",
-        "emailUs": "Email Us",
-        "emailDesc": "support@jayakhub.com"
-      },
-      "createTicket": {
-        "errorEmpty": "Please fill in all required fields.",
-        "success": "Ticket created successfully!",
-        "errorFailed": "Failed to create ticket",
-        "errorUnexpected": "An unexpected error occurred.",
-        "title": "Create New Ticket",
-        "description": "Fill out the form below to submit a new support ticket.",
-        "subjectLabel": "Subject",
-        "subjectPlaceholder": "Brief summary of your issue",
-        "priorityLabel": "Priority",
-        "prioritySelect": "Select priority",
-        "priorities": {
-          "low": "Low",
-          "medium": "Medium",
-          "high": "High"
-        },
-        "categoryLabel": "Category",
-        "categorySelect": "Select a category",
-        "categories": {
-          "general": "General Inquiry",
-          "technical": "Technical Issue",
-          "billing": "Billing",
-          "feature": "Feature Request"
-        },
-        "descLabel": "Description",
-        "descPlaceholder": "Describe your issue in detail...",
-        "cancel": "Cancel",
-        "submitting": "Submitting...",
-        "submit": "Submit Ticket"
-      },
-      "faq": {
-        "title": "Frequently Asked Questions",
-        "q1": "How do I change my restaurant logo?",
-        "a1": "Navigate to Settings > Profile and click on the camera icon to upload a new logo picture.",
-        "q2": "When do I get paid?",
-        "a2": "Payouts are processed weekly. You can expect funds to arrive in your designated bank account every Wednesday.",
-        "q3": "Can I set different hours for weekends?",
-        "a3": "Yes, go to Settings > Opening Hours. You can define specific time slots for each day of the week.",
-        "q4": "How do I add a new menu item?",
-        "a4": "Go to Menu Management, select a category, and click the 'Add Item' button to enter the item details and price.",
-        "q5": "What happens when I mark an order as 'Ready'?",
-        "a5": "The customer and delivery driver are notified immediately that the order is prepared and ready for pickup.",
-        "q6": "How do I handle a customer complaint?",
-        "a6": "Please reach out to our Support team via Live Chat or Phone. We will mediate the process.",
-        "q7": "Can I export my financial data?",
-        "a7": "Yes, you can export your payout and transaction history as a CSV file from the Finance tab.",
-        "q8": "How do I add team members?",
-        "a8": "Go to Account & Settings > Team roles, and click 'Invite Member' to assign them specific access permissions.",
-        "noFaqs": "No FAQs available."
-      },
-      "knowledgeBase": {
-        "title": "Knowledge Base",
-        "subtitle": "Browse help topics",
-        "articlesCount": "{count} articles",
-        "cat1Name": "Getting Started",
-        "cat1Desc": "Setup guide, onboarding, first steps",
-        "cat2Name": "Orders & Delivery",
-        "cat2Desc": "Order flow, tracking, delivery",
-        "cat3Name": "Payments & Billing",
-        "cat3Desc": "Payouts, invoices, billing info",
-        "cat4Name": "Menu Management",
-        "cat4Desc": "Items, categories, variants, photos",
-        "cat5Name": "Account & Settings",
-        "cat5Desc": "Profile, team roles, notifications",
-        "cat6Name": "Troubleshooting",
-        "cat6Desc": "Common issues, error codes, fixes"
-      },
-      "statusBadge": {
-        "open": "OPEN",
-        "inProgress": "IN PROGRESS",
-        "resolved": "RESOLVED"
-      },
-      "searchBanner": {
-        "title": "How can we help you today?",
-        "subtitle": "Search for articles, FAQs, or browse our knowledge base.",
-        "placeholder": "e.g. How to change opening hours.."
-      },
-      "ticketDetail": {
-        "priority": "Priority",
-        "created": "Created",
-        "description": "Description",
-        "noDescription": "No description provided.",
-        "status": "Status",
-        "timeline": {
-          "ticketCreated": "Ticket Created",
-          "agentAssigned": "Agent Assigned",
-          "resolved": "Resolved",
-          "awaitingResponse": "Awaiting Response",
-          "resolution": "Resolution",
-          "pending": "Pending",
-          "now": "Now",
-          "dash": "—"
-        }
-      },
-      "ticketsTable": {
-        "title": "Support Tickets",
-        "subtitle": "Your recent inquiries",
-        "colTicket": "Ticket",
-        "colSubject": "Subject",
-        "colCategory": "Category",
-        "colDesc": "Description",
-        "colStatus": "Status",
-        "colPriority": "Priority",
-        "colUpdated": "Updated",
-        "viewAll": "View All Tickets",
-        "noTickets": "No tickets found. Create one to get started.",
-        "timeAgo": {
-          "minutes": "{count}m ago",
-          "hours": "{count}h ago",
-          "days": "{count}d ago"
-        }
-      }
-    },
-    "Users": {
-      "form": {
-        "roles": {
-          "admin": "Admin",
-          "manager": "Manager",
-          "cashier": "Cashier",
-          "kitchen": "Kitchen"
-        },
-        "titleAdd": "Add New User",
-        "titleEdit": "Edit User",
-        "cancel": "Cancel",
-        "saving": "Saving...",
-        "saveChanges": "Save Changes",
-        "personalInfo": "Personal Information",
-        "active": "Active",
-        "inactive": "Inactive",
-        "personalDesc": "Basic identification details for this user.",
-        "firstName": "First Name",
-        "firstNamePlaceholder": "e.g. John",
-        "lastName": "Last Name",
-        "lastNamePlaceholder": "e.g. Doe",
-        "email": "Email Address",
-        "emailPlaceholder": "e.g. name@restaurant.com",
-        "accessSecurity": "Access & Security",
-        "accessDesc": "Manage role permissions and login credentials.",
-        "assignedRole": "Assigned Role",
-        "selectRole": "Select a role",
-        "password": "Password",
-        "createPassword": "Create password",
-        "leaveBlank": "Leave blank to keep current",
-        "confirmPasswordLabel": "Confirm Password",
-        "confirmPasswordPlaceholder": "Confirm password"
-      },
-      "list": {
-        "showing": "Showing {start}-{end} of {total}",
-        "deleteTitle": "Delete User",
-        "deleteDesc": "Are you sure you want to delete this user? This action cannot be undone.",
-        "cancel": "Cancel",
-        "deleting": "Deleting...",
-        "delete": "Delete"
-      },
-      "filters": {
-        "addUser": "Add User"
-      },
-      "table": {
-        "colUser": "User",
-        "colRole": "Role",
-        "colStatus": "Status",
-        "colLastActive": "Last Active",
-        "colActions": "Actions",
-        "noUsers": "No users found in this category."
-      }
-    },
-    "status": {
-      "online": "Online",
-      "offline": "Offline",
-      "updateSuccess": "Restaurant is now {status}",
-      "updateFailed": "Failed to update status"
-    },
-    "metrics": {
-      "todaysOrders": "Today's Orders",
-      "revenueToday": "Revenue Today",
-      "avgRating": "Avg Rating",
-      "prepTime": "Prep Time",
-      "vsYesterday": "vs yesterday",
-      "thisWeek": "this week",
-      "vsAvg": "vs avg"
-    },
-    "recentActivity": {
-      "title": "Recent Activity",
-      "subtitle": "Everything happening now",
-      "noActivity": "No recent activity to show",
-      "timeAgo": {
-        "mins": "{count} min ago",
-        "hours": "{count} hr ago",
-        "yesterday": "Yesterday",
-        "days": "{count} days ago"
-      }
-    },
-    "recentOrders": {
-      "title": "Recent Orders",
-      "subtitle": "Active and completed today",
-      "viewAll": "View All",
-      "noOrders": "No recent orders",
-      "itemsCount": "{count} items",
-      "status": {
-        "new": "NEW",
-        "preparing": "PREPARING",
-        "delivered": "DELIVERED",
-        "rejected": "REJECTED"
-      },
-      "columns": {
-        "order": "Order",
-        "customer": "Customer",
-        "items": "Items",
-        "total": "Total",
-        "status": "Status"
-      }
-    },
-    "revenueChart": {
-      "title": "Revenue Overview",
-      "subtitle": "Last 7 Days",
-      "thisWeek": "This Week",
-      "gatheringData": "Gathering data...",
-      "days": {
-        "mon": "Mon",
-        "tue": "Tue",
-        "wed": "Wed",
-        "thu": "Thu",
-        "fri": "Fri",
-        "sat": "Sat",
-        "sun": "Sun"
       }
     }
   },
@@ -2970,7 +3316,15 @@
           }
         ],
         "jayakub_title": "⚡ YOUR COST ON JAYAKHUB — TAP A TIER TO SEE SAVINGS",
-        "selected_badge": "✓ SELECTED"
+        "selected_badge": "✓ SELECTED",
+        "platformFallbacks": [
+          "Talabat (28%)",
+          "Careem Now (~22%)",
+          "Lezzoo / Toters (~20%)"
+        ],
+        "perMonth": "/mo",
+        "forLife": "for life",
+        "saveAmount": "save {amount}/mo"
       },
       "tiers": [
         {
@@ -3062,6 +3416,7 @@
     },
     "pricing": {
       "badge": "Honest Pricing",
+      "perMonth": "/mo",
       "title": "Flat fee. No commission. Forever.",
       "subtitle": "One-time setup of $500. Then pick your monthly tier. $2 flat per delivery. Credit card fees pass through to the processor — we never take a cut of your sales.",
       "most_popular": "MOST POPULAR",
@@ -3341,6 +3696,9 @@
       "subtitle": "Flat monthly fee. No commissions, ever. Prices are listed in USD and charged in IQD (≈ 1,500 IQD/USD).",
       "most_popular": "MOST POPULAR",
       "choose": "Choose {tier}",
+      "no_plans": "No plans available at the moment.",
+      "days_free": "{days} days free",
+      "plan_fallback": "plan",
       "plans": [
         {
           "tier": "Starter",
@@ -3403,7 +3761,8 @@
       "buttons": {
         "partner": "Sign up to drive",
         "learn_more": "Apply to drive"
-      }
+      },
+      "imageAlt": "Driver with pizza boxes"
     },
     "stats": {
       "partners": "Active Drivers",
@@ -3491,22 +3850,25 @@
       "items": {
         "t1": {
           "quote": "Driving with JayakHub gives me the flexibility I need for my family.",
-          "role": "Driver since 2023"
+          "role": "Driver since 2023",
+          "name": "Ahmed Hassan"
         },
         "t2": {
           "quote": "The app is very easy to use and the support team is always helpful.",
-          "role": "Driver since 2024"
+          "role": "Driver since 2024",
+          "name": "Sara Al-Mousa"
         },
         "t3": {
           "quote": "I earn good money and I love being my own boss.",
-          "role": "Driver since 2023"
+          "role": "Driver since 2023",
+          "name": "Omar Khalil"
         }
       }
     },
     "cta": {
-      "title": "Ready to hit the road?",
+      "title": "Download the Rider App",
       "subtitle": "Get started today and start earning on your own terms.",
-      "button": "Sign up to drive"
+      "button": "Download App"
     }
   },
   "Careers": {
@@ -3723,6 +4085,10 @@
       "badge": "Pricing",
       "title": "Simple, transparent plans",
       "subtitle": "No hidden fees. Cancel anytime.",
+      "no_plans": "No plans available at the moment.",
+      "days_free": "{days} days free",
+      "plan_fallback": "plan",
+      "per_month": "/mo",
       "plans": {
         "starter": {
           "name": "Starter",
@@ -3976,7 +4342,9 @@
     "headerActions": {
       "login": "Login",
       "signUp": "Sign up",
-      "userFallback": "User"
+      "userFallback": "User",
+      "defaultAddress": "Iraq, Baghdad",
+      "customerFallback": "Customer"
     },
     "bottomNav": {
       "home": "Home",
@@ -4081,6 +4449,323 @@
     },
     "restaurantsPage": {
       "nearbyCount": "{count} restaurants near you"
+    }
+  },
+  "POS": {
+    "header": {
+      "logoAlt": "Jayak Hub Logo",
+      "searchPlaceholder": "Search menu...",
+      "allCategories": "All",
+      "online": "Online",
+      "posOrders": "POS Orders",
+      "register": "Register"
+    },
+    "menuGrid": {
+      "noItems": "No items found in this category.",
+      "selectTableFirst": "Please select a table before adding items.",
+      "tablePending": "Table {table} already has a pending order.",
+      "tableNotAvailable": "Table {table} is not available."
+    },
+    "activityLog": {
+      "title": "Activity Log",
+      "empty": "No activity logs found."
+    },
+    "closeRegister": {
+      "title": "Close Register",
+      "shiftReport": "Shift Report",
+      "cashier": "Cashier: {name}",
+      "unknown": "Unknown",
+      "noData": "No data available.",
+      "closing": "Closing & Saving Report...",
+      "closeShiftPrint": "Close Shift & Print Report",
+      "metrics": {
+        "totalSales": "Total Sales",
+        "grossProfit": "Gross Profit",
+        "transactions": "Transactions",
+        "avgOrder": "Avg Order"
+      },
+      "paymentSummary": {
+        "title": "Payment Summary",
+        "cash": "Cash Payments",
+        "card": "Card Payments",
+        "online": "Online Orders"
+      },
+      "toasts": {
+        "loadFailed": "Failed to load dashboard data",
+        "closedLoggedOut": "Shift closed and logged out successfully.",
+        "closeFailed": "Failed to close shift",
+        "logoutError": "An error occurred while logging out.",
+        "closedReport": "Shift closed and report generated."
+      }
+    },
+    "shiftReportPdf": {
+      "title": "Shift Summary Report",
+      "generatedDate": "Generated Date: {date}",
+      "brand": "Jayak Hub POS",
+      "operator": "Operator: {name}",
+      "role": "Role: {role}",
+      "unknown": "Unknown",
+      "totalSales": "Total Sales",
+      "grossProfit": "Gross Profit",
+      "transactions": "Transactions",
+      "avgOrder": "Avg Order",
+      "paymentSummary": "Payment Summary",
+      "cashPayments": "Cash Payments",
+      "cardPayments": "Card Payments",
+      "onlineOrders": "Online Orders",
+      "orderHistory": "Detailed Order History",
+      "colTime": "Time",
+      "colOrderId": "Order ID",
+      "colItemName": "Item Name",
+      "colType": "Type",
+      "colPayment": "Payment",
+      "colAmount": "Amount",
+      "customOrder": "Custom Order",
+      "endOfReport": "END OF REPORT - GENERATED SECURELY BY JAYAK HUB SECURE POS"
+    },
+    "modifiers": {
+      "title": "{name} — Variants",
+      "noVariants": "No variants available for this item.",
+      "save": "Save"
+    },
+    "shortcuts": {
+      "title": "Keyboard Shortcuts",
+      "searchMenu": "Search menu",
+      "openPayment": "Open payment",
+      "pendingOrders": "Pending orders",
+      "closeModal": "Close modal"
+    },
+    "payment": {
+      "title": "Complete Payment",
+      "totalPayable": "Total Payable",
+      "subtotal": "Subtotal",
+      "deliveryCharges": "Delivery Charges",
+      "deliveryFee": "Delivery Fee",
+      "total": "Total",
+      "grandTotal": "Grand Total",
+      "cash": "Cash",
+      "card": "Card",
+      "online": "Online",
+      "paidAmount": "Paid Amount",
+      "change": "Change:",
+      "selectMethod": "Select Payment Method",
+      "confirmPayment": "Confirm {method} Payment",
+      "successTitle": "Payment Successful",
+      "receipt": "Receipt",
+      "noItems": "No items",
+      "afterDiscount": "After discount",
+      "priceAfterDiscount": "Price (after discount)",
+      "paidVia": "Paid via",
+      "thankYou": "Thank you for dining with us!",
+      "print": "Print",
+      "newOrder": "New Order",
+      "toasts": {
+        "success": "Payment successful!",
+        "failed": "Failed to process payment",
+        "error": "An error occurred during payment."
+      }
+    },
+    "pendingOrders": {
+      "title": "Pending Orders",
+      "empty": "No pending orders",
+      "clearCartFirst": "Please clear or pay for the current cart before restoring a pending order.",
+      "restored": "Order restored to cart!",
+      "justNow": "Just now",
+      "minutesAgo": "{minutes}m ago",
+      "itemsCount": "{count} items",
+      "cart": "Cart",
+      "table": "Table"
+    },
+    "cart": {
+      "dineIn": "Dine-In",
+      "dine": "Dine",
+      "takeaway": "Takeaway",
+      "take": "Take",
+      "delivery": "Delivery",
+      "table": "Table",
+      "select": "Select",
+      "walkIn": "Walk-In",
+      "noItemsYet": "No items yet",
+      "tapToStart": "Tap a menu item to start your order",
+      "modifiers": "Modifiers",
+      "remove": "Remove",
+      "items": "Items",
+      "subtotal": "Subtotal",
+      "total": "Total",
+      "payLater": "Pay Later",
+      "pay": "Pay →",
+      "shoppingCart": "Shopping Cart",
+      "savedToPending": "Order saved to Pending!"
+    },
+    "settings": {
+      "title": "POS Settings — Tables",
+      "colTable": "Table",
+      "colCapacity": "Capacity",
+      "colActions": "Actions",
+      "noTables": "No tables found",
+      "seats": "{count} seats",
+      "tableNamePlaceholder": "Table name (e.g. T13)",
+      "seatsPlaceholder": "Seats",
+      "cancel": "Cancel",
+      "update": "Update",
+      "add": "Add",
+      "toasts": {
+        "loadFailed": "Failed to load tables",
+        "error": "An error occurred",
+        "enterNameSeats": "Please enter table name and seats",
+        "updated": "Table updated successfully",
+        "updateFailed": "Failed to update table",
+        "added": "Table added successfully",
+        "addFailed": "Failed to add table",
+        "removed": "Table Removed Successfully",
+        "removeFailed": "Failed to remove table"
+      }
+    },
+    "tableModal": {
+      "title": "Select Table",
+      "available": "Available",
+      "occupied": "Occupied",
+      "payPending": "Pay Pending",
+      "selected": "Selected",
+      "noTables": "No tables found",
+      "seats": "{count} Seats",
+      "toasts": {
+        "loadFailed": "Failed to load tables",
+        "loadError": "An error occurred loading tables",
+        "selected": "Table {table} selected",
+        "saveFailed": "Failed to save table selection",
+        "notSelectable": "Table {table} is {status} and cannot be selected"
+      }
+    },
+    "onlineOrders": {
+      "accepted": "Accepted",
+      "ready": "Ready",
+      "outForDelivery": "Out for Delivery",
+      "accept": "Accept",
+      "reject": "Reject",
+      "markReady": "Mark Ready",
+      "handOff": "Hand Off",
+      "noRiderYet": "No rider assigned yet",
+      "preparedIn": "Prepared in {time}",
+      "waitingForRider": "Waiting for rider assignment",
+      "noRiderAction": "No Rider — Action Required",
+      "cancelRefund": "Cancel & Refund",
+      "noOrders": "No {tab} orders",
+      "customer": "Customer",
+      "justNow": "Just now",
+      "minutesAgo": "{minutes}m ago",
+      "tabs": {
+        "incoming": "Incoming",
+        "preparing": "Preparing",
+        "ready": "Ready",
+        "outForDelivery": "Out for Delivery"
+      },
+      "toasts": {
+        "updated": "Order updated",
+        "updateFailed": "Failed to update order status",
+        "updateError": "Error updating order",
+        "handedOff": "Order handed off to rider",
+        "handoffFailed": "Failed to hand off order to rider",
+        "handoffError": "Error handing off order",
+        "cancelledRefunded": "Order cancelled — refund initiated to card",
+        "cancelledCod": "Order cancelled (COD)",
+        "cancelFailed": "Failed to cancel order",
+        "cancelError": "Error cancelling order"
+      }
+    },
+    "posOrders": {
+      "accepted": "Accepted",
+      "completed": "Completed",
+      "accept": "Accept",
+      "reject": "Reject",
+      "complete": "Complete",
+      "noOrders": "No {tab} orders",
+      "table": "Table {name}",
+      "walkIn": "Walk-In",
+      "justNow": "Just now",
+      "minutesAgo": "{minutes}m ago",
+      "tabs": {
+        "incoming": "Incoming",
+        "preparing": "Preparing",
+        "completed": "Completed"
+      },
+      "toasts": {
+        "statusUpdated": "Order status updated",
+        "updateFailed": "Failed to update order status",
+        "updateError": "Error updating order status"
+      }
+    },
+    "history": {
+      "stats": {
+        "totalOrders": "Total Orders",
+        "totalSales": "Total Sales",
+        "avgOrderValue": "Avg. Order Value",
+        "topSeller": "Top Seller (Cashier)"
+      },
+      "columns": {
+        "orderId": "Order ID",
+        "orderType": "Order Type",
+        "cashier": "Cashier",
+        "paymentMethod": "Payment Method",
+        "items": "Items",
+        "total": "Total",
+        "status": "Status",
+        "time": "Time"
+      },
+      "filters": {
+        "allOrderTypes": "All Order Types",
+        "dineIn": "Dine-In",
+        "takeAway": "TakeAway",
+        "delivery": "Delivery",
+        "walkIn": "Walk-In",
+        "allPaymentMethods": "All Payment Methods",
+        "cash": "Cash",
+        "card": "Card",
+        "allStatuses": "All Statuses",
+        "pending": "Pending",
+        "preparing": "Preparing",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "status": {
+        "pending": "Pending",
+        "prepare": "Preparing",
+        "complete": "Completed",
+        "completed": "Completed",
+        "cancelled": "Cancelled",
+        "rejected": "Rejected"
+      },
+      "ordersTitle": "Orders",
+      "searchPlaceholder": "Search orders...",
+      "orderTypePlaceholder": "Order Type",
+      "paymentMethodPlaceholder": "Payment Method",
+      "statusPlaceholder": "Status",
+      "loadingOrders": "Loading orders...",
+      "noData": "No data",
+      "noDataHint": "Order data will appear here once connected."
+    },
+    "historyDetail": {
+      "orderTitle": "Order {id}",
+      "status": "Status",
+      "orderType": "Order Type",
+      "orderInfo": "Order Info",
+      "table": "Table",
+      "paymentMethod": "Payment Method",
+      "items": "Items",
+      "discountApplied": "Discount applied",
+      "notes": "Notes",
+      "paymentSummary": "Payment Summary",
+      "itemsTotal": "Items Total",
+      "deliveryFee": "Delivery Fee",
+      "grandTotal": "Grand Total"
+    },
+    "ordersHook": {
+      "statusUpdated": "Order status updated successfully",
+      "updateFailed": "Failed to update status",
+      "updateError": "An error occurred while updating status",
+      "handedOff": "Order handed off to rider",
+      "handoffFailed": "Failed to hand off order to rider",
+      "handoffError": "An error occurred while handing off order"
     }
   }
 }

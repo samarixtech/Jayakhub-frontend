@@ -8,11 +8,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { KycRecord } from "./useKycVerification";
-import { KYC_DOCUMENTS } from "./kyc-constants";
+import { KycDocument } from "./kyc-constants";
 import { useTranslations } from "next-intl";
 
 interface DocumentItemProps {
-  item: (typeof KYC_DOCUMENTS)[0];
+  item: KycDocument;
   kycData: KycRecord[];
   activeTypeId: string | null;
   selectedFile: File | null;
@@ -78,7 +78,7 @@ export function DocumentItem({
 }
 
 interface DocumentActionAreaProps {
-  item: (typeof KYC_DOCUMENTS)[0];
+  item: KycDocument;
   kycData: KycRecord[];
   isSelected: boolean;
   selectedFile: File | null;
@@ -104,8 +104,9 @@ function DocumentActionArea({
 }: DocumentActionAreaProps) {
   const t = useTranslations('CustomerDashboard.ProfileSettings');
   const existingDoc = kycData.find((d) => d.documentType === item.id);
+  const isRejected = existingDoc?.status === "rejected";
 
-  if (existingDoc) {
+  if (existingDoc && !isRejected) {
     return <DocumentStatusBadge status={existingDoc.status} />;
   }
 
@@ -137,14 +138,17 @@ function DocumentActionArea({
   }
 
   return (
-    <Button
-      variant="ghost"
-      onClick={() => onSelectClick(item.id)}
-      disabled={!!selectedFile || fetching}
-      className="text-gray-600 text-xs font-bold flex gap-2 border border-gray-100 rounded-xl px-4 py-2 h-auto hover:bg-gray-50 whitespace-nowrap"
-    >
-      <Upload size={14} /> {t('select')}
-    </Button>
+    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+      {isRejected && <DocumentStatusBadge status="rejected" />}
+      <Button
+        variant="ghost"
+        onClick={() => onSelectClick(item.id)}
+        disabled={!!selectedFile || fetching}
+        className="text-gray-600 text-xs font-bold flex gap-2 border border-gray-100 rounded-xl px-4 py-2 h-auto hover:bg-gray-50 whitespace-nowrap"
+      >
+        <Upload size={14} /> {t('select')}
+      </Button>
+    </div>
   );
 }
 

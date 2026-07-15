@@ -21,8 +21,8 @@ const ReportsView = () => {
   const { formatPrice } = useCLC();
   const { startDate, endDate } = useDateFilter();
   const { isExporting, handleExport } = useExport({
-    successMessage: "Reports exported successfully!",
-    errorMessage: "Failed to export reports.",
+    successMessage: t("header.exportSuccess"),
+    errorMessage: t("header.exportFailed"),
   });
   const {
     data,
@@ -69,7 +69,7 @@ const ReportsView = () => {
           ) : (
             <Download className="mr-2 w-4 h-4" />
           )}
-          {isExporting ? "Exporting..." : "Export CSV"}
+          {isExporting ? t("header.exporting") : t("header.exportCsv")}
         </Button>
       </div>
 

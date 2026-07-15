@@ -9,8 +9,10 @@ import {
 } from "lucide-react";
 import { useCLC } from "@/context/CLCContext";
 import { usePosOrders } from "../hooks/usePosOrders";
+import { useTranslations } from "next-intl";
 
 export default function PosOrdersView() {
+  const t = useTranslations("POS.posOrders");
   const { formatPrice } = useCLC();
   const {
     activeTab,
@@ -96,7 +98,7 @@ export default function PosOrdersView() {
                 <div className="items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 hidden md:flex">
                   <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
                   <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
-                    ACCEPTED
+                    {t("accepted")}
                   </span>
                 </div>
               )}
@@ -105,7 +107,7 @@ export default function PosOrdersView() {
                 <div className="items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 hidden md:flex shrink-0">
                   <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
                   <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
-                    COMPLETED
+                    {t("completed")}
                   </span>
                 </div>
               )}
@@ -124,14 +126,14 @@ export default function PosOrdersView() {
                       className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#10b981] hover:bg-[#059669] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
                     >
                       <Check className="w-[16px] h-[16px] stroke-[2.5px]" />
-                      Accept
+                      {t("accept")}
                     </button>
                     <button
                       onClick={() => handleReject(order.id)}
                       className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-white border border-red-100 hover:bg-red-50 text-red-500 rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors"
                     >
                       <X className="w-[16px] h-[16px] stroke-[2.5px]" />
-                      Reject
+                      {t("reject")}
                     </button>
                   </>
                 )}
@@ -142,7 +144,7 @@ export default function PosOrdersView() {
                     className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#357252] hover:bg-[#2a5a41] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
                   >
                     <CheckCircle2 className="w-[16px] h-[16px] stroke-[2.5px]" />
-                    <span className="whitespace-nowrap">Complete</span>
+                    <span className="whitespace-nowrap">{t("complete")}</span>
                   </button>
                 )}
               </div>
@@ -153,7 +155,7 @@ export default function PosOrdersView() {
               <div className="flex md:hidden items-center justify-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 mt-2">
                 <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
                 <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
-                  ACCEPTED
+                  {t("accepted")}
                 </span>
               </div>
             )}
@@ -163,7 +165,7 @@ export default function PosOrdersView() {
               <div className="flex md:hidden items-center justify-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100 mt-2">
                 <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
                 <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
-                  COMPLETED
+                  {t("completed")}
                 </span>
               </div>
             )}
@@ -182,7 +184,10 @@ export default function PosOrdersView() {
               <CheckCircle2 className="w-12 h-12 mb-4 text-gray-200" />
             )}
             <p className="font-bold text-[14px] sm:text-[15px]">
-              No {activeTab} orders
+              {t("noOrders", {
+                tab:
+                  tabs.find((tab) => tab.id === activeTab)?.label ?? activeTab,
+              })}
             </p>
           </div>
         )}

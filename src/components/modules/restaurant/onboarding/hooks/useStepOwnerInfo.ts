@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   ownerInfoSchema,
   OwnerInfoInput,
@@ -17,6 +18,7 @@ export const useStepOwnerInfo = () => {
   const router = useRouter();
   const { country, language } = useLocale();
   const { nextStep } = useOnboarding();
+  const t = useTranslations("Onboarding.ownerInfoView");
   const [email, setEmail] = useState<string>("");
 
   const form = useForm<OwnerInfoInput>({
@@ -64,19 +66,22 @@ export const useStepOwnerInfo = () => {
 
   const onSubmit = (data: OwnerInfoInput) => {
     try {
-      localStorage.setItem("onboarding_owner_info", JSON.stringify({ ...data, ownerEmail: email }));
-      toast.success("Owner info saved");
+      localStorage.setItem(
+        "onboarding_owner_info",
+        JSON.stringify({ ...data, ownerEmail: email }),
+      );
+      toast.success(t("toastSaved"));
       nextStep();
       router.push(`/restaurant/onboarding/step-restaurant-info`);
     } catch (e) {
       console.error("LocalStorage Save Error", e);
-      toast.error("Failed to save owner info");
+      toast.error(t("toastSaveFailed"));
     }
   };
 
   const onError = (errors: any) => {
     console.error("Validation Errors:", errors);
-    toast.error("Please check the form for errors");
+    toast.error(t("toastValidationError"));
   };
 
   return {

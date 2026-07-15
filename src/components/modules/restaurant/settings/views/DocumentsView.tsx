@@ -82,7 +82,7 @@ export default function DocumentsView({
 
   const handleUpload1 = async () => {
     if (!file1) {
-      toast.error("Please select a file to upload.");
+      toast.error(t("toasts.selectFile"));
       return;
     }
     setLoading1(true);
@@ -93,15 +93,15 @@ export default function DocumentsView({
     try {
       const response = await updateKycAction(formData);
       if (response.success) {
-        toast.success(response.message || "Document uploaded successfully.");
+        toast.success(response.message || t("toasts.uploadSuccess"));
         setFile1(null);
         router.refresh();
       } else {
-        toast.error(response.message || "Failed to upload document.");
+        toast.error(response.message || t("toasts.uploadFailed"));
       }
     } catch (error) {
       console.error(error);
-      toast.error("An unexpected error occurred.");
+      toast.error(t("toasts.unexpectedError"));
     } finally {
       setLoading1(false);
     }
@@ -109,7 +109,7 @@ export default function DocumentsView({
 
   const handleUpload2 = async () => {
     if (!file2) {
-      toast.error("Please select a file to upload.");
+      toast.error(t("toasts.selectFile"));
       return;
     }
     setLoading2(true);
@@ -120,15 +120,15 @@ export default function DocumentsView({
     try {
       const response = await updateKycAction(formData);
       if (response.success) {
-        toast.success(response.message || "Document uploaded successfully.");
+        toast.success(response.message || t("toasts.uploadSuccess"));
         setFile2(null);
         router.refresh();
       } else {
-        toast.error(response.message || "Failed to upload document.");
+        toast.error(response.message || t("toasts.uploadFailed"));
       }
     } catch (error) {
       console.error(error);
-      toast.error("An unexpected error occurred.");
+      toast.error(t("toasts.unexpectedError"));
     } finally {
       setLoading2(false);
     }
@@ -166,8 +166,7 @@ export default function DocumentsView({
               {t("updatePendingTitle")}
             </AlertTitle>
             <AlertDescription className="text-blue-700">
-              YOUR CHANGES ARE SUBMITTED, WE ARE REVIEWING IT AND WILL APPROVE
-              SHORTLY.
+              {t("updatePendingDesc")}
             </AlertDescription>
           </Alert>
         )}
@@ -294,7 +293,7 @@ export default function DocumentsView({
             <div className="space-y-3">
               {kyc.map((doc: any) => {
                 const DocIcon = getDocIcon(doc.documentType);
-                const statusBadge = getStatusBadge(doc.status);
+                const statusBadge = getStatusBadge(doc.status, t);
                 const verifiedDate = doc.updatedAt
                   ? t("verifiedOn", { date: isoToDateOnly(doc.updatedAt) })
                   : "";
@@ -310,10 +309,10 @@ export default function DocumentsView({
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-foreground">
-                          {getDocLabel(doc.documentType)}
+                          {getDocLabel(doc.documentType, t)}
                         </p>
                         <p className="text-xs text-muted-foreground mt-0.5">
-                          {getDocCategory(doc.documentType)}
+                          {getDocCategory(doc.documentType, t)}
                           {verifiedDate && ` • ${verifiedDate}`}
                         </p>
                       </div>

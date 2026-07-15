@@ -10,8 +10,10 @@ import {
   getVariantGroupsAction,
 } from "@/app/actions/restaurant/menu";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export const useAddNewItem = () => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.addNewItem.toasts");
   const params = useParams();
   const itemId = (params.itemId || params.id) as string;
   const isEditMode = !!itemId;
@@ -107,7 +109,7 @@ export const useAddNewItem = () => {
             setImagePreview(imgToPreview);
           }
         } else {
-          toast.error("Failed to load item details properly.");
+          toast.error(t("fetchFailed"));
         }
       },
       onError: (err) => {
@@ -199,13 +201,13 @@ export const useAddNewItem = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.category || !formData.basePrice) {
-      toast.error("Please fill in all required fields");
+      toast.error(t("fillRequired"));
       return;
     }
 
     if (!imagePreview) {
       setImageError(true);
-      toast.error("Please upload an item image");
+      toast.error(t("uploadImage"));
       return;
     }
 
@@ -213,7 +215,7 @@ export const useAddNewItem = () => {
       formData.discount &&
       Number(formData.discount) > Number(formData.basePrice)
     ) {
-      toast.error("Discount cannot be greater than the base price");
+      toast.error(t("discountExceeds"));
       return;
     }
 

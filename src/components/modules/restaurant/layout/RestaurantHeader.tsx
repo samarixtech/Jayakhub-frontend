@@ -29,6 +29,7 @@ export default function RestaurantHeader() {
 
   const t = useTranslations("RestaurantDashboard.Sidebar.items");
   const tSettings = useTranslations("RestaurantDashboard.Settings.sidebar");
+  const tSidebar = useTranslations("RestaurantDashboard.Sidebar");
 
   const segments = pathname?.split("/") || [];
 
@@ -82,14 +83,14 @@ export default function RestaurantHeader() {
         <div className="w-full min-h-[72px] bg-red-500/10 backdrop-blur-md border-b border-red-800/30 text-red-800 text-sm font-semibold text-center py-5 px-4 flex flex-col sm:flex-row items-center justify-center gap-2 shrink-0">
           <span>
             {isCancelled
-              ? "Your subscription has been cancelled."
-              : "Your subscription has expired."}
+              ? tSidebar("subscriptionCancelled")
+              : tSidebar("subscriptionExpired")}
           </span>
           <Link
             href="/restaurant/subscription"
             className="underline underline-offset-2 hover:text-red-900 transition-colors font-bold text-red-900"
           >
-            Go to Subscription Management to renew.
+            {tSidebar("renewSubscription")}
           </Link>
         </div>
       )}

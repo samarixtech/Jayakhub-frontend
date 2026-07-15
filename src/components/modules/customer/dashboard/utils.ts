@@ -21,11 +21,11 @@ export const getStatusColor = (status: string) => {
   }
 };
 
-export const getStatusLabel = (status: string) => {
+export const getStatusLabel = (status: string, t?: (key: string) => string) => {
   const s = status?.toLowerCase();
   switch (s) {
     case OrderStatus.OUT_FOR_DELIVERY:
-      return "Out for Delivery";
+      return t ? t("out_for_delivery") : "Out for Delivery";
     default:
       if (!s) return "";
       return s.charAt(0).toUpperCase() + s.slice(1);

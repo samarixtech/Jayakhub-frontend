@@ -1,33 +1,35 @@
 import { CreditCard, FileText, FileCheck, LucideIcon } from "lucide-react";
 
+type Translator = (key: string) => string;
+
 // DOCUMENT TYPE KEYS
-export const getDocLabel = (type: string): string => {
-  const labels: Record<string, string> = {
-    government_id: "National ID Card",
-    food_license: "Food Hygiene License",
-    driving_license: "Driving License",
-    passport: "Passport",
-    tax_certificate: "Tax Certificate",
-  };
-  return (
-    labels[type] ||
-    type.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
-  );
+export const getDocLabel = (type: string, t: Translator): string => {
+  const knownTypes = [
+    "government_id",
+    "food_license",
+    "driving_license",
+    "passport",
+    "tax_certificate",
+  ];
+  if (knownTypes.includes(type)) {
+    return t(`docLabels.${type}`);
+  }
+  return type.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
 // DOCUMENT CATEGORY
-export const getDocCategory = (type: string): string => {
+export const getDocCategory = (type: string, t: Translator): string => {
   switch (type) {
     case "government_id":
     case "driving_license":
     case "passport":
-      return "Identity Proof";
+      return t("docCategories.identityProof");
     case "food_license":
-      return "Restaurant Document";
+      return t("docCategories.restaurantDocument");
     case "tax_certificate":
-      return "Financial Document";
+      return t("docCategories.financialDocument");
     default:
-      return "Document";
+      return t("docCategories.document");
   }
 };
 
@@ -46,23 +48,23 @@ export const getDocIcon = (type: string): LucideIcon => {
 };
 
 // DOCUMENT STATUS
-export const getStatusBadge = (status: string) => {
+export const getStatusBadge = (status: string, t: Translator) => {
   switch (status.toLowerCase()) {
     case "verified":
     case "approved":
       return {
-        label: "VERIFIED",
+        label: t("statusBadges.verified"),
         className: "bg-emerald-50 text-emerald-600 border-emerald-200",
       };
     case "rejected":
       return {
-        label: "REJECTED",
+        label: t("statusBadges.rejected"),
         className: "bg-red-50 text-red-600 border-red-200",
       };
     case "pending":
     default:
       return {
-        label: "PENDING",
+        label: t("statusBadges.pending"),
         className: "bg-amber-50 text-amber-600 border-amber-200",
       };
   }

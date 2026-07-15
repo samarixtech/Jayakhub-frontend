@@ -33,24 +33,27 @@ interface OrderDetailSidebarProps {
   order: OrderDetail | null;
 }
 
-const getStatusBadge = (status: OrderDetail["status"]) => {
+const getStatusBadge = (
+  status: OrderDetail["status"],
+  t: (key: string) => string,
+) => {
   switch (status) {
     case "Completed":
       return (
         <span className="bg-[#e6f4ea] text-[#1e8e3e] px-3 py-1 rounded-full text-[12px] font-bold">
-          Completed
+          {t("completed")}
         </span>
       );
     case "Preparing":
       return (
         <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[12px] font-bold">
-          Preparing
+          {t("preparing")}
         </span>
       );
     case "Cancelled":
       return (
         <span className="bg-red-100 text-red-700 px-3 py-1 rounded-full text-[12px] font-bold">
-          Cancelled
+          {t("cancelled")}
         </span>
       );
     default:
@@ -121,7 +124,7 @@ const OrderDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("status")}
                 </span>
-                {getStatusBadge(order.status)}
+                {getStatusBadge(order.status, t)}
               </div>
               {/* Customer */}
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">

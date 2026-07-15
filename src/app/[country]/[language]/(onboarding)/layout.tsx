@@ -9,6 +9,7 @@ import {
 } from "@/components/modules/restaurant/onboarding/OnboardingContext";
 import { Typography } from "@/components/ui/typography";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 // Inner component to consume context
 const OnboardingLayoutContent = ({
@@ -18,6 +19,7 @@ const OnboardingLayoutContent = ({
 }) => {
   const pathname = usePathname();
   const { logoPreview } = useOnboarding();
+  const t = useTranslations("Onboarding.layout");
 
   const router = useRouter();
 
@@ -54,7 +56,7 @@ const OnboardingLayoutContent = ({
   const handleStepClick = (stepId: number) => {
     if (stepId > currentStep) {
       if (!isStepComplete(currentStep)) {
-        toast.error("Please complete the current step before proceeding.");
+        toast.error(t("incompleteStepError"));
         return;
       }
     }
@@ -95,10 +97,10 @@ const OnboardingLayoutContent = ({
           variant="h2"
           className="text-[28px] font-black text-[#111827]"
         >
-          Complete Profile
+          {t("title")}
         </Typography>
         <Typography className="text-gray-500 text-base mt-1">
-          Please finish setting up your restaurant to start accepting orders.
+          {t("subtitle")}
         </Typography>
       </div>
 

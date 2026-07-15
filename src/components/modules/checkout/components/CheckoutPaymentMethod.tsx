@@ -1,4 +1,5 @@
 import { Banknote, CreditCard, CheckCircle2, Circle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface CheckoutPaymentMethodProps {
   paymentMethod: string;
@@ -11,11 +12,12 @@ export const CheckoutPaymentMethod = ({
   setPaymentMethod,
   savedCards,
 }: CheckoutPaymentMethodProps) => {
+  const t = useTranslations("Checkout");
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
         <Banknote className="text-[#346853]" size={20} />
-        <h3 className="font-bold text-lg text-gray-900">Payment Method</h3>
+        <h3 className="font-bold text-lg text-gray-900">{t("paymentMethod")}</h3>
       </div>
       <div className="space-y-3">
         {/* Stripe Option */}
@@ -38,10 +40,10 @@ export const CheckoutPaymentMethod = ({
               />
               <div>
                 <p className="font-bold text-gray-900 text-sm">
-                  Credit Card / Stripe
+                  {t("creditCardStripe")}
                 </p>
                 <p className="text-xs text-gray-500">
-                  Secure payment via Stripe
+                  {t("securePaymentStripe")}
                 </p>
               </div>
             </div>
@@ -78,7 +80,7 @@ export const CheckoutPaymentMethod = ({
                   )}
                 </div>
                 <span className="font-medium text-sm text-gray-700">
-                  Pay with a new card
+                  {t("payWithNewCard")}
                 </span>
               </div>
 
@@ -113,7 +115,7 @@ export const CheckoutPaymentMethod = ({
                         {card.cardType} •••• {card.last4}
                       </span>
                       <span className="text-xs text-gray-500">
-                        Expires {card.expiryDate}
+                        {t("expires")} {card.expiryDate}
                       </span>
                     </div>
                   </div>
@@ -141,9 +143,9 @@ export const CheckoutPaymentMethod = ({
             />
             <div>
               <p className="font-bold text-gray-900 text-sm">
-                Cash on Delivery
+                {t("cashOnDelivery")}
               </p>
-              <p className="text-xs text-gray-500">Pay when food arrives</p>
+              <p className="text-xs text-gray-500">{t("payWhenArrives")}</p>
             </div>
           </div>
           {paymentMethod === "cod" ? (

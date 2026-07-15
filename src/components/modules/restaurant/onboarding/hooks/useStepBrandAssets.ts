@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   brandAssetsSchema,
   BrandAssetsInput,
@@ -14,6 +15,7 @@ import useLocale from "@/hooks/useLocals";
 
 export const useStepBrandAssets = () => {
   const { country, language } = useLocale();
+  const t = useTranslations("Onboarding.brandAssetsView");
   const {
     nextStep,
     prevStep: contextPrevStep,
@@ -75,10 +77,10 @@ export const useStepBrandAssets = () => {
         "onboarding_brand_assets_previews",
         JSON.stringify(previewsToSave),
       );
-      toast.success("Brand assets saved");
+      toast.success(t("toastSaved"));
     } catch (e) {
       console.error("Failed to save previews to localStorage", e);
-      toast.error("Images too large to save locally, but proceed anyway.");
+      toast.error(t("toastTooLarge"));
     }
 
     nextStep();

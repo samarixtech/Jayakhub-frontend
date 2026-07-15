@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { bulkImportItemsAction } from "@/app/actions/restaurant/menu";
 import { useRouter } from "next/navigation";
 import { BulkImportItem } from "@/types";
+import { useTranslations } from "next-intl";
 
 export type Step = "selection" | "bulk-import" | "preview";
 
@@ -12,6 +13,7 @@ export const useAddItem = (
   onOpenChange: (open: boolean) => void,
   onImportSuccess?: () => void,
 ) => {
+  const t = useTranslations("RestaurantDashboard.Menu.Items.addItemModal.toasts");
   const [step, setStep] = useState<Step>("selection");
   const [dragActive, setDragActive] = useState(false);
   const [parsedData, setParsedData] = useState<any[]>([]);
@@ -40,7 +42,7 @@ export const useAddItem = (
 
       const lines = text.split(/\r\n|\n/).filter((line) => line.trim() !== "");
       if (lines.length < 2) {
-        toast.error("CSV file is empty or has no data rows");
+        toast.error(t("csvEmpty"));
         return;
       }
 
@@ -151,7 +153,7 @@ export const useAddItem = (
       const payload = { items, itemImage: itemImages };
 
       if (payload.items.length === 0) {
-        toast.error("No valid items found to import");
+        toast.error(t("noValidItems"));
         setIsLoading(false);
         return;
       }
@@ -169,7 +171,7 @@ export const useAddItem = (
       }
     } catch (error) {
       console.error("Import failed:", error);
-      toast.error("Failed to import items");
+      toast.error(t("importFailed"));
     } finally {
       setIsLoading(false);
     }

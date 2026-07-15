@@ -18,6 +18,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import useLocale from "@/hooks/useLocals";
 
 interface UserNavProps {
   user: {
@@ -63,6 +64,7 @@ type UserRole = keyof typeof ROLE_CONFIG;
 
 const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" }) => {
   const tProfile = useTranslations("profile");
+  const { dir } = useLocale();
 
   // Construct Avatar URL
   const avatarSrc = user?.avatar || user?.image || undefined;
@@ -94,7 +96,7 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
   ];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu dir={dir}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -151,14 +153,14 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
                 href={item.href}
                 className="flex items-center w-full px-3 py-2.5 rounded-lg hover:bg-gray-50 text-gray-700 transition-colors group cursor-pointer"
               >
-                <item.icon className="h-4 w-4 mr-3 text-gray-500 group-hover:text-[#346853] transition-colors" />
+                <item.icon className="h-4 w-4 me-3 text-gray-500 group-hover:text-[#346853] transition-colors" />
                 <span className="font-medium text-sm group-hover:text-gray-900 transition-colors">
                   {item.label === "Dashboard"
                     ? tProfile("link.dashboard")
                     : item.label}
                 </span>
                 {item.label === "Subscription" && (
-                  <span className="ml-auto text-[10px] bg-[#346853]/10 text-[#346853] px-1.5 py-0.5 rounded font-semibold">
+                  <span className="ms-auto text-[10px] bg-[#346853]/10 text-[#346853] px-1.5 py-0.5 rounded font-semibold">
                     PRO
                   </span>
                 )}
@@ -174,7 +176,7 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
             onClick={onLogout}
             className="flex items-center w-full px-3 py-2.5 rounded-lg hover:bg-red-50 text-gray-700 hover:text-red-600 transition-colors cursor-pointer outline-none group"
           >
-            <LogOut className="h-4 w-4 mr-3 text-gray-500 group-hover:text-red-600 transition-colors" />
+            <LogOut className="h-4 w-4 me-3 text-gray-500 group-hover:text-red-600 transition-colors" />
             <span className="font-medium text-sm">
               {tProfile("link.logout")}
             </span>

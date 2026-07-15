@@ -7,8 +7,10 @@ import { RestaurantProps } from "@/components/modules/discovery/discovery.types"
 import { Loader2, Heart } from "lucide-react";
 import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
 import EmptyState from "@/components/common/EmptyState";
+import { useTranslations } from "next-intl";
 
 const WishlistView: React.FC = () => {
+  const t = useTranslations("Wishlist");
   const [wishlist, setWishlist] = useState<RestaurantProps[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -54,16 +56,16 @@ const WishlistView: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold">My Wishlist</h1>
+        <h1 className="text-3xl font-extrabold">{t("title")}</h1>
         <p className="text-gray-500 mt-2">
-          Your favorite restaurants in one place
+          {t("subtitle")}
         </p>
       </div>
 
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-20">
           <Loader2 className="w-10 h-10 text-[#346853] animate-spin mb-4" />
-          <p className="text-gray-500 font-medium">Loading your wishlist...</p>
+          <p className="text-gray-500 font-medium">{t("loading")}</p>
         </div>
       ) : wishlist.length > 0 ? (
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -80,10 +82,8 @@ const WishlistView: React.FC = () => {
       ) : (
         <EmptyState
           icon={Heart}
-          title={"Your wishlist is empty"}
-          message={
-            "Save your favorite restaurants to find them easily next time."
-          }
+          title={t("emptyTitle")}
+          message={t("emptyMessage")}
         />
       )}
     </div>

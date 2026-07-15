@@ -21,7 +21,7 @@ const SectionHeader = ({
           className="text-[#346853] hover:text-[#2a5443] cursor-pointer hover:underline font-bold text-sm leading-none"
           onClick={onAction}
         >
-          {resolvedActionText} <ChevronRight className="h-4 w-4 text-[#346853]" />
+          {resolvedActionText} <ChevronRight className="h-4 w-4 text-[#346853] rtl:rotate-180" />
         </Button>
       )}
     </div>

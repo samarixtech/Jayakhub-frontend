@@ -20,6 +20,7 @@ import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
 import { useCLC } from "@/context/CLCContext";
+import { useTranslations } from "next-intl";
 
 import {
   Breadcrumb,
@@ -50,15 +51,16 @@ const CheckoutView = () => {
   const [couponFinalTotal, setCouponFinalTotal] = useState<number | null>(null);
 
   const { currencyCode } = useCLC();
+  const t = useTranslations("Checkout");
 
   // ACTIONS
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
-      toast.error("Please select a delivery address.");
+      toast.error(t("selectAddressError"));
       return;
     }
     if (cart.length === 0) {
-      toast.error("Your cart is empty.");
+      toast.error(t("cartEmpty"));
       return;
     }
 
@@ -116,7 +118,7 @@ const CheckoutView = () => {
       if (res.meta?.status === 200 || res.success) {
         if (paymentMethod === "cod") {
           // COD Success
-          toast.success("Order placed successfully!");
+          toast.success(t("orderPlacedSuccess"));
           dispatch(clearCart());
           const orderId = res.data?.orderId || "new";
           router.push(`/order-confirmation/${orderId}`);
@@ -125,16 +127,16 @@ const CheckoutView = () => {
             window.location.assign(res.data.url);
           } else if (res.success || res.meta?.status === 200) {
             // Successful charge with saved card
-            toast.success("Payment successful!");
+            toast.success(t("paymentSuccess"));
             dispatch(clearCart());
             const orderId = res.data?.orderId || "new";
             router.push(`/order-confirmation/${orderId}`);
           } else {
-            toast.error("Stripe URL not found.");
+            toast.error(t("stripeUrlNotFound"));
           }
         }
       } else {
-        toast.error(res.message || "Failed to place order.");
+        toast.error(res.message || t("placeOrderFailed"));
       }
     } catch (error) {
       console.error("Place order error:", error);
@@ -146,7 +148,7 @@ const CheckoutView = () => {
   const fetchAddresses = async () => {
     try {
       const addressRes: any = await getUserAddresses();
-      if (addressRes && addressRes.data) {
+      if (addressRes && addressRes.success) {
         setSavedAddresses(addressRes.data);
 
         if (!selectedAddress) {
@@ -228,23 +230,23 @@ const CheckoutView = () => {
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                <BreadcrumbLink href="/">{t("breadcrumbHome")}</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink href="/restaurants">Restaurants</BreadcrumbLink>
+                <BreadcrumbLink href="/restaurants">{t("breadcrumbRestaurants")}</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage className="font-bold text-gray-900">
-                  Checkout
+                  {t("breadcrumbCheckout")}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
 
           <h1 className="text-3xl font-bold text-gray-900 mb-8">
-            Finalize Your Order
+            {t("heading")}
           </h1>
 
           {/* Promo Banner if logged in */}
@@ -276,12 +278,12 @@ const CheckoutView = () => {
                   <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
                     <div className="flex items-center gap-3 mb-6">
                       <h3 className="font-bold text-lg text-gray-900">
-                        Special Instructions
+                        {t("specialInstructions")}
                       </h3>
                     </div>
                     <textarea
                       className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#346853] resize-none"
-                      placeholder="e.g. No onions, please. Knock twice."
+                      placeholder={t("specialInstructionsPlaceholder")}
                     />
                   </div>
                 </>

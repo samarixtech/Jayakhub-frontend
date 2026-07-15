@@ -44,7 +44,7 @@ export default function CustomerRegisterView() {
           isPending={isPending}
         />
 
-        <AuthDivider text="Or register with email" compact={true} />
+        <AuthDivider text={t("orRegisterWithEmail")} compact={true} />
 
         <Form {...form}>
           <form
@@ -58,7 +58,7 @@ export default function CustomerRegisterView() {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="Full Name"
+                      placeholder={t("fullNamePlaceholder")}
                       className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
@@ -74,7 +74,7 @@ export default function CustomerRegisterView() {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="Email Address"
+                      placeholder={t("emailPlaceholder")}
                       className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
@@ -91,7 +91,7 @@ export default function CustomerRegisterView() {
                 <FormItem>
                   <FormControl>
                     <PhoneInput
-                      placeholder="Phone Number"
+                      placeholder={t("phonePlaceholder")}
                       maxLength={14}
                       defaultCountry="PK"
                       className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
@@ -122,7 +122,7 @@ export default function CustomerRegisterView() {
                   <FormControl>
                     <PasswordField
                       field={field}
-                      placeholder="Confirm Password"
+                      placeholder={t("confirmPasswordPlaceholder")}
                       compact={true}
                     />
                   </FormControl>
@@ -143,12 +143,12 @@ export default function CustomerRegisterView() {
                   </FormControl>
                   <div className="space-y-1 leading-none ">
                     <FormLabel className="text-sm font-normal text-gray-500">
-                      I agree to the{" "}
+                      {t("agreeToThe")}{" "}
                       <Link
                         href="/terms-of-service"
                         className="font-bold text-emerald-bg hover:underline"
                       >
-                        Terms and Conditions
+                        {t("termsAndConditions")}
                       </Link>
                     </FormLabel>
                     <FormMessage />
@@ -165,7 +165,7 @@ export default function CustomerRegisterView() {
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                "Create Account"
+                t("createAccountBtn")
               )}
             </Button>
           </form>

@@ -92,6 +92,7 @@ export async function getPosOrdersFilteredAction(params?: {
   limit?: number;
   orderType?: string;
   paymentMethod?: string;
+  orderStatus?: string;
   search?: string;
 }): Promise<{
   success: boolean;
@@ -106,6 +107,7 @@ export async function getPosOrdersFilteredAction(params?: {
     if (params?.limit) query.set("limit", String(params.limit));
     if (params?.orderType) query.set("orderType", params.orderType);
     if (params?.paymentMethod) query.set("paymentMethod", params.paymentMethod);
+    if (params?.orderStatus) query.set("orderStatus", params.orderStatus);
     if (params?.search) query.set("search", params.search);
     const qs = query.toString();
     const url = qs ? `/pos-orders-filtered?${qs}` : "/pos-orders-filtered";
@@ -115,7 +117,7 @@ export async function getPosOrdersFilteredAction(params?: {
     return {
       success: true,
       data: Array.isArray(resData?.data) ? resData.data : [],
-      pagination: resData?.pagination,
+      pagination: resData?.meta,
     };
   } catch (error: any) {
     return {

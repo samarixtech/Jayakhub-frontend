@@ -6,11 +6,13 @@ import { useParams, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store/store";
 import { clearCart } from "@/redux/slices/cartSlice";
+import { useTranslations } from "next-intl";
 
 export default function OrderConfirmedView() {
   const params = useParams();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const t = useTranslations("OrderTracking");
   const { id } = params;
 
   // Clear cart on mount when order successfully placed
@@ -30,14 +32,14 @@ export default function OrderConfirmedView() {
 
         {/* Text Content */}
         <h1 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">
-          Order Placed!
+          {t("confirmedHeading")}
         </h1>
         <p className="text-gray-500 mb-1">
-          Your order{" "}
-          <span className="font-bold text-gray-900">{id || "88291"}</span> is
-          confirmed.
+          {t("yourOrderPrefix")}{" "}
+          <span className="font-bold text-gray-900">{id || "88291"}</span>{" "}
+          {t("isConfirmedSuffix")}
         </p>
-        <p className="text-gray-500 mb-8">Sit tight, good food is coming!</p>
+        <p className="text-gray-500 mb-8">{t("confirmedSubMessage")}</p>
 
         {/* Actions */}
         <div className="space-y-4 w-full px-8">
@@ -45,7 +47,7 @@ export default function OrderConfirmedView() {
             onClick={() => router.push(`/order/${id}`)}
             className="w-full h-12 bg-[#346853] hover:bg-[#2a5443] text-white font-bold rounded-lg shadow-lg shadow-[#346853]/20"
           >
-            Track Order
+            {t("trackOrderBtn")}
           </Button>
 
           <Button
@@ -53,7 +55,7 @@ export default function OrderConfirmedView() {
             onClick={() => router.push("/restaurants")}
             className="w-full text-xs font-bold text-gray-500 hover:text-gray-900 hover:bg-transparent"
           >
-            Continue Order
+            {t("continueOrderBtn")}
           </Button>
         </div>
       </div>

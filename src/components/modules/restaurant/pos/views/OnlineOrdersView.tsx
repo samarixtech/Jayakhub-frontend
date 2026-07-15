@@ -6,15 +6,20 @@ import {
   CheckCircle2,
   Check,
   X,
+  XCircle,
   Phone,
   Bike,
   Clock,
   Hash,
+  AlertTriangle,
+  Loader2,
 } from "lucide-react";
 import { useCLC } from "@/context/CLCContext";
 import { useOnlineOrders } from "../hooks/useOnlineOrders";
+import { useTranslations } from "next-intl";
 
 export default function OnlineOrdersView() {
+  const t = useTranslations("POS.onlineOrders");
   const { formatPrice } = useCLC();
   const {
     activeTab,
@@ -22,8 +27,12 @@ export default function OnlineOrdersView() {
     handleAccept,
     handleReject,
     handleMarkReady,
+    handleHandoff,
+    handleCancelNoRider,
+    cancellingOrderId,
     tabs,
     currentOrders,
+    isKitchen,
   } = useOnlineOrders();
 
   return (
@@ -67,7 +76,11 @@ export default function OnlineOrdersView() {
         {(currentOrders || []).map((order) => (
           <div
             key={order.id}
-            className="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 flex flex-col gap-4 shadow-sm"
+            className={`bg-white rounded-xl border p-4 sm:p-5 flex flex-col gap-4 shadow-sm transition-colors ${
+              order.isCritical && !order.rider
+                ? "border-red-300 bg-red-50/40 ring-2 ring-red-200"
+                : "border-gray-100"
+            }`}
           >
             {/* Order Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -96,7 +109,7 @@ export default function OnlineOrdersView() {
                   <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
                     <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
                     <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
-                      ACCEPTED
+                      {t("accepted")}
                     </span>
                   </div>
                 )}
@@ -105,7 +118,16 @@ export default function OnlineOrdersView() {
                   <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-[#fff8eb] rounded-full border border-[#ffe4b5]">
                     <ChefHat className="w-[14px] h-[14px] text-[#e8901e] stroke-[2.5px]" />
                     <span className="text-[#e8901e] font-black text-[11px] tracking-wider uppercase">
-                      READY
+                      {t("ready")}
+                    </span>
+                  </div>
+                )}
+
+                {order.status === "out_for_delivery" && (
+                  <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-blue-50 rounded-full border border-blue-100">
+                    <Bike className="w-[14px] h-[14px] text-blue-600 stroke-[2.5px]" />
+                    <span className="text-blue-600 font-black text-[11px] tracking-wider uppercase">
+                      {t("outForDelivery")}
                     </span>
                   </div>
                 )}
@@ -123,14 +145,14 @@ export default function OnlineOrdersView() {
                         className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#10b981] hover:bg-[#059669] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
                       >
                         <Check className="w-[16px] h-[16px] stroke-[2.5px]" />
-                        Accept
+                        {t("accept")}
                       </button>
                       <button
                         onClick={() => handleReject(order.id)}
                         className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-white border border-red-100 hover:bg-red-50 text-red-500 rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors"
                       >
                         <X className="w-[16px] h-[16px] stroke-[2.5px]" />
-                        Reject
+                        {t("reject")}
                       </button>
                     </>
                   )}
@@ -141,7 +163,23 @@ export default function OnlineOrdersView() {
                       className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#357252] hover:bg-[#2a5a41] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
                     >
                       <CheckCircle2 className="w-[16px] h-[16px] stroke-[2.5px]" />
-                      <span className="whitespace-nowrap">Mark Ready</span>
+                      <span className="whitespace-nowrap">{t("markReady")}</span>
+                    </button>
+                  )}
+
+                  {order.status === "ready" && !order.handoff && !isKitchen && (
+                    <button
+                      onClick={() => handleHandoff(order.id)}
+                      disabled={!order.rider}
+                      title={!order.rider ? t("noRiderYet") : undefined}
+                      className={`flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors ${
+                        order.rider
+                          ? "bg-[#357252] hover:bg-[#2a5a41] text-white shadow-sm"
+                          : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                      }`}
+                    >
+                      <Bike className="w-[16px] h-[16px] stroke-[2.5px]" />
+                      <span className="whitespace-nowrap">{t("handOff")}</span>
                     </button>
                   )}
                 </div>
@@ -172,27 +210,29 @@ export default function OnlineOrdersView() {
               {order.riderOrderId && (
                 <div className="flex items-center gap-1.5 text-gray-500">
                   <Hash className="w-3.5 h-3.5 text-gray-400" />
-                  <span className="text-[12px] font-bold">{order.riderOrderId}</span>
+                  <span className="text-[12px] font-bold">
+                    {order.riderOrderId}
+                  </span>
                 </div>
               )}
               {order.prepareTime && order.prepareTime !== "0s" && (
                 <div className="flex items-center gap-1.5 text-gray-500">
                   <Clock className="w-3.5 h-3.5 text-gray-400" />
                   <span className="text-[12px] font-medium">
-                    Prepared in {order.prepareTime}
+                    {t("preparedIn", { time: order.prepareTime })}
                   </span>
                 </div>
               )}
             </div>
 
-            {/* Rider info (Ready tab) */}
-            {order.status === "ready" && order.rider && (
+            {/* Rider info (Ready / Out for Delivery tabs) */}
+            {(order.status === "ready" || order.status === "out_for_delivery") && order.rider && (
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-100">
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center shrink-0 overflow-hidden">
                   {order.rider.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL}/${order.rider.image}`}
+                      src={order.rider.image}
                       alt={order.rider.name}
                       className="w-full h-full object-cover"
                     />
@@ -222,14 +262,49 @@ export default function OnlineOrdersView() {
               </div>
             )}
 
-            {/* Ready — no rider yet */}
-            {order.status === "ready" && !order.rider && (
+            {/* Ready — no rider yet (not critical) */}
+            {order.status === "ready" && !order.rider && !order.isCritical && (
               <div className="flex items-center gap-2 px-3 py-2.5 bg-[#fff8eb] rounded-xl border border-[#ffe4b5]">
                 <Bike className="w-4 h-4 text-[#e8901e] shrink-0" />
                 <span className="text-[13px] font-semibold text-[#92400e]">
-                  Waiting for rider assignment
+                  {t("waitingForRider")}
                 </span>
               </div>
+            )}
+
+            {/* Critical — no rider found within the backend's window */}
+            {order.isCritical && !order.rider && (
+              isKitchen ? (
+                <div className="flex items-center gap-2 px-3 py-2.5 bg-red-50 rounded-xl border border-red-200">
+                  <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+                  <span className="text-[13px] font-bold text-red-700 uppercase tracking-wide">
+                    {t("noRiderYet")}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-3 py-2.5 bg-red-50 rounded-xl border border-red-200 animate-pulse">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+                    <span className="text-[13px] font-bold text-red-700 uppercase tracking-wide">
+                      {t("noRiderAction")}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => handleCancelNoRider(order.id)}
+                    disabled={cancellingOrderId === order.id}
+                    className="flex items-center justify-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold text-[12px] sm:text-[13px] transition-colors disabled:opacity-60 shrink-0"
+                  >
+                    {cancellingOrderId === order.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <XCircle className="w-4 h-4" />
+                        {t("cancelRefund")}
+                      </>
+                    )}
+                  </button>
+                </div>
+              )
             )}
 
             {/* Mobile status badge */}
@@ -237,7 +312,7 @@ export default function OnlineOrdersView() {
               <div className="flex sm:hidden items-center justify-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
                 <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
                 <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
-                  ACCEPTED
+                  {t("accepted")}
                 </span>
               </div>
             )}
@@ -255,8 +330,14 @@ export default function OnlineOrdersView() {
             {activeTab === "ready" && (
               <CheckCircle2 className="w-12 h-12 mb-4 text-gray-200" />
             )}
+            {activeTab === "out_for_delivery" && (
+              <Bike className="w-12 h-12 mb-4 text-gray-200" />
+            )}
             <p className="font-bold text-[14px] sm:text-[15px]">
-              No {activeTab} orders
+              {t("noOrders", {
+                tab:
+                  tabs.find((tab) => tab.id === activeTab)?.label ?? activeTab,
+              })}
             </p>
           </div>
         )}

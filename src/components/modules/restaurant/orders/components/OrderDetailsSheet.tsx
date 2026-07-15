@@ -19,6 +19,7 @@ interface OrderDetailsSheetProps {
   isOpen: boolean;
   onClose: () => void;
   onStatusUpdate: (orderId: string, newStatus: string) => Promise<void>;
+  onHandoff: (orderId: string) => Promise<void>;
 }
 
 const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
@@ -26,6 +27,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
   isOpen,
   onClose,
   onStatusUpdate,
+  onHandoff,
 }) => {
   const t = useTranslations("RestaurantDashboard.Orders.details");
   const [updatingAction, setUpdatingAction] = useState<string | null>(null);
@@ -40,6 +42,18 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
       onClose();
     } catch (error) {
       console.error("Failed to update status", error);
+    } finally {
+      setUpdatingAction(null);
+    }
+  };
+
+  const handleHandoffClick = async () => {
+    setUpdatingAction("handoff");
+    try {
+      await onHandoff(order.id);
+      onClose();
+    } catch (error) {
+      console.error("Failed to hand off order", error);
     } finally {
       setUpdatingAction(null);
     }
@@ -110,7 +124,23 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
       );
     }
 
-    // For other statuses (ready, out_for_delivery, delivered, rejected), return null
+    // READY -> Hand Off to Rider (Green)
+    if (currentStatus === "ready") {
+      return (
+        <Button
+          onClick={handleHandoffClick}
+          disabled={!!updatingAction}
+          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+        >
+          {updatingAction === "handoff" ? (
+            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          ) : null}
+          {t("handoffBtn")}
+        </Button>
+      );
+    }
+
+    // For other statuses (out_for_delivery, delivered, rejected), return null
     return null;
   };
 

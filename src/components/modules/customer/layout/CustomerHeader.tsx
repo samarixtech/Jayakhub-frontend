@@ -15,6 +15,7 @@ import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import LocationSwitcher from "@/components/common/LocationSwitcher";
 import UserProfile from "@/components/common/UserProfile";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,8 +29,9 @@ const CustomerHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations("Discovery.headerActions");
 
-  const [currentAddress, setCurrentAddress] = useState("Iraq, Baghdad");
+  const [currentAddress, setCurrentAddress] = useState(t("defaultAddress"));
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -78,7 +80,7 @@ const CustomerHeader = () => {
                   className="text-white text-xs font-bold h-8 px-2 hover:bg-white/10"
                   asChild
                 >
-                  <Link href={`/login`}>Login</Link>
+                  <Link href={`/login`}>{t("login")}</Link>
                 </Button>
               ) : (
                 <UserProfile
@@ -197,10 +199,10 @@ const CustomerHeader = () => {
             <div className="flex items-center pl-3 ml-1 gap-3">
               <div className="text-right hidden sm:block">
                 <p className="text-white font-bold text-sm leading-none">
-                  {user?.name || "User"}
+                  {user?.name || t("userFallback")}
                 </p>
                 <p className="text-white/70 text-[10px] uppercase tracking-widest font-medium mt-1">
-                  {user?.role?.name || "Customer"}
+                  {user?.role?.name || t("customerFallback")}
                 </p>
               </div>
               <UserProfile

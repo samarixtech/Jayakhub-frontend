@@ -6,6 +6,7 @@ import {
 } from "@/app/actions/restaurant/settings";
 import { changePasswordAction } from "@/app/actions/customer/userprofile";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -16,6 +17,7 @@ import {
 } from "@/lib/schemas/restaurant-security";
 
 export function useSecuritySettings() {
+  const t = useTranslations("RestaurantDashboard.Settings.security.toasts");
   const [loading, setLoading] = useState(true);
   const [verifiedVia, setVerifiedVia] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -33,7 +35,7 @@ export function useSecuritySettings() {
           }
         }
       } catch (error) {
-        toast.error("Failed to fetch security settings");
+        toast.error(t("fetchFailed"));
       } finally {
         setLoading(false);
       }
@@ -52,6 +54,7 @@ export function useSecuritySettings() {
 }
 
 export function useSetPasswordForm() {
+  const t = useTranslations("RestaurantDashboard.Settings.security.toasts");
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -72,7 +75,7 @@ export function useSetPasswordForm() {
         toast.error(res.message);
       }
     } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
+      toast.error(error.message || t("somethingWrong"));
     } finally {
       setSubmitting(false);
     }
@@ -90,6 +93,7 @@ export function useSetPasswordForm() {
 }
 
 export function useChangePasswordForm() {
+  const t = useTranslations("RestaurantDashboard.Settings.security.toasts");
   const [submitting, setSubmitting] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -110,13 +114,13 @@ export function useChangePasswordForm() {
       });
 
       if (res.success) {
-        toast.success(res.message || "Password Updated Successfully");
+        toast.success(res.message || t("passwordUpdated"));
         form.reset();
       } else {
-        toast.error(res.message || "Something went wrong");
+        toast.error(res.message || t("somethingWrong"));
       }
     } catch (error: any) {
-      toast.error(error.message || "Something went wrong");
+      toast.error(error.message || t("somethingWrong"));
     } finally {
       setSubmitting(false);
     }

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Upload, ImageIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,7 @@ export function ProfileImageUpload({
   onChange,
   isCover = false,
 }: ProfileImageUploadProps) {
+  const t = useTranslations("RestaurantDashboard.Settings.profile");
   const displaySrc = imagePreview || existingImage || null;
 
   return (
@@ -73,7 +75,7 @@ export function ProfileImageUpload({
               {icon || <ImageIcon className="w-5 h-5 text-primary" />}
             </div>
             <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-              Upload {label.replace(" Image", "")}
+              {t("uploadPrefix", { label: label.replace(" Image", "") })}
             </p>
             {subLabel && (
               <p className="text-xs text-muted-foreground mt-1">{subLabel}</p>

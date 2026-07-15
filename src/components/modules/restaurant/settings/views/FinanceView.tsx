@@ -73,7 +73,7 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
         toast.error(response.message || t("errorMsg"));
       }
     } catch (error) {
-      toast.error("An unexpected error occurred.");
+      toast.error(t("unexpectedErr"));
     } finally {
       setLoading(false);
     }
@@ -112,16 +112,16 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
                       disabled={loadingBanks}
                       className="w-full justify-between bg-background border-input font-normal text-left h-10 px-3 hover:bg-muted/50"
                     >
-                      {formData.bankName || (loadingBanks ? "Loading banks..." : t("bankName"))}
+                      {formData.bankName || (loadingBanks ? t("loadingBanks") : t("bankName"))}
                       <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-white" align="start">
                     <Command className="bg-white">
-                      <CommandInput placeholder="Search bank..." className="h-9" />
+                      <CommandInput placeholder={t("searchBankPlaceholder")} className="h-9" />
                       <CommandList>
                         <ScrollArea className="h-72">
-                          <CommandEmpty>No bank found.</CommandEmpty>
+                          <CommandEmpty>{t("noBankFound")}</CommandEmpty>
                           <CommandGroup>
                             {banks.map((bankName) => (
                               <CommandItem
@@ -179,7 +179,7 @@ export function FinanceView({ settings }: { settings: SettingsData | null }) {
       </CardContent>
       <CardFooter className="flex justify-end pt-6 border-t border-border mt-2">
         <Button onClick={handleSave} disabled={loading}>
-          {loading ? "Saving..." : t("saveBtn")}
+          {loading ? t("saving") : t("saveBtn")}
         </Button>
       </CardFooter>
     </Card>

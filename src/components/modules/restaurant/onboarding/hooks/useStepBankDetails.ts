@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   bankDetailsSchema,
   BankDetailsInput,
@@ -17,6 +18,7 @@ export const ACCOUNT_TYPES = ["Current", "Savings"];
 export const useStepBankDetails = () => {
   const { country, language } = useLocale();
   const router = useRouter();
+  const t = useTranslations("Onboarding.bankDetailsView");
 
   const [banks, setBanks] = useState<string[]>([]);
   const [loadingBanks, setLoadingBanks] = useState(false);
@@ -62,7 +64,7 @@ export const useStepBankDetails = () => {
 
   const onSubmit = (data: BankDetailsInput) => {
     localStorage.setItem("onboarding_bank_details", JSON.stringify(data));
-    toast.success("Bank details saved");
+    toast.success(t("toastSaved"));
     router.push(`/restaurant/onboarding/step-review`);
   };
 

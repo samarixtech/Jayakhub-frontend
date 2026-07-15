@@ -60,19 +60,19 @@ export default function CustomerOrderHistoryView() {
   const handleConfirmCancel = async () => {
     if (!orderToCancel) return;
     setCanceling(true);
-    const toastId = toast.loading("Cancelling order...");
+    const toastId = toast.loading(t("cancelling_order"));
     try {
       const res = await cancelOrderAction(orderToCancel.orderId);
       if (res.success) {
-        toast.success(res.message || "Order cancelled successfully", { id: toastId });
+        toast.success(res.message || t("order_cancelled_success"), { id: toastId });
         setTriggerRefetch((prev) => prev + 1);
         setCancelModalOpen(false);
         setOrderToCancel(null);
       } else {
-        toast.error(res.message || "Failed to cancel order", { id: toastId });
+        toast.error(res.message || t("cancel_order_failed"), { id: toastId });
       }
     } catch {
-      toast.error("Failed to cancel order", { id: toastId });
+      toast.error(t("cancel_order_failed"), { id: toastId });
     } finally {
       setCanceling(false);
     }
@@ -210,7 +210,7 @@ export default function CustomerOrderHistoryView() {
               className="rounded-full bg-red-600 hover:bg-red-500 text-white cursor-pointer"
               disabled={canceling}
             >
-              {canceling ? "Cancelling..." : t("cancel_order_confirm")}
+              {canceling ? t("cancelling_state") : t("cancel_order_confirm")}
             </Button>
           </div>
         </GlobalModal>

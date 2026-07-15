@@ -110,7 +110,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
           </Button>
           <Button
             onClick={onCancel}
-            variant="ghost"
+            variant="outline"
             className="text-gray-500 hover:text-gray-900"
             disabled={isSaving}
           >

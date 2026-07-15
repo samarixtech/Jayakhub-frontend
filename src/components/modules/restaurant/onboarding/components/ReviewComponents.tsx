@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface ReviewSectionProps {
@@ -32,6 +33,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({
   className,
 }) => {
   const router = useRouter();
+  const t = useTranslations("Onboarding.reviewComponents");
   return (
     <div className={cn("space-y-4", className)}>
       <div className="flex items-center justify-between">
@@ -50,7 +52,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({
           onClick={() => router.push(stepPath)}
         >
           <Edit className="w-3.5 h-3.5 mr-1" />
-          Edit
+          {t("edit")}
         </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">{children}</div>
@@ -93,26 +95,29 @@ export const ReviewDocField = ({
   label: string;
   status?: "UPLOADED" | "VERIFIED" | "PENDING";
   className?: string;
-}) => (
-  <div
-    className={cn(
-      "bg-gray-50/50 rounded-2xl p-4 flex items-center justify-between border border-transparent md:col-span-2",
-      className,
-    )}
-  >
-    <Typography className="text-sm font-medium text-gray-700">
-      {label}
-    </Typography>
+}) => {
+  const t = useTranslations("Onboarding.reviewComponents");
+  return (
     <div
       className={cn(
-        "px-3 py-1 rounded-full text-[10px] font-black tracking-wider flex items-center gap-1",
-        status === "VERIFIED"
-          ? "bg-emerald-50 text-emerald-600"
-          : "bg-emerald-50/50 text-emerald-600/70",
+        "bg-gray-50/50 rounded-2xl p-4 flex items-center justify-between border border-transparent md:col-span-2",
+        className,
       )}
     >
-      {status === "VERIFIED" && <Check className="w-3 h-3" />}
-      {status}
+      <Typography className="text-sm font-medium text-gray-700">
+        {label}
+      </Typography>
+      <div
+        className={cn(
+          "px-3 py-1 rounded-full text-[10px] font-black tracking-wider flex items-center gap-1",
+          status === "VERIFIED"
+            ? "bg-emerald-50 text-emerald-600"
+            : "bg-emerald-50/50 text-emerald-600/70",
+        )}
+      >
+        {status === "VERIFIED" && <Check className="w-3 h-3" />}
+        {t(status.toLowerCase())}
+      </div>
     </div>
-  </div>
-);
+  );
+};

@@ -148,7 +148,7 @@ export function LocationView({ settings }: { settings: SettingsData | null }) {
       </CardContent>
       <CardFooter className="flex justify-end border-t border-border pt-6 mt-2">
         <Button disabled={loading} onClick={handeSave}>
-          {loading ? "Saving..." : t("saveBtn")}
+          {loading ? t("saving") : t("saveBtn")}
         </Button>
       </CardFooter>
     </Card>

@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface OrderMapProps {
   address: {
@@ -10,10 +11,11 @@ interface OrderMapProps {
 }
 
 export const OrderMap: React.FC<OrderMapProps> = ({ address }) => {
+  const t = useTranslations("OrderTracking");
   return (
     <div className="w-full h-[300px] bg-blue-50 rounded-2xl border border-gray-100 overflow-hidden relative">
       <iframe
-        title="Order Location"
+        title={t("mapTitle")}
         src={
           address
             ? `https://maps.google.com/maps?q=${address.latitude},${address.longitude}&z=15&output=embed`

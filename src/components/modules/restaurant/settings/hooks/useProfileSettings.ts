@@ -5,8 +5,10 @@ import { SettingsData } from "@/types";
 import { useServerAction } from "@/hooks/use-server-action";
 import { updateRestaurantProfileAction } from "@/app/actions/restaurant/settings";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export function useProfileSettings(settings: SettingsData | null) {
+  const t = useTranslations("RestaurantDashboard.Settings.profile.toasts");
   const profile = settings?.profile;
   const [name, setName] = useState(profile?.name || "");
   const [description, setDescription] = useState(profile?.description || "");
@@ -88,7 +90,7 @@ export function useProfileSettings(settings: SettingsData | null) {
       onError: (err: any) => {
         const message =
           err?.message ||
-          (typeof err === "string" ? err : "Failed to update profile");
+          (typeof err === "string" ? err : t("updateFailed"));
         toast.error(message);
       },
     },
@@ -102,7 +104,7 @@ export function useProfileSettings(settings: SettingsData | null) {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("File size must be less than 5MB");
+      toast.error(t("fileTooLarge"));
       return;
     }
 
@@ -161,7 +163,7 @@ export function useProfileSettings(settings: SettingsData | null) {
 
   const handleSubmit = async () => {
     if (!name.trim()) {
-      toast.error("Restaurant Name is required");
+      toast.error(t("nameRequired"));
       return;
     }
 

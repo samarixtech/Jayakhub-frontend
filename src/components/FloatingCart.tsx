@@ -3,6 +3,7 @@
 import React from "react";
 import { ShoppingBasket, ChevronRight } from "lucide-react";
 import { useCLC } from "@/context/CLCContext";
+import { useTranslations } from "next-intl";
 
 interface FloatingCartProps {
   itemCount: number;
@@ -18,6 +19,7 @@ const FloatingCart: React.FC<FloatingCartProps> = ({
   onClick,
 }) => {
   const { currency } = useCLC();
+  const t = useTranslations("Cart");
 
   if (itemCount === 0) return null;
 
@@ -32,9 +34,9 @@ const FloatingCart: React.FC<FloatingCartProps> = ({
             <ShoppingBasket size={20} className="text-white" />
           </div>
           <div className="text-left">
-            <p className="font-bold text-sm leading-tight">View Cart</p>
+            <p className="font-bold text-sm leading-tight">{t("floatingViewCart")}</p>
             <p className="text-[10px] text-white/80 uppercase tracking-wide font-medium mt-0.5">
-              {itemCount} ITEMS • {restaurantName}
+              {t("floatingItemsLabel", { count: itemCount, restaurant: restaurantName })}
             </p>
           </div>
         </div>

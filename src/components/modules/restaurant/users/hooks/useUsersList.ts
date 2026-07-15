@@ -2,20 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import { useServerAction } from "@/hooks/use-server-action";
 import {
   getRestaurantUsersAction,
   deleteRestaurantUserAction,
 } from "@/app/actions/restaurant/users";
 
-function formatLastActive(value?: string): string {
-  if (!value) return "Never";
+function formatLastActive(value: string | undefined, never: string): string {
+  if (!value) return never;
   const date = new Date(value);
-  if (isNaN(date.getTime())) return "Never";
+  if (isNaN(date.getTime())) return never;
   return format(date, "dd MMM yyyy, hh:mm a");
 }
 
 export function useUsersList() {
+  const t = useTranslations("RestaurantDashboard.Users");
   const [selectedFilter, setSelectedFilter] = useState("ALL");
   const [users, setUsers] = useState<any[]>([]);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export function useUsersList() {
             email: u.email,
             role: u.role ? u.role.toUpperCase() : "CASHIER",
             status: u.status,
-            lastActive: formatLastActive(u.lastActive),
+            lastActive: formatLastActive(u.lastActive, t("list.never")),
             avatar: "",
             isMe: !!u.isMe,
           }));
@@ -69,21 +71,26 @@ export function useUsersList() {
       : users.filter((user) => user.role === selectedFilter);
 
   const filters = [
-    { label: "All Users", value: "ALL", count: users.length },
+    { label: t("filters.allUsers"), value: "ALL", count: users.length },
     {
-      label: "Admin",
+      label: t("filters.admin"),
       value: "ADMIN",
       count: users.filter((u) => u.role === "ADMIN").length,
     },
     {
-      label: "Manager",
+      label: t("filters.manager"),
       value: "MANAGER",
       count: users.filter((u) => u.role === "MANAGER").length,
     },
     {
-      label: "Cashier",
+      label: t("filters.cashier"),
       value: "CASHIER",
       count: users.filter((u) => u.role === "CASHIER").length,
+    },
+    {
+      label: t("filters.kitchen"),
+      value: "KITCHEN",
+      count: users.filter((u) => u.role === "KITCHEN").length,
     },
   ];
 

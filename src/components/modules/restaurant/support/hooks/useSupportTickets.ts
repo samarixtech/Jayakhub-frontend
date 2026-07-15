@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getAllTicketsAction } from "@/app/actions/restaurant/support";
 import type { Ticket } from "../support.types";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export function useSupportTickets(initialParams?: {
   search?: string;
@@ -17,6 +18,7 @@ export function useSupportTickets(initialParams?: {
   const [error, setError] = useState<string | null>(null);
   const [meta, setMeta] = useState<{ totalPages?: number; totalCount?: number } | null>(null);
   const [params, setParams] = useState(initialParams);
+  const t = useTranslations("RestaurantDashboard.Support.hookToasts");
 
   const fetchTickets = useCallback(async (customParams?: typeof initialParams) => {
     Promise.resolve().then(() => {
@@ -31,16 +33,16 @@ export function useSupportTickets(initialParams?: {
         setTickets(apiData.data || []);
         setMeta(apiData.meta || null);
       } else {
-        setError(res.message || "Failed to fetch tickets");
-        toast.error(res.message || "Failed to fetch tickets");
+        setError(res.message || t("fetchFailed"));
+        toast.error(res.message || t("fetchFailed"));
       }
     } catch {
-      setError("An unexpected error occurred");
-      toast.error("An unexpected error occurred");
+      setError(t("unexpectedError"));
+      toast.error(t("unexpectedError"));
     } finally {
       setIsLoading(false);
     }
-  }, [params]);
+  }, [params, t]);
 
   useEffect(() => {
     Promise.resolve().then(() => {

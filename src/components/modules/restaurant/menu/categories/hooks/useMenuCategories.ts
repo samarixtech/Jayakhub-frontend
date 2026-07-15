@@ -9,8 +9,10 @@ import {
   deleteCategoryAction,
 } from "@/app/actions/restaurant/menu";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export const useMenuCategories = () => {
+  const t = useTranslations("RestaurantDashboard.Menu.Categories.toasts");
   const [categories, setCategories] = useState<any[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -64,7 +66,7 @@ export const useMenuCategories = () => {
         setIsDeleteModalOpen(false);
       },
       onError: (err: any) =>
-        toast.error(err.message || "Failed to delete category"),
+        toast.error(err.message || t("deleteFailed")),
     },
   );
 

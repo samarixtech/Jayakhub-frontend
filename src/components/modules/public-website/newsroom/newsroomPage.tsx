@@ -92,7 +92,7 @@ export default function Newsroom({ blogs = [], categories = [] }: Props) {
         <div className="max-w-7xl mx-auto">
           {articleList.length === 0 ? (
             <p className="text-center text-[#94A3B8] py-16">
-              {t("no_posts") || "No posts found."}
+              {t("no_posts")}
             </p>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">

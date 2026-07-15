@@ -1,9 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import { Info, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useKycVerification } from "./kyc/useKycVerification";
-import { KYC_DOCUMENTS } from "./kyc/kyc-constants";
+import { getKycDocuments } from "./kyc/kyc-constants";
 import { DocumentItem } from "./kyc/kyc-document-item";
 import { useTranslations } from "next-intl";
 
@@ -21,18 +22,18 @@ export default function IdentityVerificationCard() {
     resetSelection,
   } = useKycVerification();
   const t = useTranslations('CustomerDashboard.ProfileSettings');
+  const KYC_DOCUMENTS = useMemo(() => getKycDocuments(t), [t]);
 
-  const hasActiveKyc = kycData.some(
+  // Once any document is verified or pending, hide the other untouched
+  // options (and their upload button) — but keep showing any rejected
+  // document so the user can still re-upload it.
+  const hasVerifiedOrPendingKyc = kycData.some(
     (d) => d.status === "verified" || d.status === "pending"
   );
 
-  const documentsToShow = hasActiveKyc
+  const documentsToShow = hasVerifiedOrPendingKyc
     ? KYC_DOCUMENTS.filter((item) =>
-      kycData.some(
-        (d) =>
-          d.documentType === item.id &&
-          (d.status === "verified" || d.status === "pending")
-      )
+      kycData.some((d) => d.documentType === item.id)
     )
     : KYC_DOCUMENTS;
 

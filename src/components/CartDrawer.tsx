@@ -17,6 +17,7 @@ import {
 import { AppDispatch, RootState } from "@/redux/store/store";
 import { useRouter, useParams } from "next/navigation";
 import { useCLC } from "@/context/CLCContext";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 
 interface CartDrawerProps {
@@ -26,6 +27,7 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { currency, country, language } = useCLC();
+  const t = useTranslations("Cart");
   const cart = useSelector((state: RootState) => state.cart.items);
   const selectedRestaurantMeta = useSelector((state: RootState) => state.discovery.selectedRestaurantMeta);
   const dispatch = useDispatch<AppDispatch>();
@@ -48,7 +50,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
       const resId = item.restaurantId || "unknown";
       if (!groups[resId]) {
         groups[resId] = {
-          name: item.restaurantName || "Unknown Restaurant",
+          name: item.restaurantName || t("unknownRestaurant"),
           image: item.restaurantImage,
           items: [],
         };
@@ -56,7 +58,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
       groups[resId].items.push(item);
     });
     return groups;
-  }, [cart]);
+  }, [cart, t]);
 
   // If there's only one restaurant, or we are on a restaurant page, we might want to default to detail?
   // But per request: "DISPLAY A RESTAURANT ONLY IN CART WITH 'VIEW CART' BUTTON"
@@ -150,7 +152,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 <ShoppingBag className="w-5 h-5 text-[#346853]" />
               )}
               <h2 className="text-xl font-bold text-gray-900">
-                {viewMode === "grouped" ? "Your Cart" : currentGroup?.name}
+                {viewMode === "grouped" ? t("title") : currentGroup?.name}
               </h2>
             </div>
             <button
@@ -163,7 +165,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
           {viewMode === "detail" && (
             <div className="flex items-center mt-2">
               <p className="text-sm text-gray-500">
-                {currentItems.length} items
+                {t("itemsCount", { count: currentItems.length })}
               </p>
             </div>
           )}
@@ -178,22 +180,22 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <p className="font-semibold text-gray-900 text-lg">
-                  Your cart is empty
+                  {t("emptyTitle")}
                 </p>
                 <p className="text-sm mt-1 max-w-[200px] mx-auto">
-                  Looks like you haven't added anything to your cart yet.
+                  {t("emptyMessage")}
                 </p>
               </div>
               <button
                 onClick={onClose}
                 className="mt-4 px-6 py-2.5 bg-[#346853] text-white text-sm font-bold rounded-lg hover:bg-[#2a5443] transition-colors"
               >
-                Start Browsing
+                {t("startBrowsing")}
               </button>
             </div>
           ) : viewMode === "grouped" ? (
             <div className="space-y-6">
-              <h3 className="font-bold text-gray-900 mb-4">Restaurants</h3>
+              <h3 className="font-bold text-gray-900 mb-4">{t("restaurants")}</h3>
               {Object.entries(groupedCart || {}).map(([id, group]) => (
                 <div
                   key={id}
@@ -215,7 +217,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                         {group.name}
                       </h4>
                       <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
-                        {group.items.length} items
+                        {t("itemsCount", { count: group.items.length })}
                       </p>
                     </div>
                   </div>
@@ -260,7 +262,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                       onClick={() => selectRestaurant(id)}
                       className="w-full bg-[#346853] text-white py-2.5 rounded-xl text-xs font-bold hover:bg-[#2a5443] transition-colors flex items-center justify-center gap-1 shadow-sm"
                     >
-                      VIEW CART
+                      {t("viewCartBtn")}
                       <ChevronRight size={14} />
                     </button>
                   </div>
@@ -346,14 +348,14 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
           <div className="p-6 bg-white border-t border-gray-100 space-y-6">
             <div className="space-y-3 text-sm">
               <div className="flex justify-between items-center text-gray-600">
-                <span>Subtotal</span>
+                <span>{t("subtotal")}</span>
                 <span className="font-medium text-gray-900">
                   {currency} {subtotal.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between items-center text-gray-600">
                 <div className="flex items-center gap-1">
-                  <span>Delivery Fee</span>
+                  <span>{t("deliveryFee")}</span>
                   <Info size={12} className="text-gray-400" />
                 </div>
                 <span className="font-medium text-[#346853]">
@@ -361,7 +363,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 </span>
               </div>
               <div className="pt-3 flex justify-between items-center border-t border-gray-50 mt-3">
-                <span className="font-bold text-base text-gray-900">Total</span>
+                <span className="font-bold text-base text-gray-900">{t("total")}</span>
                 <span className="font-bold text-xl text-gray-900">
                   {currency} {total.toFixed(2)}
                 </span>
@@ -372,7 +374,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
               onClick={handleCheckout}
               className="w-full bg-[#346853] text-white py-4 px-6 rounded-xl font-bold flex justify-between items-center hover:bg-[#2a5443] active:scale-[0.99] transition-all duration-200 shadow-lg shadow-[#346853]/20"
             >
-              <span>Go to Checkout</span>
+              <span>{t("goToCheckout")}</span>
               <span>
                 {currency} {total.toFixed(2)}
               </span>

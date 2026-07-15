@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ClipboardList, DollarSign, TrendingUp, Award, Loader2, Search } from "lucide-react";
 import { format } from "date-fns";
 import { useCLC } from "@/context/CLCContext";
@@ -7,31 +8,8 @@ import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { Input } from "@/components/ui/input";
 import GlobalSelect from "@/components/common/GlobalSelect";
 import { usePosHistory, PosOrderRow } from "../hooks/usePosHistory";
-
-const TABLE_COLUMNS = [
-  "Order ID",
-  "Order Type",
-  "Cashier",
-  "Payment Method",
-  "Items",
-  "Total",
-  "Status",
-  "Time",
-];
-
-const ORDER_TYPE_OPTIONS = [
-  { value: "all", label: "All Order Types" },
-  { value: "Dine-In", label: "Dine-In" },
-  { value: "TakeAway", label: "TakeAway" },
-  { value: "Delivery", label: "Delivery" },
-  { value: "Walk-in", label: "Walk-In" },
-];
-
-const PAYMENT_METHOD_OPTIONS = [
-  { value: "all", label: "All Payment Methods" },
-  { value: "Cash", label: "Cash" },
-  { value: "Card", label: "Card" },
-];
+import PosOrderDetailSheet from "../components/PosOrderDetailSheet";
+import { useTranslations } from "next-intl";
 
 const STATUS_STYLES: Record<string, string> = {
   pending: "bg-amber-50 text-amber-600",
@@ -40,12 +18,23 @@ const STATUS_STYLES: Record<string, string> = {
   rejected: "bg-red-50 text-red-500",
 };
 
-function StatusPill({ status }: { status: string }) {
+const KNOWN_STATUSES = [
+  "pending",
+  "prepare",
+  "complete",
+  "completed",
+  "cancelled",
+  "rejected",
+];
+
+export function StatusPill({ status }: { status: string }) {
+  const t = useTranslations("POS.history.status");
   const key = (status || "").toLowerCase();
   const style = STATUS_STYLES[key] || "bg-gray-100 text-gray-600";
+  const label = KNOWN_STATUSES.includes(key) ? t(key) : status;
   return (
     <span className={`inline-flex px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide ${style}`}>
-      {status}
+      {label}
     </span>
   );
 }
@@ -56,7 +45,43 @@ function itemsSummary(order: PosOrderRow) {
 }
 
 export default function PosHistoryView() {
+  const t = useTranslations("POS.history");
   const { formatPrice } = useCLC();
+  const [selectedOrder, setSelectedOrder] = useState<PosOrderRow | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+
+  const TABLE_COLUMNS = [
+    t("columns.orderId"),
+    t("columns.orderType"),
+    t("columns.cashier"),
+    t("columns.paymentMethod"),
+    t("columns.items"),
+    t("columns.total"),
+    t("columns.status"),
+    t("columns.time"),
+  ];
+
+  const ORDER_TYPE_OPTIONS = [
+    { value: "all", label: t("filters.allOrderTypes") },
+    { value: "Dine-In", label: t("filters.dineIn") },
+    { value: "TakeAway", label: t("filters.takeAway") },
+    { value: "Delivery", label: t("filters.delivery") },
+    { value: "Walk-in", label: t("filters.walkIn") },
+  ];
+
+  const PAYMENT_METHOD_OPTIONS = [
+    { value: "all", label: t("filters.allPaymentMethods") },
+    { value: "Cash", label: t("filters.cash") },
+    { value: "Card", label: t("filters.card") },
+  ];
+
+  const STATUS_OPTIONS = [
+    { value: "all", label: t("filters.allStatuses") },
+    { value: "pending", label: t("filters.pending") },
+    { value: "prepare", label: t("filters.preparing") },
+    { value: "complete", label: t("filters.completed") },
+    { value: "cancelled", label: t("filters.cancelled") },
+  ];
   const {
     stats,
     statsLoading,
@@ -69,28 +94,30 @@ export default function PosHistoryView() {
     setOrderType,
     paymentMethod,
     setPaymentMethod,
+    status,
+    setStatus,
     searchQuery,
     setSearchQuery,
   } = usePosHistory();
 
   const STATS = [
     {
-      label: "Total Orders",
+      label: t("stats.totalOrders"),
       icon: ClipboardList,
       value: stats ? stats.totalOrders : "--",
     },
     {
-      label: "Total Sales",
+      label: t("stats.totalSales"),
       icon: DollarSign,
       value: stats ? formatPrice(stats.totalSales) : "--",
     },
     {
-      label: "Avg. Order Value",
+      label: t("stats.avgOrderValue"),
       icon: TrendingUp,
       value: stats ? formatPrice(stats.avgOrderValue) : "--",
     },
     {
-      label: "Top Seller (Cashier)",
+      label: t("stats.topSeller"),
       icon: Award,
       value: stats?.topSeller ? stats.topSeller.name : "--",
     },
@@ -123,14 +150,16 @@ export default function PosHistoryView() {
       {/* Orders Table */}
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <h3 className="font-bold text-[15px] text-[#1a1a1a] shrink-0">Orders</h3>
+          <h3 className="font-bold text-[15px] text-[#1a1a1a] shrink-0">
+            {t("ordersTitle")}
+          </h3>
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <div className="relative w-full sm:w-[220px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search orders..."
+                placeholder={t("searchPlaceholder")}
                 className="pl-9 h-10 bg-white border-gray-200 focus:ring-[#1F4D36] focus:border-[#1F4D36]"
               />
             </div>
@@ -139,7 +168,7 @@ export default function PosHistoryView() {
                 value={orderType}
                 onChange={setOrderType}
                 options={ORDER_TYPE_OPTIONS}
-                placeholder="Order Type"
+                placeholder={t("orderTypePlaceholder")}
                 className="h-10"
               />
             </div>
@@ -148,7 +177,16 @@ export default function PosHistoryView() {
                 value={paymentMethod}
                 onChange={setPaymentMethod}
                 options={PAYMENT_METHOD_OPTIONS}
-                placeholder="Payment Method"
+                placeholder={t("paymentMethodPlaceholder")}
+                className="h-10"
+              />
+            </div>
+            <div className="w-full sm:w-[170px]">
+              <GlobalSelect
+                value={status}
+                onChange={setStatus}
+                options={STATUS_OPTIONS}
+                placeholder={t("statusPlaceholder")}
                 className="h-10"
               />
             </div>
@@ -175,7 +213,9 @@ export default function PosHistoryView() {
                   <td colSpan={TABLE_COLUMNS.length} className="px-5 py-16">
                     <div className="flex flex-col items-center justify-center text-gray-400">
                       <Loader2 className="w-6 h-6 mb-2 animate-spin" />
-                      <p className="text-[13px] font-medium">Loading orders...</p>
+                      <p className="text-[13px] font-medium">
+                        {t("loadingOrders")}
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -184,16 +224,23 @@ export default function PosHistoryView() {
                   <td colSpan={TABLE_COLUMNS.length} className="px-5 py-16">
                     <div className="flex flex-col items-center justify-center text-gray-400">
                       <ClipboardList className="w-10 h-10 mb-3 text-gray-200" />
-                      <p className="font-bold text-[14px]">No data</p>
+                      <p className="font-bold text-[14px]">{t("noData")}</p>
                       <p className="text-[12px] text-gray-400 mt-1">
-                        Order data will appear here once connected.
+                        {t("noDataHint")}
                       </p>
                     </div>
                   </td>
                 </tr>
               ) : (
                 orders.map((order) => (
-                  <tr key={order.id} className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50">
+                  <tr
+                    key={order.id}
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setDetailOpen(true);
+                    }}
+                    className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50 cursor-pointer"
+                  >
                     <td className="px-5 py-3.5 text-[13px] font-bold text-[#357252]">{order.id}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.orderType}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.userId}</td>
@@ -226,6 +273,12 @@ export default function PosHistoryView() {
           />
         )}
       </div>
+
+      <PosOrderDetailSheet
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        order={selectedOrder}
+      />
     </div>
   );
 }

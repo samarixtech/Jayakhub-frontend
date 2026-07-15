@@ -150,7 +150,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
       const newFiles = Array.from(e.target.files);
 
       if (attachedFiles.length + newFiles.length > 5) {
-        toast.error("You can upload a maximum of 5 files.");
+        toast.error(t("maxFiles"));
         return;
       }
 
@@ -161,13 +161,13 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
       });
 
       if (invalidTypeFiles.length > 0) {
-        toast.error("Only JPG, PNG, WEBP, and PDF files are allowed.");
+        toast.error(t("invalidFileType"));
         return;
       }
 
       const largeFiles = newFiles.filter(file => file.size > 5 * 1024 * 1024);
       if (largeFiles.length > 0) {
-        toast.error("Each file must be under 5MB.");
+        toast.error(t("fileTooLarge"));
         return;
       }
 
@@ -246,7 +246,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
     return (
       <div className="w-full max-w-[1200px] mx-auto py-12 flex flex-col items-center justify-center min-h-[400px]">
         <Loader2 className="w-8 h-8 text-[#0b5d4e] animate-spin" />
-        <p className="text-[14px] text-gray-500 mt-4">Loading ticket details...</p>
+        <p className="text-[14px] text-gray-500 mt-4">{t("loadingDetails")}</p>
       </div>
     );
   }
@@ -283,19 +283,19 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
               <span className="text-gray-200 hidden sm:inline">|</span>
               <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-semibold text-gray-500 shrink-0">
                 <Hash className="w-3.5 h-3.5 text-gray-400" />
-                <span>Ticket {ticket.id}</span>
+                <span>{t("ticketIdLabel", { id: ticket.id })}</span>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
               <div className={`flex items-center gap-1 border px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-semibold ${getPriorityColor(ticket.priority)}`}>
                 <Flag className="w-3.5 h-3.5" />
-                <span>Priority {ticket.priority}</span>
+                <span>{t("priorityPrefix", { priority: ticket.priority })}</span>
               </div>
 
               <div className="flex items-center gap-1 bg-gray-50 border border-gray-100 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-[11px] font-semibold text-gray-500">
                 <Clock className="w-3.5 h-3.5 text-gray-400" />
-                <span className="max-w-[180px] sm:max-w-none truncate">Updated {formatDate(ticket.updatedAt)}</span>
+                <span className="max-w-[180px] sm:max-w-none truncate">{t("updatedPrefix", { date: formatDate(ticket.updatedAt) })}</span>
               </div>
 
               <StatusBadge status={ticket.status} />
@@ -342,7 +342,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
                       {msg.attachments.map((filePath, idx) => {
                         const url = getAttachmentUrl(filePath);
                         const isImg = isImageUrl(filePath);
-                        const fileName = filePath.split("/").pop() || "Attachment";
+                        const fileName = filePath.split("/").pop() || t("attachmentFallback");
 
                         if (isImg) {
                           return (

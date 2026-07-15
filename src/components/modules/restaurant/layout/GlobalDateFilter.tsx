@@ -39,7 +39,7 @@ export default function GlobalDateFilter() {
     <div className="flex items-center gap-3 bg-gray-50/80 p-1.5 rounded-xl border border-gray-100/80 shadow-sm">
       {/* Start Date */}
       <div className="flex items-center gap-1.5">
-        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider pl-1.5">From</span>
+        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider pl-1.5">{t("from")}</span>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -47,7 +47,7 @@ export default function GlobalDateFilter() {
               className="h-8 justify-between text-left font-normal border border-gray-200 bg-white rounded-lg px-2.5 text-gray-800 cursor-pointer hover:border-primary/30 hover:bg-gray-50/50 transition-all text-xs min-w-[115px] shadow-sm"
             >
               <span className="truncate">
-                {tempStartDate ? format(tempStartDate, "MM/dd/yyyy") : "Start Date"}
+                {tempStartDate ? format(tempStartDate, "MM/dd/yyyy") : t("startDate")}
               </span>
               <CalendarIcon className="h-3.5 w-3.5 text-gray-400 shrink-0 ml-1.5" />
             </Button>
@@ -65,7 +65,7 @@ export default function GlobalDateFilter() {
 
       {/* End Date */}
       <div className="flex items-center gap-1.5">
-        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">To</span>
+        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t("to")}</span>
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -73,7 +73,7 @@ export default function GlobalDateFilter() {
               className="h-8 justify-between text-left font-normal border border-gray-200 bg-white rounded-lg px-2.5 text-gray-800 cursor-pointer hover:border-primary/30 hover:bg-gray-50/50 transition-all text-xs min-w-[115px] shadow-sm"
             >
               <span className="truncate">
-                {tempEndDate ? format(tempEndDate, "MM/dd/yyyy") : "End Date"}
+                {tempEndDate ? format(tempEndDate, "MM/dd/yyyy") : t("endDate")}
               </span>
               <CalendarIcon className="h-3.5 w-3.5 text-gray-400 shrink-0 ml-1.5" />
             </Button>
@@ -109,7 +109,7 @@ export default function GlobalDateFilter() {
             clearDates();
           }}
           className="h-7 w-7 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer shrink-0 ml-1"
-          title="Clear Dates"
+          title={t("clearDates")}
         >
           <X className="h-4 w-4" />
         </Button>

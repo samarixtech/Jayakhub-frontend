@@ -110,7 +110,7 @@ export const RecentActivity = ({
                   <Badge
                     className={`rounded-full px-3 py-0.5 text-[10px] font-bold border-none ${statusStyle.bg} ${statusStyle.color}`}
                   >
-                    {getStatusLabel(order.OrderStatus)}
+                    {getStatusLabel(order.OrderStatus, t)}
                   </Badge>
                   <Typography className="text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-tighter">
                     {formatOrderDateTime(order.orderDate, order.orderTime)}

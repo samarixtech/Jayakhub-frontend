@@ -6,6 +6,7 @@ import { useCLC } from "@/context/CLCContext";
 import { toast } from "react-hot-toast";
 import { validateCouponAction } from "@/app/actions/public/coupon";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface CartItem {
   id?: string;
@@ -48,6 +49,7 @@ const OrderSummary = ({
   onCouponApplied,
 }: OrderSummaryProps) => {
   const { currency } = useCLC();
+  const t = useTranslations("Checkout");
   const [isApplying, setIsApplying] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
 
@@ -55,7 +57,7 @@ const OrderSummary = ({
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
-      toast.error("Please enter a coupon code.");
+      toast.error(t("couponEmptyError"));
       return;
     }
     setIsApplying(true);
@@ -69,12 +71,12 @@ const OrderSummary = ({
         };
         setAppliedCoupon(coupon);
         onCouponApplied?.(coupon.finalTotal);
-        toast.success("Coupon applied successfully!");
+        toast.success(t("couponAppliedToast"));
       } else {
-        toast.error(res.message || "Invalid coupon code.");
+        toast.error(res.message || t("couponInvalid"));
       }
     } catch {
-      toast.error("Failed to validate coupon. Please try again.");
+      toast.error(t("couponValidateFailed"));
     } finally {
       setIsApplying(false);
     }
@@ -95,17 +97,17 @@ const OrderSummary = ({
         </div>
         <div>
           <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">
-            Est. Delivery Time
+            {t("estDeliveryTime")}
           </p>
-          <p className="font-bold text-gray-900">25 - 35 mins</p>
+          <p className="font-bold text-gray-900">{t("estDeliveryTimeValue")}</p>
         </div>
       </div>
 
       {/* Items List */}
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-        <h3 className="font-bold text-lg mb-1">Your items</h3>
+        <h3 className="font-bold text-lg mb-1">{t("yourItems")}</h3>
         <p className="text-sm text-gray-500 mb-6">
-          From: {cartItems[0]?.restaurantName || "Restaurant"}
+          {t("fromRestaurant", { name: cartItems[0]?.restaurantName || t("restaurantFallback") })}
         </p>
 
         <div className="space-y-4 mb-6">
@@ -135,16 +137,16 @@ const OrderSummary = ({
         {/* Pricing Breakdown */}
         <div className="space-y-2 text-sm border-t border-gray-100 pt-4 mb-4">
           <div className="flex justify-between text-gray-500">
-            <span>Subtotal</span>
+            <span>{t("subtotal")}</span>
             <span>{currency}{subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-gray-500">
-            <span>Delivery Fee</span>
+            <span>{t("deliveryFee")}</span>
             <span>{currency}{deliveryFee.toFixed(2)}</span>
           </div>
           {appliedCoupon && (
             <div className="flex justify-between text-emerald-600 font-medium">
-              <span>Discount ({appliedCoupon.couponCode})</span>
+              <span>{t("discountLabel", { code: appliedCoupon.couponCode })}</span>
               <span>- {currency}{appliedCoupon.discountAmount.toFixed(2)}</span>
             </div>
           )}
@@ -152,7 +154,7 @@ const OrderSummary = ({
 
         {/* Total */}
         <div className="flex justify-between items-center pt-2 mb-6">
-          <span className="font-bold text-lg">Total</span>
+          <span className="font-bold text-lg">{t("total")}</span>
           <div className="text-right">
             {appliedCoupon && (
               <span className="text-gray-400 line-through text-sm mr-2">
@@ -170,7 +172,7 @@ const OrderSummary = ({
           <div className="flex items-center justify-between mb-6 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-lg">
             <div className="flex items-center gap-2 text-emerald-700 text-sm font-medium">
               <Tag size={16} />
-              <span>{appliedCoupon.couponCode} applied</span>
+              <span>{t("couponApplied", { code: appliedCoupon.couponCode })}</span>
             </div>
             <button
               type="button"
@@ -187,7 +189,7 @@ const OrderSummary = ({
             </div>
             <input
               type="text"
-              placeholder="Promo code"
+              placeholder={t("promoPlaceholder")}
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
@@ -199,7 +201,7 @@ const OrderSummary = ({
               disabled={isApplying}
               className="text-xs font-bold text-[#346853] px-3 hover:underline disabled:opacity-50"
             >
-              {isApplying ? <Loader2 size={14} className="animate-spin" /> : "APPLY"}
+              {isApplying ? <Loader2 size={14} className="animate-spin" /> : t("applyBtn")}
             </button>
           </div>
         )}
@@ -212,13 +214,13 @@ const OrderSummary = ({
           {isPlacingOrder ? (
             <Loader2 className="animate-spin" size={18} />
           ) : (
-            "Place Order"
+            t("placeOrderBtn")
           )}
         </Button>
 
         <p className="text-[10px] text-gray-400 text-center mt-3 leading-tight">
-          By placing your order, you agree to {"JayakHub's"}{" "}
-          <Link href="/terms-of-service" className="underline cursor-pointer">Terms & Conditions</Link>.
+          {t("agreeToOrderPrefix")}{" "}
+          <Link href="/terms-of-service" className="underline cursor-pointer">{t("termsAndConditions")}</Link>.
         </p>
       </div>
     </div>

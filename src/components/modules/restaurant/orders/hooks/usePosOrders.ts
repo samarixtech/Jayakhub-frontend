@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Bell, ChefHat, CheckCircle2 } from "lucide-react";
+import { getCookie } from "cookies-next";
 import { getCartListAction, updateCartStatusAction } from "@/app/actions/restaurant/cart";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export enum PosOrderStatus {
   COMPLETE = "complete",
@@ -28,7 +30,11 @@ const BASE_POLL_INTERVAL = 30_000;
 const MAX_POLL_INTERVAL = 300_000; // 5 min cap
 
 export const usePosOrders = () => {
-  const [activeTab, setActiveTab] = useState<OrderStatus>("incoming");
+  const t = useTranslations("POS.posOrders");
+  const isKitchen = getCookie("role") === "kitchen";
+  const [activeTab, setActiveTab] = useState<OrderStatus>(
+    isKitchen ? "preparing" : "incoming",
+  );
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const isFetchingRef = useRef(false);
@@ -46,7 +52,9 @@ export const usePosOrders = () => {
   const calculateTimeAgo = (dateString: string) => {
     const timeAgoMs = Date.now() - new Date(dateString).getTime();
     const minutesAgo = Math.max(0, Math.floor(timeAgoMs / 60000));
-    return minutesAgo < 1 ? "Just now" : `${minutesAgo}m ago`;
+    return minutesAgo < 1
+      ? t("justNow")
+      : t("minutesAgo", { minutes: minutesAgo });
   };
 
   const fetchOrders = useCallback(async () => {
@@ -70,7 +78,9 @@ export const usePosOrders = () => {
             
             mapped.push({
               id: order.id,
-              customerName: order.tableName ? `Table ${order.tableName}` : (order.orderType || "Walk-In"),
+              customerName: order.tableName
+                ? t("table", { name: order.tableName })
+                : order.orderType || t("walkIn"),
               timeAgo: calculateTimeAgo(order.createdAt),
               items: formattedItems,
               total: parseFloat(order.grandTotal || "0"),
@@ -99,7 +109,7 @@ export const usePosOrders = () => {
       isFetchingRef.current = false;
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchOrders();
@@ -120,14 +130,14 @@ export const usePosOrders = () => {
     try {
       const res = await updateCartStatusAction(orderId, newApiStatus);
       if (res.success) {
-        toast.success(`Order status updated`);
+        toast.success(t("toasts.statusUpdated"));
         fetchOrders();
       } else {
-        toast.error(res.message || "Failed to update order status");
+        toast.error(res.message || t("toasts.updateFailed"));
       }
     } catch (err) {
       console.error("Status update error:", err);
-      toast.error("Error updating order status");
+      toast.error(t("toasts.updateError"));
     }
   };
 
@@ -153,23 +163,23 @@ export const usePosOrders = () => {
   const tabs = [
     {
       id: "incoming" as const,
-      label: "Incoming",
+      label: t("tabs.incoming"),
       count: incomingOrders.length,
       icon: Bell,
     },
     {
       id: "preparing" as const,
-      label: "Preparing",
+      label: t("tabs.preparing"),
       count: preparingOrders.length,
       icon: ChefHat,
     },
     {
       id: "ready" as const,
-      label: "Completed",
+      label: t("tabs.completed"),
       count: readyOrders.length,
       icon: CheckCircle2,
     },
-  ];
+  ].filter((tab) => !isKitchen || tab.id !== "incoming");
 
   const currentOrders =
     activeTab === "incoming"

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   restaurantInfoSchema,
   RestaurantInfoInput,
@@ -16,6 +17,7 @@ export const useStepRestaurantInfo = () => {
   const router = useRouter();
   const { country, language } = useLocale();
   const { nextStep } = useOnboarding();
+  const t = useTranslations("Onboarding.restaurantInfoView");
 
   const form = useForm<RestaurantInfoInput>({
     resolver: zodResolver(restaurantInfoSchema),
@@ -64,7 +66,7 @@ export const useStepRestaurantInfo = () => {
       JSON.stringify(dataToSave),
     );
 
-    toast.success("Restaurant info saved");
+    toast.success(t("toastSaved"));
     nextStep();
     router.push(`/restaurant/onboarding/step-brand-assets`);
   };

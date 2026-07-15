@@ -9,10 +9,12 @@ import {
   deleteVariantGroupAction,
 } from "@/app/actions/restaurant/menu";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 const INITIAL_OPTIONS = [{ name: "", price: "0" }];
 
 export const useMenuVariants = () => {
+  const t = useTranslations("RestaurantDashboard.Menu.VariantGroups.toasts");
   const [variants, setVariants] = useState<any[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -95,7 +97,7 @@ export const useMenuVariants = () => {
 
   const handleSaveGroup = async () => {
     if (!groupName) {
-      toast.error("Please enter a group name");
+      toast.error(t("nameRequired"));
       return;
     }
 

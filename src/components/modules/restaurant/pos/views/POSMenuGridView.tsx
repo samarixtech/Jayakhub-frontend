@@ -8,8 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { AppDispatch, RootState } from "@/redux/store/store";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export default function POSMenuGrid() {
+  const t = useTranslations("POS.menuGrid");
   const { posItems, isPosLoading, setIsCartOpen, selectedTable } = usePOS();
   const { formatPrice } = useCLC();
   const dispatch = useDispatch<AppDispatch>();
@@ -41,7 +43,7 @@ export default function POSMenuGrid() {
   if (!posItems || posItems.length === 0) {
     return (
       <div className="flex-1 bg-[#f4f5f7] p-3 sm:p-4 flex flex-col items-center justify-center w-full text-gray-400">
-        <p className="text-sm font-medium">No items found in this category.</p>
+        <p className="text-sm font-medium">{t("noItems")}</p>
       </div>
     );
   }
@@ -53,9 +55,7 @@ export default function POSMenuGrid() {
           const imageUrl = item.image;
 
           const discountAmt = item.discount ? parseFloat(item.discount) : 0;
-          const effectivePrice = discountAmt > 0
-            ? item.basePrice - discountAmt
-            : item.basePrice;
+          const effectivePrice = Number(item.basePrice) - discountAmt;
 
           return (
             <div
@@ -63,7 +63,7 @@ export default function POSMenuGrid() {
               onClick={() => {
                 if (orderType === "Dine-In") {
                   if (!selectedTable) {
-                    toast.error("Please select a table before adding items.");
+                    toast.error(t("selectTableFirst"));
                     return;
                   }
 
@@ -73,7 +73,7 @@ export default function POSMenuGrid() {
 
                   if (isTablePending) {
                     toast.error(
-                      `Table ${selectedTable.name} already has a pending order.`,
+                      t("tablePending", { table: selectedTable.name }),
                     );
                     return;
                   }
@@ -83,7 +83,7 @@ export default function POSMenuGrid() {
                     selectedTable.status === "Occupied"
                   ) {
                     toast.error(
-                      `Table ${selectedTable.name} is not available.`,
+                      t("tableNotAvailable", { table: selectedTable.name }),
                     );
                     return;
                   }
@@ -95,7 +95,7 @@ export default function POSMenuGrid() {
                     name: item.name,
                     description: item.description || "",
                     price: effectivePrice,
-                    basePrice: item.basePrice,
+                    basePrice: Number(item.basePrice),
                     discount: item.discount,
                     quantity: 1,
                     image: imageUrl,

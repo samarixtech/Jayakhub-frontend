@@ -192,9 +192,9 @@ export function Calculator() {
                 <div className="text-[12px] font-bold tracking-[0.12em] uppercase mb-[18px]" style={{ color: C.gold }}>{t('tool.results_title')}</div>
 
                 {[
-                  { name: platforms[0]?.name || "Talabat (28%)", cost: talabat },
-                  { name: platforms[1]?.name || "Careem Now (~22%)", cost: careem },
-                  { name: platforms[2]?.name || "Lezzoo / Toters (~20%)", cost: lezzoo },
+                  { name: platforms[0]?.name || t('tool.platformFallbacks.0'), cost: talabat },
+                  { name: platforms[1]?.name || t('tool.platformFallbacks.1'), cost: careem },
+                  { name: platforms[2]?.name || t('tool.platformFallbacks.2'), cost: lezzoo },
                 ].map(({ name, cost }) => (
                   <div key={name} className="flex justify-between items-baseline py-3 border-b border-white/15">
                     <span className="text-[15px] opacity-90">{name}</span>
@@ -258,7 +258,7 @@ export function Calculator() {
                           )}
                         </span>
                         <span className="text-[11px] font-semibold uppercase tracking-[0.05em] opacity-70">
-                          {currencySymbol}{tier.price}/mo{tier.founding ? " for life" : ""}
+                          {currencySymbol}{tier.price}{t('tool.perMonth')}{tier.founding ? ` ${t('tool.forLife')}` : ""}
                         </span>
                       </div>
 
@@ -276,7 +276,7 @@ export function Calculator() {
                           className="text-[11px] font-bold tracking-[0.03em]"
                           style={{ color: isSelected ? C.gold : "#B7E4B7" }}
                         >
-                          {saves[tier.id] > 0 ? `save ${fmt(saves[tier.id])}/mo` : ""}
+                          {saves[tier.id] > 0 ? t('tool.saveAmount', { amount: fmt(saves[tier.id]) }) : ""}
                         </span>
                       </div>
                     </div>

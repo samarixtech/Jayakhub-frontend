@@ -33,8 +33,10 @@ import TableModal from "./TableModal";
 import ItemModifiersModal from "./ItemModifiersModal";
 import PaymentModal from "./PaymentModal";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export default function POSCartPanel() {
+  const t = useTranslations("POS.cart");
   const { formatPrice } = useCLC();
   const { isCartOpen, setIsCartOpen, setActiveModifierItemId, selectedTable } =
     usePOS();
@@ -69,7 +71,7 @@ export default function POSCartPanel() {
               tableName: selectedTable?.name || undefined,
             }),
           );
-          toast.success("Order saved to Pending!");
+          toast.success(t("savedToPending"));
         }
       } else if (e.key === "F3") {
         e.preventDefault();
@@ -85,9 +87,9 @@ export default function POSCartPanel() {
 
   const subtotal = cartItems.reduce((acc, item) => {
     const extraPrice = item.selectedVariations?.length
-      ? item.selectedVariations.reduce((s, v) => s + (v.additionalPrice ?? 0), 0)
-      : (item.selectedVariation?.additionalPrice ?? 0);
-    return acc + (item.price + extraPrice) * item.quantity;
+      ? item.selectedVariations.reduce((s, v) => s + (Number(v.additionalPrice) || 0), 0)
+      : (Number(item.selectedVariation?.additionalPrice) || 0);
+    return acc + (Number(item.price) + extraPrice) * item.quantity;
   }, 0);
   const total = subtotal;
 
@@ -116,8 +118,8 @@ export default function POSCartPanel() {
             className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold transition-all ${orderType === "Dine-In" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
           >
             <Utensils className="w-[13px] h-[13px]" />{" "}
-            <span className="hidden lg:inline">Dine-In</span>
-            <span className="lg:hidden">Dine</span>
+            <span className="hidden lg:inline">{t("dineIn")}</span>
+            <span className="lg:hidden">{t("dine")}</span>
           </button>
           <div className="w-px bg-gray-200"></div>
           <button
@@ -125,15 +127,15 @@ export default function POSCartPanel() {
             className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "TakeAway" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
           >
             <ShoppingBag className="w-[13px] h-[13px]" />{" "}
-            <span className="hidden lg:inline">Takeaway</span>
-            <span className="lg:hidden">Take</span>
+            <span className="hidden lg:inline">{t("takeaway")}</span>
+            <span className="lg:hidden">{t("take")}</span>
           </button>
           <div className="w-px bg-gray-200"></div>
           <button
             onClick={() => dispatch(setOrderType("Delivery"))}
             className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "Delivery" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
           >
-            <Bike className="w-[13px] h-[13px]" /> Delivery
+            <Bike className="w-[13px] h-[13px]" /> {t("delivery")}
           </button>
         </div>
       </div>
@@ -148,10 +150,10 @@ export default function POSCartPanel() {
                 className="flex-1 px-3 border-r border-gray-100 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors"
               >
                 <span className="text-gray-400 font-extrabold uppercase tracking-wider text-[9px]">
-                  Table
+                  {t("table")}
                 </span>
                 <span className="font-black text-[#111] text-[12px]">
-                  {selectedTable ? selectedTable.name : "Select"}
+                  {selectedTable ? selectedTable.name : t("select")}
                 </span>
               </div>
             )}
@@ -160,7 +162,7 @@ export default function POSCartPanel() {
             >
               <User className="w-[12px] h-[12px] text-[#357252] stroke-[2.5px]" />
               <span className="font-bold text-[#111] text-[12px] truncate">
-                Walk-In
+                {t("walkIn")}
               </span>
             </div>
           </div>
@@ -197,10 +199,10 @@ export default function POSCartPanel() {
                 <ReceiptText className="w-10 h-10 text-gray-200 stroke-[1.5px]" />
               </div>
               <p className="font-bold text-gray-400 text-[13px]">
-                No items yet
+                {t("noItemsYet")}
               </p>
               <p className="text-[11px] mt-0.5 text-gray-300 font-medium text-center px-4">
-                Tap a menu item to start your order
+                {t("tapToStart")}
               </p>
             </div>
           ) : (
@@ -217,9 +219,9 @@ export default function POSCartPanel() {
                     <span className="font-black text-[#111827] text-[13px] shrink-0">
                       {(() => {
                         const extra = item.selectedVariations?.length
-                          ? item.selectedVariations.reduce((s: number, v: any) => s + (v.additionalPrice ?? 0), 0)
-                          : (item.selectedVariation?.additionalPrice ?? 0);
-                        return formatPrice((item.price + extra) * item.quantity);
+                          ? item.selectedVariations.reduce((s: number, v: any) => s + (Number(v.additionalPrice) || 0), 0)
+                          : (Number(item.selectedVariation?.additionalPrice) || 0);
+                        return formatPrice((Number(item.price) + extra) * item.quantity);
                       })()}
                     </span>
                   </div>
@@ -287,7 +289,7 @@ export default function POSCartPanel() {
                       }}
                       className="flex-1 py-1 rounded-md bg-[#edf6f1] text-[#357252] hover:bg-[#d6efe6] text-[10px] font-bold transition-colors"
                     >
-                      Modifiers
+                      {t("modifiers")}
                     </button>
                     <button
                       onClick={() =>
@@ -295,7 +297,7 @@ export default function POSCartPanel() {
                       }
                       className="flex-1 py-1 rounded-md bg-red-50 text-[#ef4444] hover:bg-red-100 text-[10px] font-bold transition-colors"
                     >
-                      Remove
+                      {t("remove")}
                     </button>
                   </div>
                 </div>
@@ -309,20 +311,20 @@ export default function POSCartPanel() {
       <div className="p-3 sm:p-4 border-t border-gray-100 bg-white shrink-0 mt-auto">
         <div className="space-y-[4px] text-[12px] mb-4">
           <div className="flex justify-between text-gray-400 font-medium">
-            <span>Items</span>
+            <span>{t("items")}</span>
             <span className="text-gray-700">
               {cartItems.reduce((acc, item) => acc + item.quantity, 0)}
             </span>
           </div>
           <div className="flex justify-between text-gray-400 font-medium">
-            <span>Subtotal</span>
+            <span>{t("subtotal")}</span>
             <span className="text-gray-700">{formatPrice(subtotal)}</span>
           </div>
         </div>
 
         <div className="flex justify-between items-center mb-3 sm:mb-4">
           <span className="font-black text-gray-900 text-[15px] sm:text-[16px]">
-            Total
+            {t("total")}
           </span>
           <span className="font-black text-gray-900 text-[15px] sm:text-[16px]">
             {formatPrice(total)}
@@ -339,7 +341,7 @@ export default function POSCartPanel() {
                     tableName: selectedTable?.name || undefined,
                   }),
                 );
-                toast.success("Order saved to Pending!");
+                toast.success(t("savedToPending"));
               }
             }}
             disabled={cartItems.length === 0}
@@ -347,7 +349,7 @@ export default function POSCartPanel() {
           >
             <Clock className="w-[16px] h-[16px] stroke-[2px]" />
             <span className="text-[10px] uppercase font-black tracking-tight">
-              Pay Later
+              {t("payLater")}
             </span>
           </button>
           <button
@@ -355,7 +357,7 @@ export default function POSCartPanel() {
             className="flex-1 bg-[#1eb589] hover:bg-[#159a72] text-white font-bold py-2 md:py-2.5 rounded-[6px] flex items-center justify-center gap-1.5 text-[14px] transition-colors shadow-[0_1px_2px_rgba(30,181,137,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={cartItems.length === 0}
           >
-            Pay →
+            {t("pay")}
           </button>
         </div>
       </div>
@@ -374,7 +376,7 @@ export default function POSCartPanel() {
           className="p-0 w-full sm:w-[400px] bg-white border-l-0 flex flex-col"
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Shopping Cart</SheetTitle>
+            <SheetTitle>{t("shoppingCart")}</SheetTitle>
           </SheetHeader>
           <div className="flex-1 overflow-hidden">
             <CartContent />

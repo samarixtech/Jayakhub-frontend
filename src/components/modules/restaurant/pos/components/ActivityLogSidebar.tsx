@@ -16,6 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { getNotifications } from "@/app/actions/customer/notifications";
+import { useTranslations } from "next-intl";
 
 interface ActivityLogSidebarProps {
   open: boolean;
@@ -26,6 +27,7 @@ export default function ActivityLogSidebar({
   open,
   onOpenChange,
 }: ActivityLogSidebarProps) {
+  const t = useTranslations("POS.activityLog");
   const [logs, setLogs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -94,7 +96,7 @@ export default function ActivityLogSidebar({
       >
         <SheetHeader className="px-6 py-5 border-b border-gray-100 shrink-0 text-left">
           <SheetTitle className="text-[18px] sm:text-[20px] font-black text-[#1f2937]">
-            Activity Log
+            {t("title")}
           </SheetTitle>
         </SheetHeader>
 
@@ -105,7 +107,7 @@ export default function ActivityLogSidebar({
             </div>
           ) : logs.length === 0 ? (
             <div className="flex justify-center py-10 text-gray-400 font-medium text-[13px]">
-              No activity logs found.
+              {t("empty")}
             </div>
           ) : (
             <div className="flex flex-col gap-5">

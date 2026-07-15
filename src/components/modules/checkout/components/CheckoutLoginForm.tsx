@@ -1,9 +1,11 @@
 import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export const CheckoutLoginForm = () => {
   const router = useRouter();
+  const t = useTranslations("Checkout");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 bg-white p-10 rounded-2xl shadow-sm border border-gray-100">
@@ -12,11 +14,10 @@ export const CheckoutLoginForm = () => {
       </div>
       <div className="space-y-2">
         <h2 className="text-2xl font-bold text-gray-900">
-          Login to Place Order
+          {t("loginTitle")}
         </h2>
         <p className="text-gray-500 max-w-sm mx-auto">
-          Please sign in or create an account to proceed with your order and
-          manage your delivery details.
+          {t("loginSubtitle")}
         </p>
       </div>
       <div className="flex gap-4">
@@ -24,7 +25,7 @@ export const CheckoutLoginForm = () => {
           onClick={() => router.push("/login")}
           className="bg-[#346853] hover:bg-[#2a5443] text-white px-8 rounded-full font-bold h-12"
         >
-          Login / Sign Up
+          {t("loginBtn")}
         </Button>
       </div>
     </div>

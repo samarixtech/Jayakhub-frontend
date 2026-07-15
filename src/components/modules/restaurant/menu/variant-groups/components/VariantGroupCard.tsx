@@ -71,7 +71,7 @@ export const VariantGroupCard: React.FC<VariantGroupCardProps> = ({
           >
             <span className="mr-2">{opt.name}</span>
             <span className="font-bold text-[#1F4D36]">
-              {opt.isFree ? "Free" : `+${formatPrice(opt.price)}`}
+              {opt.isFree ? t("free") : `+${formatPrice(opt.price)}`}
             </span>
           </div>
         ))}

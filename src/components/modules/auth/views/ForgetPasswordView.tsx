@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,13 +20,11 @@ import { useForgotPassword } from "../hooks/useForgotPassword";
 
 export default function ForgotPasswordView() {
   const { form, onSubmit, isPending } = useForgotPassword();
+  const t = useTranslations("Auth.forgotPassword");
 
   return (
     <Card className="border-none shadow-none bg-transparent">
-      <AuthHeader
-        title="Reset Password"
-        description="We will send a 6-digit verification code to your email to reset your password."
-      />
+      <AuthHeader title={t("title")} description={t("subtitle")} />
 
       <CardContent className="px-0">
         <Form {...form}>
@@ -36,11 +35,11 @@ export default function ForgotPasswordView() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-600 ml-1">
-                    Email Address
+                    {t("emailLabel")}
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="example@mail.com"
+                      placeholder={t("emailPlaceholder")}
                       className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                       {...field}
                     />
@@ -58,7 +57,7 @@ export default function ForgotPasswordView() {
               {isPending ? (
                 <Loader2 className="mr-2 h-6 w-6 animate-spin" />
               ) : (
-                "Send OTP"
+                t("submit")
               )}
             </Button>
           </form>
@@ -66,12 +65,12 @@ export default function ForgotPasswordView() {
 
         <div className="text-center mt-8">
           <Typography variant="small" className="text-gray-600">
-            Remember your password?{" "}
+            {t("rememberPassword")}{" "}
             <Link
               href="/login"
               className="font-bold text-emerald-bg hover:underline"
             >
-              Login
+              {t("login")}
             </Link>
           </Typography>
         </div>

@@ -152,8 +152,8 @@ export default function DownloadApp() {
               >
                 <FaApple className="w-8 h-8 " />
                 <div className="text-left">
-                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">Download on the</div>
-                  <div className="text-base md:text-lg font-bold -mt-1">App Store</div>
+                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">{t('buttons.app_store_sub')}</div>
+                  <div className="text-base md:text-lg font-bold -mt-1">{t('buttons.app_store_main')}</div>
                 </div>
               </a>
               <a
@@ -164,8 +164,8 @@ export default function DownloadApp() {
               >
                 <FaGooglePlay className="w-7 h-7 md:w-8 md:h-8" />
                 <div className="text-left">
-                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">Get it on</div>
-                  <div className="text-base md:text-lg font-bold -mt-1">Google Play</div>
+                  <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">{t('buttons.google_play_sub')}</div>
+                  <div className="text-base md:text-lg font-bold -mt-1">{t('buttons.google_play_main')}</div>
                 </div>
               </a>
             </div>

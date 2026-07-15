@@ -45,8 +45,7 @@ function SetPasswordForm({ t }: { t: any }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="space-y-6">
           <p className="text-[14px] font-bold text-gray-900">
-            You are currently logged in with Google. Set a new password to
-            secure your account.
+            {t("google_login_notice")}
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -100,7 +99,7 @@ function SetPasswordForm({ t }: { t: any }) {
             {isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              "Set Password"
+              t("set_password_btn")
             )}
           </Button>
         </div>

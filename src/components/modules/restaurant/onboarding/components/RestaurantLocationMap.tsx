@@ -5,6 +5,7 @@ import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import { MapPin, Crosshair } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface Location {
   lat: number;
@@ -33,6 +34,7 @@ export default function RestaurantLocationMap({
   onLocationSelect,
   className = "h-[300px] w-full",
 }: RestaurantLocationMapProps) {
+  const t = useTranslations("Onboarding.locationMap");
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "", // Ensure this is set
@@ -106,7 +108,7 @@ export default function RestaurantLocationMap({
 
   const handleLocateMe = () => {
     if (navigator.geolocation) {
-      toast.loading("Locating...", { id: "locating" });
+      toast.loading(t("locating"), { id: "locating" });
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const pos = {
@@ -116,16 +118,16 @@ export default function RestaurantLocationMap({
           setCenter(pos);
           handleLocationUpdate(pos.lat, pos.lng);
           map?.panTo(pos);
-          toast.success("Location found!", { id: "locating" });
+          toast.success(t("locationFound"), { id: "locating" });
         },
         () => {
-          toast.error("Error: The Geolocation service failed.", {
+          toast.error(t("geoServiceFailed"), {
             id: "locating",
           });
         },
       );
     } else {
-      toast.error("Error: Your browser doesn't support geolocation.", {
+      toast.error(t("geoNotSupported"), {
         id: "locating",
       });
     }
@@ -139,8 +141,8 @@ export default function RestaurantLocationMap({
         className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center p-4 text-center`}
       >
         <div className="text-red-500">
-          <p className="font-bold">Error loading maps</p>
-          <p className="text-sm">Please check your API key configuration.</p>
+          <p className="font-bold">{t("errorLoadingMaps")}</p>
+          <p className="text-sm">{t("checkApiKey")}</p>
         </div>
       </div>
     );
@@ -152,8 +154,8 @@ export default function RestaurantLocationMap({
         className={`${className} bg-gray-100 rounded-2xl flex items-center justify-center p-4 text-center`}
       >
         <div className="text-gray-500">
-          <p className="font-bold">Maps Unavailable</p>
-          <p className="text-sm">Google Maps API Key is missing.</p>
+          <p className="font-bold">{t("mapsUnavailable")}</p>
+          <p className="text-sm">{t("apiKeyMissing")}</p>
         </div>
       </div>
     );
@@ -166,7 +168,7 @@ export default function RestaurantLocationMap({
       >
         <div className="animate-pulse flex flex-col items-center">
           <MapPin className="h-8 w-8 text-gray-300 mb-2" />
-          <span className="text-gray-400 text-sm">Loading Map...</span>
+          <span className="text-gray-400 text-sm">{t("loadingMap")}</span>
         </div>
       </div>
     );
@@ -198,11 +200,11 @@ export default function RestaurantLocationMap({
         onClick={handleLocateMe}
         className="absolute top-4 right-4 bg-white text-emerald-700 hover:bg-gray-50 shadow-md border border-gray-200 z-10 font-bold gap-2"
       >
-        <Crosshair className="h-4 w-4" /> Locate Me
+        <Crosshair className="h-4 w-4" /> {t("locateMe")}
       </Button>
 
       <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 shadow-sm border border-gray-100 pointer-events-none">
-        Click on map to pin location
+        {t("clickToPin")}
       </div>
     </div>
   );

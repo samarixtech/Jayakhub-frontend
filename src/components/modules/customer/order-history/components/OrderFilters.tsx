@@ -144,7 +144,7 @@ export const OrderFilters = ({
             <SelectValue placeholder={t("date_range")} />
           </SelectTrigger>
           <SelectContent className="bg-white">
-            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">{t("filter_all")}</SelectItem>
             <SelectItem value="1">{t("last_30_days")}</SelectItem>
             <SelectItem value="3">{t("last_3_months")}</SelectItem>
             <SelectItem value="6">{t("last_6_months")}</SelectItem>

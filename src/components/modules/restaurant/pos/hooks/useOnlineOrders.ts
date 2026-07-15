@@ -1,12 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Bell, ChefHat, CheckCircle2 } from "lucide-react";
+import { Bell, ChefHat, CheckCircle2, Bike } from "lucide-react";
+import { getCookie } from "cookies-next";
 import {
   getRestaurantOrdersAction,
   updateOrderStatusAction,
+  handoffOrderAction,
+  resolveNoRiderAction,
 } from "@/app/actions/restaurant/orders";
+import { useSocket } from "@/components/providers/SocketProvider";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
-export type OrderStatus = "incoming" | "preparing" | "ready";
+export type OrderStatus = "incoming" | "preparing" | "ready" | "out_for_delivery";
 
 export interface OrderItem {
   name: string;
@@ -35,31 +40,42 @@ export interface Order {
   riderOrderId: string;
   prepareTime: string;
   rider: OrderRider | null;
+  handoff: boolean;
+  isCritical: boolean;
 }
 
 const BASE_POLL_INTERVAL = 30_000;
 const MAX_POLL_INTERVAL = 300_000;
 
 export const useOnlineOrders = () => {
-  const [activeTab, setActiveTab] = useState<OrderStatus>("incoming");
+  const t = useTranslations("POS.onlineOrders");
+  const isKitchen = getCookie("role") === "kitchen";
+  const [activeTab, setActiveTab] = useState<OrderStatus>(
+    isKitchen ? "preparing" : "incoming",
+  );
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
   const isFetchingRef = useRef(false);
   const consecutiveErrorsRef = useRef(0);
   const pollIntervalRef = useRef(BASE_POLL_INTERVAL);
+  const { socket } = useSocket();
 
   const mapApiStatusToTabStatus = (status: string): OrderStatus | null => {
     const s = status.toLowerCase();
     if (s === "pending") return "incoming";
     if (s === "accepted" || s === "prepare") return "preparing";
     if (s === "ready") return "ready";
+    if (s === "out_of_delivery") return "out_for_delivery";
     return null;
   };
 
   const calculateTimeAgo = (dateString: string) => {
     const timeAgoMs = Date.now() - new Date(dateString).getTime();
     const minutesAgo = Math.max(0, Math.floor(timeAgoMs / 60000));
-    return minutesAgo < 1 ? "Just now" : `${minutesAgo}m ago`;
+    return minutesAgo < 1
+      ? t("justNow")
+      : t("minutesAgo", { minutes: minutesAgo });
   };
 
   const fetchOrders = useCallback(async () => {
@@ -79,7 +95,7 @@ export const useOnlineOrders = () => {
           if (tabStatus) {
             mapped.push({
               id: o.orderId,
-              customerName: o.customerName || "Customer",
+              customerName: o.customerName || t("customer"),
               customerPhone: o.customerPhone || 0,
               timeAgo: calculateTimeAgo(o.dateTime),
               items: o.summary
@@ -92,6 +108,8 @@ export const useOnlineOrders = () => {
               riderOrderId: o.riderOrderId || "",
               prepareTime: o.prepareTime || "",
               rider: o.rider || null,
+              handoff: !!o.handoff,
+              isCritical: !!o.isCritical,
             });
           }
         });
@@ -115,7 +133,7 @@ export const useOnlineOrders = () => {
       isFetchingRef.current = false;
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchOrders();
@@ -131,6 +149,25 @@ export const useOnlineOrders = () => {
 
     return () => clearTimeout(timeoutId);
   }, [fetchOrders]);
+
+  // Live-mark an order critical the moment the backend broadcasts that no
+  // rider was found within its window — no need to wait for the next poll.
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleNoRiderAvailable = (data: { orderId: string }) => {
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === data.orderId ? { ...o, isCritical: true } : o,
+        ),
+      );
+    };
+
+    socket.on("NO_RIDER_AVAILABLE", handleNoRiderAvailable);
+    return () => {
+      socket.off("NO_RIDER_AVAILABLE", handleNoRiderAvailable);
+    };
+  }, [socket]);
 
   const handleUpdateStatus = async (
     orderId: string,
@@ -150,14 +187,14 @@ export const useOnlineOrders = () => {
     try {
       const res = await updateOrderStatusAction(orderId, newApiStatus);
       if (!res.success) {
-        toast.error(res.message || "Failed to update order status");
+        toast.error(res.message || t("toasts.updateFailed"));
         fetchOrders();
       } else {
-        toast.success(`Order updated`);
+        toast.success(t("toasts.updated"));
         fetchOrders();
       }
     } catch (err) {
-      toast.error("Error updating order");
+      toast.error(t("toasts.updateError"));
       fetchOrders();
     }
   };
@@ -174,37 +211,97 @@ export const useOnlineOrders = () => {
     handleUpdateStatus(orderId, "ready", "ready");
   };
 
+  const handleHandoff = async (orderId: string) => {
+    setOrders((prev) =>
+      prev.map((o) =>
+        o.id === orderId
+          ? { ...o, status: "out_for_delivery", handoff: true }
+          : o,
+      ),
+    );
+
+    try {
+      const res = await handoffOrderAction(orderId);
+      if (!res.success) {
+        toast.error(res.message || t("toasts.handoffFailed"));
+        fetchOrders();
+      } else {
+        toast.success(t("toasts.handedOff"));
+        fetchOrders();
+      }
+    } catch (err) {
+      toast.error(t("toasts.handoffError"));
+      fetchOrders();
+    }
+  };
+
+  const handleCancelNoRider = async (orderId: string) => {
+    setCancellingOrderId(orderId);
+    try {
+      const res = await resolveNoRiderAction(orderId);
+      if (res.success) {
+        toast.success(
+          res.data?.refunded
+            ? t("toasts.cancelledRefunded")
+            : t("toasts.cancelledCod"),
+        );
+        setOrders((prev) => prev.filter((o) => o.id !== orderId));
+      } else {
+        toast.error(res.message || t("toasts.cancelFailed"));
+      }
+    } catch (err) {
+      toast.error(t("toasts.cancelError"));
+    } finally {
+      setCancellingOrderId(null);
+    }
+  };
+
   const incomingOrders = orders.filter((o) => o.status === "incoming");
   const preparingOrders = orders.filter((o) => o.status === "preparing");
   const readyOrders = orders.filter((o) => o.status === "ready");
+  const outForDeliveryOrders = orders.filter(
+    (o) => o.status === "out_for_delivery",
+  );
 
   const tabs = [
     {
       id: "incoming" as const,
-      label: "Incoming",
+      label: t("tabs.incoming"),
       count: incomingOrders.length,
       icon: Bell,
     },
     {
       id: "preparing" as const,
-      label: "Preparing",
+      label: t("tabs.preparing"),
       count: preparingOrders.length,
       icon: ChefHat,
     },
     {
       id: "ready" as const,
-      label: "Ready",
+      label: t("tabs.ready"),
       count: readyOrders.length,
       icon: CheckCircle2,
     },
-  ];
+    {
+      id: "out_for_delivery" as const,
+      label: t("tabs.outForDelivery"),
+      count: outForDeliveryOrders.length,
+      icon: Bike,
+    },
+  ].filter(
+    (tab) =>
+      !isKitchen ||
+      (tab.id !== "incoming" && tab.id !== "out_for_delivery"),
+  );
 
   const currentOrders =
     activeTab === "incoming"
       ? incomingOrders
       : activeTab === "preparing"
         ? preparingOrders
-        : readyOrders;
+        : activeTab === "ready"
+          ? readyOrders
+          : outForDeliveryOrders;
 
   return {
     activeTab,
@@ -213,8 +310,12 @@ export const useOnlineOrders = () => {
     handleAccept,
     handleReject,
     handleMarkReady,
+    handleHandoff,
+    handleCancelNoRider,
+    cancellingOrderId,
     tabs,
     currentOrders,
     loading,
+    isKitchen,
   };
 };

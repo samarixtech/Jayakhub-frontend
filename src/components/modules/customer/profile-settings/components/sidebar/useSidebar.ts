@@ -10,14 +10,17 @@ export function useSidebar(
 ) {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [kycSubmitted, setKycSubmitted] = useState<boolean | null>(null);
+  const [kycRecords, setKycRecords] = useState<KycRecord[]>([]);
 
   const { execute: fetchStatus } = useServerAction(getKycStatus, {
     suppressSuccessToast: true,
     onSuccess: (data?: KycRecord[]) => {
-      setKycSubmitted(Array.isArray(data) && data.length > 0);
+      setKycRecords(Array.isArray(data) ? data : []);
     },
   });
+
+  const kycSubmitted = kycRecords.length > 0;
+  const hasRejectedKyc = kycRecords.some((d) => d.status === "rejected");
 
   useEffect(() => {
     fetchStatus();
@@ -41,5 +44,6 @@ export function useSidebar(
     handleFile,
     avatarSrc,
     kycSubmitted,
+    hasRejectedKyc,
   };
 }

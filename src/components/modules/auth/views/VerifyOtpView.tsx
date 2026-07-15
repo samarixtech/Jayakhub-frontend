@@ -12,6 +12,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { useVerifyOtp } from "../hooks/useVerifyOtp";
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 export default function VerifyOtpView() {
   const {
@@ -24,6 +25,7 @@ export default function VerifyOtpView() {
     handleResend,
     handleVerify,
   } = useVerifyOtp();
+  const t = useTranslations("Auth.verifyOtp");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -37,10 +39,10 @@ export default function VerifyOtpView() {
     <Card className="border-none shadow-none bg-transparent m-0 py-2">
       <CardHeader className="px-0 pt-0 text-center">
         <Typography variant="h2" className="text-emerald-bg">
-          Verify OTP
+          {t("title")}
         </Typography>
         <Typography variant="muted" className="mb-4">
-          Enter the 6-digit code sent to <br />
+          {t("subtitle")} <br />
           <span className="text-gray-900 font-bold break-all block mt-1">
             {email}
           </span>
@@ -80,34 +82,34 @@ export default function VerifyOtpView() {
             {isVerifying ? (
               <Loader2 className="mr-2 h-6 w-6 animate-spin" />
             ) : (
-              "Verify & Proceed"
+              t("submit")
             )}
           </Button>
 
           <div className="flex items-center justify-center gap-1 text-sm text-gray-500">
-            <span>Didn&apos;t receive the code?</span>
+            <span>{t("noCode")}</span>
             <button
               onClick={handleResend}
               disabled={timer > 0 || isResending}
               className="font-bold text-emerald-bg hover:underline disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isResending
-                ? "Resending..."
+                ? t("resending")
                 : timer > 0
-                  ? `Resend in ${timer}s`
-                  : "Resend OTP"}
+                  ? t("resendIn", { timer })
+                  : t("resendOtp")}
             </button>
           </div>
           <div className="flex items-center justify-center gap-1">
             <Typography variant="small" className="text-slate-500 font-medium">
-              Back to
+              {t("backTo")}
             </Typography>
             <Link href="/login" className="inline-block">
               <Typography
                 variant="small"
                 className="text-emerald-bg font-bold transition-colors hover:opacity-80"
               >
-                Log in
+                {t("login")}
               </Typography>
             </Link>
           </div>

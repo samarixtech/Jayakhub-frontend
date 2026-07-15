@@ -66,6 +66,7 @@ import {
 
 export function HoursView({ settings }: { settings: SettingsData | null }) {
   const t = useTranslations("RestaurantDashboard.Settings.hours");
+  const tDays = useTranslations("Onboarding.days");
   const router = useRouter();
   const initialSchedules = React.useMemo(() => {
     // Ensure all days are present, default to closed if missing
@@ -178,7 +179,7 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
             >
               {/* Day */}
               <span className="font-medium text-foreground">
-                {schedule.dayOfWeek}
+                {tDays(schedule.dayOfWeek.toLowerCase())}
               </span>
 
               {/* Open Time */}
@@ -226,7 +227,7 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
           {isPending ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" />
-              Saving...
+              {t("saving")}
             </>
           ) : (
             <>

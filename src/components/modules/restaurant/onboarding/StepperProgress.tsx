@@ -1,5 +1,7 @@
+import { useMemo } from "react";
 import { Check } from "lucide-react";
-import { STEPS } from "./onboarding.constants";
+import { useTranslations } from "next-intl";
+import { getSteps } from "./onboarding.constants";
 
 interface StepperProgressProps {
   currentStep: number;
@@ -10,6 +12,8 @@ export const StepperProgress = ({
   currentStep,
   onStepClick,
 }: StepperProgressProps) => {
+  const t = useTranslations("Onboarding");
+  const STEPS = useMemo(() => getSteps(t), [t]);
   return (
     <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
       <div className="relative flex justify-between min-w-[800px] w-full my-4 sm:my-7 px-4 sm:px-10">

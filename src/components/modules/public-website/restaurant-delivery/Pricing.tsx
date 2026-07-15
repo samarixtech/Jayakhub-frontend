@@ -47,7 +47,7 @@ export function Pricing() {
               <div className="flex items-baseline gap-1 mb-2">
                 <span className="text-[20px] font-medium" style={{ color: C.muted }}>{currencySymbol}</span>
                 <span className="font-bold leading-none tracking-[-0.035em]" style={{ fontSize: 42, color: C.ink }}>{p.price}</span>
-                <span className="text-[14px] ml-1" style={{ color: C.muted }}>/mo</span>
+                <span className="text-[14px] ml-1" style={{ color: C.muted }}>{t('perMonth')}</span>
               </div>
               <p className="text-[13px] mb-[18px]" style={{ color: C.muted, minHeight: 38 }}>{p.desc}</p>
               <ul className="list-none mb-5 flex-grow">

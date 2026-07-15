@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { RestaurantInfoInput } from "@/lib/schemas/restaurant-onboarding";
 
 const CUISINE_TYPES = [
@@ -28,19 +29,39 @@ const CUISINE_TYPES = [
   "Fusion",
 ] as const;
 
+const CUISINE_TYPE_KEYS: Record<string, string> = {
+  "Fast Food": "fastFood",
+  "Casual Dining": "casualDining",
+  Cafe: "cafe",
+  "Fine Dining": "fineDining",
+  Bakery: "bakery",
+  Indian: "indian",
+  Chinese: "chinese",
+  Italian: "italian",
+  Mexican: "mexican",
+  Japanese: "japanese",
+  Thai: "thai",
+  Mediterranean: "mediterranean",
+  American: "american",
+  "Middle Eastern": "middleEastern",
+  Korean: "korean",
+  Fusion: "fusion",
+};
+
 interface CuisineSelectorProps {
   form: UseFormReturn<RestaurantInfoInput>;
 }
 
 export const CuisineSelector: React.FC<CuisineSelectorProps> = ({ form }) => {
+  const t = useTranslations("Onboarding.cuisineSelector");
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-2">
         <label className="text-[10px] font-bold uppercase text-gray-400">
-          Cuisine Types
+          {t("label")}
         </label>
         <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-bold">
-          {form.watch("cuisineTypes")?.length || 0} SELECTED
+          {t("selectedBadge", { count: form.watch("cuisineTypes")?.length || 0 })}
         </span>
       </div>
 
@@ -88,7 +109,7 @@ export const CuisineSelector: React.FC<CuisineSelectorProps> = ({ form }) => {
                           <span
                             className={`text-sm font-medium ${isChecked ? "text-emerald-900" : "text-gray-600"}`}
                           >
-                            {type}
+                            {t(`types.${CUISINE_TYPE_KEYS[type]}`)}
                           </span>
                         </label>
                       </FormItem>

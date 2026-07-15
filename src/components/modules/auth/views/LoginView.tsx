@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,20 +30,18 @@ export default function LoginView() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("Auth.login");
 
   useEffect(() => {
     if (searchParams.get("reason") === "session-expired") {
-      toast.error("Session Expired");
+      toast.error(t("sessionExpired"));
       router.replace(pathname);
     }
-  }, [searchParams, pathname, router]);
+  }, [searchParams, pathname, router, t]);
 
   return (
     <Card className="border-none shadow-none bg-transparent py-2">
-      <AuthHeader
-        title="Login to Account"
-        description="Enter your details to continue"
-      />
+      <AuthHeader title={t("title")} description={t("subtitle")} />
 
       <CardContent className="px-0">
         <SocialAuthButtons
@@ -51,7 +50,7 @@ export default function LoginView() {
           isPending={isPending}
         />
 
-        <AuthDivider text="Or continue with email" />
+        <AuthDivider text={t("orContinueWithEmail")} />
 
         <Form {...form}>
           <form
@@ -63,10 +62,10 @@ export default function LoginView() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="sr-only">Email</FormLabel>
+                  <FormLabel className="sr-only">{t("emailSrLabel")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Email Address"
+                      placeholder={t("emailPlaceholder")}
                       className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
                       {...field}
                     />
@@ -94,7 +93,7 @@ export default function LoginView() {
                   href="/forget-password"
                   className="text-xs text-gray-400 hover:text-emerald-bg transition-colors font-bold"
                 >
-                  Forgot Password?
+                  {t("forgotPassword")}
                 </Link>
               </div>
             </div>
@@ -107,19 +106,19 @@ export default function LoginView() {
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                "Login"
+                t("submit")
               )}
             </Button>
           </form>
         </Form>
 
         <Typography variant="small" className="mt-8 text-center text-gray-600">
-          Don&apos;t have an account?{" "}
+          {t("noAccount")}{" "}
           <Link
             href="/register"
             className="text-emerald-bg font-bold hover:underline"
           >
-            Create Account
+            {t("createAccount")}
           </Link>
         </Typography>
       </CardContent>

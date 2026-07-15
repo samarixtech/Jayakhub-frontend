@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 import {
   ArrowRight,
   TrendingUp,
@@ -22,6 +23,7 @@ const RTL_LOCALES = ["ar", "ur", "fa", "he"];
 
 export default function Driver() {
   const t = useTranslations('DriverPage');
+  const tDownload = useTranslations('Home.download_app');
   const locale = useLocale();
   const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
   const isRtl = dir === "rtl";
@@ -60,7 +62,6 @@ export default function Driver() {
   };
 
   const testimonialKeys = ['t1', 't2', 't3'];
-  const testimonialNames = ['Ahmed Hassan', 'Sara Al-Mousa', 'Omar Khalil'];
   const testimonialAvatars = ['AH', 'SM', 'OK'];
 
   return (
@@ -128,7 +129,7 @@ export default function Driver() {
             >
               <Image
                 src={driverImge}
-                alt="Driver with pizza boxes"
+                alt={t('hero.imageAlt')}
                 fill
                 priority
                 className="object-cover"
@@ -278,7 +279,7 @@ export default function Driver() {
                     {testimonialAvatars[i]}
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900">{testimonialNames[i]}</h4>
+                    <h4 className="font-bold text-slate-900">{t(`testimonials.items.${key}.name`)}</h4>
                     <p className="text-xs text-slate-400 font-medium">{t(`testimonials.items.${key}.role`)}</p>
                   </div>
                 </div>
@@ -300,12 +301,31 @@ export default function Driver() {
             <div className="relative z-10 max-w-2xl mx-auto space-y-6">
               <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{t('cta.title')}</h2>
               <p className="text-emerald-100/80 text-lg max-w-lg mx-auto">{t('cta.subtitle')}</p>
-              <div className="pt-4">
-                <button
-                  className="bg-white hover:bg-emerald-50 text-[#0B5D4E] font-bold px-8 py-4 rounded-full inline-flex items-center justify-center transition-all hover:scale-105 shadow-lg text-base"
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
+                <a
+                  href="https://apps.apple.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 bg-white hover:bg-emerald-50 text-[#0B5D4E] px-6 py-3.5 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto text-start"
                 >
-                  {t('cta.button')}
-                </button>
+                  <FaApple className="w-8 h-8 shrink-0" />
+                  <div>
+                    <div className="text-[10px] opacity-80 uppercase font-bold tracking-wider">{tDownload('buttons.app_store_sub')}</div>
+                    <div className="text-sm md:text-base font-bold -mt-1 whitespace-nowrap">{tDownload('buttons.app_store_main')}</div>
+                  </div>
+                </a>
+                <a
+                  href="https://play.google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 bg-white hover:bg-emerald-50 text-[#0B5D4E] px-6 py-3.5 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto text-start"
+                >
+                  <FaGooglePlay className="w-7 h-7 shrink-0" />
+                  <div>
+                    <div className="text-[10px] opacity-80 uppercase font-bold tracking-wider">{tDownload('buttons.google_play_sub')}</div>
+                    <div className="text-sm md:text-base font-bold -mt-1 whitespace-nowrap">{tDownload('buttons.google_play_main')}</div>
+                  </div>
+                </a>
               </div>
             </div>
           </div>

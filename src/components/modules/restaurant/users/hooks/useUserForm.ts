@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import { useServerAction } from "@/hooks/use-server-action";
 import { useRouter } from "next/navigation";
 import {
@@ -18,6 +19,7 @@ export function useUserForm({
   mode?: "add" | "edit";
   userId?: string;
 }) {
+  const t = useTranslations("RestaurantDashboard.Users.form.toasts");
   const router = useRouter();
 
   // Personal Info
@@ -43,7 +45,7 @@ export function useUserForm({
         setRole(user.role ? user.role.toUpperCase() : "");
       }
     },
-    onError: () => toast.error("Failed to fetch user details"),
+    onError: () => toast.error(t("fetchFailed")),
   });
 
   useEffect(() => {
@@ -72,7 +74,7 @@ export function useUserForm({
 
   const handleSave = () => {
     if (!firstName || !lastName || !email || !role) {
-      toast.error("Please fill in all required fields.");
+      toast.error(t("fillRequired"));
       return;
     }
 

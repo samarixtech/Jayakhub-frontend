@@ -1,5 +1,6 @@
 import { useState, useEffect, useTransition, useMemo } from "react";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import {
   getProfile,
   updateProfileAction,
@@ -7,6 +8,7 @@ import {
 import { CustomerProfileData } from "@/types";
 
 export function useProfileSettings() {
+  const t = useTranslations("CustomerDashboard.ProfileSettings");
   const [isPending, startTransition] = useTransition();
   const [profile, setProfile] = useState<CustomerProfileData | null>(null);
   const [initialProfile, setInitialProfile] =
@@ -77,7 +79,7 @@ export function useProfileSettings() {
         avatarName: avatarFile?.name,
       });
       if (result.success) {
-        toast.success("Profile updated!");
+        toast.success(t("profile_updated"));
         // Force full page reload to update all UI elements globally
         window.location.reload();
       } else {

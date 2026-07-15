@@ -130,13 +130,13 @@ export default function AddNewAddressModal({
 
   const handleSaveAddress = async () => {
     if (!formData.street || !formData.city || !formData.country) {
-      toast.error("Please fill in all required fields (Street, City, Country)");
+      toast.error(t("toast_fill_required"));
       return;
     }
 
     const label = addressType === "Other" ? otherLabel : addressType;
     if (!label) {
-      toast.error("Please provide a label for the address");
+      toast.error(t("toast_provide_label"));
       return;
     }
 
@@ -156,17 +156,19 @@ export default function AddNewAddressModal({
         status: formData.status,
       };
 
-      if (addressToEdit?.id) {
-        await updateUserAddress(addressToEdit.id, payload);
-        toast.success("Address updated successfully!");
-      } else {
-        await createUserAddress(payload);
-        toast.success("Address saved successfully!");
+      const res = addressToEdit?.id
+        ? await updateUserAddress(addressToEdit.id, payload)
+        : await createUserAddress(payload);
+
+      if (!res.success) {
+        toast.error(res.message || t("toast_save_failed"));
+        return;
       }
 
+      toast.success(addressToEdit?.id ? t("toast_updated") : t("toast_saved"));
       onOpenChange(false);
     } catch (error: any) {
-      toast.error(error.message || "Failed to save address");
+      toast.error(error.message || t("toast_save_failed"));
     } finally {
       setLoading(false);
     }

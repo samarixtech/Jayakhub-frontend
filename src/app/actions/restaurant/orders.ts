@@ -41,7 +41,7 @@ export async function getRestaurantOrdersAction(
       data: response.data,
       meta: response.data.meta || null,
     };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Fetch restaurant orders error:", error);
     return {
@@ -51,6 +51,50 @@ export async function getRestaurantOrdersAction(
     };
   }
 }
+export async function handoffOrderAction(orderId: string) {
+  try {
+    const api = await serverApi();
+    const response = await api.patch(`/orders/${orderId}/handoff`);
+    return {
+      success: true,
+      data: response.data,
+    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Handoff order error:", error);
+    return {
+      success: false,
+      message:
+        error.response?.data?.meta?.message ||
+        error.response?.data?.message ||
+        "Failed to hand off order to rider",
+    };
+  }
+}
+
+export async function resolveNoRiderAction(orderId: string) {
+  try {
+    const api = await serverApi();
+    const response = await api.post(`/orders/${orderId}/resolve-no-rider`);
+    const resData = response.data as any;
+    return {
+      success: true,
+      data: resData?.data,
+      message: resData?.meta?.message,
+    };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error("Resolve no-rider error:", error);
+    return {
+      success: false,
+      message:
+        error.response?.data?.meta?.message ||
+        error.response?.data?.message ||
+        "Failed to cancel order",
+    };
+  }
+}
+
 export async function updateOrderStatusAction(orderId: string, status: string) {
   try {
     const api = await serverApi();
@@ -59,7 +103,7 @@ export async function updateOrderStatusAction(orderId: string, status: string) {
       success: true,
       data: response.data,
     };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Update order status error:", error);
     return {

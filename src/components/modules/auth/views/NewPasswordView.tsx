@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,14 +17,12 @@ import { useNewPassword } from "../hooks/useNewPassword";
 
 export default function NewPasswordView() {
   const { form, onSubmit, isPending } = useNewPassword();
+  const t = useTranslations("Auth.newPassword");
 
   return (
     <Card className="border-none shadow-none bg-transparent m-0 p-0">
       <div className="mb-6">
-        <AuthHeader
-          title="New Password"
-          description="Enter your new security credentials"
-        />
+        <AuthHeader title={t("title")} description={t("subtitle")} />
       </div>
       <CardContent className="px-0">
         <Form {...form}>
@@ -34,7 +33,7 @@ export default function NewPasswordView() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <PasswordField field={field} placeholder="New Password" />
+                    <PasswordField field={field} placeholder={t("passwordPlaceholder")} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -49,7 +48,7 @@ export default function NewPasswordView() {
                   <FormControl>
                     <PasswordField
                       field={field}
-                      placeholder="Confirm New Password"
+                      placeholder={t("confirmPasswordPlaceholder")}
                     />
                   </FormControl>
                   <FormMessage />
@@ -65,7 +64,7 @@ export default function NewPasswordView() {
               {isPending ? (
                 <Loader2 className="mr-2 h-6 w-6 animate-spin" />
               ) : (
-                "Update Password"
+                t("submit")
               )}
             </Button>
           </form>

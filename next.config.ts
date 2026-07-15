@@ -31,6 +31,11 @@ const nextConfig: NextConfig = {
         hostname: "jayakhub.s3.us-west-1.amazonaws.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "avatar.vercel.sh",
+        pathname: "/**",
+      },
     ],
   },
   experimental: {

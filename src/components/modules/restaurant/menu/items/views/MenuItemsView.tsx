@@ -81,10 +81,10 @@ export default function MenuItemsView() {
             </div>
             <div>
               <Typography className="font-medium text-gray-900">
-                {item.name || "N/A"}
+                {item.name || t("na")}
               </Typography>
               <Typography className="text-gray-400 text-xs line-clamp-1">
-                {item.description || "N/A"}
+                {item.description || t("na")}
               </Typography>
             </div>
           </div>
@@ -100,7 +100,7 @@ export default function MenuItemsView() {
             variant="outline"
             className="font-semibold rounded-md border text-[10px] px-2 py-0.5 shadow-none uppercase bg-white border-gray-200 text-gray-700"
           >
-            {item.category || "N/A"}
+            {item.category || t("na")}
           </Badge>
         </div>
       ),
@@ -127,7 +127,7 @@ export default function MenuItemsView() {
               </div>
             ) : (
               <span className="text-sm font-medium text-gray-700">
-                {formatPrice(basePrice) || "N/A"}
+                {formatPrice(basePrice) || t("na")}
               </span>
             )}
           </div>

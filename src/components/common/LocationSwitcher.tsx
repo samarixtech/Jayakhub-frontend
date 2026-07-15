@@ -425,7 +425,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
     setFetchingAddresses(true);
     try {
       const response = await getUserAddresses();
-      if (response?.data) {
+      if (response?.success) {
         setAddresses(response.data);
       }
     } catch (error) {

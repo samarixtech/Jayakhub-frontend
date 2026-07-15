@@ -69,7 +69,7 @@ export const AddCategoryCard: React.FC<AddCategoryCardProps> = ({
               t("createBtn")
             )}
           </Button>
-          <Button variant="ghost" onClick={onCancel} disabled={isSaving}>
+          <Button variant="outline" onClick={onCancel} disabled={isSaving}>
             {t("cancel")}
           </Button>
         </div>

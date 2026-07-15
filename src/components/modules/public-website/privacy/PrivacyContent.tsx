@@ -26,12 +26,6 @@ export default function PrivacyContent({ tab }: { tab: string }) {
               <h2 className="text-lg font-bold text-[#0f172a] mb-3">{t(`privacy.sections.${s}.title`)}</h2>
               {["s1","s2"].includes(s) ? (
                 <SectionList items={t.raw(`privacy.sections.${s}.items`) as string[]} />
-              ) : s === "s9" ? (
-                <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
-                  Privacy questions:{" "}
-                  <a href="mailto:privacy@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">privacy@jayakhub.com</a>
-                  {" · "}JayakHub, 320 Decker Suite 100, Irving Texas 75062.
-                </p>
               ) : (
                 <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`privacy.sections.${s}.content`)}</p>
               )}
@@ -49,11 +43,6 @@ export default function PrivacyContent({ tab }: { tab: string }) {
               <h2 className="text-lg font-bold text-[#0f172a] mb-3">{t(`terms.sections.${s}.title`)}</h2>
               {["s1","s2","s3"].includes(s) ? (
                 <SectionList items={t.raw(`terms.sections.${s}.items`) as string[]} />
-              ) : s === "s7" ? (
-                <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
-                  We may update these terms with notice. These terms are governed by the laws of Iraq. Contact:{" "}
-                  <a href="mailto:legal@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">legal@jayakhub.com</a>.
-                </p>
               ) : (
                 <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`terms.sections.${s}.content`)}</p>
               )}
@@ -74,8 +63,7 @@ export default function PrivacyContent({ tab }: { tab: string }) {
           <h2 className="text-lg font-bold text-[#0f172a] mb-3">{t("refund.sections.s5.title")}</h2>
           <SectionList items={t.raw("refund.sections.s5.items") as string[]} />
           <p className="text-[15px] leading-relaxed text-[#1a1a1a]">
-            Contact:{" "}
-            <a href="mailto:support@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">support@jayakhub.com</a>.
+            {t("refund.sections.s5.contact")}
           </p>
         </>
       )}
@@ -90,8 +78,7 @@ export default function PrivacyContent({ tab }: { tab: string }) {
             </div>
           ))}
           <p className="text-[15px] leading-relaxed text-[#1a1a1a]">
-            Questions? Contact{" "}
-            <a href="mailto:support@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">support@jayakhub.com</a>.
+            {t("delivery_policy.contactNote")}
           </p>
         </>
       )}
@@ -105,12 +92,6 @@ export default function PrivacyContent({ tab }: { tab: string }) {
               <h2 className="text-lg font-bold text-[#0f172a] mb-3">{t(`deletion.sections.${s}.title`)}</h2>
               {s === "s4" ? (
                 <SectionList items={t.raw("deletion.sections.s4.items") as string[]} />
-              ) : s === "s5" ? (
-                <ul className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6 space-y-2 list-none ps-0">
-                  <li><span className="font-semibold">In-app:</span> Settings → Privacy → Delete Account</li>
-                  <li><span className="font-semibold">Web:</span> <a href="https://jayakhub.com/delete-account" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:opacity-75 transition-opacity">jayakhub.com/delete-account</a></li>
-                  <li><span className="font-semibold">Questions:</span> <a href="mailto:privacy@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">privacy@jayakhub.com</a></li>
-                </ul>
               ) : (
                 <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`deletion.sections.${s}.content`)}</p>
               )}

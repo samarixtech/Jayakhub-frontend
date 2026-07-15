@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useCLC } from "@/context/CLCContext";
+import { useTranslations } from "next-intl";
 
 interface CloseRegisterMetricsProps {
   metrics: any;
@@ -10,13 +11,14 @@ interface CloseRegisterMetricsProps {
 export const CloseRegisterMetrics = ({
   metrics,
 }: CloseRegisterMetricsProps) => {
+  const t = useTranslations("POS.closeRegister.metrics");
   const { formatPrice } = useCLC();
   return (
     <div className="bg-[#f8fafa] rounded-xl p-5 mb-5">
       <div className="grid grid-cols-2 gap-y-5 gap-x-4">
         <div>
           <p className="text-[10px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-            TOTAL SALES
+            {t("totalSales")}
           </p>
           <p className="text-[22px] font-black text-[#1b2d22] tracking-tight leading-none">
             {formatPrice(metrics?.totalSales ?? 0)}
@@ -24,7 +26,7 @@ export const CloseRegisterMetrics = ({
         </div>
         <div>
           <p className="text-[10px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-            GROSS PROFIT
+            {t("grossProfit")}
           </p>
           <p className="text-[22px] font-black text-[#1eb589] tracking-tight leading-none">
             {formatPrice(metrics?.grossProfit ?? 0)}
@@ -33,7 +35,7 @@ export const CloseRegisterMetrics = ({
 
         <div>
           <p className="text-[10px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-            TRANSACTIONS
+            {t("transactions")}
           </p>
           <p className="text-[18px] font-black text-[#1b2d22] tracking-tight leading-none">
             {metrics?.transactions || 0}
@@ -41,7 +43,7 @@ export const CloseRegisterMetrics = ({
         </div>
         <div>
           <p className="text-[10px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
-            AVG ORDER
+            {t("avgOrder")}
           </p>
           <p className="text-[18px] font-black text-[#1b2d22] tracking-tight leading-none">
             {formatPrice(metrics?.averageOrder ?? 0)}

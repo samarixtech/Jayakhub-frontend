@@ -6,6 +6,7 @@ import { logoutAction } from "@/app/actions/auth/auth";
 import { getPOSDashboardAction } from "@/app/actions/restaurant/pos";
 import { exportToPDF } from "@/lib/utils/pdfs/pdf-export";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface UseCloseRegisterOptions {
   open: boolean;
@@ -16,6 +17,7 @@ export function useCloseRegister({
   open,
   onOpenChange,
 }: UseCloseRegisterOptions) {
+  const t = useTranslations("POS.closeRegister.toasts");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [data, setData] = useState<any>(null);
@@ -30,7 +32,7 @@ export function useCloseRegister({
         if (res.success) {
           setData(res.data);
         } else {
-          toast.error("Failed to load dashboard data");
+          toast.error(t("loadFailed"));
         }
         setIsLoading(false);
       };
@@ -50,17 +52,17 @@ export function useCloseRegister({
             try {
               const res = await logoutAction();
               if (res.success) {
-                toast.success("Shift closed and logged out successfully.");
+                toast.success(t("closedLoggedOut"));
                 onOpenChange(false);
                 router.replace("/login");
               } else {
-                toast.error(res.message || "Failed to close shift");
+                toast.error(res.message || t("closeFailed"));
               }
             } catch (error) {
-              toast.error("An error occurred while logging out.");
+              toast.error(t("logoutError"));
             }
           } else {
-            toast.success("Shift closed and report generated.");
+            toast.success(t("closedReport"));
             onOpenChange(false);
             router.replace("/restaurant/dashboard");
           }

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import {
   deleteCardAction,
   getMyCardsAction,
 } from "@/app/actions/customer/userprofile";
 
 export function useWallet() {
+  const t = useTranslations("CustomerDashboard.Wallet");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<any>(null);
   const [cards, setCards] = useState<any[]>([]);
@@ -23,7 +25,7 @@ export function useWallet() {
         toast.error(result.message);
       }
     } catch (error) {
-      toast.error("Failed to fetch cards");
+      toast.error(t("fetch_cards_failed"));
     } finally {
       setIsLoading(false);
     }

@@ -21,7 +21,7 @@ const categories = [
 const restaurants = [
   {
     id: 1,
-    name: "Al-Mansour Grill",
+    nameKey: "r1",
     cuisines: ["Iraqi", "Kebab"],
     rating: 4.9,
     reviews: 1120,
@@ -33,7 +33,7 @@ const restaurants = [
   },
   {
     id: 2,
-    name: "Baghdad Bites",
+    nameKey: "r2",
     cuisines: ["Fast Food", "Burger"],
     rating: 4.7,
     reviews: 850,
@@ -45,7 +45,7 @@ const restaurants = [
   },
   {
     id: 3,
-    name: "Pizza Palace",
+    nameKey: "r3",
     cuisines: ["Italian", "Pizza"],
     rating: 4.6,
     reviews: 780,
@@ -57,7 +57,7 @@ const restaurants = [
   },
   {
     id: 4,
-    name: "Spice Route",
+    nameKey: "r4",
     cuisines: ["Indian", "Curry"],
     rating: 4.8,
     reviews: 650,
@@ -69,7 +69,7 @@ const restaurants = [
   },
   {
     id: 5,
-    name: "Sushi Master",
+    nameKey: "r5",
     cuisines: ["Japanese", "Sushi"],
     rating: 4.9,
     reviews: 480,
@@ -81,7 +81,7 @@ const restaurants = [
   },
   {
     id: 6,
-    name: "Green Garden",
+    nameKey: "r6",
     cuisines: ["Healthy", "Salad"],
     rating: 4.5,
     reviews: 420,
@@ -186,7 +186,7 @@ export default function Restaurants() {
                   width={200}
                   height={200}
                   src={restaurant.image}
-                  alt={restaurant.name}
+                  alt={t(`items.${restaurant.nameKey}`)}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
 
@@ -226,13 +226,13 @@ export default function Restaurants() {
                       key={cuisine}
                       className="text-[10px] md:text-xs font-semibold text-[#64748B] bg-[#F1F5F9] px-2 md:px-2.5 py-0.5 md:py-1 rounded-full uppercase tracking-wider"
                     >
-                      {cuisine}
+                      {t(`cuisineTags.${cuisine}`)}
                     </span>
                   ))}
                 </div>
 
                 <h3 className="text-base md:text-lg lg:text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-1">
-                  {restaurant.name}
+                  {t(`items.${restaurant.nameKey}`)}
                 </h3>
 
                 <div className="flex items-center gap-3 md:gap-4">
@@ -243,7 +243,7 @@ export default function Restaurants() {
                     </span>
                   </div>
                   <span className="text-xs md:text-sm text-[#94A3B8]">
-                    ({restaurant.reviews.toLocaleString()} reviews)
+                    ({restaurant.reviews.toLocaleString()} {t('reviewsWord')})
                   </span>
                 </div>
               </div>

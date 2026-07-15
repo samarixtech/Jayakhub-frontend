@@ -1,5 +1,6 @@
 import React from "react";
 import { MapPin, CreditCard } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DeliveryDetailsProps {
   userName?: string;
@@ -19,19 +20,22 @@ export const DeliveryDetails: React.FC<DeliveryDetailsProps> = ({
   paymentMethod,
   paymentDetails,
 }) => {
+  const t = useTranslations("OrderTracking");
+  const methodLabel =
+    paymentDetails?.cardType ||
+    (paymentMethod?.toLowerCase() === "card" ? t("card") : t("cash"));
   return (
     <div className="border border-gray-100 rounded-2xl p-6 bg-white">
       <div className=" flex items-center gap-2 mb-4">
         <MapPin className="w-4 h-4 text-[#346853]" />
-        <h3 className="font-bold text-gray-900">Delivery Address</h3>
+        <h3 className="font-bold text-gray-900">{t("deliveryAddress")}</h3>
       </div>
       <div>
         <h4 className="font-bold text-gray-900 mb-1">
-          {userName || "Grand Indonesia East Mall"}
+          {userName || t("defaultUserName")}
         </h4>
         <p className="text-sm text-gray-500 leading-relaxed">
-          {address?.fullAddress ||
-            "Level 3, Shop 10-12, Jl. M.H. Thamrin No.1, Jakarta Pusat, 10310"}
+          {address?.fullAddress || t("defaultAddress")}
         </p>
       </div>
 
@@ -41,12 +45,12 @@ export const DeliveryDetails: React.FC<DeliveryDetailsProps> = ({
             {paymentMethod === "card" ? (
               <CreditCard size={12} />
             ) : (
-              <div className="text-[10px] font-bold">COD</div>
+              <div className="text-[10px] font-bold">{t("cod")}</div>
             )}
           </div>
           <div>
             <p className="text-sm font-bold text-gray-900">
-              Paid via {paymentDetails?.cardType || "Cash"}
+              {t("paidVia", { method: methodLabel })}
             </p>
             <p className="text-xs text-gray-500">
               {paymentDetails?.cardNumber || ""}

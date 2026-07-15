@@ -155,6 +155,7 @@ export async function proxy(request: NextRequest) {
       let redirectPath = "login";
       if (role === "restaurant_owner" || role === "admin" || role === "manager") redirectPath = "restaurant/dashboard";
       if (role === "cashier") redirectPath = "restaurant/pos";
+      if (role === "kitchen") redirectPath = "restaurant/pos/orders";
 
       return NextResponse.redirect(
         new URL(`/${country}/${language}/${redirectPath}`, request.url),
@@ -166,7 +167,8 @@ export async function proxy(request: NextRequest) {
         role !== "restaurant_owner" &&
         role !== "cashier" &&
         role !== "admin" &&
-        role !== "manager"
+        role !== "manager" &&
+        role !== "kitchen"
       ) {
         const redirectPath =
           role === "customer" ? "customer/dashboard" : "login";
@@ -175,8 +177,11 @@ export async function proxy(request: NextRequest) {
         );
       }
 
-      // Restrict cashiers exclusively to the POS route
-      if (role === "cashier" && !pathSegments.includes("pos")) {
+      // Restrict cashiers and kitchen staff exclusively to the POS routes
+      if (
+        (role === "cashier" || role === "kitchen") &&
+        !pathSegments.includes("pos")
+      ) {
         return NextResponse.redirect(
           new URL(`/${country}/${language}/restaurant/pos`, request.url),
         );

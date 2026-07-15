@@ -21,17 +21,6 @@ import { useUserForm } from "../hooks/useUserForm";
 import { useTranslations } from "next-intl";
 import { LoaderIcon } from "react-hot-toast";
 
-const passwordSchema = z
-  .string()
-  .min(8, "Password must be at least 8 characters")
-  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-  .regex(/[0-9]/, "Password must contain at least one number")
-  .regex(
-    /[^A-Za-z0-9]/,
-    "Password must contain at least one special character (e.g. @, #, $, %, etc.)",
-  );
-
 export default function UserFormView({
   mode = "add",
   userId,
@@ -45,18 +34,26 @@ export default function UserFormView({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<{ password?: string; confirmPassword?: string }>({});
 
+  const passwordSchema = z
+    .string()
+    .min(8, t("toasts.passwordMin"))
+    .regex(/[A-Z]/, t("toasts.passwordUppercase"))
+    .regex(/[a-z]/, t("toasts.passwordLowercase"))
+    .regex(/[0-9]/, t("toasts.passwordNumber"))
+    .regex(/[^A-Za-z0-9]/, t("toasts.passwordSpecial"));
+
   const handleSave = () => {
     const newErrors: { password?: string; confirmPassword?: string } = {};
 
     if (mode === "add" && !state.password) {
-      newErrors.password = "Password is required for new users.";
+      newErrors.password = t("toasts.passwordRequired");
     } else if (state.password) {
       const result = passwordSchema.safeParse(state.password);
       if (!result.success) {
         newErrors.password =
-          result.error.issues?.[0]?.message ?? "Invalid password.";
+          result.error.issues?.[0]?.message ?? t("toasts.passwordInvalid");
       } else if (state.password !== state.confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match.";
+        newErrors.confirmPassword = t("toasts.passwordMismatch");
       }
     }
 
@@ -73,7 +70,7 @@ export default function UserFormView({
     { label: t("roles.admin"), value: "ADMIN" },
     { label: t("roles.manager"), value: "MANAGER" },
     { label: t("roles.cashier"), value: "CASHIER" },
-    // { label: t("roles.kitchen"), value: "KITCHEN" },
+    { label: t("roles.kitchen"), value: "KITCHEN" },
   ];
 
   return (

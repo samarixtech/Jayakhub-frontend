@@ -38,8 +38,8 @@ export default function RestaurantRegisterView() {
   return (
     <Card className="border-none shadow-none bg-transparent m-0 p-0">
       <AuthHeader
-        title="Partner with Us"
-        description="Grow your business by reaching more customers"
+        title={t("partnerWithUs")}
+        description={t("partnerSubtitle")}
         compact={true}
       />
 
@@ -53,7 +53,7 @@ export default function RestaurantRegisterView() {
           isPending={isPending}
         />
 
-        <AuthDivider text="Or register with email" compact={true} />
+        <AuthDivider text={t("orRegisterWithEmail")} compact={true} />
 
         <Form {...form}>
           <form
@@ -67,7 +67,7 @@ export default function RestaurantRegisterView() {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="Owner Name"
+                      placeholder={t("ownerNamePlaceholder")}
                       className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
@@ -84,7 +84,7 @@ export default function RestaurantRegisterView() {
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="Email Address"
+                      placeholder={t("emailPlaceholder")}
                       className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
                       {...field}
                     />
@@ -101,7 +101,7 @@ export default function RestaurantRegisterView() {
                 <FormItem>
                   <FormControl>
                     <PhoneInput
-                      placeholder="Phone Number"
+                      placeholder={t("phonePlaceholder")}
                       maxLength={14}
                       defaultCountry="PK"
                       className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
@@ -134,7 +134,7 @@ export default function RestaurantRegisterView() {
                   <FormControl>
                     <PasswordField
                       field={field}
-                      placeholder="Confirm Password"
+                      placeholder={t("confirmPasswordPlaceholder")}
                       compact={true}
                     />
                   </FormControl>
@@ -156,12 +156,12 @@ export default function RestaurantRegisterView() {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel className="text-sm font-normal text-gray-500">
-                      I agree to the{" "}
+                      {t("agreeToThe")}{" "}
                       <Link
                         href="/terms-of-service"
                         className="font-bold text-emerald-bg hover:underline"
                       >
-                        Terms and Conditions
+                        {t("termsAndConditions")}
                       </Link>
                     </FormLabel>
                     <FormMessage />
@@ -178,7 +178,7 @@ export default function RestaurantRegisterView() {
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                "Register Restaurant"
+                t("registerRestaurantBtn")
               )}
             </Button>
           </form>
@@ -188,7 +188,7 @@ export default function RestaurantRegisterView() {
           variant="small"
           className="mt-3 text-center text-gray-600 mb-0 p-0"
         >
-          Already a partner?{" "}
+          {t("alreadyPartner")}{" "}
           <Link
             href="/login"
             className="text-emerald-bg font-bold hover:underline"

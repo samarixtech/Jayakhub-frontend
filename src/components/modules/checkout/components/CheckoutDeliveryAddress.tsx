@@ -3,6 +3,7 @@ import { MapPin, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { GlobalModal } from "@/components/common/GlobalModal";
 import AddNewAddressModal from "@/components/modules/customer/address/AddNewAddressModal";
+import { useTranslations } from "next-intl";
 
 interface CheckoutDeliveryAddressProps {
   selectedAddress: any;
@@ -20,26 +21,27 @@ export const CheckoutDeliveryAddress = ({
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [isAddNewAddressModalOpen, setIsAddNewAddressModalOpen] =
     useState(false);
+  const t = useTranslations("Checkout");
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
         <MapPin className="text-[#346853]" size={20} />
-        <h3 className="font-bold text-lg text-gray-900">Delivery Address</h3>
+        <h3 className="font-bold text-lg text-gray-900">{t("deliveryAddress")}</h3>
       </div>
       <div className="bg-gray-50 p-4 rounded-lg flex items-center justify-between">
         <div>
           <h4 className="font-bold text-gray-900 mb-1">
-            {selectedAddress ? selectedAddress.label : "No Address Selected"}
+            {selectedAddress ? selectedAddress.label : t("noAddressSelected")}
           </h4>
           <p className="text-sm text-gray-500">
             {selectedAddress
               ? `${selectedAddress.streetAddress}, ${selectedAddress.city}, ${selectedAddress.stateProvince}`
-              : "Please select or add an address."}
+              : t("selectOrAddAddress")}
           </p>
           {selectedAddress?.noteToCourier && (
             <p className="text-xs text-gray-400 mt-1">
-              Note: {selectedAddress.noteToCourier}
+              {t("noteLabel")}: {selectedAddress.noteToCourier}
             </p>
           )}
         </div>
@@ -51,11 +53,11 @@ export const CheckoutDeliveryAddress = ({
             className="w-full mt-4 bg-[#346853] hover:bg-[#2a5443] text-white"
             onClick={() => setIsAddressModalOpen(true)}
           >
-            Change
+            {t("changeBtn")}
           </Button>
         }
-        title="Select Delivery Address"
-        description="Choose where you want your order delivered."
+        title={t("selectAddressTitle")}
+        description={t("selectAddressDesc")}
         open={isAddressModalOpen}
         onOpenChange={setIsAddressModalOpen}
       >
@@ -94,7 +96,7 @@ export const CheckoutDeliveryAddress = ({
           ))}
           {(savedAddresses || []).length === 0 && (
             <p className="text-center text-gray-500 py-4">
-              No addresses found.
+              {t("noAddressesFound")}
             </p>
           )}
 
@@ -107,7 +109,7 @@ export const CheckoutDeliveryAddress = ({
             className="w-full p-4 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center gap-2 text-gray-500 hover:text-[#346853] hover:border-[#346853] hover:bg-gray-50 transition-all group"
           >
             <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            <span className="font-bold text-sm">Add New Address</span>
+            <span className="font-bold text-sm">{t("addNewAddress")}</span>
           </button>
         </div>
       </GlobalModal>

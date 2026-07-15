@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   scheduleSchema,
   ScheduleInput,
@@ -34,7 +35,9 @@ const BASE_MONDAY_EPOCH = 1704067200000;
 
 const timeToEpoch = (dayIndex: number, timeStr: string): number => {
   const [hours = 0, minutes = 0] = (timeStr || "00:00").split(":").map(Number);
-  return BASE_MONDAY_EPOCH + dayIndex * 86400000 + hours * 3600000 + minutes * 60000;
+  return (
+    BASE_MONDAY_EPOCH + dayIndex * 86400000 + hours * 3600000 + minutes * 60000
+  );
 };
 
 const epochToTimeStr = (epoch: number | string | null | undefined): string => {
@@ -51,6 +54,7 @@ export const useStepSchedule = () => {
   const { country, language } = useLocale();
   const router = useRouter();
   const { nextStep } = useOnboarding();
+  const t = useTranslations("Onboarding.scheduleView");
 
   const [timezones, setTimezones] = useState<TimezoneOption[]>([]);
   const [timezone, setTimezoneState] = useState<string>("");
@@ -129,7 +133,7 @@ export const useStepSchedule = () => {
   const onSubmit = (data: ScheduleInput) => {
     if (!timezone) {
       setTimezoneError(true);
-      toast.error("Please select a timezone");
+      toast.error(t("timezoneRequired"));
       return;
     }
 
@@ -153,7 +157,7 @@ export const useStepSchedule = () => {
       "onboarding_schedule_info",
       JSON.stringify({ ...epochData, timezone }),
     );
-    toast.success("Schedule saved");
+    toast.success(t("toastSaved"));
     nextStep();
     router.push(`/restaurant/onboarding/step-kyc`);
   };

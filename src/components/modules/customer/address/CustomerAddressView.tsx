@@ -59,11 +59,13 @@ export default function CustomerAddressView() {
     setLoading(true);
     try {
       const response = await getUserAddresses();
-      if (response && response.data) {
+      if (response.success) {
         setAddresses(response.data);
+      } else {
+        toast.error(response.message || t("load_failed"));
       }
     } catch {
-      toast.error("Failed to load addresses");
+      toast.error(t("load_failed"));
     } finally {
       setLoading(false);
     }
@@ -116,15 +118,19 @@ export default function CustomerAddressView() {
   const handleConfirmDelete = async () => {
     if (!addressToDelete) return;
 
-    const toastId = toast.loading("Deleting address...");
+    const toastId = toast.loading(t("deleting"));
     try {
-      await deleteUserAddress(addressToDelete.id);
+      const res = await deleteUserAddress(addressToDelete.id);
+      if (!res.success) {
+        toast.error(res.message || t("delete_failed"), { id: toastId });
+        return;
+      }
       await fetchAddresses();
-      toast.success("Address deleted successfully", { id: toastId });
+      toast.success(t("deleted_success"), { id: toastId });
       setDeleteModalOpen(false);
       setAddressToDelete(null);
     } catch {
-      toast.error("Failed to delete address", { id: toastId });
+      toast.error(t("delete_failed"), { id: toastId });
     }
   };
 

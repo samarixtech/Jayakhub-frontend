@@ -5,8 +5,10 @@ import { SettingsData } from "@/types";
 import { updateKycAction } from "@/app/actions/restaurant/settings";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export function useDocumentSettings(settings: SettingsData | null) {
+  const t = useTranslations("RestaurantDashboard.Settings.documents.toasts");
   const router = useRouter();
   const kyc = settings?.kyc || [];
   const updateStatus = settings?.onboardingUpdate?.kyc || "none";
@@ -24,7 +26,7 @@ export function useDocumentSettings(settings: SettingsData | null) {
 
   const handleUpload = async () => {
     if (!file) {
-      toast.error("Please select a file to upload.");
+      toast.error(t("selectFile"));
       return;
     }
     setLoading(true);
@@ -35,11 +37,11 @@ export function useDocumentSettings(settings: SettingsData | null) {
     try {
       const response = await updateKycAction(formData);
       if (response.success) {
-        toast.success(response.message || "Document uploaded successfully.");
+        toast.success(response.message || t("uploadSuccess"));
         setFile(null);
         router.refresh();
       } else {
-        toast.error(response.message || "Failed to upload document.");
+        toast.error(response.message || t("uploadFailed"));
       }
     } catch (error) {
       console.error("An unexpected error occurred.");

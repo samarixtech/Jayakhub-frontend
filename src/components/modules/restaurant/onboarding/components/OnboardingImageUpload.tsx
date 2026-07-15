@@ -3,6 +3,7 @@ import { ImageIcon, X, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface OnboardingImageUploadProps {
   label: string;
@@ -18,10 +19,12 @@ export const OnboardingImageUpload: React.FC<OnboardingImageUploadProps> = ({
   preview,
   onFileChange,
   onRemove,
-  recommendedSize = "1200 x 400 px (3:1 ratio)",
+  recommendedSize,
   className = "",
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations("Onboarding.imageUpload");
+  const sizeLabel = recommendedSize ?? t("defaultRecommendedSize");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -49,7 +52,7 @@ export const OnboardingImageUpload: React.FC<OnboardingImageUploadProps> = ({
                 className="rounded-full"
                 type="button"
               >
-                <X className="h-4 w-4 mr-2" /> Remove
+                <X className="h-4 w-4 mr-2" /> {t("remove")}
               </Button>
             </div>
           </>
@@ -60,7 +63,7 @@ export const OnboardingImageUpload: React.FC<OnboardingImageUploadProps> = ({
             </div>
             <h3 className="text-gray-900 font-bold mb-1">{label}</h3>
             <p className="text-[10px] text-gray-400 mb-6 uppercase tracking-wider">
-              {recommendedSize}
+              {sizeLabel}
             </p>
             <Button
               type="button"
@@ -68,7 +71,7 @@ export const OnboardingImageUpload: React.FC<OnboardingImageUploadProps> = ({
               className="rounded-xl border-gray-200 text-gray-700 font-bold hover:bg-white hover:border-gray-300"
               onClick={() => inputRef.current?.click()}
             >
-              Choose Image
+              {t("chooseImage")}
             </Button>
           </>
         )}
@@ -83,24 +86,24 @@ export const OnboardingImageUpload: React.FC<OnboardingImageUploadProps> = ({
 
       <div className="space-y-3 px-2">
         <Typography variant="h4" className="font-bold text-gray-800 text-sm">
-          Tips for a great cover:
+          {t("tipsTitle")}
         </Typography>
         <ul className="space-y-2">
           <li className="flex items-center gap-2 text-xs text-gray-500">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            Show your most popular dishes
+            {t("tip1")}
           </li>
           <li className="flex items-center gap-2 text-xs text-gray-500">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            Use natural lighting
+            {t("tip2")}
           </li>
           <li className="flex items-center gap-2 text-xs text-gray-500">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            Keep text to a minimum
+            {t("tip3")}
           </li>
           <li className="flex items-center gap-2 text-xs text-gray-500">
             <XCircle className="w-4 h-4 text-red-500" />
-            Avoid blurry or low-quality images
+            {t("tip4")}
           </li>
         </ul>
       </div>

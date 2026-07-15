@@ -1,6 +1,7 @@
 import React from "react";
 import { Utensils } from "lucide-react";
 import { useCLC } from "@/context/CLCContext";
+import { useTranslations } from "next-intl";
 
 interface Coupon {
   code: string;
@@ -25,11 +26,12 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
   coupon,
 }) => {
   const { formatPrice } = useCLC();
+  const t = useTranslations("OrderTracking");
   return (
     <div className="border border-gray-100 rounded-2xl p-6 bg-white">
       <div className="flex items-center gap-2 mb-6">
         <Utensils className="w-4 h-4 text-[#346853]" />
-        <h3 className="font-bold text-gray-900">Order Summary</h3>
+        <h3 className="font-bold text-gray-900">{t("orderSummary")}</h3>
       </div>
 
       <div className="space-y-4 mb-6">
@@ -92,19 +94,19 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
 
       <div className="border-t border-dashed border-gray-200 pt-4 space-y-2 mb-4">
         <div className="flex justify-between text-gray-500 text-sm">
-          <span>Subtotal</span>
+          <span>{t("subtotal")}</span>
           <span>{formatPrice(subtotal)}</span>
         </div>
         <div className="flex justify-between text-gray-500 text-sm">
-          <span>Delivery Fee</span>
+          <span>{t("deliveryFee")}</span>
           <span className={deliveryFee === 0 ? "text-emerald-600 font-medium" : ""}>
-            {deliveryFee === 0 ? "Free" : formatPrice(deliveryFee)}
+            {deliveryFee === 0 ? t("free") : formatPrice(deliveryFee)}
           </span>
         </div>
         {coupon && (
           <div className="flex justify-between text-emerald-600 text-sm font-medium">
             <span className="flex items-center gap-1">
-              Coupon
+              {t("coupon")}
               <span className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded">
                 {coupon.code}
               </span>
@@ -118,7 +120,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
       </div>
 
       <div className="flex justify-between items-end border-t border-gray-100 pt-4">
-        <span className="font-bold text-lg text-gray-900">Total</span>
+        <span className="font-bold text-lg text-gray-900">{t("total")}</span>
         <span className="font-bold text-xl text-gray-900">
           {formatPrice(total)}
         </span>

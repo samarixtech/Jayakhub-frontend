@@ -1,4 +1,5 @@
 import { FaApple } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { GoogleAuthButton } from "../GoogleAuthButton";
 import { UserRole } from "@/config/role-map.config";
@@ -20,6 +21,8 @@ export function SocialAuthButtons({
   country,
   language,
 }: SocialAuthButtonsProps) {
+  const t = useTranslations("Auth.social");
+
   return (
     <div className="grid grid-cols-2 gap-4 mb-6 mt-3">
       <GoogleAuthButton
@@ -34,7 +37,7 @@ export function SocialAuthButtons({
         type="button"
         className="flex items-center justify-center gap-3 h-12 bg-black text-white rounded-xl hover:bg-gray-800 transition font-semibold text-sm"
       >
-        <FaApple className="text-xl" /> Apple
+        <FaApple className="text-xl" /> {t("apple")}
       </Button>
     </div>
   );

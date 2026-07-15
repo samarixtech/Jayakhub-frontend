@@ -10,26 +10,29 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { ChevronsUpDown, Check, Globe } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 import { useStepSchedule } from "../../hooks/useStepSchedule";
 import { cn } from "@/lib/utils";
 
 export default function StepScheduleView() {
   const { form, onSubmit, days, timezones, timezone, setTimezone, isLoadingTimezones, timezoneError } = useStepSchedule();
   const [tzOpen, setTzOpen] = useState(false);
+  const t = useTranslations("Onboarding.scheduleView");
+  const tDays = useTranslations("Onboarding.days");
 
   const selectedTz = timezones.find((tz) => tz.name === timezone);
 
   return (
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-500">
       <Typography variant="h4" className="font-bold text-gray-900">
-        Operating Hours
+        {t("title")}
       </Typography>
 
       {/* Timezone Selector */}
       <div className="space-y-2">
         <Label className="text-sm font-semibold text-gray-700 flex items-center gap-1.5">
           <Globe className="w-4 h-4 text-gray-400" />
-          Timezone <span className="text-red-500">*</span>
+          {t("timezone")} <span className="text-red-500">*</span>
         </Label>
         <Popover open={tzOpen} onOpenChange={setTzOpen}>
           <PopoverTrigger asChild>
@@ -45,19 +48,19 @@ export default function StepScheduleView() {
             >
               <span className={cn(!selectedTz && "text-gray-400")}>
                 {isLoadingTimezones
-                  ? "Loading timezones..."
+                  ? t("loadingTimezones")
                   : selectedTz
                     ? selectedTz.label
-                    : "Select timezone"}
+                    : t("selectTimezone")}
               </span>
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 text-gray-400" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-white" align="start">
             <Command>
-              <CommandInput placeholder="Search timezone..." className="h-9" />
+              <CommandInput placeholder={t("searchTimezone")} className="h-9" />
               <CommandList className="max-h-64">
-                <CommandEmpty>No timezone found.</CommandEmpty>
+                <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
                 <CommandGroup>
                   {timezones.map((tz) => (
                     <CommandItem
@@ -83,7 +86,7 @@ export default function StepScheduleView() {
           </PopoverContent>
         </Popover>
         {timezoneError && (
-          <p className="text-xs text-red-500 font-medium">Please select a timezone</p>
+          <p className="text-xs text-red-500 font-medium">{t("timezoneRequired")}</p>
         )}
       </div>
 
@@ -101,7 +104,7 @@ export default function StepScheduleView() {
                 >
                   <div className="flex items-center justify-between sm:justify-start gap-4">
                     <span className="text-[13px] sm:text-sm font-bold text-gray-700 w-24">
-                      {day}
+                      {tDays(day.toLowerCase())}
                     </span>
                     <div className="sm:hidden">
                       <FormField
@@ -139,7 +142,7 @@ export default function StepScheduleView() {
                     />
 
                     <span className="text-[10px] sm:text-xs text-gray-400 font-black uppercase tracking-tighter sm:tracking-normal">
-                      To
+                      {t("to")}
                     </span>
 
                     <FormField
@@ -185,7 +188,7 @@ export default function StepScheduleView() {
               type="submit"
               className="bg-emerald-bg text-white px-10 h-12 rounded-2xl font-bold hover:bg-emerald-bg-hover"
             >
-              Next Step
+              {t("nextStep")}
             </Button>
           </div>
         </form>

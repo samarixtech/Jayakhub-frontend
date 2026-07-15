@@ -12,16 +12,18 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useTranslations } from "next-intl";
 import { useStepOwnerInfo } from "../../hooks/useStepOwnerInfo";
 // import { useStepSchedule } from "../../hooks/useStepSchedule";
 
 export default function StepOwnerInfoView() {
   const { form, email, onSubmit, onError } = useStepOwnerInfo();
+  const t = useTranslations("Onboarding.ownerInfoView");
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <Typography variant="h4" className="font-bold text-gray-900">
-        Who manages this restaurant?
+        {t("title")}
       </Typography>
 
       <Form {...form}>
@@ -37,14 +39,14 @@ export default function StepOwnerInfoView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-gray-400">
-                    Full Name
+                    {t("fullName")}
                   </label>
                   <FormControl>
                     <div className="relative">
                       <User className="absolute left-4 top-3 h-4 w-4 text-gray-400" />
                       <Input
                         className="pl-12 h-12 bg-gray-50/50 border-gray-100 rounded-xl"
-                        placeholder="John Doe"
+                        placeholder={t("fullNamePlaceholder")}
                         {...field}
                       />
                     </div>
@@ -57,7 +59,7 @@ export default function StepOwnerInfoView() {
             {/* Owner Email (Read Only) */}
             <div className="space-y-2">
               <label className="text-[10px] font-bold uppercase text-gray-400">
-                Email Address
+                {t("emailAddress")}
               </label>
               <div className="relative">
                 <Mail className="absolute left-4 top-3 h-4 w-4 text-gray-400" />
@@ -77,11 +79,11 @@ export default function StepOwnerInfoView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-gray-400">
-                    Contact Phone
+                    {t("contactPhone")}
                   </label>
                   <FormControl>
                     <PhoneInput
-                      placeholder="Phone Number"
+                      placeholder={t("phonePlaceholder")}
                       maxLength={14}
                       defaultCountry="PK"
                       className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
@@ -91,7 +93,7 @@ export default function StepOwnerInfoView() {
                   <div className="flex justify-between items-start">
                     <FormMessage />
                     <Typography className="text-[10px] text-gray-400">
-                      We will send important updates to this number.
+                      {t("phoneHelper")}
                     </Typography>
                   </div>
                 </FormItem>
@@ -104,7 +106,7 @@ export default function StepOwnerInfoView() {
               type="submit"
               className="w-full sm:w-auto bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
             >
-              Next Step
+              {t("nextStep")}
             </Button>
           </div>
         </form>

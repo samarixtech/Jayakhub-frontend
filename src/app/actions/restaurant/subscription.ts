@@ -30,6 +30,10 @@ export type SubscriptionDetails = {
   endDate: string;
   daysRemaining: number;
   renewalDate: string;
+  paidAmount?: number;
+  paidCurrency?: string;
+  convertedPrice?: number;
+  convertedCurrency?: string;
   plan: SubscriptionPlan;
   paymentCard: PaymentCard | null;
 };
@@ -39,6 +43,8 @@ export type BillingHistoryItem = {
   planName: string;
   amount: string;
   currency: string;
+  convertedPrice?: number | null;
+  convertedCurrency?: string | null;
   status: string;
   autoRenew: boolean;
   startDate: string;

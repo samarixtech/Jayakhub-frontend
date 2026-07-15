@@ -14,17 +14,19 @@ import {
 } from "@/components/ui/form";
 import LocationPicker from "@/components/common/LocationPicker";
 import { PhoneInput } from "@/components/ui/phone-input";
+import { useTranslations } from "next-intl";
 import { useStepRestaurantInfo } from "../../hooks/useStepRestaurantInfo";
 import { CuisineSelector } from "../../components/CuisineSelector";
 // import RestaurantLocationMap from "../../components/RestaurantLocationMap";
 
 export default function StepRestaurantInfoView() {
   const { form, onSubmit } = useStepRestaurantInfo();
+  const t = useTranslations("Onboarding.restaurantInfoView");
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <Typography variant="h4" className="font-bold text-gray-900">
-        Tell us about your place
+        {t("title")}
       </Typography>
 
       <Form {...form}>
@@ -37,13 +39,13 @@ export default function StepRestaurantInfoView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-gray-400">
-                    Restaurant Name
+                    {t("restaurantName")}
                   </label>
                   <FormControl>
                     <div className="relative">
                       <Store className="absolute left-4 top-3.5 h-4 w-4 text-gray-400" />
                       <Input
-                        placeholder="Tasty Bites"
+                        placeholder={t("restaurantNamePlaceholder")}
                         className="pl-12 h-12 bg-gray-50/50 border-gray-100 rounded-xl"
                         {...field}
                       />
@@ -60,11 +62,11 @@ export default function StepRestaurantInfoView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-gray-400">
-                    Restaurant Phone
+                    {t("restaurantPhone")}
                   </label>
                   <FormControl>
                     <PhoneInput
-                      placeholder="Phone Number"
+                      placeholder={t("phonePlaceholder")}
                       maxLength={14}
                       defaultCountry="PK"
                       className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
@@ -82,13 +84,13 @@ export default function StepRestaurantInfoView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-gray-400">
-                    Restaurant Email
+                    {t("restaurantEmail")}
                   </label>
                   <FormControl>
                     <div className="relative">
                       <Mail className="absolute left-4 top-3.5 h-4 w-4 text-gray-400" />
                       <Input
-                        placeholder="contact@tastybites.com"
+                        placeholder={t("restaurantEmailPlaceholder")}
                         className="pl-12 h-12 bg-gray-50/50 border-gray-100 rounded-xl"
                         {...field}
                       />
@@ -105,13 +107,13 @@ export default function StepRestaurantInfoView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-gray-400">
-                    Website URL (Optional)
+                    {t("websiteUrl")}
                   </label>
                   <FormControl>
                     <div className="relative">
                       <LinkIcon className="absolute left-4 top-3.5 h-4 w-4 text-gray-400" />
                       <Input
-                        placeholder="https://tastybites.com"
+                        placeholder={t("websiteUrlPlaceholder")}
                         className="pl-12 h-12 bg-gray-50/50 border-gray-100 rounded-xl"
                         {...field}
                       />
@@ -130,7 +132,7 @@ export default function StepRestaurantInfoView() {
             render={({ field, fieldState }) => (
               <FormItem className="space-y-2">
                 <label className="text-[10px] font-bold uppercase text-gray-400">
-                  Restaurant Location
+                  {t("location")}
                 </label>
                 <FormControl>
                   <LocationPicker
@@ -141,7 +143,7 @@ export default function StepRestaurantInfoView() {
                       form.setValue("location", { lat: loc.lat, lng: loc.lng }, { shouldValidate: true });
                       if (loc.country) form.setValue("country", loc.country, { shouldValidate: true });
                     }}
-                    placeholder="Search for restaurant address..."
+                    placeholder={t("locationPlaceholder")}
                     error={!!fieldState.error}
                   />
                 </FormControl>
@@ -157,13 +159,13 @@ export default function StepRestaurantInfoView() {
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <label className="text-[10px] font-bold uppercase text-gray-400">
-                  Description
+                  {t("description")}
                 </label>
                 <FormControl>
                   <div className="relative">
                     <Edit3 className="absolute left-4 top-4 h-4 w-4 text-gray-400" />
                     <Textarea
-                      placeholder="Describe your restaurant's vibe..."
+                      placeholder={t("descriptionPlaceholder")}
                       className="min-h-[100px] pl-12 pt-3.5 bg-gray-50/50 border-gray-100 rounded-xl resize-none"
                       {...field}
                     />
@@ -182,7 +184,7 @@ export default function StepRestaurantInfoView() {
               type="submit"
               className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443]"
             >
-              Next Step
+              {t("nextStep")}
             </Button>
           </div>
         </form>

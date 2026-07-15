@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
@@ -25,18 +25,17 @@ import { GlobalModal } from "@/components/common/GlobalModal";
 import { cancelOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
 
-export default function OrderTrackingView({ params }: { params: any }) {
-  const unwrappedParams = params ? React.use(params as any) : {};
-  const orderIdFromUrl = (unwrappedParams as any)?.id;
-
+export default function OrderTrackingView({ orderId }: { orderId: string }) {
   const { order, loading, subtotal, total, deliveryFee, coupon, rider, refetch } =
-    useOrderTracking(orderIdFromUrl);
+    useOrderTracking(orderId);
 
   const t = useTranslations("CustomerDashboard.OrderHistory");
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [canceling, setCanceling] = useState(false);
 
   const isRejected = order?.orderStatus?.toLowerCase() === "rejected";
+  const isRiderNotAssigned =
+    order?.orderStatus?.toLowerCase() === "rider_not_assigned";
 
   const isCancelable =
     !isRejected &&
@@ -45,18 +44,18 @@ export default function OrderTrackingView({ params }: { params: any }) {
 
   const handleConfirmCancel = async () => {
     setCanceling(true);
-    const toastId = toast.loading("Cancelling order...");
+    const toastId = toast.loading(t("cancelling_order"));
     try {
       const res = await cancelOrderAction(order.orderId);
       if (res.success) {
-        toast.success(res.message || "Order cancelled successfully", { id: toastId });
+        toast.success(res.message || t("order_cancelled_success"), { id: toastId });
         setCancelModalOpen(false);
         refetch();
       } else {
-        toast.error(res.message || "Failed to cancel order", { id: toastId });
+        toast.error(res.message || t("cancel_order_failed"), { id: toastId });
       }
     } catch {
-      toast.error("Failed to cancel order", { id: toastId });
+      toast.error(t("cancel_order_failed"), { id: toastId });
     } finally {
       setCanceling(false);
     }
@@ -70,8 +69,8 @@ export default function OrderTrackingView({ params }: { params: any }) {
     return (
       <EmptyState
         icon={Utensils}
-        title={"Order not found"}
-        message={"NO order found for this order ID"}
+        title={t("order_not_found_title")}
+        message={t("order_not_found_message")}
       />
     );
   }
@@ -83,16 +82,16 @@ export default function OrderTrackingView({ params }: { params: any }) {
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href="/">{t("breadcrumb_home")}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/orders">Orders</BreadcrumbLink>
+              <BreadcrumbLink href="/orders">{t("breadcrumb_orders")}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage className="font-bold text-gray-900">
-                Track {order.orderId}
+                {t("track_order_id", { id: order.orderId })}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
@@ -103,18 +102,32 @@ export default function OrderTrackingView({ params }: { params: any }) {
           <div>
             <div className="flex items-center gap-3 mb-1">
               <h1 className="text-3xl font-bold text-gray-900">
-                {isRejected ? "Order Cancelled" : "Live Order Tracking"}
+                {isRejected || isRiderNotAssigned
+                  ? t("order_cancelled_heading")
+                  : t("live_tracking_heading")}
               </h1>
               {isRejected && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-gray-500">
-                  Cancelled
+                  {t("cancelled_badge")}
+                </span>
+              )}
+              {isRiderNotAssigned && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-50 text-red-500">
+                  {t("rider_not_assigned_badge")}
                 </span>
               )}
             </div>
             <p className="text-gray-500">
-              Order #{order.orderId} • Place at{" "}
-              {formatOrderDateTime(order.orderDate, order.orderTime)}
+              {t("order_placed_at", {
+                id: order.orderId,
+                date: formatOrderDateTime(order.orderDate, order.orderTime),
+              })}
             </p>
+            {isRiderNotAssigned && (
+              <p className="text-sm text-red-500 font-medium mt-2">
+                {t("rider_not_assigned_sorry")}
+              </p>
+            )}
           </div>
           <div className="flex gap-3">
             {isCancelable && (
@@ -182,7 +195,7 @@ export default function OrderTrackingView({ params }: { params: any }) {
             className="rounded-full bg-red-600 hover:bg-red-500 text-white cursor-pointer"
             disabled={canceling}
           >
-            {canceling ? "Cancelling..." : t("cancel_order_confirm")}
+            {canceling ? t("cancelling_state") : t("cancel_order_confirm")}
           </Button>
         </div>
       </GlobalModal>

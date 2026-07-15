@@ -57,8 +57,8 @@ export function PaymentHistoryHeader({
   const isDeleteDisabled = !tempStartDate && !tempEndDate && !startDate && !endDate;
 
   const { isExporting, handleExport } = useExport({
-    successMessage: "CSV export completed successfully!",
-    errorMessage: "Failed to export CSV. Please try again."
+    successMessage: t("export_success"),
+    errorMessage: t("export_error")
   });
 
   const handleExportCSV = async () => {
@@ -90,7 +90,7 @@ export function PaymentHistoryHeader({
         <div className="flex flex-wrap items-end gap-3 w-full sm:w-auto">
           {/* Start Date Picker */}
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider pl-0.5">Start Date</span>
+            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider pl-0.5">{t("start_date")}</span>
             <Popover open={isStartOpen} onOpenChange={setIsStartOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -98,7 +98,7 @@ export function PaymentHistoryHeader({
                   className="h-9 justify-between text-left font-normal border border-gray-200 bg-white rounded-lg px-3 text-[#1E293B] cursor-pointer shadow-sm min-w-[145px] text-[13px]"
                 >
                   <span className="truncate">
-                    {tempStartDate ? format(tempStartDate, "MM/dd/yyyy") : "Pick date"}
+                    {tempStartDate ? format(tempStartDate, "MM/dd/yyyy") : t("pick_date")}
                   </span>
                   <CalendarIcon className="h-4 w-4 text-gray-400 shrink-0 ml-1.5" />
                 </Button>
@@ -121,7 +121,7 @@ export function PaymentHistoryHeader({
 
           {/* End Date Picker */}
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider pl-0.5">End Date</span>
+            <span className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider pl-0.5">{t("end_date")}</span>
             <Popover open={isEndOpen} onOpenChange={setIsEndOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -129,7 +129,7 @@ export function PaymentHistoryHeader({
                   className="h-9 justify-between text-left font-normal border border-gray-200 bg-white rounded-lg px-3 text-[#1E293B] cursor-pointer shadow-sm min-w-[145px] text-[13px]"
                 >
                   <span className="truncate">
-                    {tempEndDate ? format(tempEndDate, "MM/dd/yyyy") : "Pick date"}
+                    {tempEndDate ? format(tempEndDate, "MM/dd/yyyy") : t("pick_date")}
                   </span>
                   <CalendarIcon className="h-4 w-4 text-gray-400 shrink-0 ml-1.5" />
                 </Button>
@@ -154,7 +154,7 @@ export function PaymentHistoryHeader({
             disabled={isApplyDisabled}
             className="h-9 rounded-lg bg-[#346853] hover:bg-[#346853]/90 text-white font-bold text-[13px] px-5 shadow-sm cursor-pointer"
           >
-            Apply
+            {t("apply")}
           </Button>
 
           {/* Delete Button */}
@@ -164,7 +164,7 @@ export function PaymentHistoryHeader({
             disabled={isDeleteDisabled}
             className="h-9 rounded-lg border border-red-200 text-red-500 hover:text-red-600 hover:bg-red-50 font-bold text-[13px] px-5 shadow-sm cursor-pointer"
           >
-            Clear
+            {t("clear")}
           </Button>
         </div>
 
@@ -174,7 +174,7 @@ export function PaymentHistoryHeader({
           className="h-9 rounded-lg bg-[#346853] hover:bg-[#346853]/90 text-white font-bold text-[13px] px-4 shadow-sm flex items-center justify-center cursor-pointer min-w-[120px]"
         >
           <FileDown className="w-4 h-4 mr-2 stroke-[2.5px]" />
-          {isExporting ? "Exporting..." : "Export CSV"}
+          {isExporting ? t("exporting") : t("export_csv")}
         </Button>
       </div>
     </header>

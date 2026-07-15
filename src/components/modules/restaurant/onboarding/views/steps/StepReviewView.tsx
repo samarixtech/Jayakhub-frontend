@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTranslations } from "next-intl";
 import { useStepReview } from "../../hooks/useStepReview";
 import {
   ReviewContainer,
@@ -36,6 +37,8 @@ export default function StepReviewView() {
   const { data, loading, isPending, handleSubmit, pathPrefix } =
     useStepReview();
   const [agreed, setAgreed] = useState(false);
+  const t = useTranslations("Onboarding.reviewView");
+  const tDays = useTranslations("Onboarding.days");
 
   if (!data?.owner)
     return (
@@ -48,11 +51,10 @@ export default function StepReviewView() {
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pb-10">
       <div className="px-4 md:px-0">
         <Typography variant="h3" className="text-3xl font-black text-gray-900">
-          Review your application
+          {t("title")}
         </Typography>
         <Typography className="text-gray-500 mt-2 text-sm">
-          Please review all information before submitting. You can edit any
-          section if needed.
+          {t("subtitle")}
         </Typography>
       </div>
 
@@ -60,13 +62,13 @@ export default function StepReviewView() {
         {/* Owner Information */}
         <ReviewSection
           icon={User}
-          title="Owner Information"
+          title={t("ownerInformation")}
           stepPath={`${pathPrefix}/step-owner-info`}
         >
-          <ReviewField label="Full Name" value={data.owner.ownerName} />
-          <ReviewField label="Contact Phone" value={data.owner.ownerPhone} />
+          <ReviewField label={t("fullName")} value={data.owner.ownerName} />
+          <ReviewField label={t("contactPhone")} value={data.owner.ownerPhone} />
           <ReviewField
-            label="Email Address"
+            label={t("emailAddress")}
             value={data.owner.ownerEmail || data.restaurant?.restaurantEmail}
             fullWidth
           />
@@ -75,32 +77,32 @@ export default function StepReviewView() {
         {/* Restaurant Details */}
         <ReviewSection
           icon={Store}
-          title="Restaurant Details"
+          title={t("restaurantDetails")}
           stepPath={`${pathPrefix}/step-restaurant-info`}
         >
           <ReviewField
-            label="Restaurant Name"
+            label={t("restaurantName")}
             value={data.restaurant?.restaurantName}
           />
           <ReviewField
-            label="Restaurant Phone"
+            label={t("restaurantPhone")}
             value={data.restaurant?.restaurantPhone}
           />
           <ReviewField
-            label="Restaurant Email"
+            label={t("restaurantEmail")}
             value={data.restaurant?.restaurantEmail}
           />
           <ReviewField
-            label="Website URL"
+            label={t("websiteUrl")}
             value={data.restaurant?.websiteUrl}
           />
           <ReviewField
-            label="Cuisine Types"
+            label={t("cuisineTypes")}
             value={data.restaurant?.cuisineTypes?.join(", ")}
             fullWidth
           />
           <ReviewField
-            label="Description"
+            label={t("description")}
             value={data.restaurant?.description}
             fullWidth
           />
@@ -109,11 +111,11 @@ export default function StepReviewView() {
         {/* Location */}
         <ReviewSection
           icon={MapPin}
-          title="Location"
+          title={t("location")}
           stepPath={`${pathPrefix}/step-restaurant-info`}
         >
           <ReviewField
-            label="Full Address"
+            label={t("fullAddress")}
             value={data.restaurant?.address}
             fullWidth
           />
@@ -122,13 +124,13 @@ export default function StepReviewView() {
         {/* Brand Assets */}
         <ReviewSection
           icon={ImageIcon}
-          title="Brand Assets"
+          title={t("brandAssets")}
           stepPath={`${pathPrefix}/step-brand-assets`}
         >
           <div className="flex flex-col md:flex-row gap-4 md:col-span-2">
             <div className="w-full md:w-32">
               <Typography className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                Logo
+                {t("logo")}
               </Typography>
               <div className="relative aspect-square w-full rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
                 {data.assets?.logo ? (
@@ -145,7 +147,7 @@ export default function StepReviewView() {
             </div>
             <div className="flex-1">
               <Typography className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
-                Cover Image
+                {t("coverImage")}
               </Typography>
               <div className="relative aspect-video md:aspect-3/1 w-full rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
                 {data.assets?.banner ? (
@@ -166,14 +168,14 @@ export default function StepReviewView() {
         {/* Operations Schedule */}
         <ReviewSection
           icon={Clock}
-          title="Operations Schedule"
+          title={t("operationsSchedule")}
           stepPath={`${pathPrefix}/step-schedule`}
         >
           {data.timezone && (
-            <ReviewField label="Timezone" value={data.timezone} fullWidth />
+            <ReviewField label={t("timezone")} value={data.timezone} fullWidth />
           )}
           <ReviewField
-            label="Operating Hours"
+            label={t("operatingHours")}
             fullWidth
             value={
               <div className="space-y-1 mt-1">
@@ -186,7 +188,7 @@ export default function StepReviewView() {
                       ([day, hours]: [string, any]) =>
                         hours.isOpen && (
                           <div key={day} className="flex justify-between text-xs">
-                            <span className="capitalize">{day}</span>
+                            <span className="capitalize">{tDays(day)}</span>
                             <span>
                               {epochToDisplayTime(hours.openTime)} -{" "}
                               {epochToDisplayTime(hours.closeTime)}
@@ -195,7 +197,7 @@ export default function StepReviewView() {
                         ),
                     )
                 ) : (
-                  <span className="text-gray-500">Not set</span>
+                  <span className="text-gray-500">{t("notSet")}</span>
                 )}
               </div>
             }
@@ -205,20 +207,20 @@ export default function StepReviewView() {
         {/* Legal & Banking */}
         <ReviewSection
           icon={FileText}
-          title="Legal & Banking"
+          title={t("legalBanking")}
           stepPath={`${pathPrefix}/step-kyc`}
         >
           <ReviewDocField
-            label="Owner's Government ID (KYC)"
+            label={t("governmentId")}
             status={data.kyc?.kycName ? "UPLOADED" : "PENDING"}
           />
           <ReviewDocField
-            label="Food License / Health Permit"
+            label={t("foodLicense")}
             status={data.kyc?.docName ? "UPLOADED" : "PENDING"}
           />
-          <ReviewField label="Account Holder" value={data.bank?.accountTitle} />
-          <ReviewField label="Bank Name" value={data.bank?.bankName} />
-          <ReviewField label="IBAN No" value={data.bank?.iban} fullWidth />
+          <ReviewField label={t("accountHolder")} value={data.bank?.accountTitle} />
+          <ReviewField label={t("bankName")} value={data.bank?.bankName} />
+          <ReviewField label={t("ibanNo")} value={data.bank?.iban} fullWidth />
         </ReviewSection>
       </ReviewContainer>
 
@@ -234,31 +236,29 @@ export default function StepReviewView() {
           htmlFor="confirm"
           className="text-[11px] md:text-xs text-emerald-800/70 leading-relaxed font-medium cursor-pointer"
         >
-          I confirm that all information provided is accurate and I agree to
-          JayakHub's{" "}
+          {t("confirmPrefix")}{" "}
           <Link
             href="/terms-of-service"
             target="_blank"
             rel="noopener noreferrer"
             className="text-emerald-700 font-bold underline hover:text-emerald-900"
           >
-            Terms of Service
+            {t("termsOfService")}
           </Link>
           ,{" "}
 
-          Merchant Agreement
+          {t("merchantAgreement")}
 
-          , and{" "}
+          , {t("and")}{" "}
           <Link
             href="/privacy-policy"
             target="_blank"
             rel="noopener noreferrer"
             className="text-emerald-700 font-bold underline hover:text-emerald-900"
           >
-            Privacy Policy
+            {t("privacyPolicy")}
           </Link>
-          . I understand that false information may result in account
-          suspension.
+          . {t("confirmSuffix")}
         </label>
       </div>
 
@@ -268,7 +268,7 @@ export default function StepReviewView() {
           disabled={isPending || loading || !agreed}
           className="w-full md:w-auto bg-[#346853] text-white px-10 h-12 rounded-xl font-bold hover:bg-[#2a5443] transition-all flex items-center justify-center gap-2"
         >
-          {isPending || loading ? "Submitting..." : "Submit Application"}
+          {isPending || loading ? t("submitting") : t("submitApplication")}
           {!isPending && !loading && (
             <div className="bg-white/20 rounded-md p-1">
               <Edit className="w-3 h-3 rotate-135" />

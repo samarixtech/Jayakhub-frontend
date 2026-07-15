@@ -3,8 +3,10 @@ import { useEffect, useState, useCallback } from "react";
 import {
   getRestaurantOrdersAction,
   updateOrderStatusAction,
+  handoffOrderAction,
 } from "@/app/actions/restaurant/orders";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import { formatOrderDateTime } from "@/lib/utils/date";
 import { format } from "date-fns";
 import { useDateFilter } from "@/components/providers/DateFilterProvider";
@@ -35,6 +37,7 @@ export enum OrderStatus {
   OUT_FOR_DELIVERY = "out_of_delivery",
   DELIVERED = "delivered",
   REJECTED = "rejected",
+  RIDER_NOT_ASSIGNED = "rider_not_assigned",
 }
 
 export interface ApiOrderRider {
@@ -62,6 +65,9 @@ export interface ApiOrder {
   riderOrderId?: string;
   prepareTime?: string;
   rider?: ApiOrderRider;
+  handoff?: boolean;
+  isCritical?: boolean;
+  paymentMethod?: string;
 }
 
 export interface OrderStats {
@@ -91,11 +97,15 @@ export interface UIOrder {
   riderOrderId?: string;
   prepareTime?: string;
   rider?: ApiOrderRider;
+  handoff?: boolean;
+  isCritical?: boolean;
+  paymentMethod?: string;
 }
 
 import { usePagination } from "@/hooks/usePagination";
 
 export const useOrders = () => {
+  const t = useTranslations("POS.ordersHook");
   const { startDate, endDate } = useDateFilter();
   const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } =
     usePagination({ initialLimit: 10 });
@@ -140,6 +150,8 @@ export const useOrders = () => {
         return "DELIVERED";
       case OrderStatus.REJECTED:
         return "CANCELLED";
+      case OrderStatus.RIDER_NOT_ASSIGNED:
+        return "RIDER NOT ASSIGNED";
       default:
         return s.toUpperCase();
     }
@@ -219,6 +231,9 @@ export const useOrders = () => {
             riderOrderId: o.riderOrderId,
             prepareTime: o.prepareTime,
             rider: o.rider,
+            handoff: !!o.handoff,
+            isCritical: !!o.isCritical,
+            paymentMethod: o.paymentMethod,
           };
         });
         setOrders(mappedOrders);
@@ -254,13 +269,28 @@ export const useOrders = () => {
            */
         }
 
-        toast.success("Order status updated successfully");
+        toast.success(t("statusUpdated"));
       } else {
-        toast.error(res.message || "Failed to update status");
+        toast.error(res.message || t("updateFailed"));
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      toast.error("An error occurred while updating status");
+      toast.error(t("updateError"));
+    }
+  };
+
+  const handleHandoff = async (orderId: string) => {
+    try {
+      const res = await handoffOrderAction(orderId);
+      if (res.success) {
+        await fetchOrders();
+        toast.success(t("handedOff"));
+      } else {
+        toast.error(res.message || t("handoffFailed"));
+      }
+    } catch (error) {
+      console.error("Error handing off order:", error);
+      toast.error(t("handoffError"));
     }
   };
 
@@ -291,6 +321,7 @@ export const useOrders = () => {
     totalPages,
     totalCount,
     handleStatusUpdate,
+    handleHandoff,
     handleOrderClick,
   };
 };

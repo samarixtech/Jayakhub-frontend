@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
               }`}
           >
             <div className="flex justify-between items-center p-4 border-b border-[#E8F4F1]/20">
-              <h2 className="text-lg font-semibold">Menu</h2>
+              <h2 className="text-lg font-semibold">{t("mobileMenuTitle")}</h2>
               <button
                 onClick={handleCloseMobileMenu}
                 className="p-2 rounded-lg hover:bg-[#E8F4F1]/10 transition"

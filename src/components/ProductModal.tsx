@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Minus, X, Check } from "lucide-react";
 import Image from "next/image";
 import { useCLC } from "@/context/CLCContext";
+import { useTranslations } from "next-intl";
 
 interface ProductModalProps {
   item: any;
@@ -24,6 +25,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const [specialInstructions, setSpecialInstructions] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
   const { currency } = useCLC();
+  const t = useTranslations("Cart");
 
   useEffect(() => {
     if (item) {
@@ -149,7 +151,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
               )}
               <span className="text-xl font-bold text-[#346853]">
                 {currency}
-                {Math.max(0, (item.price || item.basePrice || 0) - (item.discount ? parseFloat(item.discount) : 0)).toFixed(2)}
+                {Math.max(
+                  0,
+                  (item.price || item.basePrice || 0) -
+                    (item.discount ? parseFloat(item.discount) : 0),
+                ).toFixed(2)}
               </span>
             </div>
           </div>
@@ -160,83 +166,88 @@ const ProductModal: React.FC<ProductModalProps> = ({
           {/* Add Extra Section */}
           {item.variantGroups && item.variantGroups.length > 0 && (
             <div className="mb-8 space-y-6">
-              {(item.variantGroups || []).map((group: any, groupIndex: number) => (
-                <div key={group.id || groupIndex}>
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-bold text-gray-900">
-                      {group.groupName}
-                    </h3>
-                    <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-1 rounded">
-                      Optional
-                    </span>
-                  </div>
-                  <div className="space-y-3">
-                    {(group.variants || []).map((variation: any, index: number) => {
-                      const isSelected = !!selectedVariations.find(
-                        (v) =>
-                          v.name === variation.name &&
-                          v.groupName === group.groupName,
-                      );
+              {(item.variantGroups || []).map(
+                (group: any, groupIndex: number) => (
+                  <div key={group.id || groupIndex}>
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-bold text-gray-900">
+                        {group.groupName}
+                      </h3>
+                      <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2 py-1 rounded">
+                        {t("optional")}
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      {(group.variants || []).map(
+                        (variation: any, index: number) => {
+                          const isSelected = !!selectedVariations.find(
+                            (v) =>
+                              v.name === variation.name &&
+                              v.groupName === group.groupName,
+                          );
 
-                      // Ensure price exists even if 0
-                      const price =
-                        variation.price || variation.additionalPrice || 0;
+                          // Ensure price exists even if 0
+                          const price =
+                            variation.price || variation.additionalPrice || 0;
 
-                      return (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between cursor-pointer group"
-                          onClick={() =>
-                            toggleVariation({
-                              ...variation,
-                              groupName: group.groupName,
-                              groupId: group.id || group._id,
-                            })
-                          }
-                        >
-                          <div className="flex items-center gap-3">
+                          return (
                             <div
-                              className={`w-5 h-5 rounded-full border transition-colors flex items-center justify-center shrink-0 ${isSelected
-                                ? "bg-[#346853] border-[#346853]"
-                                : "border-gray-300 group-hover:border-[#346853]"
-                                }`}
+                              key={index}
+                              className="flex items-center justify-between cursor-pointer group"
+                              onClick={() =>
+                                toggleVariation({
+                                  ...variation,
+                                  groupName: group.groupName,
+                                  groupId: group.id || group._id,
+                                })
+                              }
                             >
-                              {isSelected && (
-                                <Check
-                                  size={12}
-                                  className="text-white"
-                                  strokeWidth={3}
-                                />
-                              )}
+                              <div className="flex items-center gap-3">
+                                <div
+                                  className={`w-5 h-5 rounded-full border transition-colors flex items-center justify-center shrink-0 ${
+                                    isSelected
+                                      ? "bg-[#346853] border-[#346853]"
+                                      : "border-gray-300 group-hover:border-[#346853]"
+                                  }`}
+                                >
+                                  {isSelected && (
+                                    <Check
+                                      size={12}
+                                      className="text-white"
+                                      strokeWidth={3}
+                                    />
+                                  )}
+                                </div>
+                                <span
+                                  className={`text-base ${isSelected ? "text-gray-900 font-medium" : "text-gray-700"}`}
+                                >
+                                  {variation.name}
+                                </span>
+                              </div>
+                              <span className="text-sm text-gray-500">
+                                {currency}
+                                {price.toFixed(2)}
+                              </span>
                             </div>
-                            <span
-                              className={`text-base ${isSelected ? "text-gray-900 font-medium" : "text-gray-700"}`}
-                            >
-                              {variation.name}
-                            </span>
-                          </div>
-                          <span className="text-sm text-gray-500">
-                            + {currency}
-                            {price.toFixed(2)}
-                          </span>
-                        </div>
-                      );
-                    })}
+                          );
+                        },
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ),
+              )}
             </div>
           )}
 
           {/* Special Instructions */}
           <div className="mb-6">
             <h3 className="font-bold text-gray-900 mb-3">
-              Special Instructions
+              {t("specialInstructions")}
             </h3>
             <textarea
               value={specialInstructions}
               onChange={(e) => setSpecialInstructions(e.target.value)}
-              placeholder="E.g. No onions, please"
+              placeholder={t("specialInstructionsPlaceholder")}
               className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853] resize-none bg-gray-50/50"
             />
           </div>
@@ -270,7 +281,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
               onClick={handleAddToCartClick}
               className="flex-1 h-12 bg-[#346853] text-white rounded-lg font-bold text-sm flex items-center justify-between px-6 hover:bg-[#2a5443] transition-colors active:scale-[0.98]"
             >
-              <span className="hidden sm:block">Add to Cart</span>
+              <span className="hidden sm:block">{t("addToCart")}</span>
               <span>
                 {currency}
                 {totalPrice.toFixed(2)}

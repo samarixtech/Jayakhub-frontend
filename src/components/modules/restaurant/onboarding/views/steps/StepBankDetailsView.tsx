@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslations } from "next-intl";
 import {
   useStepBankDetails,
   ACCOUNT_TYPES,
@@ -26,15 +27,16 @@ import {
 
 export default function StepBankDetailsView() {
   const { form, onSubmit, banks, loadingBanks } = useStepBankDetails();
+  const t = useTranslations("Onboarding.bankDetailsView");
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
         <Typography variant="h3" className="text-xl font-bold text-gray-900">
-          Set up your payout account
+          {t("title")}
         </Typography>
         <Typography className="text-gray-500 mt-1">
-          Enter your bank details so we can deposit your earnings directly.
+          {t("subtitle")}
         </Typography>
       </div>
 
@@ -44,11 +46,10 @@ export default function StepBankDetailsView() {
         </div>
         <div>
           <Typography className="text-emerald-bg font-bold text-sm">
-            256-bit SSL Encryption
+            {t("sslTitle")}
           </Typography>
           <Typography className="text-emerald-bg/80 text-xs mt-1">
-            Your banking information is encrypted and stored securely. We never
-            share your data.
+            {t("sslDesc")}
           </Typography>
         </div>
       </div>
@@ -61,11 +62,11 @@ export default function StepBankDetailsView() {
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <FormLabel className="text-[10px] font-bold uppercase text-gray-400">
-                  Account Tile / Holder Name
+                  {t("accountTitleLabel")}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="John Doe"
+                    placeholder={t("accountTitlePlaceholder")}
                     className="h-12 bg-gray-50/50 border-gray-100 rounded-xl"
                     {...field}
                   />
@@ -82,12 +83,12 @@ export default function StepBankDetailsView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-[10px] font-bold uppercase text-gray-400">
-                    Bank Name
+                    {t("bankNameLabel")}
                   </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value} disabled={loadingBanks}>
                     <FormControl>
                       <SelectTrigger className="h-12! bg-gray-50/50 border-gray-100 rounded-xl w-full">
-                        <SelectValue placeholder={loadingBanks ? "Loading..." : "Select Bank"} />
+                        <SelectValue placeholder={loadingBanks ? t("loadingBanks") : t("selectBank")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-gray-50" position="popper">
@@ -109,12 +110,12 @@ export default function StepBankDetailsView() {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-[10px] font-bold uppercase text-gray-400">
-                    Account Type
+                    {t("accountTypeLabel")}
                   </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-12! bg-gray-50/50 border-gray-100 rounded-xl w-full">
-                        <SelectValue placeholder="Select Type" />
+                        <SelectValue placeholder={t("selectType")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-gray-50" position="popper" sideOffset={4}>
@@ -137,11 +138,11 @@ export default function StepBankDetailsView() {
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <FormLabel className="text-[10px] font-bold uppercase text-gray-400">
-                  IBAN Number
+                  {t("ibanLabel")}
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="IQ00 0000 0000 0000 0000 000"
+                    placeholder={t("ibanPlaceholder")}
                     className="h-12 bg-gray-50/50 border-gray-100 rounded-xl"
                     {...field}
                   />
@@ -153,19 +154,19 @@ export default function StepBankDetailsView() {
 
           <div className="pt-6 border-t border-gray-50">
             <Typography className="font-bold text-gray-900 text-sm mb-3">
-              Payout Schedule
+              {t("payoutScheduleTitle")}
             </Typography>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                 <Calendar className="w-5 h-5 text-emerald-bg" />
                 <span className="text-xs text-gray-600">
-                  Weekly payouts every Monday
+                  {t("weeklyPayouts")}
                 </span>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                 <Clock className="w-5 h-5 text-emerald-bg" />
                 <span className="text-xs text-gray-600">
-                  Processing takes 1-2 business days
+                  {t("processingTime")}
                 </span>
               </div>
             </div>
@@ -176,7 +177,7 @@ export default function StepBankDetailsView() {
               type="submit"
               className="bg-emerald-bg text-white px-10 h-12 rounded-2xl font-bold hover:bg-emerald-bg-hover"
             >
-              Next Step
+              {t("nextStep")}
             </Button>
           </div>
         </form>

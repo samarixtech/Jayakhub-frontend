@@ -67,7 +67,7 @@ export function PaymentHistoryTable({
                   width={36}
                   height={36}
                   src={imageUrl}
-                  alt={firstItem?.name || "Item"}
+                  alt={firstItem?.name || t("item_fallback")}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -96,14 +96,14 @@ export function PaymentHistoryTable({
       ),
     },
     {
-      header: "Status",
+      header: t("table_status"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[120px]",
       cell: (order) => (
         <span
           className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(order.OrderStatus)}`}
         >
-          {getStatusLabel(order.OrderStatus)}
+          {getStatusLabel(order.OrderStatus, t)}
         </span>
       ),
     },

@@ -9,6 +9,7 @@ import { updateItemVariations } from "@/redux/slices/cartSlice";
 import { RootState, AppDispatch } from "@/redux/store/store";
 import { getItemVariantsAction } from "@/app/actions/restaurant/pos";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ItemModifiersModalProps {
   open: boolean;
@@ -33,6 +34,7 @@ export default function ItemModifiersModal({
   open,
   onOpenChange,
 }: ItemModifiersModalProps) {
+  const t = useTranslations("POS.modifiers");
   const { activeModifierItemId } = usePOS();
   const { formatPrice } = useCLC();
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -88,7 +90,7 @@ export default function ItemModifiersModal({
           selections.push({
             variantGroupId: group.id,
             name: option.name,
-            additionalPrice: option.price,
+            additionalPrice: Number(option.price) || 0,
           });
         }
       });
@@ -114,7 +116,7 @@ export default function ItemModifiersModal({
     >
       <DialogHeader className="px-5 py-5 border-b border-gray-100 flex flex-row items-center justify-between text-left">
         <DialogTitle className="text-[20px] font-black tracking-[-0.01em] text-[#111827]">
-          {activeItem.name} — Variants
+          {t("title", { name: activeItem.name })}
         </DialogTitle>
       </DialogHeader>
 
@@ -161,7 +163,7 @@ export default function ItemModifiersModal({
         ) : (
           <div className="flex flex-col items-center justify-center py-8 mb-6">
             <p className="text-gray-400 font-medium text-[14px]">
-              No variants available for this item.
+              {t("noVariants")}
             </p>
           </div>
         )}
@@ -170,7 +172,7 @@ export default function ItemModifiersModal({
           onClick={handleSave}
           className="w-full bg-[#1eb589] hover:bg-[#159a72] text-white font-bold py-3.5 rounded-[8px] text-[16px] transition-colors"
         >
-          Save
+          {t("save")}
         </button>
       </div>
     </GlobalModal>

@@ -37,7 +37,7 @@ export default function RestaurantStatusView() {
         ) : (
           <ArrowLeft className="w-4 h-4 mr-2" />
         )}
-        Back to Login
+        {t("backToLogin")}
       </Button>
     </div>
   );
@@ -80,23 +80,23 @@ export default function RestaurantStatusView() {
     return (
       <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4 relative">
         {LogoutButton}
-        <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white">
-          <div className="flex justify-center mb-8">
+        <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white gap-0">
+          <div className="flex justify-center mb-6">
             <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center animate-in zoom-in duration-500">
               <Clock className="w-10 h-10 text-orange-500 stroke-[2px]" />
             </div>
           </div>
           <Typography
             variant="h2"
-            className="text-2xl font-bold text-gray-900 mb-4"
+            className="text-2xl font-bold text-gray-900 mb-3"
           >
             {t("titlePending")}
           </Typography>
-          <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base mb-8">
+          <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base mb-4">
             {t("descriptionPending")}
           </Typography>
 
-          <div className="w-full border-t border-gray-100 mb-6 mt-2" />
+          <div className="w-full border-t border-gray-100 mb-4" />
 
           <div className="">
             <Typography className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
@@ -113,8 +113,8 @@ export default function RestaurantStatusView() {
   return (
     <div className="h-[100dvh] lg:overflow-hidden bg-gray-50 flex items-center justify-center p-3 sm:p-4 relative">
       {LogoutButton}
-      <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white text-balance">
-        <div className="flex justify-center mb-8">
+      <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white text-balance gap-0">
+        <div className="flex justify-center mb-6">
           <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200 animate-in zoom-in duration-500">
             <Check className="w-10 h-10 text-white stroke-[3px]" />
           </div>
@@ -122,19 +122,19 @@ export default function RestaurantStatusView() {
 
         <Typography
           variant="h2"
-          className="text-2xl font-bold text-gray-900 mb-4"
+          className="text-2xl font-bold text-gray-900 mb-3"
         >
           {t("titleSubmitted")}
         </Typography>
 
-        <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base">
+        <Typography className="text-gray-500 leading-relaxed text-sm sm:text-base mb-4">
           {successMessage || t("descriptionSubmitted")}
         </Typography>
 
-        <div className="w-full border-t border-gray-100 mb-1 mt-3 sm:mt-8" />
+        <div className="w-full border-t border-gray-100 mb-4" />
 
         <div className="">
-          <Typography className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 sm:mb-6 mt-3 sm:mt-6">
+          <Typography className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
             {t("whatHappensNext")}
           </Typography>
 
@@ -144,4 +144,3 @@ export default function RestaurantStatusView() {
     </div>
   );
 }
-

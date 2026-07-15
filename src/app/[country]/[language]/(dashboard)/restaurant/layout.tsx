@@ -8,6 +8,11 @@ export default async function Layout({
 }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value || "";
+  const restaurantId = cookieStore.get("restaurantId")?.value || "";
 
-  return <SocketProvider token={token}>{children}</SocketProvider>;
+  return (
+    <SocketProvider token={token} restaurantId={restaurantId}>
+      {children}
+    </SocketProvider>
+  );
 }

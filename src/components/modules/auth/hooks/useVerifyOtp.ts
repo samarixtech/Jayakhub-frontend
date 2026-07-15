@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "react-hot-toast";
 import {
   resendOtpAction,
@@ -15,6 +16,7 @@ import { AUTH_KEYS } from "@/config/auth-keys.config";
 
 export function useVerifyOtp() {
   const router = useRouter();
+  const t = useTranslations("Auth.toasts");
   const [otpValue, setOtpValue] = useState("");
   const [email, setEmail] = useState<string | null>(null);
   const [isVerifying, startVerifyTransition] = useTransition();
@@ -26,10 +28,10 @@ export function useVerifyOtp() {
     if (storedEmail) {
       setEmail(storedEmail);
     } else {
-      toast.error("No verification email found. Redirecting...");
+      toast.error(t("noVerificationEmail"));
       router.push(`/register`);
     }
-  }, [router]);
+  }, [router, t]);
 
   const resolveRestaurantPath = (data?: any) => {
     const isOnboarded = data?.isOnboarded;
@@ -47,17 +49,17 @@ export function useVerifyOtp() {
     startResendTransition(async () => {
       const result = await resendOtpAction(email);
       if (result.success) {
-        toast.success(result.message || "OTP Sent Successfully");
+        toast.success(result.message || t("otpSent"));
         setTimer(60);
       } else {
-        toast.error(result.message || "Failed to resend OTP");
+        toast.error(result.message || t("failedResendOtp"));
       }
     });
   };
 
   const handleVerify = () => {
     if (otpValue.length < 6) {
-      toast.error("Please enter the full 6-digit code");
+      toast.error(t("enterFullCode"));
       return;
     }
     if (!email) return;
@@ -86,12 +88,12 @@ export function useVerifyOtp() {
         const targetSubPath = role ? ROLE_REDIRECT_MAP[role] : null;
 
         if (!targetSubPath) {
-          toast.error("Authentication error: Invalid user role");
+          toast.error(t("invalidUserRole"));
           router.replace(`/login`);
           return;
         }
 
-        toast.success(result.message || "Account verified!");
+        toast.success(result.message || t("accountVerified"));
         sessionStorage.removeItem(AUTH_KEYS.PENDING_EMAIL);
         sessionStorage.removeItem(AUTH_KEYS.INTENT);
 
@@ -115,7 +117,7 @@ export function useVerifyOtp() {
 
         router.replace(targetSubPath);
       } else {
-        toast.error(result.message || "Verification failed");
+        toast.error(result.message || t("verificationFailed"));
         setOtpValue("");
       }
     });

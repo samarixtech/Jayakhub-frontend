@@ -1,62 +1,76 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import useLocale from "@/hooks/useLocals";
 import { useOnboarding } from "../OnboardingContext";
-
-export const KYC_TYPES = [
-  {
-    id: "id_card",
-    label: "ID Card",
-    description: "Upload your ID Card",
-    sub: "Please upload a clear photo of the front and back of your Government ID.",
-  },
-  {
-    id: "passport",
-    label: "Passport",
-    description: "Upload your Passport",
-    sub: "Please upload the data page of your valid Passport.",
-  },
-  {
-    id: "driving_license",
-    label: "Driving License",
-    description: "Upload your Driving License",
-    sub: "Please upload a clear photo of your valid Driving License.",
-  },
-];
-
-export const DOC_TYPES = [
-  {
-    id: "food_license",
-    label: "Food License",
-    description: "Upload Food License",
-    sub: "Upload your valid food operating license or health permit.",
-  },
-  {
-    id: "tax_certificate",
-    label: "Tax Certificate",
-    description: "Upload Tax Certificate",
-    sub: "Upload your valid business tax registration certificate.",
-  },
-];
 
 export const useStepKyc = () => {
   const router = useRouter();
   const { country, language } = useLocale();
   const { setKycFile, setDocFile } = useOnboarding();
+  const t = useTranslations("Onboarding.kycView");
+
+  const KYC_TYPES = useMemo(
+    () => [
+      {
+        id: "id_card",
+        label: t("types.idCard.label"),
+        description: t("types.idCard.description"),
+        sub: t("types.idCard.sub"),
+      },
+      {
+        id: "passport",
+        label: t("types.passport.label"),
+        description: t("types.passport.description"),
+        sub: t("types.passport.sub"),
+      },
+      {
+        id: "driving_license",
+        label: t("types.drivingLicense.label"),
+        description: t("types.drivingLicense.description"),
+        sub: t("types.drivingLicense.sub"),
+      },
+    ],
+    [t],
+  );
+
+  const DOC_TYPES = useMemo(
+    () => [
+      {
+        id: "food_license",
+        label: t("docs.foodLicense.label"),
+        description: t("docs.foodLicense.description"),
+        sub: t("docs.foodLicense.sub"),
+      },
+      {
+        id: "tax_certificate",
+        label: t("docs.taxCertificate.label"),
+        description: t("docs.taxCertificate.description"),
+        sub: t("docs.taxCertificate.sub"),
+      },
+    ],
+    [t],
+  );
 
   const [kycType, setKycTypeState] = useState("id_card");
   const [docType, setDocTypeState] = useState("food_license");
 
   // Isolated file per KYC type — switching tabs never cross-contaminates
   const [kycFiles, setKycFiles] = useState<Record<string, File | null>>({});
-  const [savedKycInfo, setSavedKycInfo] = useState<{ name: string; type: string } | null>(null);
+  const [savedKycInfo, setSavedKycInfo] = useState<{
+    name: string;
+    type: string;
+  } | null>(null);
 
   // Isolated file per doc type — same pattern as KYC
   const [docFiles, setDocFiles] = useState<Record<string, File | null>>({});
-  const [savedDocInfo, setSavedDocInfo] = useState<{ name: string; type: string } | null>(null);
+  const [savedDocInfo, setSavedDocInfo] = useState<{
+    name: string;
+    type: string;
+  } | null>(null);
 
   useEffect(() => {
     const savedKycName = localStorage.getItem("onboarding_kyc_name");
@@ -93,7 +107,7 @@ export const useStepKyc = () => {
     setSavedKycInfo({ name: file.name, type: kycType });
     localStorage.setItem("onboarding_kyc_name", file.name);
     localStorage.setItem("onboarding_kyc_type", kycType);
-    toast.success("Identity document attached");
+    toast.success(t("identityAttached"));
   };
 
   const handleDocFileChange = (file: File) => {
@@ -103,7 +117,7 @@ export const useStepKyc = () => {
     setSavedDocInfo({ name: file.name, type: docType });
     localStorage.setItem("onboarding_doc_name", file.name);
     localStorage.setItem("onboarding_doc_type", docType);
-    toast.success("Business document attached");
+    toast.success(t("businessAttached"));
   };
 
   const removeKycFile = () => {
@@ -127,7 +141,7 @@ export const useStepKyc = () => {
     const hasDoc = docFiles[docType] || savedDocInfo?.type === docType;
 
     if (!hasKyc || !hasDoc) {
-      toast.error("Please upload both identity and business documents.");
+      toast.error(t("uploadBothRequired"));
       return;
     }
 
@@ -135,7 +149,7 @@ export const useStepKyc = () => {
     localStorage.setItem("onboarding_kyc_type", kycType);
     localStorage.setItem("onboarding_doc_type", docType);
 
-    toast.success("Verification documents submitted");
+    toast.success(t("verificationSubmitted"));
     router.push(`/restaurant/onboarding/step-bank-details`);
   };
 

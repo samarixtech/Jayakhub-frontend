@@ -39,7 +39,7 @@ export async function getCurrentOrder(orderIdFromUrl?: string | null) {
   try {
     const api = await serverApi();
     const response = orderIdFromUrl
-      ? await api.get(`/current-order?orderId=${orderIdFromUrl}`)
+      ? await api.get(`/current-order/${orderIdFromUrl}`)
       : await api.get("/current-order");
     return { success: true, data: response.data };
   } catch (error: any) {

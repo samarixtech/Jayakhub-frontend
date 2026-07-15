@@ -128,7 +128,7 @@ export default function Services({ plans = [] }: Props) {
       id,
       name: plan.name,
       price: isNumeric ? rawPrice : plan.price,
-      period: plan.period || "/mo",
+      period: plan.period || t("pricing.per_month"),
       billingCycle: "monthly",
       features: Object.values(plan.features),
       popular: id === "pro",
@@ -284,7 +284,7 @@ export default function Services({ plans = [] }: Props) {
 
           {pricingPlans.length === 0 ? (
             <p className="text-center text-white/50 py-8">
-              {t("pricing.no_plans") || "No plans available at the moment."}
+              {t("pricing.no_plans")}
             </p>
           ) : (
             <>
@@ -312,14 +312,14 @@ export default function Services({ plans = [] }: Props) {
                         )}
                         {plan.freeTrialDays && (
                           <span className={`inline-flex items-center text-[11px] font-semibold px-3 py-1 rounded-full ${isLight ? "bg-primary/10 text-primary" : "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30"}`}>
-                            {plan.freeTrialDays} days free
+                            {t("pricing.days_free", { days: plan.freeTrialDays })}
                           </span>
                         )}
                       </div>
 
                       {/* billing cycle label */}
                       <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isLight ? "text-primary/60" : "text-white/40"}`}>
-                        {plan.billingCycle ?? "plan"}
+                        {plan.billingCycle ?? t("pricing.plan_fallback")}
                       </p>
 
                       {/* plan name */}

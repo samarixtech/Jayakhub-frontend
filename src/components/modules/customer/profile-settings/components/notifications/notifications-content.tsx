@@ -1,24 +1,25 @@
 "use client";
 import { Bell, Star, Utensils } from "lucide-react";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 import { useNotifications, Notification } from "./useNotifications";
 
-export function getRelativeTime(dateString: string) {
+export function getRelativeTime(dateString: string, t: any) {
   const date = new Date(dateString);
   const now = new Date();
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   let interval = seconds / 31536000;
-  if (interval > 1) return Math.floor(interval) + " years ago";
+  if (interval > 1) return t("years_ago", { count: Math.floor(interval) });
   interval = seconds / 2592000;
-  if (interval > 1) return Math.floor(interval) + " months ago";
+  if (interval > 1) return t("months_ago", { count: Math.floor(interval) });
   interval = seconds / 86400;
-  if (interval > 1) return Math.floor(interval) + " days ago";
+  if (interval > 1) return t("days_ago", { count: Math.floor(interval) });
   interval = seconds / 3600;
-  if (interval > 1) return Math.floor(interval) + " hours ago";
+  if (interval > 1) return t("hours_ago", { count: Math.floor(interval) });
   interval = seconds / 60;
-  if (interval > 1) return Math.floor(interval) + " minutes ago";
-  return Math.floor(seconds) + " seconds ago";
+  if (interval > 1) return t("minutes_ago", { count: Math.floor(interval) });
+  return t("seconds_ago", { count: Math.floor(seconds) });
 }
 
 export function getNotificationIcon(notification: Notification) {
@@ -50,11 +51,12 @@ export function NotificationsContent({
   onNavigate,
 }: NotificationsContentProps) {
   const { handleNotificationClick } = useNotifications(userRole, onNavigate);
+  const t = useTranslations("CustomerDashboard.ProfileSettings");
 
   if (isLoading) {
     return (
       <div className="p-8 text-center text-gray-400">
-        <Typography className="text-xs">Loading notifications...</Typography>
+        <Typography className="text-xs">{t("loading_notifications")}</Typography>
       </div>
     );
   }
@@ -63,7 +65,7 @@ export function NotificationsContent({
     return (
       <div className="p-8 text-center text-gray-500">
         <Bell className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-        <Typography className="text-xs">No new notifications</Typography>
+        <Typography className="text-xs">{t("no_new_notifications")}</Typography>
       </div>
     );
   }
@@ -89,7 +91,7 @@ export function NotificationsContent({
                 {notification.title}
               </h4>
               <span className="text-[10px] text-gray-400 whitespace-nowrap ml-2">
-                {getRelativeTime(notification.createdAt)}
+                {getRelativeTime(notification.createdAt, t)}
               </span>
             </div>
             <p className="text-xs text-gray-600 leading-snug line-clamp-2">

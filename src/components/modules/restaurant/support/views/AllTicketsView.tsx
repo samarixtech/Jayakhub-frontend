@@ -73,15 +73,15 @@ const AllTicketsView = () => {
   };
 
   const statusOptions = [
-    { value: "all", label: "All Statuses" },
-    { value: "RESOLVED", label: "Resolved" },
+    { value: "all", label: t("allTickets.statusOptions.all") },
+    { value: "RESOLVED", label: t("allTickets.statusOptions.resolved") },
   ];
 
   const priorityOptions = [
-    { value: "all", label: "All Priorities" },
-    { value: "LOW", label: "Low" },
-    { value: "MEDIUM", label: "Medium" },
-    { value: "HIGH", label: "High" },
+    { value: "all", label: t("allTickets.priorityOptions.all") },
+    { value: "LOW", label: t("allTickets.priorityOptions.low") },
+    { value: "MEDIUM", label: t("allTickets.priorityOptions.medium") },
+    { value: "HIGH", label: t("allTickets.priorityOptions.high") },
   ];
 
   const totalPages = meta?.totalPages || 1;
@@ -109,7 +109,7 @@ const AllTicketsView = () => {
           <Input
             value={searchTerm}
             onChange={handleSearchChange}
-            placeholder="Search tickets..."
+            placeholder={t("allTickets.searchPlaceholder")}
             className="pl-9 h-10 bg-white border-gray-200 focus:ring-[#1F4D36] focus:border-[#1F4D36]"
           />
         </div>
@@ -120,7 +120,7 @@ const AllTicketsView = () => {
               value={statusFilter}
               onChange={handleStatusChange}
               options={statusOptions}
-              placeholder="Status"
+              placeholder={t("allTickets.statusPlaceholder")}
             />
           </div>
           <div className="w-full sm:w-[180px]">
@@ -128,7 +128,7 @@ const AllTicketsView = () => {
               value={priorityFilter}
               onChange={handlePriorityChange}
               options={priorityOptions}
-              placeholder="Priority"
+              placeholder={t("allTickets.priorityPlaceholder")}
             />
           </div>
         </div>

@@ -3,6 +3,7 @@ import { ArrowLeft, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { NotificationsContent } from "./notifications/notifications-content";
+import { useTranslations } from "next-intl";
 
 interface NotificationPanelProps {
   onBack: () => void;
@@ -21,6 +22,7 @@ export default function NotificationPanel({
   userRole = "customer",
   onNavigate,
 }: NotificationPanelProps) {
+  const t = useTranslations("CustomerDashboard.ProfileSettings");
   return (
     <div className={cn("flex flex-col h-full bg-white", className)}>
       <div className="flex flex-row items-center gap-2 border-b border-gray-100 p-3 shrink-0">
@@ -34,7 +36,7 @@ export default function NotificationPanel({
         </Button>
         <div className="text-sm font-bold text-gray-900 flex items-center gap-2">
           <Bell className="h-4 w-4 text-emerald-600" />
-          Notifications
+          {t("notifications")}
         </div>
       </div>
       <div className="flex-1 overflow-y-auto max-h-[300px]">

@@ -18,6 +18,7 @@ import { clearCart } from "@/redux/slices/cartSlice";
 import { RootState, AppDispatch } from "@/redux/store/store";
 import { addCartItemsAction } from "@/app/actions/restaurant/cart";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface PaymentModalProps {
   open: boolean;
@@ -31,6 +32,7 @@ export default function PaymentModal({
   open,
   onOpenChange,
 }: PaymentModalProps) {
+  const t = useTranslations("POS.payment");
   const { selectedTable } = usePOS();
   const { formatPrice } = useCLC();
   const dispatch = useDispatch<AppDispatch>();
@@ -47,9 +49,9 @@ export default function PaymentModal({
   // Calculate totals directly from Redux cart (same source as POSCartPanel)
   const displaySubtotal = cartItems.reduce((acc, item) => {
     const extraPrice = item.selectedVariations?.length
-      ? item.selectedVariations.reduce((s: number, v: any) => s + (v.additionalPrice ?? 0), 0)
-      : (item.selectedVariation?.additionalPrice ?? 0);
-    return acc + (item.price + extraPrice) * item.quantity;
+      ? item.selectedVariations.reduce((s: number, v: any) => s + (Number(v.additionalPrice) || 0), 0)
+      : (Number(item.selectedVariation?.additionalPrice) || 0);
+    return acc + (Number(item.price) + extraPrice) * item.quantity;
   }, 0);
   const displayTotal = displaySubtotal;
   const deliveryChargesNum = parseFloat(deliveryCharges) || 0;
@@ -107,16 +109,16 @@ export default function PaymentModal({
       try {
         const result = await addCartItemsAction(payload);
         if (result.success) {
-          toast.success("Payment successful!");
+          toast.success(t("toasts.success"));
           setReceiptData(result.data);
           dispatch(clearCart());
           setStep("receipt");
         } else {
-          toast.error(result.message || "Failed to process payment");
+          toast.error(result.message || t("toasts.failed"));
         }
       } catch (err: any) {
         console.error("Payment error:", err);
-        toast.error(err?.message || "An error occurred during payment.");
+        toast.error(err?.message || t("toasts.error"));
       } finally {
         setIsProcessing(false);
       }
@@ -129,17 +131,16 @@ export default function PaymentModal({
 
   if (step === "receipt") {
     const receiptItems: any[] = receiptData?.items || [];
-    const firstItem = receiptItems[0];
-    const receiptOrderId = firstItem?.id ? `#${firstItem.id.slice(-6).toUpperCase()}` : "#——";
-    const receiptDate = firstItem?.createdAt
-      ? new Date(firstItem.createdAt).toLocaleString("en-GB", {
+    const receiptOrderId = receiptData?.id || "——";
+    const receiptDate = receiptData?.createdAt
+      ? new Date(receiptData.createdAt).toLocaleString("en-GB", {
           day: "2-digit", month: "2-digit", year: "numeric",
           hour: "2-digit", minute: "2-digit",
         })
       : "——";
-    const receiptTableName = firstItem?.tableName || selectedTable?.name || "——";
-    const receiptPaymentMethod = firstItem?.paymentMethod || method || "——";
-    const receiptOrderType = firstItem?.orderType || orderType;
+    const receiptTableName = receiptData?.tableName || selectedTable?.name || "——";
+    const receiptPaymentMethod = receiptData?.paymentMethod || method || "——";
+    const receiptOrderType = receiptData?.orderType || orderType;
     const receiptItemsTotal: number = receiptData?.itemsTotal ?? 0;
     const receiptDeliveryFee: number = receiptData?.deliveryFee ?? 0;
     const receiptGrandTotal: number = receiptData?.grandTotal ?? 0;
@@ -156,7 +157,7 @@ export default function PaymentModal({
 
         const discountRow = discountAmt > 0
           ? `<tr>
-               <td style="color:#999;font-size:11px;padding:1px 0 0 8px;">After discount</td>
+               <td style="color:#999;font-size:11px;padding:1px 0 0 8px;">${t("afterDiscount")}</td>
                <td style="text-align:right;font-size:11px;padding:1px 0 0;">
                  <s style="color:#bbb;">${formatPrice(baseTotal)}</s>
                  <span style="color:#357252;margin-left:4px;">${formatPrice(discountedItemTotal)}</span>
@@ -182,13 +183,13 @@ export default function PaymentModal({
 
       const deliveryRow = receiptDeliveryFee > 0
         ? `<tr>
-             <td style="color:#666;padding:3px 0;">Delivery Fee</td>
+             <td style="color:#666;padding:3px 0;">${t("deliveryFee")}</td>
              <td style="text-align:right;padding:3px 0;">${formatPrice(receiptDeliveryFee)}</td>
            </tr>`
         : "";
 
       printWindow.document.write(`
-        <!DOCTYPE html><html><head><title>Receipt</title>
+        <!DOCTYPE html><html><head><title>${t("receipt")}</title>
         <style>
           *{margin:0;padding:0;box-sizing:border-box;}
           body{font-family:'Courier New',Courier,monospace;font-size:13px;padding:24px 20px;max-width:340px;margin:0 auto;}
@@ -201,21 +202,21 @@ export default function PaymentModal({
           .footer{text-align:center;color:#aaa;font-size:11px;margin-top:18px;line-height:1.6;}
           @media print{body{padding:8px;}}
         </style></head><body>
-        <h1>Receipt</h1>
+        <h1>${t("receipt")}</h1>
         <p class="sub">${receiptOrderType} &middot; ${receiptTableName}</p>
         <div class="meta"><span>${receiptOrderId}</span><span>${receiptDate}</span></div>
         <hr>
         <table>${itemsHtml}</table>
         <hr>
         <table>
-          <tr><td style="color:#666;padding:3px 0;">Subtotal</td><td style="text-align:right;padding:3px 0;">${formatPrice(receiptItemsTotal)}</td></tr>
+          <tr><td style="color:#666;padding:3px 0;">${t("subtotal")}</td><td style="text-align:right;padding:3px 0;">${formatPrice(receiptItemsTotal)}</td></tr>
           ${deliveryRow}
         </table>
         <hr>
         <table>
-          <tr class="total-row"><td>Grand Total</td><td style="text-align:right;">${formatPrice(receiptGrandTotal)}</td></tr>
+          <tr class="total-row"><td>${t("grandTotal")}</td><td style="text-align:right;">${formatPrice(receiptGrandTotal)}</td></tr>
         </table>
-        <p class="footer">Paid via <b>${receiptPaymentMethod}</b><br>Thank you for dining with us!</p>
+        <p class="footer">${t("paidVia")} <b>${receiptPaymentMethod}</b><br>${t("thankYou")}</p>
         </body></html>
       `);
 
@@ -229,6 +230,7 @@ export default function PaymentModal({
         open={open}
         onOpenChange={onOpenChange}
         customStyle
+        isOutsideDisabled
         className="sm:max-w-[400px] p-6 flex flex-col items-center bg-white border-none shadow-2xl rounded-2xl text-center"
       >
         <div className="flex flex-col items-center w-full pb-6">
@@ -237,7 +239,7 @@ export default function PaymentModal({
             <Check className="w-6 h-6 text-[#357252] stroke-[3px]" />
           </div>
           <h2 className="text-[20px] font-black text-[#1b2d22] tracking-tight mb-0.5">
-            Payment Successful
+            {t("successTitle")}
           </h2>
           <p className="text-[12px] text-[#8ea89a] font-medium mb-5">
             {receiptOrderType} · {receiptTableName}
@@ -268,7 +270,9 @@ export default function PaymentModal({
                     {/* Discounted price row */}
                     {discountAmt > 0 && (
                       <div className="flex justify-between text-[11px] mt-0.5">
-                        <span className="text-[#8ea89a]">Price (after discount)</span>
+                        <span className="text-[#8ea89a]">
+                          {t("priceAfterDiscount")}
+                        </span>
                         <div className="flex items-center gap-1.5">
                           <span className="text-gray-400 line-through">{formatPrice(baseTotal)}</span>
                           <span className="text-[#357252] font-semibold">{formatPrice(discountedItemTotal)}</span>
@@ -289,50 +293,50 @@ export default function PaymentModal({
                 );
               })
             ) : (
-              <p className="text-[13px] text-[#8ea89a]">No items</p>
+              <p className="text-[13px] text-[#8ea89a]">{t("noItems")}</p>
             )}
           </div>
 
           {/* Subtotal / delivery / total */}
           <div className="w-full space-y-1.5 mb-3">
             <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
-              <span>Subtotal</span>
+              <span>{t("subtotal")}</span>
               <span>{formatPrice(receiptItemsTotal)}</span>
             </div>
             {receiptDeliveryFee > 0 && (
               <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
-                <span>Delivery Fee</span>
+                <span>{t("deliveryFee")}</span>
                 <span>{formatPrice(receiptDeliveryFee)}</span>
               </div>
             )}
           </div>
 
           <div className="flex justify-between w-full text-[17px] text-[#111] font-black mb-5 border-t border-dashed border-gray-200 pt-3">
-            <span>Grand Total</span>
+            <span>{t("grandTotal")}</span>
             <span>{formatPrice(receiptGrandTotal)}</span>
           </div>
 
           <div className="text-center mb-5">
             <p className="text-[13px] text-[#3e5648] font-medium mb-1">
-              Paid via{" "}
+              {t("paidVia")}{" "}
               <span className="font-black text-[#111] capitalize">
                 {receiptPaymentMethod}
               </span>
             </p>
             <p className="text-[11px] text-[#8ea89a] font-medium">
-              Thank you for dining with us!
+              {t("thankYou")}
             </p>
           </div>
 
           <div className="flex w-full gap-3">
             <button onClick={handlePrint} className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
-              <Printer className="w-4 h-4 stroke-[2.5px]" /> Print
+              <Printer className="w-4 h-4 stroke-[2.5px]" /> {t("print")}
             </button>
             <button
               onClick={handleNewOrder}
               className="flex-1 bg-[#f4f6f8] hover:bg-[#e9ecef] text-[#111] font-bold py-3 rounded-lg flex items-center justify-center transition-colors"
             >
-              New Order
+              {t("newOrder")}
             </button>
           </div>
         </div>
@@ -349,7 +353,7 @@ export default function PaymentModal({
     >
       <DialogHeader className="px-5 py-4 border-b border-gray-100 flex flex-row items-center justify-between text-left">
         <DialogTitle className="text-[18px] font-black tracking-tight text-[#111] border-none">
-          Complete Payment
+          {t("title")}
         </DialogTitle>
       </DialogHeader>
 
@@ -360,19 +364,19 @@ export default function PaymentModal({
             {formatPrice(actualTotal)}
           </span>
           <span className="text-[12px] text-[#789684] font-semibold">
-            Total Payable
+            {t("totalPayable")}
           </span>
         </div>
 
         {/* Breakdown */}
         <div className="space-y-1.5 mb-3">
           <div className="flex justify-between text-[#556977] text-[13px] font-medium">
-            <span>Subtotal</span>
+            <span>{t("subtotal")}</span>
             <span>{formatPrice(displaySubtotal)}</span>
           </div>
           {orderType === "Delivery" && (
             <div className="flex justify-between text-[#556977] text-[13px] font-medium items-center">
-              <span>Delivery Charges</span>
+              <span>{t("deliveryCharges")}</span>
               <input
                 type="number"
                 min="0"
@@ -384,7 +388,9 @@ export default function PaymentModal({
           )}
         </div>
         <div className="border-t border-dashed border-gray-200 pt-3 flex justify-between items-center mb-4">
-          <span className="text-[15px] font-black text-[#111]">Total</span>
+          <span className="text-[15px] font-black text-[#111]">
+            {t("total")}
+          </span>
           <span className="text-[15px] font-black text-[#111]">
             {formatPrice(actualTotal)}
           </span>
@@ -405,7 +411,7 @@ export default function PaymentModal({
             <span
               className={`text-[12px] font-bold ${method === "cash" ? "text-white" : "text-[#111]"}`}
             >
-              Cash
+              {t("cash")}
             </span>
           </button>
 
@@ -422,7 +428,7 @@ export default function PaymentModal({
             <span
               className={`text-[12px] font-bold ${method === "card" ? "text-white" : "text-[#111]"}`}
             >
-              Card
+              {t("card")}
             </span>
           </button>
         </div>
@@ -430,7 +436,7 @@ export default function PaymentModal({
         {/* Paid Amount */}
         <div className="bg-[#fcfdfd] border border-gray-100 p-3 rounded-xl mb-4 flex flex-col items-center">
           <span className="text-[#657a8a] text-[11px] font-bold mb-1.5 w-full text-left">
-            Paid Amount
+            {t("paidAmount")}
           </span>
           <input
             type="number"
@@ -445,7 +451,8 @@ export default function PaymentModal({
               <span
                 className={`text-[14px] font-black ${change >= 0 ? "text-[#1eb589]" : "text-red-500"}`}
               >
-                Change: {change >= 0 ? formatPrice(change) : formatPrice(0)}
+                {t("change")}{" "}
+                {change >= 0 ? formatPrice(change) : formatPrice(0)}
               </span>
             );
           })()}
@@ -462,9 +469,9 @@ export default function PaymentModal({
           {isProcessing ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : !method ? (
-            "Select Payment Method"
+            t("selectMethod")
           ) : (
-            `Confirm ${method.charAt(0).toUpperCase() + method.slice(1)} Payment`
+            t("confirmPayment", { method: t(method) })
           )}
         </button>
       </div>

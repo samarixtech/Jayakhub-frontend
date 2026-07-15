@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 
 interface ShiftReportPDFProps {
   data: any;
@@ -8,6 +9,7 @@ interface ShiftReportPDFProps {
 }
 
 export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
+  const t = useTranslations("POS.shiftReportPdf");
   return (
     <div className="absolute top-[-9999px] left-[-9999px] w-[800px] -z-50 pointer-events-none bg-white">
       <div
@@ -18,19 +20,19 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
         <div className="flex justify-between items-start border-b-2 border-gray-800 pb-6 mb-8">
           <div>
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-              Shift Summary Report
+              {t("title")}
             </h1>
             <p className="text-gray-500 mt-2 font-medium">
-              Generated Date: {new Date().toLocaleString()}
+              {t("generatedDate", { date: new Date().toLocaleString() })}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xl font-bold text-gray-900">Jayak Hub POS</p>
+            <p className="text-xl font-bold text-gray-900">{t("brand")}</p>
             <p className="text-gray-500 font-medium tracking-tight">
-              Operator: {data?.user?.name || "Unknown"}
+              {t("operator", { name: data?.user?.name || t("unknown") })}
             </p>
             <p className="text-gray-500 font-medium uppercase text-xs mt-1">
-              Role: {data?.user?.role?.replace("_", " ")}
+              {t("role", { role: data?.user?.role?.replace("_", " ") ?? "" })}
             </p>
           </div>
         </div>
@@ -39,7 +41,7 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
         <div className="grid grid-cols-4 gap-6 mb-10">
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-              Total Sales
+              {t("totalSales")}
             </p>
             <p className="text-2xl font-black text-gray-900">
               ${data?.metrics?.totalSales?.toFixed(2) || "0.00"}
@@ -47,7 +49,7 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
           </div>
           <div className="bg-emerald-50 p-5 border border-emerald-100 rounded-lg">
             <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-2">
-              Gross Profit
+              {t("grossProfit")}
             </p>
             <p className="text-2xl font-black text-emerald-700">
               ${data?.metrics?.grossProfit?.toFixed(2) || "0.00"}
@@ -55,7 +57,7 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
           </div>
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-              Transactions
+              {t("transactions")}
             </p>
             <p className="text-2xl font-black text-gray-900">
               {data?.metrics?.transactions || 0}
@@ -63,7 +65,7 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
           </div>
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
-              Avg Order
+              {t("avgOrder")}
             </p>
             <p className="text-2xl font-black text-gray-900">
               ${data?.metrics?.averageOrder?.toFixed(2) || "0.00"}
@@ -74,23 +76,29 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
         {/* Payment Summary */}
         <div className="mb-10">
           <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-3 mb-4">
-            Payment Summary
+            {t("paymentSummary")}
           </h2>
           <div className="grid grid-cols-3 gap-6">
             <div className="flex justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
-              <span className="font-semibold text-gray-600">Cash Payments</span>
+              <span className="font-semibold text-gray-600">
+                {t("cashPayments")}
+              </span>
               <span className="font-black text-gray-900">
                 ${data?.paymentSummary?.cash?.toFixed(2) || "0.00"}
               </span>
             </div>
             <div className="flex justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
-              <span className="font-semibold text-gray-600">Card Payments</span>
+              <span className="font-semibold text-gray-600">
+                {t("cardPayments")}
+              </span>
               <span className="font-black text-gray-900">
                 ${data?.paymentSummary?.card?.toFixed(2) || "0.00"}
               </span>
             </div>
             <div className="flex justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
-              <span className="font-semibold text-gray-600">Online Orders</span>
+              <span className="font-semibold text-gray-600">
+                {t("onlineOrders")}
+              </span>
               <span className="font-black text-gray-900">
                 ${data?.paymentSummary?.online?.toFixed(2) || "0.00"}
               </span>
@@ -102,22 +110,28 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
         {data?.orders && data.orders.length > 0 && (
           <div>
             <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-3 mb-4">
-              Detailed Order History
+              {t("orderHistory")}
             </h2>
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b-2 border-gray-800 text-sm">
-                  <th className="py-3 px-2 font-bold text-gray-600">Time</th>
                   <th className="py-3 px-2 font-bold text-gray-600">
-                    Order ID
+                    {t("colTime")}
+                  </th>
+                  <th className="py-3 px-2 font-bold text-gray-600">
+                    {t("colOrderId")}
                   </th>
                   <th className="py-3 px-2 font-bold text-gray-600 max-w-[200px]">
-                    Item Name
+                    {t("colItemName")}
                   </th>
-                  <th className="py-3 px-2 font-bold text-gray-600">Type</th>
-                  <th className="py-3 px-2 font-bold text-gray-600">Payment</th>
+                  <th className="py-3 px-2 font-bold text-gray-600">
+                    {t("colType")}
+                  </th>
+                  <th className="py-3 px-2 font-bold text-gray-600">
+                    {t("colPayment")}
+                  </th>
                   <th className="py-3 px-2 font-bold text-gray-600 text-right">
-                    Amount
+                    {t("colAmount")}
                   </th>
                 </tr>
               </thead>
@@ -137,7 +151,7 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
                       {order.id}
                     </td>
                     <td className="py-4 px-2 font-bold text-gray-900 wrap-break-word max-w-[200px]">
-                      {order.itemName || "Custom Order"}
+                      {order.itemName || t("customOrder")}
                     </td>
                     <td className="py-4 px-2">
                       <span className="bg-gray-100 text-gray-600 px-2.5 py-1 rounded text-[11px] font-bold uppercase tracking-wide">
@@ -158,7 +172,7 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
         )}
 
         <div className="mt-16 text-center text-gray-400 text-xs font-bold tracking-widest border-t border-gray-100 pt-6">
-          <p>END OF REPORT - GENERATED SECURELY BY JAYAK HUB SECURE POS</p>
+          <p>{t("endOfReport")}</p>
         </div>
       </div>
     </div>

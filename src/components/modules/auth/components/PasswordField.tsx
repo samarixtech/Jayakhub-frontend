@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -13,18 +14,19 @@ interface PasswordFieldProps {
 }
 
 export function PasswordField({
-  placeholder = "Password",
+  placeholder,
   field,
   error,
   compact,
 }: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
+  const t = useTranslations("Auth.passwordField");
 
   return (
     <div className="relative">
       <Input
         type={showPassword ? "text" : "password"}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t("defaultPlaceholder")}
         className={cn(
           "pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all",
           compact ? "h-12" : "h-13",

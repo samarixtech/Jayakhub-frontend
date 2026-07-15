@@ -44,6 +44,19 @@ function capitalize(str?: string) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
+function formatAmountInCurrency(amount: number | string, currencyCode?: string) {
+  const num = Number(amount);
+  if (isNaN(num)) return "—";
+  try {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: (currencyCode || "USD").toUpperCase(),
+    }).format(num);
+  } catch {
+    return `${currencyCode ?? ""} ${num.toFixed(2)}`.trim();
+  }
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function SubscriptionView() {
   const { formatPrice } = useCLC();
@@ -110,6 +123,13 @@ export default function SubscriptionView() {
   const card = subscription?.paymentCard;
   const isActive = subscription?.status === "active" && !subscription?.isExpired;
 
+  const paidDisplayAmount =
+    subscription?.convertedPrice ?? subscription?.paidAmount;
+  const paidDisplayCurrency =
+    subscription?.convertedPrice != null
+      ? subscription?.convertedCurrency
+      : subscription?.paidCurrency;
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -160,7 +180,9 @@ export default function SubscriptionView() {
             <p className="text-lg font-black text-gray-900">{plan?.name}</p>
             <div className="flex items-end gap-1 mt-0.5">
               <span className="text-2xl font-black text-[#346853]">
-                {formatPrice(plan?.monthlyPrice ?? "0")}
+                {paidDisplayAmount != null
+                  ? formatAmountInCurrency(paidDisplayAmount, paidDisplayCurrency)
+                  : formatPrice(plan?.monthlyPrice ?? "0")}
               </span>
               <span className="text-xs text-gray-400 mb-0.5">/month</span>
             </div>
@@ -446,7 +468,9 @@ export default function SubscriptionView() {
                       </div>
                     </td>
                     <td className="px-6 py-3.5 font-semibold text-gray-900 font-mono">
-                      {formatPrice(row.amount)}
+                      {row.convertedPrice != null
+                        ? formatAmountInCurrency(row.convertedPrice, row.convertedCurrency ?? undefined)
+                        : formatAmountInCurrency(row.amount, row.currency)}
                     </td>
                     <td className="px-6 py-3.5 text-gray-600">{row.planName}</td>
                     <td className="px-6 py-3.5">

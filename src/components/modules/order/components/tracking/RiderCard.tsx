@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { Star, Phone, Clock, Bike } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Rider {
   name: string;
@@ -16,13 +17,14 @@ interface RiderCardProps {
 }
 
 export const RiderCard: React.FC<RiderCardProps> = ({ rider }) => {
+  const t = useTranslations("OrderTracking");
   if (!rider) {
     return (
       <div className="border border-gray-100 rounded-2xl p-6 bg-white">
         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">
-          Your Rider
+          {t("yourRider")}
         </h3>
-        <p className="text-sm text-gray-400">Rider not assigned yet.</p>
+        <p className="text-sm text-gray-400">{t("riderNotAssigned")}</p>
       </div>
     );
   }
@@ -31,7 +33,7 @@ export const RiderCard: React.FC<RiderCardProps> = ({ rider }) => {
     <div className="border border-gray-100 rounded-2xl p-6 bg-white">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-          Your Rider
+          {t("yourRider")}
         </h3>
         <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg">
           <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
@@ -66,7 +68,7 @@ export const RiderCard: React.FC<RiderCardProps> = ({ rider }) => {
         {rider.estimatedArrivalTime && (
           <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
             <Clock className="w-3.5 h-3.5 text-[#346853]" />
-            <span>ETA <span className="font-bold text-gray-900">{rider.estimatedArrivalTime}</span></span>
+            <span>{t("eta")} <span className="font-bold text-gray-900">{rider.estimatedArrivalTime}</span></span>
           </div>
         )}
         <a
@@ -74,7 +76,7 @@ export const RiderCard: React.FC<RiderCardProps> = ({ rider }) => {
           className="flex items-center gap-1.5 text-xs text-[#346853] font-bold bg-emerald-50 px-3 py-1.5 rounded-full hover:bg-emerald-100 transition-colors"
         >
           <Phone className="w-3.5 h-3.5" />
-          Call Rider
+          {t("callRider")}
         </a>
       </div>
     </div>

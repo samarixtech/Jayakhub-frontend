@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 import { useStepKyc } from "../../hooks/useStepKyc";
 import { DocumentUploadArea } from "../../components/DocumentUploadArea";
 
@@ -21,6 +22,7 @@ export default function StepKycView() {
     KYC_TYPES,
     DOC_TYPES,
   } = useStepKyc();
+  const t = useTranslations("Onboarding.kycView");
 
   const activeKyc = KYC_TYPES.find((t) => t.id === kycType)!;
   const activeDoc = DOC_TYPES.find((t) => t.id === docType)!;
@@ -43,10 +45,10 @@ export default function StepKycView() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
         <Typography variant="h3" className="text-xl font-bold text-gray-900">
-          Upload Documents
+          {t("title")}
         </Typography>
         <Typography className="text-gray-500 mt-1">
-          Verify your identity and business to start selling.
+          {t("subtitle")}
         </Typography>
       </div>
 
@@ -59,7 +61,7 @@ export default function StepKycView() {
                 1
               </div>
               <Typography className="font-bold text-gray-900">
-                Owner Identity (KYC)
+                {t("ownerIdentity")}
               </Typography>
             </div>
           </div>
@@ -97,11 +99,11 @@ export default function StepKycView() {
                 2
               </div>
               <Typography className="font-bold text-gray-900">
-                Restaurant Documents
+                {t("restaurantDocuments")}
               </Typography>
             </div>
             <span className="text-[10px] font-bold text-emerald-bg px-2 py-0.5 bg-emerald-50 rounded-full uppercase">
-              Select One
+              {t("selectOne")}
             </span>
           </div>
 
@@ -137,7 +139,7 @@ export default function StepKycView() {
           disabled={!kycFile || !docFile}
           className="bg-emerald-bg text-white px-10 h-12 rounded-2xl font-bold hover:bg-emerald-bg-hover"
         >
-          Next Step
+          {t("nextStep")}
         </Button>
       </div>
     </div>

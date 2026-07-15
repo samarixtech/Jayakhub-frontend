@@ -43,6 +43,8 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
       case "REJECTED":
       case "CANCELLED":
         return "bg-red-50 text-red-700 hover:bg-red-50"; // Destructive color
+      case "RIDER NOT ASSIGNED":
+        return "bg-red-100 text-red-700 hover:bg-red-100";
       default:
         return "bg-gray-100 text-gray-700 hover:bg-gray-100";
     }

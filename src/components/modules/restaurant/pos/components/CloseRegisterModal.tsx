@@ -7,6 +7,7 @@ import { useCloseRegister } from "../hooks/useCloseRegister";
 import { ShiftReportPDF } from "./ShiftReportPDF";
 import { CloseRegisterMetrics } from "./CloseRegisterMetrics";
 import { CloseRegisterPaymentSummary } from "./CloseRegisterPaymentSummary";
+import { useTranslations } from "next-intl";
 
 interface CloseRegisterModalProps {
   open: boolean;
@@ -17,6 +18,7 @@ export default function CloseRegisterModal({
   open,
   onOpenChange,
 }: CloseRegisterModalProps) {
+  const t = useTranslations("POS.closeRegister");
   const { data, isLoading, isPending, pdfRef, handleCloseShift } =
     useCloseRegister({ open, onOpenChange });
 
@@ -29,7 +31,7 @@ export default function CloseRegisterModal({
     >
       <DialogHeader className="px-6 py-5 border-b border-gray-100 flex flex-row items-center justify-between text-left">
         <DialogTitle className="text-[16px] font-black tracking-tight text-[#1b2d22] border-none">
-          Close Register
+          {t("title")}
         </DialogTitle>
       </DialogHeader>
 
@@ -43,11 +45,13 @@ export default function CloseRegisterModal({
             <>
               <div className="mb-4 border-b border-gray-100 pb-4">
                 <h2 className="text-[17px] font-black tracking-tight text-[#1b2d22]">
-                  Shift Report
+                  {t("shiftReport")}
                 </h2>
                 <div className="flex justify-between items-center mt-2 text-[12px] text-gray-500 font-medium">
                   <span>{new Date().toLocaleString()}</span>
-                  <span>Cashier: {data.user?.name || "Unknown"}</span>
+                  <span>
+                    {t("cashier", { name: data.user?.name || t("unknown") })}
+                  </span>
                 </div>
               </div>
 
@@ -58,7 +62,7 @@ export default function CloseRegisterModal({
             </>
           ) : (
             <p className="text-sm text-center text-gray-500 py-6">
-              No data available.
+              {t("noData")}
             </p>
           )}
         </div>
@@ -71,9 +75,7 @@ export default function CloseRegisterModal({
           disabled={isPending || isLoading || !data}
           className="w-full bg-[#ef4444] hover:bg-[#dc2626] text-white font-bold py-3.5 rounded-xl text-[14px] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
         >
-          {isPending
-            ? "Closing & Saving Report..."
-            : "Close Shift & Print Report"}
+          {isPending ? t("closing") : t("closeShiftPrint")}
         </button>
       </div>
     </GlobalModal>

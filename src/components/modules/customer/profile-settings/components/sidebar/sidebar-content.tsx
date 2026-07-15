@@ -19,23 +19,25 @@ export function SidebarContent({
   onAvatarChange,
   onNotificationClick,
 }: SidebarContentProps) {
-  const { fileInputRef, handleFile, avatarSrc, kycSubmitted } = useSidebar(
-    profile,
-    onAvatarChange,
-  );
+  const { fileInputRef, handleFile, avatarSrc, kycSubmitted, hasRejectedKyc } =
+    useSidebar(profile, onAvatarChange);
   const t = useTranslations("CustomerDashboard.ProfileSettings");
 
   const kycStatusLabel = profile.kycVerified
     ? t("verified")
-    : kycSubmitted
-      ? t("pending")
-      : t("not_verified");
+    : hasRejectedKyc
+      ? t("rejected")
+      : kycSubmitted
+        ? t("pending")
+        : t("not_verified");
 
   const kycStatusClass = profile.kycVerified
     ? "bg-emerald-50 text-emerald-600"
-    : kycSubmitted
-      ? "bg-amber-50 text-amber-600"
-      : "bg-red-50 text-red-600";
+    : hasRejectedKyc
+      ? "bg-red-50 text-red-600"
+      : kycSubmitted
+        ? "bg-amber-50 text-amber-600"
+        : "bg-red-50 text-red-600";
 
   return (
     <div className="flex flex-col items-center text-center w-full">
@@ -68,14 +70,14 @@ export function SidebarContent({
           {typeof profile.role === "string"
             ? profile.role
             : typeof profile.role === "object"
-              ? profile.role?.name || "Customer"
-              : "Customer"}
+              ? profile.role?.name || t("customer_fallback")
+              : t("customer_fallback")}
         </Badge>
       </div>
 
       {/* STATS SECTION */}
       <div className="w-full mt-12 space-y-4 px-4">
-        <h2 className="font-semibold text-slate-500 text-left">Statistics</h2>
+        <h2 className="font-semibold text-slate-500 text-left">{t("statistics")}</h2>
         <div className="bg-gray-50 rounded-2xl p-4 flex justify-between items-center">
           <span className="text-sm font-semibold text-gray-600">
             {t("total_orders")}

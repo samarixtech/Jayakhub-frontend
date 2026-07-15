@@ -17,9 +17,11 @@ export const useSocket = () => useContext(SocketContext);
 export default function SocketProvider({
   children,
   token,
+  restaurantId,
 }: {
   children: React.ReactNode;
   token: string;
+  restaurantId?: string;
 }) {
   const socketRef = useRef<Socket | null>(null);
 
@@ -35,6 +37,10 @@ export default function SocketProvider({
 
     const socket = getSocket(token);
     socketRef.current = socket;
+
+    if (restaurantId) {
+      socket.emit("join", restaurantId);
+    }
     // console.log(
     //   "📡 [SOCKET PROVIDER] Socket state:",
     //   socket.connected ? "CONNECTED" : "CONNECTING...",
@@ -93,9 +99,21 @@ export default function SocketProvider({
       );
     });
 
+    // 🚨 No rider assigned within the critical window — surfaced globally
+    // as a toast; the specific order card is marked critical by whichever
+    // hook owns that order's state (e.g. useOnlineOrders).
+    socket.on("NO_RIDER_AVAILABLE", (data: any) => {
+      toast.error(
+        data?.message ||
+          `Order ${data?.orderId}: no rider found after ${data?.waitingMins} min`,
+        { duration: 8000 },
+      );
+    });
+
     return () => {
       socket.off("HANDSHAKE_SUCCESS");
       socket.off("NEW_ORDER_RECEIVED");
+      socket.off("NO_RIDER_AVAILABLE");
       disconnectSocket();
     };
   }, []);

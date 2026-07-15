@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { FileText, CheckCircle, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
+import { useTranslations } from "next-intl";
 
 interface DocumentUploadAreaProps {
   title: string;
@@ -23,6 +24,7 @@ export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
   themeColor = "blue",
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const t = useTranslations("Onboarding.documentUpload");
 
   const colors = {
     blue: {
@@ -77,7 +79,7 @@ export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
           className="rounded-xl border-gray-200 text-gray-700 font-bold hover:bg-gray-50"
         >
           <Upload className="w-4 h-4 mr-2" />
-          Choose File
+          {t("chooseFile")}
         </Button>
       )}
 
@@ -90,7 +92,7 @@ export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
       />
 
       <div className="flex gap-2 mt-8">
-        {["No glare", "High quality", "Valid expiry"].map((tag) => (
+        {[t("tagNoGlare"), t("tagHighQuality"), t("tagValidExpiry")].map((tag) => (
           <span
             key={tag}
             className="px-3 py-1 bg-gray-50 rounded-full text-[10px] text-gray-400 font-bold uppercase tracking-wider"

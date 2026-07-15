@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { usePOS } from "@/context/POSContext";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
+import { useTranslations } from "next-intl";
 
 interface TableModalProps {
   open: boolean;
@@ -25,6 +26,7 @@ export interface CombinedTable {
 }
 
 export default function TableModal({ open, onOpenChange }: TableModalProps) {
+  const t = useTranslations("POS.tableModal");
   const { setSelectedTable } = usePOS();
   const pendingOrders = useSelector(
     (state: RootState) => state.cart.pendingOrders,
@@ -77,10 +79,10 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
         });
         setTables(normalized);
       } else {
-        toast.error("Failed to load tables");
+        toast.error(t("toasts.loadFailed"));
       }
     } catch (error) {
-      toast.error("An error occurred loading tables");
+      toast.error(t("toasts.loadError"));
     } finally {
       setIsLoading(false);
     }
@@ -124,17 +126,35 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
           status: newStatus,
         });
 
-        toast.success(`Table ${table.name} selected`);
+        toast.success(t("toasts.selected", { table: table.name }));
         // Close modal after selection
         onOpenChange(false);
       } catch (err) {
         console.error("Failed to save table status", err);
-        toast.error("Failed to save table selection");
+        toast.error(t("toasts.saveFailed"));
       }
     } else {
       toast.error(
-        `Table ${table.name} is ${table.status} and cannot be selected`,
+        t("toasts.notSelectable", {
+          table: table.name,
+          status: statusLabel(table.status),
+        }),
       );
+    }
+  };
+
+  const statusLabel = (status: string) => {
+    switch (status) {
+      case "Available":
+        return t("available");
+      case "Occupied":
+        return t("occupied");
+      case "Pay Pending":
+        return t("payPending");
+      case "Selected":
+        return t("selected");
+      default:
+        return status;
     }
   };
 
@@ -147,7 +167,7 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
     >
       <DialogHeader className="px-6 py-[18px] border-b border-gray-100 flex flex-row items-center justify-between text-left">
         <DialogTitle className="text-[20px] font-black tracking-tight text-[#111827]">
-          Select Table
+          {t("title")}
         </DialogTitle>
       </DialogHeader>
 
@@ -157,19 +177,19 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
           <div className="flex items-center gap-[6px]">
             <div className="w-[18px] h-[12px] rounded-[4px] bg-[#9df3c4]"></div>
             <span className="text-[14px] font-extrabold text-[#3e5648]">
-              Available
+              {t("available")}
             </span>
           </div>
           <div className="flex items-center gap-[6px]">
             <div className="w-[18px] h-[12px] rounded-[4px] bg-[#ffadad]"></div>
             <span className="text-[14px] font-extrabold text-[#3e5648]">
-              Occupied
+              {t("occupied")}
             </span>
           </div>
           <div className="flex items-center gap-[6px]">
             <div className="w-[18px] h-[12px] rounded-[4px] bg-[#ffd066]"></div>
             <span className="text-[14px] font-extrabold text-[#3e5648]">
-              Pay Pending
+              {t("payPending")}
             </span>
           </div>
         </div>
@@ -189,7 +209,7 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
           </div>
         ) : tables.length === 0 ? (
           <div className="flex flex-1 items-center justify-center min-h-[200px] text-gray-400 font-medium">
-            No tables found
+            {t("noTables")}
           </div>
         ) : (
           <div className="grid grid-cols-4 gap-[20px] min-h-[200px] max-h-[400px] overflow-y-auto pr-2">
@@ -198,7 +218,10 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
                 (order) => order.tableName === table.name,
               );
               const displayStatus = isPending ? "Pay Pending" : table.status;
-              const displayDetails = isPending ? "Pay Pending" : table.details;
+              const displayDetails =
+                displayStatus === "Pay Pending"
+                  ? t("payPending")
+                  : t("seats", { count: table.seats });
 
               let bgClass = "";
               let borderClass = "";

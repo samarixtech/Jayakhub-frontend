@@ -15,6 +15,7 @@ import {
   deleteTableAction,
 } from "@/app/actions/restaurant/tables";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface POSSettingsModalProps {
   open: boolean;
@@ -25,6 +26,7 @@ export default function POSSettingsModal({
   open,
   onOpenChange,
 }: POSSettingsModalProps) {
+  const t = useTranslations("POS.settings");
   const [tables, setTables] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -49,10 +51,10 @@ export default function POSSettingsModal({
       if (res.success) {
         setTables(res.data);
       } else {
-        toast.error(res.message || "Failed to load tables");
+        toast.error(res.message || t("toasts.loadFailed"));
       }
     } catch (error) {
-      toast.error("An error occurred");
+      toast.error(t("toasts.error"));
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +68,7 @@ export default function POSSettingsModal({
 
   const handleSaveTable = async () => {
     if (!newTableName || !newTableSeats) {
-      toast.error("Please enter table name and seats");
+      toast.error(t("toasts.enterNameSeats"));
       return;
     }
 
@@ -80,11 +82,11 @@ export default function POSSettingsModal({
           seats: parseInt(newTableSeats, 10),
         });
         if (res.success) {
-          toast.success("Table updated successfully");
+          toast.success(t("toasts.updated"));
           resetForm();
           fetchTables();
         } else {
-          toast.error(res.message || "Failed to update table");
+          toast.error(res.message || t("toasts.updateFailed"));
         }
       } else {
         const res = await addTableAction({
@@ -92,15 +94,15 @@ export default function POSSettingsModal({
           seats: parseInt(newTableSeats, 10),
         });
         if (res.success) {
-          toast.success("Table added successfully");
+          toast.success(t("toasts.added"));
           resetForm();
           fetchTables();
         } else {
-          toast.error(res.message || "Failed to add table");
+          toast.error(res.message || t("toasts.addFailed"));
         }
       }
     } catch (error) {
-      toast.error("An error occurred");
+      toast.error(t("toasts.error"));
     } finally {
       setIsSaving(false);
     }
@@ -117,14 +119,14 @@ export default function POSSettingsModal({
     try {
       const res = await deleteTableAction(id);
       if (res.success) {
-        toast.success("Table removed successfully");
+        toast.success(t("toasts.removed"));
         if (editingTableId === id) resetForm();
         fetchTables();
       } else {
-        toast.error(res.message || "Failed to remove table");
+        toast.error(res.message || t("toasts.removeFailed"));
       }
     } catch (error) {
-      toast.error("An error occurred");
+      toast.error(t("toasts.error"));
     } finally {
       setDeletingId(null);
     }
@@ -135,15 +137,15 @@ export default function POSSettingsModal({
       <DialogContent className="max-w-[450px] p-0 overflow-hidden bg-white gap-0">
         <DialogHeader className="p-4 sm:p-5 border-b border-gray-100 bg-white">
           <DialogTitle className="text-[18px] sm:text-[20px] font-black text-[#1f2937]">
-            POS Settings — Tables
+            {t("title")}
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col bg-white">
           <div className="flex items-center justify-between px-6 py-3 border-b border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
-            <div className="w-[100px]">Table</div>
-            <div className="flex-1 text-center">Capacity</div>
-            <div className="w-[70px] text-right">Actions</div>
+            <div className="w-[100px]">{t("colTable")}</div>
+            <div className="flex-1 text-center">{t("colCapacity")}</div>
+            <div className="w-[70px] text-right">{t("colActions")}</div>
           </div>
 
           <div className="max-h-[350px] overflow-y-auto">
@@ -168,7 +170,7 @@ export default function POSSettingsModal({
               </div>
             ) : tables.length === 0 ? (
               <div className="py-10 text-center text-sm text-gray-400 font-medium">
-                No tables found
+                {t("noTables")}
               </div>
             ) : (
               tables.map((table) => (
@@ -180,7 +182,7 @@ export default function POSSettingsModal({
                     {table.name || table.id}
                   </div>
                   <div className="flex-1 text-center font-semibold text-gray-500 text-[13px]">
-                    {table.seats || table.capacity || 0} seats
+                    {t("seats", { count: table.seats || table.capacity || 0 })}
                   </div>
                   <div className="w-[70px] flex justify-end gap-1">
                     <button
@@ -210,14 +212,14 @@ export default function POSSettingsModal({
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="Table name (e.g. T13)"
+                placeholder={t("tableNamePlaceholder")}
                 value={newTableName}
                 onChange={(e) => setNewTableName(e.target.value)}
                 className="flex-1 h-10 px-3 bg-white border border-gray-200 rounded-md text-[13px] font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#357252]/20 focus:border-[#357252]"
               />
               <input
                 type="number"
-                placeholder="Seats"
+                placeholder={t("seatsPlaceholder")}
                 value={newTableSeats}
                 onChange={(e) => setNewTableSeats(e.target.value)}
                 className="w-[80px] h-10 px-3 bg-white border border-gray-200 rounded-md text-[13px] font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#357252]/20 focus:border-[#357252]"
@@ -227,7 +229,7 @@ export default function POSSettingsModal({
                   onClick={resetForm}
                   className="h-10 px-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-500 rounded-md text-[13px] font-bold transition-colors shadow-sm"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
               )}
               <button
@@ -242,7 +244,7 @@ export default function POSSettingsModal({
                 ) : (
                   <Plus className="w-[16px] h-[16px] stroke-[2.5px]" />
                 )}
-                {editingTableId ? "Update" : "Add"}
+                {editingTableId ? t("update") : t("add")}
               </button>
             </div>
           </div>

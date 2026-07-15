@@ -25,7 +25,10 @@ export const OrderCard = ({
   handleCancelOrder,
 }: OrderCardProps) => {
   const t = useTranslations("CustomerDashboard.OrderHistory");
-  const isRejected = order.OrderStatus.toLowerCase() === OrderStatus.REJECTED || order.OrderStatus.toLowerCase() === OrderStatus.CANCELLED;
+  const isRejected =
+    order.OrderStatus.toLowerCase() === OrderStatus.REJECTED ||
+    order.OrderStatus.toLowerCase() === OrderStatus.CANCELLED ||
+    order.OrderStatus.toLowerCase() === OrderStatus.RIDER_NOT_ASSIGNED;
   const isDelivered = order.OrderStatus.toLowerCase() === OrderStatus.DELIVERED;
   const firstItem = order.items?.[0];
   const itemNames = order.items
@@ -89,7 +92,7 @@ export const OrderCard = ({
             >
               {isDelivered && <span>✓</span>}
               {isRejected && <span>✕</span>}
-              {getStatusLabel(order.OrderStatus)}
+              {getStatusLabel(order.OrderStatus, t)}
             </div>
 
             <span className="font-semibold text-gray-900 text-sm w-[60px] text-right">
@@ -104,7 +107,7 @@ export const OrderCard = ({
                 onClick={() => handleReorder(order)}
               >
                 <RefreshCw size={12} />
-                Reorder
+                {t("reorder")}
               </Button>
             ) : (
               <div className="flex gap-2 items-center">
@@ -124,7 +127,7 @@ export const OrderCard = ({
                   }}
                 >
                   <Navigation size={12} />
-                  Track
+                  {t("track")}
                 </Button>
               </div>
             )}

@@ -841,7 +841,7 @@ export default function Home() {
           </div>
 
           {pricingPlans.length === 0 ? (
-            <p className="text-center text-white/50 py-8">No plans available at the moment.</p>
+            <p className="text-center text-white/50 py-8">{t('pricing.no_plans')}</p>
           ) : (
             <>
               <div
@@ -869,14 +869,14 @@ export default function Home() {
                         )}
                         {plan.freeTrialDays && (
                           <span className={`inline-flex items-center text-[11px] font-semibold px-3 py-1 rounded-full ${isLight ? "bg-primary/10 text-primary" : "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30"}`}>
-                            {plan.freeTrialDays} days free
+                            {t('pricing.days_free', { days: plan.freeTrialDays })}
                           </span>
                         )}
                       </div>
 
                       {/* billing cycle */}
                       <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isLight ? "text-primary/60" : "text-white/40"}`}>
-                        {plan.billingCycle ?? "plan"}
+                        {plan.billingCycle ?? t('pricing.plan_fallback')}
                       </p>
 
                       {/* name */}

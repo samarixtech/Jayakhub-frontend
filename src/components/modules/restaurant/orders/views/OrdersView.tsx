@@ -22,6 +22,7 @@ const OrdersView = () => {
     totalPages,
     totalCount,
     handleStatusUpdate,
+    handleHandoff,
     handleOrderClick,
   } = useOrders();
 
@@ -55,6 +56,7 @@ const OrdersView = () => {
         isOpen={isSheetOpen}
         onClose={() => setIsSheetOpen(false)}
         onStatusUpdate={handleStatusUpdate}
+        onHandoff={handleHandoff}
       />
     </div>
   );

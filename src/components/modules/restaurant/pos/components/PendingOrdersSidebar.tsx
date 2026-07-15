@@ -11,6 +11,7 @@ import { restoreFromPendingThunk } from "@/redux/slices/cartSlice";
 import { ShoppingCart } from "lucide-react";
 import toast from "react-hot-toast";
 import { useCLC } from "@/context/CLCContext";
+import { useTranslations } from "next-intl";
 
 interface PendingOrdersSidebarProps {
   open: boolean;
@@ -21,6 +22,7 @@ export default function PendingOrdersSidebar({
   open,
   onOpenChange,
 }: PendingOrdersSidebarProps) {
+  const t = useTranslations("POS.pendingOrders");
   const { formatPrice } = useCLC();
   const dispatch = useDispatch<AppDispatch>();
   const pendingOrders = useSelector(
@@ -32,13 +34,11 @@ export default function PendingOrdersSidebar({
 
   const handleRestore = (id: string) => {
     if (currentCartItemsCount > 0) {
-      toast.error(
-        "Please clear or pay for the current cart before restoring a pending order.",
-      );
+      toast.error(t("clearCartFirst"));
       return;
     }
     dispatch(restoreFromPendingThunk(id));
-    toast.success("Order restored to cart!");
+    toast.success(t("restored"));
     onOpenChange(false);
   };
 
@@ -50,14 +50,14 @@ export default function PendingOrdersSidebar({
       >
         <SheetHeader className="px-5 py-4 border-b border-gray-100 flex flex-row items-center justify-between">
           <SheetTitle className="text-[15px] font-black text-[#1b2d22] tracking-tight border-none">
-            Pending Orders
+            {t("title")}
           </SheetTitle>
         </SheetHeader>
 
         <div className="p-4 flex-1 overflow-y-auto bg-white flex flex-col gap-3">
           {pendingOrders.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-              <p className="font-medium text-[13px]">No pending orders</p>
+              <p className="font-medium text-[13px]">{t("empty")}</p>
             </div>
           ) : (
             pendingOrders.map((order) => {
@@ -67,22 +67,24 @@ export default function PendingOrdersSidebar({
               );
               const priceTotal = (order.items || []).reduce((acc, item) => {
                 const extraPrice = item.selectedVariations?.length
-                  ? item.selectedVariations.reduce((s: number, v: any) => s + (v.additionalPrice ?? 0), 0)
-                  : (item.selectedVariation?.additionalPrice ?? 0);
-                return acc + (item.price + extraPrice) * item.quantity;
+                  ? item.selectedVariations.reduce((s: number, v: any) => s + (Number(v.additionalPrice) || 0), 0)
+                  : (Number(item.selectedVariation?.additionalPrice) || 0);
+                return acc + (Number(item.price) + extraPrice) * item.quantity;
               }, 0);
 
               const displayName =
                 order.tableName ||
                 order.items[0]?.tableName ||
-                (order.orderType === "Dine-In" ? "Table" : order.orderType);
+                (order.orderType === "Dine-In" ? t("table") : order.orderType);
 
               // Format time ago roughly
               const timeAgoMs =
                 Date.now() - new Date(order.timestamp).getTime();
               const minutesAgo = Math.floor(timeAgoMs / 60000);
               const timeAgoStr =
-                minutesAgo < 1 ? "Just now" : `${minutesAgo}m ago`;
+                minutesAgo < 1
+                  ? t("justNow")
+                  : t("minutesAgo", { minutes: minutesAgo });
 
               return (
                 <div
@@ -100,11 +102,12 @@ export default function PendingOrdersSidebar({
                   </div>
                   <div className="text-[11px] text-[#556977] font-medium flex justify-between items-center mt-2">
                     <span>
-                      {itemTotal} items · {formatPrice(priceTotal)}
+                      {t("itemsCount", { count: itemTotal })} ·{" "}
+                      {formatPrice(priceTotal)}
                     </span>
                     <div className="text-[#357252] group-hover:bg-[#e6f4ef] p-1.5 rounded-md transition-colors flex items-center gap-1.5 font-bold">
                       <ShoppingCart className="w-3.5 h-3.5" />
-                      Cart
+                      {t("cart")}
                     </div>
                   </div>
                 </div>
