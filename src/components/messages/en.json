@@ -4497,15 +4497,24 @@
       "closeShiftPrint": "Close Shift & Print Report",
       "metrics": {
         "totalSales": "Total Sales",
-        "grossProfit": "Gross Profit",
         "transactions": "Transactions",
         "avgOrder": "Avg Order"
       },
       "paymentSummary": {
         "title": "Payment Summary",
         "cash": "Cash Payments",
-        "card": "Card Payments",
-        "online": "Online Orders"
+        "card": "Card Payments"
+      },
+      "orderTypeSummary": {
+        "title": "Order Type Summary",
+        "dineIn": "Dine-In",
+        "takeAway": "Take Away",
+        "delivery": "Delivery"
+      },
+      "ordersList": {
+        "title": "Orders",
+        "empty": "No orders this shift.",
+        "table": "Table {name}"
       },
       "toasts": {
         "loadFailed": "Failed to load dashboard data",
@@ -4523,13 +4532,11 @@
       "role": "Role: {role}",
       "unknown": "Unknown",
       "totalSales": "Total Sales",
-      "grossProfit": "Gross Profit",
       "transactions": "Transactions",
       "avgOrder": "Avg Order",
       "paymentSummary": "Payment Summary",
       "cashPayments": "Cash Payments",
       "cardPayments": "Card Payments",
-      "onlineOrders": "Online Orders",
       "orderHistory": "Detailed Order History",
       "colTime": "Time",
       "colOrderId": "Order ID",

@@ -7,6 +7,8 @@ import { useCloseRegister } from "../hooks/useCloseRegister";
 import { ShiftReportPDF } from "./ShiftReportPDF";
 import { CloseRegisterMetrics } from "./CloseRegisterMetrics";
 import { CloseRegisterPaymentSummary } from "./CloseRegisterPaymentSummary";
+import { CloseRegisterOrderTypeSummary } from "./CloseRegisterOrderTypeSummary";
+import { CloseRegisterOrdersList } from "./CloseRegisterOrdersList";
 import { useTranslations } from "next-intl";
 
 interface CloseRegisterModalProps {
@@ -35,7 +37,7 @@ export default function CloseRegisterModal({
         </DialogTitle>
       </DialogHeader>
 
-      <div className="p-6 relative">
+      <div className="p-6 relative max-h-[80vh] overflow-y-auto">
         <div className="bg-white mb-6">
           {isLoading ? (
             <div className="flex justify-center py-10">
@@ -59,6 +61,10 @@ export default function CloseRegisterModal({
               <CloseRegisterPaymentSummary
                 paymentSummary={data.paymentSummary}
               />
+              <CloseRegisterOrderTypeSummary
+                orderTypeSummary={data.orderTypeSummary}
+              />
+              <CloseRegisterOrdersList orders={data.orders} />
             </>
           ) : (
             <p className="text-sm text-center text-gray-500 py-6">

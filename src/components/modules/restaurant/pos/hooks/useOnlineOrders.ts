@@ -287,11 +287,7 @@ export const useOnlineOrders = () => {
       count: outForDeliveryOrders.length,
       icon: Bike,
     },
-  ].filter(
-    (tab) =>
-      !isKitchen ||
-      (tab.id !== "incoming" && tab.id !== "out_for_delivery"),
-  );
+  ].filter((tab) => !isKitchen || tab.id === "preparing");
 
   const currentOrders =
     activeTab === "incoming"

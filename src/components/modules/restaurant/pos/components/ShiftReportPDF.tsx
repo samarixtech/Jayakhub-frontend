@@ -38,21 +38,13 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
         </div>
 
         {/* Metrics */}
-        <div className="grid grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-3 gap-6 mb-10">
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
               {t("totalSales")}
             </p>
             <p className="text-2xl font-black text-gray-900">
               ${data?.metrics?.totalSales?.toFixed(2) || "0.00"}
-            </p>
-          </div>
-          <div className="bg-emerald-50 p-5 border border-emerald-100 rounded-lg">
-            <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-2">
-              {t("grossProfit")}
-            </p>
-            <p className="text-2xl font-black text-emerald-700">
-              ${data?.metrics?.grossProfit?.toFixed(2) || "0.00"}
             </p>
           </div>
           <div className="bg-gray-50 p-5 border border-gray-200 rounded-lg">
@@ -78,7 +70,7 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
           <h2 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-3 mb-4">
             {t("paymentSummary")}
           </h2>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             <div className="flex justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
               <span className="font-semibold text-gray-600">
                 {t("cashPayments")}
@@ -93,14 +85,6 @@ export const ShiftReportPDF = ({ data, pdfRef }: ShiftReportPDFProps) => {
               </span>
               <span className="font-black text-gray-900">
                 ${data?.paymentSummary?.card?.toFixed(2) || "0.00"}
-              </span>
-            </div>
-            <div className="flex justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
-              <span className="font-semibold text-gray-600">
-                {t("onlineOrders")}
-              </span>
-              <span className="font-black text-gray-900">
-                ${data?.paymentSummary?.online?.toFixed(2) || "0.00"}
               </span>
             </div>
           </div>

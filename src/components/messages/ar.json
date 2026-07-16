@@ -4491,15 +4491,24 @@
       "closeShiftPrint": "إغلاق الوردية وطباعة التقرير",
       "metrics": {
         "totalSales": "إجمالي المبيعات",
-        "grossProfit": "إجمالي الربح",
         "transactions": "المعاملات",
         "avgOrder": "متوسط الطلب"
       },
       "paymentSummary": {
         "title": "ملخص المدفوعات",
         "cash": "مدفوعات نقدية",
-        "card": "مدفوعات بالبطاقة",
-        "online": "الطلبات الأونلاين"
+        "card": "مدفوعات بالبطاقة"
+      },
+      "orderTypeSummary": {
+        "title": "ملخص أنواع الطلبات",
+        "dineIn": "تناول في المطعم",
+        "takeAway": "استلام",
+        "delivery": "توصيل"
+      },
+      "ordersList": {
+        "title": "الطلبات",
+        "empty": "لا توجد طلبات في هذه الوردية.",
+        "table": "طاولة {name}"
       },
       "toasts": {
         "loadFailed": "فشل تحميل بيانات لوحة التحكم",
@@ -4517,13 +4526,11 @@
       "role": "الدور: {role}",
       "unknown": "غير معروف",
       "totalSales": "إجمالي المبيعات",
-      "grossProfit": "إجمالي الربح",
       "transactions": "المعاملات",
       "avgOrder": "متوسط الطلب",
       "paymentSummary": "ملخص المدفوعات",
       "cashPayments": "مدفوعات نقدية",
       "cardPayments": "مدفوعات بالبطاقة",
-      "onlineOrders": "الطلبات الأونلاين",
       "orderHistory": "سجل الطلبات التفصيلي",
       "colTime": "الوقت",
       "colOrderId": "رقم الطلب",
