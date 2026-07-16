@@ -141,20 +141,21 @@ export function useRestaurantDiscovery() {
               setCurrentOrderInfo({
                 rawOrder: orderData,
                 orderNumber: `#${orderData.orderId?.substring(0, 8) || "Order"}`,
-                restaurantName: orderData.restaurantId,
+                restaurantName: orderData.restaurantName || "",
                 items: (orderData.items || []).map((item: any) => ({
                   id: item.orderItemId,
+                  originalId: null,
+                  orderItemId: item.orderItemId || null,
                   name: item.name,
                   price: parseFloat(item.price),
                   quantity: item.quantity,
                   image: item.image || null,
                 })),
                 delivery: {
-                  driverName: "Your Rider",
-                  vehicle: "Delivery",
+                  driverName: orderData.rider?.name || "Your Rider",
+                  vehicle: orderData.rider?.vehicleType || "Delivery",
                   time: orderData.orderTime || "Just now",
-                  driverImage:
-                    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200",
+                  driverImage: orderData.rider?.image || "",
                 },
               });
               setIsRatingModalOpen(true);

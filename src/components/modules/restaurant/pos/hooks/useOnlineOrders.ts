@@ -212,12 +212,11 @@ export const useOnlineOrders = () => {
   };
 
   const handleHandoff = async (orderId: string) => {
+    // Only flag the handoff locally (hides the button) — the order stays in
+    // the Ready tab and moves to Out for Delivery on its own once the
+    // backend actually transitions its status (picked up by polling).
     setOrders((prev) =>
-      prev.map((o) =>
-        o.id === orderId
-          ? { ...o, status: "out_for_delivery", handoff: true }
-          : o,
-      ),
+      prev.map((o) => (o.id === orderId ? { ...o, handoff: true } : o)),
     );
 
     try {

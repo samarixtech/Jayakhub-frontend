@@ -97,10 +97,10 @@ export function PromotionsModal({
       open={open}
       onOpenChange={onOpenChange}
       customStyle={true}
-      className="max-w-[480px] p-0 overflow-hidden bg-white rounded-3xl shadow-2xl border border-gray-100"
+      className="max-w-[420px] p-0 overflow-hidden bg-white rounded-3xl shadow-2xl border border-gray-100 max-h-[90vh] overflow-y-auto"
     >
       {/* Campaign Visual Header */}
-      <div className="relative w-full h-[220px] bg-gray-100 flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-[130px] bg-gray-100 flex items-center justify-center overflow-hidden shrink-0">
         {currentCampaign.image ? (
           <Image
             src={getImageUrl(currentCampaign.image)}
@@ -127,17 +127,17 @@ export function PromotionsModal({
         </div>
 
         {/* Campaign Title Overlay */}
-        <div className="absolute bottom-4 left-5 right-5 text-white">
-          <h2 className="text-2xl font-bold tracking-tight line-clamp-1 drop-shadow-md">
+        <div className="absolute bottom-3 left-5 right-5 text-white">
+          <h2 className="text-xl font-bold tracking-tight line-clamp-1 drop-shadow-md">
             {currentCampaign.title}
           </h2>
         </div>
       </div>
 
       {/* Content Area */}
-      <div className="p-6 flex flex-col gap-4">
+      <div className="p-4 flex flex-col gap-3">
         {/* Date / Validity Area */}
-        <div className="flex items-center gap-2 text-xs font-medium text-gray-500 bg-gray-50 px-3.5 py-2.5 rounded-2xl w-full border border-gray-100">
+        <div className="flex items-center gap-2 text-xs font-medium text-gray-500 bg-gray-50 px-3.5 py-2 rounded-2xl w-full border border-gray-100">
           <Calendar className="w-4 h-4 text-[#346853] shrink-0" />
           <span className="truncate">
             {t("validRange", { start: formatDate(currentCampaign.startTime), end: formatDate(currentCampaign.endTime) })}
@@ -146,14 +146,14 @@ export function PromotionsModal({
 
         {/* Description */}
         <div>
-          <p className="text-sm text-gray-600 leading-relaxed break-words line-clamp-3">
+          <p className="text-sm text-gray-600 leading-relaxed break-words line-clamp-2">
             {currentCampaign.description}
           </p>
         </div>
 
         {/* Coupon Section */}
         {currentCampaign.coupon && (
-          <div className="relative mt-2 border-2 border-dashed border-[#82A896]/50 bg-[#F4FBF7] rounded-2xl p-4 flex flex-col gap-3 shadow-sm overflow-hidden select-none">
+          <div className="relative border-2 border-dashed border-[#82A896]/50 bg-[#F4FBF7] rounded-2xl p-3 flex flex-col gap-2 shadow-sm overflow-hidden select-none">
             {/* Left & Right Decorative Punch-out Holes */}
             <div className="absolute top-1/2 -left-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white border-r border-gray-100 shrink-0" />
             <div className="absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 rounded-full bg-white border-l border-gray-100 shrink-0" />
@@ -213,7 +213,7 @@ export function PromotionsModal({
 
         {/* Multi-campaign Slider Controls */}
         {campaigns.length > 1 && (
-          <div className="flex items-center justify-between border-t border-b border-gray-50 py-3 mt-1">
+          <div className="flex items-center justify-between border-t border-b border-gray-50 py-2">
             <button
               onClick={handlePrev}
               aria-label="Previous promotion"
@@ -248,16 +248,16 @@ export function PromotionsModal({
         )}
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="flex flex-col gap-1.5 mt-1">
           <button
             onClick={() => onOpenChange(false)}
-            className="w-full bg-[#346853] hover:bg-[#28503f] active:scale-[0.99] text-white font-semibold py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full bg-[#346853] hover:bg-[#28503f] active:scale-[0.99] text-white font-semibold py-2.5 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
           >
             <span>{t("exploreDeals")}</span>
           </button>
           <button
             onClick={() => onOpenChange(false)}
-            className="w-full text-gray-500 hover:text-gray-700 hover:bg-gray-50 font-medium py-2.5 rounded-2xl transition-all text-sm text-center"
+            className="w-full text-gray-500 hover:text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-2xl transition-all text-sm text-center"
           >
             {t("dismiss")}
           </button>

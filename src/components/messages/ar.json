@@ -1330,6 +1330,21 @@
     "trackOrderBtn": "تتبع الطلب",
     "continueOrderBtn": "متابعة الطلب"
   },
+  "RatingModal": {
+    "title": "قيّم طلبك",
+    "overallQuestion": "كيف كانت تجربتك بشكل عام؟",
+    "tapToRate": "اضغط على نجمة للتقييم",
+    "rateEachItem": "قيّم كل صنف",
+    "deliveryBy": "التوصيل بواسطة {name}",
+    "additionalComments": "تعليقات إضافية",
+    "commentPlaceholder": "أخبرنا بما أعجبك أو ما يمكن تحسينه...",
+    "submitting": "جارٍ الإرسال...",
+    "submitRating": "إرسال التقييم",
+    "skip": "تخطي",
+    "toastSuccess": "تم إرسال التقييمات بنجاح!",
+    "toastRateAtLeastOne": "يرجى تقييم صنف واحد على الأقل أو تجربتك بشكل عام.",
+    "toastFailed": "فشل إرسال التقييمات."
+  },
   "Wishlist": {
     "title": "قائمة المفضلة",
     "subtitle": "مطاعمك المفضلة في مكان واحد",

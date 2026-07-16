@@ -1,12 +1,11 @@
 "use client";
-
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { Star, X, Utensils } from "lucide-react";
+import { Star, X, Utensils, Bike } from "lucide-react";
 import { GlobalModal } from "./GlobalModal";
-import { DialogClose } from "@/components/ui/dialog";
 import { submitRatingAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface RatingModalProps {
   open: boolean;
@@ -30,7 +29,7 @@ interface RatingModalProps {
       time: string;
       driverImage: string;
     };
-    rawOrder?: any; // To hold original order details like orderId and restaurantId
+    rawOrder?: any;
   };
 }
 
@@ -39,9 +38,9 @@ export function RatingModal({
   onOpenChange,
   orderInfo,
 }: RatingModalProps) {
+  const t = useTranslations("RatingModal");
   const [overallRating, setOverallRating] = useState(0);
   const [itemRatings, setItemRatings] = useState<Record<string, number>>({});
-  const [deliveryRating, setDeliveryRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -56,7 +55,7 @@ export function RatingModal({
     let successCount = 0;
 
     // Submit rating for each rated item
-    for (const item of (orderInfo.items || [])) {
+    for (const item of orderInfo.items || []) {
       const itemRating = itemRatings[item.id] || overallRating; // fallback to overall if not explicitly rated
       if (itemRating > 0) {
         const payload = {
@@ -79,12 +78,12 @@ export function RatingModal({
     setIsSubmitting(false);
 
     if (successCount > 0) {
-      toast.success("Ratings submitted successfully!");
+      toast.success(t("toastSuccess"));
       onOpenChange(false);
     } else if (overallRating === 0 && Object.keys(itemRatings).length === 0) {
-      toast.error("Please rate at least one item or your overall experience.");
+      toast.error(t("toastRateAtLeastOne"));
     } else {
-      toast.error("Failed to submit ratings.");
+      toast.error(t("toastFailed"));
     }
   };
 
@@ -132,7 +131,7 @@ export function RatingModal({
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900 leading-tight">
-              Rate Your Order
+              {t("title")}
             </h2>
             <p className="text-sm text-gray-500 mt-0.5">
               {orderInfo.orderNumber} • {orderInfo.restaurantName}
@@ -145,9 +144,9 @@ export function RatingModal({
         {/* Overall Experience */}
         <div className="flex flex-col items-center justify-center text-center">
           <h3 className="text-lg font-bold text-gray-900">
-            How was your overall experience?
+            {t("overallQuestion")}
           </h3>
-          <p className="text-sm text-gray-500 mb-2">Tap a star to rate</p>
+          <p className="text-sm text-gray-500 mb-2">{t("tapToRate")}</p>
           <div className="flex justify-center">
             {renderStars(overallRating, setOverallRating, "lg")}
           </div>
@@ -155,7 +154,7 @@ export function RatingModal({
 
         {/* Rate Each Item */}
         <div className="bg-gray-50 rounded-2xl p-5">
-          <h4 className="font-bold text-gray-900 mb-4">Rate Each Item</h4>
+          <h4 className="font-bold text-gray-900 mb-4">{t("rateEachItem")}</h4>
           <div className="space-y-6">
             {(orderInfo.items || []).map((item) => (
               <div key={item.id} className="flex gap-4 items-start">
@@ -197,35 +196,35 @@ export function RatingModal({
         </div>
 
         {/* Delivery */}
-        <div className="bg-gray-50 rounded-2xl p-5 flex gap-4 items-start">
-          <div className="w-14 h-14 rounded-full overflow-hidden bg-emerald-100 shrink-0 relative">
-            <Image
-              src={orderInfo.delivery.driverImage}
-              alt={orderInfo.delivery.driverName}
-              fill
-              className="object-cover"
-            />
+        <div className="bg-gray-50 rounded-2xl p-5 flex gap-4 items-center">
+          <div className="w-14 h-14 rounded-full overflow-hidden bg-emerald-100 shrink-0 relative flex items-center justify-center">
+            {orderInfo.delivery.driverImage ? (
+              <Image
+                src={orderInfo.delivery.driverImage}
+                alt={orderInfo.delivery.driverName}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <Bike className="w-6 h-6 text-emerald-600" />
+            )}
           </div>
           <div className="flex-1">
             <h5 className="font-semibold text-gray-900 text-sm">
-              Delivery by {orderInfo.delivery.driverName}
+              {t("deliveryBy", { name: orderInfo.delivery.driverName })}
             </h5>
-            <p className="text-xs text-gray-500 mt-0.5">
-              {orderInfo.delivery.vehicle} • {orderInfo.delivery.time}
-            </p>
-            <div className="mt-1">
-              {renderStars(deliveryRating, setDeliveryRating, "sm")}
-            </div>
           </div>
         </div>
 
         {/* Additional Comments */}
         <div className="bg-gray-50 rounded-2xl p-5">
-          <h4 className="font-bold text-gray-900 mb-3">Additional Comments</h4>
+          <h4 className="font-bold text-gray-900 mb-3">
+            {t("additionalComments")}
+          </h4>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Tell us what you liked or what could be improved..."
+            placeholder={t("commentPlaceholder")}
             className="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-700 outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853] transition-all resize-none h-24"
           />
         </div>
@@ -237,14 +236,14 @@ export function RatingModal({
             disabled={isSubmitting}
             className="w-full bg-[#82A896] hover:bg-[#6e9281] disabled:opacity-70 disabled:cursor-not-allowed text-white font-medium py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
-            {isSubmitting ? "Submitting..." : "Submit Rating"}
+            {isSubmitting ? t("submitting") : t("submitRating")}
           </button>
           <button
             onClick={() => onOpenChange(false)}
             disabled={isSubmitting}
             className="w-full text-gray-500 hover:text-gray-700 font-medium py-3 rounded-xl transition-colors"
           >
-            Skip
+            {t("skip")}
           </button>
         </div>
       </div>

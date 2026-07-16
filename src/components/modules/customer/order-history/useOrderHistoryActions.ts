@@ -98,7 +98,7 @@ export function useOrderHistoryActions({
     setCurrentOrderInfo({
       rawOrder: order,
       orderNumber: `#${order.orderId?.substring(0, 8) || "Order"}`,
-      restaurantName: t("restaurant_order_fallback"),
+      restaurantName: order.restaurantName || t("restaurant_order_fallback"),
       items: (order.items || []).map((item) => ({
         id:
           item.id ||
@@ -113,11 +113,10 @@ export function useOrderHistoryActions({
         image: getImageUrl(item.image),
       })),
       delivery: {
-        driverName: t("your_rider_fallback"),
-        vehicle: t("delivery_fallback"),
+        driverName: (order as any).rider?.name || t("your_rider_fallback"),
+        vehicle: (order as any).rider?.vehicleType || t("delivery_fallback"),
         time: order.orderTime || t("just_now"),
-        driverImage:
-          "https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200",
+        driverImage: (order as any).rider?.image || "",
       },
     });
     setIsRatingModalOpen(true);

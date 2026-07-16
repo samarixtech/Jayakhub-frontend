@@ -1332,6 +1332,21 @@
     "trackOrderBtn": "Track Order",
     "continueOrderBtn": "Continue Order"
   },
+  "RatingModal": {
+    "title": "Rate Your Order",
+    "overallQuestion": "How was your overall experience?",
+    "tapToRate": "Tap a star to rate",
+    "rateEachItem": "Rate Each Item",
+    "deliveryBy": "Delivery by {name}",
+    "additionalComments": "Additional Comments",
+    "commentPlaceholder": "Tell us what you liked or what could be improved...",
+    "submitting": "Submitting...",
+    "submitRating": "Submit Rating",
+    "skip": "Skip",
+    "toastSuccess": "Ratings submitted successfully!",
+    "toastRateAtLeastOne": "Please rate at least one item or your overall experience.",
+    "toastFailed": "Failed to submit ratings."
+  },
   "Wishlist": {
     "title": "My Wishlist",
     "subtitle": "Your favorite restaurants in one place",

@@ -164,7 +164,7 @@ export const GlobalSearch = () => {
 
   return (
     <div className="relative w-full max-w-[540px]" ref={dropdownRef}>
-      <div className="w-full flex items-center bg-white rounded-full shadow-lg overflow-hidden pl-3 md:pl-4 pr-0 py-0 border-2 border-[#2A5443] focus-within:border-[#346853] transition-colors relative z-20">
+      <div className="w-full flex items-center bg-white rounded-full shadow-lg overflow-hidden ps-3 md:ps-4 pe-0 py-0 border-2 border-[#2A5443] focus-within:border-[#346853] transition-colors relative z-20">
         <Search className="w-4 h-4 md:w-5 md:h-5 text-gray-400 shrink-0" />
         <input
           type="text"
@@ -187,14 +187,14 @@ export const GlobalSearch = () => {
               const newSearch = params.toString();
               router.push(newSearch ? `${pathname}?${newSearch}` : pathname);
             }}
-            className="p-1 mr-1 text-gray-400 hover:text-gray-600 rounded-full"
+            className="p-1 me-1 text-gray-400 hover:text-gray-600 rounded-full"
           >
             <X className="w-4 h-4" />
           </button>
         )}
         <button
           onClick={() => handleSearchSubmit(query)}
-          className="h-8 md:h-9 flex items-center justify-center bg-[#346853] hover:bg-[#2a5443] text-white text-xs md:text-sm font-semibold px-4 md:px-5 mr-1 md:mr-1.5 rounded-full transition-colors shrink-0"
+          className="h-8 md:h-9 flex items-center justify-center bg-[#346853] hover:bg-[#2a5443] text-white text-xs md:text-sm font-semibold px-4 md:px-5 me-1 md:me-1.5 rounded-full transition-colors shrink-0"
         >
           {t("searchButton")}
         </button>

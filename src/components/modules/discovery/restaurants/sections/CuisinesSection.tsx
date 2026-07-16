@@ -1,8 +1,15 @@
 import React from "react";
 import Image from "next/image";
+import { Utensils } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { CuisinesSectionProps } from "@/components/modules/discovery/discovery.types";
+
+// next/image throws on src values that are neither absolute URLs nor
+// "/"-prefixed paths — the backend sometimes sends placeholder strings
+// like "default-image-url.jpg" for cuisines without a real image.
+const isValidImageSrc = (src?: string) =>
+  !!src && (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("/"));
 
 export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
   isCuisinesLoading,
@@ -41,15 +48,21 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
                         : "border-gray-100 group-hover:border-[#346853]"
                     }`}
                   >
-                    <Image
-                      width={250}
-                      height={250}
-                      src={cat.image}
-                      alt={cat.name}
-                      className={`w-full h-full object-cover transition-transform duration-300 ${
-                        isActive ? "scale-105" : "group-hover:scale-110"
-                      }`}
-                    />
+                    {isValidImageSrc(cat.image) ? (
+                      <Image
+                        width={250}
+                        height={250}
+                        src={cat.image}
+                        alt={cat.name}
+                        className={`w-full h-full object-cover transition-transform duration-300 ${
+                          isActive ? "scale-105" : "group-hover:scale-110"
+                        }`}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <Utensils className="w-8 h-8 text-gray-300" />
+                      </div>
+                    )}
                   </div>
                   <span
                     className={`text-[11px] font-bold transition-colors whitespace-nowrap ${
