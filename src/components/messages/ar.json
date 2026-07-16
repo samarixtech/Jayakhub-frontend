@@ -2030,7 +2030,8 @@
         "tableStatus": "الحالة",
         "to": "إلى",
         "saving": "جاري الحفظ...",
-        "saveBtn": "حفظ الجدول الزمني"
+        "saveBtn": "حفظ الجدول الزمني",
+        "invalidTimeRange": "يجب أن يكون وقت الإغلاق بعد وقت الفتح ليوم {day}"
       },
       "finance": {
         "successMsg": "تم إرسال طلب تحديث التفاصيل البنكية.",
@@ -2868,6 +2869,7 @@
         "priorityPlaceholder": "الأولوية",
         "statusOptions": {
           "all": "جميع الحالات",
+          "open": "مفتوحة",
           "resolved": "تم الحل"
         },
         "priorityOptions": {

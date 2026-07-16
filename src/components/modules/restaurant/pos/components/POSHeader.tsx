@@ -141,34 +141,30 @@ export default function POSNavbar() {
         )}
 
         {/* Online Orders button */}
-        {userRole !== "kitchen" && (
-          <Link
-            href={"/restaurant/pos/orders"}
-            className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
-              isOnlineOrdersPage
-                ? "bg-emerald-500 text-white"
-                : "bg-white text-gray-800 hover:bg-gray-100"
-            }`}
-          >
-            <Globe className="w-[15px] h-[15px] stroke-[2.5px]" />
-            {t("online")}
-          </Link>
-        )}
+        <Link
+          href={"/restaurant/pos/orders"}
+          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
+            isOnlineOrdersPage
+              ? "bg-emerald-500 text-white"
+              : "bg-white text-gray-800 hover:bg-gray-100"
+          }`}
+        >
+          <Globe className="w-[15px] h-[15px] stroke-[2.5px]" />
+          {t("online")}
+        </Link>
 
         {/* POS Orders button */}
-        {userRole !== "kitchen" && (
-          <Link
-            href={"/restaurant/pos/orders/pos"}
-            className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
-              isPosOrdersPage
-                ? "bg-emerald-500 text-white"
-                : "bg-white text-gray-800 hover:bg-gray-100"
-            }`}
-          >
-            <ShoppingCart className="w-[15px] h-[15px] stroke-[2.5px]" />
-            {t("posOrders")}
-          </Link>
-        )}
+        <Link
+          href={"/restaurant/pos/orders/pos"}
+          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
+            isPosOrdersPage
+              ? "bg-emerald-500 text-white"
+              : "bg-white text-gray-800 hover:bg-gray-100"
+          }`}
+        >
+          <ShoppingCart className="w-[15px] h-[15px] stroke-[2.5px]" />
+          {t("posOrders")}
+        </Link>
 
         {/* Mobile Cart Toggle */}
         <button

@@ -2032,7 +2032,8 @@
         "tableStatus": "Status",
         "to": "to",
         "saving": "Saving...",
-        "saveBtn": "Save Schedule"
+        "saveBtn": "Save Schedule",
+        "invalidTimeRange": "Closing time must be after opening time for {day}"
       },
       "finance": {
         "successMsg": "Bank details update requested.",
@@ -2870,6 +2871,7 @@
         "priorityPlaceholder": "Priority",
         "statusOptions": {
           "all": "All Statuses",
+          "open": "Open",
           "resolved": "Resolved"
         },
         "priorityOptions": {

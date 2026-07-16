@@ -74,6 +74,7 @@ const AllTicketsView = () => {
 
   const statusOptions = [
     { value: "all", label: t("allTickets.statusOptions.all") },
+    { value: "OPEN", label: t("allTickets.statusOptions.open") },
     { value: "RESOLVED", label: t("allTickets.statusOptions.resolved") },
   ];
 

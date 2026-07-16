@@ -122,6 +122,9 @@ export default function SubscriptionView() {
   const plan = subscription?.plan;
   const card = subscription?.paymentCard;
   const isActive = subscription?.status === "active" && !subscription?.isExpired;
+  const isCancelledOrExpired =
+    subscription?.status?.toLowerCase() === "cancelled" ||
+    !!subscription?.isExpired;
 
   const paidDisplayAmount =
     subscription?.convertedPrice ?? subscription?.paidAmount;
@@ -307,8 +310,8 @@ export default function SubscriptionView() {
                 <Switch
                   checked={autoRenew}
                   onCheckedChange={handleAutoRenewToggle}
-                  disabled={togglingRenew}
-                  className="data-[state=checked]:bg-[#346853]"
+                  disabled={togglingRenew || isCancelledOrExpired}
+                  className="data-[state=checked]:bg-[#346853] disabled:opacity-50"
                 />
               )}
             </div>
@@ -330,16 +333,18 @@ export default function SubscriptionView() {
               <ChevronRight className="w-4 h-4 text-gray-400 shrink-0" />
             </Link>
 
-            {/* Cancel */}
-            <div className="p-3">
-              <button
-                onClick={() => setCancelDialogOpen(true)}
-                className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-red-50 hover:bg-red-100 transition-colors"
-              >
-                <LogOut className="w-4 h-4 text-red-600" />
-                <span className="text-sm font-bold text-red-600">Cancel Subscription</span>
-              </button>
-            </div>
+            {/* Cancel — hidden once the subscription is already cancelled or expired */}
+            {!isCancelledOrExpired && (
+              <div className="p-3">
+                <button
+                  onClick={() => setCancelDialogOpen(true)}
+                  className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl bg-red-50 hover:bg-red-100 transition-colors"
+                >
+                  <LogOut className="w-4 h-4 text-red-600" />
+                  <span className="text-sm font-bold text-red-600">Cancel Subscription</span>
+                </button>
+              </div>
+            )}
           </div>
         </Card>
       </div>

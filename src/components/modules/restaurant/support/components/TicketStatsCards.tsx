@@ -125,19 +125,6 @@ export const TicketStatsCards = ({ stats, isLoading }: TicketStatsCardsProps) =>
             t("na")
           )
         }
-        sub={
-          stats ? (
-            <div className="flex items-center gap-2 flex-wrap mt-0.5">
-              {(["URGENT", "HIGH", "MEDIUM", "LOW"] as const).map((p) =>
-                stats.byPriority?.[p] ? (
-                  <span key={p} className={`text-[10px] font-semibold ${priorityColor[p]}`}>
-                    {priorityLabel[p]} {stats.byPriority[p]}
-                  </span>
-                ) : null
-              )}
-            </div>
-          ) : undefined
-        }
       />
     </div>
   );

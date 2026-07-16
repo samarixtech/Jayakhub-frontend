@@ -179,7 +179,7 @@ export const usePosOrders = () => {
       count: readyOrders.length,
       icon: CheckCircle2,
     },
-  ].filter((tab) => !isKitchen || tab.id !== "incoming");
+  ].filter((tab) => !isKitchen || tab.id === "preparing");
 
   const currentOrders =
     activeTab === "incoming"

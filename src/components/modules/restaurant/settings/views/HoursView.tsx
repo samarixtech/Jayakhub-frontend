@@ -136,7 +136,27 @@ export function HoursView({ settings }: { settings: SettingsData | null }) {
     setSchedules(newSchedules);
   };
 
+  // "HH:MM:SS" → minutes since midnight, for comparing open vs close
+  const timeToMinutes = (timeStr: string) => {
+    const [h = 0, m = 0] = (timeStr || "00:00").split(":").map(Number);
+    return h * 60 + m;
+  };
+
   const handleSubmit = () => {
+    // Closing time must be strictly after opening time on every open day
+    const invalidDay = schedules.find(
+      (s) =>
+        !s.isClosed && timeToMinutes(s.closeTime) <= timeToMinutes(s.openTime),
+    );
+    if (invalidDay) {
+      toast.error(
+        t("invalidTimeRange", {
+          day: tDays(invalidDay.dayOfWeek.toLowerCase()),
+        }),
+      );
+      return;
+    }
+
     const payload = schedules.map(({ dayOfWeek, openTime, closeTime, isClosed }) => {
       const dayIndex = DAYS_ORDER.indexOf(dayOfWeek);
       return {
