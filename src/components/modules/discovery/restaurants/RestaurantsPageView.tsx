@@ -15,7 +15,6 @@ import {
 import { useRestaurantDiscovery } from "@/hooks/use-restaurant-discovery";
 import { PopularRestaurantsSection } from "./sections/PopularRestaurantsSection";
 import { CuisinesSection } from "./sections/CuisinesSection";
-import { CuratedSection } from "./sections/CuratedSection";
 import { AllRestaurantsSection } from "./sections/AllRestaurantsSection";
 import { PreviousOrdersSection } from "./sections/PreviousOrdersSection";
 import { PromotionsModal, Campaign } from "./components/PromotionsModal";
@@ -107,11 +106,6 @@ const AllRestaurantsPage: React.FC = () => {
               {t("restaurantsPage.nearbyCount", { count: state.restaurants.length })}
             </h2>
           </div>
-
-          <CuratedSection
-            selectedSort={state.selectedSort}
-            onSortChange={actions.setSelectedSort}
-          />
 
           <AllRestaurantsSection
             isPending={state.isPending}
