@@ -2188,7 +2188,8 @@
             "fetchFailed": "Failed to load item details properly.",
             "fillRequired": "Please fill in all required fields",
             "uploadImage": "Please upload an item image",
-            "discountExceeds": "Discount cannot be greater than the base price"
+            "discountExceeds": "Discount cannot be greater than the base price",
+            "negativePrice": "Base price and discount cannot be negative"
           }
         },
         "stepSelection": {

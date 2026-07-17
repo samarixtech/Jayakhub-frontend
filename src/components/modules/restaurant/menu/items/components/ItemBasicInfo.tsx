@@ -97,10 +97,14 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
               </span>
               <Input
                 type="number"
+                min="0"
                 placeholder="0.00"
                 className="h-12 pl-10 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-bold"
                 value={formData.basePrice}
-                onChange={(e) => onChange("basePrice", e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "" || Number(val) >= 0) onChange("basePrice", val);
+                }}
               />
             </div>
           </div>
@@ -116,12 +120,16 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
               </span>
               <Input
                 type="number"
+                min="0"
                 placeholder={t("discountPlaceholder")}
                 className={`h-12 pl-10 bg-gray-50/50 border-gray-100 rounded-xl focus:bg-white transition-all font-bold ${
                   discountExceedsBasePrice ? "border-red-500 focus:border-red-500" : ""
                 }`}
                 value={formData.discount}
-                onChange={(e) => onChange("discount", e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "" || Number(val) >= 0) onChange("discount", val);
+                }}
               />
             </div>
             {discountExceedsBasePrice && (

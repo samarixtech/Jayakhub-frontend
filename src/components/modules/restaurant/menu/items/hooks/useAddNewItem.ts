@@ -212,6 +212,14 @@ export const useAddNewItem = () => {
     }
 
     if (
+      Number(formData.basePrice) < 0 ||
+      (formData.discount && Number(formData.discount) < 0)
+    ) {
+      toast.error(t("negativePrice"));
+      return;
+    }
+
+    if (
       formData.discount &&
       Number(formData.discount) > Number(formData.basePrice)
     ) {
