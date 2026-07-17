@@ -144,7 +144,10 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
     }
 
     const hasChanged = code !== currentCountry || language !== currentLanguage;
-    if (hasChanged) {
+    // Navigate whenever the country/language changed OR a new location was
+    // picked — otherwise selecting a location that resolves to the same
+    // country (the common case) silently drops the lat/lng update.
+    if (hasChanged || location) {
       router.replace(`${newPathname}?${searchParams.toString()}`);
     }
   };

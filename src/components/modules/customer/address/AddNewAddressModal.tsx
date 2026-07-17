@@ -129,7 +129,7 @@ export default function AddNewAddressModal({
   }, [open, addressToEdit, setCenter, setMarkerPosition, autoDetectLocation]);
 
   const handleSaveAddress = async () => {
-    if (!formData.street || !formData.city || !formData.country) {
+    if (!formData.street || !formData.city || !formData.country || !formData.zip) {
       toast.error(t("toast_fill_required"));
       return;
     }
