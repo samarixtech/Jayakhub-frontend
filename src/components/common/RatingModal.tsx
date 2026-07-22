@@ -56,12 +56,11 @@ export function RatingModal({
 
     // Submit rating for each rated item
     for (const item of orderInfo.items || []) {
-      const itemRating = itemRatings[item.id] || overallRating; // fallback to overall if not explicitly rated
+      const itemRating = itemRatings[item.id] || overallRating;
       if (itemRating > 0) {
         const payload = {
           orderId: orderInfo.rawOrder.orderId,
           restaurantId: orderInfo.rawOrder.restaurantId,
-          // Only include itemId if the backend provided a real one, to prevent DB foreign-key errors.
           ...(item.originalId ? { itemId: item.originalId } : {}),
           ...(item.orderItemId ? { orderItemId: item.orderItemId } : {}),
           rating: itemRating,
@@ -123,7 +122,6 @@ export function RatingModal({
       onOpenChange={onOpenChange}
       className="p-6 md:p-8 max-h-[90vh] overflow-y-auto sm:max-w-[500px]"
     >
-      {/* Custom Header area instead of default GlobalModal title, because we need custom layout */}
       <div className="flex items-start justify-between mb-8 -mt-2 -mx-2">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-[#E8F5F0] flex items-center justify-center shrink-0">

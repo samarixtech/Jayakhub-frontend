@@ -3,6 +3,7 @@
 import { cookies, headers } from "next/headers";
 import { serverApi } from "@/components/services/api";
 import { countryCurrencyMap } from "@/lib/utils/country";
+import getClientIp from "@/lib/getClientIp";
 
 interface DetectApiResult {
   country: string;
@@ -42,18 +43,28 @@ export async function detectLocationAction(
   // 2. Fetch from API if Cookies missing
   try {
     const headerStore = await headers();
-    const clientIp =
-      headerStore.get("x-forwarded-for")?.split(",")[0].trim() ||
-      headerStore.get("x-real-ip") ||
-      "";
+    // Checks 7 proxy header variants (Cloudflare, Akamai, generic LBs, etc.)
+    // and already filters out loopback addresses.
+    const clientIp = (await getClientIp(headerStore)) || "";
 
-    console.log("[detectLocationAction] client IP:", clientIp || "unknown");
+    const outgoingHeaders: Record<string, string> = clientIp
+      ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
+      : {};
+
+    // See proxy.ts for why this is needed in local dev — clientIp resolves
+    // to nothing without a real reverse proxy in front of it.
+    if (process.env.NODE_ENV !== "production" && !clientIp && process.env.DEV_TEST_IP) {
+      outgoingHeaders["x-test-ip"] = process.env.DEV_TEST_IP;
+    }
+
+    console.log(
+      "[detectLocationAction] sending IP headers to backend /detect:",
+      outgoingHeaders,
+    );
 
     const api = await serverApi();
     const res = await api.get<{ data: DetectApiResult }>("/detect", {
-      headers: clientIp
-        ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
-        : {},
+      headers: outgoingHeaders,
     });
     const json = res.data;
     const data = json.data;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-// import getClientIp from "./lib/getClientIp";
+import getClientIp from "./lib/getClientIp";
 import api, { isSessionExpiredPayload, SESSION_EXPIRED_FLAG_COOKIE } from "./components/services/api";
 
 const AUTH_COOKIE_NAMES = ["role", "planKeywords", "isExpired", "isCancelled", "restaurantId", "planCheckedAt"];
@@ -76,17 +76,32 @@ export async function proxy(request: NextRequest) {
   // 3. If cookies are missing, call detect API
   if (!country || !language) {
     try {
-      const clientIp =
-        request.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
-        request.headers.get("x-real-ip") ||
-        "";
+      // Checks 7 proxy header variants (Cloudflare, Akamai, generic LBs,
+      // etc.) and already filters out loopback addresses — a broader net
+      // than the old 2-header check, which was leaving clientIp empty in
+      // production whenever the reverse proxy used a different header name.
+      const clientIp = (await getClientIp(request.headers)) || "";
 
-      console.log("[proxy] detecting location for IP:", clientIp || "unknown");
+      const outgoingHeaders: Record<string, string> = clientIp
+        ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
+        : {};
+
+      // Local dev has no real reverse proxy in front of it, so clientIp
+      // resolves to nothing — the backend can't geolocate that. Set
+      // DEV_TEST_IP in .env(.local) to a real public IP to simulate a
+      // location locally; the backend's geoDetectMiddleware checks
+      // x-test-ip ahead of x-forwarded-for/x-real-ip.
+      if (process.env.NODE_ENV !== "production" && !clientIp && process.env.DEV_TEST_IP) {
+        outgoingHeaders["x-test-ip"] = process.env.DEV_TEST_IP;
+      }
+
+      console.log(
+        "[proxy] sending IP headers to backend /detect:",
+        outgoingHeaders,
+      );
 
       const detectRes = (await api.get("/detect", {
-        headers: clientIp
-          ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
-          : {},
+        headers: outgoingHeaders,
       })) as any;
 
       const data = detectRes.data?.data;

@@ -26,7 +26,7 @@ interface UserNavProps {
     email: string;
     avatar?: string;
     image?: string;
-    role?: string;
+    role?: string | { id: number; name: string };
   } | null;
   onLogout?: () => void;
   size?: "default" | "sm";
@@ -74,7 +74,11 @@ const UserProfile: React.FC<UserNavProps> = ({ user, onLogout, size = "default" 
     ? user.name.charAt(0).toUpperCase()
     : user?.email?.substring(0, 2).toUpperCase() || "??";
 
-  const userRole = ((user?.role || "customer") as string).toLowerCase() as UserRole;
+  const roleString =
+    typeof user?.role === "string"
+      ? user.role
+      : user?.role?.name || "customer";
+  const userRole = roleString.toLowerCase() as UserRole;
   const routes = ROLE_CONFIG[userRole] || ROLE_CONFIG["customer"];
 
   const menuItems = [

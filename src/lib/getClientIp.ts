@@ -23,12 +23,22 @@ export default async function getClientIp(customHeaders?: Headers) {
   for (const holder of ipHolders) {
     if (!holder) continue;
 
-    // x-forwarded-for can be a list: "client, proxy1, proxy2"
-    const firstIp = holder.split(",")[0].trim();
+    // x-forwarded-for is a hop-by-hop list ("client, proxy1, proxy2, ..."):
+    // each proxy APPENDS the IP of whoever connected to it. Behind a single
+    // trusted reverse proxy directly in front of the app (e.g. an AWS ALB,
+    // with no CDN/other proxy in the chain), the LAST entry is the one that
+    // proxy itself observed and can be trusted — earlier entries can be
+    // freely set by the client and must not be trusted for anything
+    // security-sensitive (geolocation-based pricing, fraud checks, etc.).
+    const parts = holder
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
+    const trustedIp = parts[parts.length - 1];
 
     // Ignore internal loopback addresses and empty strings
-    if (firstIp && firstIp !== "::1" && firstIp !== "127.0.0.1") {
-      return firstIp;
+    if (trustedIp && trustedIp !== "::1" && trustedIp !== "127.0.0.1") {
+      return trustedIp;
     }
   }
 

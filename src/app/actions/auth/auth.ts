@@ -311,7 +311,6 @@ export async function googleAuthAction(payload: {
       }),
     "Auth Successful",
     async (data: any) => {
-      console.log("Google auth response:", data);
       const { accessToken, user } = data;
       // The backend should return the actual assigned role
       const assignedRole = user?.role || payload.role;
@@ -328,8 +327,10 @@ export async function googleAuthAction(payload: {
 
         // Google login skips OTP verification entirely, so this response is
         // the only place to capture subscription expiry/cancellation for it.
-        const isExpired = data?.isExpired ?? user?.planDetails?.isExpired ?? false;
-        const isCancelled = data?.isCancel ?? user?.planDetails?.isCancel ?? false;
+        const isExpired =
+          data?.isExpired ?? user?.planDetails?.isExpired ?? false;
+        const isCancelled =
+          data?.isCancel ?? user?.planDetails?.isCancel ?? false;
         cookieStore.set("isExpired", isExpired ? "true" : "false", {
           path: "/",
           maxAge: 60 * 60 * 24 * 7,

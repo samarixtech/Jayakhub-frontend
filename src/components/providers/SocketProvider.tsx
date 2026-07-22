@@ -99,9 +99,6 @@ export default function SocketProvider({
       );
     });
 
-    // 🚨 No rider assigned within the critical window — surfaced globally
-    // as a toast; the specific order card is marked critical by whichever
-    // hook owns that order's state (e.g. useOnlineOrders).
     socket.on("NO_RIDER_AVAILABLE", (data: any) => {
       toast.error(
         data?.message ||

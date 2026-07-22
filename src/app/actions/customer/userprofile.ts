@@ -70,8 +70,6 @@ export async function updateProfileAction(
     async () => {
       const api = await serverApi();
 
-      // 1. ALWAYS send JSON first to update text fields properly
-      // This bypasses FormData stringification and satisfies backend's strict numeric type requirement for phone
       const rawPhone = payload.phone?.replace(/\D/g, "");
       const updatePayload: any = {
         name: payload.name,
@@ -83,17 +81,16 @@ export async function updateProfileAction(
 
       console.log("update payload", updatePayload);
 
-
       const profileResult = await api.put("/update-profile", updatePayload);
 
       if (payload.avatarBase64) {
         const base64Data = payload.avatarBase64.split(",")[1];
-        const mimeType = payload.avatarBase64.split(",")[0].split(":")[1].split(";")[0];
+        const mimeType = payload.avatarBase64
+          .split(",")[0]
+          .split(":")[1]
+          .split(";")[0];
         const buffer = Buffer.from(base64Data, "base64");
 
-        // Use the form-data package so axios gets a proper multipart
-        // Content-Type header with boundary — native Node.js FormData
-        // doesn't expose the boundary, which breaks some backends.
         const { default: NodeFormData } = await import("form-data");
         const avatarFormData = new NodeFormData();
         avatarFormData.append("avatar", buffer, {
@@ -156,9 +153,6 @@ export async function changePasswordAction(
 }
 
 // ==================== UPLOAD KYC ====================
-// Accepts base64-encoded file data to avoid Next.js Server Action
-// multipart deserialization issues on production (file.arrayBuffer()
-// can silently return empty on some Node.js/proxy configurations).
 export async function uploadKycAction(payload: {
   documentType: string;
   documentFile: string; // base64
@@ -175,9 +169,6 @@ export async function uploadKycAction(payload: {
 
       const buffer = Buffer.from(documentFile, "base64");
 
-      // Use the form-data package so axios gets a proper multipart
-      // Content-Type header with boundary — native Node.js FormData
-      // doesn't expose the boundary, which breaks some backends.
       const { default: NodeFormData } = await import("form-data");
       const sendData = new NodeFormData();
       sendData.append("documentType", documentType);

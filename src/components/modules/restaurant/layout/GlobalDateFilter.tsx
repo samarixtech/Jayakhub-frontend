@@ -26,6 +26,15 @@ export default function GlobalDateFilter() {
     setTempEndDate(endDate);
   }, [endDate]);
 
+  // If a later start date is picked, drop an end date that's now before it
+  React.useEffect(() => {
+    if (tempStartDate && tempEndDate && tempEndDate < tempStartDate) {
+      setTempEndDate(undefined);
+    }
+  }, [tempStartDate, tempEndDate]);
+
+  const today = new Date();
+
   const handleApply = () => {
     setStartDate(tempStartDate);
     setEndDate(tempEndDate);
@@ -57,6 +66,7 @@ export default function GlobalDateFilter() {
               mode="single"
               selected={tempStartDate}
               onSelect={setTempStartDate}
+              disabled={{ after: today }}
               className="rounded-md"
             />
           </PopoverContent>
@@ -83,6 +93,11 @@ export default function GlobalDateFilter() {
               mode="single"
               selected={tempEndDate}
               onSelect={setTempEndDate}
+              disabled={
+                tempStartDate
+                  ? [{ after: today }, { before: tempStartDate }]
+                  : { after: today }
+              }
               className="rounded-md"
             />
           </PopoverContent>

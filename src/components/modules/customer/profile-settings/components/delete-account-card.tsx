@@ -46,15 +46,17 @@ export default function DeleteAccountCard() {
           <p className="text-sm text-gray-500 leading-relaxed">
             {t("delete_account_description")}
           </p>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsModalOpen(true)}
-            className="rounded-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-6 h-11 font-semibold transition-all"
-          >
-            <Trash2 className="h-4 w-4 mr-2" />
-            {t("delete_account_button")}
-          </Button>
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsModalOpen(true)}
+              className="rounded-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-6 h-11 font-semibold transition-all"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              {t("delete_account_button")}
+            </Button>
+          </div>
         </CardContent>
       </Card>
 

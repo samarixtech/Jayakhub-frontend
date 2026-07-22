@@ -46,18 +46,20 @@ export default function PaymentModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const [receiptData, setReceiptData] = useState<any>(null);
 
-  // Calculate totals directly from Redux cart (same source as POSCartPanel)
   const displaySubtotal = cartItems.reduce((acc, item) => {
     const extraPrice = item.selectedVariations?.length
-      ? item.selectedVariations.reduce((s: number, v: any) => s + (Number(v.additionalPrice) || 0), 0)
-      : (Number(item.selectedVariation?.additionalPrice) || 0);
+      ? item.selectedVariations.reduce(
+          (s: number, v: any) => s + (Number(v.additionalPrice) || 0),
+          0,
+        )
+      : Number(item.selectedVariation?.additionalPrice) || 0;
     return acc + (Number(item.price) + extraPrice) * item.quantity;
   }, 0);
   const displayTotal = displaySubtotal;
   const deliveryChargesNum = parseFloat(deliveryCharges) || 0;
-  const actualTotal = orderType === "Delivery" ? displayTotal + deliveryChargesNum : displayTotal;
+  const actualTotal =
+    orderType === "Delivery" ? displayTotal + deliveryChargesNum : displayTotal;
 
-  // Reset state only when modal opens (not on cart changes while open)
   React.useEffect(() => {
     if (open) {
       setMethod(null);
@@ -67,7 +69,6 @@ export default function PaymentModal({
     }
   }, [open]);
 
-  // Sync paid amount when modal first opens with current cart total
   React.useEffect(() => {
     if (open && step === "select") {
       setPaidAmount(displayTotal.toFixed(2));
@@ -89,14 +90,16 @@ export default function PaymentModal({
           const vars: any[] = item.selectedVariations?.length
             ? item.selectedVariations
             : item.selectedVariation
-            ? [item.selectedVariation]
-            : [];
+              ? [item.selectedVariation]
+              : [];
           if (vars.length === 1) {
             const vgId = vars[0].variantGroupId || vars[0].id;
             if (vgId) entry.variantGroupId = vgId;
             entry.variantOptionName = vars[0].name;
           } else if (vars.length > 1) {
-            entry.variantGroupIds = vars.map((v) => v.variantGroupId || v.id).filter(Boolean);
+            entry.variantGroupIds = vars
+              .map((v) => v.variantGroupId || v.id)
+              .filter(Boolean);
             entry.variantOptionNames = vars.map((v) => v.name);
           }
           return entry;
@@ -134,11 +137,15 @@ export default function PaymentModal({
     const receiptOrderId = receiptData?.id || "——";
     const receiptDate = receiptData?.createdAt
       ? new Date(receiptData.createdAt).toLocaleString("en-GB", {
-          day: "2-digit", month: "2-digit", year: "numeric",
-          hour: "2-digit", minute: "2-digit",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
         })
       : "——";
-    const receiptTableName = receiptData?.tableName || selectedTable?.name || "——";
+    const receiptTableName =
+      receiptData?.tableName || selectedTable?.name || "——";
     const receiptPaymentMethod = receiptData?.paymentMethod || method || "——";
     const receiptOrderType = receiptData?.orderType || orderType;
     const receiptItemsTotal: number = receiptData?.itemsTotal ?? 0;
@@ -149,44 +156,52 @@ export default function PaymentModal({
       const printWindow = window.open("", "_blank", "width=420,height=700");
       if (!printWindow) return;
 
-      const itemsHtml = receiptItems.map((item: any) => {
-        const discountAmt = parseFloat(item.discount) || 0;
-        const baseTotal = item.itemPrice * item.quantity;
-        const discountedItemTotal = (item.itemPrice - discountAmt) * item.quantity;
-        const totalAmt = parseFloat(item.totalAmount) || 0;
+      const itemsHtml = receiptItems
+        .map((item: any) => {
+          const discountAmt = parseFloat(item.discount) || 0;
+          const baseTotal = item.itemPrice * item.quantity;
+          const discountedItemTotal =
+            (item.itemPrice - discountAmt) * item.quantity;
+          const totalAmt = parseFloat(item.totalAmount) || 0;
 
-        const discountRow = discountAmt > 0
-          ? `<tr>
+          const discountRow =
+            discountAmt > 0
+              ? `<tr>
                <td style="color:#999;font-size:11px;padding:1px 0 0 8px;">${t("afterDiscount")}</td>
                <td style="text-align:right;font-size:11px;padding:1px 0 0;">
                  <s style="color:#bbb;">${formatPrice(baseTotal)}</s>
                  <span style="color:#357252;margin-left:4px;">${formatPrice(discountedItemTotal)}</span>
                </td>
              </tr>`
-          : "";
+              : "";
 
-        const variantRows = (item.variantDetails || []).map((v: any) =>
-          `<tr>
+          const variantRows = (item.variantDetails || [])
+            .map(
+              (v: any) =>
+                `<tr>
              <td style="color:#888;font-size:11px;padding:1px 0 0 8px;">${v.groupName}: <b>${v.optionName}</b></td>
              <td style="color:#1eb589;font-size:11px;text-align:right;padding:1px 0 0;">${v.price > 0 ? `+${formatPrice(v.price)}` : ""}</td>
-           </tr>`
-        ).join("");
+           </tr>`,
+            )
+            .join("");
 
-        return `
+          return `
           <tr>
             <td style="font-weight:700;padding:6px 0 0;font-size:13px;">${item.quantity}x ${item.itemName}</td>
             <td style="font-weight:700;text-align:right;padding:6px 0 0;font-size:13px;">${formatPrice(totalAmt)}</td>
           </tr>
           ${discountRow}
           ${variantRows}`;
-      }).join("");
+        })
+        .join("");
 
-      const deliveryRow = receiptDeliveryFee > 0
-        ? `<tr>
+      const deliveryRow =
+        receiptDeliveryFee > 0
+          ? `<tr>
              <td style="color:#666;padding:3px 0;">${t("deliveryFee")}</td>
              <td style="text-align:right;padding:3px 0;">${formatPrice(receiptDeliveryFee)}</td>
            </tr>`
-        : "";
+          : "";
 
       printWindow.document.write(`
         <!DOCTYPE html><html><head><title>${t("receipt")}</title>
@@ -222,7 +237,10 @@ export default function PaymentModal({
 
       printWindow.document.close();
       printWindow.focus();
-      setTimeout(() => { printWindow.print(); printWindow.close(); }, 300);
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 300);
     };
 
     return (
@@ -257,14 +275,19 @@ export default function PaymentModal({
               receiptItems.map((item: any, idx: number) => {
                 const discountAmt = parseFloat(item.discount) || 0;
                 const baseTotal = item.itemPrice * item.quantity;
-                const discountedItemTotal = (item.itemPrice - discountAmt) * item.quantity;
+                const discountedItemTotal =
+                  (item.itemPrice - discountAmt) * item.quantity;
                 const totalAmt = parseFloat(item.totalAmount) || 0;
                 return (
                   <div key={idx} className="w-full">
                     {/* Item name + total */}
                     <div className="flex justify-between text-[13px] text-[#1b2d22] font-bold">
-                      <span>{item.quantity}x {item.itemName}</span>
-                      <span className="shrink-0 ml-2">{formatPrice(totalAmt)}</span>
+                      <span>
+                        {item.quantity}x {item.itemName}
+                      </span>
+                      <span className="shrink-0 ml-2">
+                        {formatPrice(totalAmt)}
+                      </span>
                     </div>
 
                     {/* Discounted price row */}
@@ -274,18 +297,32 @@ export default function PaymentModal({
                           {t("priceAfterDiscount")}
                         </span>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-gray-400 line-through">{formatPrice(baseTotal)}</span>
-                          <span className="text-[#357252] font-semibold">{formatPrice(discountedItemTotal)}</span>
+                          <span className="text-gray-400 line-through">
+                            {formatPrice(baseTotal)}
+                          </span>
+                          <span className="text-[#357252] font-semibold">
+                            {formatPrice(discountedItemTotal)}
+                          </span>
                         </div>
                       </div>
                     )}
 
                     {/* Variant details */}
                     {item.variantDetails?.map((v: any, vi: number) => (
-                      <div key={vi} className="flex justify-between text-[11px] text-[#8ea89a] mt-0.5">
-                        <span>{v.groupName}: <span className="font-semibold text-[#556977]">{v.optionName}</span></span>
+                      <div
+                        key={vi}
+                        className="flex justify-between text-[11px] text-[#8ea89a] mt-0.5"
+                      >
+                        <span>
+                          {v.groupName}:{" "}
+                          <span className="font-semibold text-[#556977]">
+                            {v.optionName}
+                          </span>
+                        </span>
                         {v.price > 0 && (
-                          <span className="text-[#1eb589] font-semibold">+{formatPrice(v.price)}</span>
+                          <span className="text-[#1eb589] font-semibold">
+                            +{formatPrice(v.price)}
+                          </span>
                         )}
                       </div>
                     ))}
@@ -329,7 +366,10 @@ export default function PaymentModal({
           </div>
 
           <div className="flex w-full gap-3">
-            <button onClick={handlePrint} className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
+            <button
+              onClick={handlePrint}
+              className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
+            >
               <Printer className="w-4 h-4 stroke-[2.5px]" /> {t("print")}
             </button>
             <button
@@ -461,10 +501,11 @@ export default function PaymentModal({
         <button
           onClick={handleConfirm}
           disabled={!method || isProcessing}
-          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${!method || isProcessing
-            ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
-            : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
-            }`}
+          className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${
+            !method || isProcessing
+              ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
+              : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
+          }`}
         >
           {isProcessing ? (
             <Loader2 className="w-5 h-5 animate-spin" />

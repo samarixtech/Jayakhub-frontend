@@ -1849,7 +1849,7 @@
       "other": "Other",
       "load_failed": "Failed to load addresses",
       "deleting": "Deleting address...",
-      "deleted_success": "Address deleted successfully",
+      "deleted_success": "Address Deleted Successfully",
       "delete_failed": "Failed to delete address",
       "toast_fill_required": "Please fill in all required fields (Street, City, Country)",
       "toast_provide_label": "Please provide a label for the address",
@@ -2716,7 +2716,7 @@
       },
       "createTicket": {
         "errorEmpty": "Please fill in all required fields.",
-        "success": "Ticket created successfully!",
+        "success": "Ticket Created Successfully!",
         "errorFailed": "Failed to create ticket",
         "errorUnexpected": "An unexpected error occurred.",
         "title": "Create New Ticket",
