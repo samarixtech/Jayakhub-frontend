@@ -125,13 +125,18 @@ export async function getTicketStatsAction() {
   }
 }
 
-export async function getFaqsAction() {
+export async function getFaqsAction(page: number = 1, limit: number = 5) {
   try {
     const api = await serverApi();
-    const response = await api.get("/faq");
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+    const response = await api.get(`/faq?${queryParams.toString()}`);
     return {
       success: true as const,
       data: response.data,
+      meta: response.data.meta || null,
     };
   } catch (error: any) {
     console.error("Fetch FAQs error:", error);

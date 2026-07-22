@@ -1,18 +1,15 @@
 import React from "react";
 import { TimelineItem } from "./TimelineItem";
 import { Check, Utensils, Bike, MapPin, XCircle, ShoppingBag } from "lucide-react";
-import { formatOrderDateTime } from "@/lib/utils/date";
 import { useTranslations } from "next-intl";
 
 interface OrderTimelineProps {
-  orderDate: string;
-  orderTime: string;
+  placedAt: string;
   orderStatus: string;
 }
 
 export const OrderTimeline: React.FC<OrderTimelineProps> = ({
-  orderDate,
-  orderTime,
+  placedAt,
   orderStatus,
 }) => {
   const t = useTranslations("OrderTracking");
@@ -29,7 +26,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
             icon={ShoppingBag}
             title={t("placedTitle")}
             description={t("placedDesc")}
-            time={formatOrderDateTime(orderDate, orderTime)}
+            time={placedAt}
             status="completed"
           />
           <TimelineItem
@@ -65,7 +62,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
             icon={ShoppingBag}
             title={t("placedTitle")}
             description={t("placedDesc")}
-            time={formatOrderDateTime(orderDate, orderTime)}
+            time={placedAt}
             status="completed"
           />
           <TimelineItem
@@ -89,7 +86,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
             icon={ShoppingBag}
             title={t("placedTitle")}
             description={t("placedDesc")}
-            time={formatOrderDateTime(orderDate, orderTime)}
+            time={placedAt}
             status="completed"
           />
           <TimelineItem
@@ -113,7 +110,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
           icon={ShoppingBag}
           title={t("placedTitle")}
           description={t("placedDesc")}
-          time={formatOrderDateTime(orderDate, orderTime)}
+          time={placedAt}
           status="completed"
         />
         <TimelineItem

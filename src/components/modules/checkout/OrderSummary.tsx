@@ -14,6 +14,8 @@ interface CartItem {
   name: string;
   price: number;
   basePrice?: number;
+  originalPrice?: number;
+  discount?: string | null;
   quantity: number;
   restaurantName?: string;
   selectedVariations?: { name: string }[];
@@ -111,27 +113,50 @@ const OrderSummary = ({
         </p>
 
         <div className="space-y-4 mb-6">
-          {(cartItems || []).map((item) => (
-            <div
-              key={item.cartId || item.id}
-              className="flex justify-between items-start text-sm"
-            >
-              <div className="flex gap-2">
-                <span className="font-bold text-[#346853]">{item.quantity}x</span>
-                <div>
-                  <p className="font-medium text-gray-900">{item.name}</p>
-                  {item.selectedVariations && item.selectedVariations.length > 0 && (
-                    <p className="text-xs text-gray-500">
-                      {item.selectedVariations.map((v) => v.name).join(", ")}
-                    </p>
-                  )}
+          {(cartItems || []).map((item) => {
+            const discountAmount = item.discount ? parseFloat(item.discount) : 0;
+            const hasDiscount =
+              discountAmount > 0 &&
+              item.originalPrice != null &&
+              item.originalPrice > (item.price || 0);
+
+            return (
+              <div
+                key={item.cartId || item.id}
+                className="flex justify-between items-start text-sm"
+              >
+                <div className="flex gap-2">
+                  <span className="font-bold text-[#346853]">{item.quantity}x</span>
+                  <div>
+                    <p className="font-medium text-gray-900">{item.name}</p>
+                    {item.selectedVariations && item.selectedVariations.length > 0 && (
+                      <p className="text-xs text-gray-500">
+                        {item.selectedVariations.map((v) => v.name).join(", ")}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                      {hasDiscount && (
+                        <span className="text-xs text-gray-400 line-through">
+                          {currency}{item.originalPrice!.toFixed(2)}
+                        </span>
+                      )}
+                      <span className="text-xs text-gray-500">
+                        {currency}{(item.price || 0).toFixed(2)} x {item.quantity}
+                      </span>
+                      {hasDiscount && (
+                        <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
+                          -{currency}{discountAmount.toFixed(0)} {t("itemOff")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
+                <span className="font-medium text-gray-900 whitespace-nowrap ml-2">
+                  {currency}{((item.price || 0) * item.quantity).toFixed(2)}
+                </span>
               </div>
-              <span className="font-medium text-gray-900">
-                {currency}{((item.price || 0) * item.quantity).toFixed(2)}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Pricing Breakdown */}

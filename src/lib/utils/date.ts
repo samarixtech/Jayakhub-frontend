@@ -8,11 +8,20 @@ export function formatOrderDateTime(
   const [dayStr, monthStr, yearStr] = orderDate.split("/");
   if (!dayStr || !monthStr || !yearStr) return "Invalid Date";
 
-  const day = Number(dayStr);
-  const month = Number(monthStr);
+  let day = Number(dayStr);
+  let month = Number(monthStr);
   const year = Number(yearStr);
 
   if ([day, month, year].some(isNaN)) return "Invalid Date";
+
+  // This is meant to be "D/M/Y", but some endpoints send unpadded US-style
+  // "M/D/Y" instead (e.g. "7/22/2026" for Jul 22). A real month is never
+  // >12, so if that's what we got here but the day slot is a valid month,
+  // the two are swapped — correcting it here avoids the date rolling into
+  // the wrong month/year (e.g. "7/22/2026" misread as month=22 -> Oct 2027).
+  if (month > 12 && day <= 12) {
+    [day, month] = [month, day];
+  }
 
   // Default time
   let hours = 0;
@@ -54,6 +63,34 @@ export function formatOrderDateTime(
     hour12: true,
     timeZone: useUTC ? "UTC" : undefined,
   }).format(utcDate);
+
+  return `${formattedDate} • ${formattedTime}${useUTC ? " (UTC)" : ""}`;
+}
+
+// Same output format as formatOrderDateTime, but parsed straight from an
+// unambiguous ISO timestamp instead of a locale-dependent "D/M/Y" string.
+export function formatOrderDateTimeFromISO(
+  iso?: string,
+  useUTC: boolean = false,
+): string {
+  if (!iso) return "Invalid Date";
+
+  const date = new Date(iso);
+  if (isNaN(date.getTime())) return "Invalid Date";
+
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: useUTC ? "UTC" : undefined,
+  }).format(date);
+
+  const formattedTime = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: useUTC ? "UTC" : undefined,
+  }).format(date);
 
   return `${formattedDate} • ${formattedTime}${useUTC ? " (UTC)" : ""}`;
 }

@@ -22,5 +22,9 @@ export function formatCurrency(
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currencyCode.toUpperCase(),
+    // Some currencies (e.g. PKR) default to 0 fraction digits in Intl's
+    // CLDR data, which silently rounds off the actual decimal price.
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(numericAmount);
 }

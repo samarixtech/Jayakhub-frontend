@@ -38,6 +38,11 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
         {items &&
           items.map((item: any, idx: number) => {
             const imageUrl = item.image || null;
+            const discountAmount = item.discount ? parseFloat(item.discount) : 0;
+            const hasDiscount =
+              discountAmount > 0 &&
+              item.originalPrice != null &&
+              item.originalPrice > (item.price || 0);
 
             return (
               <div key={idx} className="flex justify-between items-start">
@@ -67,25 +72,30 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
                         {item.name}
                       </span>
                     </div>
-                    {item.discount && (
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1 py-0.5 rounded">
-                          -{formatPrice(parseFloat(item.discount))}
-                        </span>
-                        <span className="text-[10px] text-gray-400 line-through">
-                          {formatPrice(item.originalPrice || item.price)}
-                        </span>
-                      </div>
-                    )}
                     {item.description && (
                       <p className="text-xs text-gray-400 mt-0.5">
                         {item.description}
                       </p>
                     )}
+                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                      {hasDiscount && (
+                        <span className="text-[10px] text-gray-400 line-through">
+                          {formatPrice(item.originalPrice)}
+                        </span>
+                      )}
+                      <span className="text-xs text-gray-500">
+                        {formatPrice(item.price)} x {item.quantity}
+                      </span>
+                      {hasDiscount && (
+                        <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
+                          -{formatPrice(discountAmount)} {t("itemOff")}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <span className="font-bold text-[#346853] shrink-0 ml-4">
-                  {formatPrice(item.price)}
+                  {formatPrice((item.price || 0) * item.quantity)}
                 </span>
               </div>
             );

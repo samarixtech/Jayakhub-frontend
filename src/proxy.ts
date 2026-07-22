@@ -86,12 +86,14 @@ export async function proxy(request: NextRequest) {
         ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
         : {};
 
-      // Local dev has no real reverse proxy in front of it, so clientIp
-      // resolves to nothing — the backend can't geolocate that. Set
-      // DEV_TEST_IP in .env(.local) to a real public IP to simulate a
-      // location locally; the backend's geoDetectMiddleware checks
-      // x-test-ip ahead of x-forwarded-for/x-real-ip.
-      if (process.env.NODE_ENV !== "production" && !clientIp && process.env.DEV_TEST_IP) {
+      // No real reverse proxy in front locally (even in a production-mode
+      // build) means clientIp resolves to nothing — the backend can't
+      // geolocate that. Set DEV_TEST_IP in .env(.local) to a real public IP
+      // to simulate a location; the backend's geoDetectMiddleware checks
+      // x-test-ip ahead of x-forwarded-for/x-real-ip. Safe to leave keyed
+      // only on DEV_TEST_IP being set — it must never be present in the
+      // real deployed environment's env config.
+      if (!clientIp && process.env.DEV_TEST_IP) {
         outgoingHeaders["x-test-ip"] = process.env.DEV_TEST_IP;
       }
 

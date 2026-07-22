@@ -58,6 +58,7 @@ export interface ApiOrder {
     name: string;
     price: string | number;
     quantity: number;
+    discount?: string | number;
   }[];
   totalPrice: number;
   status: string;
@@ -73,6 +74,7 @@ export interface ApiOrder {
 export interface OrderStats {
   totalOrders: number;
   liveOrders: number;
+  totalDelivered: number;
   totalRevenue: string;
 }
 
@@ -81,6 +83,7 @@ export interface OrderItem {
   name: string;
   quantity: number;
   price: number;
+  discount?: number;
 }
 
 export interface UIOrder {
@@ -118,6 +121,7 @@ export const useOrders = () => {
   const [stats, setStats] = useState<OrderStats>({
     totalOrders: 0,
     liveOrders: 0,
+    totalDelivered: 0,
     totalRevenue: "0.00",
   });
   const [loading, setLoading] = useState(true);
@@ -194,6 +198,7 @@ export const useOrders = () => {
         setStats({
           totalOrders: apiStats.totalOrders || 0,
           liveOrders: apiStats.liveOrders || 0,
+          totalDelivered: apiStats.totalDelivered || 0,
           totalRevenue: (apiStats.deliveredRevenue || 0).toString(),
         });
         if (res.meta) {
@@ -204,15 +209,28 @@ export const useOrders = () => {
         const mappedOrders: UIOrder[] = apiOrders.map((o) => {
           let items: OrderItem[] = [];
           if (o.itemDetail && o.itemDetail.length > 0) {
-            items = o.itemDetail.map((item, idx) => ({
-              id: `item-${idx}`,
-              name: item.name,
-              quantity: item.quantity,
-              price:
-                typeof item.price === "string"
-                  ? parseFloat(item.price)
-                  : item.price,
-            }));
+            items = o.itemDetail.map((item, idx) => {
+              const itemDiscount =
+                typeof item.discount === "string"
+                  ? parseFloat(item.discount)
+                  : item.discount || 0;
+              // The API only sends the discount at the order level, not per
+              // item. When there's just one distinct item, it unambiguously
+              // belongs to that item; with multiple items there's no way to
+              // attribute it, so it's only shown in the order-level summary.
+              const discount =
+                itemDiscount || (o.itemDetail!.length === 1 ? o.discount || 0 : 0);
+              return {
+                id: `item-${idx}`,
+                name: item.name,
+                quantity: item.quantity,
+                price:
+                  typeof item.price === "string"
+                    ? parseFloat(item.price)
+                    : item.price,
+                discount,
+              };
+            });
           } else {
             items = parseSummaryToItems(o.summary);
           }

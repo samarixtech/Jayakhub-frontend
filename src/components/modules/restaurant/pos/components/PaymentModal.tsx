@@ -59,6 +59,8 @@ export default function PaymentModal({
   const deliveryChargesNum = parseFloat(deliveryCharges) || 0;
   const actualTotal =
     orderType === "Delivery" ? displayTotal + deliveryChargesNum : displayTotal;
+  const paidAmountNum = parseFloat(paidAmount) || 0;
+  const isPaidAmountInvalid = paidAmountNum <= 0 || paidAmountNum < actualTotal;
 
   React.useEffect(() => {
     if (open) {
@@ -76,6 +78,10 @@ export default function PaymentModal({
   }, [open, displayTotal, step]);
 
   const handleConfirm = async () => {
+    if (isPaidAmountInvalid) {
+      toast.error(t("toasts.amountTooLow"));
+      return;
+    }
     if (method && cartItems.length > 0) {
       setIsProcessing(true);
 
@@ -159,23 +165,21 @@ export default function PaymentModal({
       const itemsHtml = receiptItems
         .map((item: any) => {
           const discountAmt = parseFloat(item.discount) || 0;
-          const baseTotal = item.itemPrice * item.quantity;
-          const discountedItemTotal =
-            (item.itemPrice - discountAmt) * item.quantity;
+          const hasDiscount = discountAmt > 0;
+          const unitPrice = item.basePrice - discountAmt;
           const totalAmt = parseFloat(item.totalAmount) || 0;
 
-          const discountRow =
-            discountAmt > 0
-              ? `<tr>
-               <td style="color:#999;font-size:11px;padding:1px 0 0 8px;">${t("afterDiscount")}</td>
-               <td style="text-align:right;font-size:11px;padding:1px 0 0;">
-                 <s style="color:#bbb;">${formatPrice(baseTotal)}</s>
-                 <span style="color:#357252;margin-left:4px;">${formatPrice(discountedItemTotal)}</span>
-               </td>
-             </tr>`
-              : "";
+          const priceRow = `<tr>
+             <td style="font-size:11px;padding:1px 0 0 8px;">
+               ${hasDiscount ? `<s style="color:#bbb;">${formatPrice(item.basePrice)}</s> ` : ""}
+               <span style="color:#666;">${formatPrice(hasDiscount ? unitPrice : item.basePrice)} x ${item.quantity}</span>
+             </td>
+             <td style="text-align:right;font-size:10px;padding:1px 0 0;">
+               ${hasDiscount ? `<span style="background:#fee2e2;color:#dc2626;font-weight:700;padding:1px 4px;border-radius:4px;">-${formatPrice(discountAmt)} ${t("itemOff")}</span>` : ""}
+             </td>
+           </tr>`;
 
-          const variantRows = (item.variantDetails || [])
+          const variantRows = (item.variants || [])
             .map(
               (v: any) =>
                 `<tr>
@@ -190,7 +194,7 @@ export default function PaymentModal({
             <td style="font-weight:700;padding:6px 0 0;font-size:13px;">${item.quantity}x ${item.itemName}</td>
             <td style="font-weight:700;text-align:right;padding:6px 0 0;font-size:13px;">${formatPrice(totalAmt)}</td>
           </tr>
-          ${discountRow}
+          ${priceRow}
           ${variantRows}`;
         })
         .join("");
@@ -274,9 +278,8 @@ export default function PaymentModal({
             {receiptItems.length > 0 ? (
               receiptItems.map((item: any, idx: number) => {
                 const discountAmt = parseFloat(item.discount) || 0;
-                const baseTotal = item.itemPrice * item.quantity;
-                const discountedItemTotal =
-                  (item.itemPrice - discountAmt) * item.quantity;
+                const hasDiscount = discountAmt > 0;
+                const unitPrice = item.basePrice - discountAmt;
                 const totalAmt = parseFloat(item.totalAmount) || 0;
                 return (
                   <div key={idx} className="w-full">
@@ -290,25 +293,27 @@ export default function PaymentModal({
                       </span>
                     </div>
 
-                    {/* Discounted price row */}
-                    {discountAmt > 0 && (
-                      <div className="flex justify-between text-[11px] mt-0.5">
-                        <span className="text-[#8ea89a]">
-                          {t("priceAfterDiscount")}
-                        </span>
-                        <div className="flex items-center gap-1.5">
+                    {/* Unit price x qty, with discount if present */}
+                    <div className="flex items-center justify-between text-[11px] mt-0.5 flex-wrap gap-1.5">
+                      <div className="flex items-center gap-1.5">
+                        {hasDiscount && (
                           <span className="text-gray-400 line-through">
-                            {formatPrice(baseTotal)}
+                            {formatPrice(item.basePrice)}
                           </span>
-                          <span className="text-[#357252] font-semibold">
-                            {formatPrice(discountedItemTotal)}
-                          </span>
-                        </div>
+                        )}
+                        <span className="text-[#8ea89a]">
+                          {formatPrice(hasDiscount ? unitPrice : item.basePrice)} x {item.quantity}
+                        </span>
                       </div>
-                    )}
+                      {hasDiscount && (
+                        <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
+                          -{formatPrice(discountAmt)} {t("itemOff")}
+                        </span>
+                      )}
+                    </div>
 
                     {/* Variant details */}
-                    {item.variantDetails?.map((v: any, vi: number) => (
+                    {item.variants?.map((v: any, vi: number) => (
                       <div
                         key={vi}
                         className="flex justify-between text-[11px] text-[#8ea89a] mt-0.5"
@@ -480,29 +485,32 @@ export default function PaymentModal({
           </span>
           <input
             type="number"
-            min="0"
+            min={actualTotal}
+            step="0.01"
             value={paidAmount}
             onChange={(e) => setPaidAmount(e.target.value)}
-            className="w-full border-2 border-[#357252] text-center rounded-lg py-1.5 text-[16px] outline-none focus:border-[#357252] font-black text-[#111] mb-2"
+            className={`w-full border-2 text-center rounded-lg py-1.5 text-[16px] outline-none font-black text-[#111] mb-2 ${
+              isPaidAmountInvalid
+                ? "border-red-400 focus:border-red-400"
+                : "border-[#357252] focus:border-[#357252]"
+            }`}
           />
-          {(() => {
-            const change = parseFloat(paidAmount) - actualTotal;
-            return (
-              <span
-                className={`text-[14px] font-black ${change >= 0 ? "text-[#1eb589]" : "text-red-500"}`}
-              >
-                {t("change")}{" "}
-                {change >= 0 ? formatPrice(change) : formatPrice(0)}
-              </span>
-            );
-          })()}
+          {isPaidAmountInvalid ? (
+            <span className="text-[12px] font-bold text-red-500 text-center">
+              {t("amountTooLow")}
+            </span>
+          ) : (
+            <span className="text-[14px] font-black text-[#1eb589]">
+              {t("change")} {formatPrice(paidAmountNum - actualTotal)}
+            </span>
+          )}
         </div>
 
         <button
           onClick={handleConfirm}
-          disabled={!method || isProcessing}
+          disabled={!method || isProcessing || isPaidAmountInvalid}
           className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${
-            !method || isProcessing
+            !method || isProcessing || isPaidAmountInvalid
               ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
               : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
           }`}

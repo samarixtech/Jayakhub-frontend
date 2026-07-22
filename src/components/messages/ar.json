@@ -1320,6 +1320,7 @@
     "orderSummary": "ملخص الطلب",
     "subtotal": "المجموع الفرعي",
     "deliveryFee": "رسوم التوصيل",
+    "itemOff": "خصم",
     "free": "مجاني",
     "coupon": "قسيمة الخصم",
     "total": "الإجمالي",
@@ -1634,6 +1635,7 @@
     "restaurantFallback": "مطعم",
     "subtotal": "المجموع الفرعي",
     "deliveryFee": "رسوم التوصيل",
+    "itemOff": "خصم",
     "discountLabel": "خصم ({code})",
     "total": "الإجمالي",
     "couponApplied": "تم تطبيق {code}",
@@ -1851,6 +1853,7 @@
       "delete_failed": "فشل حذف العنوان",
       "toast_fill_required": "يرجى ملء جميع الحقول المطلوبة (الشارع، المدينة، البلد)",
       "toast_provide_label": "يرجى إدخال تسمية للعنوان",
+      "field_required": "هذا الحقل مطلوب",
       "toast_updated": "تم تحديث العنوان بنجاح!",
       "toast_saved": "تم حفظ العنوان بنجاح!",
       "toast_save_failed": "فشل حفظ العنوان"
@@ -1891,7 +1894,8 @@
       "export_error": "فشل تصدير ملف CSV. يرجى المحاولة مرة أخرى.",
       "table_status": "الحالة",
       "item_fallback": "عنصر",
-      "out_for_delivery": "قيد التوصيل"
+      "out_for_delivery": "قيد التوصيل",
+      "rider_not_assigned_badge": "لم يتم تعيين سائق"
     },
     "Wallet": {
       "title": "المحفظة",
@@ -2303,6 +2307,8 @@
         "status": "الحالة",
         "customer": "العميل",
         "items": "الأصناف والعناصر",
+        "totalItems": "{count} عناصر",
+        "itemOff": "خصم",
         "paymentSummary": "ملخص الدفع",
         "subtotal": "المجموع الفرعي",
         "discount": "الخصم",
@@ -2336,7 +2342,8 @@
         "totalToday": "إجمالي اليوم",
         "liveOrders": "الطلبات الحالية المباشرة",
         "revenue": "الإيرادات",
-        "totalOrders": "إجمالي الطلبات"
+        "totalOrders": "إجمالي الطلبات",
+        "totalDelivered": "إجمالي الطلبات المسلمة"
       },
       "table": {
         "orderId": "رقم الطلب",
@@ -3011,6 +3018,7 @@
       "subtitle": "كل ما يحدث في المطعم والفرع الآن فوراً",
       "noActivity": "لا توجد أنشطة أو عمليات حديثة لعرضها حالياً",
       "timeAgo": {
+        "justNow": "الآن",
         "mins": "منذ {count} دقيقة",
         "hours": "منذ {count} ساعة",
         "yesterday": "يوم أمس",
@@ -4566,6 +4574,8 @@
       "card": "بطاقة",
       "online": "أونلاين",
       "paidAmount": "المبلغ المدفوع",
+      "amountTooLow": "يجب أن يكون المبلغ المدفوع مساويًا للإجمالي المستحق على الأقل",
+      "itemOff": "خصم",
       "change": "الباقي:",
       "selectMethod": "اختر طريقة الدفع",
       "confirmPayment": "تأكيد الدفع {method}",
@@ -4581,7 +4591,8 @@
       "toasts": {
         "success": "تم الدفع بنجاح!",
         "failed": "فشل في معالجة الدفع",
-        "error": "حدث خطأ أثناء الدفع."
+        "error": "حدث خطأ أثناء الدفع.",
+        "amountTooLow": "يجب أن يكون المبلغ المدفوع مساويًا للإجمالي المستحق على الأقل"
       }
     },
     "pendingOrders": {

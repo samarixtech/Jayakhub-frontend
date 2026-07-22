@@ -1322,6 +1322,7 @@
     "orderSummary": "Order Summary",
     "subtotal": "Subtotal",
     "deliveryFee": "Delivery Fee",
+    "itemOff": "OFF",
     "free": "Free",
     "coupon": "Coupon",
     "total": "Total",
@@ -1636,6 +1637,7 @@
     "restaurantFallback": "Restaurant",
     "subtotal": "Subtotal",
     "deliveryFee": "Delivery Fee",
+    "itemOff": "OFF",
     "discountLabel": "Discount ({code})",
     "total": "Total",
     "couponApplied": "{code} applied",
@@ -1853,6 +1855,7 @@
       "delete_failed": "Failed to delete address",
       "toast_fill_required": "Please fill in all required fields (Street, City, Country)",
       "toast_provide_label": "Please provide a label for the address",
+      "field_required": "This field is required",
       "toast_updated": "Address updated successfully!",
       "toast_saved": "Address saved successfully!",
       "toast_save_failed": "Failed to save address"
@@ -1893,7 +1896,8 @@
       "export_error": "Failed to export CSV. Please try again.",
       "table_status": "Status",
       "item_fallback": "Item",
-      "out_for_delivery": "Out for Delivery"
+      "out_for_delivery": "Out for Delivery",
+      "rider_not_assigned_badge": "Rider Not Assigned"
     },
     "Wallet": {
       "title": "Wallet",
@@ -2305,6 +2309,8 @@
         "status": "Status",
         "customer": "Customer",
         "items": "Items",
+        "totalItems": "{count} items",
+        "itemOff": "OFF",
         "paymentSummary": "Payment Summary",
         "subtotal": "Subtotal",
         "discount": "Discount",
@@ -2338,7 +2344,8 @@
         "totalToday": "Total Today Orders",
         "liveOrders": "Live Orders",
         "revenue": "Revenue",
-        "totalOrders": "Total Orders"
+        "totalOrders": "Total Orders",
+        "totalDelivered": "Total Delivered"
       },
       "table": {
         "orderId": "ORDER ID",
@@ -3013,6 +3020,7 @@
       "subtitle": "Everything happening now",
       "noActivity": "No recent activity to show",
       "timeAgo": {
+        "justNow": "Just now",
         "mins": "{count} min ago",
         "hours": "{count} hr ago",
         "yesterday": "Yesterday",
@@ -4572,6 +4580,8 @@
       "card": "Card",
       "online": "Online",
       "paidAmount": "Paid Amount",
+      "amountTooLow": "Amount paid must be at least the total payable amount",
+      "itemOff": "OFF",
       "change": "Change:",
       "selectMethod": "Select Payment Method",
       "confirmPayment": "Confirm {method} Payment",
@@ -4587,7 +4597,8 @@
       "toasts": {
         "success": "Payment successful!",
         "failed": "Failed to process payment",
-        "error": "An error occurred during payment."
+        "error": "An error occurred during payment.",
+        "amountTooLow": "Amount paid must be at least the total payable amount"
       }
     },
     "pendingOrders": {

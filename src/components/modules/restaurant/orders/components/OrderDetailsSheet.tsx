@@ -266,28 +266,55 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
 
           {/* Items */}
           <div>
-            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
-              {t("items")}
-            </h4>
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                {t("items")}
+              </h4>
+              <span className="text-[11px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                {t("totalItems", {
+                  count: order.items.reduce((sum, item) => sum + item.quantity, 0),
+                })}
+              </span>
+            </div>
             <div className="space-y-4">
-              {order.items.map((item) => (
-                <div key={item.id} className="flex justify-between items-start">
-                  <div className="flex gap-3">
-                    <span className="text-sm font-bold text-gray-900 w-6">
-                      {item.quantity}x
-                    </span>
-                    <span className="text-sm text-gray-700">{item.name}</span>
-                    {item.price > 0 && (
-                      <span className="text-[10px] text-gray-400 font-medium ml-1 flex items-center h-full pt-1">
-                        (@{formatPrice(item.price)})
+              {order.items.map((item) => {
+                const hasDiscount = !!item.discount && item.discount > 0;
+                const unitPrice = hasDiscount
+                  ? item.price - item.discount!
+                  : item.price;
+                return (
+                  <div key={item.id} className="flex justify-between items-start">
+                    <div className="flex gap-3">
+                      <span className="text-sm font-bold text-gray-900 w-6">
+                        {item.quantity}x
                       </span>
-                    )}
+                      <div>
+                        <span className="text-sm text-gray-700">{item.name}</span>
+                        {item.price > 0 && (
+                          <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                            {hasDiscount && (
+                              <span className="text-[10px] text-gray-400 line-through">
+                                {formatPrice(item.price)}
+                              </span>
+                            )}
+                            <span className="text-[10px] text-gray-400 font-medium">
+                              @{formatPrice(unitPrice)}
+                            </span>
+                            {hasDiscount && (
+                              <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
+                                -{formatPrice(item.discount!)} {t("itemOff")}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-sm font-medium text-gray-900">
+                      {formatPrice(unitPrice * item.quantity) || "N/A"}
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-gray-900">
-                    {formatPrice(item.price * item.quantity) || "N/A"}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

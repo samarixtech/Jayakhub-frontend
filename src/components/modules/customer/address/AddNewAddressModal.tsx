@@ -51,6 +51,9 @@ export default function AddNewAddressModal({
   );
   const [otherLabel, setOtherLabel] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<
+    Partial<Record<"street" | "city" | "zip" | "country", boolean>>
+  >({});
   const t = useTranslations('CustomerDashboard.MyAddress');
 
   const [formData, setFormData] = useState({
@@ -126,10 +129,30 @@ export default function AddNewAddressModal({
       setMarkerPosition(defaultCenter);
       autoDetectLocation();
     }
+    setErrors({});
   }, [open, addressToEdit, setCenter, setMarkerPosition, autoDetectLocation]);
 
+  // Clear a field's error as soon as the user fills it in
+  useEffect(() => {
+    setErrors((prev) => {
+      const next = { ...prev };
+      if (formData.street) delete next.street;
+      if (formData.city) delete next.city;
+      if (formData.zip) delete next.zip;
+      if (formData.country) delete next.country;
+      return next;
+    });
+  }, [formData.street, formData.city, formData.zip, formData.country]);
+
   const handleSaveAddress = async () => {
-    if (!formData.street || !formData.city || !formData.country || !formData.zip) {
+    const nextErrors = {
+      street: !formData.street,
+      city: !formData.city,
+      zip: !formData.zip,
+      country: !formData.country,
+    };
+    if (Object.values(nextErrors).some(Boolean)) {
+      setErrors(nextErrors);
       toast.error(t("toast_fill_required"));
       return;
     }
@@ -211,6 +234,7 @@ export default function AddNewAddressModal({
               setAddressType={setAddressType}
               otherLabel={otherLabel}
               setOtherLabel={setOtherLabel}
+              errors={errors}
             />
           </div>
         </div>

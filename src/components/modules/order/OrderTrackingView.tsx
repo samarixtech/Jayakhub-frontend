@@ -17,7 +17,10 @@ import { OrderTimeline } from "./components/tracking/OrderTimeline";
 import { RiderCard } from "./components/tracking/RiderCard";
 import { OrderSummaryTable } from "./components/tracking/OrderSummaryTable";
 import { DeliveryDetails } from "./components/tracking/DeliveryDetails";
-import { formatOrderDateTime } from "@/lib/utils/date";
+import {
+  formatOrderDateTime,
+  formatOrderDateTimeFromISO,
+} from "@/lib/utils/date";
 import EmptyState from "@/components/common/EmptyState";
 import { Utensils } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -26,8 +29,16 @@ import { cancelOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
 
 export default function OrderTrackingView({ orderId }: { orderId: string }) {
-  const { order, loading, subtotal, total, deliveryFee, coupon, rider, refetch } =
-    useOrderTracking(orderId);
+  const {
+    order,
+    loading,
+    subtotal,
+    total,
+    deliveryFee,
+    coupon,
+    rider,
+    refetch,
+  } = useOrderTracking(orderId);
 
   const t = useTranslations("CustomerDashboard.OrderHistory");
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
@@ -48,7 +59,9 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
     try {
       const res = await cancelOrderAction(order.orderId);
       if (res.success) {
-        toast.success(res.message || t("order_cancelled_success"), { id: toastId });
+        toast.success(res.message || t("order_cancelled_success"), {
+          id: toastId,
+        });
         setCancelModalOpen(false);
         refetch();
       } else {
@@ -75,6 +88,10 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
     );
   }
 
+  const placedAt = order.rawTimestamp
+    ? formatOrderDateTimeFromISO(order.rawTimestamp)
+    : formatOrderDateTime(order.orderDate, order.orderTime);
+
   return (
     <div className="min-h-screen bg-white font-sans">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
@@ -86,7 +103,9 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/orders">{t("breadcrumb_orders")}</BreadcrumbLink>
+              <BreadcrumbLink href="/orders">
+                {t("breadcrumb_orders")}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -120,7 +139,7 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
             <p className="text-gray-500">
               {t("order_placed_at", {
                 id: order.orderId,
-                date: formatOrderDateTime(order.orderDate, order.orderTime),
+                date: placedAt,
               })}
             </p>
             {isRiderNotAssigned && (
@@ -147,8 +166,7 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
           <div className="lg:col-span-8 space-y-8">
             <OrderMap address={order.address} />
             <OrderTimeline
-              orderDate={order.orderDate}
-              orderTime={order.orderTime}
+              placedAt={placedAt}
               orderStatus={order.orderStatus}
             />
           </div>

@@ -26,7 +26,7 @@ export interface Order {
   originalStatus: string;
 }
 
-const BASE_POLL_INTERVAL = 30_000;
+const BASE_POLL_INTERVAL = 60_000; // poll every 1 minute
 const MAX_POLL_INTERVAL = 300_000; // 5 min cap
 
 export const usePosOrders = () => {
@@ -78,7 +78,10 @@ export const usePosOrders = () => {
             
             mapped.push({
               id: order.id,
-              customerName: order.tableName
+              // Only Dine-In orders are tied to a physical table; TakeAway/
+              // Delivery/Walk-in orders sometimes carry a placeholder
+              // tableName (e.g. "Walk in") that shouldn't be shown as one.
+              customerName: order.orderType === "Dine-In" && order.tableName
                 ? t("table", { name: order.tableName })
                 : order.orderType || t("walkIn"),
               timeAgo: calculateTimeAgo(order.createdAt),

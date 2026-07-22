@@ -51,6 +51,8 @@ function formatAmountInCurrency(amount: number | string, currencyCode?: string) 
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: (currencyCode || "USD").toUpperCase(),
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(num);
   } catch {
     return `${currencyCode ?? ""} ${num.toFixed(2)}`.trim();
@@ -291,30 +293,32 @@ export default function SubscriptionView() {
             <Typography className="text-base font-semibold text-gray-900">Plan Actions</Typography>
           </div>
           <div className="divide-y divide-gray-100">
-            {/* Auto-Renewal */}
-            <div className="flex items-center justify-between px-6 py-4">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                  <RotateCcw className="w-4 h-4 text-[#346853]" />
+            {/* Auto-Renewal — hidden once the subscription is cancelled or expired */}
+            {!isCancelledOrExpired && (
+              <div className="flex items-center justify-between px-6 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+                    <RotateCcw className="w-4 h-4 text-[#346853]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Auto-Renewal Status</p>
+                    <p className="text-xs text-gray-400">
+                      {autoRenew ? `Next billing: ${renewalDateFormatted}` : "Auto-renewal is disabled"}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-gray-900">Auto-Renewal Status</p>
-                  <p className="text-xs text-gray-400">
-                    {autoRenew ? `Next billing: ${renewalDateFormatted}` : "Auto-renewal is disabled"}
-                  </p>
-                </div>
+                {togglingRenew ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-[#346853]" />
+                ) : (
+                  <Switch
+                    checked={autoRenew}
+                    onCheckedChange={handleAutoRenewToggle}
+                    disabled={togglingRenew}
+                    className="data-[state=checked]:bg-[#346853] disabled:opacity-50"
+                  />
+                )}
               </div>
-              {togglingRenew ? (
-                <Loader2 className="w-5 h-5 animate-spin text-[#346853]" />
-              ) : (
-                <Switch
-                  checked={autoRenew}
-                  onCheckedChange={handleAutoRenewToggle}
-                  disabled={togglingRenew || isCancelledOrExpired}
-                  className="data-[state=checked]:bg-[#346853] disabled:opacity-50"
-                />
-              )}
-            </div>
+            )}
 
             {/* Manage Plan */}
             <Link

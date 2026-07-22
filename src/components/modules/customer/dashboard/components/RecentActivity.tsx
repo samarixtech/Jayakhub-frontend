@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Order } from "../../types";
 import { getStatusColor, getStatusLabel } from "../utils";
 import { useTranslations } from "next-intl";
-import { formatOrderDateTime } from "@/lib/utils/date";
+import { formatOrderDateTime, formatOrderDateTimeFromISO } from "@/lib/utils/date";
 import { useCLC } from "@/context/CLCContext";
 
 interface RecentActivityProps {
@@ -113,7 +113,9 @@ export const RecentActivity = ({
                     {getStatusLabel(order.OrderStatus, t)}
                   </Badge>
                   <Typography className="text-[10px] font-medium text-gray-400 mt-1 uppercase tracking-tighter">
-                    {formatOrderDateTime(order.orderDate, order.orderTime)}
+                    {(order as any).rawTimestamp
+                      ? formatOrderDateTimeFromISO((order as any).rawTimestamp)
+                      : formatOrderDateTime(order.orderDate, order.orderTime)}
                   </Typography>
                 </div>
               </div>

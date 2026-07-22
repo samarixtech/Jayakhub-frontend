@@ -2,7 +2,7 @@
 
 import React from "react";
 import StatsCard from "./StatsCard";
-import { Receipt, Timer, Wallet } from "lucide-react";
+import { Receipt, Timer, CheckCircle2, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCLC } from "@/context/CLCContext";
 
@@ -10,6 +10,7 @@ interface OrdersStatsProps {
   stats: {
     totalOrders: number;
     liveOrders: number;
+    totalDelivered: number;
     totalRevenue: string;
   };
   loading: boolean;
@@ -20,7 +21,7 @@ const OrdersStats: React.FC<OrdersStatsProps> = ({ stats, loading }) => {
 
   const { formatPrice } = useCLC();
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
       <StatsCard
         icon={<Receipt className="w-6 h-6" />}
         value={stats.totalOrders.toString()}
@@ -35,6 +36,14 @@ const OrdersStats: React.FC<OrdersStatsProps> = ({ stats, loading }) => {
         label={t("liveOrders")}
         iconBgColor="bg-emerald-100"
         iconColor="text-emerald-800"
+        loading={loading}
+      />
+      <StatsCard
+        icon={<CheckCircle2 className="w-6 h-6" />}
+        value={stats.totalDelivered.toString()}
+        label={t("totalDelivered")}
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-700"
         loading={loading}
       />
       <StatsCard

@@ -15,6 +15,7 @@ interface AddressFormProps {
   >;
   otherLabel: string;
   setOtherLabel: React.Dispatch<React.SetStateAction<string>>;
+  errors?: Partial<Record<"street" | "city" | "zip" | "country", boolean>>;
 }
 
 export const AddressForm = ({
@@ -24,6 +25,7 @@ export const AddressForm = ({
   setAddressType,
   otherLabel,
   setOtherLabel,
+  errors = {},
 }: AddressFormProps) => {
   const t = useTranslations('CustomerDashboard.MyAddress');
 
@@ -36,6 +38,9 @@ export const AddressForm = ({
       [id]: value,
     }));
   };
+
+  const errorInputClass =
+    "border-red-400 focus-visible:ring-red-500/30 bg-red-50/40";
 
   return (
     <form className="space-y-5">
@@ -76,15 +81,19 @@ export const AddressForm = ({
       {/* Street Address */}
       <div className="space-y-2">
         <Label htmlFor="street" className="text-sm font-bold text-gray-900">
-          {t('street_address')}
+          {t('street_address')} <span className="text-red-500">*</span>
         </Label>
         <Input
           id="street"
           placeholder={t('street_placeholder')}
-          className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
+          className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.street ? errorInputClass : ""}`}
           value={formData.street}
           onChange={handleInputChange}
+          aria-invalid={!!errors.street}
         />
+        {errors.street && (
+          <p className="text-xs font-medium text-red-500">{t('field_required')}</p>
+        )}
       </div>
 
       {/* Apartment */}
@@ -105,15 +114,19 @@ export const AddressForm = ({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="city" className="text-sm font-bold text-gray-900">
-            {t('city')}
+            {t('city')} <span className="text-red-500">*</span>
           </Label>
           <Input
             id="city"
             placeholder={t('city_placeholder')}
-            className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
+            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.city ? errorInputClass : ""}`}
             value={formData.city}
             onChange={handleInputChange}
+            aria-invalid={!!errors.city}
           />
+          {errors.city && (
+            <p className="text-xs font-medium text-red-500">{t('field_required')}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="state" className="text-sm font-bold text-gray-900">
@@ -133,27 +146,35 @@ export const AddressForm = ({
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="zip" className="text-sm font-bold text-gray-900">
-            {t('zip_code')}
+            {t('zip_code')} <span className="text-red-500">*</span>
           </Label>
           <Input
             id="zip"
             placeholder={t('zip_placeholder')}
-            className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
+            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.zip ? errorInputClass : ""}`}
             value={formData.zip}
             onChange={handleInputChange}
+            aria-invalid={!!errors.zip}
           />
+          {errors.zip && (
+            <p className="text-xs font-medium text-red-500">{t('field_required')}</p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="country" className="text-sm font-bold text-gray-900">
-            {t('country')}
+            {t('country')} <span className="text-red-500">*</span>
           </Label>
           <Input
             id="country"
             placeholder={t('country_placeholder')}
-            className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
+            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.country ? errorInputClass : ""}`}
             value={formData.country}
             onChange={handleInputChange}
+            aria-invalid={!!errors.country}
           />
+          {errors.country && (
+            <p className="text-xs font-medium text-red-500">{t('field_required')}</p>
+          )}
         </div>
       </div>
 

@@ -1,5 +1,11 @@
 "use client";
 
+// TODO: Not currently wired into any route — the root page (src/app/page.tsx)
+// just redirects to /restaurants, and proxy.ts middleware handles the actual
+// country/language detection and URL prefixing server-side. This component
+// was likely an earlier client-side approach to the same problem. Keep it
+// until a flow is ready to use it again, otherwise remove.
+
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";

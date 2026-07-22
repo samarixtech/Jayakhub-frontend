@@ -4,10 +4,11 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useFaqs } from "../hooks/useFaqs";
+import { GlobalPagination } from "@/components/common/GlobalPagination";
 
 export const FAQSection = () => {
   const t = useTranslations("RestaurantDashboard.Support.faq");
-  const { faqs, isLoading } = useFaqs();
+  const { faqs, isLoading, currentPage, totalPages, onPageChange } = useFaqs();
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
   const toggleFaq = (id: string) => {
@@ -58,6 +59,14 @@ export const FAQSection = () => {
           ))
         )}
       </div>
+      {!isLoading && faqs.length > 0 && (
+        <GlobalPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          isLoading={isLoading}
+        />
+      )}
     </div>
   );
 };

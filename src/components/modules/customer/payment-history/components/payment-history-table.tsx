@@ -5,7 +5,7 @@ import GlobalTable, { Column } from "@/components/common/GlobalTable";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
 import { generateInvoicePDF } from "@/lib/utils/InvoicePDF";
 import { useTranslations } from "next-intl";
-import { formatOrderDateTime } from "@/lib/utils/date";
+import { formatOrderDateTime, formatOrderDateTimeFromISO } from "@/lib/utils/date";
 import { useCLC } from "@/context/CLCContext";
 import { getStatusColor, getStatusLabel } from "../../order-history/useOrderHistoryActions";
 
@@ -91,7 +91,9 @@ export function PaymentHistoryTable({
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[150px]",
       cell: (order) => (
         <span className="text-[15px] font-medium text-[#64748B]">
-          {formatOrderDateTime(order.orderDate, order.orderTime)}
+          {order.rawTimestamp
+            ? formatOrderDateTimeFromISO(order.rawTimestamp)
+            : formatOrderDateTime(order.orderDate, order.orderTime)}
         </span>
       ),
     },

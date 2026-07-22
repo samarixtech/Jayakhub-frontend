@@ -51,9 +51,11 @@ export async function detectLocationAction(
       ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
       : {};
 
-    // See proxy.ts for why this is needed in local dev — clientIp resolves
-    // to nothing without a real reverse proxy in front of it.
-    if (process.env.NODE_ENV !== "production" && !clientIp && process.env.DEV_TEST_IP) {
+    // See proxy.ts for why this is needed locally — clientIp resolves to
+    // nothing without a real reverse proxy in front of it. Safe to leave
+    // keyed only on DEV_TEST_IP being set — it must never be present in the
+    // real deployed environment's env config.
+    if (!clientIp && process.env.DEV_TEST_IP) {
       outgoingHeaders["x-test-ip"] = process.env.DEV_TEST_IP;
     }
 

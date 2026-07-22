@@ -94,11 +94,15 @@ export function useDashboard() {
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
+    // Clock skew between the server (which stamps createdAt) and the client
+    // can put the timestamp a few seconds/minutes in the future; treat that
+    // as "just now" instead of showing a negative minute count.
+    const diffMs = Math.max(0, now.getTime() - date.getTime());
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
+    if (diffMins < 1) return t("recentActivity.timeAgo.justNow");
     if (diffMins < 60) return t("recentActivity.timeAgo.mins", { count: diffMins });
     if (diffHours < 24) return t("recentActivity.timeAgo.hours", { count: diffHours });
     if (diffDays === 1) return t("recentActivity.timeAgo.yesterday");
