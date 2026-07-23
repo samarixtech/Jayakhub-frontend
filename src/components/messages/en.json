@@ -4405,7 +4405,8 @@
       "new": "New",
       "defaultDeliveryTime": "30-45 mins",
       "freeDelivery": "Free Delivery",
-      "deliverySuffix": "Delivery"
+      "deliverySuffix": "Delivery",
+      "upToOff": "UPTO {currency} {amount} OFF"
     },
     "sidebar": {
       "sortBy": "Sort By",

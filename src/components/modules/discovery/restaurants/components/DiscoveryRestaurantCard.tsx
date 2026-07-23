@@ -57,7 +57,9 @@ const DiscoveryRestaurantCard = ({
         const newState = !internalIsWishlist;
         setInternalIsWishlist(newState);
         onWishlistToggle?.(data.id, newState);
-        toast.success(newState ? t("addedToWishlist") : t("removedFromWishlist"));
+        toast.success(
+          newState ? t("addedToWishlist") : t("removedFromWishlist"),
+        );
       } else {
         toast.error(res.message || t("wishlistUpdateFailed"));
       }
@@ -79,8 +81,9 @@ const DiscoveryRestaurantCard = ({
     >
       {/* Image Container */}
       <div
-        className={`relative ${isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
-          } w-full overflow-hidden shadow-sm ${isClosed ? "grayscale" : ""}`}
+        className={`relative ${
+          isCompact ? "h-32 rounded-xl" : "h-47 rounded-2xl"
+        } w-full overflow-hidden shadow-sm ${isClosed ? "grayscale" : ""}`}
       >
         <Image
           width={250}
@@ -99,10 +102,12 @@ const DiscoveryRestaurantCard = ({
         )}
 
         {/* Discount Badge */}
-        {!isClosed && (data.discount ||
-          (data.averageDiscount && data.averageDiscount > 0)) && (
+        {!isClosed &&
+          (data.discount ||
+            (data.averageDiscount && data.averageDiscount > 0)) && (
             <Badge className="absolute top-3 left-3 bg-[#EE3F43] hover:bg-[#EE3F43] text-white border-0 font-bold px-2 py-1 text-[10px] sm:text-[11px] uppercase rounded-md shadow-md z-10">
-              {data.discount || `${data.averageDiscount}% OFF`}
+              {data.discount ||
+                t("upToOff", { currency, amount: data.averageDiscount ?? 0 })}
             </Badge>
           )}
 
@@ -114,19 +119,23 @@ const DiscoveryRestaurantCard = ({
             className="absolute top-3 right-3 p-2 rounded-full transition-all bg-black/20 backdrop-blur-sm hover:bg-black/30 shadow-sm z-10"
           >
             <Heart
-              className={`h-4 w-4 transition-colors ${internalIsWishlist ? "text-red-500 fill-red-500" : "text-white"
-                }`}
+              className={`h-4 w-4 transition-colors ${
+                internalIsWishlist ? "text-red-500 fill-red-500" : "text-white"
+              }`}
             />
           </button>
         )}
       </div>
 
       {/* Content */}
-      <div className={`${isCompact ? "pt-2 space-y-0.5" : "pt-3 space-y-1"} ${isClosed ? "opacity-60" : ""}`}>
+      <div
+        className={`${isCompact ? "pt-2 space-y-0.5" : "pt-3 space-y-1"} ${isClosed ? "opacity-60" : ""}`}
+      >
         <div className="flex justify-between items-start">
           <h3
-            className={`${isCompact ? "text-sm" : "text-lg"
-              } font-bold text-gray-900 truncate pr-2`}
+            className={`${
+              isCompact ? "text-sm" : "text-lg"
+            } font-bold text-gray-900 truncate pr-2`}
           >
             {data.name}
           </h3>

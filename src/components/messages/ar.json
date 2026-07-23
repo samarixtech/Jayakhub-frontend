@@ -4399,7 +4399,8 @@
       "new": "جديد",
       "defaultDeliveryTime": "30-45 دقيقة",
       "freeDelivery": "توصيل مجاني",
-      "deliverySuffix": "توصيل"
+      "deliverySuffix": "توصيل",
+      "upToOff": "خصم يصل إلى {currency}{amount}"
     },
     "sidebar": {
       "sortBy": "ترتيب حسب",

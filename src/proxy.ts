@@ -1,9 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import getClientIp from "./lib/getClientIp";
-import api, { isSessionExpiredPayload, SESSION_EXPIRED_FLAG_COOKIE } from "./components/services/api";
+import api, {
+  isSessionExpiredPayload,
+  SESSION_EXPIRED_FLAG_COOKIE,
+} from "./components/services/api";
 
-const AUTH_COOKIE_NAMES = ["role", "planKeywords", "isExpired", "isCancelled", "restaurantId", "planCheckedAt"];
+const AUTH_COOKIE_NAMES = [
+  "role",
+  "planKeywords",
+  "isExpired",
+  "isCancelled",
+  "restaurantId",
+  "planCheckedAt",
+];
 
 // Don't hit /my-restaurant on every single request to a /restaurant/* route
 // (middleware also runs on RSC data-fetch/prefetch requests, not just full
@@ -83,7 +93,11 @@ export async function proxy(request: NextRequest) {
       const clientIp = (await getClientIp(request.headers)) || "";
 
       const outgoingHeaders: Record<string, string> = clientIp
-        ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
+        ? {
+            "x-forwarded-for": clientIp,
+            "x-real-ip": clientIp,
+            "x-pm-ip": clientIp,
+          }
         : {};
 
       // No real reverse proxy in front locally (even in a production-mode
@@ -102,11 +116,17 @@ export async function proxy(request: NextRequest) {
         outgoingHeaders,
       );
 
-      const detectRes = (await api.get("/detect", {
-        headers: outgoingHeaders,
-      })) as any;
+      // Plain fetch instead of the shared axios instance: middleware always
+      // runs on the Edge runtime, where axios has no real http/https adapter
+      // and has to wrap the platform fetch anyway — that extra adapter layer
+      // was silently dropping these custom headers before they hit the wire.
+      const detectRes = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/detect`,
+        { headers: outgoingHeaders },
+      );
+      const detectJson = await detectRes.json();
 
-      const data = detectRes.data?.data;
+      const data = detectJson?.data;
       if (data && data.isActive) {
         country = (data.code || "iq").toLowerCase();
         language = (data.language || "en").toLowerCase();
@@ -170,7 +190,8 @@ export async function proxy(request: NextRequest) {
     // Role-based access control
     if (isCustomerRoute && role !== "customer") {
       let redirectPath = "login";
-      if (role === "restaurant_owner" || role === "admin" || role === "manager") redirectPath = "restaurant/dashboard";
+      if (role === "restaurant_owner" || role === "admin" || role === "manager")
+        redirectPath = "restaurant/dashboard";
       if (role === "cashier") redirectPath = "restaurant/pos";
       if (role === "kitchen") redirectPath = "restaurant/pos/orders";
 

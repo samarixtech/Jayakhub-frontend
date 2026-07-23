@@ -48,7 +48,11 @@ export async function detectLocationAction(
     const clientIp = (await getClientIp(headerStore)) || "";
 
     const outgoingHeaders: Record<string, string> = clientIp
-      ? { "x-forwarded-for": clientIp, "x-real-ip": clientIp }
+      ? {
+          "x-forwarded-for": clientIp,
+          "x-real-ip": clientIp,
+          "x-pm-ip": clientIp,
+        }
       : {};
 
     // See proxy.ts for why this is needed locally — clientIp resolves to
