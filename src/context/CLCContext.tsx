@@ -110,7 +110,10 @@ export const useCLC = () => {
   }
 
   // Helper to format currency dynamically without repeating currencyCode & language
-  const formatPrice = (amount: number | string) => {
+  const formatPrice = (
+    amount: number | string,
+    fractionDigits: number = 2,
+  ) => {
     // We import dynamically or just use the logic directly here to avoid circular dep risks
     const numericAmount =
       typeof amount === "string" ? parseFloat(amount) : amount;
@@ -119,9 +122,11 @@ export const useCLC = () => {
       style: "currency",
       currency: context.currencyCode.toUpperCase(),
       // Some currencies (e.g. PKR) default to 0 fraction digits in Intl's
-      // CLDR data, which silently rounds off the actual decimal price.
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      // CLDR data, which silently rounds off the actual decimal price unless
+      // told otherwise. Callers that explicitly want a rounded display (e.g.
+      // compact list rows) can pass fractionDigits: 0.
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
     }).format(numericAmount);
   };
 

@@ -103,9 +103,9 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/orders">
+              <span aria-disabled="true" className="cursor-default">
                 {t("breadcrumb_orders")}
-              </BreadcrumbLink>
+              </span>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

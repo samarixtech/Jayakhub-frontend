@@ -48,7 +48,7 @@ export const OrderCard = ({
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row items-center p-5 gap-6">
           {/* Left Image & Info */}
-          <div className="flex items-center gap-4 w-full md:w-[35%]">
+          <div className="flex items-center gap-4 w-full md:w-[35%] min-w-0">
             <div className="h-16 w-16 shrink-0 rounded-2xl bg-gray-100 overflow-hidden relative">
               {firstItem?.image ? (
                 <Image
@@ -77,14 +77,14 @@ export const OrderCard = ({
           </div>
 
           {/* Middle Items Summary */}
-          <div className="hidden md:block w-[30%]">
-            <p className="text-xs text-gray-500 font-medium line-clamp-2 leading-relaxed">
+          <div className="hidden md:block w-[30%] min-w-0">
+            <p className="text-xs text-gray-500 font-medium line-clamp-2 leading-relaxed break-words">
               {itemNames}
             </p>
           </div>
 
           {/* Right Status & Actions */}
-          <div className="flex items-center justify-end gap-6 w-full md:w-[35%] ml-auto">
+          <div className="flex items-center justify-end gap-6 w-full md:w-auto md:shrink-0 ml-auto">
             <div
               className={`px-3 py-1.5 rounded-full flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider ${getStatusColor(
                 order.OrderStatus,
@@ -95,8 +95,8 @@ export const OrderCard = ({
               {getStatusLabel(order.OrderStatus, t)}
             </div>
 
-            <span className="font-semibold text-gray-900 text-sm w-[60px] text-right">
-              {formatPrice(order.totalAmount)}
+            <span className="font-semibold text-gray-900 text-sm text-right whitespace-nowrap">
+              {formatPrice(order.totalAmount, 0)}
             </span>
 
             {isRejected ? (
