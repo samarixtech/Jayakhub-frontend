@@ -61,8 +61,8 @@ const AllRestaurantsPage: React.FC = () => {
         const outgoingHeaders: Record<string, string> = clientIp
           ? {
               "x-forwarded-for": clientIp,
-              "x-real-ip": clientIp,
-              "x-pm-ip": clientIp,
+              // "x-real-ip": clientIp,
+              // "x-pm-ip": clientIp,
             }
           : {};
 
