@@ -3,7 +3,9 @@ import type { NextRequest } from "next/server";
 import getClientIp from "./lib/getClientIp";
 import api, {
   isSessionExpiredPayload,
+  isAccountSuspendedPayload,
   SESSION_EXPIRED_FLAG_COOKIE,
+  ACCOUNT_SUSPENDED_FLAG_COOKIE,
 } from "./components/services/api";
 
 const AUTH_COOKIE_NAMES = [
@@ -26,7 +28,7 @@ const PLAN_CHECK_INTERVAL_MS = 60_000;
 // case the existing cookie values — however stale — are left untouched).
 async function getPlanCookieUpdates(
   request: NextRequest,
-): Promise<Record<string, string> | null | "EXPIRED"> {
+): Promise<Record<string, string> | null | "EXPIRED" | "SUSPENDED"> {
   const token = request.cookies.get("token")?.value;
   if (!token) return null;
 
@@ -41,10 +43,12 @@ async function getPlanCookieUpdates(
     })) as any;
 
     // /my-restaurant is authenticated by the same token, so a killed session
-    // (e.g. deactivated from User Management) surfaces here too — this is
-    // the one path that runs without any client component around to show
-    // the toast itself, so the caller has to force a redirect instead.
+    // (e.g. deactivated from User Management) or a suspended restaurant
+    // account surfaces here too — this is the one path that runs without any
+    // client component around to show the toast itself, so the caller has to
+    // force a redirect instead.
     if (isSessionExpiredPayload(res.data)) return "EXPIRED";
+    if (isAccountSuspendedPayload(res.data)) return "SUSPENDED";
 
     const data = res.data?.data;
     if (!data) return null;
@@ -160,13 +164,21 @@ export async function proxy(request: NextRequest) {
   if (isProtected) {
     if (!token) {
       // A session killed server-side (SSR/Server Action detecting a 403
-      // "Session Expired") clears cookies before any client toast can fire —
-      // it leaves this short-lived flag behind so the login page can still
-      // show the toast once it loads.
+      // "Session Expired" or a suspended restaurant account) clears cookies
+      // before any client toast can fire — it leaves one of these short-lived
+      // flags behind so the login page can still show the right toast once
+      // it loads.
       const wasSessionExpired =
         request.cookies.get(SESSION_EXPIRED_FLAG_COOKIE)?.value === "1";
+      const wasAccountSuspended =
+        request.cookies.get(ACCOUNT_SUSPENDED_FLAG_COOKIE)?.value === "1";
+      const reason = wasAccountSuspended
+        ? "account-suspended"
+        : wasSessionExpired
+          ? "session-expired"
+          : null;
       const loginUrl = new URL(
-        `/${country}/${language}/login${wasSessionExpired ? "?reason=session-expired" : ""}`,
+        `/${country}/${language}/login${reason ? `?reason=${reason}` : ""}`,
         request.url,
       );
       const response = NextResponse.redirect(loginUrl);
@@ -179,9 +191,14 @@ export async function proxy(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 365,
       });
       // No valid token — ensure any stale auth cookies (e.g. left over from
-      // a session killed server-side after a 403 "Session Expired") are
-      // wiped too, so the client is in a fully logged-out state.
-      [...AUTH_COOKIE_NAMES, SESSION_EXPIRED_FLAG_COOKIE].forEach((name) => {
+      // a session killed server-side after a 403 "Session Expired" or
+      // "account suspended" response) are wiped too, so the client is in a
+      // fully logged-out state.
+      [
+        ...AUTH_COOKIE_NAMES,
+        SESSION_EXPIRED_FLAG_COOKIE,
+        ACCOUNT_SUSPENDED_FLAG_COOKIE,
+      ].forEach((name) => {
         response.cookies.delete(name);
       });
       return response;
@@ -267,9 +284,11 @@ export async function proxy(request: NextRequest) {
     // ever refreshing at login.
     if (isRestaurantRoute) {
       const planCookies = await getPlanCookieUpdates(request);
-      if (planCookies === "EXPIRED") {
+      if (planCookies === "EXPIRED" || planCookies === "SUSPENDED") {
+        const reason =
+          planCookies === "SUSPENDED" ? "account-suspended" : "session-expired";
         const loginUrl = new URL(
-          `/${country}/${language}/login?reason=session-expired`,
+          `/${country}/${language}/login?reason=${reason}`,
           request.url,
         );
         const expiredResponse = NextResponse.redirect(loginUrl);

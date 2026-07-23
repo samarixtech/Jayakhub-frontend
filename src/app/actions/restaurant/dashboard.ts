@@ -26,7 +26,10 @@ export async function getDashboardAnalyticsAction(
         return {
             success: false as const,
             data: null,
-            message: error.response?.data?.message || "Failed to fetch dashboard analytics",
+            message:
+                error.response?.data?.meta?.message ||
+                error.response?.data?.message ||
+                "Failed to fetch dashboard analytics",
         };
     }
 }

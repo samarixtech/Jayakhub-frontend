@@ -955,7 +955,8 @@
       "submit": "Login",
       "noAccount": "Don't have an account?",
       "createAccount": "Create Account",
-      "sessionExpired": "Session Expired"
+      "sessionExpired": "Session Expired",
+      "accountSuspended": "Your restaurant account has been suspended. Please contact support."
     },
     "verifyOtp": {
       "title": "Verify OTP",

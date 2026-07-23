@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import Link from "next/link";
 import { useCLC } from "@/context/CLCContext";
+import { usePlanAccess } from "@/hooks/use-plan-access";
 import { useSubscription } from "../hooks/useSubscription";
 import { toggleAutoRenewAction, cancelSubscriptionAction } from "@/app/actions/restaurant/subscription";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
@@ -77,6 +78,7 @@ export default function SubscriptionView() {
     renewalDateFormatted,
     refetch,
   } = useSubscription();
+  const { isExpired: isPlanExpired, isCancelled: isPlanCancelled } = usePlanAccess();
 
   useEffect(() => {
     if (subscription) setAutoRenew(subscription.autoRenew ?? false);
@@ -124,9 +126,16 @@ export default function SubscriptionView() {
   const plan = subscription?.plan;
   const card = subscription?.paymentCard;
   const isActive = subscription?.status === "active" && !subscription?.isExpired;
+  // The subscription-details endpoint isn't always the freshest signal (e.g.
+  // right after cancelling, before the page's own data refetches) — fall
+  // back to the same isExpired/isCancelled cookies the header/sidebar/lock
+  // overlay already use as the authoritative source, so these controls never
+  // stay visible for an account that's actually cancelled or expired.
   const isCancelledOrExpired =
     subscription?.status?.toLowerCase() === "cancelled" ||
-    !!subscription?.isExpired;
+    !!subscription?.isExpired ||
+    isPlanCancelled ||
+    isPlanExpired;
 
   const paidDisplayAmount =
     subscription?.convertedPrice ?? subscription?.paidAmount;

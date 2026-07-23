@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { getDashboardAnalyticsAction } from "@/app/actions/restaurant/dashboard";
 import { updateOnlineStatusAction } from "@/app/actions/restaurant/settings";
+import { forceClientLogout, isSuspendedMessage } from "@/components/services/api";
 import toast from "react-hot-toast";
 
 export function useDashboard() {
@@ -21,6 +22,12 @@ export function useDashboard() {
         if (payload && typeof payload.isOnline === "boolean") {
           setIsOnline(payload.isOnline);
         }
+      } else if (!res.success && isSuspendedMessage(res.message)) {
+        // Server Actions run server-side and can't show a toast themselves —
+        // the interceptor in serverApi() already cleared the auth cookies,
+        // this just surfaces it to the user immediately instead of waiting
+        // on some later request to stumble into proxy.ts's own check.
+        forceClientLogout(res.message);
       }
       setIsLoading(false);
     };

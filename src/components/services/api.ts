@@ -13,6 +13,10 @@ const AUTH_COOKIE_NAMES = ["token", "role", "planKeywords", "isExpired", "isCanc
 // it on the very next request and tell the login page to show one.
 export const SESSION_EXPIRED_FLAG_COOKIE = "authSessionExpired";
 
+// Same idea as SESSION_EXPIRED_FLAG_COOKIE, but for a suspended restaurant
+// account, so the login page can show the right toast for each case.
+export const ACCOUNT_SUSPENDED_FLAG_COOKIE = "authAccountSuspended";
+
 // Backend signals a killed/expired session (e.g. user deactivated from User
 // Management) with { meta: { status: 403, message: "Session Expired" } } —
 // sometimes as a real HTTP 403, sometimes embedded in an HTTP 200 body.
@@ -24,17 +28,31 @@ export function isSessionExpiredPayload(data: any): boolean {
   );
 }
 
+// Backend signals a suspended restaurant account with
+// { meta: { status: 403, message: "Your restaurant account has been
+// suspended. Please contact support." } } — same 403-in-body shape as a
+// killed session, just a different message, so this gets its own logout path.
+export function isAccountSuspendedPayload(data: any): boolean {
+  return (
+    !!data?.meta &&
+    data.meta.status === 403 &&
+    /suspend/i.test(data.meta.message || "")
+  );
+}
+
 // Clears every auth cookie server-side (inside a Server Action's request
 // lifecycle) so the *next* request proxy.ts sees has no token — its existing
 // route guard then redirects to /login on its own.
-async function clearServerAuthCookies() {
+async function clearServerAuthCookies(
+  flagCookie: string = SESSION_EXPIRED_FLAG_COOKIE,
+) {
   try {
     const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
     for (const name of AUTH_COOKIE_NAMES) {
       cookieStore.delete(name);
     }
-    cookieStore.set(SESSION_EXPIRED_FLAG_COOKIE, "1", { path: "/", maxAge: 15 });
+    cookieStore.set(flagCookie, "1", { path: "/", maxAge: 15 });
   } catch {
     // Not in a request context (e.g. build time) — nothing to clear.
   }
@@ -81,34 +99,50 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Client-side helper: clears auth cookies in the browser and hard-redirects
-// to /login. A hard navigation (not router.push) so proxy.ts sees a fresh
-// request and adds the correct [country]/[language] prefix itself.
-let clientSessionExpiredHandled = false;
+// Client-side helper: clears auth cookies in the browser, toasts the reason,
+// and hard-redirects to /login. A hard navigation (not router.push) so
+// proxy.ts sees a fresh request and adds the correct [country]/[language]
+// prefix itself. Exported so hooks calling Server Actions directly (which
+// can't show a browser toast themselves — they run server-side) can trigger
+// the same immediate logout instead of waiting on a coincidental next
+// request to hit proxy.ts's own checks.
+let clientLogoutHandled = false;
 
-function handleClientSessionExpired() {
-  if (typeof window === "undefined" || clientSessionExpiredHandled) return;
-  clientSessionExpiredHandled = true;
+export function forceClientLogout(message: string) {
+  if (typeof window === "undefined" || clientLogoutHandled) return;
+  clientLogoutHandled = true;
   AUTH_COOKIE_NAMES.forEach((name) => {
     document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
   });
-  toast.error("Session Expired");
+  toast.error(message);
   setTimeout(() => {
     window.location.href = "/login";
   }, 1200);
+}
+
+// A Server Action's caught error only has whatever flattened `message`
+// string it chose to return — not the raw { meta: { status, message } }
+// body — so callers check the message text itself rather than reusing
+// isAccountSuspendedPayload.
+export function isSuspendedMessage(message?: string | null): boolean {
+  return !!message && /suspend/i.test(message);
 }
 
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
     if (isSessionExpiredPayload(response.data)) {
-      handleClientSessionExpired();
+      forceClientLogout("Session Expired");
+    } else if (isAccountSuspendedPayload(response.data)) {
+      forceClientLogout(response.data.meta.message);
     }
     return response;
   },
   (error) => {
     if (isSessionExpiredPayload(error.response?.data)) {
-      handleClientSessionExpired();
+      forceClientLogout("Session Expired");
+    } else if (isAccountSuspendedPayload(error.response?.data)) {
+      forceClientLogout(error.response.data.meta.message);
     }
     if (error.response) {
       switch (error.response.status) {
@@ -176,14 +210,20 @@ export async function serverApi() {
   instance.interceptors.response.use(
     async (response) => {
       if (isSessionExpiredPayload(response.data)) {
-        await clearServerAuthCookies();
+        await clearServerAuthCookies(SESSION_EXPIRED_FLAG_COOKIE);
+        serverInstanceCache.delete(cacheKey);
+      } else if (isAccountSuspendedPayload(response.data)) {
+        await clearServerAuthCookies(ACCOUNT_SUSPENDED_FLAG_COOKIE);
         serverInstanceCache.delete(cacheKey);
       }
       return response;
     },
     async (error) => {
       if (isSessionExpiredPayload(error.response?.data)) {
-        await clearServerAuthCookies();
+        await clearServerAuthCookies(SESSION_EXPIRED_FLAG_COOKIE);
+        serverInstanceCache.delete(cacheKey);
+      } else if (isAccountSuspendedPayload(error.response?.data)) {
+        await clearServerAuthCookies(ACCOUNT_SUSPENDED_FLAG_COOKIE);
         serverInstanceCache.delete(cacheKey);
       }
       if (error.response && error.response.status !== 401) {

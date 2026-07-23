@@ -953,7 +953,8 @@
       "submit": "تسجيل الدخول",
       "noAccount": "ليس لديك حساب؟",
       "createAccount": "إنشاء حساب",
-      "sessionExpired": "انتهت الجلسة"
+      "sessionExpired": "انتهت الجلسة",
+      "accountSuspended": "تم تعليق حساب مطعمك. يرجى التواصل مع الدعم."
     },
     "verifyOtp": {
       "title": "تأكيد رمز التحقق",

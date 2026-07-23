@@ -33,8 +33,12 @@ export default function LoginView() {
   const t = useTranslations("Auth.login");
 
   useEffect(() => {
-    if (searchParams.get("reason") === "session-expired") {
+    const reason = searchParams.get("reason");
+    if (reason === "session-expired") {
       toast.error(t("sessionExpired"));
+      router.replace(pathname);
+    } else if (reason === "account-suspended") {
+      toast.error(t("accountSuspended"));
       router.replace(pathname);
     }
   }, [searchParams, pathname, router, t]);
