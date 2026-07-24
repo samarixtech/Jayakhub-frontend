@@ -2928,6 +2928,8 @@
         "toasts": {
           "fetchFailed": "فشل جلب بيانات المستخدم",
           "fillRequired": "يرجى تعبئة جميع الحقول المطلوبة.",
+          "emailRequired": "البريد الإلكتروني مطلوب.",
+          "emailInvalid": "يرجى إدخال بريد إلكتروني صالح (مثال: name@gmail.com).",
           "passwordRequired": "كلمة المرور مطلوبة للمستخدمين الجدد.",
           "passwordInvalid": "كلمة مرور غير صالحة.",
           "passwordMismatch": "كلمتا المرور غير متطابقتين.",

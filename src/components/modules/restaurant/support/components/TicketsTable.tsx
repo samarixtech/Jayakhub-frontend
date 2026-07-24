@@ -28,6 +28,9 @@ function formatTimeAgo(dateStr: string, t: ReturnType<typeof useTranslations>): 
   return t("timeAgo.days", { count: days });
 }
 
+// Equal-width columns, all left-aligned (including Updated, which used to
+// be right-aligned) — that mismatched alignment was what created a large
+// gap next to its value even when every column was otherwise the same width.
 const COLS = "grid-cols-7";
 
 const ColHeaders = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
@@ -51,7 +54,7 @@ const ColHeaders = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
       <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
         {t("colPriority")}
       </span>
-      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider text-right">
+      <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
         {t("colUpdated")}
       </span>
     </div>
@@ -103,7 +106,7 @@ export const TicketsTable = ({
                 <div className="h-3.5 w-4/5 bg-gray-200 rounded animate-pulse" />
                 <div className="h-5 w-20 bg-gray-200 rounded-full animate-pulse" />
                 <div className="h-3.5 w-10 bg-gray-200 rounded animate-pulse" />
-                <div className="h-3 w-12 bg-gray-200 rounded animate-pulse ml-auto" />
+                <div className="h-3 w-12 bg-gray-200 rounded animate-pulse" />
               </div>
             ))}
           </div>
@@ -140,7 +143,7 @@ export const TicketsTable = ({
                 >
                   {ticket.priority.charAt(0) + ticket.priority.slice(1).toLowerCase()}
                 </span>
-                <span className="text-[11px] text-gray-400 text-right whitespace-nowrap">
+                <span className="text-[11px] text-gray-400 whitespace-nowrap">
                   {formatTimeAgo(ticket.updatedAt, t)}
                 </span>
               </div>

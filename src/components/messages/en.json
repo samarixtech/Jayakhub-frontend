@@ -2930,6 +2930,8 @@
         "toasts": {
           "fetchFailed": "Failed to fetch user details",
           "fillRequired": "Please fill in all required fields.",
+          "emailRequired": "Email is required.",
+          "emailInvalid": "Please enter a valid email address (e.g. name@gmail.com).",
           "passwordRequired": "Password is required for new users.",
           "passwordInvalid": "Invalid password.",
           "passwordMismatch": "Passwords do not match.",

@@ -32,7 +32,9 @@ export default function UserFormView({
   const { state, actions, status } = useUserForm({ mode, userId });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState<{ password?: string; confirmPassword?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string }>({});
+
+  const emailSchema = z.string().email(t("toasts.emailInvalid"));
 
   const passwordSchema = z
     .string()
@@ -43,7 +45,17 @@ export default function UserFormView({
     .regex(/[^A-Za-z0-9]/, t("toasts.passwordSpecial"));
 
   const handleSave = () => {
-    const newErrors: { password?: string; confirmPassword?: string } = {};
+    const newErrors: { email?: string; password?: string; confirmPassword?: string } = {};
+
+    if (!state.email) {
+      newErrors.email = t("toasts.emailRequired");
+    } else {
+      const emailResult = emailSchema.safeParse(state.email);
+      if (!emailResult.success) {
+        newErrors.email =
+          emailResult.error.issues?.[0]?.message ?? t("toasts.emailInvalid");
+      }
+    }
 
     if (mode === "add" && !state.password) {
       newErrors.password = t("toasts.passwordRequired");
@@ -176,12 +188,18 @@ export default function UserFormView({
               id="email"
               type="email"
               value={state.email}
-              onChange={(e) => actions.setEmail(e.target.value)}
-              className="pl-9 bg-gray-50/50 border-gray-200"
+              onChange={(e) => {
+                actions.setEmail(e.target.value);
+                setErrors((prev) => ({ ...prev, email: undefined }));
+              }}
+              className={`pl-9 bg-gray-50/50 ${errors.email ? "border-red-400" : "border-gray-200"}`}
               placeholder={t("emailPlaceholder")}
               disabled={mode === "edit"}
             />
           </div>
+          {errors.email && (
+            <p className="text-xs text-red-500 mt-0.5">{errors.email}</p>
+          )}
         </div>
       </Card>
 

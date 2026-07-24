@@ -18,6 +18,13 @@ import { useTranslations } from "next-intl";
 import { usePOS } from "@/context/POSContext";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import KeyboardShortcutsModal from "./KeyboardShortcutsModal";
 import PendingOrdersSidebar from "./PendingOrdersSidebar";
 import CloseRegisterModal from "./CloseRegisterModal";
@@ -44,7 +51,6 @@ export default function POSNavbar() {
     searchTerm,
     setSearchTerm,
     globalCategories,
-    isPosLoading,
   } = usePOS();
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isPendingOrdersOpen, setIsPendingOrdersOpen] = useState(false);
@@ -109,22 +115,34 @@ export default function POSNavbar() {
           </div>
         )}
 
-        {/* Category dropdown — hidden on orders page */}
-        {!isOrdersPage && !isPosLoading && (
-          <div className="relative hidden lg:block">
-            <select
-              value={activeCategory}
-              onChange={(e) => setActiveCategory(e.target.value)}
-              className="appearance-none bg-white text-gray-800 rounded-full pl-4 pr-8 py-1.5 text-[12px] sm:text-[13px] font-semibold outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-sm"
-            >
-              <option value="all">{t("allCategories")}</option>
-              {(globalCategories || []).map((cat: string) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+        {/* Category dropdown — hidden on orders page. Not gated on
+        isPosLoading: that flag also flips true on every search/category
+        refetch, which was hiding this dropdown while the cashier typed. */}
+        {!isOrdersPage && (
+          <div className="hidden lg:block">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-1.5 bg-white text-gray-800 rounded-full pl-4 pr-3 py-1.5 text-[12px] sm:text-[13px] font-semibold outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-sm">
+                  {activeCategory === "all" ? t("allCategories") : activeCategory}
+                  <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">
+                <DropdownMenuRadioGroup
+                  value={activeCategory}
+                  onValueChange={setActiveCategory}
+                >
+                  <DropdownMenuRadioItem value="all">
+                    {t("allCategories")}
+                  </DropdownMenuRadioItem>
+                  {(globalCategories || []).map((cat: string) => (
+                    <DropdownMenuRadioItem key={cat} value={cat}>
+                      {cat}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         )}
       </div>

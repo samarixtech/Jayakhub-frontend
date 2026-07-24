@@ -1,4 +1,5 @@
 "use server";
+import { cookies } from "next/headers";
 import { serverApi } from "@/components/services/api";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
@@ -42,6 +43,9 @@ export async function getAllRestaurantsAction(params?: {
   if (lowestPrice) searchParams.append("lowestPrice", "true");
   if (highestPrice) searchParams.append("highestPrice", "true");
   if (isWishlist) searchParams.append("isWishlist", "true");
+
+  const countryCode = (await cookies()).get("USER_COUNTRY")?.value;
+  if (countryCode) searchParams.append("countryCode", countryCode);
 
   const queryString = searchParams.toString();
   const url = queryString ? `/allResturant?${queryString}` : "/allResturant";

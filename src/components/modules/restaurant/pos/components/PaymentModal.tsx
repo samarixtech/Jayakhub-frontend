@@ -59,8 +59,11 @@ export default function PaymentModal({
   const deliveryChargesNum = parseFloat(deliveryCharges) || 0;
   const actualTotal =
     orderType === "Delivery" ? displayTotal + deliveryChargesNum : displayTotal;
+  // Cash is physical currency — round the payable total (and the amount the
+  // cashier is prompted to collect) to a whole number instead of asking for exact cents.
+  const roundedTotal = Math.round(actualTotal);
   const paidAmountNum = parseFloat(paidAmount) || 0;
-  const isPaidAmountInvalid = paidAmountNum <= 0 || paidAmountNum < actualTotal;
+  const isPaidAmountInvalid = paidAmountNum <= 0 || paidAmountNum < roundedTotal;
 
   React.useEffect(() => {
     if (open) {
@@ -73,7 +76,7 @@ export default function PaymentModal({
 
   React.useEffect(() => {
     if (open && step === "select") {
-      setPaidAmount(displayTotal.toFixed(2));
+      setPaidAmount(String(Math.round(displayTotal)));
     }
   }, [open, displayTotal, step]);
 
@@ -255,26 +258,29 @@ export default function PaymentModal({
         isOutsideDisabled
         className="sm:max-w-[400px] p-6 flex flex-col items-center bg-white border-none shadow-2xl rounded-2xl text-center"
       >
-        <div className="flex flex-col items-center w-full pb-6">
-          {/* Check icon */}
-          <div className="w-12 h-12 rounded-full bg-[#e6f4ef] flex items-center justify-center mb-3">
-            <Check className="w-6 h-6 text-[#357252] stroke-[3px]" />
-          </div>
-          <h2 className="text-[20px] font-black text-[#1b2d22] tracking-tight mb-0.5">
-            {t("successTitle")}
-          </h2>
-          <p className="text-[12px] text-[#8ea89a] font-medium mb-5">
-            {receiptOrderType} · {receiptTableName}
-          </p>
+        <div className="flex flex-col items-center w-full max-h-[85vh] pb-6">
+          {/* Fixed header: icon, title, order meta */}
+          <div className="flex flex-col items-center w-full shrink-0">
+            {/* Check icon */}
+            <div className="w-12 h-12 rounded-full bg-[#e6f4ef] flex items-center justify-center mb-3">
+              <Check className="w-6 h-6 text-[#357252] stroke-[3px]" />
+            </div>
+            <h2 className="text-[20px] font-black text-[#1b2d22] tracking-tight mb-0.5">
+              {t("successTitle")}
+            </h2>
+            <p className="text-[12px] text-[#8ea89a] font-medium mb-5">
+              {receiptOrderType} · {receiptTableName}
+            </p>
 
-          {/* Order meta */}
-          <div className="flex justify-between w-full text-[12px] text-[#556977] font-semibold mb-4 border-b border-dashed border-gray-200 pb-4">
-            <span>{receiptOrderId}</span>
-            <span>{receiptDate}</span>
+            {/* Order meta */}
+            <div className="flex justify-between w-full text-[12px] text-[#556977] font-semibold mb-4 border-b border-dashed border-gray-200 pb-4">
+              <span>{receiptOrderId}</span>
+              <span>{receiptDate}</span>
+            </div>
           </div>
 
-          {/* Line items */}
-          <div className="w-full space-y-3 mb-4">
+          {/* Line items — scrolls internally instead of growing the modal */}
+          <div className="w-full space-y-3 mb-4 flex-1 min-h-0 overflow-y-auto pr-1 -mr-1">
             {receiptItems.length > 0 ? (
               receiptItems.map((item: any, idx: number) => {
                 const discountAmt = parseFloat(item.discount) || 0;
@@ -339,50 +345,53 @@ export default function PaymentModal({
             )}
           </div>
 
-          {/* Subtotal / delivery / total */}
-          <div className="w-full space-y-1.5 mb-3">
-            <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
-              <span>{t("subtotal")}</span>
-              <span>{formatPrice(receiptItemsTotal)}</span>
-            </div>
-            {receiptDeliveryFee > 0 && (
+          {/* Fixed footer: subtotal, total, payment method, actions */}
+          <div className="w-full shrink-0">
+            {/* Subtotal / delivery / total */}
+            <div className="w-full space-y-1.5 mb-3">
               <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
-                <span>{t("deliveryFee")}</span>
-                <span>{formatPrice(receiptDeliveryFee)}</span>
+                <span>{t("subtotal")}</span>
+                <span>{formatPrice(receiptItemsTotal)}</span>
               </div>
-            )}
-          </div>
+              {receiptDeliveryFee > 0 && (
+                <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
+                  <span>{t("deliveryFee")}</span>
+                  <span>{formatPrice(receiptDeliveryFee)}</span>
+                </div>
+              )}
+            </div>
 
-          <div className="flex justify-between w-full text-[17px] text-[#111] font-black mb-5 border-t border-dashed border-gray-200 pt-3">
-            <span>{t("grandTotal")}</span>
-            <span>{formatPrice(receiptGrandTotal)}</span>
-          </div>
+            <div className="flex justify-between w-full text-[17px] text-[#111] font-black mb-5 border-t border-dashed border-gray-200 pt-3">
+              <span>{t("grandTotal")}</span>
+              <span>{formatPrice(receiptGrandTotal)}</span>
+            </div>
 
-          <div className="text-center mb-5">
-            <p className="text-[13px] text-[#3e5648] font-medium mb-1">
-              {t("paidVia")}{" "}
-              <span className="font-black text-[#111] capitalize">
-                {receiptPaymentMethod}
-              </span>
-            </p>
-            <p className="text-[11px] text-[#8ea89a] font-medium">
-              {t("thankYou")}
-            </p>
-          </div>
+            <div className="text-center mb-5">
+              <p className="text-[13px] text-[#3e5648] font-medium mb-1">
+                {t("paidVia")}{" "}
+                <span className="font-black text-[#111] capitalize">
+                  {receiptPaymentMethod}
+                </span>
+              </p>
+              <p className="text-[11px] text-[#8ea89a] font-medium">
+                {t("thankYou")}
+              </p>
+            </div>
 
-          <div className="flex w-full gap-3">
-            <button
-              onClick={handlePrint}
-              className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
-            >
-              <Printer className="w-4 h-4 stroke-[2.5px]" /> {t("print")}
-            </button>
-            <button
-              onClick={handleNewOrder}
-              className="flex-1 bg-[#f4f6f8] hover:bg-[#e9ecef] text-[#111] font-bold py-3 rounded-lg flex items-center justify-center transition-colors"
-            >
-              {t("newOrder")}
-            </button>
+            <div className="flex w-full gap-3">
+              <button
+                onClick={handlePrint}
+                className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
+              >
+                <Printer className="w-4 h-4 stroke-[2.5px]" /> {t("print")}
+              </button>
+              <button
+                onClick={handleNewOrder}
+                className="flex-1 bg-[#f4f6f8] hover:bg-[#e9ecef] text-[#111] font-bold py-3 rounded-lg flex items-center justify-center transition-colors"
+              >
+                {t("newOrder")}
+              </button>
+            </div>
           </div>
         </div>
       </GlobalModal>
@@ -406,7 +415,7 @@ export default function PaymentModal({
         {/* Header Total */}
         <div className="bg-[#f2fbf5] rounded-xl flex flex-col items-center justify-center py-4 mb-4">
           <span className="text-[32px] font-black text-[#357252] leading-none mb-1">
-            {formatPrice(actualTotal)}
+            {formatPrice(roundedTotal, 0)}
           </span>
           <span className="text-[12px] text-[#789684] font-semibold">
             {t("totalPayable")}
@@ -437,7 +446,7 @@ export default function PaymentModal({
             {t("total")}
           </span>
           <span className="text-[15px] font-black text-[#111]">
-            {formatPrice(actualTotal)}
+            {formatPrice(roundedTotal, 0)}
           </span>
         </div>
 
@@ -485,8 +494,8 @@ export default function PaymentModal({
           </span>
           <input
             type="number"
-            min={actualTotal}
-            step="0.01"
+            min={roundedTotal}
+            step="1"
             value={paidAmount}
             onChange={(e) => setPaidAmount(e.target.value)}
             className={`w-full border-2 text-center rounded-lg py-1.5 text-[16px] outline-none font-black text-[#111] mb-2 ${
@@ -501,7 +510,7 @@ export default function PaymentModal({
             </span>
           ) : (
             <span className="text-[14px] font-black text-[#1eb589]">
-              {t("change")} {formatPrice(paidAmountNum - actualTotal)}
+              {t("change")} {formatPrice(paidAmountNum - roundedTotal, 0)}
             </span>
           )}
         </div>

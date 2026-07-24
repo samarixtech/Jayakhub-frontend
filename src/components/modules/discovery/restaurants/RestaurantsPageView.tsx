@@ -19,7 +19,6 @@ import { AllRestaurantsSection } from "./sections/AllRestaurantsSection";
 import { PreviousOrdersSection } from "./sections/PreviousOrdersSection";
 import { PromotionsModal, Campaign } from "./components/PromotionsModal";
 import { getWebappCampaignsAction } from "@/app/actions/public/marketing";
-import { getClientIpAction } from "@/app/actions/public/detect";
 
 const AllRestaurantsPage: React.FC = () => {
   const t = useTranslations("Discovery");
@@ -46,38 +45,6 @@ const AllRestaurantsPage: React.FC = () => {
       }
     };
     fetchCampaigns();
-  }, []);
-
-  // TEMP DEBUG — remove once the header-loss investigation is closed.
-  // Hits /detect directly from the browser with fetch(), bypassing proxy.ts
-  // and axios entirely, to check whether custom headers survive all the way
-  // to the backend when sent from a totally different request path.
-  useEffect(() => {
-    const url = process.env.NEXT_PUBLIC_BASE_URL;
-    const fetchDetect = async () => {
-      try {
-        const clientIp = (await getClientIpAction()) || "";
-
-        const outgoingHeaders: Record<string, string> = clientIp
-          ? {
-              "x-forwarded-for": clientIp,
-              // "x-real-ip": clientIp,
-              // "x-pm-ip": clientIp,
-            }
-          : {};
-
-        const res = await fetch(`${url}/detect`, {
-          headers: outgoingHeaders,
-        });
-        const json = await res.json();
-        console.log("[DEBUG client-side /detect] response:", json);
-        console.log("[DEBUG client-side /detect] headers:", outgoingHeaders);
-      } catch (err) {
-        console.error("[DEBUG client-side /detect] error:", err);
-      }
-    };
-
-    fetchDetect();
   }, []);
 
   const handlePromotionsModalChange = (open: boolean) => {

@@ -127,14 +127,3 @@ export async function detectLocationAction(
     };
   }
 }
-
-export async function getClientIpAction(): Promise<string | null> {
-  const headerStore = await headers();
-  const ip = await getClientIp(headerStore);
-  if (!ip && process.env.DEV_TEST_IP) {
-    return process.env.DEV_TEST_IP;
-  }
-  return ip;
-}
-
-
