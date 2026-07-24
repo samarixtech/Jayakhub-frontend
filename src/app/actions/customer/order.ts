@@ -30,7 +30,12 @@ export async function createOrderAction(payload: CreateOrderPayload) {
   } catch (error: any) {
     return {
       success: false,
-      message: error.message || "Failed to create order",
+      message:
+        error?.response?.data?.meta?.message ||
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to create order",
+      meta: error?.response?.data?.meta,
     };
   }
 }

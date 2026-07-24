@@ -114,8 +114,13 @@ const CheckoutView = () => {
     try {
       const res: any = await createOrderAction(payload);
 
+      const isSuccess =
+        (res?.meta?.status === 200 || res?.meta?.status === 201 || res?.success === true) &&
+        res?.meta?.status !== 400 &&
+        res?.meta?.status !== 422 &&
+        res?.meta?.status !== 500;
 
-      if (res.meta?.status === 200 || res.success) {
+      if (isSuccess) {
         if (paymentMethod === "cod") {
           // COD Success
           toast.success(t("orderPlacedSuccess"));
@@ -132,14 +137,26 @@ const CheckoutView = () => {
             const orderId = res.data?.orderId || "new";
             router.push(`/order-confirmation/${orderId}`);
           } else {
-            toast.error(t("stripeUrlNotFound"));
+            const errMsg =
+              res.meta?.message ||
+              res.data?.message ||
+              res.message ||
+              t("stripeUrlNotFound");
+            toast.error(errMsg);
           }
         }
       } else {
-        toast.error(res.message || t("placeOrderFailed"));
+        const errorMsg =
+          res?.meta?.message ||
+          res?.data?.message ||
+          res?.message ||
+          (typeof res?.error === "string" ? res.error : undefined) ||
+          t("placeOrderFailed");
+        toast.error(errorMsg);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Place order error:", error);
+      toast.error(error?.message || t("placeOrderFailed"));
     } finally {
       setIsPlacingOrder(false);
     }

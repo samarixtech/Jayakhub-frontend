@@ -55,7 +55,13 @@ const OrderSummary = ({
   const [isApplying, setIsApplying] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
 
-  const displayTotal = appliedCoupon ? appliedCoupon.finalTotal : total;
+  // appliedCoupon.finalTotal is the discounted *item subtotal* (the coupon is
+  // validated against `subtotal`, not `total`, so the delivery fee is never
+  // part of what the discount is calculated from) — add the delivery fee
+  // back on top of it to get the actual amount payable.
+  const displayTotal = appliedCoupon
+    ? appliedCoupon.finalTotal + deliveryFee
+    : total;
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
@@ -64,7 +70,7 @@ const OrderSummary = ({
     }
     setIsApplying(true);
     try {
-      const res = await validateCouponAction(couponCode.trim(), total);
+      const res = await validateCouponAction(couponCode.trim(), subtotal);
       if (res.success && res.data?.valid) {
         const coupon: AppliedCoupon = {
           couponCode: res.data.couponCode,
@@ -72,7 +78,7 @@ const OrderSummary = ({
           finalTotal: res.data.finalTotal,
         };
         setAppliedCoupon(coupon);
-        onCouponApplied?.(coupon.finalTotal);
+        onCouponApplied?.(coupon.finalTotal + deliveryFee);
         toast.success(t("couponAppliedToast"));
       } else {
         toast.error(res.message || t("couponInvalid"));

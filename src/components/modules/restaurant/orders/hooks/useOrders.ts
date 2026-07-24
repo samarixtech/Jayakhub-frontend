@@ -48,6 +48,15 @@ export interface ApiOrderRider {
   vehicleType: string;
 }
 
+export interface ApiOrderCalculation {
+  subtotal: number;
+  itemDiscount: number;
+  couponDiscount: number;
+  afterCoupon: number;
+  deliveryFee: number;
+  total: number;
+}
+
 export interface ApiOrder {
   orderId: string;
   customerName: string;
@@ -56,11 +65,16 @@ export interface ApiOrder {
   summary: string;
   itemDetail?: {
     name: string;
+    basePrice?: number;
     price: string | number;
     quantity: number;
     discount?: string | number;
+    itemDiscount?: number;
   }[];
+  totalItemDiscount?: number;
+  couponDiscount?: number;
   totalPrice: number;
+  calculation?: ApiOrderCalculation;
   status: string;
   dateTime: string;
   riderOrderId?: string;
@@ -83,7 +97,17 @@ export interface OrderItem {
   name: string;
   quantity: number;
   price: number;
+  basePrice?: number;
   discount?: number;
+}
+
+export interface UIOrderCalculation {
+  subtotal: number;
+  itemDiscount: number;
+  couponDiscount: number;
+  afterCoupon: number;
+  deliveryFee: number;
+  total: number;
 }
 
 export interface UIOrder {
@@ -95,7 +119,11 @@ export interface UIOrder {
   items: OrderItem[];
   subtotal: number;
   discount: number;
+  itemDiscount?: number;
+  couponDiscount?: number;
+  deliveryFee?: number;
   total: number;
+  calculation?: UIOrderCalculation;
   originalStatus?: string;
   riderOrderId?: string;
   prepareTime?: string;
@@ -210,30 +238,47 @@ export const useOrders = () => {
           let items: OrderItem[] = [];
           if (o.itemDetail && o.itemDetail.length > 0) {
             items = o.itemDetail.map((item, idx) => {
-              const itemDiscount =
-                typeof item.discount === "string"
+              const explicitDiscount =
+                item.itemDiscount !== undefined
+                  ? item.itemDiscount
+                  : typeof item.discount === "string"
                   ? parseFloat(item.discount)
                   : item.discount || 0;
-              // The API only sends the discount at the order level, not per
-              // item. When there's just one distinct item, it unambiguously
-              // belongs to that item; with multiple items there's no way to
-              // attribute it, so it's only shown in the order-level summary.
               const discount =
-                itemDiscount || (o.itemDetail!.length === 1 ? o.discount || 0 : 0);
+                explicitDiscount ||
+                (o.itemDetail!.length === 1
+                  ? o.discount || o.totalItemDiscount || 0
+                  : 0);
+              const unitPrice =
+                typeof item.price === "string"
+                  ? parseFloat(item.price)
+                  : Number(item.price) || 0;
+              const unitBasePrice =
+                item.basePrice !== undefined
+                  ? item.basePrice
+                  : unitPrice + (item.quantity > 0 ? discount / item.quantity : 0);
+
               return {
                 id: `item-${idx}`,
                 name: item.name,
                 quantity: item.quantity,
-                price:
-                  typeof item.price === "string"
-                    ? parseFloat(item.price)
-                    : item.price,
+                price: unitPrice,
+                basePrice: unitBasePrice,
                 discount,
               };
             });
           } else {
             items = parseSummaryToItems(o.summary);
           }
+
+          const calc = o.calculation;
+          const itemDiscountVal = calc?.itemDiscount ?? o.totalItemDiscount ?? 0;
+          const couponDiscountVal =
+            calc?.couponDiscount ?? o.couponDiscount ?? o.discount ?? 0;
+          const totalDiscountVal = itemDiscountVal + couponDiscountVal;
+          const subtotalVal = calc?.subtotal ?? o.totalPrice + totalDiscountVal;
+          const deliveryFeeVal = calc?.deliveryFee ?? 0;
+          const totalVal = calc?.total ?? o.totalPrice;
 
           return {
             id: o.orderId,
@@ -242,9 +287,22 @@ export const useOrders = () => {
             status: mapApiStatusToUiStatus(o.status),
             date: isoToOrderDateTime(o.dateTime),
             items,
-            subtotal: o.totalPrice + (o.discount || 0),
-            discount: o.discount || 0,
-            total: o.totalPrice,
+            subtotal: subtotalVal,
+            discount: totalDiscountVal,
+            itemDiscount: itemDiscountVal,
+            couponDiscount: couponDiscountVal,
+            deliveryFee: deliveryFeeVal,
+            total: totalVal,
+            calculation: calc
+              ? {
+                  subtotal: calc.subtotal,
+                  itemDiscount: calc.itemDiscount,
+                  couponDiscount: calc.couponDiscount,
+                  afterCoupon: calc.afterCoupon,
+                  deliveryFee: calc.deliveryFee,
+                  total: calc.total,
+                }
+              : undefined,
             originalStatus: o.status,
             riderOrderId: o.riderOrderId,
             prepareTime: o.prepareTime,

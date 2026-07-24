@@ -279,9 +279,9 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
             <div className="space-y-4">
               {order.items.map((item) => {
                 const hasDiscount = !!item.discount && item.discount > 0;
-                const unitPrice = hasDiscount
-                  ? item.price - item.discount!
-                  : item.price;
+                const baseUnitPrice = item.basePrice || item.price;
+                const effectiveUnitPrice = item.price;
+                const lineTotal = effectiveUnitPrice * item.quantity;
                 return (
                   <div key={item.id} className="flex justify-between items-start">
                     <div className="flex gap-3">
@@ -290,15 +290,15 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                       </span>
                       <div>
                         <span className="text-sm text-gray-700">{item.name}</span>
-                        {item.price > 0 && (
+                        {(baseUnitPrice > 0 || effectiveUnitPrice > 0) && (
                           <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-                            {hasDiscount && (
+                            {hasDiscount && baseUnitPrice > effectiveUnitPrice && (
                               <span className="text-[10px] text-gray-400 line-through">
-                                {formatPrice(item.price)}
+                                {formatPrice(baseUnitPrice)}
                               </span>
                             )}
                             <span className="text-[10px] text-gray-400 font-medium">
-                              @{formatPrice(unitPrice)}
+                              @{formatPrice(effectiveUnitPrice)}
                             </span>
                             {hasDiscount && (
                               <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
@@ -310,7 +310,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                       </div>
                     </div>
                     <span className="text-sm font-medium text-gray-900">
-                      {formatPrice(unitPrice * item.quantity) || "N/A"}
+                      {formatPrice(lineTotal) || "N/A"}
                     </span>
                   </div>
                 );
@@ -329,19 +329,43 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">{t("subtotal")}</span>
                 <span className="text-gray-900 font-medium">
-                  {formatPrice(order.subtotal) || "N/A"}
+                  {formatPrice(order.calculation?.subtotal ?? order.subtotal) || "N/A"}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">{t("discount")}</span>
-                <span className="text-red-500 font-medium">
-                  -{formatPrice(order.discount) || "N/A"}
-                </span>
-              </div>
+
+              {(order.calculation?.couponDiscount ?? order.couponDiscount ?? 0) > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">{t("couponDiscount")}</span>
+                  <span className="text-red-500 font-medium">
+                    -{formatPrice(order.calculation?.couponDiscount ?? order.couponDiscount ?? 0) || "N/A"}
+                  </span>
+                </div>
+              )}
+
+              {!order.calculation &&
+                !(order.itemDiscount || order.couponDiscount) &&
+                order.discount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-500">{t("discount")}</span>
+                    <span className="text-red-500 font-medium">
+                      -{formatPrice(order.discount) || "N/A"}
+                    </span>
+                  </div>
+                )}
+
+              {(order.calculation?.deliveryFee ?? order.deliveryFee ?? 0) > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">{t("deliveryFee")}</span>
+                  <span className="text-gray-900 font-medium">
+                    +{formatPrice(order.calculation?.deliveryFee ?? order.deliveryFee ?? 0) || "N/A"}
+                  </span>
+                </div>
+              )}
+
               <div className="flex justify-between text-base font-bold mt-2 pt-2 border-t border-gray-100">
                 <span className="text-gray-900">{t("total")}</span>
                 <span className="text-emerald-600">
-                  {formatPrice(order.total) || "N/A"}
+                  {formatPrice(order.calculation?.total ?? order.total) || "N/A"}
                 </span>
               </div>
             </div>
