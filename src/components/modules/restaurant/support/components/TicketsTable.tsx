@@ -18,9 +18,13 @@ const priorityColor: Record<string, string> = {
   LOW: "text-gray-500",
 };
 
-function formatTimeAgo(dateStr: string, t: ReturnType<typeof useTranslations>): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
+function formatTimeAgo(
+  dateStr: string,
+  t: ReturnType<typeof useTranslations>,
+): string {
+  const diff = Math.max(0, Date.now() - new Date(dateStr).getTime());
   const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return t("timeAgo.justNow");
   if (minutes < 60) return t("timeAgo.minutes", { count: minutes });
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return t("timeAgo.hours", { count: hours });
@@ -28,9 +32,6 @@ function formatTimeAgo(dateStr: string, t: ReturnType<typeof useTranslations>): 
   return t("timeAgo.days", { count: days });
 }
 
-// Equal-width columns, all left-aligned (including Updated, which used to
-// be right-aligned) — that mismatched alignment was what created a large
-// gap next to its value even when every column was otherwise the same width.
 const COLS = "grid-cols-7";
 
 const ColHeaders = ({ t }: { t: ReturnType<typeof useTranslations> }) => (
@@ -76,9 +77,7 @@ export const TicketsTable = ({
     <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
       <div className="flex justify-between items-center mb-5">
         <div>
-          <h3 className="text-[15px] font-bold text-[#1a1a1a]">
-            {t("title")}
-          </h3>
+          <h3 className="text-[15px] font-bold text-[#1a1a1a]">{t("title")}</h3>
           <p className="text-[12px] text-gray-400 mt-0.5">{t("subtitle")}</p>
         </div>
         {onViewAll && (
@@ -141,10 +140,11 @@ export const TicketsTable = ({
                 <span
                   className={`text-[12px] font-semibold capitalize ${priorityColor[ticket.priority] || "text-gray-500"}`}
                 >
-                  {ticket.priority.charAt(0) + ticket.priority.slice(1).toLowerCase()}
+                  {ticket.priority.charAt(0) +
+                    ticket.priority.slice(1).toLowerCase()}
                 </span>
                 <span className="text-[11px] text-gray-400 whitespace-nowrap">
-                  {formatTimeAgo(ticket.updatedAt, t)}
+                  {formatTimeAgo(ticket.createdAt, t)}
                 </span>
               </div>
             ))}

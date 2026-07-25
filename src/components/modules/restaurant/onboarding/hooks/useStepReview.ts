@@ -114,7 +114,7 @@ export const useStepReview = () => {
       case "food_license":
         return "food_license";
       case "tax_certificate":
-        return "food_license";
+        return "TAX_CERTIFICATE";
       default:
         return "government_id";
     }

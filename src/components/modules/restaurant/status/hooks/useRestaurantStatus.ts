@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { getRestaurantStatusAction } from "@/app/actions/restaurant/status";
 import { useServerAction } from "@/hooks/use-server-action";
 
 export function useRestaurantStatus() {
-  const router = useRouter();
+  const params = useParams<{ country: string; language: string }>();
   const [status, setStatus] = useState<
     "pending" | "rejected" | "active" | null
   >(null);
@@ -25,7 +25,13 @@ export function useRestaurantStatus() {
       setLoading(false);
 
       if (currentStatus === "active") {
-        router.push(`/restaurant/dashboard`);
+        // Hard navigation instead of router.push: the dashboard layout
+        // (header/sidebar/lock overlay) reads isCancelled/isExpired from
+        // document.cookie once per mount via usePlanAccess. A soft
+        // client-side transition can land there without that state actually
+        // refreshing, leaving the dashboard looking locked until a manual
+        // reload — a full navigation guarantees everything remounts fresh.
+        window.location.href = `/${params.country}/${params.language}/restaurant/dashboard`;
       }
     },
     onError: (err) => {

@@ -32,7 +32,13 @@ export default function UserFormView({
   const { state, actions, status } = useUserForm({ mode, userId });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; confirmPassword?: string }>({});
+  const [errors, setErrors] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+  }>({});
 
   const emailSchema = z.string().email(t("toasts.emailInvalid"));
 
@@ -45,7 +51,21 @@ export default function UserFormView({
     .regex(/[^A-Za-z0-9]/, t("toasts.passwordSpecial"));
 
   const handleSave = () => {
-    const newErrors: { email?: string; password?: string; confirmPassword?: string } = {};
+    const newErrors: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+      password?: string;
+      confirmPassword?: string;
+    } = {};
+
+    if (!state.firstName.trim()) {
+      newErrors.firstName = t("toasts.firstNameRequired");
+    }
+
+    if (!state.lastName.trim()) {
+      newErrors.lastName = t("toasts.lastNameRequired");
+    }
 
     if (!state.email) {
       newErrors.email = t("toasts.emailRequired");
@@ -154,27 +174,39 @@ export default function UserFormView({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
           <div className="grid gap-2">
             <Label htmlFor="firstName" className="font-medium text-gray-700">
-              {t("firstName")}
+              {t("firstName")} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="firstName"
               value={state.firstName}
-              onChange={(e) => actions.setFirstName(e.target.value)}
-              className="bg-gray-50/50 border-gray-200"
+              onChange={(e) => {
+                actions.setFirstName(e.target.value);
+                setErrors((prev) => ({ ...prev, firstName: undefined }));
+              }}
+              className={`bg-gray-50/50 ${errors.firstName ? "border-red-400" : "border-gray-200"}`}
               placeholder={t("firstNamePlaceholder")}
             />
+            {errors.firstName && (
+              <p className="text-xs text-red-500 mt-0.5">{errors.firstName}</p>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="lastName" className="font-medium text-gray-700">
-              {t("lastName")}
+              {t("lastName")} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="lastName"
               value={state.lastName}
-              onChange={(e) => actions.setLastName(e.target.value)}
-              className="bg-gray-50/50 border-gray-200"
+              onChange={(e) => {
+                actions.setLastName(e.target.value);
+                setErrors((prev) => ({ ...prev, lastName: undefined }));
+              }}
+              className={`bg-gray-50/50 ${errors.lastName ? "border-red-400" : "border-gray-200"}`}
               placeholder={t("lastNamePlaceholder")}
             />
+            {errors.lastName && (
+              <p className="text-xs text-red-500 mt-0.5">{errors.lastName}</p>
+            )}
           </div>
         </div>
 

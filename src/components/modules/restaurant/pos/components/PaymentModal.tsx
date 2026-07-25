@@ -64,6 +64,8 @@ export default function PaymentModal({
   const roundedTotal = Math.round(actualTotal);
   const paidAmountNum = parseFloat(paidAmount) || 0;
   const isPaidAmountInvalid = paidAmountNum <= 0 || paidAmountNum < roundedTotal;
+  const isDeliveryChargeInvalid =
+    orderType === "Delivery" && deliveryChargesNum <= 0;
 
   React.useEffect(() => {
     if (open) {
@@ -81,6 +83,10 @@ export default function PaymentModal({
   }, [open, displayTotal, step]);
 
   const handleConfirm = async () => {
+    if (isDeliveryChargeInvalid) {
+      toast.error(t("toasts.deliveryChargeRequired"));
+      return;
+    }
     if (isPaidAmountInvalid) {
       toast.error(t("toasts.amountTooLow"));
       return;
@@ -429,15 +435,29 @@ export default function PaymentModal({
             <span>{formatPrice(displaySubtotal)}</span>
           </div>
           {orderType === "Delivery" && (
-            <div className="flex justify-between text-[#556977] text-[13px] font-medium items-center">
-              <span>{t("deliveryCharges")}</span>
-              <input
-                type="number"
-                min="0"
-                value={deliveryCharges}
-                onChange={(e) => setDeliveryCharges(e.target.value)}
-                className="w-24 border border-gray-200 text-right rounded-md px-2 py-0.5 text-[13px] font-bold text-[#111] focus:outline-none focus:border-[#357252]"
-              />
+            <div>
+              <div className="flex justify-between text-[#556977] text-[13px] font-medium items-center">
+                <span>
+                  {t("deliveryCharges")} <span className="text-red-500">*</span>
+                </span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={deliveryCharges}
+                  onChange={(e) => setDeliveryCharges(e.target.value)}
+                  className={`w-24 border text-right rounded-md px-2 py-0.5 text-[13px] font-bold text-[#111] focus:outline-none ${
+                    isDeliveryChargeInvalid
+                      ? "border-red-400 focus:border-red-400"
+                      : "border-gray-200 focus:border-[#357252]"
+                  }`}
+                />
+              </div>
+              {isDeliveryChargeInvalid && (
+                <p className="text-[11px] font-bold text-red-500 text-right mt-0.5">
+                  {t("toasts.deliveryChargeRequired")}
+                </p>
+              )}
             </div>
           )}
         </div>
@@ -517,9 +537,11 @@ export default function PaymentModal({
 
         <button
           onClick={handleConfirm}
-          disabled={!method || isProcessing || isPaidAmountInvalid}
+          disabled={
+            !method || isProcessing || isPaidAmountInvalid || isDeliveryChargeInvalid
+          }
           className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${
-            !method || isProcessing || isPaidAmountInvalid
+            !method || isProcessing || isPaidAmountInvalid || isDeliveryChargeInvalid
               ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
               : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
           }`}

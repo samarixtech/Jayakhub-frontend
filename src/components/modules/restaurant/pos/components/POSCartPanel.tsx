@@ -108,7 +108,12 @@ export default function POSCartPanel() {
   const [isModifiersOpen, setIsModifiersOpen] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  const CartContent = () => (
+  // Plain JSX (not a nested component function) — defining a component
+  // inside another component's body gives it a new identity every render,
+  // which makes React tear down and remount the whole subtree (including
+  // this scrollable list) instead of just updating it, resetting scrollTop
+  // to 0 on every cart change (e.g. bumping an item's quantity).
+  const cartContent = (
     <div className="w-full h-full lg:w-[300px] xl:w-[320px] bg-white lg:border-l border-gray-200 flex flex-col z-10 shrink-0">
       {/* Top Toggle */}
       <div className="p-3">
@@ -209,7 +214,7 @@ export default function POSCartPanel() {
             <div className="flex flex-col px-3 gap-2">
               {cartItems.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.cartId || item.id}
                   className="relative flex flex-col p-3 border border-[#f5e1c4] bg-[#fffbf4] transition-colors rounded-xl shadow-[0_1px_3px_rgba(245,166,35,0.1)]"
                 >
                   <div className="flex justify-between items-start mb-1">
@@ -367,7 +372,7 @@ export default function POSCartPanel() {
   return (
     <>
       <div className="hidden lg:flex shrink-0 h-full">
-        <CartContent />
+        {cartContent}
       </div>
 
       <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -379,7 +384,7 @@ export default function POSCartPanel() {
             <SheetTitle>{t("shoppingCart")}</SheetTitle>
           </SheetHeader>
           <div className="flex-1 overflow-hidden">
-            <CartContent />
+            {cartContent}
           </div>
         </SheetContent>
       </Sheet>

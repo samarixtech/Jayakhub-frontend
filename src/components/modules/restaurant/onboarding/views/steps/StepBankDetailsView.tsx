@@ -143,6 +143,7 @@ export default function StepBankDetailsView() {
                 <FormControl>
                   <Input
                     placeholder={t("ibanPlaceholder")}
+                    maxLength={97}
                     className="h-12 bg-gray-50/50 border-gray-100 rounded-xl"
                     {...field}
                   />

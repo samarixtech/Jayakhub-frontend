@@ -131,12 +131,23 @@ export default function SubscriptionView() {
   const plan = subscription?.plan;
   const card = subscription?.paymentCard;
   const isActive =
-    subscription?.status === "active" && !subscription?.isExpired;
+    subscription?.status === "active" &&
+    !subscription?.isExpired &&
+    !isPlanCancelled &&
+    !isPlanExpired;
   const isCancelledOrExpired =
     subscription?.status?.toLowerCase() === "cancelled" ||
     !!subscription?.isExpired ||
     isPlanCancelled ||
     isPlanExpired;
+  // isPlanCancelled/isPlanExpired come from the same isCancelled/isExpired
+  // cookies proxy.ts and the header/sidebar/lock overlay already treat as
+  // authoritative — prefer them over subscription.status for the badge text.
+  const statusLabel = isPlanCancelled
+    ? "Cancelled"
+    : isPlanExpired
+      ? "Expired"
+      : capitalize(subscription?.status);
 
   const paidDisplayAmount =
     subscription?.convertedPrice ?? subscription?.paidAmount;
@@ -189,7 +200,7 @@ export default function SubscriptionView() {
                 : "bg-red-50 text-red-600 border-red-200"
             }`}
           >
-            ● Status: {capitalize(subscription.status)}
+            ● Status: {statusLabel}
           </Badge>
         </div>
 

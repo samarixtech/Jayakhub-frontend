@@ -21,8 +21,12 @@ function formatTimeAgo(
   dateStr: string,
   t: ReturnType<typeof useTranslations>,
 ): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
+  // Clock skew between the server (which stamps updatedAt) and the client
+  // can put the timestamp a few seconds/minutes in the future; treat that
+  // as "just now" instead of showing a negative minute count.
+  const diff = Math.max(0, Date.now() - new Date(dateStr).getTime());
   const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return t("timeAgo.justNow");
   if (minutes < 60) return t("timeAgo.minutes", { count: minutes });
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return t("timeAgo.hours", { count: hours });

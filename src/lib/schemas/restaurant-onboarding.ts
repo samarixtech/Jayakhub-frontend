@@ -88,7 +88,10 @@ export const bankDetailsSchema = z.object({
   accountTitle: z.string().min(3, "Account Title is required"),
   bankName: z.string().min(1, "Select a bank"),
   accountType: z.string().min(1, "Select account type"),
-  iban: z.string().min(23, "IBAN must be at least 23 characters"),
+  iban: z
+    .string()
+    .min(1, "IBAN is required")
+    .max(97, "IBAN must be at most 97 characters"),
 });
 
 // ========== FINAL REGISTRATION API PAYLOAD FOR /ONBOARDING/REGISTER ==========

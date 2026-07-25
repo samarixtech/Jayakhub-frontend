@@ -2832,6 +2832,7 @@
         "viewAll": "View All Tickets",
         "noTickets": "No tickets found. Create one to get started.",
         "timeAgo": {
+          "justNow": "Just now",
           "minutes": "{count}m ago",
           "hours": "{count}h ago",
           "days": "{count}d ago"
@@ -2933,6 +2934,8 @@
         "toasts": {
           "fetchFailed": "Failed to fetch user details",
           "fillRequired": "Please fill in all required fields.",
+          "firstNameRequired": "First name is required.",
+          "lastNameRequired": "Last name is required.",
           "emailRequired": "Email is required.",
           "emailInvalid": "Please enter a valid email address (e.g. name@gmail.com).",
           "passwordRequired": "Password is required for new users.",
@@ -4605,7 +4608,8 @@
         "success": "Payment successful!",
         "failed": "Failed to process payment",
         "error": "An error occurred during payment.",
-        "amountTooLow": "Amount paid must be at least the total payable amount"
+        "amountTooLow": "Amount paid must be at least the total payable amount",
+        "deliveryChargeRequired": "Please enter the delivery charges"
       }
     },
     "pendingOrders": {

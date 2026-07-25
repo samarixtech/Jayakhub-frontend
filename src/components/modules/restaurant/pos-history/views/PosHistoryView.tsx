@@ -66,7 +66,6 @@ export default function PosHistoryView() {
     { value: "Dine-In", label: t("filters.dineIn") },
     { value: "TakeAway", label: t("filters.takeAway") },
     { value: "Delivery", label: t("filters.delivery") },
-    { value: "Walk-in", label: t("filters.walkIn") },
   ];
 
   const PAYMENT_METHOD_OPTIONS = [
@@ -241,9 +240,9 @@ export default function PosHistoryView() {
                     }}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50 cursor-pointer"
                   >
-                    <td className="px-5 py-3.5 text-[13px] font-bold text-[#357252]">{order.id}</td>
+                    <td className="px-5 py-3.5 text-[13px] font-bold text-[#357252] whitespace-nowrap">{order.id}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.orderType}</td>
-                    <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.userId}</td>
+                    <td className="px-5 py-3.5 text-[13px] text-gray-700 whitespace-nowrap">{order.userId}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.paymentMethod}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-500 max-w-[260px] truncate">
                       {itemsSummary(order)}
