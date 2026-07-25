@@ -99,16 +99,8 @@ export const OrderCard = ({
               {formatPrice(order.totalAmount, 0)}
             </span>
 
-            {isRejected ? (
+            {isRejected || isDelivered ? (
               <></>
-            ) : isDelivered ? (
-              <Button
-                className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
-                onClick={() => handleReorder(order)}
-              >
-                <RefreshCw size={12} />
-                {t("reorder")}
-              </Button>
             ) : (
               <div className="flex gap-2 items-center">
                 {order.OrderStatus.toLowerCase() === "pending" && order.paymentMethod?.toLowerCase() === "cod" && (
