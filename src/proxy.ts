@@ -87,8 +87,8 @@ export async function proxy(request: NextRequest) {
   let country: string = cookieCountry || "";
   let language: string = cookieLanguage || "";
 
-  // 3. If cookies are missing, call detect API
-  if (!country || !language) {
+  // 3. If cookies are missing or visiting root path "/", call detect API to get latest location data
+  if (!country || !language || pathname === "/") {
     try {
       // Checks 7 proxy header variants (Cloudflare, Akamai, generic LBs,
       // etc.) and already filters out loopback addresses — a broader net
@@ -135,13 +135,13 @@ export async function proxy(request: NextRequest) {
         country = (data.code || "iq").toLowerCase();
         language = (data.language || "en").toLowerCase();
       } else {
-        if (!country) country = "iq";
-        if (!language) language = "en";
+        if (!country) country = cookieCountry || "iq";
+        if (!language) language = cookieLanguage || "en";
       }
     } catch (error) {
       console.error("Middleware: detect API error:", error);
-      if (!country) country = "iq";
-      if (!language) language = "en";
+      if (!country) country = cookieCountry || "iq";
+      if (!language) language = cookieLanguage || "en";
     }
   }
 
