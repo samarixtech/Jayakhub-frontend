@@ -9,7 +9,7 @@ interface CheckoutDeliveryAddressProps {
   selectedAddress: any;
   savedAddresses: any[];
   setSelectedAddress: (addr: any) => void;
-  fetchAddresses: () => void;
+  fetchAddresses: (autoSelectLatest?: boolean) => void;
 }
 
 export const CheckoutDeliveryAddress = ({
@@ -27,7 +27,9 @@ export const CheckoutDeliveryAddress = ({
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
         <MapPin className="text-[#346853]" size={20} />
-        <h3 className="font-bold text-lg text-gray-900">{t("deliveryAddress")}</h3>
+        <h3 className="font-bold text-lg text-gray-900">
+          {t("deliveryAddress")}
+        </h3>
       </div>
       <div className="bg-gray-50 p-4 rounded-lg flex items-center justify-between">
         <div>
@@ -62,7 +64,7 @@ export const CheckoutDeliveryAddress = ({
         onOpenChange={setIsAddressModalOpen}
       >
         <div className="space-y-3 max-h-[400px] overflow-y-auto">
-          {(savedAddresses || []).map((addr) => (
+          {(Array.isArray(savedAddresses) ? savedAddresses : []).map((addr) => (
             <div
               key={addr.id}
               className={`p-4 rounded-xl border cursor-pointer flex items-start gap-3 transition-all ${
@@ -94,7 +96,7 @@ export const CheckoutDeliveryAddress = ({
               </div>
             </div>
           ))}
-          {(savedAddresses || []).length === 0 && (
+          {(Array.isArray(savedAddresses) ? savedAddresses : []).length === 0 && (
             <p className="text-center text-gray-500 py-4">
               {t("noAddressesFound")}
             </p>
@@ -119,9 +121,8 @@ export const CheckoutDeliveryAddress = ({
         onOpenChange={(open) => {
           setIsAddNewAddressModalOpen(open);
           if (!open) {
-            // Refresh list when closed
-            fetchAddresses();
-            setIsAddressModalOpen(true);
+            // Refresh list when closed and auto select latest address
+            fetchAddresses(true);
           }
         }}
       />

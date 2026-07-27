@@ -6,7 +6,10 @@ import {
   getProfile,
   getMyCardsAction,
 } from "@/app/actions/customer/userprofile";
-import { getUserAddresses } from "@/app/actions/customer/address";
+import {
+  getUserAddresses,
+  getDeliveryChargeEstimateAction,
+} from "@/app/actions/customer/address";
 import { CheckoutPromoBanner } from "./components/CheckoutPromoBanner";
 import { CheckoutLoginForm } from "./components/CheckoutLoginForm";
 import { CheckoutPersonalDetails } from "./components/CheckoutPersonalDetails";
@@ -49,8 +52,10 @@ const CheckoutView = () => {
   );
   const [couponCode, setCouponCode] = useState("");
   const [couponFinalTotal, setCouponFinalTotal] = useState<number | null>(null);
+  const [estimatedDeliveryCharge, setEstimatedDeliveryCharge] = useState<number | null>(null);
+  const [isEstimatingDelivery, setIsEstimatingDelivery] = useState(false);
 
-  const { currencyCode } = useCLC();
+  const { country, currencyCode } = useCLC();
   const t = useTranslations("Checkout");
 
   // ACTIONS
@@ -75,17 +80,17 @@ const CheckoutView = () => {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
-    const deliveryFee = selectedRestaurantMeta?.deliveryFee ?? 0;
+    const deliveryFee = estimatedDeliveryCharge ?? (selectedRestaurantMeta?.deliveryFee ?? 0);
     const totalAmount = couponFinalTotal ?? (subtotal + deliveryFee);
 
     const payload = {
       paymentMethod: paymentMethod as any,
       restaurantId,
-      items: cart.map((item) => {
+      items: (Array.isArray(cart) ? cart : []).map((item) => {
         const variantGroupIds =
-          (item.selectedVariations || []).map((v: any) => v.groupId).filter(Boolean);
+          (Array.isArray(item.selectedVariations) ? item.selectedVariations : []).map((v: any) => v.groupId).filter(Boolean);
         const variantOptionNames =
-          (item.selectedVariations || []).map((v: any) => v.name).filter(Boolean);
+          (Array.isArray(item.selectedVariations) ? item.selectedVariations : []).map((v: any) => v.name).filter(Boolean);
 
         const itemPayload: any = {
           itemId: item.id,
@@ -162,18 +167,22 @@ const CheckoutView = () => {
     }
   };
 
-  const fetchAddresses = async () => {
+  const fetchAddresses = async (autoSelectLatest = false) => {
     try {
       const addressRes: any = await getUserAddresses();
-      if (addressRes && addressRes.success) {
+      if (addressRes && addressRes.success && Array.isArray(addressRes.data)) {
         setSavedAddresses(addressRes.data);
 
-        if (!selectedAddress) {
+        if (autoSelectLatest && addressRes.data.length > 0) {
+          const latest = addressRes.data[addressRes.data.length - 1] || addressRes.data[0];
+          setSelectedAddress(latest);
+        } else if (!selectedAddress && addressRes.data.length > 0) {
           const defaultAddr = addressRes.data.find((addr: any) => addr.status);
-          if (defaultAddr) {
-            setSelectedAddress(defaultAddr);
-          } else if (addressRes.data.length > 0) {
-            setSelectedAddress(addressRes.data[0]);
+          setSelectedAddress(defaultAddr || addressRes.data[0]);
+        } else if (selectedAddress) {
+          const updated = addressRes.data.find((addr: any) => addr.id === selectedAddress.id);
+          if (updated) {
+            setSelectedAddress(updated);
           }
         }
       }
@@ -197,13 +206,65 @@ const CheckoutView = () => {
   };
 
   useEffect(() => {
-    if (!selectedRestaurantMeta) {
+    if (selectedRestaurantMeta && !selectedRestaurantMeta.deliveryFee) {
       try {
         const saved = localStorage.getItem("selectedRestaurantMeta");
         if (saved) dispatch(setSelectedRestaurantMeta(JSON.parse(saved)));
       } catch { }
     }
   }, []);
+
+  // Fetch delivery charge estimate whenever selectedAddress changes
+  useEffect(() => {
+    if (!selectedAddress) return;
+
+    const latRaw = selectedAddress.latitude ?? selectedAddress.lat ?? selectedAddress.location?.lat;
+    const lngRaw = selectedAddress.longitude ?? selectedAddress.lng ?? selectedAddress.location?.lng;
+
+    if (latRaw == null || lngRaw == null) return;
+
+    const lat = Number(latRaw);
+    const lng = Number(lngRaw);
+    const code = (
+      selectedAddress.countryCode ||
+      (selectedAddress.country && selectedAddress.country.length === 2
+        ? selectedAddress.country
+        : null) ||
+      country ||
+      "PK"
+    ).toUpperCase();
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+      setIsEstimatingDelivery(true);
+      getDeliveryChargeEstimateAction(lat, lng, code)
+        .then((res) => {
+          if (res.success && res.data) {
+            const raw = res.data;
+            const chargeVal =
+              raw?.data?.deliveryCharge ??
+              raw?.deliveryCharge ??
+              raw?.data?.data?.deliveryCharge ??
+              raw?.data?.delivery_charge ??
+              raw?.delivery_charge ??
+              raw?.data?.deliveryFee ??
+              raw?.deliveryFee;
+
+            if (chargeVal !== undefined && chargeVal !== null) {
+              const parsed = Number(chargeVal);
+              if (!isNaN(parsed)) {
+                setEstimatedDeliveryCharge(parsed);
+              }
+            }
+          }
+        })
+        .catch((err) => {
+          console.error("Failed to estimate delivery charge", err);
+        })
+        .finally(() => {
+          setIsEstimatingDelivery(false);
+        });
+    }
+  }, [selectedAddress, country]);
 
   // Check auth status and fetch profile & addresses
   useEffect(() => {
@@ -310,25 +371,28 @@ const CheckoutView = () => {
             {/* Right Column: Order Summary */}
             <div className="lg:col-span-4">
               <div className="sticky top-8">
-                <OrderSummary
-                  subtotal={cart.reduce(
+                {(() => {
+                  const currentSubtotal = cart.reduce(
                     (sum, item) => sum + item.price * item.quantity,
                     0,
-                  )}
-                  deliveryFee={selectedRestaurantMeta?.deliveryFee ?? 0}
-                  total={
-                    cart.reduce(
-                      (sum, item) => sum + item.price * item.quantity,
-                      0,
-                    ) + (selectedRestaurantMeta?.deliveryFee ?? 0)
-                  }
-                  cartItems={cart}
-                  onPlaceOrder={handlePlaceOrder}
-                  isPlacingOrder={isPlacingOrder}
-                  couponCode={couponCode}
-                  setCouponCode={setCouponCode}
-                  onCouponApplied={(finalTotal) => setCouponFinalTotal(finalTotal)}
-                />
+                  );
+                  const currentDeliveryFee =
+                    estimatedDeliveryCharge ?? (selectedRestaurantMeta?.deliveryFee ?? 0);
+                  return (
+                    <OrderSummary
+                      subtotal={currentSubtotal}
+                      deliveryFee={currentDeliveryFee}
+                      total={currentSubtotal + currentDeliveryFee}
+                      cartItems={cart}
+                      onPlaceOrder={handlePlaceOrder}
+                      isPlacingOrder={isPlacingOrder}
+                      isEstimatingDelivery={isEstimatingDelivery}
+                      couponCode={couponCode}
+                      setCouponCode={setCouponCode}
+                      onCouponApplied={(finalTotal) => setCouponFinalTotal(finalTotal)}
+                    />
+                  );
+                })()}
               </div>
             </div>
           </div>

@@ -108,17 +108,35 @@ export default function Services({ plans = [] }: Props) {
     },
   ];
 
-  const apiPlans = plans.map((plan) => ({
-    id: plan.id,
-    name: plan.name,
-    price: formatPrice(plan.monthlyPrice),
-    period: `/ ${plan.billingCycle}`,
-    billingCycle: plan.billingCycle,
-    features: plan.keywords,
-    popular: plan.planType === "premium",
-    freeTrialDays: plan.freeTrialDays,
-    numericPrice: !isNaN(parseFloat(plan.monthlyPrice)),
-  }));
+  const apiPlans = plans.map((plan) => {
+    const rawPrice = (plan.monthlyPrice || "").replace(/[$€£¥₹]/g, "").trim();
+    const isNumeric = rawPrice !== "Free" && rawPrice !== "Custom" && rawPrice !== "" && !isNaN(Number(rawPrice));
+    const featuresList =
+      Array.isArray(plan.features) && plan.features.length > 0
+        ? plan.features
+        : Array.isArray(plan.keywords)
+        ? plan.keywords
+        : [];
+
+    return {
+      id: plan.id,
+      name: plan.name,
+      price: isNumeric ? formatPrice(rawPrice) : plan.monthlyPrice,
+      period: plan.billingCycle
+        ? `/ ${plan.billingCycle}`
+        : t.has("pricing.per_month")
+        ? t("pricing.per_month")
+        : "/mo",
+      billingCycle: plan.billingCycle || "monthly",
+      features: featuresList,
+      popular:
+        (plan.name && plan.name.toLowerCase().includes("family")) ||
+        plan.planType === "premium",
+      freeTrialDays: plan.freeTrialDays ?? null,
+      numericPrice: isNumeric,
+      currency: plan.currency || "USD",
+    };
+  });
 
   const staticPlansRaw = t.raw("pricing.plans") as Record<string, { name: string; price: string; period: string; features: Record<string, string> }>;
   const fallbackPlans = Object.entries(staticPlansRaw).map(([id, plan]) => {
@@ -128,7 +146,7 @@ export default function Services({ plans = [] }: Props) {
       id,
       name: plan.name,
       price: isNumeric ? rawPrice : plan.price,
-      period: plan.period || t("pricing.per_month"),
+      period: plan.period !== undefined ? plan.period : (t.has("pricing.per_month") ? t("pricing.per_month") : "/mo"),
       billingCycle: "monthly",
       features: Object.values(plan.features),
       popular: id === "pro",

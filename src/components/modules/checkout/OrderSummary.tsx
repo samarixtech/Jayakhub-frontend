@@ -34,6 +34,7 @@ interface OrderSummaryProps {
   cartItems: CartItem[];
   onPlaceOrder?: () => void;
   isPlacingOrder?: boolean;
+  isEstimatingDelivery?: boolean;
   couponCode: string;
   setCouponCode: (val: string) => void;
   onCouponApplied?: (finalTotal: number) => void;
@@ -46,6 +47,7 @@ const OrderSummary = ({
   cartItems,
   onPlaceOrder,
   isPlacingOrder = false,
+  isEstimatingDelivery = false,
   couponCode,
   setCouponCode,
   onCouponApplied,
@@ -53,12 +55,10 @@ const OrderSummary = ({
   const { currency } = useCLC();
   const t = useTranslations("Checkout");
   const [isApplying, setIsApplying] = useState(false);
-  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(
+    null,
+  );
 
-  // appliedCoupon.finalTotal is the discounted *item subtotal* (the coupon is
-  // validated against `subtotal`, not `total`, so the delivery fee is never
-  // part of what the discount is calculated from) — add the delivery fee
-  // back on top of it to get the actual amount payable.
   const displayTotal = appliedCoupon
     ? appliedCoupon.finalTotal + deliveryFee
     : total;
@@ -115,12 +115,16 @@ const OrderSummary = ({
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <h3 className="font-bold text-lg mb-1">{t("yourItems")}</h3>
         <p className="text-sm text-gray-500 mb-6">
-          {t("fromRestaurant", { name: cartItems[0]?.restaurantName || t("restaurantFallback") })}
+          {t("fromRestaurant", {
+            name: cartItems[0]?.restaurantName || t("restaurantFallback"),
+          })}
         </p>
 
         <div className="space-y-4 mb-6">
-          {(cartItems || []).map((item) => {
-            const discountAmount = item.discount ? parseFloat(item.discount) : 0;
+          {(Array.isArray(cartItems) ? cartItems : []).map((item) => {
+            const discountAmount = item.discount
+              ? parseFloat(item.discount)
+              : 0;
             const hasDiscount =
               discountAmount > 0 &&
               item.originalPrice != null &&
@@ -132,33 +136,42 @@ const OrderSummary = ({
                 className="flex justify-between items-start text-sm"
               >
                 <div className="flex gap-2">
-                  <span className="font-bold text-[#346853]">{item.quantity}x</span>
+                  <span className="font-bold text-[#346853]">
+                    {item.quantity}x
+                  </span>
                   <div>
                     <p className="font-medium text-gray-900">{item.name}</p>
-                    {item.selectedVariations && item.selectedVariations.length > 0 && (
-                      <p className="text-xs text-gray-500">
-                        {item.selectedVariations.map((v) => v.name).join(", ")}
-                      </p>
-                    )}
+                    {Array.isArray(item.selectedVariations) &&
+                      item.selectedVariations.length > 0 && (
+                        <p className="text-xs text-gray-500">
+                          {item.selectedVariations
+                            .map((v) => v.name)
+                            .join(", ")}
+                        </p>
+                      )}
                     <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                       {hasDiscount && (
                         <span className="text-xs text-gray-400 line-through">
-                          {currency}{item.originalPrice!.toFixed(2)}
+                          {currency}
+                          {item.originalPrice!.toFixed(2)}
                         </span>
                       )}
                       <span className="text-xs text-gray-500">
-                        {currency}{(item.price || 0).toFixed(2)} x {item.quantity}
+                        {currency}
+                        {(item.price || 0).toFixed(2)} x {item.quantity}
                       </span>
                       {hasDiscount && (
                         <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
-                          -{currency}{discountAmount.toFixed(0)} {t("itemOff")}
+                          -{currency}
+                          {discountAmount.toFixed(0)} {t("itemOff")}
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
                 <span className="font-medium text-gray-900 whitespace-nowrap ml-2">
-                  {currency}{((item.price || 0) * item.quantity).toFixed(2)}
+                  {currency}
+                  {((item.price || 0) * item.quantity).toFixed(2)}
                 </span>
               </div>
             );
@@ -169,16 +182,30 @@ const OrderSummary = ({
         <div className="space-y-2 text-sm border-t border-gray-100 pt-4 mb-4">
           <div className="flex justify-between text-gray-500">
             <span>{t("subtotal")}</span>
-            <span>{currency}{subtotal.toFixed(2)}</span>
+            <span>
+              {currency}
+              {subtotal.toFixed(2)}
+            </span>
           </div>
           <div className="flex justify-between text-gray-500">
             <span>{t("deliveryFee")}</span>
-            <span>{currency}{deliveryFee.toFixed(2)}</span>
+            <span>
+              {isEstimatingDelivery ? (
+                <Loader2 size={14} className="animate-spin inline" />
+              ) : (
+                `${currency}${deliveryFee.toFixed(2)}`
+              )}
+            </span>
           </div>
           {appliedCoupon && (
             <div className="flex justify-between text-emerald-600 font-medium">
-              <span>{t("discountLabel", { code: appliedCoupon.couponCode })}</span>
-              <span>- {currency}{appliedCoupon.discountAmount.toFixed(2)}</span>
+              <span>
+                {t("discountLabel", { code: appliedCoupon.couponCode })}
+              </span>
+              <span>
+                - {currency}
+                {appliedCoupon.discountAmount.toFixed(2)}
+              </span>
             </div>
           )}
         </div>
@@ -189,11 +216,13 @@ const OrderSummary = ({
           <div className="text-right">
             {appliedCoupon && (
               <span className="text-gray-400 line-through text-sm mr-2">
-                {currency}{total.toFixed(2)}
+                {currency}
+                {total.toFixed(2)}
               </span>
             )}
             <span className="font-bold text-2xl text-[#346853]">
-              {currency}{displayTotal.toFixed(2)}
+              {currency}
+              {displayTotal.toFixed(2)}
             </span>
           </div>
         </div>
@@ -203,7 +232,9 @@ const OrderSummary = ({
           <div className="flex items-center justify-between mb-6 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-lg">
             <div className="flex items-center gap-2 text-emerald-700 text-sm font-medium">
               <Tag size={16} />
-              <span>{t("couponApplied", { code: appliedCoupon.couponCode })}</span>
+              <span>
+                {t("couponApplied", { code: appliedCoupon.couponCode })}
+              </span>
             </div>
             <button
               type="button"
@@ -232,7 +263,11 @@ const OrderSummary = ({
               disabled={isApplying}
               className="text-xs font-bold text-[#346853] px-3 hover:underline disabled:opacity-50"
             >
-              {isApplying ? <Loader2 size={14} className="animate-spin" /> : t("applyBtn")}
+              {isApplying ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                t("applyBtn")
+              )}
             </button>
           </div>
         )}
@@ -251,7 +286,10 @@ const OrderSummary = ({
 
         <p className="text-[10px] text-gray-400 text-center mt-3 leading-tight">
           {t("agreeToOrderPrefix")}{" "}
-          <Link href="/terms-of-service" className="underline cursor-pointer">{t("termsAndConditions")}</Link>.
+          <Link href="/terms-of-service" className="underline cursor-pointer">
+            {t("termsAndConditions")}
+          </Link>
+          .
         </p>
       </div>
     </div>

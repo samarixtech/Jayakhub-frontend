@@ -405,6 +405,10 @@
       "desc": "Choose the plan that fits your needs and scale your delivery operations effortlessly.",
       "button": "Choose Plan",
       "most_popular": "Most Popular",
+      "no_plans": "No plans available at the moment.",
+      "days_free": "{days} days free",
+      "plan_fallback": "plan",
+      "per_month": "/mo",
       "plans": {
         "starter": {
           "name": "Starter",
@@ -4601,7 +4605,7 @@
       "afterDiscount": "After discount",
       "priceAfterDiscount": "Price (after discount)",
       "paidVia": "Paid via",
-      "thankYou": "Thank you for dining with us!",
+      "thankYou": "Thank you for choosing us!",
       "print": "Print",
       "newOrder": "New Order",
       "toasts": {

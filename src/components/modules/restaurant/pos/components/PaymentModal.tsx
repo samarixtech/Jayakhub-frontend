@@ -63,7 +63,8 @@ export default function PaymentModal({
   // cashier is prompted to collect) to a whole number instead of asking for exact cents.
   const roundedTotal = Math.round(actualTotal);
   const paidAmountNum = parseFloat(paidAmount) || 0;
-  const isPaidAmountInvalid = paidAmountNum <= 0 || paidAmountNum < roundedTotal;
+  const isPaidAmountInvalid =
+    paidAmountNum <= 0 || paidAmountNum < roundedTotal;
   const isDeliveryChargeInvalid =
     orderType === "Delivery" && deliveryChargesNum <= 0;
 
@@ -275,7 +276,7 @@ export default function PaymentModal({
               {t("successTitle")}
             </h2>
             <p className="text-[12px] text-[#8ea89a] font-medium mb-5">
-              {receiptOrderType} · {receiptTableName}
+              {receiptOrderType}
             </p>
 
             {/* Order meta */}
@@ -314,7 +315,10 @@ export default function PaymentModal({
                           </span>
                         )}
                         <span className="text-[#8ea89a]">
-                          {formatPrice(hasDiscount ? unitPrice : item.basePrice)} x {item.quantity}
+                          {formatPrice(
+                            hasDiscount ? unitPrice : item.basePrice,
+                          )}{" "}
+                          x {item.quantity}
                         </span>
                       </div>
                       {hasDiscount && (
@@ -445,7 +449,17 @@ export default function PaymentModal({
                   min="0"
                   step="0.01"
                   value={deliveryCharges}
-                  onChange={(e) => setDeliveryCharges(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "" || Number(val) >= 0) {
+                      setDeliveryCharges(val);
+                    }
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "Subtract") {
+                      e.preventDefault();
+                    }
+                  }}
                   className={`w-24 border text-right rounded-md px-2 py-0.5 text-[13px] font-bold text-[#111] focus:outline-none ${
                     isDeliveryChargeInvalid
                       ? "border-red-400 focus:border-red-400"
@@ -538,10 +552,16 @@ export default function PaymentModal({
         <button
           onClick={handleConfirm}
           disabled={
-            !method || isProcessing || isPaidAmountInvalid || isDeliveryChargeInvalid
+            !method ||
+            isProcessing ||
+            isPaidAmountInvalid ||
+            isDeliveryChargeInvalid
           }
           className={`w-full font-bold py-3 rounded-xl text-[14.5px] transition-colors flex items-center justify-center gap-2 ${
-            !method || isProcessing || isPaidAmountInvalid || isDeliveryChargeInvalid
+            !method ||
+            isProcessing ||
+            isPaidAmountInvalid ||
+            isDeliveryChargeInvalid
               ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
               : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
           }`}

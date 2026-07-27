@@ -150,7 +150,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full">
         {/* Header */}
-        <SheetHeader className="p-6 border-b border-gray-100 flex-none sticky top-0 bg-white z-10">
+        <SheetHeader className="px-6 py-4 border-b border-gray-100 flex-none sticky top-0 bg-white z-10">
           <div className="flex items-center justify-between">
             <div>
               <SheetTitle className="text-lg font-bold text-gray-900">
@@ -170,7 +170,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           </div>
         </SheetHeader>
 
-        <div className="p-6 space-y-6 overflow-y-auto flex-1">
+        <div className="px-6 space-y-6 overflow-y-auto flex-1">
           {/* Status */}
           <div className="flex items-start justify-between">
             <div>
@@ -246,16 +246,20 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                         {order.rider.phone}
                       </p>
                       <p className="text-xs text-gray-400 font-medium capitalize">
-                        {t("vehicle")}: {order.rider.vehicleType} · {order.rider.vehicleNumber}
+                        {t("vehicle")}: {order.rider.vehicleType} ·{" "}
+                        {order.rider.vehicleNumber}
                       </p>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-400">{t("noRiderAssigned")}</p>
+                  <p className="text-sm text-gray-400">
+                    {t("noRiderAssigned")}
+                  </p>
                 )}
                 {order.riderOrderId && (
                   <p className="text-xs text-gray-400 font-medium mt-2">
-                    {t("riderOrderId")}: <span className="text-gray-700">{order.riderOrderId}</span>
+                    {t("riderOrderId")}:{" "}
+                    <span className="text-gray-700">{order.riderOrderId}</span>
                   </p>
                 )}
               </div>
@@ -272,7 +276,10 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
               </h4>
               <span className="text-[11px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
                 {t("totalItems", {
-                  count: order.items.reduce((sum, item) => sum + item.quantity, 0),
+                  count: order.items.reduce(
+                    (sum, item) => sum + item.quantity,
+                    0,
+                  ),
                 })}
               </span>
             </div>
@@ -283,20 +290,26 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                 const effectiveUnitPrice = item.price;
                 const lineTotal = effectiveUnitPrice * item.quantity;
                 return (
-                  <div key={item.id} className="flex justify-between items-start">
+                  <div
+                    key={item.id}
+                    className="flex justify-between items-start"
+                  >
                     <div className="flex gap-3">
                       <span className="text-sm font-bold text-gray-900 w-6">
                         {item.quantity}x
                       </span>
                       <div>
-                        <span className="text-sm text-gray-700">{item.name}</span>
+                        <span className="text-sm text-gray-700">
+                          {item.name}
+                        </span>
                         {(baseUnitPrice > 0 || effectiveUnitPrice > 0) && (
                           <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-                            {hasDiscount && baseUnitPrice > effectiveUnitPrice && (
-                              <span className="text-[10px] text-gray-400 line-through">
-                                {formatPrice(baseUnitPrice)}
-                              </span>
-                            )}
+                            {hasDiscount &&
+                              baseUnitPrice > effectiveUnitPrice && (
+                                <span className="text-[10px] text-gray-400 line-through">
+                                  {formatPrice(baseUnitPrice)}
+                                </span>
+                              )}
                             <span className="text-[10px] text-gray-400 font-medium">
                               @{formatPrice(effectiveUnitPrice)}
                             </span>
@@ -329,15 +342,23 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">{t("subtotal")}</span>
                 <span className="text-gray-900 font-medium">
-                  {formatPrice(order.calculation?.subtotal ?? order.subtotal) || "N/A"}
+                  {formatPrice(order.calculation?.subtotal ?? order.subtotal) ||
+                    "N/A"}
                 </span>
               </div>
 
-              {(order.calculation?.couponDiscount ?? order.couponDiscount ?? 0) > 0 && (
+              {(order.calculation?.couponDiscount ??
+                order.couponDiscount ??
+                0) > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">{t("couponDiscount")}</span>
                   <span className="text-red-500 font-medium">
-                    -{formatPrice(order.calculation?.couponDiscount ?? order.couponDiscount ?? 0) || "N/A"}
+                    -
+                    {formatPrice(
+                      order.calculation?.couponDiscount ??
+                        order.couponDiscount ??
+                        0,
+                    ) || "N/A"}
                   </span>
                 </div>
               )}
@@ -353,11 +374,15 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                   </div>
                 )}
 
-              {(order.calculation?.deliveryFee ?? order.deliveryFee ?? 0) > 0 && (
+              {(order.calculation?.deliveryFee ?? order.deliveryFee ?? 0) >
+                0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">{t("deliveryFee")}</span>
                   <span className="text-gray-900 font-medium">
-                    +{formatPrice(order.calculation?.deliveryFee ?? order.deliveryFee ?? 0) || "N/A"}
+                    +
+                    {formatPrice(
+                      order.calculation?.deliveryFee ?? order.deliveryFee ?? 0,
+                    ) || "N/A"}
                   </span>
                 </div>
               )}
@@ -365,7 +390,8 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
               <div className="flex justify-between text-base font-bold mt-2 pt-2 border-t border-gray-100">
                 <span className="text-gray-900">{t("total")}</span>
                 <span className="text-emerald-600">
-                  {formatPrice(order.calculation?.total ?? order.total) || "N/A"}
+                  {formatPrice(order.calculation?.total ?? order.total) ||
+                    "N/A"}
                 </span>
               </div>
             </div>

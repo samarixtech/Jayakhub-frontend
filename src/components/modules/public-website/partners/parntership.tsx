@@ -510,20 +510,25 @@ export default function Home() {
     setActivePlanIndex(Math.round(el.scrollLeft / cardWidth));
   };
 
-  const pricingPlans = apiPlans.map((plan) => ({
+  const pricingPlans = (Array.isArray(apiPlans) ? apiPlans : []).map((plan) => ({
     id: plan.id,
     name: plan.name,
     price: formatPrice(plan.monthlyPrice),
     period: `/ ${plan.billingCycle}`,
     billingCycle: plan.billingCycle,
-    features: plan.keywords,
-    popular: plan.planType === "premium",
+    features: Array.isArray(plan.features) && plan.features.length > 0 ? plan.features : (Array.isArray(plan.keywords) ? plan.keywords : []),
+    popular: (plan.name && plan.name.toLowerCase().includes("family")) || plan.planType === "premium",
     freeTrialDays: plan.freeTrialDays,
   }));
 
-  const comparePlatforms = t.raw('compare.platforms') as { name: string; fee: string }[];
-  const benefitItems = t.raw('benefits.items') as { icon: string; title: string; desc: string }[];
-  const featureItems = t.raw('features.items') as { n: number; title: string; desc: string }[];
+  const rawPlatforms = t.raw('compare.platforms');
+  const comparePlatforms = (Array.isArray(rawPlatforms) ? rawPlatforms : []) as { name: string; fee: string }[];
+
+  const rawBenefits = t.raw('benefits.items');
+  const benefitItems = (Array.isArray(rawBenefits) ? rawBenefits : []) as { icon: string; title: string; desc: string }[];
+
+  const rawFeatures = t.raw('features.items');
+  const featureItems = (Array.isArray(rawFeatures) ? rawFeatures : []) as { n: number; title: string; desc: string }[];
 
   return (
     <main dir={dir} className="text-[#1a1a1a] bg-white">
@@ -687,7 +692,7 @@ export default function Home() {
             {t('compare.title')}
           </motion.h2>
 
-          {comparePlatforms.map((row, i) => (
+          {(Array.isArray(comparePlatforms) ? comparePlatforms : []).map((row, i) => (
             <motion.div
               key={i}
               variants={{
@@ -762,7 +767,7 @@ export default function Home() {
             }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {benefitItems.map((benefit, i) => (
+            {(Array.isArray(benefitItems) ? benefitItems : []).map((benefit, i) => (
               <motion.div
                 key={i}
                 variants={{
@@ -806,7 +811,7 @@ export default function Home() {
             }}
             className="max-w-[780px] mx-auto space-y-3.5"
           >
-            {featureItems.map((feature, i) => (
+            {(Array.isArray(featureItems) ? featureItems : []).map((feature, i) => (
               <motion.div
                 key={i}
                 variants={{
@@ -849,7 +854,7 @@ export default function Home() {
                 onScroll={handlePlansScroll}
                 className="flex gap-5 overflow-x-auto pb-4 no-scrollbar snap-x snap-mandatory"
               >
-                {pricingPlans.map((plan, idx) => {
+                {(Array.isArray(pricingPlans) ? pricingPlans : []).map((plan, idx) => {
                   const isLight = idx % 2 === 0;
                   return (
                     <div
@@ -899,7 +904,7 @@ export default function Home() {
 
                       {/* features */}
                       <ul className="space-y-3 mb-8 flex-1">
-                        {plan.features.map((feature) => (
+                        {(Array.isArray(plan.features) ? plan.features : []).map((feature) => (
                           <li key={feature} className="flex items-center gap-3">
                             <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${isLight ? "bg-primary/10" : "bg-white/10"}`}>
                               <Check className={`w-3 h-3 ${isLight ? "text-primary" : "text-white"}`} />

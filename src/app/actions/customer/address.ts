@@ -96,3 +96,26 @@ export async function deleteUserAddress(id: string) {
     };
   }
 }
+
+// ESTIMATE DELIVERY CHARGE ACTION
+export async function getDeliveryChargeEstimateAction(
+  latitude: number | string,
+  longitude: number | string,
+  countryCode: string,
+) {
+  try {
+    const api = await serverApi();
+    const response = await api.get(
+      `/delivery-charge-estimate?latitude=${latitude}&longitude=${longitude}&countryCode=${countryCode}`,
+    );
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error("Get Delivery Charge Estimate Error:", error);
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ||
+        "Failed to get delivery charge estimate",
+    };
+  }
+}
