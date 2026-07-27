@@ -127,6 +127,24 @@ export async function submitRatingAction(payload: {
   }
 }
 
+export async function reorderAction(orderId: string) {
+  try {
+    const api = await serverApi();
+    const response = await api.get(`/reorder/${orderId}`);
+    const resData = response.data as any;
+    return { success: true, data: resData?.data ?? resData };
+  } catch (error: any) {
+    return {
+      success: false,
+      message:
+        error?.response?.data?.meta?.message ||
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to fetch reorder details",
+    };
+  }
+}
+
 export async function cancelOrderAction(orderId: string) {
   try {
     const api = await serverApi();

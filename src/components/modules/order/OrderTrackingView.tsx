@@ -152,7 +152,7 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
             {isCancelable && (
               <Button
                 variant="secondary"
-                className="bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold h-10 px-6 rounded-lg"
+                className="bg-pink-50 hover:bg-pink-100 text-pink-600 font-bold h-10 px-6 rounded-lg border border-pink-200"
                 onClick={() => setCancelModalOpen(true)}
               >
                 {t("cancel_order_btn")}

@@ -1,13 +1,54 @@
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { addToCart } from "@/redux/slices/cartSlice";
+import { toast } from "react-hot-toast";
+import { setCart, setUnavailableItems } from "@/redux/slices/cartSlice";
+import { reorderAction } from "@/app/actions/customer/order";
 import { Order, OrderItem, OrderStatus } from "../types";
 
 
 
-import React from "react";
+import React, { useState } from "react";
 import { RatingModal } from "@/components/common/RatingModal";
+
+// The reorder API returns the same item shape for both available
+// ("success") and unavailable ("errors") items.
+function mapReorderItem(
+  item: any,
+  restaurantId?: string,
+  restaurantName?: string,
+) {
+  const discountAmount = item.discount ? Number(item.discount) : 0;
+  const basePrice = Number(item.basePrice) || 0;
+  const unitPrice = Math.max(0, basePrice - discountAmount);
+  const selectedVariations = (item.variants || []).map((v: any) => ({
+    name: v.optionName,
+    groupName: v.groupName,
+    additionalPrice: v.price,
+    variantGroupId: v.variantId,
+    id: v.variantId,
+  }));
+  const variantKey = JSON.stringify(
+    selectedVariations.map((v: any) => v.name).sort(),
+  );
+
+  return {
+    id: item.itemId,
+    productId: item.itemId,
+    name: item.itemName,
+    description: item.description || "",
+    price: unitPrice,
+    originalPrice: basePrice,
+    discount: item.discount != null ? String(item.discount) : null,
+    image: item.image,
+    imageUrl: item.image,
+    quantity: item.quantity,
+    restaurantId,
+    restaurantName,
+    selectedVariations,
+    cartId: `${item.itemId}-${variantKey}`,
+  };
+}
 
 interface UseOrderHistoryActionsProps {
   country: string;
@@ -63,6 +104,9 @@ export function useOrderHistoryActions({
   const dispatch = useDispatch();
   const router = useRouter();
   const t = useTranslations("CustomerDashboard.OrderHistory");
+  const [reorderingOrderId, setReorderingOrderId] = useState<string | null>(
+    null,
+  );
 
   const handlePageChange = (page: number, totalPages: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -71,27 +115,52 @@ export function useOrderHistoryActions({
     }
   };
 
-  const handleReorder = (order: Order) => {
-    if (!order.items || order.items.length === 0) return;
+  const handleReorder = async (order: Order) => {
+    setReorderingOrderId(order.orderId);
+    try {
+      const res = await reorderAction(order.orderId);
+      if (!res.success || !res.data) {
+        toast.error(res.message || t("reorder_failed"));
+        return;
+      }
 
-    order.items.forEach((item) => {
-      const cartItem = {
-        id: item.id || `temp-${Date.now()}-${Math.random()}`,
-        name: item.name,
-        description: "",
-        price: parseFloat(item.price),
-        quantity: item.quantity,
-        image: item.image,
-        imageUrl: getImageUrl(item.image),
-        restaurantId: order.restaurantId,
-        restaurantName: order.restaurantName,
-        selectedVariations: item.selectedVariations || [],
-        cartId: `reorder-${order.orderId}-${item.id || item.name}-${Date.now()}`,
-      };
-      dispatch(addToCart(cartItem));
-    });
+      const data = res.data as any;
+      const restaurantId = data.restaurantId || order.restaurantId;
+      const restaurantName = data.restaurantName || order.restaurantName;
 
-    router.push("/checkout");
+      const availableItems = (data.success || []).map((item: any) =>
+        mapReorderItem(item, restaurantId, restaurantName),
+      );
+      const unavailableItems = (data.errors || []).map((item: any) =>
+        mapReorderItem(item, restaurantId, restaurantName),
+      );
+
+      if (availableItems.length === 0 && unavailableItems.length === 0) {
+        toast.error(t("reorder_no_items"));
+        return;
+      }
+
+      // The cart only ever holds one restaurant's items at a time — always
+      // replace it with the reordered restaurant's items rather than
+      // merging with whatever was already there.
+      dispatch(setCart(availableItems));
+      dispatch(setUnavailableItems(unavailableItems));
+
+      if (availableItems.length === 0) {
+        toast.error(t("reorder_all_unavailable"));
+      } else if (unavailableItems.length > 0) {
+        toast.success(t("reorder_partial"));
+      } else {
+        toast.success(data.summary?.message || t("reorder"));
+      }
+
+      router.push("/checkout");
+    } catch (error) {
+      console.error("Reorder failed", error);
+      toast.error(t("reorder_failed"));
+    } finally {
+      setReorderingOrderId(null);
+    }
   };
 
   const handleRateOrder = (order: Order) => {
@@ -122,5 +191,10 @@ export function useOrderHistoryActions({
     setIsRatingModalOpen(true);
   };
 
-  return { handlePageChange, handleReorder, handleRateOrder };
+  return {
+    handlePageChange,
+    handleReorder,
+    handleRateOrder,
+    reorderingOrderId,
+  };
 }

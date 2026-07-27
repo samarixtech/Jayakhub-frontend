@@ -103,14 +103,6 @@ const AllRestaurantsPage: React.FC = () => {
             onCuisineClick={actions.handleFilter}
           />
 
-          <div className="mb-2">
-            <h2 className="text-xl font-bold text-gray-900">
-              {t("restaurantsPage.nearbyCount", {
-                count: state.restaurants.length,
-              })}
-            </h2>
-          </div>
-
           <AllRestaurantsSection
             isPending={state.isPending}
             restaurants={state.restaurants}

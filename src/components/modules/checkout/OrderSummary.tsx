@@ -32,6 +32,9 @@ interface OrderSummaryProps {
   deliveryFee: number;
   total: number;
   cartItems: CartItem[];
+  // Items from a /reorder call that are no longer available — shown for
+  // context only, never counted toward subtotal/total or sent to checkout.
+  unavailableItems?: CartItem[];
   onPlaceOrder?: () => void;
   isPlacingOrder?: boolean;
   isEstimatingDelivery?: boolean;
@@ -45,6 +48,7 @@ const OrderSummary = ({
   deliveryFee,
   total,
   cartItems,
+  unavailableItems = [],
   onPlaceOrder,
   isPlacingOrder = false,
   isEstimatingDelivery = false,
@@ -177,6 +181,48 @@ const OrderSummary = ({
             );
           })}
         </div>
+
+        {/* Unavailable items from a reorder — display only, excluded from
+        subtotal/total and never sent to checkout */}
+        {unavailableItems.length > 0 && (
+          <div className="space-y-3 mb-6 pt-4 border-t border-dashed border-gray-200">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+              {t("unavailableItemsTitle")}
+            </p>
+            {unavailableItems.map((item) => (
+              <div
+                key={item.cartId || item.id}
+                className="flex justify-between items-start text-sm opacity-50"
+              >
+                <div className="flex gap-2">
+                  <span className="font-bold text-gray-400">
+                    {item.quantity}x
+                  </span>
+                  <div>
+                    <p className="font-medium text-gray-500 line-through">
+                      {item.name}
+                    </p>
+                    {Array.isArray(item.selectedVariations) &&
+                      item.selectedVariations.length > 0 && (
+                        <p className="text-xs text-gray-400">
+                          {item.selectedVariations
+                            .map((v) => v.name)
+                            .join(", ")}
+                        </p>
+                      )}
+                  </div>
+                </div>
+                <span className="font-medium text-gray-400 whitespace-nowrap ml-2">
+                  {currency}
+                  {((item.price || 0) * item.quantity).toFixed(2)}
+                </span>
+              </div>
+            ))}
+            <p className="text-xs text-gray-400">
+              {t("unavailableItemsNote")}
+            </p>
+          </div>
+        )}
 
         {/* Pricing Breakdown */}
         <div className="space-y-2 text-sm border-t border-gray-100 pt-4 mb-4">

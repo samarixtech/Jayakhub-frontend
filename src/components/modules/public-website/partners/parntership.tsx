@@ -473,22 +473,19 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { getPublicPlansAction, ApiPlan } from "@/app/actions/public/plans";
-import { Check, ArrowRight, ArrowLeft } from "lucide-react";
-import { useCurrency } from "@/hooks/useCurrency";
+import { ArrowRight, ArrowLeft } from "lucide-react";
+import PricingPlansSection from "@/components/common/public-website/PricingPlansSection";
 
 const RTL_LOCALES = ["ar", "ur", "fa", "he"];
 
 export default function Home() {
   const t = useTranslations('PartnerPage');
   const locale = useLocale();
-  const { symbol: currencySymbol } = useCurrency();
   const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
 
   const [apiPlans, setApiPlans] = useState<ApiPlan[]>([]);
-  const [activePlanIndex, setActivePlanIndex] = useState(0);
-  const plansScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getPublicPlansAction().then((res) => {
@@ -498,17 +495,13 @@ export default function Home() {
 
   const formatPrice = (price: string) => {
     const num = parseFloat(price);
-    return isNaN(num) ? price : num.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    if (isNaN(num)) return price;
+    const decimalMatch = price.match(/\.(\d+)/);
+    const decimals = decimalMatch ? decimalMatch[1].length : 0;
+    return num.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
   };
 
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
-
-  const handlePlansScroll = () => {
-    const el = plansScrollRef.current;
-    if (!el || !apiPlans.length) return;
-    const cardWidth = el.scrollWidth / apiPlans.length;
-    setActivePlanIndex(Math.round(el.scrollLeft / cardWidth));
-  };
 
   const pricingPlans = (Array.isArray(apiPlans) ? apiPlans : []).map((plan) => ({
     id: plan.id,
@@ -836,116 +829,15 @@ export default function Home() {
       {/* PRICING */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-primary" id="pricing">
         <div className="max-w-screen-xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="inline-block bg-white/10 text-white/80 text-sm font-semibold px-4 py-2 rounded-full mb-6 border border-white/10">
-              {t('pricing.subtitle')}
-            </span>
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              {t.rich('pricing.title', { span: (chunks) => <span className="text-white">{chunks}</span> })}
-            </h2>
-          </div>
-
-          {pricingPlans.length === 0 ? (
-            <p className="text-center text-white/50 py-8">{t('pricing.no_plans')}</p>
-          ) : (
-            <>
-              <div
-                ref={plansScrollRef}
-                onScroll={handlePlansScroll}
-                className="flex gap-5 overflow-x-auto pb-4 no-scrollbar snap-x snap-mandatory"
-              >
-                {(Array.isArray(pricingPlans) ? pricingPlans : []).map((plan, idx) => {
-                  const isLight = idx % 2 === 0;
-                  return (
-                    <div
-                      key={plan.id}
-                      className={`relative flex-none w-[calc(100%-8px)] sm:w-[calc(50%-10px)] lg:w-[calc(30%-14px)] snap-start flex flex-col rounded-2xl p-9 transition-transform duration-300 hover:-translate-y-1 ${
-                        isLight
-                          ? "bg-white shadow-[0_20px_60px_rgba(0,0,0,0.2)]"
-                          : "bg-white/[0.07] border border-white/15"
-                      }`}
-                    >
-                      {/* badges */}
-                      <div className="flex flex-wrap gap-2 mb-5 min-h-[26px]">
-                        {plan.popular && (
-                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-3 py-1 rounded-full tracking-wide ${isLight ? "bg-primary text-white" : "bg-white/20 text-white"}`}>
-                            ★ {t('pricing.most_popular')}
-                          </span>
-                        )}
-                        {plan.freeTrialDays && (
-                          <span className={`inline-flex items-center text-[11px] font-semibold px-3 py-1 rounded-full ${isLight ? "bg-primary/10 text-primary" : "bg-emerald-400/20 text-emerald-300 border border-emerald-400/30"}`}>
-                            {t('pricing.days_free', { days: plan.freeTrialDays })}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* billing cycle */}
-                      <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${isLight ? "text-primary/60" : "text-white/40"}`}>
-                        {plan.billingCycle ?? t('pricing.plan_fallback')}
-                      </p>
-
-                      {/* name */}
-                      <h3 className={`text-3xl font-bold mb-5 capitalize leading-tight ${isLight ? "text-foreground" : "text-white"}`}>
-                        {plan.name}
-                      </h3>
-
-                      {/* price */}
-                      <div className={`flex items-end gap-1 mb-6 pb-6 border-b ${isLight ? "border-gray-100" : "border-white/10"}`}>
-                        <span className={`text-2xl font-bold self-start mt-2 ${isLight ? "text-primary" : "text-white"}`}>
-                          {currencySymbol}
-                        </span>
-                        <span className={`text-6xl font-extrabold leading-none ${isLight ? "text-primary" : "text-white"}`}>
-                          {plan.price}
-                        </span>
-                        <span className={`text-sm font-medium mb-1 ${isLight ? "text-[#94A3B8]" : "text-white/50"}`}>
-                          {plan.period}
-                        </span>
-                      </div>
-
-                      {/* features */}
-                      <ul className="space-y-3 mb-8 flex-1">
-                        {(Array.isArray(plan.features) ? plan.features : []).map((feature) => (
-                          <li key={feature} className="flex items-center gap-3">
-                            <span className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${isLight ? "bg-primary/10" : "bg-white/10"}`}>
-                              <Check className={`w-3 h-3 ${isLight ? "text-primary" : "text-white"}`} />
-                            </span>
-                            <span className={`text-base capitalize ${isLight ? "text-[#475569]" : "text-white/70"}`}>
-                              {feature}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {/* cta */}
-                      <Link
-                        href="/contact"
-                        className={`w-full py-4 rounded-xl font-semibold text-base flex justify-center items-center gap-2 transition-all mt-auto ${
-                          isLight
-                            ? "bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20"
-                            : "bg-white/10 text-white hover:bg-white/20 border border-white/20"
-                        }`}
-                      >
-                        {t('pricing.choose', { tier: plan.name })}
-                        <Arrow className="w-4 h-4" />
-                      </Link>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* progress bar */}
-              {pricingPlans.length > 1 && (
-                <div className="flex justify-center mt-6">
-                  <div className="w-24 h-1.5 bg-white/20 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-white rounded-full transition-all duration-300"
-                      style={{ width: `${((activePlanIndex + 1) / pricingPlans.length) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+          <PricingPlansSection
+            badge={t('pricing.subtitle')}
+            title={t.rich('pricing.title', { span: (chunks) => <span className="text-white">{chunks}</span> })}
+            plans={pricingPlans}
+            noPlansText={t('pricing.no_plans')}
+            planFallbackLabel={t('pricing.plan_fallback')}
+            ctaLabel={(plan) => t('pricing.choose', { tier: plan.name })}
+            ArrowIcon={Arrow}
+          />
 
           {/* Founding 100 */}
           <motion.div

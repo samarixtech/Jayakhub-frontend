@@ -1,19 +1,23 @@
 import { CartItem } from "@/types";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { getCartItemsFromDB, getPendingOrdersFromDB, savePendingOrdersToDB } from "@/lib/indexedDB";
+import {
+  getCartItemsFromDB,
+  getPendingOrdersFromDB,
+  savePendingOrdersToDB,
+} from "@/lib/indexedDB";
 
 export const loadCartFromDB = createAsyncThunk(
   "cart/loadCartFromDB",
   async () => {
     const [items, pending] = await Promise.all([
       getCartItemsFromDB(),
-      getPendingOrdersFromDB()
+      getPendingOrdersFromDB(),
     ]);
     return {
       items: items as CartItem[],
-      pendingOrders: (pending || []) as PendingOrder[]
+      pendingOrders: (pending || []) as PendingOrder[],
     };
-  }
+  },
 );
 
 export interface PendingOrder {
@@ -29,13 +33,15 @@ interface CartState {
   isLoading: boolean;
   orderType: "Dine-In" | "TakeAway" | "Delivery";
   pendingOrders: PendingOrder[];
+  unavailableItems: CartItem[];
 }
 
 const initialState: CartState = {
   items: [],
-  isLoading: true, // Initially true while we load from DB
+  isLoading: true,
   orderType: "Dine-In",
   pendingOrders: [],
+  unavailableItems: [],
 };
 
 const generateCartId = (item: CartItem) => {
@@ -84,7 +90,10 @@ const cartSlice = createSlice({
 
     updateItemVariation: (
       state,
-      action: PayloadAction<{ id: string; variation: { name: string; additionalPrice: number } }>,
+      action: PayloadAction<{
+        id: string;
+        variation: { name: string; additionalPrice: number };
+      }>,
     ) => {
       const { id, variation } = action.payload;
       const itemIndex = state.items.findIndex(
@@ -110,7 +119,10 @@ const cartSlice = createSlice({
         state.items[itemIndex].selectedVariations = variations;
         // Keep selectedVariation in sync with first entry for backward compat
         state.items[itemIndex].selectedVariation = variations[0]
-          ? { name: variations[0].name, additionalPrice: variations[0].additionalPrice }
+          ? {
+              name: variations[0].name,
+              additionalPrice: variations[0].additionalPrice,
+            }
           : undefined;
         state.items[itemIndex].cartId = generateCartId(state.items[itemIndex]);
       }
@@ -124,11 +136,25 @@ const cartSlice = createSlice({
       state.items = action.payload;
     },
 
-    setOrderType: (state, action: PayloadAction<"Dine-In" | "TakeAway" | "Delivery">) => {
+    setUnavailableItems: (state, action: PayloadAction<CartItem[]>) => {
+      state.unavailableItems = action.payload;
+    },
+
+    clearUnavailableItems: (state) => {
+      state.unavailableItems = [];
+    },
+
+    setOrderType: (
+      state,
+      action: PayloadAction<"Dine-In" | "TakeAway" | "Delivery">,
+    ) => {
       state.orderType = action.payload;
     },
 
-    saveToPendingOrders: (state, action: PayloadAction<{ tableName?: string } | undefined>) => {
+    saveToPendingOrders: (
+      state,
+      action: PayloadAction<{ tableName?: string } | undefined>,
+    ) => {
       if (state.items.length === 0) return;
       const newPendingOrder: PendingOrder = {
         id: `PO-${Date.now()}`,
@@ -142,7 +168,9 @@ const cartSlice = createSlice({
     },
 
     restoreFromPending: (state, action: PayloadAction<string>) => {
-      const orderIndex = state.pendingOrders.findIndex((o) => o.id === action.payload);
+      const orderIndex = state.pendingOrders.findIndex(
+        (o) => o.id === action.payload,
+      );
       if (orderIndex >= 0) {
         const order = state.pendingOrders[orderIndex];
         state.items = [...order.items];
@@ -165,16 +193,19 @@ const cartSlice = createSlice({
       state.pendingOrders = [];
       state.isLoading = false;
     });
-  }
+  },
 });
 
 export const saveToPendingOrdersThunk = createAsyncThunk(
   "cart/saveToPendingOrdersThunk",
-  async (payload: { tableName?: string } | undefined, { dispatch, getState }) => {
+  async (
+    payload: { tableName?: string } | undefined,
+    { dispatch, getState },
+  ) => {
     dispatch(saveToPendingOrders(payload));
     const state = getState() as { cart: CartState };
     await savePendingOrdersToDB(state.cart.pendingOrders);
-  }
+  },
 );
 
 export const restoreFromPendingThunk = createAsyncThunk(
@@ -182,12 +213,22 @@ export const restoreFromPendingThunk = createAsyncThunk(
   async (id: string, { dispatch, getState }) => {
     dispatch(restoreFromPending(id));
     const state = getState() as { cart: CartState };
-    // Immediately persist the removed item back to DB
     await savePendingOrdersToDB(state.cart.pendingOrders);
-  }
+  },
 );
 
-export const { addToCart, updateQuantity, updateItemVariation, updateItemVariations, clearCart, setCart, setOrderType, saveToPendingOrders, restoreFromPending } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  updateQuantity,
+  updateItemVariation,
+  updateItemVariations,
+  clearCart,
+  setCart,
+  setUnavailableItems,
+  clearUnavailableItems,
+  setOrderType,
+  saveToPendingOrders,
+  restoreFromPending,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

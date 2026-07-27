@@ -107,31 +107,31 @@ const ProductModal: React.FC<ProductModalProps> = ({
       <DialogContent
         showCloseButton={false}
         onPointerDownOutside={(e) => e.preventDefault()}
-        className="sm:max-w-[425px] p-0 overflow-hidden gap-0 border-0 rounded-2xl"
+        className="w-full sm:max-w-[440px] max-h-[85vh] sm:max-h-[88vh] flex flex-col p-0 overflow-hidden gap-0 border-0 rounded-2xl shadow-2xl"
       >
         <div className="sr-only">
           <DialogTitle>{item.name}</DialogTitle>
         </div>
 
         {/* Header Image */}
-        <div className="relative h-48 w-full">
+        <div className="relative h-44 sm:h-48 w-full bg-white flex items-center justify-center p-4 shrink-0 border-b border-gray-100">
           <Image
-            width={200}
-            height={200}
+            width={300}
+            height={300}
             src={item.imageUrl || item.image}
             alt={item.name}
-            className="w-full h-full object-cover"
+            className="max-h-full max-w-full h-auto w-auto object-contain mx-auto"
           />
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 bg-white rounded-full p-1 shadow-sm hover:bg-gray-100 transition-colors cursor-pointer"
+            className="absolute top-4 right-4 z-10 bg-gray-100 hover:bg-gray-200 rounded-full p-1.5 transition-colors cursor-pointer shadow-sm"
           >
-            <X size={16} className="text-black" />
+            <X size={16} className="text-gray-700" />
           </button>
         </div>
 
         {/* Scrollable Content */}
-        <div className="max-h-[60vh] overflow-y-auto px-5 py-5 scrollbar-thin scrollbar-thumb-gray-200">
+        <div className="flex-1 overflow-y-auto px-5 py-5 scrollbar-thin scrollbar-thumb-gray-200">
           {/* Title & Description */}
           <div className="flex justify-between items-start mb-2">
             <h2 className="text-2xl font-bold text-gray-900 leading-tight">
@@ -254,7 +254,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-100 bg-white drop-shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+        <div className="p-4 border-t border-gray-100 bg-white shrink-0 drop-shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
           <div className="flex items-center gap-4">
             {/* Quantity Selector */}
             <div className="flex items-center bg-[#F3F4F6] rounded-lg h-12 px-2 shrink-0">

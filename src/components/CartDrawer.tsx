@@ -133,7 +133,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
       />
 
       <div
-        className={`fixed top-0 right-0 w-full max-w-[400px] h-full bg-white z-9999 shadow-2xl
+        className={`fixed top-0 right-0 w-full max-w-[400px] h-dvh bg-white z-9999 shadow-2xl
         transition-transform duration-300 transform flex flex-col
         ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >

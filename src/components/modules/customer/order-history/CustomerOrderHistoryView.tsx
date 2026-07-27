@@ -44,7 +44,7 @@ export default function CustomerOrderHistoryView() {
 
   const t = useTranslations("CustomerDashboard.OrderHistory");
 
-  const { handleReorder, handleRateOrder } = useOrderHistoryActions({
+  const { handleReorder, handleRateOrder, reorderingOrderId } = useOrderHistoryActions({
     country,
     language,
     setCurrentPage: handlePageChange,
@@ -161,6 +161,7 @@ export default function CustomerOrderHistoryView() {
                 handleReorder={handleReorder}
                 handleRateOrder={handleRateOrder}
                 handleCancelOrder={handleCancelOrderClick}
+                isReordering={reorderingOrderId === order.orderId}
               />
             ))
           )}

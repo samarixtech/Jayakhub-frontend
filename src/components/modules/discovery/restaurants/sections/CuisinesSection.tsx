@@ -5,11 +5,11 @@ import { useTranslations } from "next-intl";
 
 import { CuisinesSectionProps } from "@/components/modules/discovery/discovery.types";
 
-// next/image throws on src values that are neither absolute URLs nor
-// "/"-prefixed paths — the backend sometimes sends placeholder strings
-// like "default-image-url.jpg" for cuisines without a real image.
 const isValidImageSrc = (src?: string) =>
-  !!src && (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("/"));
+  !!src &&
+  (src.startsWith("http://") ||
+    src.startsWith("https://") ||
+    src.startsWith("/"));
 
 export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
   isCuisinesLoading,
@@ -19,9 +19,9 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
 }) => {
   const t = useTranslations("Discovery.cuisinesSection");
   return (
-    <section className="mb-8">
+    <section className="mb-4">
       <h3 className="text-lg font-bold text-gray-900 mb-4">{t("title")}</h3>
-      <div className="flex gap-12 md:gap-6 overflow-x-auto pb-2 pl-3 sm:pl-0 scrollbar-hide">
+      <div className="flex gap-2 md:gap-6 overflow-x-auto pb-2 pl-3 sm:pl-0 scrollbar-hide">
         {isCuisinesLoading
           ? // Skeleton Loading for Cuisines
             Array.from({ length: 8 }).map((_, idx) => (
@@ -29,7 +29,7 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
                 key={idx}
                 className="flex flex-col items-center gap-2 min-w-[70px] animate-pulse"
               >
-                <div className="w-24 h-24 rounded-full bg-gray-200" />
+                <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-gray-200" />
                 <div className="w-12 h-3 rounded bg-gray-200" />
               </div>
             ))
@@ -42,7 +42,7 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
                   className="flex flex-col items-center gap-2 min-w-[70px] group"
                 >
                   <div
-                    className={`w-23 h-23 rounded-full overflow-hidden border transition-all shadow-sm ${
+                    className={`w-16 h-16 md:w-23 md:h-23 rounded-full overflow-hidden border transition-all shadow-sm ${
                       isActive
                         ? "border-[#346853] ring-2 ring-[#346853]/20"
                         : "border-gray-100 group-hover:border-[#346853]"
@@ -60,7 +60,7 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <Utensils className="w-8 h-8 text-gray-300" />
+                        <Utensils className="w-5 h-5 md:w-8 md:h-8 text-gray-300" />
                       </div>
                     )}
                   </div>

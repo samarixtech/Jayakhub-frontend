@@ -62,7 +62,9 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
           className="flex flex-col items-center gap-1"
         >
           <SlidersHorizontal className="w-6 h-6 text-gray-400" />
-          <span className="text-[10px] font-medium text-gray-500">{t("filters")}</span>
+          <span className="text-[10px] font-medium text-gray-500">
+            {t("filters")}
+          </span>
         </button>
       )}
 
@@ -79,27 +81,22 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
             </Badge>
           )}
         </div>
-        <span className="text-[10px] font-medium text-gray-500">{t("cart")}</span>
+        <span className="text-[10px] font-medium text-gray-500">
+          {t("cart")}
+        </span>
       </button>
 
       {/* Wishlist */}
       {isLoggedIn && (
-        <Link
-          href="/customer/wishlist"
-          className="flex flex-col items-center gap-1"
-        >
+        <Link href="/wishlist" className="flex flex-col items-center gap-1">
           <Heart
             className={`w-6 h-6 ${
-              isActive("/customer/wishlist")
-                ? "text-[#346853]"
-                : "text-gray-400"
+              isActive("/wishlist") ? "text-[#346853]" : "text-gray-400"
             }`}
           />
           <span
             className={`text-[10px] font-medium ${
-              isActive("/customer/wishlist")
-                ? "text-[#346853]"
-                : "text-gray-500"
+              isActive("/wishlist") ? "text-[#346853]" : "text-gray-500"
             }`}
           >
             {t("wishlist")}

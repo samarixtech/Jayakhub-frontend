@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Search, RefreshCw, Star, Navigation } from "lucide-react";
+import { Search, RefreshCw, Star, Navigation, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Order, OrderStatus } from "../../types";
@@ -16,6 +16,7 @@ interface OrderCardProps {
   handleReorder: (order: Order) => void;
   handleRateOrder: (order: Order) => void;
   handleCancelOrder: (order: Order) => void;
+  isReordering?: boolean;
 }
 
 export const OrderCard = ({
@@ -23,6 +24,7 @@ export const OrderCard = ({
   handleReorder,
   handleRateOrder,
   handleCancelOrder,
+  isReordering = false,
 }: OrderCardProps) => {
   const t = useTranslations("CustomerDashboard.OrderHistory");
   const isRejected =
@@ -99,8 +101,21 @@ export const OrderCard = ({
               {formatPrice(order.totalAmount, 0)}
             </span>
 
-            {isRejected || isDelivered ? (
+            {isRejected ? (
               <></>
+            ) : isDelivered ? (
+              <Button
+                className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
+                onClick={() => handleReorder(order)}
+                disabled={isReordering}
+              >
+                {isReordering ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <RefreshCw size={12} />
+                )}
+                {isReordering ? t("reordering") : t("reorder")}
+              </Button>
             ) : (
               <div className="flex gap-2 items-center">
                 {order.OrderStatus.toLowerCase() === "pending" && order.paymentMethod?.toLowerCase() === "cod" && (

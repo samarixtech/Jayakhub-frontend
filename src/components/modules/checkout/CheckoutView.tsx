@@ -18,7 +18,7 @@ import { CheckoutPaymentMethod } from "./components/CheckoutPaymentMethod";
 import CheckoutSkeleton from "@/components/skeletons/CheckoutSkeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store/store";
-import { clearCart } from "@/redux/slices/cartSlice";
+import { clearCart, clearUnavailableItems } from "@/redux/slices/cartSlice";
 import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
@@ -37,6 +37,9 @@ import {
 const CheckoutView = () => {
   const dispatch = useDispatch<AppDispatch>();
   const cart = useSelector((state: RootState) => state.cart.items);
+  const unavailableItems = useSelector(
+    (state: RootState) => state.cart.unavailableItems,
+  );
   const selectedRestaurantMeta = useSelector((state: RootState) => state.discovery.selectedRestaurantMeta);
   const router = useRouter();
 
@@ -130,6 +133,7 @@ const CheckoutView = () => {
           // COD Success
           toast.success(t("orderPlacedSuccess"));
           dispatch(clearCart());
+          dispatch(clearUnavailableItems());
           const orderId = res.data?.orderId || "new";
           router.push(`/order-confirmation/${orderId}`);
         } else {
@@ -139,6 +143,7 @@ const CheckoutView = () => {
             // Successful charge with saved card
             toast.success(t("paymentSuccess"));
             dispatch(clearCart());
+            dispatch(clearUnavailableItems());
             const orderId = res.data?.orderId || "new";
             router.push(`/order-confirmation/${orderId}`);
           } else {
@@ -384,6 +389,7 @@ const CheckoutView = () => {
                       deliveryFee={currentDeliveryFee}
                       total={currentSubtotal + currentDeliveryFee}
                       cartItems={cart}
+                      unavailableItems={unavailableItems}
                       onPlaceOrder={handlePlaceOrder}
                       isPlacingOrder={isPlacingOrder}
                       isEstimatingDelivery={isEstimatingDelivery}
