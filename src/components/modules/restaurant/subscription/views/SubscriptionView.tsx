@@ -182,6 +182,7 @@ export default function SubscriptionView() {
   return (
     <div className="p-3 sm:p-4 space-y-5 bg-gray-50/50 min-h-screen font-sans">
       {/* ── Plan Details ─────────────────────────────────────────────────── */}
+      {!isPlanCancelled && !isPlanExpired && (
       <Card className="bg-white border border-gray-100 shadow-sm rounded-xl overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
@@ -286,6 +287,7 @@ export default function SubscriptionView() {
           </div>
         </div>
       </Card>
+      )}
 
       {/* ── Payment Method + Plan Actions ────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
