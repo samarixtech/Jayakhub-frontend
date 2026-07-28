@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import SectionHeader from "@/components/modules/discovery/components/SectionHeader";
 import DiscoveryRestaurantCard from "@/components/modules/discovery/restaurants/components/DiscoveryRestaurantCard";
-import { LayoutGrid, List, Sprout } from "lucide-react";
+import { LayoutGrid, List, Loader2, Sprout } from "lucide-react";
 import { AllRestaurantsSectionProps } from "@/components/modules/discovery/discovery.types";
 
 export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
@@ -12,8 +12,33 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
   setViewMode,
   isLoggedIn,
   onAction,
+  hasMore,
+  isFetchingMore,
+  onLoadMore,
 }) => {
   const t = useTranslations("Discovery.allRestaurantsSection");
+  const observerTargetRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!onLoadMore || !hasMore || isFetchingMore || isPending) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0.1, rootMargin: "300px" },
+    );
+
+    const target = observerTargetRef.current;
+    if (target) observer.observe(target);
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, [onLoadMore, hasMore, isFetchingMore, isPending]);
+
   return (
     <section className="mb-20">
       {/* Desktop View */}
@@ -129,6 +154,21 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
           </div>
         )}
       </div>
+
+      {/* INFINITE SCROLL LOADER & SENTINEL */}
+      {!isPending && (restaurants || []).length > 0 && (
+        <div
+          ref={observerTargetRef}
+          className="py-8 flex flex-col items-center justify-center min-h-[60px]"
+        >
+          {isFetchingMore ? (
+            <div className="flex items-center gap-2 text-sm text-gray-500 font-medium bg-gray-50 px-4 py-2 rounded-full border border-gray-100 shadow-sm">
+              <Loader2 className="w-4 h-4 animate-spin text-[#346853]" />
+              <span>Loading more restaurants...</span>
+            </div>
+          ) : null}
+        </div>
+      )}
     </section>
   );
 };

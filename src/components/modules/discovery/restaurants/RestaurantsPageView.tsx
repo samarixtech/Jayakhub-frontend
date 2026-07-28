@@ -110,6 +110,9 @@ const AllRestaurantsPage: React.FC = () => {
             setViewMode={actions.setViewMode}
             isLoggedIn={state.isLoggedIn}
             onAction={() => router.push("/all-restaurants")}
+            hasMore={state.hasMore}
+            isFetchingMore={state.isFetchingMore}
+            onLoadMore={actions.loadMore}
           />
 
           <PreviousOrdersSection

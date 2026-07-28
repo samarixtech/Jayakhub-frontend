@@ -132,6 +132,11 @@ const cartSlice = createSlice({
       state.items = [];
     },
 
+    clearRestaurantCart: (state, action: PayloadAction<string>) => {
+      const resId = action.payload;
+      state.items = state.items.filter((item) => item.restaurantId !== resId);
+    },
+
     setCart: (state, action: PayloadAction<CartItem[]>) => {
       state.items = action.payload;
     },
@@ -143,7 +148,6 @@ const cartSlice = createSlice({
     clearUnavailableItems: (state) => {
       state.unavailableItems = [];
     },
-
     setOrderType: (
       state,
       action: PayloadAction<"Dine-In" | "TakeAway" | "Delivery">,
@@ -223,6 +227,7 @@ export const {
   updateItemVariation,
   updateItemVariations,
   clearCart,
+  clearRestaurantCart,
   setCart,
   setUnavailableItems,
   clearUnavailableItems,

@@ -138,6 +138,9 @@ export interface AllRestaurantsSectionProps {
   setViewMode: (mode: "grid" | "list") => void;
   isLoggedIn?: boolean;
   onAction?: () => void;
+  hasMore?: boolean;
+  isFetchingMore?: boolean;
+  onLoadMore?: () => void;
 }
 
 export interface ShopProps {

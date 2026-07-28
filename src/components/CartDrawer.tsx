@@ -112,7 +112,12 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const handleCheckout = () => {
     const routeCountry = params?.country || country.toLowerCase();
     const routeLang = params?.language || language.toLowerCase();
-    router.push(`/${routeCountry}/${routeLang}/checkout`);
+    const resId = selectedRestaurantId || currentItems[0]?.restaurantId;
+    if (resId) {
+      router.push(`/${routeCountry}/${routeLang}/checkout?restaurantId=${resId}`);
+    } else {
+      router.push(`/${routeCountry}/${routeLang}/checkout`);
+    }
     onClose();
   };
 

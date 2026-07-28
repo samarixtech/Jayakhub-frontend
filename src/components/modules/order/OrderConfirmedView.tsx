@@ -15,10 +15,8 @@ export default function OrderConfirmedView() {
   const t = useTranslations("OrderTracking");
   const { id } = params;
 
-  // Clear cart on mount when order successfully placed
-  useEffect(() => {
-    dispatch(clearCart());
-  }, [dispatch]);
+  // Note: Ordered items are already cleared selectively by restaurant in CheckoutView upon order placement.
+  useEffect(() => {}, []);
 
   return (
     <div className="w-full flex items-center justify-center p-4 py-12 md:py-20">

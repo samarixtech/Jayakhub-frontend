@@ -15,6 +15,8 @@ export async function getAllRestaurantsAction(params?: {
   lowestPrice?: boolean;
   highestPrice?: boolean;
   isWishlist?: boolean;
+  page?: number;
+  limit?: number;
 }): Promise<ActionResponse> {
   const {
     lat,
@@ -28,6 +30,8 @@ export async function getAllRestaurantsAction(params?: {
     lowestPrice,
     highestPrice,
     isWishlist,
+    page,
+    limit,
   } = params || {};
 
   const searchParams = new URLSearchParams();
@@ -43,6 +47,8 @@ export async function getAllRestaurantsAction(params?: {
   if (lowestPrice) searchParams.append("lowestPrice", "true");
   if (highestPrice) searchParams.append("highestPrice", "true");
   if (isWishlist) searchParams.append("isWishlist", "true");
+  if (page !== undefined) searchParams.append("page", page.toString());
+  if (limit !== undefined) searchParams.append("limit", limit.toString());
 
   const countryCode = (await cookies()).get("USER_COUNTRY")?.value;
   if (countryCode) searchParams.append("countryCode", countryCode);

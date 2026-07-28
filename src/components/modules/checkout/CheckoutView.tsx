@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import OrderSummary from "@/components/modules/checkout/OrderSummary";
 import {
   getProfile,
@@ -18,7 +18,7 @@ import { CheckoutPaymentMethod } from "./components/CheckoutPaymentMethod";
 import CheckoutSkeleton from "@/components/skeletons/CheckoutSkeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store/store";
-import { clearCart, clearUnavailableItems } from "@/redux/slices/cartSlice";
+import { clearCart, clearRestaurantCart, clearUnavailableItems } from "@/redux/slices/cartSlice";
 import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
@@ -42,6 +42,25 @@ const CheckoutView = () => {
   );
   const selectedRestaurantMeta = useSelector((state: RootState) => state.discovery.selectedRestaurantMeta);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const restaurantIdParam = searchParams.get("restaurantId");
+
+  // Filter cart items specifically for the active restaurant being checked out
+  const activeCart = useMemo(() => {
+    if (restaurantIdParam) {
+      const filtered = cart.filter(
+        (item) => item.restaurantId === restaurantIdParam,
+      );
+      if (filtered.length > 0) return filtered;
+    }
+    if (cart.length > 0) {
+      const firstResId = cart[0]?.restaurantId;
+      if (firstResId) {
+        return cart.filter((item) => item.restaurantId === firstResId);
+      }
+    }
+    return cart;
+  }, [cart, restaurantIdParam]);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -67,7 +86,7 @@ const CheckoutView = () => {
       toast.error(t("selectAddressError"));
       return;
     }
-    if (cart.length === 0) {
+    if (activeCart.length === 0) {
       toast.error(t("cartEmpty"));
       return;
     }
@@ -75,11 +94,12 @@ const CheckoutView = () => {
     setIsPlacingOrder(true);
 
     // Prepare Payload
-    const restaurantId = cart[0].restaurantId || "";
+    const targetRestaurantId =
+      restaurantIdParam || activeCart[0]?.restaurantId || "";
     const fullAddress = `${selectedAddress.streetAddress}, ${selectedAddress.city}, ${selectedAddress.stateProvince}`;
 
     // Calculate total amount
-    const subtotal = cart.reduce(
+    const subtotal = activeCart.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
@@ -88,8 +108,8 @@ const CheckoutView = () => {
 
     const payload = {
       paymentMethod: paymentMethod as any,
-      restaurantId,
-      items: (Array.isArray(cart) ? cart : []).map((item) => {
+      restaurantId: targetRestaurantId,
+      items: (Array.isArray(activeCart) ? activeCart : []).map((item) => {
         const variantGroupIds =
           (Array.isArray(item.selectedVariations) ? item.selectedVariations : []).map((v: any) => v.groupId).filter(Boolean);
         const variantOptionNames =
@@ -119,6 +139,15 @@ const CheckoutView = () => {
       couponCode: couponCode || undefined,
     };
 
+    const clearOrderedCart = () => {
+      if (targetRestaurantId) {
+        dispatch(clearRestaurantCart(targetRestaurantId));
+      } else {
+        dispatch(clearCart());
+      }
+      dispatch(clearUnavailableItems());
+    };
+
     try {
       const res: any = await createOrderAction(payload);
 
@@ -132,18 +161,17 @@ const CheckoutView = () => {
         if (paymentMethod === "cod") {
           // COD Success
           toast.success(t("orderPlacedSuccess"));
-          dispatch(clearCart());
-          dispatch(clearUnavailableItems());
+          clearOrderedCart();
           const orderId = res.data?.orderId || "new";
           router.push(`/order-confirmation/${orderId}`);
         } else {
           if (res.data?.url) {
+            clearOrderedCart();
             window.location.assign(res.data.url);
           } else if (res.success || res.meta?.status === 200) {
             // Successful charge with saved card
             toast.success(t("paymentSuccess"));
-            dispatch(clearCart());
-            dispatch(clearUnavailableItems());
+            clearOrderedCart();
             const orderId = res.data?.orderId || "new";
             router.push(`/order-confirmation/${orderId}`);
           } else {
@@ -377,7 +405,7 @@ const CheckoutView = () => {
             <div className="lg:col-span-4">
               <div className="sticky top-8">
                 {(() => {
-                  const currentSubtotal = cart.reduce(
+                  const currentSubtotal = activeCart.reduce(
                     (sum, item) => sum + item.price * item.quantity,
                     0,
                   );
@@ -388,7 +416,7 @@ const CheckoutView = () => {
                       subtotal={currentSubtotal}
                       deliveryFee={currentDeliveryFee}
                       total={currentSubtotal + currentDeliveryFee}
-                      cartItems={cart}
+                      cartItems={activeCart}
                       unavailableItems={unavailableItems}
                       onPlaceOrder={handlePlaceOrder}
                       isPlacingOrder={isPlacingOrder}

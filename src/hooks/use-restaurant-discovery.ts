@@ -37,12 +37,100 @@ export function useRestaurantDiscovery() {
   const [showAllCuisines, setShowAllCuisines] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
+  // Pagination states for infinite scroll
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
   // ── Filter values derived from URL (single source of truth) ──
   const selectedSort = searchParams.get("sort") || "recommended";
   const activeFilters = searchParams.get("cuisineType")?.split(",").filter(Boolean) ?? [];
   const selectedRating = searchParams.get("minRating") ? Number(searchParams.get("minRating")) : null;
   const discounted = searchParams.get("discounted") === "true";
   const isWishlist = searchParams.get("isWishlist") === "true";
+
+  // Build filter params from URL
+  const buildFilterParams = useCallback(() => {
+    const p: any = {};
+    const urlQuery = searchParams.get("query");
+    const urlSort = searchParams.get("sort");
+    const urlCuisines = searchParams.get("cuisineType")?.split(",").filter(Boolean);
+    const urlMinRating = searchParams.get("minRating");
+    const urlDiscounted = searchParams.get("discounted");
+    const urlIsWishlist = searchParams.get("isWishlist");
+
+    if (urlQuery) p.query = urlQuery;
+    if (urlCuisines?.length) p.cuisineType = urlCuisines;
+    if (urlMinRating) p.minRating = Number(urlMinRating);
+    if (urlDiscounted === "true") p.discounted = true;
+    if (urlIsWishlist === "true") p.isWishlist = true;
+    if (urlSort === "fastestDelivery") p.fastestDelivery = true;
+    else if (urlSort === "nearestRestaurant") p.nearestRestaurant = true;
+    else if (urlSort === "lowestPrice") p.lowestPrice = true;
+    else if (urlSort === "highestPrice") p.highestPrice = true;
+    return p;
+  }, [searchParams]);
+
+  const mapData = useCallback((data: any): RestaurantProps[] => {
+    const list = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.data)
+        ? data.data
+        : [];
+    return list.map((item: any) => ({
+      id: item.id || "",
+      slug: item.slug || item.id || "",
+      name: item.name || "Unknown",
+      image: item.profileImage || item.bannerImage,
+      rating: item.averageRating || 0,
+      totalRatings: item.totalRatings || 0,
+      priceLevel: "$$",
+      cuisine: Array.isArray(item.type) ? item.type.join(", ") : item.type || "General",
+      deliveryTime: item.deliveryTime || "30-45 mins",
+      deliveryFee:
+        typeof item.deliveryFee === "object"
+          ? item.deliveryFee?.deliveryCharge || 0
+          : item.deliveryFee || 0,
+      discount: undefined,
+      isFavorite: false,
+      isWishlist: !!item.isWishlist,
+      averageDiscount: item.averageDiscount || 0,
+      isOpen: item.isOpen ?? true,
+    }));
+  }, []);
+
+  const extractMeta = useCallback(
+    (res: any, itemCount: number = 0, defaultLimit: number = 10) => {
+      const meta =
+        res?.meta ||
+        res?.data?.meta ||
+        (res?.data && !Array.isArray(res.data) ? res.data.meta : null) ||
+        res;
+
+      const pageNum = Number(meta?.page || 1);
+      const limitNum = Number(meta?.limit || defaultLimit);
+      const totalCount =
+        meta?.totalCount !== undefined && meta?.totalCount !== null
+          ? Number(meta.totalCount)
+          : null;
+      const totalPages =
+        meta?.totalPages !== undefined && meta?.totalPages !== null
+          ? Number(meta.totalPages)
+          : totalCount !== null
+            ? Math.ceil(totalCount / limitNum)
+            : null;
+
+      let hasMorePages = false;
+      if (totalPages !== null && !isNaN(totalPages)) {
+        hasMorePages = pageNum < totalPages;
+      } else {
+        hasMorePages = itemCount >= limitNum;
+      }
+
+      return { page: pageNum, limit: limitNum, totalPages, hasMorePages };
+    },
+    [],
+  );
 
   // ── URL param updater ──
   // Reads from window.location.search (not searchParams) so lat/lng synced
@@ -221,61 +309,12 @@ export function useRestaurantDiscovery() {
 
     const fetchOptimistically = async () => {
       setIsPending(true);
-
-      const mapData = (data: any): RestaurantProps[] => {
-        const list = Array.isArray(data)
-          ? data
-          : Array.isArray(data?.data)
-            ? data.data
-            : [];
-        return list.map((item: any) => ({
-          id: item.id || "",
-          slug: item.slug || item.id || "",
-          name: item.name || "Unknown",
-          image: item.profileImage || item.bannerImage,
-          rating: item.averageRating || 0,
-          totalRatings: item.totalRatings || 0,
-          priceLevel: "$$",
-          cuisine: Array.isArray(item.type) ? item.type.join(", ") : item.type || "General",
-          deliveryTime: item.deliveryTime || "30-45 mins",
-          deliveryFee:
-            typeof item.deliveryFee === "object"
-              ? item.deliveryFee?.deliveryCharge || 0
-              : item.deliveryFee || 0,
-          discount: undefined,
-          isFavorite: false,
-          isWishlist: !!item.isWishlist,
-          averageDiscount: item.averageDiscount || 0,
-          isOpen: item.isOpen ?? true,
-        }));
-      };
-
-      // Build filter params from URL
-      const buildFilterParams = () => {
-        const p: any = {};
-        const urlQuery = searchParams.get("query");
-        const urlSort = searchParams.get("sort");
-        const urlCuisines = searchParams.get("cuisineType")?.split(",").filter(Boolean);
-        const urlMinRating = searchParams.get("minRating");
-        const urlDiscounted = searchParams.get("discounted");
-        const urlIsWishlist = searchParams.get("isWishlist");
-
-        if (urlQuery) p.query = urlQuery;
-        if (urlCuisines?.length) p.cuisineType = urlCuisines;
-        if (urlMinRating) p.minRating = Number(urlMinRating);
-        if (urlDiscounted === "true") p.discounted = true;
-        if (urlIsWishlist === "true") p.isWishlist = true;
-        if (urlSort === "fastestDelivery") p.fastestDelivery = true;
-        else if (urlSort === "nearestRestaurant") p.nearestRestaurant = true;
-        else if (urlSort === "lowestPrice") p.lowestPrice = true;
-        else if (urlSort === "highestPrice") p.highestPrice = true;
-        return p;
-      };
+      setPage(1);
+      setHasMore(true);
 
       try {
         const urlLat = searchParams.get("lat");
         const urlLng = searchParams.get("lng");
-        const urlQuery = searchParams.get("query");
         const filterParams = buildFilterParams();
 
         let locationParams: { lat: number; lng: number } | null = null;
@@ -330,14 +369,15 @@ export function useRestaurantDiscovery() {
         }
 
         const queryParams = locationParams
-          ? { ...locationParams, ...filterParams }
-          : filterParams;
+          ? { ...locationParams, ...filterParams, page: 1, limit: 10 }
+          : { ...filterParams, page: 1, limit: 10 };
 
         if (mounted) {
-          const res = await getAllRestaurantsAction(
-            Object.keys(queryParams).length > 0 ? queryParams : undefined,
-          );
-          setRestaurants(mapData(res?.data));
+          const res = await getAllRestaurantsAction(queryParams);
+          const mapped = mapData(res?.data);
+          setRestaurants(mapped);
+          const { hasMorePages } = extractMeta(res, mapped.length, 10);
+          setHasMore(hasMorePages && mapped.length > 0);
         }
       } catch (error) {
         console.error("Failed to fetch restaurants:", error);
@@ -348,9 +388,58 @@ export function useRestaurantDiscovery() {
     };
 
     fetchOptimistically();
-    return () => { mounted = false; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      mounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]); // string comparison — reliable even if object ref is reused
+
+  // 6. Infinite Scroll Load More Action
+  const loadMore = useCallback(async () => {
+    if (isPending || isFetchingMore || !hasMore) return;
+
+    setIsFetchingMore(true);
+    const nextPage = page + 1;
+
+    try {
+      const urlLat = searchParams.get("lat");
+      const urlLng = searchParams.get("lng");
+      let locationParams: { lat: number; lng: number } | null = null;
+      if (urlLat && urlLng) {
+        locationParams = { lat: parseFloat(urlLat), lng: parseFloat(urlLng) };
+      } else {
+        try {
+          const cachedLoc = localStorage.getItem("userLocation");
+          if (cachedLoc) {
+            const parsed = JSON.parse(cachedLoc);
+            locationParams = { lat: parsed.lat, lng: parsed.lng };
+          }
+        } catch {}
+      }
+
+      const filterParams = buildFilterParams();
+      const queryParams = locationParams
+        ? { ...locationParams, ...filterParams, page: nextPage, limit: 10 }
+        : { ...filterParams, page: nextPage, limit: 10 };
+
+      const res = await getAllRestaurantsAction(queryParams);
+      const newItems = mapData(res?.data);
+      const { hasMorePages } = extractMeta(res, newItems.length, 10);
+
+      setRestaurants((prev) => {
+        const existingIds = new Set(prev.map((r) => r.id));
+        const uniqueNew = newItems.filter((r) => !existingIds.has(r.id));
+        return [...prev, ...uniqueNew];
+      });
+
+      setPage(nextPage);
+      setHasMore(hasMorePages && newItems.length > 0);
+    } catch (error) {
+      console.error("Failed to load more restaurants:", error);
+    } finally {
+      setIsFetchingMore(false);
+    }
+  }, [isPending, isFetchingMore, hasMore, page, searchParams, buildFilterParams, mapData]);
 
   return {
     state: {
@@ -371,6 +460,8 @@ export function useRestaurantDiscovery() {
       isWishlist,
       showAllCuisines,
       viewMode,
+      hasMore,
+      isFetchingMore,
     },
     actions: {
       setIsRatingModalOpen,
@@ -382,6 +473,7 @@ export function useRestaurantDiscovery() {
       setShowAllCuisines,
       setViewMode,
       resetFilters,
+      loadMore,
     },
   };
 }

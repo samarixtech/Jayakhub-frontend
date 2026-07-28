@@ -63,6 +63,9 @@ const AllRestaurantsPageView: React.FC = () => {
             viewMode={state.viewMode}
             setViewMode={actions.setViewMode}
             isLoggedIn={state.isLoggedIn}
+            hasMore={state.hasMore}
+            isFetchingMore={state.isFetchingMore}
+            onLoadMore={actions.loadMore}
           />
         </div>
       </div>
