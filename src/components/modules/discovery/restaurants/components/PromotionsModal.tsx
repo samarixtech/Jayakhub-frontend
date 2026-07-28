@@ -60,7 +60,8 @@ export function PromotionsModal({
     setCopied(false);
   };
 
-  const getImageUrl = (imagePath: string) => imagePath || "";
+  const isValidImageSrc = (src?: string) =>
+    !!src && (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("/"));
 
   const formatDate = (dateStr: string) => {
     try {
@@ -101,9 +102,9 @@ export function PromotionsModal({
     >
       {/* Campaign Visual Header */}
       <div className="relative w-full h-[130px] bg-gray-100 flex items-center justify-center overflow-hidden shrink-0">
-        {currentCampaign.image ? (
+        {isValidImageSrc(currentCampaign.image) ? (
           <Image
-            src={getImageUrl(currentCampaign.image)}
+            src={currentCampaign.image}
             alt={currentCampaign.title}
             fill
             sizes="(max-w-md) 100vw, 480px"

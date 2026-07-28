@@ -58,10 +58,6 @@ export default async function BlogPostPage({
             <Calendar className="w-4 h-4 mr-1" />
             {formatDate(post.publishedAt)}
           </div>
-          <div className="flex items-center text-[#94A3B8]">
-            <Clock className="w-4 h-4 mr-1" />
-            {estimateReadTime(post.content)}
-          </div>
         </div>
 
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-8 leading-tight tracking-tight">

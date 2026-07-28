@@ -299,9 +299,9 @@ const OrderSummary = ({
               type="text"
               placeholder={t("promoPlaceholder")}
               value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value)}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
               onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
-              className="bg-transparent border-none text-sm outline-none w-full font-sans"
+              className="bg-transparent border-none text-sm outline-none w-full font-sans uppercase placeholder:normal-case"
             />
             <button
               type="button"
