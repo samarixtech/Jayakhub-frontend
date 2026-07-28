@@ -108,7 +108,6 @@ export async function getDeliveryChargeEstimateAction(
     const response = await api.get(
       `/delivery-charge-estimate?latitude=${latitude}&longitude=${longitude}&countryCode=${countryCode}`,
     );
-    console.log("Delivery Charge Estimate Response:", response.data);
     return { success: true, data: response.data };
   } catch (error: any) {
     console.error("Get Delivery Charge Estimate Error:", error);

@@ -64,13 +64,10 @@ export async function getBlogsAction(params?: {
   return responseHandler(
     async () => {
       const res = await api.get(`/blog?${searchParams.toString()}`);
-      console.log("[getBlogsAction] raw response status:", res.status);
-      console.log("[getBlogsAction] raw response data:", JSON.stringify(res.data, null, 2));
       return res;
     },
     undefined,
     async (data: BlogsData) => {
-      console.log("[getBlogsAction] transformData received:", JSON.stringify(data, null, 2));
       return {
         ...data,
         items: data.items.map((post) => ({

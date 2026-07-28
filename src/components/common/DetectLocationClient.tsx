@@ -35,12 +35,11 @@ export default function DetectLocationClient() {
         } else {
           // Call detect directly from browser so backend sees the user's real IP
           const baseUrl =
-            process.env.NEXT_PUBLIC_BASE_URL || "https://app.jayakhub.com/api/v1";
+            process.env.NEXT_PUBLIC_BASE_URL ||
+            "https://app.jayakhub.com/api/v1";
           const res = await fetch(`${baseUrl}/detect`);
           const json = await res.json();
           const data = json?.data;
-
-          console.log("[DetectLocationClient] detect response:", data);
 
           if (data?.isActive) {
             country = data.code.toLowerCase();
@@ -73,7 +72,9 @@ export default function DetectLocationClient() {
         setError("Failed to detect location. Redirecting...");
         setTimeout(() => {
           const currentParams = searchParams.toString();
-          router.replace(`/pk/en/restaurants${currentParams ? `?${currentParams}` : ""}`);
+          router.replace(
+            `/pk/en/restaurants${currentParams ? `?${currentParams}` : ""}`,
+          );
         }, 1000);
       }
     }

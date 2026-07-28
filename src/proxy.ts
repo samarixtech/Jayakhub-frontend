@@ -115,11 +115,6 @@ export async function proxy(request: NextRequest) {
         outgoingHeaders["x-test-ip"] = process.env.DEV_TEST_IP;
       }
 
-      console.log(
-        "[proxy] sending IP headers to backend /detect:",
-        outgoingHeaders,
-      );
-
       // Plain fetch instead of the shared axios instance: middleware always
       // runs on the Edge runtime, where axios has no real http/https adapter
       // and has to wrap the platform fetch anyway — that extra adapter layer

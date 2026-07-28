@@ -57,8 +57,6 @@ export async function updateProfileAction(
     payload,
   );
   if (!validation.success) {
-    console.log("====================");
-    console.log(validation.errors);
     return {
       success: false,
       message: validation.errors[0],
@@ -78,8 +76,6 @@ export async function updateProfileAction(
       if (rawPhone) {
         updatePayload.phone = Number(rawPhone);
       }
-
-      console.log("update payload", updatePayload);
 
       const profileResult = await api.put("/update-profile", updatePayload);
 

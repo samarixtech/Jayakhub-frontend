@@ -90,7 +90,7 @@ const DiscoveryRestaurantCard = ({
           height={250}
           src={data.image}
           alt={data.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
         />
 
         {isClosed && (

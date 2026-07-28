@@ -115,12 +115,10 @@ export async function registerRestaurantOnboardingAction(
       headers: sendData.getHeaders(),
     });
 
-    console.log(response);
-
-
     return {
       success: true,
-      message: response?.data?.meta?.message || "Application Submitted Successfully!",
+      message:
+        response?.data?.meta?.message || "Application Submitted Successfully!",
       data: response.data,
     };
   } catch (error: any) {

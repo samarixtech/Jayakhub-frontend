@@ -337,17 +337,7 @@ export function useRestaurantDiscovery() {
           const res = await getAllRestaurantsAction(
             Object.keys(queryParams).length > 0 ? queryParams : undefined,
           );
-          const mapped = mapData(res?.data);
-
-          // Fallback: if geo gave no results, try without location
-          if (mapped.length === 0 && locationParams) {
-            const fallback = await getAllRestaurantsAction(
-              Object.keys(filterParams).length > 0 ? filterParams : undefined,
-            );
-            setRestaurants(mapData(fallback?.data));
-          } else {
-            setRestaurants(mapped);
-          }
+          setRestaurants(mapData(res?.data));
         }
       } catch (error) {
         console.error("Failed to fetch restaurants:", error);

@@ -63,11 +63,6 @@ export async function detectLocationAction(
       outgoingHeaders["x-test-ip"] = process.env.DEV_TEST_IP;
     }
 
-    console.log(
-      "[detectLocationAction] sending IP headers to backend /detect:",
-      outgoingHeaders,
-    );
-
     const api = await serverApi();
     const res = await api.get<{ data: DetectApiResult }>("/detect", {
       headers: outgoingHeaders,
