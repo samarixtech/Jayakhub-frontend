@@ -30,23 +30,36 @@
         "label": "Avg Delivery"
       }
     },
+    "delivery_route": {
+      "badge": "Live Tracking",
+      "title": "From Kitchen to Your Door",
+      "subtitle": "Watch your order travel in real-time, from the restaurant straight to your doorstep.",
+      "restaurant_label": "Restaurant",
+      "customer_label": "Your Home",
+      "order_picked_up": "Order Picked Up!",
+      "delivered": "Delivered!"
+    },
     "how_it_works": {
-      "badge": "How It Works",
-      "title_prefix": "Order in",
-      "title_highlight": "3 Easy Steps",
-      "subtitle": "Getting your favorite food delivered has never been easier",
+      "badge": "How the app works",
+      "title_prefix": "Your order in",
+      "title_highlight": "four steps",
+      "subtitle": "From browsing to your doorstep — here's how it works.",
       "steps": {
         "step1": {
-          "title": "Set Your Location",
-          "desc": "Enter your address and discover restaurants delivering to your area."
+          "title": "Choose your restaurant",
+          "desc": "Browse restaurants near you."
         },
         "step2": {
-          "title": "Choose Your Food",
-          "desc": "Browse menus, read reviews, and pick your perfect meal."
+          "title": "Pick your meal",
+          "desc": "Add your order easily and complete payment."
         },
         "step3": {
-          "title": "Fast Delivery",
-          "desc": "Track your order in real-time and enjoy hot, fresh food."
+          "title": "Track your order",
+          "desc": "Watch your order live to your door."
+        },
+        "step4": {
+          "title": "Get it hot",
+          "desc": "Your meal arrives fresh and in the best condition."
         }
       },
       "learn_more": "Learn More"
@@ -155,6 +168,21 @@
         "avg_delivery_label": "Avg delivery",
         "active_downloads": "Active Downloads"
       }
+    },
+    "platform_services": {
+      "badge": "One platform",
+      "title": "All your needs... soon from one place",
+      "subtitle": "We start with restaurant delivery and activate the other services one by one after testing and approval.",
+      "items": {
+        "restaurant_delivery": "Restaurant delivery",
+        "grocery_delivery": "Grocery delivery",
+        "shopping_list": "Shopping list",
+        "pickup_dropoff": "Pickup & drop-off",
+        "request_car": "Request a car"
+      },
+      "available": "Available",
+      "coming_soon": "Coming soon",
+      "footnote": "Services marked \"Coming soon\" are under development and not active — no ordering or payment is possible through them. Each service is activated after its technical, operational, and legal review is complete and approved."
     },
     "partnership": {
       "badge": "Partner With Us",
@@ -350,6 +378,45 @@
       "partners": "Partner Restaurants",
       "rating": "User Rating"
     },
+    "why_trust": {
+      "badge": "Why JayakHub",
+      "title": "Service worthy of your trust",
+      "subtitle": "Everything is designed so your order reaches you easily, quickly, and with the best experience.",
+      "items": {
+        "verified_restaurants": {
+          "title": "Verified restaurants",
+          "desc": "Selected, reviewed restaurants so you can order with confidence."
+        },
+        "fast_delivery": {
+          "title": "Fast delivery",
+          "desc": "Our drivers deliver your order in the shortest possible time."
+        },
+        "hot_fresh_food": {
+          "title": "Hot, fresh food",
+          "desc": "Thermal packaging keeps your meal fresh all the way to your door."
+        },
+        "great_prices": {
+          "title": "Great prices and offers",
+          "desc": "Launch offers and discounts on your orders."
+        },
+        "secure_payment": {
+          "title": "Secure payment",
+          "desc": "Protected, easy-to-use payment methods."
+        },
+        "live_tracking": {
+          "title": "Live tracking",
+          "desc": "Follow your order step by step until it arrives."
+        },
+        "fast_support": {
+          "title": "Fast support",
+          "desc": "A support team ready to help whenever you need."
+        },
+        "real_ratings": {
+          "title": "Real ratings",
+          "desc": "Reviews from real customers to help you choose."
+        }
+      }
+    },
     "platform": {
       "badge": "Our Platform",
       "title": "Smarter Solutions for Modern Delivery",
@@ -442,6 +509,24 @@
         }
       }
     },
+    "partner_network": {
+      "badge": "Partner Network",
+      "title": "Join the JayakHub partner network",
+      "subtitle": "We are building a partner network that grows with our services. Registration is currently open to restaurants only; other roles open later once their requirements are approved.",
+      "items": {
+        "restaurants": "Restaurants",
+        "grocery": "Grocery & supermarket stores",
+        "shoppers": "Shoppers",
+        "delivery_drivers": "Delivery drivers",
+        "pickup_delivery": "Pickup & delivery services",
+        "taxi_drivers": "Taxi drivers",
+        "companies_fleets": "Companies & fleets",
+        "other_partners": "Other partners"
+      },
+      "registration_open": "Registration open",
+      "coming_soon": "Coming soon",
+      "footnote": "Roles marked \"Coming soon\" are not open for registration yet. We do not collect real registration data for a service whose requirements are not approved."
+    },
     "testimonials": {
       "badge": "Testimonials",
       "title": "What Our Clients Say",
@@ -465,9 +550,11 @@
       }
     },
     "cta": {
-      "title": "Ready to Transform Your Delivery Business?",
-      "desc": "Join the growing community of businesses optimizing their delivery operations with JayakHub.",
-      "button": "Contact Sales"
+      "title": "Download JayakHub today and start ordering",
+      "app_store_sub": "Download on the",
+      "app_store_main": "App Store",
+      "google_play_sub": "Get it on",
+      "google_play_main": "Google Play"
     }
   },
   "Contact": {
@@ -3732,19 +3819,26 @@
         },
         {
           "n": 5,
-          "title": "Marketing & Loyalty",
+          "title": "Marketing",
           "desc": "Run promotions, build a loyalty program, and reach your customers directly (Pro & above)."
+        },
+        {
+          "n": 6,
+          "title": "Restaurant with Optional POS",
+          "desc": "Keep using your current POS or device — supported POS integrations and optional hardware packages can be added later."
         }
       ]
     },
     "pricing": {
       "title": "Simple <span>subscription</span> pricing",
-      "subtitle": "Flat monthly fee. No commissions, ever. Prices are listed in USD and charged in IQD (≈ 1,500 IQD/USD).",
+      "subtitle": "Flat monthly fee. No commissions, ever. Prices are listed in USD and charged in IQD",
       "most_popular": "MOST POPULAR",
       "choose": "Choose {tier}",
       "no_plans": "No plans available at the moment.",
       "days_free": "{days} days free",
       "plan_fallback": "plan",
+      "plan_column": "Plan",
+      "price_column": "Monthly price",
       "plans": [
         {
           "tier": "Starter",
@@ -3791,6 +3885,52 @@
         "cta": "Apply for Founding 100 →"
       },
       "setup_note": "One-time setup & onboarding: <strong>$500</strong> · Live in 3 days · Cancel anytime."
+    },
+    "pos_integration": {
+      "title_main": "POS Integration",
+      "title_highlight": "& Optional Hardware",
+      "subtitle": "Use your current POS or device today. JayakHub POS integrations are planned, and optional tablet and printer packages may be offered later.",
+      "notes": [
+        "Use your current POS or device",
+        "JayakHub POS integrations are planned",
+        "Optional tablet and printer packages may be offered",
+        "Hardware is not automatically included",
+        "Provider availability varies",
+        "Custom integration may require setup and approval",
+        "Native JayakHub POS is not available at launch"
+      ],
+      "available": "Available",
+      "planned": "Planned",
+      "tiers": {
+        "essential": {
+          "name": "Essential",
+          "status": "available",
+          "items": [
+            "Restaurant Portal",
+            "Kitchen Display (KDS)",
+            "Manual order handling",
+            "Bring Your Own Device"
+          ]
+        },
+        "growth": {
+          "name": "Growth",
+          "status": "planned",
+          "items": [
+            "Supported POS integration when available",
+            "Menu and stock sync where supported",
+            "Reconciliation tools"
+          ]
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "status": "planned",
+          "items": [
+            "Multi-location integration",
+            "Custom connector",
+            "Dedicated onboarding"
+          ]
+        }
+      }
     },
     "cta": {
       "title": "Ready to own your delivery?",

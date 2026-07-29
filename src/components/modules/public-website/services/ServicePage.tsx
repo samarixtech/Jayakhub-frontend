@@ -14,11 +14,19 @@ import {
   Shield,
   Server,
   Quote,
+  CheckCircle2,
+  Flame,
+  Tag,
+  Lock,
+  MessageCircle,
+  Star,
 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import Link from "next/link";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
 import PublicHeroSection from "@/components/common/public-website/publicHeroSection";
 import PricingPlansSection from "@/components/common/public-website/PricingPlansSection";
+import DeliveryRouteAnimation from "@/components/modules/public-website/home/DeliveryRouteAnimation";
+import PartnerNetwork from "@/components/modules/public-website/services/PartnerNetwork";
 import type { ApiPlan } from "@/app/actions/public/plans";
 
 type Props = {
@@ -30,7 +38,10 @@ function formatPrice(price: string): string {
   if (isNaN(num)) return price;
   const decimalMatch = price.match(/\.(\d+)/);
   const decimals = decimalMatch ? decimalMatch[1].length : 0;
-  return num.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  return num.toLocaleString("en-US", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
 }
 
 export default function Services({ plans = [] }: Props) {
@@ -40,6 +51,57 @@ export default function Services({ plans = [] }: Props) {
   const [isVisible, setIsVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
+
+  const whyTrust = [
+    {
+      icon: CheckCircle2,
+      color: "text-emerald-600",
+      title: t("why_trust.items.verified_restaurants.title"),
+      description: t("why_trust.items.verified_restaurants.desc"),
+    },
+    {
+      icon: Zap,
+      color: "text-amber-500",
+      title: t("why_trust.items.fast_delivery.title"),
+      description: t("why_trust.items.fast_delivery.desc"),
+    },
+    {
+      icon: Flame,
+      color: "text-orange-500",
+      title: t("why_trust.items.hot_fresh_food.title"),
+      description: t("why_trust.items.hot_fresh_food.desc"),
+    },
+    {
+      icon: Tag,
+      color: "text-pink-500",
+      title: t("why_trust.items.great_prices.title"),
+      description: t("why_trust.items.great_prices.desc"),
+    },
+    {
+      icon: Lock,
+      color: "text-amber-600",
+      title: t("why_trust.items.secure_payment.title"),
+      description: t("why_trust.items.secure_payment.desc"),
+    },
+    {
+      icon: MapPin,
+      color: "text-rose-500",
+      title: t("why_trust.items.live_tracking.title"),
+      description: t("why_trust.items.live_tracking.desc"),
+    },
+    {
+      icon: MessageCircle,
+      color: "text-slate-500",
+      title: t("why_trust.items.fast_support.title"),
+      description: t("why_trust.items.fast_support.desc"),
+    },
+    {
+      icon: Star,
+      color: "text-amber-400",
+      title: t("why_trust.items.real_ratings.title"),
+      description: t("why_trust.items.real_ratings.desc"),
+    },
+  ];
 
   const platformFeatures = [
     {
@@ -94,13 +156,17 @@ export default function Services({ plans = [] }: Props) {
 
   const apiPlans = plans.map((plan) => {
     const rawPrice = (plan.monthlyPrice || "").replace(/[$€£¥₹]/g, "").trim();
-    const isNumeric = rawPrice !== "Free" && rawPrice !== "Custom" && rawPrice !== "" && !isNaN(Number(rawPrice));
+    const isNumeric =
+      rawPrice !== "Free" &&
+      rawPrice !== "Custom" &&
+      rawPrice !== "" &&
+      !isNaN(Number(rawPrice));
     const featuresList =
       Array.isArray(plan.features) && plan.features.length > 0
         ? plan.features
         : Array.isArray(plan.keywords)
-        ? plan.keywords
-        : [];
+          ? plan.keywords
+          : [];
 
     return {
       id: plan.id,
@@ -109,8 +175,8 @@ export default function Services({ plans = [] }: Props) {
       period: plan.billingCycle
         ? `/ ${plan.billingCycle}`
         : t.has("pricing.per_month")
-        ? t("pricing.per_month")
-        : "/mo",
+          ? t("pricing.per_month")
+          : "/mo",
       billingCycle: plan.billingCycle || "monthly",
       features: featuresList,
       popular:
@@ -122,15 +188,29 @@ export default function Services({ plans = [] }: Props) {
     };
   });
 
-  const staticPlansRaw = t.raw("pricing.plans") as Record<string, { name: string; price: string; period: string; features: Record<string, string> }>;
+  const staticPlansRaw = t.raw("pricing.plans") as Record<
+    string,
+    {
+      name: string;
+      price: string;
+      period: string;
+      features: Record<string, string>;
+    }
+  >;
   const fallbackPlans = Object.entries(staticPlansRaw).map(([id, plan]) => {
     const rawPrice = plan.price.replace(/[$€£¥₹]/g, "").trim();
-    const isNumeric = rawPrice !== "Free" && rawPrice !== "Custom" && !isNaN(Number(rawPrice));
+    const isNumeric =
+      rawPrice !== "Free" && rawPrice !== "Custom" && !isNaN(Number(rawPrice));
     return {
       id,
       name: plan.name,
       price: isNumeric ? rawPrice : plan.price,
-      period: plan.period !== undefined ? plan.period : (t.has("pricing.per_month") ? t("pricing.per_month") : "/mo"),
+      period:
+        plan.period !== undefined
+          ? plan.period
+          : t.has("pricing.per_month")
+            ? t("pricing.per_month")
+            : "/mo",
       billingCycle: "monthly",
       features: Object.values(plan.features),
       popular: id === "pro",
@@ -207,6 +287,38 @@ export default function Services({ plans = [] }: Props) {
         </div>
       </section>
 
+      {/* ===== WHY TRUST ===== */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto text-center">
+          <span className="block text-amber-600 font-bold text-sm mb-3">
+            {t("why_trust.badge")}
+          </span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            {t("why_trust.title")}
+          </h2>
+          <p className="text-[#64748B] max-w-2xl mx-auto mb-12">
+            {t("why_trust.subtitle")}
+          </p>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-left">
+            {whyTrust.map((item) => (
+              <div
+                key={item.title}
+                className="bg-[#FFF8E6] border border-[#F5E6C8] rounded-2xl p-6"
+              >
+                <div className="w-11 h-11 rounded-xl bg-white/70 flex items-center justify-center mb-4">
+                  <item.icon className={`w-5 h-5 ${item.color}`} />
+                </div>
+                <h3 className="font-bold text-foreground mb-2">{item.title}</h3>
+                <p className="text-[#64748B] text-sm leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== PLATFORM FEATURES ===== */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#FAFAFA]">
         <div className="max-w-6xl mx-auto">
@@ -242,7 +354,7 @@ export default function Services({ plans = [] }: Props) {
       </section>
 
       {/* ===== WHY CHOOSE US ===== */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
+      <section className="py-10 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="inline-block bg-accent-yellow/20 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
@@ -285,8 +397,11 @@ export default function Services({ plans = [] }: Props) {
         </div>
       </section>
 
+      {/* ===== PARTNER NETWORK ===== */}
+      <PartnerNetwork />
+
       {/* ===== TESTIMONIALS ===== */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#FAFAFA]">
+      <section className="pt-6 sm:pt-10 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8 bg-[#FAFAFA]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
@@ -323,30 +438,56 @@ export default function Services({ plans = [] }: Props) {
       </section>
 
       {/* ===== FINAL CTA ===== */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8">
+      <section className="py-8 sm:py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-primary rounded-3xl p-12 md:p-16 text-center relative overflow-hidden">
+          <div className="bg-primary rounded-3xl p-12 md:p-16 py-10! text-center relative overflow-hidden">
             <div className="absolute inset-0">
               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[100px]" />
               <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent-yellow/10 rounded-full blur-[80px]" />
             </div>
 
             <div className="relative">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
-                {t.rich("cta.title", {
-                  br: () => <br />,
-                })}
+              <div className="max-w-4xl mx-auto mb-3">
+                <DeliveryRouteAnimation />
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-4xl font-bold text-white mb-8">
+                {t("cta.title")}
               </h2>
-              <p className="text-white/60 max-w-xl mx-auto mb-10 text-lg">
-                {t("cta.desc")}
-              </p>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 bg-white text-primary px-8 py-4 rounded-full font-semibold text-sm hover:bg-white/90 transition-all hover:gap-3"
-              >
-                {t("cta.button")}
-                <Arrow className="w-5 h-5" />
-              </Link>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="https://apps.apple.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 bg-white text-primary px-6 py-3.5 rounded-2xl hover:bg-white/90 transition-all hover:scale-105"
+                >
+                  <FaApple className="w-7 h-7" />
+                  <div className="text-left">
+                    <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">
+                      {t("cta.app_store_sub")}
+                    </div>
+                    <div className="text-base font-bold -mt-1">
+                      {t("cta.app_store_main")}
+                    </div>
+                  </div>
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.jayakhub.customer"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 bg-white text-primary px-6 py-3.5 rounded-2xl hover:bg-white/90 transition-all hover:scale-105"
+                >
+                  <FaGooglePlay className="w-6 h-6" />
+                  <div className="text-left">
+                    <div className="text-[10px] opacity-70 uppercase font-bold tracking-wider">
+                      {t("cta.google_play_sub")}
+                    </div>
+                    <div className="text-base font-bold -mt-1">
+                      {t("cta.google_play_main")}
+                    </div>
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -475,13 +475,13 @@ import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { useState, useEffect } from "react";
 import { getPublicPlansAction, ApiPlan } from "@/app/actions/public/plans";
-import { ArrowRight, ArrowLeft } from "lucide-react";
-import PricingPlansSection from "@/components/common/public-website/PricingPlansSection";
+import { ChevronRight } from "lucide-react";
+import PartnersPricingTable from "./PartnersPricingTable";
 
 const RTL_LOCALES = ["ar", "ur", "fa", "he"];
 
 export default function Home() {
-  const t = useTranslations('PartnerPage');
+  const t = useTranslations("PartnerPage");
   const locale = useLocale();
   const dir = RTL_LOCALES.includes(locale) ? "rtl" : "ltr";
 
@@ -498,30 +498,50 @@ export default function Home() {
     if (isNaN(num)) return price;
     const decimalMatch = price.match(/\.(\d+)/);
     const decimals = decimalMatch ? decimalMatch[1].length : 0;
-    return num.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    return num.toLocaleString("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    });
   };
 
-  const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
+  const pricingPlans = (Array.isArray(apiPlans) ? apiPlans : []).map(
+    (plan) => ({
+      id: plan.id,
+      name: plan.name,
+      price: formatPrice(plan.monthlyPrice),
+      period: `/ ${plan.billingCycle}`,
+      billingCycle: plan.billingCycle,
+      features:
+        Array.isArray(plan.features) && plan.features.length > 0
+          ? plan.features
+          : Array.isArray(plan.keywords)
+            ? plan.keywords
+            : [],
+      popular:
+        (plan.name && plan.name.toLowerCase().includes("family")) ||
+        plan.planType === "premium",
+      freeTrialDays: plan.freeTrialDays,
+    }),
+  );
 
-  const pricingPlans = (Array.isArray(apiPlans) ? apiPlans : []).map((plan) => ({
-    id: plan.id,
-    name: plan.name,
-    price: formatPrice(plan.monthlyPrice),
-    period: `/ ${plan.billingCycle}`,
-    billingCycle: plan.billingCycle,
-    features: Array.isArray(plan.features) && plan.features.length > 0 ? plan.features : (Array.isArray(plan.keywords) ? plan.keywords : []),
-    popular: (plan.name && plan.name.toLowerCase().includes("family")) || plan.planType === "premium",
-    freeTrialDays: plan.freeTrialDays,
-  }));
+  const rawPlatforms = t.raw("compare.platforms");
+  const comparePlatforms = (
+    Array.isArray(rawPlatforms) ? rawPlatforms : []
+  ) as { name: string; fee: string }[];
 
-  const rawPlatforms = t.raw('compare.platforms');
-  const comparePlatforms = (Array.isArray(rawPlatforms) ? rawPlatforms : []) as { name: string; fee: string }[];
+  const rawBenefits = t.raw("benefits.items");
+  const benefitItems = (Array.isArray(rawBenefits) ? rawBenefits : []) as {
+    icon: string;
+    title: string;
+    desc: string;
+  }[];
 
-  const rawBenefits = t.raw('benefits.items');
-  const benefitItems = (Array.isArray(rawBenefits) ? rawBenefits : []) as { icon: string; title: string; desc: string }[];
-
-  const rawFeatures = t.raw('features.items');
-  const featureItems = (Array.isArray(rawFeatures) ? rawFeatures : []) as { n: number; title: string; desc: string }[];
+  const rawFeatures = t.raw("features.items");
+  const featureItems = (Array.isArray(rawFeatures) ? rawFeatures : []) as {
+    n: number;
+    title: string;
+    desc: string;
+  }[];
 
   return (
     <main dir={dir} className="text-[#1a1a1a] bg-white">
@@ -540,56 +560,81 @@ export default function Home() {
           <motion.span
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
             className="inline-block bg-[#e8f4f1] text-[#0B5D4E] font-semibold text-[13px] py-[7px] px-4 rounded-[30px] mb-[22px]"
           >
-            {t('hero.badge')}
+            {t("hero.badge")}
           </motion.span>
 
           <motion.h1
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
             className="text-[54px] font-bold text-[#0B5D4E] leading-[1.1] tracking-tight mb-5"
           >
-            {t('hero.title_main')}<br />
-            <span className="font-serif italic font-normal text-[#0B5D4E]">{t('hero.title_highlight')}</span>
+            {t("hero.title_main")}
+            <br />
+            <span className="font-serif italic font-normal text-[#0B5D4E]">
+              {t("hero.title_highlight")}
+            </span>
           </motion.h1>
 
           <motion.p
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
             className="text-[20px] text-[#6b6b6b] mb-[36px] max-w-[640px] mx-auto"
           >
-            {t.rich('hero.description', { strong: (chunks) => <strong>{chunks}</strong> })}
+            {t.rich("hero.description", {
+              strong: (chunks) => <strong>{chunks}</strong>,
+            })}
           </motion.p>
 
           <motion.div
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
           >
             <Link
               href="/contact"
               className="bg-[#0B5D4E] text-white py-[17px] px-[44px] rounded-[30px] font-bold text-[17px] inline-block shadow-[0_8px_24px_rgba(11,93,78,0.32)] hover:bg-[#094c40] transition-colors"
             >
-              {t('hero.cta')}
+              {t("hero.cta")}
             </Link>
           </motion.div>
 
           <motion.div
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
             className="mt-[18px] text-[14px] text-[#6b6b6b]"
           >
-            {t('hero.sub_text')}
+            {t("hero.sub_text")}
           </motion.div>
         </motion.div>
       </section>
@@ -660,10 +705,6 @@ export default function Home() {
         </motion.div>
       </section> */}
 
-
-
-
-
       <section className="bg-[#0B5D4E] text-white py-[50px]">
         <motion.div
           initial="hidden"
@@ -678,104 +719,149 @@ export default function Home() {
           <motion.h2
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
             className="text-[30px] font-bold tracking-tight mb-[26px]"
           >
-            {t('compare.title')}
+            {t("compare.title")}
           </motion.h2>
 
-          {(Array.isArray(comparePlatforms) ? comparePlatforms : []).map((row, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-              }}
-
-              className="flex justify-between items-center bg-white/5 rounded-xl px-[32px] py-5 mb-2.5 text-[16px] rtl:text-[14px]"
-            >
-              <span className="min-w-0 text-left rtl:text-right font-medium">{row.name}</span>
-              <span className="shrink-0 text-[#ff8a8a] font-bold text-right rtl:text-left">{row.fee}</span>
-            </motion.div>
-          ))}
+          {(Array.isArray(comparePlatforms) ? comparePlatforms : []).map(
+            (row, i) => (
+              <motion.div
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.6, ease: "easeOut" },
+                  },
+                }}
+                className="flex justify-between items-center bg-white/5 rounded-xl px-[32px] py-5 mb-2.5 text-[16px] rtl:text-[14px]"
+              >
+                <span className="min-w-0 text-left rtl:text-right font-medium">
+                  {row.name}
+                </span>
+                <span className="shrink-0 text-[#ff8a8a] font-bold text-right rtl:text-left">
+                  {row.fee}
+                </span>
+              </motion.div>
+            ),
+          )}
 
           <motion.div
             variants={{
               hidden: { opacity: 0, scale: 0.95 },
-              visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                scale: 1,
+                transition: { duration: 0.5, ease: "easeOut" },
+              },
             }}
-
             className="flex justify-between items-center bg-[#7ee7871f] border border-[#7ee78759] rounded-xl px-[32px] py-5 mb-2.5 text-[16px] rtl:text-[14px]"
           >
-            <span className="min-w-0 text-left rtl:text-right"><strong>{t('compare.jayakub_name')}</strong></span>
-            <span className="shrink-0 text-[#7ee787] font-bold text-right rtl:text-left">{t('compare.jayakub_fee')}</span>
+            <span className="min-w-0 text-left rtl:text-right">
+              <strong>{t("compare.jayakub_name")}</strong>
+            </span>
+            <span className="shrink-0 text-[#7ee787] font-bold text-right rtl:text-left">
+              {t("compare.jayakub_fee")}
+            </span>
           </motion.div>
 
           <motion.p
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
             className="mt-5 opacity-80 text-[14px]"
           >
-            {t('compare.description')}
+            {t("compare.description")}
           </motion.p>
           <motion.p
             variants={{
               hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.6, ease: "easeOut" },
+              },
             }}
             className="mt-2.5 opacity-55 text-[11.5px]"
           >
-            {t('compare.disclaimer')}
+            {t("compare.disclaimer")}
           </motion.p>
         </motion.div>
       </section>
-
-
-
 
       {/* BENEFITS */}
       <section className="py-[80px] bg-[#f6f7f8]" id="benefits">
         <div className="max-w-[1180px] mx-auto px-6">
           <motion.h2
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
             className="text-center text-[38px] font-bold text-[#0B5D4E] mb-[14px] tracking-tight"
           >
-            {t.rich('benefits.title', { span: (chunks) => <span className="text-[#0B5D4E]">{chunks}</span> })}
+            {t.rich("benefits.title", {
+              span: (chunks) => (
+                <span className="text-[#0B5D4E]">{chunks}</span>
+              ),
+            })}
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             className="text-center text-[17px] text-[#6b6b6b] max-w-[600px] mx-auto mb-[54px]"
           >
-            {t('benefits.subtitle')}
+            {t("benefits.subtitle")}
           </motion.p>
 
           <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
             variants={{
               hidden: { opacity: 0 },
               visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
             }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
-            {(Array.isArray(benefitItems) ? benefitItems : []).map((benefit, i) => (
-              <motion.div
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-                }}
-                className="bg-white p-8 rounded-[18px] border border-[#e6e6e6] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(11,93,78,0.1)]"
-              >
-                <div className="w-14 h-14 rounded-xl bg-[#e8f4f1] flex items-center justify-center text-[27px] mb-[18px]">
-                  {benefit.icon}
-                </div>
-                <h3 className="text-[20px] font-bold text-[#0B5D4E] mb-2.5 leading-tight">{benefit.title}</h3>
-                <p className="text-[15px] text-[#6b6b6b]">{benefit.desc}</p>
-              </motion.div>
-            ))}
+            {(Array.isArray(benefitItems) ? benefitItems : []).map(
+              (benefit, i) => (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.5 },
+                    },
+                  }}
+                  className="bg-white p-8 rounded-[18px] border border-[#e6e6e6] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(11,93,78,0.1)]"
+                >
+                  <div className="w-14 h-14 rounded-xl bg-[#e8f4f1] flex items-center justify-center text-[27px] mb-[18px]">
+                    {benefit.icon}
+                  </div>
+                  <h3 className="text-[20px] font-bold text-[#0B5D4E] mb-2.5 leading-tight">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-[15px] text-[#6b6b6b]">{benefit.desc}</p>
+                </motion.div>
+              ),
+            )}
           </motion.div>
         </div>
       </section>
@@ -784,44 +870,64 @@ export default function Home() {
       <section className="py-[80px] bg-white" id="features">
         <div className="max-w-[1180px] mx-auto px-6">
           <motion.h2
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
             className="text-center text-[38px] font-bold text-[#0B5D4E] mb-[14px] tracking-tight"
           >
-            {t.rich('features.title', { span: (chunks) => <span className="text-[#0B5D4E]">{chunks}</span> })}
+            {t.rich("features.title", {
+              span: (chunks) => (
+                <span className="text-[#0B5D4E]">{chunks}</span>
+              ),
+            })}
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             className="text-center text-[17px] text-[#6b6b6b] max-w-[600px] mx-auto mb-[54px]"
           >
-            {t('features.subtitle')}
+            {t("features.subtitle")}
           </motion.p>
 
           <motion.div
-            initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
             variants={{
               hidden: { opacity: 0 },
               visible: { opacity: 1, transition: { staggerChildren: 0.15 } },
             }}
             className="max-w-[780px] mx-auto space-y-3.5"
           >
-            {(Array.isArray(featureItems) ? featureItems : []).map((feature, i) => (
-              <motion.div
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-                }}
-                className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e6e6e6] flex items-start gap-5"
-              >
-                <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#0B5D4E] to-[#B6932F] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0 mt-1">
-                  {feature.n}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-[17px] font-bold text-[#0B5D4E] mb-1 leading-tight">{feature.title}</h3>
-                  <p className="text-[14px] text-[#6b6b6b]">{feature.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+            {(Array.isArray(featureItems) ? featureItems : []).map(
+              (feature, i) => (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.5 },
+                    },
+                  }}
+                  className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e6e6e6] flex items-start gap-5"
+                >
+                  <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#0B5D4E] to-[#B6932F] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0 mt-1">
+                    {feature.n}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-[17px] font-bold text-[#0B5D4E] mb-1 leading-tight">
+                      {feature.title}
+                    </h3>
+                    <p className="text-[14px] text-[#6b6b6b]">{feature.desc}</p>
+                  </div>
+                </motion.div>
+              ),
+            )}
           </motion.div>
         </div>
       </section>
@@ -829,46 +935,94 @@ export default function Home() {
       {/* PRICING */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-primary" id="pricing">
         <div className="max-w-screen-xl mx-auto">
-          <PricingPlansSection
-            badge={t('pricing.subtitle')}
-            title={t.rich('pricing.title', { span: (chunks) => <span className="text-white">{chunks}</span> })}
+          <div className="text-center mb-12">
+            <span className="inline-block bg-white/10 text-white/80 text-sm font-semibold px-4 py-2 rounded-full mb-6 border border-white/10">
+              {t("pricing.subtitle")}
+            </span>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
+              {t.rich("pricing.title", {
+                span: (chunks) => <span className="text-white">{chunks}</span>,
+              })}
+            </h2>
+          </div>
+
+          <PartnersPricingTable
             plans={pricingPlans}
-            noPlansText={t('pricing.no_plans')}
-            planFallbackLabel={t('pricing.plan_fallback')}
-            ctaLabel={(plan) => t('pricing.choose', { tier: plan.name })}
-            ArrowIcon={Arrow}
+            noPlansText={t("pricing.no_plans")}
+            planLabel={t("pricing.plan_column")}
+            priceLabel={t("pricing.price_column")}
+            daysFreeLabel={(days) => t("pricing.days_free", { days })}
           />
-
-          {/* Founding 100 */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
-            className="max-w-[980px] mx-auto mt-10 bg-white/10 border border-white/20 text-white rounded-[18px] p-[30px] md:px-[34px] flex flex-col lg:flex-row items-center gap-5"
-          >
-            <div className="text-center lg:text-start flex-1 min-w-0">
-              <h3 className="text-[24px] font-bold mb-1.5 leading-tight">{t('pricing.founding.badge')}</h3>
-              <p className="text-[15px] opacity-85">{t('pricing.founding.desc')}</p>
-            </div>
-            <div className="text-center shrink-0">
-              <div className="text-[34px] font-bold whitespace-nowrap">
-                {t('pricing.founding.price')}
-              </div>
-              <div className="text-[12px] opacity-80 leading-tight max-w-[180px]">{t('pricing.founding.period')}</div>
-            </div>
-            <Link href="/contact" className="bg-[#FDB833] text-[#0B5D4E] px-7 py-[13px] rounded-[30px] font-bold whitespace-nowrap hover:bg-white transition-colors shrink-0">
-              {t('pricing.founding.cta')}
-            </Link>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-center mt-6 text-[14px] text-white/50"
-          >
-            {t.rich('pricing.setup_note', { strong: (chunks) => <strong className="text-white">{chunks}</strong> })}
-          </motion.p>
         </div>
       </section>
 
+      {/* POS INTEGRATION & OPTIONAL HARDWARE */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <span className="text-[#0F2942]">
+                {t("pos_integration.title_main")}
+              </span>{" "}
+              <span className="text-[#FE8C34]">
+                {t("pos_integration.title_highlight")}
+              </span>
+            </h2>
+            <p className="text-[#64748B] max-w-2xl mx-auto">
+              {t("pos_integration.subtitle")}
+            </p>
+          </div>
 
+          <div className="bg-[#FDF3EA] border border-[#F5E3D0] rounded-2xl p-8 mb-8">
+            <ul className="space-y-3">
+              {(t.raw("pos_integration.notes") as string[]).map((note) => (
+                <li
+                  key={note}
+                  className="flex items-start gap-2.5 text-[15px] text-[#0F2942]"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0F2942] mt-2 shrink-0" />
+                  <span>{note}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {(["essential", "growth", "enterprise"] as const).map((tier) => {
+              const status = t(`pos_integration.tiers.${tier}.status`) as
+                | "available"
+                | "planned";
+              const items = t.raw(`pos_integration.tiers.${tier}.items`) as string[];
+              return (
+                <div
+                  key={tier}
+                  className="bg-white border border-[#E2E8F0] rounded-2xl p-6"
+                >
+                  <h3 className="font-bold text-lg text-[#0F2942] mb-3">
+                    {t(`pos_integration.tiers.${tier}.name`)}
+                  </h3>
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-bold mb-4 bg-amber-100 text-amber-800">
+                    {status === "available"
+                      ? t("pos_integration.available")
+                      : t("pos_integration.planned")}
+                  </span>
+                  <ul className="space-y-2.5">
+                    {items.map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-2 text-[14px] text-[#0F2942]"
+                      >
+                        <ChevronRight className="w-4 h-4 text-[#FE8C34] shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
