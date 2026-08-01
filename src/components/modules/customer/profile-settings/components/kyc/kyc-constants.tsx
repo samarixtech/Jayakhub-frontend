@@ -14,19 +14,19 @@ export function getKycDocuments(t: any): KycDocument[] {
       id: "government_id",
       title: t("kyc_gov_id_title"),
       desc: t("kyc_gov_id_desc"),
-      icon: <IdCard className="text-blue-500" />,
+      icon: <IdCard className="text-navy" />,
     },
     {
       id: "driving_license",
       title: t("kyc_license_title"),
       desc: t("kyc_license_desc"),
-      icon: <Car className="text-blue-500" />,
+      icon: <Car className="text-navy" />,
     },
     {
       id: "passport",
       title: t("kyc_passport_title"),
       desc: t("kyc_passport_desc"),
-      icon: <Smartphone className="text-blue-500" />,
+      icon: <Smartphone className="text-navy" />,
     },
   ];
 }

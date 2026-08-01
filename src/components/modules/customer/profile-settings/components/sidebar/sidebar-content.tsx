@@ -32,11 +32,11 @@ export function SidebarContent({
         : t("not_verified");
 
   const kycStatusClass = profile.kycVerified
-    ? "bg-emerald-50 text-emerald-600"
+    ? "bg-forest-green/10 text-forest-green"
     : hasRejectedKyc
       ? "bg-red-50 text-red-600"
       : kycSubmitted
-        ? "bg-amber-50 text-amber-600"
+        ? "bg-secondary/15 text-gold-deep"
         : "bg-red-50 text-red-600";
 
   return (
@@ -54,7 +54,7 @@ export function SidebarContent({
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="absolute bottom-1 right-1 bg-emerald-bg text-white p-2 rounded-full border-4 border-white"
+          className="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full border-4 border-white"
         >
           <Camera size={16} />
         </button>
@@ -66,7 +66,7 @@ export function SidebarContent({
         <Badge className={`uppercase ${kycStatusClass}`}>
           {kycStatusLabel}
         </Badge>
-        <Badge className="bg-blue-50 text-blue-600 uppercase">
+        <Badge className="bg-navy/10 text-navy uppercase">
           {typeof profile.role === "string"
             ? profile.role
             : typeof profile.role === "object"
@@ -82,7 +82,7 @@ export function SidebarContent({
           <span className="text-sm font-semibold text-gray-600">
             {t("total_orders")}
           </span>
-          <span className="font-bold text-emerald-bg">
+          <span className="font-bold text-primary">
             {profile.totalOrders}
           </span>
         </div>
@@ -90,7 +90,7 @@ export function SidebarContent({
           <span className="text-sm font-semibold text-gray-600">
             {t("reviews")}
           </span>
-          <span className="font-bold text-amber-500">
+          <span className="font-bold text-gold-deep">
             {profile.averageRating}
           </span>
         </div>

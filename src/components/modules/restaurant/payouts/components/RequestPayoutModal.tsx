@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 import { RequestPayoutPayload } from "../hooks/usePayouts";
 
 interface RequestPayoutModalProps {
@@ -27,6 +28,7 @@ const RequestPayoutModal: React.FC<RequestPayoutModalProps> = ({
   isSubmitting,
 }) => {
   const t = useTranslations("RestaurantDashboard.Payouts.form");
+  const { currency } = useCLC();
   const [amount, setAmount] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,11 +41,15 @@ const RequestPayoutModal: React.FC<RequestPayoutModalProps> = ({
     setAmount("");
   };
 
+  const amountLabelText = t("amountLabel").includes("$")
+    ? t("amountLabel").replace("$", currency)
+    : `${t("amountLabel")} (${currency})`;
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[480px]">
+      <DialogContent className="sm:max-w-[480px] bg-white !bg-white">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">{t("title")}</DialogTitle>
+          <DialogTitle className="text-lg font-bold text-navy">{t("title")}</DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
             {t("description")}
           </DialogDescription>
@@ -51,7 +57,9 @@ const RequestPayoutModal: React.FC<RequestPayoutModalProps> = ({
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           <div className="space-y-1.5">
-            <Label htmlFor="amount">{t("amountLabel")}</Label>
+            <Label htmlFor="amount" className="text-navy font-bold">
+              {amountLabelText}
+            </Label>
             <Input
               id="amount"
               type="number"
@@ -60,6 +68,7 @@ const RequestPayoutModal: React.FC<RequestPayoutModalProps> = ({
               placeholder={t("amountPlaceholder")}
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
+              className="bg-white border-gray-200 focus:border-brand-orange focus:ring-brand-orange text-navy font-bold"
               required
             />
           </div>
@@ -68,7 +77,7 @@ const RequestPayoutModal: React.FC<RequestPayoutModalProps> = ({
             <Button
               type="button"
               variant="outline"
-              className="flex-1"
+              className="flex-1 border-gray-200 text-gray-700 hover:bg-gray-50"
               onClick={onClose}
               disabled={isSubmitting}
             >
@@ -76,7 +85,7 @@ const RequestPayoutModal: React.FC<RequestPayoutModalProps> = ({
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+              className="flex-1 bg-brand-orange hover:bg-[#e85a2a] text-white font-bold cursor-pointer"
               disabled={isSubmitting || !amount}
             >
               {isSubmitting ? t("submitting") : t("submitBtn")}

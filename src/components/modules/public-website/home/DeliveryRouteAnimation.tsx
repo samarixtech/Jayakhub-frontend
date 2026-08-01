@@ -45,7 +45,14 @@ function bubbleState(local: number, fadeOut: boolean) {
   return { opacity: 1 - l, ty: -l * 6, scale: 1 - l * 0.2 };
 }
 
-export default function DeliveryRouteAnimation() {
+interface DeliveryRouteAnimationProps {
+  /** Tailwind text-color class applied to the "Restaurant" / "Home" route labels. Defaults to white (for dark backgrounds) — pass e.g. "text-navy" when placing this on a light background. */
+  labelColor?: string;
+}
+
+export default function DeliveryRouteAnimation({
+  labelColor = "text-white",
+}: DeliveryRouteAnimationProps) {
   const t = useTranslations("Home.delivery_route");
   const containerRef = useRef<HTMLDivElement>(null);
   const riderRef = useRef<HTMLDivElement>(null);
@@ -170,7 +177,7 @@ export default function DeliveryRouteAnimation() {
         <div className="relative w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12 lg:h-12">
           <Image src={restaurantImg} alt="Restaurant" fill className="object-contain" />
         </div>
-        <span className="text-[10px] sm:text-xs md:text-sm font-bold text-white whitespace-nowrap">
+        <span className={`text-[10px] sm:text-xs md:text-sm font-bold whitespace-nowrap ${labelColor}`}>
           {t("restaurant_label")}
         </span>
       </div>
@@ -180,7 +187,7 @@ export default function DeliveryRouteAnimation() {
         <div className="relative w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12 lg:h-12">
           <Image src={homeImg} alt="Home" fill className="object-contain" />
         </div>
-        <span className="text-[10px] sm:text-xs md:text-sm font-bold text-white whitespace-nowrap">
+        <span className={`text-[10px] sm:text-xs md:text-sm font-bold whitespace-nowrap ${labelColor}`}>
           {t("customer_label")}
         </span>
       </div>

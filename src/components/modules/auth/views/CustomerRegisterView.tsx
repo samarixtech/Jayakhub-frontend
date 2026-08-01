@@ -59,7 +59,7 @@ export default function CustomerRegisterView() {
                   <FormControl>
                     <Input
                       placeholder={t("fullNamePlaceholder")}
-                      className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
+                      className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-primary/10 focus-visible:border-primary transition-all"
                       {...field}
                     />
                   </FormControl>
@@ -75,7 +75,7 @@ export default function CustomerRegisterView() {
                   <FormControl>
                     <Input
                       placeholder={t("emailPlaceholder")}
-                      className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
+                      className="h-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-primary/10 focus-visible:border-primary transition-all"
                       {...field}
                     />
                   </FormControl>
@@ -94,7 +94,7 @@ export default function CustomerRegisterView() {
                       placeholder={t("phonePlaceholder")}
                       maxLength={14}
                       defaultCountry="PK"
-                      className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all"
+                      className="h-12 rounded-xl [&_button]:rounded-s-xl [&_input]:rounded-e-xl border-gray-100 bg-gray-50 focus-visible:ring-primary/10 focus-visible:border-primary transition-all"
                       {...field}
                     />
                   </FormControl>
@@ -146,7 +146,7 @@ export default function CustomerRegisterView() {
                       {t("agreeToThe")}{" "}
                       <Link
                         href="/terms-of-service"
-                        className="font-bold text-emerald-bg hover:underline"
+                        className="font-bold text-primary hover:underline"
                       >
                         {t("termsAndConditions")}
                       </Link>
@@ -160,7 +160,7 @@ export default function CustomerRegisterView() {
             <Button
               type="submit"
               disabled={isPending || !form.watch("terms")}
-              className="w-full h-11 bg-emerald-bg text-white text-lg font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
+              className="w-full h-11 bg-primary text-white text-lg font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
             >
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -178,7 +178,7 @@ export default function CustomerRegisterView() {
           {t("existingAccount")}{" "}
           <Link
             href="/login"
-            className="text-emerald-bg font-bold hover:underline"
+            className="text-primary font-bold hover:underline"
           >
             {t("login")}
           </Link>

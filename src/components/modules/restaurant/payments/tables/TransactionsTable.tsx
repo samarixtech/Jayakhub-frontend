@@ -263,7 +263,7 @@ export default function TransactionsTable() {
                 size="icon"
                 className={`w-8 h-8 rounded-lg text-[12px] font-bold ${
                   p === page
-                    ? "bg-[#346853] hover:bg-[#2a5644] text-white border-0"
+                    ? "bg-[#FF6B35] hover:bg-[#E85A2A] text-white border-0"
                     : "border-gray-200 text-gray-600"
                 }`}
                 onClick={() => handlePageChange(p)}

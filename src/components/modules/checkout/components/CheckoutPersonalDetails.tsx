@@ -23,7 +23,7 @@ export const CheckoutPersonalDetails = ({
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
-        <User className="text-[#346853]" size={20} />
+        <User className="text-primary" size={20} />
         <h3 className="font-bold text-lg text-gray-900">
           {t("personalDetails")}
         </h3>

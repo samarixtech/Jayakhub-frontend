@@ -30,7 +30,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
   return (
     <div className="border border-gray-100 rounded-2xl p-6 bg-white">
       <div className="flex items-center gap-2 mb-6">
-        <Utensils className="w-4 h-4 text-[#346853]" />
+        <Utensils className="w-4 h-4 text-navy" />
         <h3 className="font-bold text-gray-900">{t("orderSummary")}</h3>
       </div>
 
@@ -94,7 +94,7 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
                     </div>
                   </div>
                 </div>
-                <span className="font-bold text-[#346853] shrink-0 ml-4">
+                <span className="font-bold text-primary shrink-0 ml-4">
                   {formatPrice((item.price || 0) * item.quantity)}
                 </span>
               </div>
@@ -109,15 +109,15 @@ export const OrderSummaryTable: React.FC<OrderSummaryTableProps> = ({
         </div>
         <div className="flex justify-between text-gray-500 text-sm">
           <span>{t("deliveryFee")}</span>
-          <span className={deliveryFee === 0 ? "text-emerald-600 font-medium" : ""}>
+          <span className={deliveryFee === 0 ? "text-forest-green font-medium" : ""}>
             {deliveryFee === 0 ? t("free") : formatPrice(deliveryFee)}
           </span>
         </div>
         {coupon && (
-          <div className="flex justify-between text-emerald-600 text-sm font-medium">
+          <div className="flex justify-between text-forest-green text-sm font-medium">
             <span className="flex items-center gap-1">
               {t("coupon")}
-              <span className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded">
+              <span className="bg-forest-green/10 border border-forest-green/30 text-forest-green text-[10px] font-bold px-1.5 py-0.5 rounded">
                 {coupon.code}
               </span>
               <span className="text-gray-400 text-xs font-normal">

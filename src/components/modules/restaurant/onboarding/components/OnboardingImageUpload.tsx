@@ -58,17 +58,17 @@ export const OnboardingImageUpload: React.FC<OnboardingImageUploadProps> = ({
           </>
         ) : (
           <>
-            <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-4 text-emerald-600">
+            <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-4 text-brand-orange">
               <ImageIcon className="w-8 h-8" />
             </div>
-            <h3 className="text-gray-900 font-bold mb-1">{label}</h3>
+            <h3 className="text-navy font-bold mb-1">{label}</h3>
             <p className="text-[10px] text-gray-400 mb-6 uppercase tracking-wider">
               {sizeLabel}
             </p>
             <Button
               type="button"
               variant="outline"
-              className="rounded-xl border-gray-200 text-gray-700 font-bold hover:bg-white hover:border-gray-300"
+              className="rounded-xl border-gray-200 text-navy font-bold hover:bg-orange-50 hover:text-brand-orange hover:border-brand-orange/40 transition-colors cursor-pointer"
               onClick={() => inputRef.current?.click()}
             >
               {t("chooseImage")}
@@ -85,20 +85,20 @@ export const OnboardingImageUpload: React.FC<OnboardingImageUploadProps> = ({
       </div>
 
       <div className="space-y-3 px-2">
-        <Typography variant="h4" className="font-bold text-gray-800 text-sm">
+        <Typography variant="h4" className="font-bold text-navy text-sm">
           {t("tipsTitle")}
         </Typography>
         <ul className="space-y-2">
           <li className="flex items-center gap-2 text-xs text-gray-500">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-4 h-4 text-brand-orange" />
             {t("tip1")}
           </li>
           <li className="flex items-center gap-2 text-xs text-gray-500">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-4 h-4 text-brand-orange" />
             {t("tip2")}
           </li>
           <li className="flex items-center gap-2 text-xs text-gray-500">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <CheckCircle2 className="w-4 h-4 text-brand-orange" />
             {t("tip3")}
           </li>
           <li className="flex items-center gap-2 text-xs text-gray-500">

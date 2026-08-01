@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
-import { Star, X } from "lucide-react";
+import { Star, X, Utensils } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCLC } from "@/context/CLCContext";
 
@@ -75,16 +75,16 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
     <div className="w-full h-full flex flex-col">
       <div className="flex justify-between items-start mb-6 w-full">
         <div>
-          <h2 className="text-[16px] font-bold text-[#1b2d22] leading-none">
+          <h2 className="text-[16px] font-bold text-[#1B3A57] leading-none">
             {t("title")}
           </h2>
-          <p className="text-[12px] text-[#8ea89a] mt-1 font-medium">
+          <p className="text-[12px] text-[#8B7355] mt-1 font-medium">
             {t("subtitle")}
           </p>
         </div>
         <button
           onClick={handleOpenAll}
-          className="text-[12px] font-bold text-[#357252] transition-colors hover:text-[#189b74]"
+          className="text-[12px] font-bold text-[#FF6B35] transition-colors hover:text-[#E85A2A]"
         >
           {t("viewAll")}
         </button>
@@ -107,27 +107,31 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
               >
                 {product.rank}
               </div>
-              <div className="w-10 h-10 rounded-lg bg-gray-100 relative overflow-hidden flex items-center justify-center border border-gray-100 shadow-sm shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-orange-50 relative overflow-hidden flex items-center justify-center border border-orange-100 text-brand-orange shadow-xs shrink-0">
                 {product.image ? (
                   <img
                     src={process.env.NEXT_PUBLIC_IMAGE_BASE_URL + product.image}
                     className="absolute inset-0 w-full h-full object-cover"
                     alt={product.name}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                      const icon = e.currentTarget.parentElement?.querySelector(".fallback-icon");
+                      if (icon) icon.classList.remove("hidden");
+                    }}
                   />
-                ) : (
-                  <span className="text-[14px]">🍔</span>
-                )}
+                ) : null}
+                <Utensils className={cn("w-4 h-4 text-brand-orange fallback-icon", product.image && "hidden")} />
               </div>
               <div className="flex flex-col">
-                <h3 className="text-[13px] font-bold text-[#1b2d22] leading-tight">
+                <h3 className="text-[13px] font-bold text-[#1B3A57] leading-tight">
                   {product.name}
                 </h3>
-                <p className="text-[11px] font-medium text-[#8ea89a] mt-0.5">
+                <p className="text-[11px] font-medium text-[#8B7355] mt-0.5">
                   {product.category}
                 </p>
               </div>
             </div>
-            <span className="text-[13px] font-black text-[#1b2d22]">
+            <span className="text-[13px] font-black text-[#1B3A57]">
               {product.revenue}
             </span>
           </div>
@@ -168,10 +172,10 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
               <div className="flex-1 overflow-y-auto px-6 pb-6">
                 {/* Green Summary Bar */}
                 <div className="bg-[#f0f9f4] rounded-xl px-5 py-3.5 mb-5 flex justify-between items-center">
-                  <span className="text-[14px] font-semibold text-[#2d6a4f]">
+                  <span className="text-[14px] font-semibold text-[#2C5F2D]">
                     {formattedProducts.length} {t("products")}
                   </span>
-                  <span className="text-[20px] font-black text-[#2d6a4f]">
+                  <span className="text-[20px] font-black text-[#2C5F2D]">
                     {formatPrice(totalRevenue)}
                   </span>
                 </div>
@@ -221,7 +225,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
 
                       {/* Product Name + Image */}
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-9 h-9 rounded-lg bg-gray-100 relative overflow-hidden flex items-center justify-center border border-gray-100 shrink-0">
+                        <div className="w-9 h-9 rounded-lg bg-orange-50 relative overflow-hidden flex items-center justify-center border border-orange-100 text-brand-orange shrink-0">
                           {product.image ? (
                             <img
                               src={
@@ -230,10 +234,14 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                               }
                               className="absolute inset-0 w-full h-full object-cover"
                               alt={product.name}
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                                const icon = e.currentTarget.parentElement?.querySelector(".fallback-icon");
+                                if (icon) icon.classList.remove("hidden");
+                              }}
                             />
-                          ) : (
-                            <span className="text-[12px]">🍔</span>
-                          )}
+                          ) : null}
+                          <Utensils className={cn("w-4 h-4 text-brand-orange fallback-icon", product.image && "hidden")} />
                         </div>
                         <div className="flex flex-col min-w-0">
                           <h3 className="text-[13px] font-semibold text-[#1a1a1a] leading-tight truncate">
@@ -275,10 +283,10 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
               {/* Header */}
               <div className="px-6 pt-5 pb-3 flex justify-between items-start">
                 <div>
-                  <SheetTitle className="text-[18px] font-bold text-[#1a1a1a] leading-tight">
+                  <SheetTitle className="text-[18px] font-bold text-navy leading-tight">
                     {selectedProduct.name}
                   </SheetTitle>
-                  <p className="text-[13px] text-[#8a8a8a] font-normal mt-0.5">
+                  <p className="text-[13px] text-gray-500 font-normal mt-0.5">
                     {selectedProduct.category} · {selectedProduct.unitsSold}{" "}
                     {t("detail.unitsSoldLabel")}
                   </p>
@@ -295,7 +303,7 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
               <div className="flex-1 overflow-y-auto px-6 pb-6">
                 {/* Product Image + Name Block */}
                 <div className="flex items-center gap-4 py-4">
-                  <div className="w-[56px] h-[56px] rounded-xl bg-gray-100 relative overflow-hidden flex items-center justify-center shrink-0 border border-gray-100">
+                  <div className="w-[56px] h-[56px] rounded-xl bg-orange-50 relative overflow-hidden flex items-center justify-center shrink-0 border border-orange-100 text-brand-orange">
                     {selectedProduct.image ? (
                       <img
                         src={
@@ -304,16 +312,20 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                         }
                         className="absolute inset-0 w-full h-full object-cover"
                         alt={selectedProduct.name}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                          const icon = e.currentTarget.parentElement?.querySelector(".fallback-icon");
+                          if (icon) icon.classList.remove("hidden");
+                        }}
                       />
-                    ) : (
-                      <span className="text-[24px]">🍔</span>
-                    )}
+                    ) : null}
+                    <Utensils className={cn("w-6 h-6 text-brand-orange fallback-icon", selectedProduct.image && "hidden")} />
                   </div>
                   <div className="flex flex-col">
-                    <h3 className="text-[16px] font-bold text-[#1a1a1a] leading-tight">
+                    <h3 className="text-[16px] font-bold text-navy leading-tight">
                       {selectedProduct.name}
                     </h3>
-                    <p className="text-[13px] font-normal text-[#8a8a8a] mt-0.5">
+                    <p className="text-[13px] font-normal text-gray-500 mt-0.5">
                       {selectedProduct.category}
                     </p>
                   </div>
@@ -323,72 +335,72 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
                 <div className="grid grid-cols-2 gap-3 mt-2">
                   {/* Units Sold */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.unitsSold")}
                     </span>
-                    <span className="text-[22px] font-black text-[#1a1a1a] leading-tight">
+                    <span className="text-[22px] font-black text-navy leading-tight">
                       {selectedProduct.unitsSold}
                     </span>
                   </div>
 
                   {/* Total Revenue */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.totalRevenue")}
                     </span>
-                    <span className="text-[22px] font-black text-[#1a1a1a] leading-tight">
+                    <span className="text-[22px] font-black text-navy leading-tight">
                       {selectedProduct.revenue}
                     </span>
                   </div>
 
                   {/* Price */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.price")}
                     </span>
-                    <span className="text-[18px] font-black text-[#1a1a1a] leading-tight">
+                    <span className="text-[18px] font-black text-navy leading-tight">
                       {selectedProduct.price}
                     </span>
                   </div>
 
                   {/* Cost */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.cost")}
                     </span>
-                    <span className="text-[18px] font-black text-[#1a1a1a] leading-tight">
+                    <span className="text-[18px] font-black text-navy leading-tight">
                       {selectedProduct.cost}
                     </span>
                   </div>
 
                   {/* Profit */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.profit")}
                     </span>
-                    <span className="text-[18px] font-bold text-[#2d9c6f] leading-tight">
+                    <span className="text-[18px] font-bold text-brand-orange leading-tight">
                       {selectedProduct.profit}
                     </span>
                   </div>
 
                   {/* Profit Margin */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.profitMargin")}
                     </span>
-                    <span className="text-[18px] font-black text-[#1a1a1a] leading-tight">
+                    <span className="text-[18px] font-black text-navy leading-tight">
                       {selectedProduct.profitMargin}
                     </span>
                   </div>
 
                   {/* Customer Rating */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.customerRating")}
                     </span>
                     <div className="flex items-center gap-1.5">
-                      <Star className="w-4 h-4 text-[#f5a623] fill-[#f5a623]" />
-                      <span className="text-[18px] font-black text-[#1a1a1a]">
+                      <Star className="w-4 h-4 text-brand-orange fill-brand-orange" />
+                      <span className="text-[18px] font-black text-navy">
                         {selectedProduct.rating}
                       </span>
                     </div>
@@ -396,21 +408,21 @@ const TopProductsList = ({ products = [] }: TopProductsListProps) => {
 
                   {/* Category */}
                   <div className="bg-white border border-gray-200 rounded-xl px-4 py-3.5">
-                    <span className="text-[10px] font-semibold text-[#8a8a8a] uppercase tracking-wider block mb-1.5">
+                    <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-1.5">
                       {t("detail.category")}
                     </span>
-                    <span className="text-[16px] font-bold text-[#1a1a1a] leading-tight">
+                    <span className="text-[16px] font-bold text-navy leading-tight">
                       {selectedProduct.category}
                     </span>
                   </div>
                 </div>
 
                 {/* Avg Revenue Per Unit Bar */}
-                <div className="mt-5 bg-[#e8f5ee] rounded-xl px-5 py-4 flex justify-between items-center">
-                  <span className="text-[13px] font-semibold text-[#2d6a4f]">
+                <div className="mt-5 bg-orange-50 rounded-xl px-5 py-4 flex justify-between items-center">
+                  <span className="text-[13px] font-bold text-brand-orange">
                     {t("detail.avgRevenue")}
                   </span>
-                  <span className="text-[18px] font-black text-[#2d6a4f]">
+                  <span className="text-[18px] font-black text-brand-orange">
                     {selectedProduct.price}
                   </span>
                 </div>

@@ -171,7 +171,7 @@ export function RestaurantSidebar() {
       className="border-none"
       style={
         {
-          "--sidebar": "#346853",
+          "--sidebar": "#1B3A57",
           "--sidebar-foreground": "#ffffff",
           "--sidebar-primary": "#ffffff",
           "--sidebar-accent": "rgba(255, 255, 255, 0.1)",

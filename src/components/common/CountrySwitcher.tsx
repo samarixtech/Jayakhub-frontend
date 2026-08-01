@@ -150,7 +150,7 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
         onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
         className={
           isNavbar
-            ? "group flex w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-[#E8F4F1]/10 md:bg-white text-[#E8F4F1] md:text-[#2C2C2C] hover:bg-[#E8F4F1]/20 md:hover:bg-[#0B5D4E] md:hover:text-white transition-all md:shadow-sm"
+            ? "group flex w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-white/10 md:bg-navy text-white hover:bg-white/20 md:hover:bg-[#14283B] transition-all md:shadow-sm"
             : "group flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all"
         }
       >
@@ -187,7 +187,7 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
           size={isNavbar ? 16 : 14}
           className={`${
             isNavbar
-              ? "text-[#E8F4F1] md:text-[#0B5D4E] md:group-hover:text-white"
+              ? "text-white"
               : "text-gray-500"
           } transition-all duration-300 ${
             isCountryDropdownOpen ? "rotate-180" : ""
@@ -201,7 +201,7 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
             isNavbar ? "end-0 z-60" : "end-0 z-50"
           } w-64 flex flex-col ${
             isNavbar
-              ? "bg-[#E8F4F1] text-black border border-[#0B5D4E] shadow-xl"
+              ? "bg-accent text-navy border border-primary/30 shadow-xl"
               : "bg-white border rounded-lg shadow-xl"
           } rounded-lg overflow-hidden animate-fade-in`}
           style={{ maxHeight: "17rem" }}
@@ -213,7 +213,7 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
               placeholder="Search country..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-3 py-2 border border-[#0B5D4E]/30 rounded-lg text-sm text-black bg-white outline-none focus:ring-2 focus:ring-[#0B5D4E]/30"
+              className="w-full px-3 py-2 border border-primary/30 rounded-lg text-sm text-black bg-white outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
 
@@ -226,8 +226,8 @@ const CountrySwitcher: React.FC<CountrySwitcherProps> = ({
                 onClick={() => handleCountrySelect(country)}
                 className={`w-full flex items-center justify-between px-3 py-2 mx-1 rounded-lg transition-all duration-200 ${
                   selectedCountry.code === country.code
-                    ? "bg-[#0B5D4E]/10 text-[#0B5D4E] font-semibold"
-                    : "text-[#2C2C2C] hover:bg-[#0B5D4E] hover:text-white"
+                    ? "bg-primary/10 text-primary font-semibold"
+                    : "text-navy hover:bg-primary hover:text-white"
                 }`}
                 style={{ width: "calc(100% - 0.5rem)" }}
               >

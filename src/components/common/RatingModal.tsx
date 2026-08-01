@@ -124,8 +124,8 @@ export function RatingModal({
     >
       <div className="flex items-start justify-between mb-8 -mt-2 -mx-2">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-[#E8F5F0] flex items-center justify-center shrink-0">
-            <Star className="w-6 h-6 text-[#346853]" />
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <Star className="w-6 h-6 text-primary" />
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900 leading-tight">
@@ -173,7 +173,7 @@ export function RatingModal({
                     <h5 className="font-semibold text-gray-900 text-sm">
                       {item.name}
                     </h5>
-                    <span className="font-semibold text-[#346853] text-sm shrink-0">
+                    <span className="font-semibold text-primary text-sm shrink-0">
                       ${item.price.toFixed(2)}
                     </span>
                   </div>
@@ -195,7 +195,7 @@ export function RatingModal({
 
         {/* Delivery */}
         <div className="bg-gray-50 rounded-2xl p-5 flex gap-4 items-center">
-          <div className="w-14 h-14 rounded-full overflow-hidden bg-emerald-100 shrink-0 relative flex items-center justify-center">
+          <div className="w-14 h-14 rounded-full overflow-hidden bg-secondary/20 shrink-0 relative flex items-center justify-center">
             {orderInfo.delivery.driverImage ? (
               <Image
                 src={orderInfo.delivery.driverImage}
@@ -204,7 +204,7 @@ export function RatingModal({
                 className="object-cover"
               />
             ) : (
-              <Bike className="w-6 h-6 text-emerald-600" />
+              <Bike className="w-6 h-6 text-navy" />
             )}
           </div>
           <div className="flex-1">
@@ -223,7 +223,7 @@ export function RatingModal({
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder={t("commentPlaceholder")}
-            className="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-700 outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853] transition-all resize-none h-24"
+            className="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-700 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none h-24"
           />
         </div>
 
@@ -232,7 +232,7 @@ export function RatingModal({
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="w-full bg-[#82A896] hover:bg-[#6e9281] disabled:opacity-70 disabled:cursor-not-allowed text-white font-medium py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-brand-orange hover:bg-brand-orange/80 disabled:opacity-70 disabled:cursor-not-allowed text-white font-medium py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
             {isSubmitting ? t("submitting") : t("submitRating")}
           </button>

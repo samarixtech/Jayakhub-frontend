@@ -37,7 +37,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
       );
     if (s === "delivered")
       return (
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#e8f6f0] text-[#1eb589]">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#d1fae5] text-[#2C5F2D]">
           {t("recentOrders.status.delivered")}
         </span>
       );
@@ -58,7 +58,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
     {
       header: t("recentOrders.columns.order"),
       cell: (item) => (
-        <span className="text-[13px] font-bold text-[#1b2d22]">
+        <span className="text-[13px] font-bold text-[#1B3A57]">
           {item.orderId}
         </span>
       ),
@@ -68,7 +68,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
     {
       header: t("recentOrders.columns.customer"),
       cell: (item) => (
-        <div className="text-[13px] font-bold text-[#1b2d22] truncate max-w-[150px]">
+        <div className="text-[13px] font-bold text-[#1B3A57] truncate max-w-[150px]">
           {item.customerName}
         </div>
       ),
@@ -78,7 +78,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
     {
       header: t("recentOrders.columns.items"),
       cell: (item) => (
-        <span className="text-[13px] font-medium text-[#1b2d22]">
+        <span className="text-[13px] font-medium text-[#1B3A57]">
           {t("recentOrders.itemsCount", { count: item.itemCount || 0 })}
         </span>
       ),
@@ -88,7 +88,7 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
     {
       header: t("recentOrders.columns.total"),
       cell: (item) => (
-        <span className="text-[13px] font-bold text-[#1b2d22]">
+        <span className="text-[13px] font-bold text-[#1B3A57]">
           {formatCurrency(item.totalPrice)}
         </span>
       ),
@@ -107,16 +107,16 @@ export const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
     <Card className="rounded-[16px] border-gray-100 shadow-sm flex flex-col w-full overflow-hidden">
       <CardHeader className="flex flex-row items-start justify-between pb-6 pt-6">
         <div className="space-y-1">
-          <CardTitle className="text-[16px] font-bold text-[#1b2d22]">
+          <CardTitle className="text-[16px] font-bold text-[#1B3A57]">
             {t("recentOrders.title")}
           </CardTitle>
-          <CardDescription className="text-[12px] text-[#8ea89a] font-medium">
+          <CardDescription className="text-[12px] text-[#8B7355] font-medium">
             {t("recentOrders.subtitle")}
           </CardDescription>
         </div>
         <Link
           href="/restaurant/orders"
-          className="text-[13px] font-bold text-[#357252] flex items-center gap-1 hover:underline"
+          className="text-[13px] font-bold text-[#FF6B35] flex items-center gap-1 hover:underline"
         >
           {t("recentOrders.viewAll")} <span>→</span>
         </Link>

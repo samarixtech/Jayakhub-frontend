@@ -58,11 +58,11 @@ export default function MenuVariantsView() {
               setIsCreating(true);
             }}
             variant="outline"
-            className="w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-gray-50 hover:border-[#1F4D36] group transition-all cursor-pointer"
+            className="w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-gray-50 hover:border-navy group transition-all cursor-pointer"
           >
-            <Plus className="size-5 text-emerald-bg mb-2" />
+            <Plus className="size-5 text-navy mb-2" />
             <div className="flex flex-col items-center gap-1">
-              <span className="text-gray-500 font-medium group-hover:text-[#1F4D36]">
+              <span className="text-navy font-bold group-hover:text-navy/80">
                 {t("createNew")}
               </span>
               <span className="text-xs text-gray-400 font-normal">

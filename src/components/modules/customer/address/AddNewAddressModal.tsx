@@ -254,7 +254,7 @@ export default function AddNewAddressModal({
             type="button"
             onClick={handleSaveAddress}
             disabled={loading}
-            className="flex-1 h-12 rounded-full font-bold bg-[#346853] hover:bg-[#2a5443] text-white shadow-lg shadow-emerald-900/10"
+            className="flex-1 h-12 rounded-full font-bold bg-primary hover:bg-[#e85a2a] text-white shadow-lg shadow-primary/10"
           >
             {loading ? (
               <>

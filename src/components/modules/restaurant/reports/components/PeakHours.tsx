@@ -62,7 +62,7 @@ const PeakHours = ({ peakHours }: PeakHoursProps) => {
   return (
     <div className="w-full">
       <div className="mb-8">
-        <h2 className="text-[18px] font-black text-[#1b2d22]">{t("title")}</h2>
+        <h2 className="text-[18px] font-black text-[#1B3A57]">{t("title")}</h2>
         <p className="text-[14px] font-bold text-[#94a3b8] mt-0.5">
           {t("subtitle")}
         </p>
@@ -71,7 +71,7 @@ const PeakHours = ({ peakHours }: PeakHoursProps) => {
       <div className="space-y-7">
         {data.map((item, index) => (
           <div key={index} className="space-y-2.5">
-            <div className="flex justify-between items-center text-[15px] font-black text-[#1b2d22]">
+            <div className="flex justify-between items-center text-[15px] font-black text-[#1B3A57]">
               <span>{item.timeRange}</span>
               <span>{item.orders} {t("orders")}</span>
             </div>

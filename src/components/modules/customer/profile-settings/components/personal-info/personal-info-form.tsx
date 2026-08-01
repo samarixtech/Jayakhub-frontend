@@ -43,7 +43,7 @@ export function PersonalInfoForm({
                 <FormControl>
                   <Input
                     placeholder={t("first_name_placeholder")}
-                    className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
+                    className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-primary"
                     {...field}
                   />
                 </FormControl>
@@ -64,7 +64,7 @@ export function PersonalInfoForm({
                 <FormControl>
                   <Input
                     placeholder={t("last_name_placeholder")}
-                    className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-emerald-bg"
+                    className="rounded-2xl border-gray-100 bg-gray-50/50 h-12 focus-visible:ring-primary"
                     {...field}
                   />
                 </FormControl>
@@ -106,7 +106,7 @@ export function PersonalInfoForm({
                   <PhoneInput
                     defaultCountry="PK"
                     placeholder={t("phone_placeholder")}
-                    className="rounded-2xl border-gray-100 bg-gray-100/50 h-12 focus-visible:ring-emerald-bg"
+                    className="rounded-2xl border-gray-100 bg-gray-100/50 h-12 focus-visible:ring-primary"
                     value={field.value}
                     onChange={field.onChange}
                   />
@@ -121,7 +121,7 @@ export function PersonalInfoForm({
           <Button
             type="submit"
             disabled={isPending || !form.formState.isDirty}
-            className="bg-emerald-bg hover:bg-emerald-bg-hover text-white font-bold rounded-xl h-12 px-8 min-w-[180px]"
+            className="bg-primary hover:bg-[#e85a2a] text-white font-bold rounded-xl h-12 px-8 min-w-[180px]"
           >
             {isPending ? (
               <span className="flex items-center justify-center">

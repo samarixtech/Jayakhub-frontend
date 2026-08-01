@@ -165,7 +165,7 @@ const DiscoveryRestaurantCard = ({
           </div>
           {!isCompact &&
             (data.deliveryFee === 0 ? (
-              <div className="flex items-center gap-1.5 text-emerald-600 font-bold">
+              <div className="flex items-center gap-1.5 text-forest-green font-bold">
                 <Bike className="h-4 w-4" />
                 <span>{t("freeDelivery")}</span>
               </div>

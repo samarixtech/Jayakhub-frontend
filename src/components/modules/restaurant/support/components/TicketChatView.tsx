@@ -245,7 +245,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
   if (loading) {
     return (
       <div className="w-full max-w-[1200px] mx-auto py-12 flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 text-[#0b5d4e] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#FF6B35] animate-spin" />
         <p className="text-[14px] text-gray-500 mt-4">{t("loadingDetails")}</p>
       </div>
     );
@@ -257,7 +257,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
         <p className="text-[14px] text-gray-500">{t("ticketNotFound")}</p>
         <button
           onClick={onBack}
-          className="mt-4 inline-flex items-center gap-1.5 text-[#0b5d4e] font-semibold hover:underline"
+          className="mt-4 inline-flex items-center gap-1.5 text-[#FF6B35] font-semibold hover:underline"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("back")}
@@ -275,7 +275,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
             <div className="flex items-center justify-between sm:justify-start gap-3">
               <button
                 onClick={onBack}
-                className="inline-flex items-center gap-1.5 text-[#0b5d4e] hover:text-[#094d40] text-[13px] font-bold transition-colors shrink-0"
+                className="inline-flex items-center gap-1.5 text-[#FF6B35] hover:text-[#E85A2A] text-[13px] font-bold transition-colors shrink-0"
               >
                 <ArrowLeft className="w-4 h-4" />
                 {t("back")}
@@ -324,14 +324,14 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
               key={msg.id}
               className={`flex gap-2.5 max-w-[92%] sm:max-w-[85%] ${msg.isCurrentUser ? "ml-auto flex-row-reverse" : "mr-auto"}`}
             >
-              <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[11px] sm:text-[12px] font-bold shrink-0 text-white shadow-sm ${msg.isCurrentUser ? "bg-[#0b5d4e]" : "bg-gray-400"}`}>
+              <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[11px] sm:text-[12px] font-bold shrink-0 text-white shadow-sm ${msg.isCurrentUser ? "bg-[#FF6B35]" : "bg-gray-400"}`}>
                 {msg.avatarLetter}
               </div>
 
               <div className="flex flex-col min-w-0">
                 <div
                   className={`rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] leading-relaxed text-[#2c2c2c] break-words ${msg.isCurrentUser
-                    ? "bg-[#e8f4f1] rounded-tr-none border border-[#d2e9e3]"
+                    ? "bg-[#FFF8F0] rounded-tr-none border border-[#fdecd4]"
                     : "bg-white rounded-tl-none border border-gray-100"
                     }`}
                 >
@@ -369,7 +369,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
                               href={url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 bg-white hover:bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-[#0b5d4e] transition-colors shadow-sm"
+                              className="flex items-center gap-1.5 bg-white hover:bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-semibold text-[#FF6B35] transition-colors shadow-sm"
                               title={fileName}
                             >
                               <Paperclip className="w-3 h-3 text-gray-400" />
@@ -400,7 +400,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
             </div>
           ) : (
             <>
-              <div className="border-2 border-[#0b5d4e] rounded-xl focus-within:ring-2 focus-within:ring-[#0b5d4e]/20 bg-white transition-all overflow-hidden flex flex-col shadow-sm">
+              <div className="border-2 border-[#FF6B35] rounded-xl focus-within:ring-2 focus-within:ring-[#FF6B35]/20 bg-white transition-all overflow-hidden flex flex-col shadow-sm">
                 <textarea
                   rows={2}
                   value={replyText}
@@ -413,7 +413,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-8 h-8 rounded-full hover:bg-gray-200/60 flex items-center justify-center transition-colors text-gray-500 hover:text-[#0b5d4e]"
+                    className="w-8 h-8 rounded-full hover:bg-gray-200/60 flex items-center justify-center transition-colors text-gray-500 hover:text-[#FF6B35]"
                     title={t("browse")}
                   >
                     <Paperclip className="w-4 h-4" />
@@ -422,7 +422,7 @@ export default function TicketChatView({ ticketId, onBack }: TicketChatViewProps
                   <button
                     onClick={handlePostComment}
                     disabled={submittingReply || (!replyText.trim() && attachedFiles.length === 0)}
-                    className="flex items-center gap-1.5 bg-[#0b5d4e] hover:bg-[#094d40] text-white text-[12px] font-bold px-4 py-2 rounded-full transition-colors shadow-sm tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-1.5 bg-[#FF6B35] hover:bg-[#E85A2A] text-white text-[12px] font-bold px-4 py-2 rounded-full transition-colors shadow-sm tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submittingReply ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />

@@ -12,8 +12,8 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
       {/* Total Spent */}
       <Card className="rounded-[20px] border border-gray-100/50 shadow-[0_4px_20px_rgba(0,0,0,0.03)] pt-5 pb-5 px-5 bg-white">
         <div className="flex gap-4 items-center">
-          <div className="w-[46px] h-[46px] rounded-full bg-[#f0fdf4] flex items-center justify-center shrink-0">
-            <span className="text-[#10b981] text-lg font-bold stroke-[2px]">
+          <div className="w-[46px] h-[46px] rounded-full bg-forest-green/10 flex items-center justify-center shrink-0">
+            <span className="text-forest-green text-lg font-bold stroke-[2px]">
               <FaMoneyBill />
             </span>
           </div>
@@ -31,13 +31,13 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
       {/* This Month */}
       <Card className="rounded-[20px] border border-gray-100/50 shadow-[0_4px_20px_rgba(0,0,0,0.03)] pt-5 pb-5 px-5 bg-white">
         <div className="flex gap-4 items-center">
-          <div className="w-[46px] h-[46px] rounded-full bg-[#f0f9ff] flex items-center justify-center shrink-0">
+          <div className="w-[46px] h-[46px] rounded-full bg-secondary/15 flex items-center justify-center shrink-0">
             <svg
               width="20"
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#2563eb"
+              stroke="#B8860B"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -68,13 +68,13 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
       {/* Pending */}
       <Card className="rounded-[20px] border border-gray-100/50 shadow-[0_4px_20px_rgba(0,0,0,0.03)] pt-5 pb-5 px-5 bg-white">
         <div className="flex gap-4 items-center">
-          <div className="w-[46px] h-[46px] rounded-full bg-[#fff7ed] flex items-center justify-center shrink-0">
+          <div className="w-[46px] h-[46px] rounded-full bg-primary/10 flex items-center justify-center shrink-0">
             <svg
               width="20"
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#ea580c"
+              stroke="#FF6B35"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -97,13 +97,13 @@ export function PaymentHistoryMetrics({ summary }: { summary: any }) {
       {/* Next Billing */}
       <Card className="rounded-[20px] border border-gray-100/50 shadow-[0_4px_20px_rgba(0,0,0,0.03)] pt-5 pb-5 px-5 bg-white">
         <div className="flex gap-4 items-center">
-          <div className="w-[46px] h-[46px] rounded-full bg-[#f5f3ff] flex items-center justify-center shrink-0">
+          <div className="w-[46px] h-[46px] rounded-full bg-navy/10 flex items-center justify-center shrink-0">
             <svg
               width="20"
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#7c3aed"
+              stroke="#1B3A57"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"

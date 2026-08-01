@@ -59,8 +59,8 @@ const AllPayoutsSheet = ({ open, onOpenChange, payouts, onPayoutClick }: AllPayo
                     <div className="flex-1 overflow-y-auto px-7 pb-6">
                         {/* Total bar */}
                         <div className="bg-[#f0f9f4] rounded-xl px-5 py-4 mb-6 flex justify-between items-center">
-                            <span className="text-[14px] font-semibold text-[#2d6a4f]">{t("totalPayouts", { count: payouts.length })}</span>
-                            <span className="text-[22px] font-black text-[#2d6a4f]">{total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
+                            <span className="text-[14px] font-semibold text-[#2C5F2D]">{t("totalPayouts", { count: payouts.length })}</span>
+                            <span className="text-[22px] font-black text-[#2C5F2D]">{total.toLocaleString("en-US", { minimumFractionDigits: 2 })}</span>
                         </div>
 
                         {/* Table */}

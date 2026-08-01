@@ -29,14 +29,14 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   }, [t]);
 
   return (
-    <Card className="border-none bg-emerald-bg overflow-hidden rounded-2xl shadow-md">
+    <Card className="border-none bg-gradient-to-r from-[#FF6B35] to-[#E85A2A] overflow-hidden rounded-2xl shadow-md">
       <CardContent className="flex items-center justify-between px-6 py-5">
         <div className="space-y-1">
           <h1 className="text-white text-xl font-bold flex items-center gap-2">
             {greeting}, {ownerName || t("greeting.fallbackName")}{" "}
             <span className="animate-bounce-short">👋</span>
           </h1>
-          <p className="text-emerald-100/80 text-sm font-medium">
+          <p className="text-[#FFF8F0]/90 text-sm font-medium">
             {t("greeting.subtitle")}
           </p>
         </div>
@@ -53,7 +53,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             checked={isOnline}
             onCheckedChange={setIsOnline}
             disabled={isToggling}
-            className="data-[state=checked]:bg-[#1eb589] data-[state=unchecked]:bg-slate-400/50 disabled:opacity-50"
+            className="data-[state=checked]:bg-[#1B3A57] data-[state=unchecked]:bg-slate-400/50 disabled:opacity-50"
           />
         </div>
       </CardContent>

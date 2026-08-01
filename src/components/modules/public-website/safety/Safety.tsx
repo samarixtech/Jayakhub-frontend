@@ -47,11 +47,11 @@ export default function Safety() {
     return (
         <div className="bg-[#FAFAFA] min-h-screen font-sans">
             {/* Hero Section (Contact Page Style) */}
-            <section className="bg-[#0B5D4E] pt-32 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            <section className="bg-navy pt-32 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-white/5 rounded-full blur-[120px]" />
-                    <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#F5A623]/10 rounded-full blur-[100px]" />
+                    <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[100px]" />
                 </div>
 
                 <div className="max-w-5xl mx-auto text-center relative z-10">
@@ -61,13 +61,13 @@ export default function Safety() {
 
                     <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-8">
                         {t('hero.title_main')} <br />
-                        <span className="text-[#FE8C34] relative inline-block">
+                        <span className="text-secondary relative inline-block">
                             {t('hero.title_highlight')}
                             {/* Custom Underline Curve */}
                             <svg
                                 viewBox="0 0 300 20"
                                 fill="none"
-                                className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[110%] h-auto text-[#FE8C34]"
+                                className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[110%] h-auto text-secondary"
                             >
                                 <path
                                     d="M10 15C100 5 200 5 290 15"
@@ -88,7 +88,7 @@ export default function Safety() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {features.map((feature, index) => (
                             <div key={index} className="bg-white p-8 rounded-[2rem] shadow-xl border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
-                                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm border border-gray-100 text-[#0B5D4E]">
+                                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-6 shadow-sm border border-gray-100 text-navy">
                                     <feature.icon className="w-6 h-6" />
                                 </div>
                                 <h3 className="text-xl font-bold text-[#0a2920] mb-3">{feature.title}</h3>

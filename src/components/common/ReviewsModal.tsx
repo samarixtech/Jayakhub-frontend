@@ -200,7 +200,7 @@ export function ReviewsModal({
                   <div key={idx} className="flex flex-col">
                     <div className="flex items-start gap-4 mb-3">
                       {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-800 font-bold flex items-center justify-center text-lg shrink-0">
+                      <div className="w-10 h-10 rounded-full bg-secondary/20 text-navy font-bold flex items-center justify-center text-lg shrink-0">
                         {review.userName
                           ? review.userName.charAt(0).toUpperCase()
                           : "U"}
@@ -241,7 +241,7 @@ export function ReviewsModal({
                           (review.orderedItems || []).map((item, i) => (
                             <div
                               key={i}
-                              className="flex items-center gap-1.5 bg-emerald-50/50 text-emerald-700 px-2.5 py-1 rounded-md text-xs font-semibold border border-emerald-100/50"
+                              className="flex items-center gap-1.5 bg-forest-green/10 text-forest-green px-2.5 py-1 rounded-md text-xs font-semibold border border-forest-green/20"
                             >
                               <CheckCircle2 className="w-3.5 h-3.5" />
                               <span>Ordered {item}</span>

@@ -50,7 +50,7 @@ export default function Partner() {
         { icon: Users, text: t("restaurant.benefits.customers") },
         { icon: DollarSign, text: t("restaurant.benefits.rates") },
       ],
-      gradient: "from-orange-500 to-amber-500",
+      gradient: "from-secondary to-[#B8860B]",
       href: "/partners",
     },
   ];
@@ -84,7 +84,7 @@ export default function Partner() {
           {/* Background Decorations (Moved inside card) */}
           <div className="absolute inset-0">
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px]" />
-            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[100px]" />
+            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px]" />
           </div>
 
           {/* Section Header */}
@@ -193,7 +193,7 @@ export default function Partner() {
               { value: "8", label: t("stats.cities") },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">
+                <div className="text-4xl lg:text-5xl font-bold text-secondary mb-2">
                   {stat.value}
                 </div>
                 <div className="text-white/50">{stat.label}</div>

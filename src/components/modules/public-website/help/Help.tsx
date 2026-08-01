@@ -99,7 +99,7 @@ export default function Help() {
                                             : 'hover:bg-gray-50 text-gray-500'
                                             }`}
                                     >
-                                        <category.icon className={`w-5 h-5 ${activeCategory === category.id ? 'text-[#0B5D4E]' : 'text-gray-400'}`} />
+                                        <category.icon className={`w-5 h-5 ${activeCategory === category.id ? 'text-navy' : 'text-gray-400'}`} />
                                         <div className="flex-1">
                                             <h3 className={`font-medium text-sm ${activeCategory === category.id ? 'text-gray-900' : 'text-gray-600'}`}>
                                                 {category.name}
@@ -108,7 +108,7 @@ export default function Help() {
                                                 {category.description}
                                             </p>
                                         </div>
-                                        {activeCategory === category.id && <ArrowRight className="w-4 h-4 text-[#0B5D4E]" />}
+                                        {activeCategory === category.id && <ArrowRight className="w-4 h-4 text-navy" />}
                                     </button>
                                 ))}
                             </div>
@@ -119,8 +119,8 @@ export default function Help() {
                     <div className="flex-1 space-y-0">
                         {/* Selected Category Header */}
                         <div className="bg-white rounded-[2rem] px-8 pt-8 pb-4 flex items-start gap-6">
-                            <div className="w-12 h-12 rounded-2xl bg-[#E8F4F1] flex items-center justify-center flex-shrink-0">
-                                <currentCategory.icon className="w-6 h-6 text-[#0B5D4E]" />
+                            <div className="w-12 h-12 rounded-2xl bg-navy/10 flex items-center justify-center flex-shrink-0">
+                                <currentCategory.icon className="w-6 h-6 text-navy" />
                             </div>
                             <div>
                                 <h2 className="text-2xl font-bold text-gray-900">{currentCategory.name}</h2>
@@ -163,11 +163,11 @@ export default function Help() {
                             <p className="text-gray-500 mb-8">{t('contact.subtitle')}</p>
 
                             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                                <button className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-[#0B5D4E] hover:text-[#0B5D4E] transition-all shadow-sm w-full sm:w-auto justify-center">
+                                <button className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-navy hover:text-navy transition-all shadow-sm w-full sm:w-auto justify-center">
                                     <MessageCircle className="w-5 h-5" />
                                     {t('contact.chat')}
                                 </button>
-                                <button className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-[#0B5D4E] hover:text-[#0B5D4E] transition-all shadow-sm w-full sm:w-auto justify-center">
+                                <button className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-medium hover:border-navy hover:text-navy transition-all shadow-sm w-full sm:w-auto justify-center">
                                     <Mail className="w-5 h-5" />
                                     {t('contact.email')}
                                 </button>

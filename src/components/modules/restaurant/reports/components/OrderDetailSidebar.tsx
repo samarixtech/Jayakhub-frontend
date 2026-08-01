@@ -84,14 +84,14 @@ const OrderDetailSidebar = ({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        className="w-full sm:max-w-[420px] md:max-w-[460px] border-l border-gray-200 shadow-[-8px_0_24px_rgba(0,0,0,0.06)] p-0 flex flex-col overflow-hidden bg-[#f8f9fa] [&>button]:hidden right-0"
+        className="w-full sm:max-w-[420px] md:max-w-[460px] border-l border-gray-200 shadow-[-8px_0_24px_rgba(0,0,0,0.06)] p-0 flex flex-col overflow-hidden bg-white !bg-white [&>button]:hidden right-0"
         side="right"
       >
-        <div className="flex flex-col w-full h-full bg-[#f8f9fa]">
+        <div className="flex flex-col w-full h-full bg-white">
           {/* Header */}
           <div className="bg-white px-6 py-5 border-b border-gray-100 flex justify-between items-start shrink-0">
             <div>
-              <h2 className="text-[18px] font-bold text-[#1b2d22] leading-tight">
+              <h2 className="text-[18px] font-bold text-[#1B3A57] leading-tight">
                 {order.orderId}
               </h2>
               <p className="text-[12px] text-gray-400 font-medium mt-0.5">
@@ -115,7 +115,7 @@ const OrderDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("orderTotal")}
                 </span>
-                <span className="text-[20px] font-bold text-[#1b2d22]">
+                <span className="text-[20px] font-bold text-[#1B3A57]">
                   {finalTotal}
                 </span>
               </div>
@@ -131,7 +131,7 @@ const OrderDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("customer")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1b2d22]">
+                <span className="text-[14px] font-bold text-[#1B3A57]">
                   {order.customer}
                 </span>
               </div>
@@ -140,7 +140,7 @@ const OrderDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("orderSource")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1b2d22]">
+                <span className="text-[14px] font-bold text-[#1B3A57]">
                   {order.source}
                 </span>
               </div>
@@ -149,7 +149,7 @@ const OrderDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("paymentMethod")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1b2d22]">
+                <span className="text-[14px] font-bold text-[#1B3A57]">
                   {paymentMethod}
                 </span>
               </div>
@@ -158,7 +158,7 @@ const OrderDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("prepDuration")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1b2d22]">
+                <span className="text-[14px] font-bold text-[#1B3A57]">
                   {prepDuration}
                 </span>
               </div>
@@ -166,21 +166,21 @@ const OrderDetailSidebar = ({
 
             {/* Order Items */}
             <div>
-              <h3 className="text-[13px] font-bold text-[#1b2d22] mb-3">
+              <h3 className="text-[13px] font-bold text-[#1B3A57] mb-3">
                 {t("orderItems")}
               </h3>
               <div className="space-y-4">
                 {items.map((item, idx) => (
                   <div key={idx} className="flex justify-between items-start">
                     <div>
-                      <p className="text-[13px] font-bold text-[#1b2d22]">
+                      <p className="text-[13px] font-bold text-[#1B3A57]">
                         {item.name}
                       </p>
                       <p className="text-[11px] text-gray-400 mt-0.5">
                         {t("qty")} {item.qty} × {formatPrice(item.price)}
                       </p>
                     </div>
-                    <span className="text-[13px] font-bold text-[#1b2d22]">
+                    <span className="text-[13px] font-bold text-[#1B3A57]">
                       {formatPrice(item.total)}
                     </span>
                   </div>
@@ -194,21 +194,15 @@ const OrderDetailSidebar = ({
                 <span className="text-[12px] text-gray-500">
                   {t("subtotal")}
                 </span>
-                <span className="text-[12px] font-bold text-[#1b2d22]">
+                <span className="text-[12px] font-bold text-[#1B3A57]">
                   {subtotal}
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-[12px] text-gray-500">{t("tax")}</span>
-                <span className="text-[12px] font-bold text-[#1b2d22]">
-                  {tax}
-                </span>
-              </div>
               <div className="flex justify-between items-center pt-2">
-                <span className="text-[13px] font-bold text-[#2d6a4f]">
+                <span className="text-[13px] font-bold text-brand-orange">
                   {t("total")}
                 </span>
-                <span className="text-[15px] font-black text-[#2d6a4f]">
+                <span className="text-[15px] font-black text-brand-orange">
                   {finalTotal}
                 </span>
               </div>

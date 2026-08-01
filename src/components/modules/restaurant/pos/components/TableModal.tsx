@@ -175,20 +175,20 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
         {/* Legend */}
         <div className="flex items-center gap-[18px] mb-[30px]">
           <div className="flex items-center gap-[6px]">
-            <div className="w-[18px] h-[12px] rounded-[4px] bg-[#9df3c4]"></div>
-            <span className="text-[14px] font-extrabold text-[#3e5648]">
+            <div className="w-[18px] h-[12px] rounded-[4px] bg-[#86efac]"></div>
+            <span className="text-[14px] font-extrabold text-[#8B7355]">
               {t("available")}
             </span>
           </div>
           <div className="flex items-center gap-[6px]">
             <div className="w-[18px] h-[12px] rounded-[4px] bg-[#ffadad]"></div>
-            <span className="text-[14px] font-extrabold text-[#3e5648]">
+            <span className="text-[14px] font-extrabold text-[#8B7355]">
               {t("occupied")}
             </span>
           </div>
           <div className="flex items-center gap-[6px]">
             <div className="w-[18px] h-[12px] rounded-[4px] bg-[#ffd066]"></div>
-            <span className="text-[14px] font-extrabold text-[#3e5648]">
+            <span className="text-[14px] font-extrabold text-[#8B7355]">
               {t("payPending")}
             </span>
           </div>
@@ -234,10 +234,10 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
                 titleClass = "text-[#cc7c50]";
                 detailsClass = "text-[#cc7c50] font-[800]";
               } else if (displayStatus === "Selected") {
-                bgClass = "bg-[#357252]";
+                bgClass = "bg-[#FF6B35]";
                 borderClass = "border-transparent";
                 titleClass = "text-white";
-                detailsClass = "text-[#759885] font-[800]";
+                detailsClass = "text-white/70 font-[800]";
               } else if (displayStatus === "Occupied") {
                 bgClass = "bg-[#fff5f5]";
                 borderClass = "border-[#ffadad]";
@@ -247,8 +247,8 @@ export default function TableModal({ open, onOpenChange }: TableModalProps) {
                 // Available
                 bgClass = "bg-[#f5fdf7]";
                 borderClass = "border-[#bbf4d4]";
-                titleClass = "text-[#1b2d22]";
-                detailsClass = "text-[#8ea89a] font-[800]";
+                titleClass = "text-[#1B3A57]";
+                detailsClass = "text-[#8B7355] font-[800]";
               }
 
               return (

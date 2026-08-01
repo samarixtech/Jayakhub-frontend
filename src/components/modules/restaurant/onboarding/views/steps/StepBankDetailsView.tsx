@@ -32,7 +32,7 @@ export default function StepBankDetailsView() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
-        <Typography variant="h3" className="text-xl font-bold text-gray-900">
+        <Typography variant="h3" className="text-xl font-bold text-navy">
           {t("title")}
         </Typography>
         <Typography className="text-gray-500 mt-1">
@@ -40,15 +40,15 @@ export default function StepBankDetailsView() {
         </Typography>
       </div>
 
-      <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4 flex items-start gap-4">
-        <div className="bg-emerald-bg p-2 rounded-lg text-white">
+      <div className="bg-orange-50/60 border border-orange-100/80 rounded-xl p-4 flex items-start gap-4">
+        <div className="bg-brand-orange p-2 rounded-lg text-white">
           <Lock className="w-5 h-5" />
         </div>
         <div>
-          <Typography className="text-emerald-bg font-bold text-sm">
+          <Typography className="text-navy font-bold text-sm">
             {t("sslTitle")}
           </Typography>
-          <Typography className="text-emerald-bg/80 text-xs mt-1">
+          <Typography className="text-gray-500 text-xs mt-1">
             {t("sslDesc")}
           </Typography>
         </div>
@@ -154,18 +154,18 @@ export default function StepBankDetailsView() {
           />
 
           <div className="pt-6 border-t border-gray-50">
-            <Typography className="font-bold text-gray-900 text-sm mb-3">
+            <Typography className="font-bold text-navy text-sm mb-3">
               {t("payoutScheduleTitle")}
             </Typography>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                <Calendar className="w-5 h-5 text-emerald-bg" />
+                <Calendar className="w-5 h-5 text-brand-orange" />
                 <span className="text-xs text-gray-600">
                   {t("weeklyPayouts")}
                 </span>
               </div>
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                <Clock className="w-5 h-5 text-emerald-bg" />
+                <Clock className="w-5 h-5 text-brand-orange" />
                 <span className="text-xs text-gray-600">
                   {t("processingTime")}
                 </span>
@@ -176,7 +176,7 @@ export default function StepBankDetailsView() {
           <div className="flex justify-end pt-4 border-t">
             <Button
               type="submit"
-              className="bg-emerald-bg text-white px-10 h-12 rounded-2xl font-bold hover:bg-emerald-bg-hover"
+              className="bg-[#FF6B35] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#E85A2A] shadow-md cursor-pointer"
             >
               {t("nextStep")}
             </Button>

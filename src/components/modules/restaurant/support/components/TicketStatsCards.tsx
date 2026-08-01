@@ -71,8 +71,8 @@ export const TicketStatsCards = ({ stats, isLoading }: TicketStatsCardsProps) =>
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <StatCard
-        icon={<Ticket className="w-5 h-5 text-[#346853]" />}
-        iconBg="bg-[#e8f3ef]"
+icon={<Ticket className="w-5 h-5 text-[#FF6B35]" />}
+            iconBg="bg-[#FFF8F0]"
         label={t("totalTickets")}
         value={stats?.total ?? t("na")}
         sub={
@@ -99,13 +99,13 @@ export const TicketStatsCards = ({ stats, isLoading }: TicketStatsCardsProps) =>
       />
 
       <StatCard
-        icon={<CheckCircle2 className="w-5 h-5 text-[#346853]" />}
-        iconBg="bg-[#e8f3ef]"
+icon={<CheckCircle2 className="w-5 h-5 text-[#2C5F2D]" />}
+            iconBg="bg-[#d1fae5]"
         label={t("resolved")}
         value={stats?.resolved ?? t("na")}
         sub={
           stats && stats.total > 0 ? (
-            <p className="text-[11px] text-[#346853]">
+            <p className="text-[11px] text-[#2C5F2D]">
               {t("resolvedPercent", { percent: Math.round((stats.resolved / stats.total) * 100) })}
             </p>
           ) : undefined

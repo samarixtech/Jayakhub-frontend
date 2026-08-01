@@ -163,7 +163,7 @@ export const AllRestaurantsSection: React.FC<AllRestaurantsSectionProps> = ({
         >
           {isFetchingMore ? (
             <div className="flex items-center gap-2 text-sm text-gray-500 font-medium bg-gray-50 px-4 py-2 rounded-full border border-gray-100 shadow-sm">
-              <Loader2 className="w-4 h-4 animate-spin text-[#346853]" />
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
               <span>Loading more restaurants...</span>
             </div>
           ) : null}

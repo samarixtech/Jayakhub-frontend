@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Minus, X, Check } from "lucide-react";
+import { Plus, Minus, X, Check, UtensilsCrossed } from "lucide-react";
 import Image from "next/image";
 import { useCLC } from "@/context/CLCContext";
 import { useTranslations } from "next-intl";
@@ -102,6 +102,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   if (!item) return null;
 
+  const itemImage = item.imageUrl || item.image;
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
@@ -114,14 +116,18 @@ const ProductModal: React.FC<ProductModalProps> = ({
         </div>
 
         {/* Header Image */}
-        <div className="relative h-44 sm:h-48 w-full bg-white flex items-center justify-center p-4 shrink-0 border-b border-gray-100">
-          <Image
-            width={300}
-            height={300}
-            src={item.imageUrl || item.image}
-            alt={item.name}
-            className="max-h-full max-w-full h-auto w-auto object-contain mx-auto"
-          />
+        <div className="relative h-44 sm:h-48 w-full bg-gray-100 flex items-center justify-center p-4 shrink-0 border-b border-gray-100">
+          {itemImage ? (
+            <Image
+              width={300}
+              height={300}
+              src={itemImage}
+              alt={item.name}
+              className="max-h-full max-w-full h-auto w-auto object-contain mx-auto"
+            />
+          ) : (
+            <UtensilsCrossed className="w-14 h-14 text-gray-300" />
+          )}
           <button
             onClick={onClose}
             className="absolute top-4 right-4 z-10 bg-gray-100 hover:bg-gray-200 rounded-full p-1.5 transition-colors cursor-pointer shadow-sm"
@@ -149,7 +155,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   </span>
                 </div>
               )}
-              <span className="text-xl font-bold text-[#346853]">
+              <span className="text-xl font-bold text-primary">
                 {currency}
                 {Math.max(
                   0,
@@ -206,8 +212,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
                                 <div
                                   className={`w-5 h-5 rounded-full border transition-colors flex items-center justify-center shrink-0 ${
                                     isSelected
-                                      ? "bg-[#346853] border-[#346853]"
-                                      : "border-gray-300 group-hover:border-[#346853]"
+                                      ? "bg-primary border-primary"
+                                      : "border-gray-300 group-hover:border-primary"
                                   }`}
                                 >
                                   {isSelected && (
@@ -248,7 +254,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
               value={specialInstructions}
               onChange={(e) => setSpecialInstructions(e.target.value)}
               placeholder={t("specialInstructionsPlaceholder")}
-              className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853] resize-none bg-gray-50/50"
+              className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none bg-gray-50/50"
             />
           </div>
         </div>
@@ -279,7 +285,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
             {/* Add Button */}
             <button
               onClick={handleAddToCartClick}
-              className="flex-1 h-12 bg-[#346853] text-white rounded-lg font-bold text-sm flex items-center justify-between px-6 hover:bg-[#2a5443] transition-colors active:scale-[0.98]"
+              className="flex-1 h-12 bg-primary text-white rounded-lg font-bold text-sm flex items-center justify-between px-6 hover:bg-[#e85a2a] transition-colors active:scale-[0.98]"
             >
               <span className="hidden sm:block">{t("addToCart")}</span>
               <span>

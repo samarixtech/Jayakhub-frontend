@@ -89,7 +89,7 @@ export default function LegalPageTemplate({
                                         key={section.id}
                                         href={`#${section.id}`}
                                         onClick={(e) => scrollToSection(section.id, e)}
-                                        className="block text-sm text-gray-600 hover:text-[#0B5D4E] hover:bg-[#0B5D4E]/5 px-4 py-3 rounded-lg transition-colors font-medium border-l-2 border-transparent hover:border-[#0B5D4E]"
+                                        className="block text-sm text-gray-600 hover:text-primary hover:bg-primary/5 px-4 py-3 rounded-lg transition-colors font-medium border-l-2 border-transparent hover:border-primary"
                                     >
                                         {section.title}
                                     </a>

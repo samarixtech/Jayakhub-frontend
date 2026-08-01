@@ -17,8 +17,8 @@ export const KnowledgeBaseCategories = () => {
       description: t("cat1Desc"),
       articles: 12,
       icon: <BookOpen className="w-[18px] h-[18px]" />,
-      color: "text-[#346853]",
-      bgColor: "bg-[#f2f8f6] border border-[#e8f3ef]",
+      color: "text-[#FF6B35]",
+      bgColor: "bg-[#FFF8F0] border border-[#fdecd4]",
     },
     {
       name: t("cat2Name"),

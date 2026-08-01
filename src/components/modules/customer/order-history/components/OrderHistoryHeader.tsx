@@ -20,7 +20,7 @@ export const OrderHistoryHeader = ({
       <div>
         <Typography
           variant="h2"
-          className="text-[#111827] font-black text-xl md:text-2xl"
+          className="text-black font-black text-xl md:text-2xl"
         >
           {t("title")}
         </Typography>

@@ -230,7 +230,7 @@ export default function PressPage() {
                   }`}
                 style={{ transitionDelay: `${index * 80}ms` }}
               >
-                <Award className="w-6 h-6 text-[#FE8C34] flex-shrink-0 mt-0.5" />
+                <Award className="w-6 h-6 text-secondary flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="font-bold text-white text-sm">{t(`awards.items.${key}.award`)}</div>
                   <div className="text-white/50 text-xs mt-1">{t(`awards.items.${key}.body`)}</div>

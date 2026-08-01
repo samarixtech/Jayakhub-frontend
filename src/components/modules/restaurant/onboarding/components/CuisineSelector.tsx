@@ -60,7 +60,7 @@ export const CuisineSelector: React.FC<CuisineSelectorProps> = ({ form }) => {
         <label className="text-[10px] font-bold uppercase text-gray-400">
           {t("label")}
         </label>
-        <span className="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-bold">
+        <span className="bg-navy/10 text-navy text-[10px] px-2.5 py-0.5 rounded-full font-bold">
           {t("selectedBadge", { count: form.watch("cuisineTypes")?.length || 0 })}
         </span>
       </div>
@@ -83,7 +83,7 @@ export const CuisineSelector: React.FC<CuisineSelectorProps> = ({ form }) => {
                         <label
                           className={`
                             cursor-pointer flex items-center gap-3 border rounded-xl p-3 w-full h-12 transition-all
-                            ${isChecked ? "border-emerald-bg bg-emerald-50/30" : "border-gray-100 bg-white hover:bg-gray-50"}
+                            ${isChecked ? "border-navy bg-navy/5" : "border-gray-100 bg-white hover:bg-gray-50"}
                           `}
                         >
                           <FormControl>
@@ -103,11 +103,11 @@ export const CuisineSelector: React.FC<CuisineSelectorProps> = ({ form }) => {
                                   );
                                 }
                               }}
-                              className="rounded-md border-gray-300 data-[state=checked]:bg-emerald-bg data-[state=checked]:border-emerald-bg"
+                              className="rounded-md border-gray-300 data-[state=checked]:bg-navy data-[state=checked]:border-navy"
                             />
                           </FormControl>
                           <span
-                            className={`text-sm font-medium ${isChecked ? "text-emerald-900" : "text-gray-600"}`}
+                            className={`text-sm font-bold ${isChecked ? "text-navy" : "text-gray-600"}`}
                           >
                             {t(`types.${CUISINE_TYPE_KEYS[type]}`)}
                           </span>

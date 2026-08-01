@@ -19,7 +19,7 @@ export function AuthHeader({
       <Typography
         variant="h2"
         className={cn(
-          "font-bold text-emerald-bg transition-all p-0",
+          "font-bold text-primary transition-all p-0",
           compact ? "text-2xl" : "text-3xl",
         )}
       >

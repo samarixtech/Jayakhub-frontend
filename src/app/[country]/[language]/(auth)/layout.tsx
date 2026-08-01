@@ -92,12 +92,12 @@ export default function AuthLayout({
   const content = getBrandingContent();
 
   return (
-    <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-[#F7FBFA]">
+    <div className="h-screen grid grid-cols-1 md:grid-cols-2 overflow-hidden bg-accent">
       {/* LEFT PANEL BRANDING AND ILLUSTRATON */}
-      <div className="hidden md:flex bg-emerald-bg text-white flex-col justify-between overflow-hidden relative">
+      <div className="hidden md:flex bg-navy text-white flex-col justify-between overflow-hidden relative">
         {content.showBack && (
           <Link href={content.backHref} className="m-5 inline-block w-fit">
-            <ArrowLeft className="hover:text-emerald-400 transition-colors" />
+            <ArrowLeft className="hover:text-secondary transition-colors" />
           </Link>
         )}
 
@@ -105,8 +105,8 @@ export default function AuthLayout({
           <h1 className="text-6xl font-black leading-tight mb-6 tracking-tight">
             {content.title}
           </h1>
-          <div className="h-1.5 w-20 bg-emerald-400 mb-6"></div>
-          <p className="text-lg text-emerald-100/80 max-w-sm leading-relaxed">
+          <div className="h-1.5 w-20 bg-secondary mb-6"></div>
+          <p className="text-lg text-white/80 max-w-sm leading-relaxed">
             {content.description}
           </p>
         </div>

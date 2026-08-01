@@ -37,7 +37,7 @@ const FinanceHeader = ({ restaurantName }: FinanceHeaderProps) => {
         <GlobalDateFilter />
         <Button
           variant="outline"
-          className="bg-[#346853] text-white hover:bg-[#2a5644] hover:text-white border-0 h-9 text-[13px]"
+          className="bg-[#FF6B35] text-white hover:bg-[#E85A2A] hover:text-white border-0 h-9 text-[13px]"
           onClick={onExport}
           disabled={isExporting}
         >

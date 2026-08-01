@@ -6,14 +6,14 @@ import { useTranslations } from "next-intl";
 
 export function StatusTimeline() {
   const t = useTranslations("RestaurantDashboard.Status.timeline");
-  
+
   const TIMELINE_STEPS = [
     {
       title: t("step1.title"),
       description: t("step1.description"),
       icon: Check,
       status: "completed",
-      bgColor: "bg-emerald-500",
+      bgColor: "bg-navy",
       iconColor: "text-white",
     },
     {
@@ -21,7 +21,7 @@ export function StatusTimeline() {
       description: t("step2.description"),
       icon: Clock,
       status: "current",
-      bgColor: "bg-[#346853]",
+      bgColor: "bg-[#FF6B35]",
       iconColor: "text-white",
     },
     {
@@ -55,7 +55,7 @@ export function StatusTimeline() {
               <Icon className={`w-5 h-5 ${step.iconColor}`} />
             </div>
             <div className="pt-0.5">
-              <Typography className="text-sm font-bold text-gray-900">
+              <Typography className="text-sm font-bold text-navy">
                 {step.title}
               </Typography>
               <Typography className="text-xs text-gray-500 mt-0.5">

@@ -84,7 +84,7 @@ export const PaymentCard = ({
 
         {/* Number */}
         <div className="relative z-10 mt-4">
-          <div className="flex items-center gap-3 text-xl sm:text-2xl font-mono tracking-widest opacity-90 drop-shadow-md">
+          <div className="flex items-center justify-between text-lg sm:text-xl font-mono tracking-wide opacity-90 drop-shadow-md">
             <span>••••</span>
             <span>••••</span>
             <span>••••</span>

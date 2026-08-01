@@ -70,7 +70,7 @@ export default function LoginView() {
                   <FormControl>
                     <Input
                       placeholder={t("emailPlaceholder")}
-                      className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                      className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-primary/10 focus-visible:border-primary"
                       {...field}
                     />
                   </FormControl>
@@ -95,7 +95,7 @@ export default function LoginView() {
               <div className="flex justify-end mt-2">
                 <Link
                   href="/forget-password"
-                  className="text-xs text-gray-400 hover:text-emerald-bg transition-colors font-bold"
+                  className="text-xs text-gray-400 hover:text-primary transition-colors font-bold"
                 >
                   {t("forgotPassword")}
                 </Link>
@@ -105,7 +105,7 @@ export default function LoginView() {
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full h-13 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
+              className="w-full h-13 bg-primary hover:[#e85a2a] text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
             >
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -120,7 +120,7 @@ export default function LoginView() {
           {t("noAccount")}{" "}
           <Link
             href="/register"
-            className="text-emerald-bg font-bold hover:underline"
+            className="text-primary font-bold hover:underline"
           >
             {t("createAccount")}
           </Link>

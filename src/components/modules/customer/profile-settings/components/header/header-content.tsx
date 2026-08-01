@@ -23,7 +23,7 @@ export function HeaderContent({
   return (
     <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 w-full">
       <div>
-        <Typography variant="h2" className="text-[#111827] font-black text-2xl">
+        <Typography variant="h2" className="text-black font-black text-2xl">
           {t("title")}
         </Typography>
         <Typography variant="small" className="text-gray-500">
@@ -50,7 +50,7 @@ export function HeaderContent({
           className={`rounded-full h-11 px-6 shadow-sm text-white min-w-[160px] ${
             saveDisabled
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-emerald-bg hover:bg-emerald-700"
+              : "bg-primary hover:bg-[#e85a2a]"
           }`}
         >
           {isPending ? (

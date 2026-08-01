@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   //   }
   //   return config;
   // },
+  devIndicators: false,
   images: {
     remotePatterns: [
       {

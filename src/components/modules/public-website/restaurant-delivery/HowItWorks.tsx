@@ -19,12 +19,12 @@ export function HowItWorks() {
           {steps.map((s, i) => (
             <div
               key={s.n}
-              className="grid grid-cols-[72px_1fr_auto] md:grid-cols-[72px_1fr_auto] gap-7 items-center p-8 rounded-[18px] mb-5 border transition-all duration-300 hover:border-orange-400 hover:translate-x-1"
+              className="grid grid-cols-[72px_1fr_auto] md:grid-cols-[72px_1fr_auto] gap-7 items-center p-8 rounded-[18px] mb-5 border transition-all duration-300 hover:border-navy hover:translate-x-1"
               style={{ background: C.cream, borderColor: C.line, animationDelay: `${i * 0.1}s` }}
             >
               <div
                 className="w-16 h-16 rounded-[16px] flex items-center justify-center text-[28px] font-bold text-white"
-                style={{ background: `linear-gradient(135deg,${C.green},${C.greenDeep})`, boxShadow: "0 6px 16px rgba(11,93,78,.25)" }}
+                style={{ background: `linear-gradient(135deg,${C.green},${C.greenDeep})`, boxShadow: "0 6px 16px rgba(27,58,87,.25)" }}
               >
                 {s.n}
               </div>

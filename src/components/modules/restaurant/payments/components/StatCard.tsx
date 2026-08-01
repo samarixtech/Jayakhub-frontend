@@ -9,7 +9,7 @@ const StatCard = ({ label, value, trend, icon, iconBg }: {
             <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${iconBg}`}>{icon}</div>
         </div>
         <span className="text-[28px] font-black text-[#1a1a1a] leading-tight">{value}</span>
-        <span className="text-[12px] font-semibold text-emerald-600">{trend}</span>
+        <span className="text-[12px] font-semibold text-[#FF6B35]">{trend}</span>
     </div>
 );
 

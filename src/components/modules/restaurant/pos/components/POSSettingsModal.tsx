@@ -215,14 +215,14 @@ export default function POSSettingsModal({
                 placeholder={t("tableNamePlaceholder")}
                 value={newTableName}
                 onChange={(e) => setNewTableName(e.target.value)}
-                className="flex-1 h-10 px-3 bg-white border border-gray-200 rounded-md text-[13px] font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#357252]/20 focus:border-[#357252]"
+                className="flex-1 h-10 px-3 bg-white border border-gray-200 rounded-md text-[13px] font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/20 focus:border-[#FF6B35]"
               />
               <input
                 type="number"
                 placeholder={t("seatsPlaceholder")}
                 value={newTableSeats}
                 onChange={(e) => setNewTableSeats(e.target.value)}
-                className="w-[80px] h-10 px-3 bg-white border border-gray-200 rounded-md text-[13px] font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#357252]/20 focus:border-[#357252]"
+                className="w-[80px] h-10 px-3 bg-white border border-gray-200 rounded-md text-[13px] font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF6B35]/20 focus:border-[#FF6B35]"
               />
               {editingTableId && (
                 <button
@@ -235,7 +235,7 @@ export default function POSSettingsModal({
               <button
                 onClick={handleSaveTable}
                 disabled={isSaving}
-                className={`h-10 px-4 text-white rounded-md text-[13px] font-bold flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap disabled:opacity-75 disabled:cursor-not-allowed ${editingTableId ? "bg-[#357252] hover:bg-[#2a5a41]" : "bg-[#357252] hover:bg-[#2a5a41]"}`}
+                className={`h-10 px-4 text-white rounded-md text-[13px] font-bold flex items-center gap-1.5 transition-colors shadow-sm whitespace-nowrap disabled:opacity-75 disabled:cursor-not-allowed bg-[#FF6B35] hover:bg-[#E85A2A]`}
               >
                 {isSaving ? (
                   <Loader2 className="w-[16px] h-[16px] stroke-[2.5px] animate-spin" />

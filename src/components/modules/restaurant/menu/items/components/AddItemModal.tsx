@@ -88,6 +88,7 @@ export function AddItemModal({
           isLoading={isLoading}
           onImport={handleImport}
           onCancel={() => handleOpenChange(false)}
+          onParsedDataChange={setParsedData}
         />
       )}
     </GlobalModal>

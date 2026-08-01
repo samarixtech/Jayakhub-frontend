@@ -35,7 +35,7 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-8">
       {/* SECTION HEADER */}
       <div className="flex items-center gap-3 border-b border-gray-50">
-        <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+        <div className="p-2 rounded-xl bg-orange-50 text-brand-orange">
           <ImageIcon className="w-5 h-5" />
         </div>
         <Typography className="font-semibold text-gray-900">
@@ -50,10 +50,10 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
           className={cn(
             "relative w-full aspect-video md:aspect-[2.5/1] border-2 border-dashed rounded-[24px] flex flex-col items-center justify-center transition-all overflow-hidden bg-gray-50/50 group",
             imagePreview
-              ? "border-emerald-500/50"
+              ? "border-brand-orange/50"
               : error
                 ? "border-red-500"
-                : "border-gray-100 hover:border-emerald-500/50 hover:bg-emerald-50/10",
+                : "border-gray-100 hover:border-brand-orange/50 hover:bg-orange-50/10",
           )}
         >
           {imagePreview ? (
@@ -85,7 +85,7 @@ export const ItemImageUpload: React.FC<ItemImageUploadProps> = ({
                 accept="image/*"
                 onChange={(e) => onImageChange(e.target.files?.[0] || null)}
               />
-              <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-emerald-bg mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-brand-orange mb-4 group-hover:scale-110 transition-transform duration-300">
                 <ImageIcon className="w-7 h-7" />
               </div>
               <Typography className="text-sm font-bold text-gray-900">

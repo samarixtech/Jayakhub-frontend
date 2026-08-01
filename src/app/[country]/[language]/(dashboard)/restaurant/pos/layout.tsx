@@ -10,7 +10,7 @@ export const metadata = {
 export default function POSLayout({ children }: { children: ReactNode }) {
   return (
     <POSProvider>
-      <div className="h-screen w-screen overflow-hidden flex flex-col bg-gray-50 font-sans selection:bg-emerald-200">
+      <div className="h-screen w-screen overflow-hidden flex flex-col bg-gray-50 font-sans selection:bg-[#FF6B35]/20">
         <POSNavbar />
         <main className="flex-1 flex overflow-hidden relative">
           {children}

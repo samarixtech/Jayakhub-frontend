@@ -475,10 +475,16 @@ import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { useState, useEffect } from "react";
 import { getPublicPlansAction, ApiPlan } from "@/app/actions/public/plans";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Percent, Smartphone, Users, Zap } from "lucide-react";
+import { FaApple, FaGooglePlay } from "react-icons/fa";
+import DeliveryRouteAnimation from "@/components/modules/public-website/home/DeliveryRouteAnimation";
 import PartnersPricingTable from "./PartnersPricingTable";
 
 const RTL_LOCALES = ["ar", "ur", "fa", "he"];
+
+// Icons for the "Why partner with JayakHub?" benefit cards, in the same
+// order as PartnerPage.benefits.items in en.json/ar.json.
+const BENEFIT_ICONS = [Percent, Smartphone, Users, Zap];
 
 export default function Home() {
   const t = useTranslations("PartnerPage");
@@ -544,10 +550,10 @@ export default function Home() {
   }[];
 
   return (
-    <main dir={dir} className="text-[#1a1a1a] bg-white">
+    <main dir={dir} className="text-[#1a1a1a] bg-hero-bg">
       {/* HERO */}
-      <section className="bg-gradient-to-br from-[#e8f4f1] to-white pt-[90px] pb-[80px] relative overflow-hidden">
-        <div className="absolute -top-[120px] -right-[120px] w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(11,93,78,0.12),transparent_70%)] pointer-events-none" />
+      <section className="p-[50px] pb-8 relative overflow-hidden">
+        <div className="absolute -top-[120px] -right-[120px] w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle,rgba(27,58,87,0.12),transparent_70%)] pointer-events-none" />
         <motion.div
           initial="hidden"
           animate="visible"
@@ -566,7 +572,7 @@ export default function Home() {
                 transition: { duration: 0.6, ease: "easeOut" },
               },
             }}
-            className="inline-block bg-[#e8f4f1] text-[#0B5D4E] font-semibold text-[13px] py-[7px] px-4 rounded-[30px] mb-[22px]"
+            className="inline-block bg-navy/10 text-navy font-semibold text-[13px] py-[7px] px-4 rounded-[30px] mb-[22px]"
           >
             {t("hero.badge")}
           </motion.span>
@@ -580,11 +586,11 @@ export default function Home() {
                 transition: { duration: 0.6, ease: "easeOut" },
               },
             }}
-            className="text-[54px] font-bold text-[#0B5D4E] leading-[1.1] tracking-tight mb-5"
+            className="text-[54px] font-bold text-navy leading-[1.1] tracking-tight mb-5"
           >
             {t("hero.title_main")}
             <br />
-            <span className="font-serif italic font-normal text-[#0B5D4E]">
+            <span className="font-serif italic font-normal text-brand-orange">
               {t("hero.title_highlight")}
             </span>
           </motion.h1>
@@ -617,7 +623,7 @@ export default function Home() {
           >
             <Link
               href="/contact"
-              className="bg-[#0B5D4E] text-white py-[17px] px-[44px] rounded-[30px] font-bold text-[17px] inline-block shadow-[0_8px_24px_rgba(11,93,78,0.32)] hover:bg-[#094c40] transition-colors"
+              className="bg-brand-orange text-white py-[17px] px-[44px] rounded-[30px] font-bold text-[17px] inline-block shadow-[0_8px_24px_rgba(27,58,87,0.32)] hover:bg-[#14283B] transition-colors"
             >
               {t("hero.cta")}
             </Link>
@@ -632,80 +638,18 @@ export default function Home() {
                 transition: { duration: 0.6, ease: "easeOut" },
               },
             }}
-            className="mt-[18px] text-[14px] text-[#6b6b6b]"
+            className="mt-[18px] text-[14px] text-primary"
           >
             {t("hero.sub_text")}
           </motion.div>
         </motion.div>
+
+        <div className="w-full mt-10 relative z-10">
+          <DeliveryRouteAnimation labelColor="text-navy" />
+        </div>
       </section>
 
-      {/* COMMISSION COMPARE STRIP
-      <section className="bg-[#0B5D4E] text-white py-[50px]">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-          }}
-          className="max-w-[760px] mx-auto px-6 text-center"
-        >
-          <motion.h2
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-            }}
-            className="text-[30px] font-bold tracking-tight mb-[26px]"
-          >
-            {t('compare.title')}
-          </motion.h2>
-
-          {comparePlatforms.map((row, i) => (
-            <motion.div
-              key={i}
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-              }}
-              className="flex flex-wrap items-center gap-x-3 gap-y-1 bg-white/5 rounded-xl px-[22px] py-4 mb-2.5 text-[16px] rtl:text-[14px]"
-            >
-              <span className="min-w-0 flex-1">{row.name}</span><span className="shrink-0 text-[#ff8a8a] font-bold">{row.fee}</span>
-            </motion.div>
-          ))}
-
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, scale: 0.95 },
-              visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
-            }}
-            className="flex flex-wrap items-center gap-x-3 gap-y-1 bg-[#7ee7871f] border border-[#7ee78759] rounded-xl px-[22px] py-4 mb-2.5 text-[16px] rtl:text-[14px]"
-          >
-            <span className="min-w-0 flex-1"><strong>{t('compare.jayakub_name')}</strong></span><span className="shrink-0 text-[#7ee787] font-bold">{t('compare.jayakub_fee')}</span>
-          </motion.div>
-
-          <motion.p
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-            }}
-            className="mt-5 opacity-80 text-[14px]"
-          >
-            {t('compare.description')}
-          </motion.p>
-          <motion.p
-            variants={{
-              hidden: { opacity: 0, y: 30 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-            }}
-            className="mt-2.5 opacity-55 text-[11.5px]"
-          >
-            {t('compare.disclaimer')}
-          </motion.p>
-        </motion.div>
-      </section> */}
-
-      <section className="bg-[#0B5D4E] text-white py-[50px]">
+      <section className="bg-navy text-white py-[50px]">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -763,12 +707,12 @@ export default function Home() {
                 transition: { duration: 0.5, ease: "easeOut" },
               },
             }}
-            className="flex justify-between items-center bg-[#7ee7871f] border border-[#7ee78759] rounded-xl px-[32px] py-5 mb-2.5 text-[16px] rtl:text-[14px]"
+            className="flex justify-between items-center bg-forest-green-light/15 border border-forest-green-light/40 rounded-xl px-[32px] py-5 mb-2.5 text-[16px] rtl:text-[14px]"
           >
             <span className="min-w-0 text-left rtl:text-right">
               <strong>{t("compare.jayakub_name")}</strong>
             </span>
-            <span className="shrink-0 text-[#7ee787] font-bold text-right rtl:text-left">
+            <span className="shrink-0 text-forest-green-light font-bold text-right rtl:text-left">
               {t("compare.jayakub_fee")}
             </span>
           </motion.div>
@@ -810,12 +754,10 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center text-[38px] font-bold text-[#0B5D4E] mb-[14px] tracking-tight"
+            className="text-center text-[38px] font-bold text-navy mb-[14px] tracking-tight"
           >
             {t.rich("benefits.title", {
-              span: (chunks) => (
-                <span className="text-[#0B5D4E]">{chunks}</span>
-              ),
+              span: (chunks) => <span className="text-navy">{chunks}</span>,
             })}
           </motion.h2>
           <motion.p
@@ -850,12 +792,15 @@ export default function Home() {
                       transition: { duration: 0.5 },
                     },
                   }}
-                  className="bg-white p-8 rounded-[18px] border border-[#e6e6e6] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(11,93,78,0.1)]"
+                  className="bg-white p-8 rounded-[18px] border border-[#e6e6e6] transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_14px_36px_rgba(27,58,87,0.1)]"
                 >
-                  <div className="w-14 h-14 rounded-xl bg-[#e8f4f1] flex items-center justify-center text-[27px] mb-[18px]">
-                    {benefit.icon}
+                  <div className="w-14 h-14 rounded-xl bg-navy/10 flex items-center justify-center mb-[18px]">
+                    {(() => {
+                      const BenefitIcon = BENEFIT_ICONS[i] || Percent;
+                      return <BenefitIcon className="w-7 h-7 text-navy" />;
+                    })()}
                   </div>
-                  <h3 className="text-[20px] font-bold text-[#0B5D4E] mb-2.5 leading-tight">
+                  <h3 className="text-[20px] font-bold text-navy mb-2.5 leading-tight">
                     {benefit.title}
                   </h3>
                   <p className="text-[15px] text-[#6b6b6b]">{benefit.desc}</p>
@@ -874,12 +819,10 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center text-[38px] font-bold text-[#0B5D4E] mb-[14px] tracking-tight"
+            className="text-center text-[38px] font-bold text-navy mb-[14px] tracking-tight"
           >
             {t.rich("features.title", {
-              span: (chunks) => (
-                <span className="text-[#0B5D4E]">{chunks}</span>
-              ),
+              span: (chunks) => <span className="text-navy">{chunks}</span>,
             })}
           </motion.h2>
           <motion.p
@@ -916,11 +859,11 @@ export default function Home() {
                   }}
                   className="bg-white p-6 md:px-7 md:py-[22px] rounded-2xl border border-[#e6e6e6] flex items-start gap-5"
                 >
-                  <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#0B5D4E] to-[#B6932F] rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0 mt-1">
+                  <div className="w-[46px] h-[46px] bg-gradient-to-br from-navy to-gold-deep rounded-full flex items-center justify-center text-white font-bold text-[18px] shrink-0 mt-1">
                     {feature.n}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-[17px] font-bold text-[#0B5D4E] mb-1 leading-tight">
+                    <h3 className="text-[17px] font-bold text-navy mb-1 leading-tight">
                       {feature.title}
                     </h3>
                     <p className="text-[14px] text-[#6b6b6b]">{feature.desc}</p>
@@ -964,7 +907,7 @@ export default function Home() {
               <span className="text-[#0F2942]">
                 {t("pos_integration.title_main")}
               </span>{" "}
-              <span className="text-[#FE8C34]">
+              <span className="text-navy">
                 {t("pos_integration.title_highlight")}
               </span>
             </h2>
@@ -992,7 +935,9 @@ export default function Home() {
               const status = t(`pos_integration.tiers.${tier}.status`) as
                 | "available"
                 | "planned";
-              const items = t.raw(`pos_integration.tiers.${tier}.items`) as string[];
+              const items = t.raw(
+                `pos_integration.tiers.${tier}.items`,
+              ) as string[];
               return (
                 <div
                   key={tier}
@@ -1012,7 +957,7 @@ export default function Home() {
                         key={item}
                         className="flex items-start gap-2 text-[14px] text-[#0F2942]"
                       >
-                        <ChevronRight className="w-4 h-4 text-[#FE8C34] shrink-0 mt-0.5" />
+                        <ChevronRight className="w-4 h-4 text-navy shrink-0 mt-0.5" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -1020,6 +965,59 @@ export default function Home() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* DOWNLOAD APP CTA */}
+      <section className="relative pt-8 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#1B3A57]">
+        <div className="max-w-4xl mx-auto mb-6">
+          <DeliveryRouteAnimation />
+        </div>
+
+        <div className="max-w-5xl mx-auto text-center relative z-10 px-2">
+          <h2 className="text-[5.5vw] sm:text-3xl lg:text-4xl font-bold text-white mb-4 whitespace-nowrap">
+            {t("download_cta.title")}
+          </h2>
+          <p className="text-white/70 text-sm sm:text-base mb-8">
+            {t.rich("download_cta.subtitle", {
+              love: (chunks) => (
+                <span className="text-secondary font-semibold">{chunks}</span>
+              ),
+              highlight: (chunks) => (
+                <span className="text-secondary font-semibold">{chunks}</span>
+              ),
+            })}
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+            <a
+              href="https://play.google.com/store/apps/details?id=com.jayakhub.customer"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl px-6 py-3 transition-colors"
+            >
+              <FaGooglePlay className="w-5 h-5 text-white/70" />
+              <div className="text-left">
+                <div className="text-[11px] text-white/50">
+                  {t("download_cta.soon_label")}
+                </div>
+                <div className="text-sm font-bold text-white">
+                  {t("download_cta.google_play")}
+                </div>
+              </div>
+            </a>
+            <div className="flex items-center gap-3 bg-white/10 border border-white/10 rounded-2xl px-6 py-3 cursor-not-allowed select-none">
+              <FaApple className="w-5 h-5 text-white/70" />
+              <div className="text-left">
+                <div className="text-[11px] text-white/50">
+                  {t("download_cta.soon_label")}
+                </div>
+                <div className="text-sm font-bold text-white">
+                  {t("download_cta.app_store")}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

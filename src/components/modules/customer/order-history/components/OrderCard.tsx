@@ -66,7 +66,7 @@ export const OrderCard = ({
               )}
             </div>
             <div>
-              <h3 className="font-excep font-semibold text-gray-900 text-base leading-tight mb-1 line-clamp-1">
+              <h3 className="font-excep font-semibold text-navy text-base leading-tight mb-1 line-clamp-1">
                 {displayTitle}
               </h3>
               <p className="text-[11px] text-gray-400 font-medium tracking-wide">
@@ -97,7 +97,7 @@ export const OrderCard = ({
               {getStatusLabel(order.OrderStatus, t)}
             </div>
 
-            <span className="font-semibold text-gray-900 text-sm text-right whitespace-nowrap">
+            <span className="font-semibold text-navy text-sm text-right whitespace-nowrap">
               {formatPrice(order.totalAmount, 0)}
             </span>
 
@@ -105,7 +105,7 @@ export const OrderCard = ({
               <></>
             ) : isDelivered ? (
               <Button
-                className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
+                className="rounded-full h-9 px-5 bg-primary hover:bg-[#e85a2a] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
                 onClick={() => handleReorder(order)}
                 disabled={isReordering}
               >
@@ -128,7 +128,7 @@ export const OrderCard = ({
                   </Button>
                 )}
                 <Button
-                  className="rounded-full h-9 px-5 bg-[#2E5C46] hover:bg-[#234535] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
+                  className="rounded-full h-9 px-5 bg-primary hover:bg-[#e85a2a] text-white text-[11px] font-bold flex items-center gap-1.5 shadow-sm"
                   onClick={() => {
                     window.location.href = `/order/${order.orderId}`;
                   }}
@@ -158,7 +158,7 @@ export const OrderCard = ({
                 {hasGivenReview ? (
                   <div className="flex-1 w-full flex flex-col gap-2">
                     <div className="flex justify-between items-center w-full">
-                      <span className="font-bold text-gray-800 text-sm">
+                      <span className="font-bold text-navy text-sm">
                         {t("your_review")}
                       </span>
                       <div className="flex gap-1">
@@ -179,15 +179,15 @@ export const OrderCard = ({
                     </p>
 
                     {replyText && (
-                      <div className="mt-2.5 bg-[#E2F1E8] border border-[#357252]/10 p-4 rounded-xl flex flex-col gap-2 w-full">
-                        <span className="text-[11px] font-bold text-[#357252] uppercase tracking-wider flex items-center gap-1.5">
+                      <div className="mt-2.5 bg-forest-green/10 border border-forest-green/20 p-4 rounded-xl flex flex-col gap-2 w-full">
+                        <span className="text-[11px] font-bold text-forest-green uppercase tracking-wider flex items-center gap-1.5">
                           <RefreshCw
                             size={12}
                             className="scale-x-[-1] shrink-0"
                           />
                           {t("restaurant_reply")}
                         </span>
-                        <p className="text-[13px] text-[#1b2d22] leading-relaxed font-medium">
+                        <p className="text-[13px] text-navy leading-relaxed font-medium">
                           {replyText}
                         </p>
                       </div>
@@ -196,7 +196,7 @@ export const OrderCard = ({
                 ) : (
                   <>
                     <div>
-                      <h4 className="font-bold text-gray-800 text-sm mb-1">
+                      <h4 className="font-bold text-navy text-sm mb-1">
                         {t("no_review_given")}
                       </h4>
                       <p className="text-gray-500 text-xs">

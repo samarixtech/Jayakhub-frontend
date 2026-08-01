@@ -89,7 +89,7 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "#1b2d22",
+        backgroundColor: "#1B3A57",
         padding: 10,
         titleFont: { size: 13, family: "sans-serif" },
         bodyFont: { size: 13, family: "sans-serif", weight: "bold" as const },
@@ -102,7 +102,7 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
         max: 5.0,
         ticks: {
           stepSize: 1.0,
-          color: "#8ea89a",
+          color: "#8B7355",
           font: { size: 10, weight: "bold" as const },
         },
         border: { display: false },
@@ -114,7 +114,7 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
       },
       x: {
         ticks: {
-          color: "#8ea89a",
+          color: "#8B7355",
           font: { size: 10, weight: "bold" as const },
           padding: 10,
           maxTicksLimit: Math.max(trendLabels.length, 6),
@@ -209,8 +209,8 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
       {/* Rating Trend (Line Chart) */}
       <div className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm col-span-2 flex flex-col min-h-[340px]">
         <div className="mb-4">
-          <h2 className="text-[16px] font-bold text-[#1b2d22]">{t("trend.title")}</h2>
-          <p className="text-[12px] text-[#8ea89a] font-medium mt-0.5">
+          <h2 className="text-[16px] font-bold text-[#1B3A57]">{t("trend.title")}</h2>
+          <p className="text-[12px] text-[#8B7355] font-medium mt-0.5">
             {t("trend.subtitle")}
           </p>
         </div>
@@ -222,10 +222,10 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
       {/* Rating Distribution (Doughnut Chart) */}
       <div className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm col-span-1 flex flex-col h-full min-h-[340px]">
         <div className="mb-2">
-          <h2 className="text-[16px] font-bold text-[#1b2d22]">
+          <h2 className="text-[16px] font-bold text-[#1B3A57]">
             {t("distribution.title")}
           </h2>
-          <p className="text-[12px] text-[#8ea89a] font-medium mt-0.5">
+          <p className="text-[12px] text-[#8B7355] font-medium mt-0.5">
             {t("distribution.subtitle")}
           </p>
         </div>
@@ -235,10 +235,10 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
           <Doughnut data={distData} options={distOptions} />
           {/* Center Text absolute placed */}
           <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none mt-1">
-            <span className="text-[26px] font-black text-[#1b2d22] leading-none">
+            <span className="text-[26px] font-black text-[#1B3A57] leading-none">
               {hasData ? `${maxPercent}%` : "0"}
             </span>
-            <span className="text-[11px] font-bold text-[#8ea89a] mt-1">
+            <span className="text-[11px] font-bold text-[#8B7355] mt-1">
               {centerSubText}
             </span>
           </div>
@@ -253,11 +253,11 @@ export default function ReviewsCharts({ summary }: ReviewsChartsProps) {
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: colors[index] }}
                 ></span>
-                <span className="text-[11px] font-bold text-[#8ea89a]">
+                <span className="text-[11px] font-bold text-[#8B7355]">
                   {labels[index]}
                 </span>
               </div>
-              <span className="text-[11px] font-black text-[#1b2d22]">
+              <span className="text-[11px] font-black text-[#1B3A57]">
                 {percent}%
               </span>
             </div>

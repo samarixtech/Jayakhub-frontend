@@ -16,7 +16,7 @@ export const CheckoutPaymentMethod = ({
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
-        <Banknote className="text-[#346853]" size={20} />
+        <Banknote className="text-primary" size={20} />
         <h3 className="font-bold text-lg text-gray-900">{t("paymentMethod")}</h3>
       </div>
       <div className="space-y-3">
@@ -25,7 +25,7 @@ export const CheckoutPaymentMethod = ({
           onClick={() => setPaymentMethod("stripe")}
           className={`border p-4 rounded-lg cursor-pointer transition-all ${
             paymentMethod === "stripe" || paymentMethod.startsWith("pm_")
-              ? "border-[#346853] bg-[#346853]/5"
+              ? "border-primary bg-primary/5"
               : "border-gray-200 hover:border-gray-300"
           }`}
         >
@@ -34,7 +34,7 @@ export const CheckoutPaymentMethod = ({
               <CreditCard
                 className={
                   paymentMethod === "stripe" || paymentMethod.startsWith("pm_")
-                    ? "text-[#346853]"
+                    ? "text-primary"
                     : "text-gray-400"
                 }
               />
@@ -49,13 +49,13 @@ export const CheckoutPaymentMethod = ({
             </div>
             {(paymentMethod === "stripe" ||
               paymentMethod.startsWith("pm_")) && (
-              <CheckCircle2 className="text-[#346853] fill-[#346853]/20" />
+              <CheckCircle2 className="text-primary fill-primary/20" />
             )}
           </div>
 
           {/* Saved Cards & New Card Options */}
           {(paymentMethod === "stripe" || paymentMethod.startsWith("pm_")) && (
-            <div className="mt-4 pt-4 border-t border-[#346853]/10 animate-in fade-in slide-in-from-top-2 space-y-3">
+            <div className="mt-4 pt-4 border-t border-primary/10 animate-in fade-in slide-in-from-top-2 space-y-3">
               {/* Option: Pay with New Card */}
               <div
                 onClick={(e) => {
@@ -64,19 +64,19 @@ export const CheckoutPaymentMethod = ({
                 }}
                 className={`p-3 rounded-xl border border-dashed flex items-center gap-3 cursor-pointer transition-all group ${
                   paymentMethod === "stripe"
-                    ? "border-[#346853] bg-[#346853]/5"
-                    : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
+                    ? "border-primary bg-primary/5"
+                    : "border-gray-300 hover:border-primary hover:bg-primary/5"
                 }`}
               >
                 <div
                   className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                     paymentMethod === "stripe"
-                      ? "border-[#346853]"
-                      : "border-gray-400 group-hover:border-[#346853]"
+                      ? "border-primary"
+                      : "border-gray-400 group-hover:border-primary"
                   }`}
                 >
                   {paymentMethod === "stripe" && (
-                    <div className="w-2 h-2 rounded-full bg-[#346853]" />
+                    <div className="w-2 h-2 rounded-full bg-primary" />
                   )}
                 </div>
                 <span className="font-medium text-sm text-gray-700">
@@ -94,20 +94,20 @@ export const CheckoutPaymentMethod = ({
                   }}
                   className={`p-3 rounded-xl border border-dashed flex items-center justify-between cursor-pointer transition-all group ${
                     paymentMethod === card.stripePaymentMethodId
-                      ? "border-[#346853] bg-[#346853]/5"
-                      : "border-gray-300 hover:border-[#346853] hover:bg-[#346853]/5"
+                      ? "border-primary bg-primary/5"
+                      : "border-gray-300 hover:border-primary hover:bg-primary/5"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-4 h-4 rounded-full border flex items-center justify-center ${
                         paymentMethod === card.stripePaymentMethodId
-                          ? "border-[#346853]"
-                          : "border-gray-400 group-hover:border-[#346853]"
+                          ? "border-primary"
+                          : "border-gray-400 group-hover:border-primary"
                       }`}
                     >
                       {paymentMethod === card.stripePaymentMethodId && (
-                        <div className="w-2 h-2 rounded-full bg-[#346853]" />
+                        <div className="w-2 h-2 rounded-full bg-primary" />
                       )}
                     </div>
                     <div className="flex flex-col">
@@ -131,14 +131,14 @@ export const CheckoutPaymentMethod = ({
           onClick={() => setPaymentMethod("cod")}
           className={`border p-4 rounded-lg flex items-center justify-between cursor-pointer transition-all ${
             paymentMethod === "cod"
-              ? "border-[#346853] bg-[#346853]/5"
+              ? "border-primary bg-primary/5"
               : "border-gray-200 hover:border-gray-300"
           }`}
         >
           <div className="flex items-center gap-4">
             <Banknote
               className={
-                paymentMethod === "cod" ? "text-[#346853]" : "text-gray-400"
+                paymentMethod === "cod" ? "text-primary" : "text-gray-400"
               }
             />
             <div>
@@ -149,7 +149,7 @@ export const CheckoutPaymentMethod = ({
             </div>
           </div>
           {paymentMethod === "cod" ? (
-            <CheckCircle2 className="text-[#346853] fill-[#346853]/20" />
+            <CheckCircle2 className="text-primary fill-primary/20" />
           ) : (
             <Circle className="text-gray-300" />
           )}

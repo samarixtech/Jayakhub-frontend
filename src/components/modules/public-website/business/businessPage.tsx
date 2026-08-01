@@ -303,7 +303,7 @@ export default function BusinessPage() {
               >
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-[#FE8C34] fill-[#FE8C34]" />
+                    <Star key={i} className="w-4 h-4 text-secondary fill-secondary" />
                   ))}
                 </div>
                 <p className="text-white/80 text-sm leading-relaxed mb-6">

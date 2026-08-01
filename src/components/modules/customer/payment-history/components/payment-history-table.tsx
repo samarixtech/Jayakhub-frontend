@@ -142,7 +142,7 @@ export function PaymentHistoryTable({
         const isRefund = order.status === "refunded";
         return (
           <span
-            className={`text-[15px] font-black ${isRefund ? "text-[#10b981]" : "text-[#1E293B]"}`}
+            className={`text-[15px] font-black ${isRefund ? "text-forest-green" : "text-[#1E293B]"}`}
           >
             {isRefund ? "+" : ""}
             {formatPrice(order.totalAmount || 0)}
@@ -185,7 +185,7 @@ export function PaymentHistoryTable({
               onClick={() => setActiveTab(tab)}
               className={`px-5 py-1.5 rounded-full text-[12px] font-bold transition-all shadow-sm ${
                 activeTab === tab
-                  ? "bg-[#f0fdf4] text-[#10b981] border border-[#10b981]"
+                  ? "bg-forest-green/10 text-forest-green border border-forest-green"
                   : "text-[#6B7280] bg-white hover:text-[#374151] border border-gray-100"
               }`}
             >
@@ -206,7 +206,7 @@ export function PaymentHistoryTable({
             loading={loading}
             emptyMessage={t("no_transactions")}
             rowClassName={(order) =>
-              order.status === "refunded" ? "bg-[#f0fdf4]" : ""
+              order.status === "refunded" ? "bg-forest-green/5" : ""
             }
           />
         </div>

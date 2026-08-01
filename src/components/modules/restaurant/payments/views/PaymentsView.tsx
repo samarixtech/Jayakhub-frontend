@@ -79,10 +79,10 @@ const PaymentsView = () => {
   const prevPoints = currentPoints.map((v) => v * 0.8);
 
   const pmColors: Record<string, string> = {
-    card: "#f5a623",
-    cod: "#346853",
-    cash: "#346853",
-    online: "#3b82f6",
+    card: "#FDB833",
+    cod: "#FF6B35",
+    cash: "#1B3A57",
+    online: "#2C5F2D",
     wallet: "#ef4444",
   };
 
@@ -107,8 +107,8 @@ const PaymentsView = () => {
             label={tStats("totalRevenue")}
             value={formatPrice(data.metrics.totalRevenue)}
             trend={`↑ ${data.metrics.totalRevenueGrowth}`}
-            icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
-            iconBg="bg-emerald-50"
+            icon={<DollarSign className="w-4 h-4 text-[#FF6B35]" />}
+            iconBg="bg-[#FFF8F0]"
           />
           <StatCard
             label={tStats("netProfit")}
@@ -142,7 +142,7 @@ const PaymentsView = () => {
             </div>
             <div className="flex items-center gap-5 mb-4">
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-0.5 bg-[#346853] rounded-full" />
+                <span className="w-3 h-0.5 bg-[#FF6B35] rounded-full" />
                 <span className="text-[11px] text-gray-500">{tTrend("currentPeriod")}</span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -213,9 +213,9 @@ const PaymentsView = () => {
                 </span>
               </div>
             </div>
-            <div className="bg-[#e8f5ee] rounded-xl px-5 py-3.5 flex justify-between items-center">
-              <span className="text-[13px] font-semibold text-[#2d6a4f]">{tTax("netEarnings")}</span>
-              <span className="text-[20px] font-black text-[#2d6a4f]">
+            <div className="bg-[#FFF5E6] rounded-xl px-5 py-3.5 flex justify-between items-center">
+              <span className="text-[13px] font-semibold text-[#FF6B35]">{tTax("netEarnings")}</span>
+              <span className="text-[20px] font-black text-[#FF6B35]">
                 {formatPrice(data.netEarnings ?? data.metrics.netProfit)}
               </span>
             </div>
@@ -230,7 +230,7 @@ const PaymentsView = () => {
               </div>
               <button
                 onClick={() => router.push(`/${params.country}/${params.language}/restaurant/payouts`)}
-                className="text-[12px] font-semibold text-[#346853] hover:text-[#2a5644] transition-colors"
+                className="text-[12px] font-semibold text-[#FF6B35] hover:text-[#E85A2A] transition-colors"
               >
                 {tPayouts("viewAllBtn")}
               </button>
@@ -251,11 +251,11 @@ const PaymentsView = () => {
                     className="grid grid-cols-4 gap-2 items-center px-1 py-3 border-b border-gray-50 last:border-0 cursor-pointer hover:bg-gray-50 rounded-lg transition-colors"
                     onClick={() => handlePayoutClick(p)}
                   >
-                    <span className="text-[12px] font-bold text-emerald-700 truncate">{p.id}</span>
+                    <span className="text-[12px] font-bold text-[#FF6B35] truncate">{p.id}</span>
                     <span className="text-[12px] text-gray-500">{formatPayoutDate(p.processedAt || p.createdAt)}</span>
                     <span className="text-[12px] font-semibold text-[#1a1a1a] text-right">{p.amount}</span>
                     <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded text-right ml-auto w-fit ${
-                      p.status === "approved" ? "bg-emerald-50 text-emerald-600" :
+                      p.status === "approved" ? "bg-[#d1fae5] text-[#2C5F2D]" :
                       p.status === "rejected" ? "bg-red-50 text-red-500" :
                       "bg-orange-100 text-orange-600"
                     }`}>

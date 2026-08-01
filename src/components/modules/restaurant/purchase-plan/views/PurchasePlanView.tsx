@@ -13,7 +13,7 @@ export default function PurchasePlanView() {
     usePurchasePlan();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 flex flex-col items-center justify-center p-4 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-[#FFF8F0] flex flex-col items-center justify-center p-4 sm:p-8">
       {/* Header */}
       <div className="text-center mb-12 max-w-lg">
         <Typography
@@ -31,7 +31,7 @@ export default function PurchasePlanView() {
       {/* Plans */}
       {loadingPlans ? (
         <div className="flex flex-col items-center gap-3 text-gray-400">
-          <Loader2 className="w-7 h-7 animate-spin text-emerald-500" />
+          <Loader2 className="w-7 h-7 animate-spin text-[#FF6B35]" />
           <span className="text-sm font-medium">Loading plans...</span>
         </div>
       ) : plans.length === 0 ? (
@@ -79,7 +79,7 @@ function PlanCard({
   ];
 
   return (
-    <Card className="relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 border-2 border-[#346853] shadow-sm hover:shadow-md">
+    <Card className="relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 border-2 border-[#FDB833] shadow-sm hover:shadow-md">
       <div className="p-7 flex flex-col gap-5 flex-1">
         {/* Plan name */}
         <div>
@@ -110,8 +110,8 @@ function PlanCard({
           {allFeatures.length > 0 ? (
             allFeatures.map((feature, i) => (
               <li key={i} className="flex items-center gap-3">
-                <span className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-                  <Check className="w-3 h-3 stroke-[3px] text-[#346853]" />
+                <span className="w-5 h-5 rounded-full bg-[#FFF8F0] flex items-center justify-center shrink-0">
+                  <Check className="w-3 h-3 stroke-[3px] text-[#FF6B35]" />
                 </span>
                 <span className="text-xs font-medium text-gray-600">
                   {feature}
@@ -126,7 +126,7 @@ function PlanCard({
         {/* Buy button */}
         <div className="mt-auto pt-2">
           <Button
-            className="w-full h-11 rounded-xl font-semibold text-sm bg-[#346853] hover:bg-[#2a5542] text-white"
+            className="w-full h-11 rounded-xl font-semibold text-sm bg-[#FF6B35] hover:bg-[#E85A2A] text-white"
             disabled={disabled}
             onClick={onBuy}
           >

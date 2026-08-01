@@ -32,7 +32,7 @@ export const OrderFilters = ({
         showFilters ? "flex" : "hidden"
       } md:flex flex-col md:flex-row bg-white rounded-2xl p-4 md:p-2 md:pl-6 shadow-sm items-start md:items-center gap-4 md:gap-6 overflow-x-auto transition-all`}
     >
-      <span className="text-sm font-bold text-gray-900 shrink-0 mb-2 md:mb-0">
+      <span className="text-sm font-bold text-navy shrink-0 mb-2 md:mb-0">
         {t("filters_label")}
       </span>
 
@@ -41,7 +41,7 @@ export const OrderFilters = ({
         <div className="flex items-center gap-2">
           <Checkbox
             id="filter-all"
-            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+            className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5 rounded-md"
             checked={statusFilters.length === 0}
             onCheckedChange={() => setStatusFilters([])}
           />
@@ -56,7 +56,7 @@ export const OrderFilters = ({
         <div className="flex items-center gap-2">
           <Checkbox
             id="filter-active"
-            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+            className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5 rounded-md"
             checked={statusFilters.includes("active")}
             onCheckedChange={(checked) => {
               if (checked) {
@@ -77,7 +77,7 @@ export const OrderFilters = ({
         <div className="flex items-center gap-2">
           <Checkbox
             id="filter-delivered"
-            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+            className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5 rounded-md"
             checked={statusFilters.includes("delivered")}
             onCheckedChange={(checked) => {
               if (checked) {
@@ -98,7 +98,7 @@ export const OrderFilters = ({
         <div className="flex items-center gap-2">
           <Checkbox
             id="filter-rejected"
-            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+            className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5 rounded-md"
             checked={statusFilters.includes("rejected")}
             onCheckedChange={(checked) => {
               if (checked) {
@@ -119,7 +119,7 @@ export const OrderFilters = ({
         <div className="flex items-center gap-2">
           <Checkbox
             id="filter-cancelled"
-            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600 w-5 h-5 rounded-md"
+            className="data-[state=checked]:bg-primary data-[state=checked]:border-primary w-5 h-5 rounded-md"
             checked={statusFilters.includes("cancelled")}
             onCheckedChange={(checked) => {
               if (checked) {

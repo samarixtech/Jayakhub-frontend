@@ -43,12 +43,12 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
       <Link href="/restaurants" className="flex flex-col items-center gap-1">
         <Home
           className={`w-6 h-6 ${
-            isActive("/restaurants") ? "text-[#346853]" : "text-gray-400"
+            isActive("/restaurants") ? "text-primary" : "text-gray-400"
           }`}
         />
         <span
           className={`text-[10px] font-medium ${
-            isActive("/restaurants") ? "text-[#346853]" : "text-gray-500"
+            isActive("/restaurants") ? "text-primary" : "text-gray-500"
           }`}
         >
           {t("home")}
@@ -91,12 +91,12 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
         <Link href="/wishlist" className="flex flex-col items-center gap-1">
           <Heart
             className={`w-6 h-6 ${
-              isActive("/wishlist") ? "text-[#346853]" : "text-gray-400"
+              isActive("/wishlist") ? "text-primary" : "text-gray-400"
             }`}
           />
           <span
             className={`text-[10px] font-medium ${
-              isActive("/wishlist") ? "text-[#346853]" : "text-gray-500"
+              isActive("/wishlist") ? "text-primary" : "text-gray-500"
             }`}
           >
             {t("wishlist")}
@@ -116,7 +116,7 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
               src={avatarSrc || user?.image}
               alt={user?.name || "User"}
             />
-            <AvatarFallback className="bg-[#346853] text-white text-[9px] font-medium">
+            <AvatarFallback className="bg-primary text-white text-[9px] font-medium">
               {user?.name?.charAt(0).toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
@@ -124,14 +124,14 @@ const RestaurantsBottomNav: React.FC<RestaurantsBottomNavProps> = ({
           <User
             className={`w-6 h-6 ${
               isActive("/customer/dashboard")
-                ? "text-[#346853]"
+                ? "text-primary"
                 : "text-gray-400"
             }`}
           />
         )}
         <span
           className={`text-[10px] font-medium ${
-            isActive("/customer/dashboard") ? "text-[#346853]" : "text-gray-500"
+            isActive("/customer/dashboard") ? "text-primary" : "text-gray-500"
           }`}
         >
           {t("profile")}

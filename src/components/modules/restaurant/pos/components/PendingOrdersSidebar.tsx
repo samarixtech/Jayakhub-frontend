@@ -49,7 +49,7 @@ export default function PendingOrdersSidebar({
         className="w-[300px] sm:w-[350px] p-0 bg-white border-l border-gray-100 flex flex-col shadow-2xl"
       >
         <SheetHeader className="px-5 py-4 border-b border-gray-100 flex flex-row items-center justify-between">
-          <SheetTitle className="text-[15px] font-black text-[#1b2d22] tracking-tight border-none">
+          <SheetTitle className="text-[15px] font-black text-[#1B3A57] tracking-tight border-none">
             {t("title")}
           </SheetTitle>
         </SheetHeader>
@@ -93,19 +93,19 @@ export default function PendingOrdersSidebar({
                   className="border border-gray-100 rounded-xl p-3.5 shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:bg-gray-50 group relative"
                 >
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[13px] font-black text-[#1eb589] tracking-tight">
+                    <span className="text-[13px] font-black text-[#FF6B35] tracking-tight">
                       {displayName}
                     </span>
-                    <span className="text-[11px] text-[#8ea89a] font-medium">
+                    <span className="text-[11px] text-[#8B7355] font-medium">
                       {timeAgoStr}
                     </span>
                   </div>
-                  <div className="text-[11px] text-[#556977] font-medium flex justify-between items-center mt-2">
+                  <div className="text-[11px] text-[#8B7355] font-medium flex justify-between items-center mt-2">
                     <span>
                       {t("itemsCount", { count: itemTotal })} ·{" "}
                       {formatPrice(priceTotal)}
                     </span>
-                    <div className="text-[#357252] group-hover:bg-[#e6f4ef] p-1.5 rounded-md transition-colors flex items-center gap-1.5 font-bold">
+                    <div className="text-[#FF6B35] group-hover:bg-[#FFF8F0] p-1.5 rounded-md transition-colors flex items-center gap-1.5 font-bold">
                       <ShoppingCart className="w-3.5 h-3.5" />
                       {t("cart")}
                     </div>

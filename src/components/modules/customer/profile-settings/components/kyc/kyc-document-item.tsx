@@ -38,18 +38,18 @@ export function DocumentItem({
 
   return (
     <div
-      className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4 border rounded-2xl transition-all px-4 sm:px-5 ${isSelected ? "border-blue-200 bg-blue-50/30" : "border-gray-50 bg-white"
+      className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4 border rounded-2xl transition-all px-4 sm:px-5 ${isSelected ? "border-primary/30 bg-primary/5" : "border-gray-50 bg-white"
         }`}
     >
       <div className="flex items-center gap-4">
-        <div className="bg-blue-50 p-2.5 rounded-xl shrink-0">{item.icon}</div>
+        <div className="bg-navy/10 p-2.5 rounded-xl shrink-0">{item.icon}</div>
         <div className="min-w-0">
           <p className="text-sm font-bold text-gray-900 truncate">
             {item.title}
           </p>
           <p className="text-xs text-gray-400 font-medium truncate">
             {isSelected ? (
-              <span className="text-blue-600 flex items-center gap-1">
+              <span className="text-primary flex items-center gap-1">
                 <CheckCircle2 size={12} className="shrink-0" />{" "}
                 <span className="truncate">{selectedFile?.name}</span>
               </span>
@@ -125,7 +125,7 @@ function DocumentActionArea({
         <Button
           onClick={onFinalUpload}
           disabled={isUploading}
-          className="bg-[#2D6A4F] hover:bg-[#1B4332] text-white text-xs font-bold rounded-xl px-4 h-9 whitespace-nowrap"
+          className="bg-primary hover:bg-[#e85a2a] text-white text-xs font-bold rounded-xl px-4 h-9 whitespace-nowrap"
         >
           {isUploading ? (
             <Loader2 className="animate-spin" size={14} />

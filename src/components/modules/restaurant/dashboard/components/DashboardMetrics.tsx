@@ -28,8 +28,8 @@ export const DashboardMetrics: React.FC<DashboardMetricsProps> = ({
       <MetricsCard
         title={t("metrics.revenueToday")}
         icon={Banknote}
-        iconBgColor="bg-[#e8f6f0]"
-        iconColor="text-[#1eb589]"
+        iconBgColor="bg-[#FFF8F0]"
+        iconColor="text-[#FF6B35]"
         value={formatCurrency(stats?.todayRevenue?.value || 0)}
         trend={stats?.todayRevenue?.trend}
         changeText={`${stats?.todayRevenue?.changePercent || 0}% ${t("metrics.vsYesterday")}`}

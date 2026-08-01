@@ -64,7 +64,7 @@ export function AppSidebar() {
         {/* HEADER: LOGO + CLOSE BUTTON (MOBILE ONLY) */}
         {isMobile && (
           <div className="flex items-center justify-between mb-6 px-2">
-            <Typography className="text-lg font-black text-emerald-900">
+            <Typography className="text-lg font-black text-navy">
               {t('menu')}
             </Typography>
             <Button
@@ -96,7 +96,7 @@ export function AppSidebar() {
                     tooltip={t(item.key)}
                     isActive={isActive}
                     className={`h-14 transition-all duration-200 rounded-2xl px-4 ${isActive
-                      ? "bg-emerald-50 text-[#346853] hover:bg-emerald-50 hover:text-[#346853]"
+                      ? "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
                       : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                       }`}
                     onClick={() => isMobile && setOpenMobile(false)}
@@ -109,7 +109,7 @@ export function AppSidebar() {
                       />
                       {(!isCollapsed || isMobile) && (
                         <span
-                          className={`text-base font-semibold truncate ${isActive ? "text-[#346853]" : "text-slate-500"}`}
+                          className={`text-base font-semibold truncate ${isActive ? "text-primary" : "text-slate-500"}`}
                         >
                           {t(item.key)}
                         </span>

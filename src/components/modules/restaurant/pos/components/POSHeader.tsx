@@ -87,7 +87,7 @@ export default function POSNavbar() {
   }, []);
 
   return (
-    <nav className="h-[64px] shrink-0 bg-[#357252] text-white flex items-center justify-between px-3 sm:px-6 z-20 relative">
+    <nav className="h-[64px] shrink-0 bg-[#1B3A57] text-white flex items-center justify-between px-3 sm:px-6 z-20 relative">
       <div className="flex items-center gap-4 sm:gap-6 w-full lg:w-auto">
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Image
@@ -110,7 +110,7 @@ export default function POSNavbar() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={t("searchPlaceholder")}
-              className="w-full bg-white text-gray-900 rounded-full pl-9 sm:pl-11 pr-4 py-1.5 sm:py-2 outline-none focus:ring-2 focus:ring-emerald-500 text-[12px] sm:text-[13px] font-semibold placeholder:text-gray-400 placeholder:font-normal"
+              className="w-full bg-white text-gray-900 rounded-full pl-9 sm:pl-11 pr-4 py-1.5 sm:py-2 outline-none focus:ring-2 focus:ring-[#FF6B35]/50 text-[12px] sm:text-[13px] font-semibold placeholder:text-gray-400 placeholder:font-normal"
             />
           </div>
         )}
@@ -122,7 +122,7 @@ export default function POSNavbar() {
           <div className="hidden lg:block">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1.5 bg-white text-gray-800 rounded-full pl-4 pr-3 py-1.5 text-[12px] sm:text-[13px] font-semibold outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-sm">
+                <button className="flex items-center gap-1.5 bg-white text-gray-800 rounded-full pl-4 pr-3 py-1.5 text-[12px] sm:text-[13px] font-semibold outline-none focus:ring-2 focus:ring-[#FF6B35]/50 cursor-pointer shadow-sm">
                   {activeCategory === "all" ? t("allCategories") : activeCategory}
                   <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
                 </button>
@@ -163,7 +163,7 @@ export default function POSNavbar() {
           href={"/restaurant/pos/orders"}
           className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
             isOnlineOrdersPage
-              ? "bg-emerald-500 text-white"
+              ? "bg-[#FF6B35] text-white"
               : "bg-white text-gray-800 hover:bg-gray-100"
           }`}
         >
@@ -176,7 +176,7 @@ export default function POSNavbar() {
           href={"/restaurant/pos/orders/pos"}
           className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
             isPosOrdersPage
-              ? "bg-emerald-500 text-white"
+              ? "bg-[#FF6B35] text-white"
               : "bg-white text-gray-800 hover:bg-gray-100"
           }`}
         >
@@ -187,11 +187,11 @@ export default function POSNavbar() {
         {/* Mobile Cart Toggle */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="lg:hidden relative p-2 bg-[#f1a43a] rounded-full text-[#357252] flex items-center justify-center shadow-sm"
+          className="lg:hidden relative p-2 bg-[#FF6B35] rounded-full text-white flex items-center justify-center shadow-sm"
         >
           <ShoppingCart className="w-[18px] h-[18px] stroke-[2.5px]" />
           {totalItems > 0 && (
-            <div className="absolute -top-1 -right-1 bg-red-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold border border-[#357252]">
+            <div className="absolute -top-1 -right-1 bg-red-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold border border-white">
               {totalItems}
             </div>
           )}
@@ -205,7 +205,7 @@ export default function POSNavbar() {
             >
               <Clock className="w-[20px] h-[20px] text-white" />
               {pendingOrdersCount > 0 && (
-                <div className="absolute top-0 -right-0.5 w-[14px] h-[14px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-[#357252]">
+                <div className="absolute top-0 -right-0.5 w-[14px] h-[14px] bg-[#ef4444] rounded-full flex items-center justify-center text-[9px] font-bold text-white border-2 border-white">
                   {pendingOrdersCount}
                 </div>
               )}
@@ -299,7 +299,7 @@ export default function POSNavbar() {
 
       {isLoggingOut && (
         <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 text-[#357252] animate-spin" />
+          <Loader2 className="w-8 h-8 text-[#FF6B35] animate-spin" />
           <span className="text-[14px] font-bold text-gray-600">Logging out...</span>
         </div>
       )}

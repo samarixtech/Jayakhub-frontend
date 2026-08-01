@@ -40,7 +40,7 @@ export default function ForgotPasswordView() {
                   <FormControl>
                     <Input
                       placeholder={t("emailPlaceholder")}
-                      className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg"
+                      className="h-14 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-4 focus-visible:ring-primary/10 focus-visible:border-primary"
                       {...field}
                     />
                   </FormControl>
@@ -52,7 +52,7 @@ export default function ForgotPasswordView() {
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full h-14 bg-emerald-bg hover:bg-emerald-bg-hover text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
+              className="w-full h-14 bg-primary hover:[#e85a2a] text-white text-lg font-bold rounded-xl shadow-lg transition-all active:scale-[0.98]"
             >
               {isPending ? (
                 <Loader2 className="mr-2 h-6 w-6 animate-spin" />
@@ -68,7 +68,7 @@ export default function ForgotPasswordView() {
             {t("rememberPassword")}{" "}
             <Link
               href="/login"
-              className="font-bold text-emerald-bg hover:underline"
+              className="font-bold text-primary hover:underline"
             >
               {t("login")}
             </Link>

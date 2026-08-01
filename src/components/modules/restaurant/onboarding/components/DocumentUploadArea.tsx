@@ -11,17 +11,16 @@ interface DocumentUploadAreaProps {
   file: { name: string } | null;
   onFileChange: (file: File) => void;
   onRemove: () => void;
-  themeColor?: "blue" | "emerald";
+  themeColor?: "blue" | "emerald" | "orange";
 }
 
 export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
-  title,
   description,
   sub,
   file,
   onFileChange,
   onRemove,
-  themeColor = "blue",
+  themeColor = "orange",
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations("Onboarding.documentUpload");
@@ -33,11 +32,16 @@ export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
       pnt: "text-blue-700",
     },
     emerald: {
-      bg: "bg-emerald-50",
-      text: "text-emerald-500",
-      pnt: "text-emerald-700",
+      bg: "bg-orange-50",
+      text: "text-brand-orange",
+      pnt: "text-brand-orange",
     },
-  }[themeColor];
+    orange: {
+      bg: "bg-orange-50",
+      text: "text-brand-orange",
+      pnt: "text-brand-orange",
+    },
+  }[themeColor || "orange"];
 
   return (
     <div className="border border-gray-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center bg-white shadow-sm min-h-[320px] h-full">
@@ -47,7 +51,7 @@ export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
         <FileText className="w-8 h-8" />
       </div>
 
-      <Typography className="font-bold text-gray-900 mb-2">
+      <Typography className="font-bold text-navy mb-2">
         {description}
       </Typography>
       <Typography className="text-xs text-gray-400 max-w-[200px] mb-6">
@@ -76,7 +80,7 @@ export const DocumentUploadArea: React.FC<DocumentUploadAreaProps> = ({
           type="button"
           variant="outline"
           onClick={() => inputRef.current?.click()}
-          className="rounded-xl border-gray-200 text-gray-700 font-bold hover:bg-gray-50"
+          className="rounded-xl border-gray-200 text-navy font-bold hover:bg-orange-50 hover:text-brand-orange hover:border-brand-orange/40 transition-colors cursor-pointer"
         >
           <Upload className="w-4 h-4 mr-2" />
           {t("chooseFile")}

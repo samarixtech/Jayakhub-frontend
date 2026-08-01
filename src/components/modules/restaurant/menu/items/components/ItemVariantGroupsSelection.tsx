@@ -36,7 +36,7 @@ export const ItemVariantGroupsSelection: React.FC<
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-4">
       {/* SECTION HEADER */}
       <div className="flex items-center gap-3 border-b border-gray-50">
-        <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+        <div className="p-2 rounded-xl bg-orange-50 text-brand-orange">
           <Layers className="w-5 h-5" />
         </div>
         <Typography className="font-semibold text-gray-900">
@@ -76,7 +76,7 @@ export const ItemVariantGroupsSelection: React.FC<
             type="button"
             onClick={handleAddGroup}
             disabled={!groupToAdd}
-            className="bg-[#2D5A43] hover:bg-[#234735] text-white h-12 px-6 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50"
+            className="bg-brand-orange hover:bg-[#e85a2a] text-white h-12 px-6 rounded-xl font-bold flex items-center gap-2 disabled:opacity-50"
           >
             {t("addBtn")}
           </Button>
@@ -89,7 +89,7 @@ export const ItemVariantGroupsSelection: React.FC<
               .map((group) => (
                 <div
                   key={group.id || group._id}
-                  className="flex items-center justify-between p-4 rounded-2xl border border-emerald-100 bg-emerald-50/20"
+                  className="flex items-center justify-between p-4 rounded-2xl border border-orange-100 bg-orange-50/20"
                 >
                   <div>
                     <Typography className="font-bold text-sm text-gray-900">
@@ -100,7 +100,7 @@ export const ItemVariantGroupsSelection: React.FC<
                         <Badge
                           key={idx}
                           variant="secondary"
-                          className="text-[10px] py-0 px-2 bg-white border border-emerald-100 text-emerald-700 font-bold"
+                          className="text-[10px] py-0 px-2 bg-white border border-orange-100 text-brand-orange font-bold"
                         >
                           {opt.name}
                         </Badge>

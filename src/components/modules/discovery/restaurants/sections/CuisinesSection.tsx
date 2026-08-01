@@ -44,8 +44,8 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
                   <div
                     className={`w-16 h-16 md:w-23 md:h-23 rounded-full overflow-hidden border transition-all shadow-sm ${
                       isActive
-                        ? "border-[#346853] ring-2 ring-[#346853]/20"
-                        : "border-gray-100 group-hover:border-[#346853]"
+                        ? "border-primary ring-2 ring-primary/20"
+                        : "border-gray-100 group-hover:border-primary"
                     }`}
                   >
                     {isValidImageSrc(cat.image) ? (
@@ -67,8 +67,8 @@ export const CuisinesSection: React.FC<CuisinesSectionProps> = ({
                   <span
                     className={`text-[11px] font-bold transition-colors whitespace-nowrap ${
                       isActive
-                        ? "text-[#346853]"
-                        : "text-gray-700 group-hover:text-[#346853]"
+                        ? "text-primary"
+                        : "text-gray-700 group-hover:text-primary"
                     }`}
                   >
                     {cat.name}

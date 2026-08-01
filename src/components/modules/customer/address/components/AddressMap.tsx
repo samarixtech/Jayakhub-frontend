@@ -59,9 +59,9 @@ export const AddressMap = ({
         type="button"
         variant="secondary"
         onClick={onLocateMe}
-        className="absolute top-4 right-4 bg-white hover:bg-gray-50 text-emerald-800 shadow-md gap-2 rounded-full font-bold text-xs h-9 px-4 z-10"
+        className="absolute top-4 right-4 bg-white hover:bg-gray-50 text-primary shadow-md gap-2 rounded-full font-bold text-xs h-9 px-4 z-10"
       >
-        <Crosshair size={14} className="text-emerald-600" />
+        <Crosshair size={14} className="text-primary" />
         {t('locate_me')}
       </Button>
 

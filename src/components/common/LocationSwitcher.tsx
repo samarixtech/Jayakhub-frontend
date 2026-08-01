@@ -452,7 +452,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
         className,
       )}
     >
-      <MapPin className="w-5 h-5 text-emerald-bg shrink-0" />
+      <MapPin className="w-5 h-5 text-primary shrink-0" />
       {currentAddress === "Iraq, Baghdad" ? (
         <Skeleton className="h-6 w-60 bg-white/20 rounded-full" />
       ) : (
@@ -495,7 +495,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                 }
               }}
               variant="ghost"
-              className="w-full justify-start text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50 h-10 font-medium"
+              className="w-full justify-start text-primary hover:text-[#e85a2a] hover:bg-primary/10 h-10 font-medium"
             >
               <LocateFixed className="w-4 h-4 mr-2" />
               Use Current Location / Map
@@ -516,7 +516,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                     className={cn(
                       "w-full text-left p-2.5 rounded-xl text-sm transition-all flex items-start gap-3 group",
                       currentAddress === detectedLocation
-                        ? "bg-emerald-50 text-emerald-900"
+                        ? "bg-primary/10 text-primary"
                         : "hover:bg-gray-50 text-gray-700",
                     )}
                   >
@@ -524,7 +524,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                       className={cn(
                         "mt-0.5 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors",
                         currentAddress === detectedLocation
-                          ? "bg-emerald-100 text-emerald-600"
+                          ? "bg-primary/15 text-primary"
                           : "bg-gray-100 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-500",
                       )}
                     >
@@ -536,7 +536,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                           Current Location
                         </span>
                         {currentAddress === detectedLocation && (
-                          <Check className="w-4 h-4 text-emerald-600 ml-2" />
+                          <Check className="w-4 h-4 text-primary ml-2" />
                         )}
                       </div>
                       <p className="text-xs text-gray-500 truncate mt-0.5">
@@ -597,7 +597,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                       className={cn(
                         "w-full text-left p-2.5 rounded-xl text-sm transition-all flex items-start gap-3 group",
                         isActive
-                          ? "bg-emerald-50 text-emerald-900"
+                          ? "bg-primary/10 text-primary"
                           : "hover:bg-gray-50 text-gray-700",
                       )}
                     >
@@ -605,7 +605,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                         className={cn(
                           "mt-0.5 w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors",
                           isActive
-                            ? "bg-emerald-100 text-emerald-600"
+                            ? "bg-primary/15 text-primary"
                             : "bg-gray-100 text-gray-400 group-hover:bg-gray-200 group-hover:text-gray-500",
                         )}
                       >
@@ -617,7 +617,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                             {addr.label}
                           </span>
                           {isActive && (
-                            <Check className="w-4 h-4 text-emerald-600 ml-2" />
+                            <Check className="w-4 h-4 text-primary ml-2" />
                           )}
                         </div>
                         <p className="text-xs text-gray-500 truncate mt-0.5">
@@ -661,7 +661,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Search location..."
-                    className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50 outline-none text-sm text-gray-700 focus:ring-2 focus:ring-emerald-500 focus:bg-white focus:border-emerald-500 transition-all shadow-sm"
+                    className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50 outline-none text-sm text-gray-700 focus:ring-2 focus:ring-primary focus:bg-white focus:border-primary transition-all shadow-sm"
                   />
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <MapPin className="h-4 w-4 text-gray-400" />
@@ -716,7 +716,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
 
             <Button
               size="sm"
-              className="absolute top-4 right-4 bg-white text-emerald-700 hover:bg-gray-50 shadow-md border py-0 h-9 px-4 rounded-full z-10"
+              className="absolute top-4 right-4 bg-white text-primary hover:bg-gray-50 shadow-md border py-0 h-9 px-4 rounded-full z-10"
               onClick={() => getCurrentLocation(true)}
               disabled={loading}
             >
@@ -736,7 +736,7 @@ const LocationSwitcher: React.FC<LocationSwitcherProps> = ({
               </p>
             )}
             <Button
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl h-12 font-bold shadow-emerald-200 shadow-md"
+              className="w-full bg-primary hover:bg-[#e85a2a] text-white rounded-xl h-12 font-bold shadow-primary/20 shadow-md"
               disabled={!selectedLocation}
               onClick={confirmLocation}
             >

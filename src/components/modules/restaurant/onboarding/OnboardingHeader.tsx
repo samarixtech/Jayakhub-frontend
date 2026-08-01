@@ -29,7 +29,7 @@ export const OnboardingHeader = ({
           {t("back")}
         </Button>
       )}
-      <div className="h-16 w-16 bg-[#346853] rounded-2xl flex items-center justify-center mb-4 overflow-hidden relative shadow-lg shadow-emerald-900/10">
+      <div className="h-16 w-16 bg-[#FF6B35] rounded-2xl flex items-center justify-center mb-4 overflow-hidden relative shadow-lg shadow-emerald-900/10">
         {logoPreview ? (
           <Image
             width={200}

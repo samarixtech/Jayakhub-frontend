@@ -1,7 +1,7 @@
 export const C = {
-  green: "#0B5D4E",
-  greenDeep: "#073d33",
-  greenLight: "#E8F4F1",
+  green: "#1B3A57",
+  greenDeep: "#14283B",
+  greenLight: "#EDF1F6",
   orange: "#B6932F",
   orangeDeep: "#9a7a24",
   gold: "#B6932F",
@@ -23,7 +23,7 @@ export function LogoMark({ size = 36 }: { size?: number }) {
         width: size,
         height: size,
         background: C.green,
-        boxShadow: "0 2px 8px rgba(11,93,78,.3)",
+        boxShadow: "0 2px 8px rgba(27,58,87,.3)",
       }}
     >
       <svg width={size * 0.61} height={size * 0.61} viewBox="0 0 24 24" fill="none">

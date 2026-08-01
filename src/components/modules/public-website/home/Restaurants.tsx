@@ -132,7 +132,7 @@ export default function Restaurants() {
             }`}
         >
           <div className="flex-1">
-            <span className="inline-flex items-center gap-2 bg-orange-100 text-orange-600 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:sm font-semibold mb-4">
+            <span className="inline-flex items-center gap-2 bg-navy/10 text-navy px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:sm font-semibold mb-4">
               <Flame className="w-3.5 h-3.5 md:w-4 md:h-4" />
               {t('badge')}
             </span>
@@ -237,7 +237,7 @@ export default function Restaurants() {
 
                 <div className="flex items-center gap-3 md:gap-4">
                   <div className="flex items-center gap-1.5">
-                    <Star className="w-4 h-4 md:w-5 md:h-5 text-orange-400 fill-orange-400" />
+                    <Star className="w-4 h-4 md:w-5 md:h-5 text-navy fill-navy" />
                     <span className="font-bold text-sm md:text-base text-foreground">
                       {restaurant.rating}
                     </span>

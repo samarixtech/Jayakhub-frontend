@@ -17,7 +17,7 @@ export const FAQSection = () => {
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-      <h3 className="text-[16px] font-bold text-[#1a1a1a] mb-5">
+      <h3 className="text-[16px] font-bold text-navy mb-5">
         {t("title")}
       </h3>
       <div className="flex flex-col">
@@ -43,7 +43,7 @@ export const FAQSection = () => {
               onClick={() => toggleFaq(item.id)}
             >
               <div className="flex items-center justify-between">
-                <span className="text-[13px] text-gray-700 font-medium">
+                <span className="text-[13px] text-navy font-bold">
                   {item.heading}
                 </span>
                 <ChevronRight

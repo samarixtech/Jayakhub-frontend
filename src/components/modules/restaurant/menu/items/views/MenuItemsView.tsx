@@ -182,7 +182,7 @@ export default function MenuItemsView() {
         {canAddItem && (
           <Button
             onClick={() => setIsAddModalOpen(true)}
-            className="bg-emerald-bg hover:bg-emerald-bg-hover text-white gap-2 cursor-pointer"
+            className="bg-brand-orange hover:bg-brand-orange/80 text-white gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             {t("addNewTitle")}

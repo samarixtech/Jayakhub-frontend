@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowLeft, FileWarning } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
 import { useTranslations } from "next-intl";
 
@@ -11,6 +12,7 @@ interface StepPreviewProps {
   isLoading: boolean;
   onImport: () => void;
   onCancel: () => void;
+  onParsedDataChange?: (data: any[]) => void;
 }
 
 export const StepPreview: React.FC<StepPreviewProps> = ({
@@ -20,9 +22,29 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
   isLoading,
   onImport,
   onCancel,
+  onParsedDataChange,
 }) => {
   const t = useTranslations("RestaurantDashboard.Menu.Items.stepPreview");
   const uniqueItemCount = new Set(parsedData.map((r) => r.name).filter(Boolean)).size;
+
+  const isPriceHeader = (header: string) => {
+    const h = header.trim().toLowerCase();
+    return (h === "price" || h === "baseprice" || h === "base price") && !h.includes("variant");
+  };
+
+  const handlePriceChange = (
+    rowIndex: number,
+    headerKey: string,
+    newValue: string,
+  ) => {
+    if (!onParsedDataChange) return;
+    const updated = [...parsedData];
+    updated[rowIndex] = {
+      ...updated[rowIndex],
+      [headerKey]: newValue,
+    };
+    onParsedDataChange(updated);
+  };
 
   return (
     <div className="space-y-4 flex flex-col h-full overflow-hidden">
@@ -60,14 +82,27 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
               {parsedData.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
-                  className="bg-white hover:bg-emerald-50/30 transition-colors"
+                  className="bg-white hover:bg-orange-50/30 transition-colors"
                 >
                   {headers.map((header, colIndex) => (
                     <td
                       key={colIndex}
-                      className="px-6 py-4 whitespace-nowrap text-gray-700"
+                      className="px-6 py-3 whitespace-nowrap text-gray-700"
                     >
-                      {row[header]}
+                      {isPriceHeader(header) ? (
+                        <Input
+                          type="number"
+                          min="0"
+                          step="any"
+                          value={row[header] ?? ""}
+                          onChange={(e) =>
+                            handlePriceChange(rowIndex, header, e.target.value)
+                          }
+                          className="w-28 h-9 px-2.5 bg-white border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange text-sm font-bold text-gray-900 rounded-lg"
+                        />
+                      ) : (
+                        row[header]
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -91,7 +126,7 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
               className="p-4 border border-gray-100 rounded-xl bg-gray-50/50 shadow-sm space-y-2"
             >
               <div className="flex justify-between items-center border-b border-gray-200 pb-2 mb-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-bg">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-orange">
                   {t("row", { index: rowIndex + 1 })}
                 </span>
               </div>
@@ -101,9 +136,22 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
                     <span className="text-[10px] text-gray-400 uppercase font-bold">
                       {header}
                     </span>
-                    <span className="text-sm text-gray-900 font-medium truncate">
-                      {row[header] || "—"}
-                    </span>
+                    {isPriceHeader(header) ? (
+                      <Input
+                        type="number"
+                        min="0"
+                        step="any"
+                        value={row[header] ?? ""}
+                        onChange={(e) =>
+                          handlePriceChange(rowIndex, header, e.target.value)
+                        }
+                        className="w-full h-9 px-2.5 bg-white border border-gray-200 focus:border-brand-orange focus:ring-1 focus:ring-brand-orange text-sm font-bold text-gray-900 rounded-lg mt-1"
+                      />
+                    ) : (
+                      <span className="text-sm text-gray-900 font-medium truncate">
+                        {row[header] || "—"}
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
@@ -117,7 +165,7 @@ export const StepPreview: React.FC<StepPreviewProps> = ({
           {t("cancel")}
         </Button>
         <Button
-          className="bg-emerald-bg hover:bg-emerald-bg-hover text-white px-8"
+          className="bg-brand-orange hover:bg-[#e85a2a] text-white px-8"
           disabled={isLoading}
           onClick={onImport}
         >

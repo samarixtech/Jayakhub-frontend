@@ -22,7 +22,7 @@ export default function StepBrandAssetsView() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <Typography variant="h4" className="font-bold text-gray-900">
+      <Typography variant="h4" className="font-bold text-navy">
         {t("title")}
       </Typography>
 
@@ -47,7 +47,7 @@ export default function StepBrandAssetsView() {
           <div className="flex justify-end pt-4 border-t border-gray-50">
             <Button
               type="submit"
-              className="w-full sm:w-auto bg-emerald-bg text-white px-10 h-12 rounded-2xl font-bold hover:bg-emerald-bg-hover shadow-md shadow-emerald-900/10"
+              className="w-full sm:w-auto bg-[#FF6B35] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#E85A2A] shadow-md cursor-pointer"
             >
               {t("nextStep")}
             </Button>

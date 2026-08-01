@@ -96,7 +96,7 @@ export default function SpecialDishes() {
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -173,7 +173,7 @@ export default function SpecialDishes() {
               <div className="p-5">
                 {/* Rating */}
                 <div className="flex items-center gap-2 mb-3">
-                  <Star className="w-4 h-4 text-orange-400 fill-orange-400" />
+                  <Star className="w-4 h-4 text-navy fill-navy" />
                   <span className="font-bold text-foreground">{dish.rating}</span>
                   <span className="text-[#94A3B8] text-sm">({dish.reviews})</span>
                 </div>

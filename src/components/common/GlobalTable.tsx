@@ -165,7 +165,7 @@ export default function GlobalTable<T>({
                     onClick={() => paginationParams.onPageChange(page)}
                     isActive={paginationParams.currentPage === page}
                     className={`w-9 h-9 rounded-full font-bold border-none cursor-pointer ${paginationParams.currentPage === page
-                      ? "bg-emerald-bg text-white hover:bg-[#1B4332] hover:text-white"
+                      ? "bg-primary text-white hover:bg-[#e85a2a] hover:text-white"
                       : "text-gray-600 hover:bg-gray-100"
                       }`}
                   >

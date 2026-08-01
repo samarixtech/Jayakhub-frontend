@@ -30,7 +30,7 @@ export const RestaurantMenu: React.FC<RestaurantMenuProps> = ({
               onClick={() => onCategoryClick(cat)}
               className={`py-2 px-4 whitespace-nowrap text-sm font-semibold border-b-2 transition-colors duration-200 ${
                 activeTab === cat
-                  ? "border-[#346853] text-[#346853]"
+                  ? "border-primary text-primary"
                   : "border-transparent text-gray-500 hover:text-gray-700"
               }`}
             >

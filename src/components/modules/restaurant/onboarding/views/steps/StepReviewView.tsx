@@ -43,14 +43,14 @@ export default function StepReviewView() {
   if (!data?.owner)
     return (
       <div className="flex items-center justify-center p-20">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-bg"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-orange"></div>
       </div>
     );
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500 pb-10">
       <div className="px-4 md:px-0">
-        <Typography variant="h3" className="text-3xl font-black text-gray-900">
+        <Typography variant="h3" className="text-3xl font-black text-navy">
           {t("title")}
         </Typography>
         <Typography className="text-gray-500 mt-2 text-sm">
@@ -187,7 +187,7 @@ export default function StepReviewView() {
                     .map(
                       ([day, hours]: [string, any]) =>
                         hours.isOpen && (
-                          <div key={day} className="flex justify-between text-xs">
+                          <div key={day} className="flex justify-between text-xs font-medium text-navy">
                             <span className="capitalize">{tDays(day)}</span>
                             <span>
                               {epochToDisplayTime(hours.openTime)} -{" "}
@@ -225,23 +225,23 @@ export default function StepReviewView() {
       </ReviewContainer>
 
       {/* Confirmation */}
-      <div className="bg-emerald-50/50 rounded-2xl p-4 flex items-start gap-4 border border-emerald-100/50">
+      <div className="bg-orange-50/50 rounded-2xl p-4 flex items-start gap-4 border border-orange-100/60">
         <Checkbox
           id="confirm"
           checked={agreed}
           onCheckedChange={(checked) => setAgreed(checked as boolean)}
-          className="mt-1 border-emerald-200 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+          className="mt-1 border-orange-200 data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange"
         />
         <label
           htmlFor="confirm"
-          className="text-[11px] md:text-xs text-emerald-800/70 leading-relaxed font-medium cursor-pointer"
+          className="text-[11px] md:text-xs text-navy/80 leading-relaxed font-medium cursor-pointer"
         >
           {t("confirmPrefix")}{" "}
           <Link
             href="/terms-of-service"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-emerald-700 font-bold underline hover:text-emerald-900"
+            className="text-brand-orange font-bold underline hover:text-[#e85a2a]"
           >
             {t("termsOfService")}
           </Link>
@@ -254,7 +254,7 @@ export default function StepReviewView() {
             href="/privacy-policy"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-emerald-700 font-bold underline hover:text-emerald-900"
+            className="text-brand-orange font-bold underline hover:text-[#e85a2a]"
           >
             {t("privacyPolicy")}
           </Link>
@@ -266,7 +266,7 @@ export default function StepReviewView() {
         <Button
           onClick={handleSubmit}
           disabled={isPending || loading || !agreed}
-          className="w-full md:w-auto bg-[#346853] text-white px-10 h-12 rounded-xl font-bold hover:bg-[#2a5443] transition-all flex items-center justify-center gap-2"
+          className="w-full md:w-auto bg-[#FF6B35] text-white px-10 h-12 rounded-xl font-bold hover:bg-[#E85A2A] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
           {isPending || loading ? t("submitting") : t("submitApplication")}
           {!isPending && !loading && (

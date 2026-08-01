@@ -65,14 +65,14 @@ function PlanCard({
     <Card
       className={`relative flex flex-col rounded-2xl overflow-hidden transition-all duration-300 ${
         isCurrent
-          ? "border-2 border-[#346853] shadow-lg shadow-emerald-100/60"
+          ? "border-2 border-[#FDB833] shadow-lg shadow-[#FDB833]/20"
           : "border border-gray-200 shadow-sm hover:shadow-md"
       }`}
     >
       {/* Current plan banner */}
       {isCurrent && (
         <div className="flex justify-center pt-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest bg-[#346853] text-white px-4 py-1 rounded-full">
+          <span className="text-[10px] font-bold uppercase tracking-widest bg-[#FDB833] text-[#1B3A57] px-4 py-1 rounded-full">
             Current Plan
           </span>
         </div>
@@ -108,8 +108,8 @@ function PlanCard({
           {allFeatures.length > 0 ? (
             allFeatures.map((feature, i) => (
               <li key={i} className="flex items-center gap-3">
-                <span className="w-5 h-5 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-                  <Check className="w-3 h-3 stroke-[3px] text-[#346853]" />
+                <span className="w-5 h-5 rounded-full bg-[#FFF8F0] flex items-center justify-center shrink-0">
+                  <Check className="w-3 h-3 stroke-[3px] text-[#FF6B35]" />
                 </span>
                 <span className="text-xs font-medium text-gray-600">
                   {feature}
@@ -126,13 +126,13 @@ function PlanCard({
           {action === "current" ? (
             <Button
               disabled
-              className="w-full h-11 rounded-xl font-semibold text-sm bg-[#346853] text-white opacity-60 cursor-default"
+              className="w-full h-11 rounded-xl font-semibold text-sm bg-[#FF6B35] text-white opacity-60 cursor-default"
             >
               Current Plan
             </Button>
           ) : action === "contact" ? (
             <Button
-              className="w-full h-11 rounded-xl font-semibold text-sm bg-[#346853] hover:bg-[#2a5542] text-white"
+              className="w-full h-11 rounded-xl font-semibold text-sm bg-[#FF6B35] hover:bg-[#E85A2A] text-white"
               onClick={() => window.open("mailto:support@ifdp.com")}
             >
               Contact Support
@@ -152,7 +152,7 @@ function PlanCard({
             </Button>
           ) : (
             <Button
-              className="w-full h-11 rounded-xl font-semibold text-sm bg-[#346853] hover:bg-[#2a5542] text-white"
+              className="w-full h-11 rounded-xl font-semibold text-sm bg-[#FF6B35] hover:bg-[#E85A2A] text-white"
               disabled={isCheckingOut}
               onClick={() => onCheckout(plan.id)}
             >
@@ -209,7 +209,7 @@ export default function SubscriptionPlansView() {
       {/* Plans grid */}
       {loading ? (
         <div className="flex flex-col items-center gap-3 py-20 text-gray-400">
-          <Loader2 className="w-7 h-7 animate-spin text-[#346853]" />
+          <Loader2 className="w-7 h-7 animate-spin text-[#FF6B35]" />
           <span className="text-sm font-medium">Loading plans...</span>
         </div>
       ) : plans.length === 0 ? (

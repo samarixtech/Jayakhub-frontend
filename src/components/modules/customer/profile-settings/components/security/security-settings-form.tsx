@@ -94,7 +94,7 @@ function SetPasswordForm({ t }: { t: any }) {
           <Button
             type="submit"
             disabled={isPending}
-            className="rounded-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white px-8 h-12 font-bold min-w-[180px]"
+            className="rounded-full bg-primary hover:bg-[#e85a2a] text-white px-8 h-12 font-bold min-w-[180px]"
           >
             {isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -185,7 +185,7 @@ function ChangePasswordForm({ t }: { t: any }) {
           <Button
             type="submit"
             disabled={isPending}
-            className="rounded-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white px-8 h-12 font-bold min-w-[180px]"
+            className="rounded-full bg-primary hover:bg-[#e85a2a] text-white px-8 h-12 font-bold min-w-[180px]"
           >
             {isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />

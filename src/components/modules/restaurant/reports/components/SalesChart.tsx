@@ -40,7 +40,7 @@ const options = {
     tooltip: {
       mode: "index" as const,
       intersect: false,
-      backgroundColor: "#1b2d22",
+      backgroundColor: "#1B3A57",
       titleColor: "#fff",
       bodyColor: "#fff",
       padding: 10,
@@ -151,12 +151,12 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
       {
         label: t("currentPeriod"),
         data: salesValues.length > 0 ? salesValues : [0],
-        borderColor: "#1B4332", // Dark Green
+        borderColor: "#FF6B35",
         backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-          gradient.addColorStop(0, "rgba(27, 67, 50, 0.15)");
-          gradient.addColorStop(1, "rgba(27, 67, 50, 0.02)");
+          gradient.addColorStop(0, "rgba(255, 107, 53, 0.15)");
+          gradient.addColorStop(1, "rgba(255, 107, 53, 0.02)");
           return gradient;
         },
         fill: true,
@@ -165,7 +165,7 @@ const SalesChart = ({ graphData = [] }: SalesChartProps) => {
       {
         label: t("previousPeriod"),
         data: salesValues.map((v) => v * 0.8), // Mock comparison if not provided by API
-        borderColor: "#a7f3d0", // Light emerald/mint
+        borderColor: "#FDB833",
         backgroundColor: "transparent",
         fill: false,
         borderWidth: 2,

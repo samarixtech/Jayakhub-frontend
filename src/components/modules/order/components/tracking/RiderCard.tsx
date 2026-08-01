@@ -42,7 +42,7 @@ export const RiderCard: React.FC<RiderCardProps> = ({ rider }) => {
       </div>
 
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center overflow-hidden relative shrink-0">
+        <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center overflow-hidden relative shrink-0">
           <Image
             src={`https://avatar.vercel.sh/${rider.name}`}
             alt={rider.name}
@@ -67,13 +67,13 @@ export const RiderCard: React.FC<RiderCardProps> = ({ rider }) => {
       <div className="flex items-center gap-3">
         {rider.estimatedArrivalTime && (
           <div className="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
-            <Clock className="w-3.5 h-3.5 text-[#346853]" />
+            <Clock className="w-3.5 h-3.5 text-navy" />
             <span>{t("eta")} <span className="font-bold text-gray-900">{rider.estimatedArrivalTime}</span></span>
           </div>
         )}
         <a
           href={`tel:${rider.phone}`}
-          className="flex items-center gap-1.5 text-xs text-[#346853] font-bold bg-emerald-50 px-3 py-1.5 rounded-full hover:bg-emerald-100 transition-colors"
+          className="flex items-center gap-1.5 text-xs text-primary font-bold bg-primary/10 px-3 py-1.5 rounded-full hover:bg-primary/15 transition-colors"
         >
           <Phone className="w-3.5 h-3.5" />
           {t("callRider")}

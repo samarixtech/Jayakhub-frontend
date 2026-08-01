@@ -19,26 +19,26 @@ export const QuickActions = () => {
     {
       label: t("order_food"),
       icon: UtensilsCrossed,
-      color: "text-emerald-600",
+      color: "text-primary",
       hrefSuffix: "/restaurants",
     },
     {
       label: t("kyc_verify"),
       icon: ShieldCheck,
-      color: "text-amber-600",
+      color: "text-gold-deep",
       hrefSuffix: "/customer/profile-settings",
     },
     {
       label: t("payment_methods"),
       icon: CreditCard,
-      color: "text-purple-600",
+      color: "text-navy",
       hrefSuffix: "/customer/wallet",
     },
   ];
 
   return (
     <Card className="border-none shadow-sm rounded-4xl bg-white p-8 h-fit">
-      <Typography className="text-lg font-black text-gray-900 mb-6">
+      <Typography className="text-lg font-black text-navy mb-6">
         {t("quick_actions")}
       </Typography>
       <div className="space-y-3">
@@ -47,7 +47,7 @@ export const QuickActions = () => {
             <>
               <div className="flex items-center gap-3">
                 <action.icon className={`h-5 w-5 ${action.color}`} />
-                <span className="text-sm font-bold text-gray-700">
+                <span className="text-sm font-bold text-navy">
                   {action.label}
                 </span>
               </div>

@@ -47,10 +47,10 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
   return (
     <Card className="rounded-[16px] border-gray-100 shadow-sm flex flex-col h-[360px] pt-4">
       <CardHeader className="pb-4">
-        <CardTitle className="text-[16px] font-bold text-[#1b2d22]">
+        <CardTitle className="text-[16px] font-bold text-[#1B3A57]">
           {t("recentActivity.title")}
         </CardTitle>
-        <CardDescription className="text-[12px] text-[#8ea89a] font-medium mt-0.5">
+        <CardDescription className="text-[12px] text-[#8B7355] font-medium mt-0.5">
           {t("recentActivity.subtitle")}
         </CardDescription>
       </CardHeader>
@@ -81,10 +81,10 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({
 
                     {/* Content */}
                     <div className="flex flex-col">
-                      <span className="text-[13px] font-bold text-[#1b2d22] leading-tight">
+                      <span className="text-[13px] font-bold text-[#1B3A57] leading-tight">
                         {activity.title}
                       </span>
-                      <span className="text-[11px] font-medium text-[#8ea89a] mt-1">
+                      <span className="text-[11px] font-medium text-[#8B7355] mt-1">
                         {getTimeAgo(activity.createdAt)}
                       </span>
                     </div>

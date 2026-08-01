@@ -50,7 +50,7 @@ const RevenueChart = ({ points, prevPoints, labels }: RevenueChartProps) => {
       tooltip: {
         mode: "index" as const,
         intersect: false,
-        backgroundColor: "#1b2d22",
+        backgroundColor: "#1B3A57",
         titleColor: "#fff",
         bodyColor: "#fff",
         padding: 10,
@@ -132,12 +132,12 @@ const RevenueChart = ({ points, prevPoints, labels }: RevenueChartProps) => {
       {
         label: tTrend("currentPeriod"),
         data: points,
-        borderColor: "#346853",
+        borderColor: "#FF6B35",
         backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-          gradient.addColorStop(0, "rgba(52, 104, 83, 0.4)");
-          gradient.addColorStop(1, "rgba(52, 104, 83, 0)");
+          gradient.addColorStop(0, "rgba(255, 107, 53, 0.4)");
+          gradient.addColorStop(1, "rgba(255, 107, 53, 0)");
           return gradient;
         },
         fill: true,

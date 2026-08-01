@@ -16,7 +16,7 @@ export const CloseRegisterOrdersList = ({
 
   return (
     <div className="border-t border-gray-100 pt-5">
-      <h3 className="text-[11px] font-bold text-[#556977] tracking-wide mb-3 uppercase">
+      <h3 className="text-[11px] font-bold text-[#8B7355] tracking-wide mb-3 uppercase">
         {t("title")}
       </h3>
 
@@ -32,7 +32,7 @@ export const CloseRegisterOrdersList = ({
               className="flex items-center justify-between gap-3"
             >
               <div className="min-w-0">
-                <p className="text-[12.5px] font-bold text-[#1b2d22] truncate">
+                <p className="text-[12.5px] font-bold text-[#1B3A57] truncate">
                   {order.itemName}
                 </p>
                 <p className="text-[11px] text-gray-400 font-medium">
@@ -43,7 +43,7 @@ export const CloseRegisterOrdersList = ({
                   • {order.paymentMethod}
                 </p>
               </div>
-              <span className="text-[12.5px] font-bold text-[#1b2d22] shrink-0">
+              <span className="text-[12.5px] font-bold text-[#1B3A57] shrink-0">
                 {formatPrice(order.amount)}
               </span>
             </div>

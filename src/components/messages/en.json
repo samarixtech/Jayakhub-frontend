@@ -46,7 +46,7 @@
       "subtitle": "From browsing to your doorstep — here's how it works.",
       "steps": {
         "step1": {
-          "title": "Choose your restaurant",
+          "title": "Choose Restaurant",
           "desc": "Browse restaurants near you."
         },
         "step2": {
@@ -3936,6 +3936,13 @@
       "title": "Ready to own your delivery?",
       "subtitle": "Join the restaurants across Iraq keeping their customers — and their revenue.",
       "button": "Become a Partner"
+    },
+    "download_cta": {
+      "title": "Download JayakHub today and start ordering",
+      "subtitle": "Because fresh food, offers, and <love>love</love>… always <highlight>come to you</highlight> ❤️",
+      "soon_label": "Soon on",
+      "google_play": "Google Play",
+      "app_store": "App Store"
     }
   },
   "DriverPage": {

@@ -120,7 +120,7 @@ export default function POSCartPanel() {
         <div className="flex border border-gray-200 rounded-md overflow-hidden h-[36px]">
           <button
             onClick={() => dispatch(setOrderType("Dine-In"))}
-            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold transition-all ${orderType === "Dine-In" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
+            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-bold transition-all ${orderType === "Dine-In" ? "bg-[#FF6B35] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
           >
             <Utensils className="w-[13px] h-[13px]" />{" "}
             <span className="hidden lg:inline">{t("dineIn")}</span>
@@ -129,7 +129,7 @@ export default function POSCartPanel() {
           <div className="w-px bg-gray-200"></div>
           <button
             onClick={() => dispatch(setOrderType("TakeAway"))}
-            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "TakeAway" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
+            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "TakeAway" ? "bg-[#FF6B35] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
           >
             <ShoppingBag className="w-[13px] h-[13px]" />{" "}
             <span className="hidden lg:inline">{t("takeaway")}</span>
@@ -138,7 +138,7 @@ export default function POSCartPanel() {
           <div className="w-px bg-gray-200"></div>
           <button
             onClick={() => dispatch(setOrderType("Delivery"))}
-            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "Delivery" ? "bg-[#357252] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
+            className={`flex-1 flex items-center justify-center gap-1.5 text-[11px] font-semibold transition-all ${orderType === "Delivery" ? "bg-[#FF6B35] text-white" : "bg-white text-gray-500 hover:text-gray-700 hover:bg-gray-50"}`}
           >
             <Bike className="w-[13px] h-[13px]" /> {t("delivery")}
           </button>
@@ -165,7 +165,7 @@ export default function POSCartPanel() {
             <div
               className={`flex-1 px-3 flex items-center gap-2 cursor-pointer hover:bg-gray-50 transition-colors ${orderType !== "Dine-In" && "justify-center"}`}
             >
-              <User className="w-[12px] h-[12px] text-[#357252] stroke-[2.5px]" />
+              <User className="w-[12px] h-[12px] text-[#FF6B35] stroke-[2.5px]" />
               <span className="font-bold text-[#111] text-[12px] truncate">
                 {t("walkIn")}
               </span>
@@ -239,11 +239,11 @@ export default function POSCartPanel() {
                       : []
                   ).map((v: any, vi: number) => (
                     <div key={vi} className="flex justify-between items-center mb-0.5">
-                      <span className="text-[10px] text-[#357252] font-semibold">
+                      <span className="text-[10px] text-[#FF6B35] font-semibold">
                         {v.name}
                       </span>
                       {v.additionalPrice > 0 && (
-                        <span className="text-[10px] text-[#357252] font-semibold">
+                        <span className="text-[10px] text-[#FF6B35] font-semibold">
                           +{formatPrice(v.additionalPrice)}
                         </span>
                       )}
@@ -292,7 +292,7 @@ export default function POSCartPanel() {
                         setActiveModifierItemId(item.cartId || item.id);
                         setIsModifiersOpen(true);
                       }}
-                      className="flex-1 py-1 rounded-md bg-[#edf6f1] text-[#357252] hover:bg-[#d6efe6] text-[10px] font-bold transition-colors"
+                      className="flex-1 py-1 rounded-md bg-[#FFF8F0] text-[#FF6B35] hover:bg-[#FFF5E6] text-[10px] font-bold transition-colors"
                     >
                       {t("modifiers")}
                     </button>
@@ -359,7 +359,7 @@ export default function POSCartPanel() {
           </button>
           <button
             onClick={() => setIsPaymentModalOpen(true)}
-            className="flex-1 bg-[#1eb589] hover:bg-[#159a72] text-white font-bold py-2 md:py-2.5 rounded-[6px] flex items-center justify-center gap-1.5 text-[14px] transition-colors shadow-[0_1px_2px_rgba(30,181,137,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 bg-[#FF6B35] hover:bg-[#E85A2A] text-white font-bold py-2 md:py-2.5 rounded-[6px] flex items-center justify-center gap-1.5 text-[14px] transition-colors shadow-[0_1px_2px_rgba(255,107,53,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={cartItems.length === 0}
           >
             {t("pay")}

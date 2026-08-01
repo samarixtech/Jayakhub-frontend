@@ -40,7 +40,7 @@ const StatCard: React.FC<StatCardProps> = ({
           </div>
         </div>
         <div className="flex flex-col gap-1.5 mt-2">
-          <span className="text-[#1b2d22] text-[32px] font-black leading-none">
+          <span className="text-[#1B3A57] text-[32px] font-black leading-none">
             {value}
           </span>
           {footer}
@@ -68,7 +68,7 @@ export default function ReviewsStats({ summary }: ReviewsStatsProps) {
         iconBgColor="bg-[#fff6e5]"
         iconColor="text-[#f5a623]"
         footer={
-          <div className="flex items-center gap-1 text-[#1eb589] font-bold text-[11px]">
+          <div className="flex items-center gap-1 text-[#2C5F2D] font-bold text-[11px]">
             <ArrowUpRight className="w-3.5 h-3.5 stroke-3" /> {t("live")}
           </div>
         }
@@ -81,7 +81,7 @@ export default function ReviewsStats({ summary }: ReviewsStatsProps) {
         iconBgColor="bg-[#ecf2ff]"
         iconColor="text-[#5584ff]"
         footer={
-          <div className="flex items-center gap-1 text-[#1eb589] font-bold text-[11px]">
+          <div className="flex items-center gap-1 text-[#2C5F2D] font-bold text-[11px]">
             <ArrowUpRight className="w-3.5 h-3.5 stroke-3" /> {t("allTime")}
           </div>
         }

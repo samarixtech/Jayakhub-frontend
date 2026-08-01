@@ -27,7 +27,7 @@ export const DeliveryDetails: React.FC<DeliveryDetailsProps> = ({
   return (
     <div className="border border-gray-100 rounded-2xl p-6 bg-white">
       <div className=" flex items-center gap-2 mb-4">
-        <MapPin className="w-4 h-4 text-[#346853]" />
+        <MapPin className="w-4 h-4 text-navy" />
         <h3 className="font-bold text-gray-900">{t("deliveryAddress")}</h3>
       </div>
       <div>

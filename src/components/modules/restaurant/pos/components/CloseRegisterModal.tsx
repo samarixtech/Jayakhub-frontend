@@ -29,24 +29,24 @@ export default function CloseRegisterModal({
       open={open}
       onOpenChange={onOpenChange}
       customStyle
-      className="max-w-[420px] p-0 flex flex-col gap-0 overflow-hidden bg-white border-none shadow-2xl rounded-2xl text-left"
+      className="max-w-[420px] max-h-[85vh] p-0 flex flex-col gap-0 overflow-hidden bg-white border-none shadow-2xl rounded-2xl text-left"
     >
-      <DialogHeader className="px-6 py-5 border-b border-gray-100 flex flex-row items-center justify-between text-left">
-        <DialogTitle className="text-[16px] font-black tracking-tight text-[#1b2d22] border-none">
+      <DialogHeader className="px-6 py-4 border-b border-gray-100 flex flex-row items-center justify-between text-left shrink-0">
+        <DialogTitle className="text-[16px] font-black tracking-tight text-[#1B3A57] border-none">
           {t("title")}
         </DialogTitle>
       </DialogHeader>
 
-      <div className="p-6 relative max-h-[80vh] overflow-y-auto">
-        <div className="bg-white mb-6">
+      <div className="p-6 overflow-y-auto flex-1">
+        <div className="bg-white">
           {isLoading ? (
             <div className="flex justify-center py-10">
-              <Loader2 className="w-6 h-6 animate-spin text-[#357252]" />
+              <Loader2 className="w-6 h-6 animate-spin text-[#FF6B35]" />
             </div>
           ) : data ? (
             <>
               <div className="mb-4 border-b border-gray-100 pb-4">
-                <h2 className="text-[17px] font-black tracking-tight text-[#1b2d22]">
+                <h2 className="text-[17px] font-black tracking-tight text-[#1B3A57]">
                   {t("shiftReport")}
                 </h2>
                 <div className="flex justify-between items-center mt-2 text-[12px] text-gray-500 font-medium">
@@ -75,7 +75,10 @@ export default function CloseRegisterModal({
 
         {/* Hidden PDF Template */}
         <ShiftReportPDF data={data} pdfRef={pdfRef} />
+      </div>
 
+      {/* Fixed Non-Scrollable Footer */}
+      <div className="p-4 sm:px-6 sm:py-4 border-t border-gray-100 bg-white shrink-0">
         <button
           onClick={handleCloseShift}
           disabled={isPending || isLoading || !data}

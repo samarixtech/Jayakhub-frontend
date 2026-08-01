@@ -164,7 +164,7 @@ export const GlobalSearch = () => {
 
   return (
     <div className="relative w-full max-w-[540px]" ref={dropdownRef}>
-      <div className="w-full flex items-center bg-white rounded-full shadow-lg overflow-hidden ps-3 md:ps-4 pe-0 py-0 border-2 border-[#2A5443] focus-within:border-[#346853] transition-colors relative z-20">
+      <div className="w-full flex items-center bg-white rounded-full shadow-lg overflow-hidden ps-3 md:ps-4 pe-0 py-0 border-2 border-primary/30 focus-within:border-primary transition-colors relative z-20">
         <Search className="w-4 h-4 md:w-5 md:h-5 text-gray-400 shrink-0" />
         <input
           type="text"
@@ -194,7 +194,7 @@ export const GlobalSearch = () => {
         )}
         <button
           onClick={() => handleSearchSubmit(query)}
-          className="h-8 md:h-9 flex items-center justify-center bg-[#346853] hover:bg-[#2a5443] text-white text-xs md:text-sm font-semibold px-4 md:px-5 me-1 md:me-1.5 rounded-full transition-colors shrink-0"
+          className="h-8 md:h-9 flex items-center justify-center bg-primary hover:bg-[#e85a2a] text-white text-xs md:text-sm font-semibold px-4 md:px-5 me-1 md:me-1.5 rounded-full transition-colors shrink-0"
         >
           {t("searchButton")}
         </button>
@@ -299,7 +299,7 @@ export const GlobalSearch = () => {
                         }}
                         className="flex items-center gap-3 px-3 py-2.5 hover:bg-gray-50 rounded-lg cursor-pointer transition-colors"
                       >
-                        <Search className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <Search className="w-4 h-4 text-primary shrink-0" />
                         <span className="text-sm text-gray-700 font-medium whitespace-nowrap overflow-hidden text-ellipsis">
                           {sug}
                         </span>
@@ -346,7 +346,7 @@ export const GlobalSearch = () => {
                             </h5>
                             <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
                               <span className="flex items-center gap-1">
-                                <span className="text-emerald-600 font-bold max-w-[120px] truncate">
+                                <span className="text-gold-deep font-bold max-w-[120px] truncate">
                                   {Array.isArray(restaurant.type)
                                     ? (restaurant.type || []).join(", ")
                                     : restaurant.type}

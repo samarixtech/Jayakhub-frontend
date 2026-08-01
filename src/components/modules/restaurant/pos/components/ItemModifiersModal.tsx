@@ -123,13 +123,13 @@ export default function ItemModifiersModal({
       <div className="flex flex-col p-5">
         {isLoading ? (
           <div className="flex items-center justify-center py-10 mb-6">
-            <Loader2 className="w-6 h-6 animate-spin text-[#1eb589]" />
+            <Loader2 className="w-6 h-6 animate-spin text-[#FF6B35]" />
           </div>
         ) : variants.length > 0 ? (
           <div className="space-y-5 mb-6">
             {variants.map((group) => (
               <div key={group.id}>
-                <p className="text-[11px] font-bold text-[#8ea89a] uppercase tracking-wider mb-2">
+                <p className="text-[11px] font-bold text-[#8B7355] uppercase tracking-wider mb-2">
                   {group.groupName}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
@@ -141,15 +141,15 @@ export default function ItemModifiersModal({
                         onClick={() => toggle(group.id, option.name)}
                         className={`flex flex-col items-center justify-center h-[76px] p-2 text-center border rounded-[8px] transition-colors ${
                           isSelected
-                            ? "border-[#1eb589] bg-emerald-50/60 ring-1 ring-[#1eb589]"
-                            : "border-gray-200 hover:border-[#1eb589] hover:bg-emerald-50/30"
+                            ? "border-[#FF6B35] bg-[#FFF8F0] ring-1 ring-[#FF6B35]/30"
+                            : "border-gray-200 hover:border-[#FF6B35] hover:bg-[#FFF8F0]"
                         }`}
                       >
                         <span className="text-[14px] font-semibold text-[#111827] capitalize">
                           {option.name}
                         </span>
                         {option.price > 0 && (
-                          <span className="text-[13px] font-medium text-[#1eb589] mt-0.5">
+                          <span className="text-[13px] font-medium text-[#FF6B35] mt-0.5">
                             +{formatPrice(option.price)}
                           </span>
                         )}
@@ -170,7 +170,7 @@ export default function ItemModifiersModal({
 
         <button
           onClick={handleSave}
-          className="w-full bg-[#1eb589] hover:bg-[#159a72] text-white font-bold py-3.5 rounded-[8px] text-[16px] transition-colors"
+          className="w-full bg-[#FF6B35] hover:bg-[#E85A2A] text-white font-bold py-3.5 rounded-[8px] text-[16px] transition-colors"
         >
           {t("save")}
         </button>

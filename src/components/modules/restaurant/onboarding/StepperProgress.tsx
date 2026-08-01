@@ -17,7 +17,7 @@ export const StepperProgress = ({
   return (
     <div className="w-full overflow-x-auto pb-4 scrollbar-hide">
       <div className="relative flex justify-between min-w-[800px] w-full my-4 sm:my-7 px-4 sm:px-10">
-        <div className="absolute top-4 left-20 right-20 h-px bg-emerald-100 z-0" />
+        <div className="absolute top-4 left-20 right-20 h-px bg-[#fdecd4] z-0" />
         {STEPS.map((step) => (
           <div
             key={step.id}
@@ -27,8 +27,8 @@ export const StepperProgress = ({
             <div
               className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                 currentStep >= step.id
-                  ? "bg-[#346853] text-white scale-110 shadow-lg shadow-emerald-900/20"
-                  : "bg-white border border-emerald-100 text-gray-300 group-hover:border-[#346853] group-hover:text-[#346853]"
+                  ? "bg-[#FF6B35] text-white scale-110 shadow-lg shadow-[#FF6B35]/20"
+                  : "bg-white border border-[#fdecd4] text-gray-300 group-hover:border-[#FF6B35] group-hover:text-[#FF6B35]"
               }`}
             >
               {currentStep > step.id ? <Check className="h-4 w-4" /> : step.id}
@@ -36,8 +36,8 @@ export const StepperProgress = ({
             <span
               className={`text-[10px] font-bold uppercase tracking-wider transition-colors duration-300 ${
                 currentStep >= step.id
-                  ? "text-[#346853]"
-                  : "text-gray-300 group-hover:text-[#346853]"
+                  ? "text-[#FF6B35]"
+                  : "text-gray-300 group-hover:text-[#FF6B35]"
               }`}
             >
               {step.label}

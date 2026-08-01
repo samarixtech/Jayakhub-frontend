@@ -56,7 +56,7 @@ export const AddressForm = ({
               className={`
                 px-6 py-2.5 rounded-full text-sm font-bold transition-all flex-1
                 ${addressType === type
-                  ? "bg-[#1E4D3B] text-white shadow-md"
+                  ? "bg-primary text-white shadow-md"
                   : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
                 }
               `}
@@ -69,7 +69,7 @@ export const AddressForm = ({
           <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-300">
             <Input
               placeholder={t('other_placeholder')}
-              className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
+              className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 text-base"
               autoFocus
               value={otherLabel}
               onChange={(e) => setOtherLabel(e.target.value)}
@@ -86,7 +86,7 @@ export const AddressForm = ({
         <Input
           id="street"
           placeholder={t('street_placeholder')}
-          className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.street ? errorInputClass : ""}`}
+          className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 text-base ${errors.street ? errorInputClass : ""}`}
           value={formData.street}
           onChange={handleInputChange}
           aria-invalid={!!errors.street}
@@ -104,7 +104,7 @@ export const AddressForm = ({
         <Input
           id="apt"
           placeholder={t('apt_placeholder')}
-          className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
+          className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 text-base"
           value={formData.apt}
           onChange={handleInputChange}
         />
@@ -119,7 +119,7 @@ export const AddressForm = ({
           <Input
             id="city"
             placeholder={t('city_placeholder')}
-            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.city ? errorInputClass : ""}`}
+            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 text-base ${errors.city ? errorInputClass : ""}`}
             value={formData.city}
             onChange={handleInputChange}
             aria-invalid={!!errors.city}
@@ -135,7 +135,7 @@ export const AddressForm = ({
           <Input
             id="state"
             placeholder={t('state_placeholder')}
-            className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base"
+            className="h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 text-base"
             value={formData.state}
             onChange={handleInputChange}
           />
@@ -151,7 +151,7 @@ export const AddressForm = ({
           <Input
             id="zip"
             placeholder={t('zip_placeholder')}
-            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.zip ? errorInputClass : ""}`}
+            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 text-base ${errors.zip ? errorInputClass : ""}`}
             value={formData.zip}
             onChange={handleInputChange}
             aria-invalid={!!errors.zip}
@@ -167,7 +167,7 @@ export const AddressForm = ({
           <Input
             id="country"
             placeholder={t('country_placeholder')}
-            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 text-base ${errors.country ? errorInputClass : ""}`}
+            className={`h-12 rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 text-base ${errors.country ? errorInputClass : ""}`}
             value={formData.country}
             onChange={handleInputChange}
             aria-invalid={!!errors.country}
@@ -193,7 +193,7 @@ export const AddressForm = ({
           onCheckedChange={(checked) =>
             setFormData((prev) => ({ ...prev, status: checked }))
           }
-          className="data-[state=checked]:bg-[#1E4D3B]"
+          className="data-[state=checked]:bg-primary"
         />
       </div>
 
@@ -205,7 +205,7 @@ export const AddressForm = ({
         <Textarea
           id="note"
           placeholder={t('note_placeholder')}
-          className="min-h-[100px] rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-emerald-500/20 resize-none text-base"
+          className="min-h-[100px] rounded-xl bg-gray-50/50 border-gray-200 focus-visible:ring-primary/20 resize-none text-base"
           value={formData.note}
           onChange={handleInputChange}
         />

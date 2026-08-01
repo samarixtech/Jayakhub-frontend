@@ -98,7 +98,7 @@ export default function PartnersPricingTable({
                         <Check
                           aria-label="Included"
                           strokeWidth={3}
-                          className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 inline-block"
+                          className="w-4 h-4 sm:w-5 sm:h-5 text-forest-green inline-block"
                         />
                       ) : (
                         <X

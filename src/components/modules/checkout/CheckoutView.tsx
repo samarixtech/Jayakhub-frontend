@@ -393,7 +393,7 @@ const CheckoutView = () => {
                       </h3>
                     </div>
                     <textarea
-                      className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#346853] resize-none"
+                      className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-primary resize-none"
                       placeholder={t("specialInstructionsPlaceholder")}
                     />
                   </div>

@@ -160,7 +160,7 @@ export default function SubscriptionView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3 text-gray-400">
-          <Loader2 className="w-8 h-8 animate-spin text-[#346853]" />
+          <Loader2 className="w-8 h-8 animate-spin text-[#FF6B35]" />
           <p className="text-sm font-medium">Loading subscription...</p>
         </div>
       </div>
@@ -214,7 +214,7 @@ export default function SubscriptionView() {
             </p>
             <p className="text-lg font-black text-gray-900">{plan?.name}</p>
             <div className="flex items-end gap-1 mt-0.5">
-              <span className="text-2xl font-black text-[#346853]">
+              <span className="text-2xl font-black text-[#FF6B35]">
                 {paidDisplayAmount != null
                   ? formatAmountInCurrency(
                       paidDisplayAmount,
@@ -246,8 +246,8 @@ export default function SubscriptionView() {
                     key={i}
                     className="flex items-center gap-2 text-[13px] text-gray-600 font-medium"
                   >
-                    <span className="w-4 h-4 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-                      <Check className="w-2.5 h-2.5 text-[#346853] stroke-[3px]" />
+                    <span className="w-4 h-4 rounded-full bg-[#FFF8F0] flex items-center justify-center shrink-0">
+                      <Check className="w-2.5 h-2.5 text-[#FF6B35] stroke-[3px]" />
                     </span>
                     {f}
                   </li>
@@ -274,7 +274,7 @@ export default function SubscriptionView() {
             {/* Progress bar */}
             <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mt-1">
               <div
-                className="h-full bg-gradient-to-r from-[#346853] to-emerald-400 rounded-full transition-all"
+                className="h-full bg-gradient-to-r from-[#FF6B35] to-[#FDB833] rounded-full transition-all"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -363,8 +363,8 @@ export default function SubscriptionView() {
             {!isCancelledOrExpired && (
               <div className="flex items-center justify-between px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                    <RotateCcw className="w-4 h-4 text-[#346853]" />
+                  <div className="w-9 h-9 rounded-xl bg-[#FFF8F0] flex items-center justify-center shrink-0">
+                    <RotateCcw className="w-4 h-4 text-[#FF6B35]" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">
@@ -378,13 +378,13 @@ export default function SubscriptionView() {
                   </div>
                 </div>
                 {togglingRenew ? (
-                  <Loader2 className="w-5 h-5 animate-spin text-[#346853]" />
+                  <Loader2 className="w-5 h-5 animate-spin text-[#FF6B35]" />
                 ) : (
                   <Switch
                     checked={autoRenew}
                     onCheckedChange={handleAutoRenewToggle}
                     disabled={togglingRenew}
-                    className="data-[state=checked]:bg-[#346853] disabled:opacity-50"
+                    className="data-[state=checked]:bg-[#FF6B35] disabled:opacity-50"
                   />
                 )}
               </div>
@@ -396,8 +396,8 @@ export default function SubscriptionView() {
               className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors text-left"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                  <Settings2 className="w-4 h-4 text-[#346853]" />
+                <div className="w-9 h-9 rounded-xl bg-[#FFF8F0] flex items-center justify-center shrink-0">
+                  <Settings2 className="w-4 h-4 text-[#FF6B35]" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-900">
@@ -493,7 +493,7 @@ export default function SubscriptionView() {
                   <p className="text-xs text-gray-400">Expires {card.expiry}</p>
                 </div>
               </div>
-              <Badge className="bg-[#346853] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border-0">
+              <Badge className="bg-[#FF6B35] text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border-0">
                 Primary
               </Badge>
             </div>
@@ -536,7 +536,7 @@ export default function SubscriptionView() {
                 <tr>
                   <td colSpan={5} className="px-6 py-8 text-center">
                     <div className="flex items-center justify-center gap-2 text-gray-400">
-                      <Loader2 className="w-4 h-4 animate-spin text-[#346853]" />
+                      <Loader2 className="w-4 h-4 animate-spin text-[#FF6B35]" />
                       <span className="text-sm">Loading history...</span>
                     </div>
                   </td>
@@ -586,7 +586,7 @@ export default function SubscriptionView() {
                       <Badge
                         className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border ${
                           row.status === "active"
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                ? "bg-[#FFF8F0] text-[#FF6B35] border-[#FFE8D1]"
                             : row.status === "cancelled"
                               ? "bg-red-50 text-red-600 border-red-200"
                               : "bg-gray-50 text-gray-600 border-gray-200"

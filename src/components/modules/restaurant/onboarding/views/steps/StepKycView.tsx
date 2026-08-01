@@ -33,7 +33,7 @@ export default function StepKycView() {
       onClick={() => setActive(type.id)}
       className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
         activeId === type.id
-          ? "bg-white text-emerald-bg shadow-sm"
+          ? "bg-white text-navy font-bold shadow-xs"
           : "text-gray-400 hover:text-gray-600"
       }`}
     >
@@ -44,7 +44,7 @@ export default function StepKycView() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
-        <Typography variant="h3" className="text-xl font-bold text-gray-900">
+        <Typography variant="h3" className="text-xl font-bold text-navy">
           {t("title")}
         </Typography>
         <Typography className="text-gray-500 mt-1">
@@ -57,10 +57,10 @@ export default function StepKycView() {
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-emerald-bg text-white flex items-center justify-center text-[10px] font-bold">
+              <div className="w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center text-[10px] font-bold">
                 1
               </div>
-              <Typography className="font-bold text-gray-900">
+              <Typography className="font-bold text-navy">
                 {t("ownerIdentity")}
               </Typography>
             </div>
@@ -95,14 +95,14 @@ export default function StepKycView() {
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-emerald-bg text-white flex items-center justify-center text-[10px] font-bold">
+              <div className="w-6 h-6 rounded-full bg-brand-orange text-white flex items-center justify-center text-[10px] font-bold">
                 2
               </div>
-              <Typography className="font-bold text-gray-900">
+              <Typography className="font-bold text-navy">
                 {t("restaurantDocuments")}
               </Typography>
             </div>
-            <span className="text-[10px] font-bold text-emerald-bg px-2 py-0.5 bg-emerald-50 rounded-full uppercase">
+            <span className="text-[10px] font-bold text-navy px-2.5 py-0.5 bg-navy/10 rounded-full uppercase">
               {t("selectOne")}
             </span>
           </div>
@@ -127,7 +127,7 @@ export default function StepKycView() {
               file={docFile}
               onFileChange={handleDocFileChange}
               onRemove={removeDocFile}
-              themeColor="emerald"
+              themeColor="orange"
             />
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function StepKycView() {
         <Button
           onClick={handleComplete}
           disabled={!kycFile || !docFile}
-          className="bg-emerald-bg text-white px-10 h-12 rounded-2xl font-bold hover:bg-emerald-bg-hover"
+          className="bg-[#FF6B35] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#E85A2A] shadow-md cursor-pointer disabled:opacity-50"
         >
           {t("nextStep")}
         </Button>

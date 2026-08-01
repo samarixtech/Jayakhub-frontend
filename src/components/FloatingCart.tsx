@@ -27,7 +27,7 @@ const FloatingCart: React.FC<FloatingCartProps> = ({
     <div className="fixed bottom-6 left-0 right-0 px-4 md:px-0 z-50 flex justify-center pointer-events-none">
       <button
         onClick={onClick}
-        className="pointer-events-auto bg-[#346853] text-white w-full max-w-xl rounded-xl shadow-2xl p-3 flex items-center justify-between hover:bg-[#2c5846] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+        className="pointer-events-auto bg-primary text-white w-full max-w-xl rounded-xl shadow-2xl p-3 flex items-center justify-between hover:bg-[#e85a2a] transition-all transform hover:scale-[1.02] active:scale-[0.98]"
       >
         <div className="flex items-center gap-3">
           <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">

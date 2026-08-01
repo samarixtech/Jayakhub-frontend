@@ -54,7 +54,7 @@ export default function CustomerDashboardView() {
         <div>
           <Typography
             variant="h2"
-            className="text-2xl font-black text-gray-900 flex items-center gap-2"
+            className="text-2xl font-black text-navy flex items-center gap-2"
           >
             {t("overview")}
           </Typography>

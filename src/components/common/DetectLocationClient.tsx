@@ -98,7 +98,7 @@ export default function DetectLocationClient() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <div className="flex flex-col items-center gap-4">
-        <Loader2 className="h-10 w-10 animate-spin text-emerald-600" />
+        <Loader2 className="h-10 w-10 animate-spin text-primary" />
         <p className="text-gray-500 text-sm font-medium animate-pulse">
           Detecting your location...
         </p>

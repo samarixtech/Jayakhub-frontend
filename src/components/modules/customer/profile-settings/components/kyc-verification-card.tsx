@@ -75,7 +75,7 @@ export default function IdentityVerificationCard() {
         )}
 
         <p className="flex items-start sm:items-center gap-2 text-[11px] text-gray-400 font-medium pt-3 leading-relaxed">
-          <Info size={14} className="text-blue-500 shrink-0 mt-0.5 sm:mt-0" />
+          <Info size={14} className="text-navy shrink-0 mt-0.5 sm:mt-0" />
           {t('complete_verification')}
         </p>
       </CardContent>

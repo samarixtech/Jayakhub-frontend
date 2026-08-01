@@ -52,7 +52,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "#1b2d22",
+        backgroundColor: "#1B3A57",
         padding: 12,
         cornerRadius: 8,
         titleFont: { size: 12, weight: "normal" as const },
@@ -69,7 +69,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
         suggestedMax: maxDataPoint * 1.2,
         ticks: {
           maxTicksLimit: 5,
-          color: "#8ea89a",
+          color: "#8B7355",
           font: { size: 11, weight: 600 },
           callback: (value: any) => `${currency}${value}`,
         },
@@ -78,7 +78,7 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
       },
       x: {
         ticks: {
-          color: "#8ea89a",
+          color: "#8B7355",
           font: { size: 11, weight: 600 },
         },
         border: { display: false },
@@ -114,16 +114,16 @@ export const RevenueChart: React.FC<RevenueChartProps> = ({
     <Card className="rounded-[16px] border-gray-100 shadow-sm flex flex-col h-[360px] overflow-hidden pt-4">
       <CardHeader className="flex flex-row items-start justify-between pb-6">
         <div className="space-y-1">
-          <CardTitle className="text-[16px] font-bold text-[#1b2d22]">
+          <CardTitle className="text-[16px] font-bold text-[#1B3A57]">
             {t("revenueChart.title")}
           </CardTitle>
-          <CardDescription className="text-[12px] text-[#8ea89a] font-medium">
+          <CardDescription className="text-[12px] text-[#8B7355] font-medium">
             {t("revenueChart.subtitle")}
           </CardDescription>
         </div>
         <Badge
           variant="secondary"
-          className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-none px-3 py-1 text-[10px] uppercase tracking-wider"
+          className="bg-[#FFF8F0] text-[#FF6B35] hover:bg-[#FFF5E6] border-none px-3 py-1 text-[10px] uppercase tracking-wider"
         >
           {t("revenueChart.thisWeek")}
         </Badge>

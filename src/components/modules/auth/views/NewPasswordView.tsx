@@ -59,7 +59,7 @@ export default function NewPasswordView() {
             <Button
               type="submit"
               disabled={isPending}
-              className="w-full h-14 bg-emerald-bg text-white rounded-xl text-lg font-bold"
+              className="w-full h-14 bg-primary text-white rounded-xl text-lg font-bold"
             >
               {isPending ? (
                 <Loader2 className="mr-2 h-6 w-6 animate-spin" />

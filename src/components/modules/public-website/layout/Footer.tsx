@@ -48,7 +48,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-primary text-white py-10 border-t border-white/10">
+    <footer className="bg-[#152E48] text-white py-10 border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12 items-start">
           {/* BRAND COLUMN (Span 2 columns on large screens) */}

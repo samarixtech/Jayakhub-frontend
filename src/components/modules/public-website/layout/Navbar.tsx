@@ -1,30 +1,38 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import LanguageSwitcher from "@/components/common/LanguageSwitcher";
 import CountrySwitcher from "@/components/common/CountrySwitcher";
-import image from "../../../../../public/ArbicLogo (2).png";
-import image2 from "../../../../../public/EngLogo (2).png";
+import image from "../../../../../public/ArbicLogo2.png";
+import image2 from "../../../../../public/ENGLogo.png";
 
 const Navbar: React.FC = () => {
   const t = useTranslations("Navbar");
   const localeFromNext = useLocale();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<"language" | "country" | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<
+    "language" | "country" | null
+  >(null);
   const handleCloseMobileMenu = useCallback(() => {
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsMobileMenuOpen(false);
-      setIsClosing(false);
-    }, 300);
+    setIsMobileMenuOpen(false);
   }, []);
+
+  // Let other floating UI (e.g. the AI chat bubble) know the mobile nav
+  // drawer's open state so it can hide itself while the drawer is open.
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("jayakhub:mobilenav", {
+        detail: { open: isMobileMenuOpen },
+      }),
+    );
+  }, [isMobileMenuOpen]);
 
   // --- Nav Items ---
   const navItems = [
@@ -39,7 +47,8 @@ const Navbar: React.FC = () => {
   const isArabic = localeFromNext === "ar";
 
   return (
-    <nav className="bg-[#0B5D4E] shadow-lg sticky top-0 z-50">
+    <>
+    <nav className="bg-white/80 backdrop-blur-md shadow-sm border-b border-navy/10 fixed top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex items-center h-20">
           {/* Logo */}
@@ -48,7 +57,7 @@ const Navbar: React.FC = () => {
               src={isArabic ? image : image2}
               alt="Logo"
               width={270}
-              className="w-32 md:w-[180px] h-auto"
+              className="w-39 md:w-[180px] h-auto"
             />
           </Link>
 
@@ -60,12 +69,15 @@ const Navbar: React.FC = () => {
                 <Link
                   key={item.to}
                   href={item.to}
-                  className={`font-medium transition-colors duration-200 ${isActive ? "text-[#B6932F]" : "text-[#E8F4F1] hover:text-[#B6932F]"
-                    }`}
+                  className={`font-medium transition-colors duration-200 ${
+                    isActive
+                      ? "text-brand-orange"
+                      : "text-navy/70 hover:text-brand-orange"
+                  }`}
                 >
                   {item.label}
                 </Link>
-              )
+              );
             })}
           </div>
 
@@ -87,68 +99,13 @@ const Navbar: React.FC = () => {
           <div className="md:hidden ms-auto">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="text-[#E8F4F1] hover:text-[#B6932F] p-2"
+              className="text-navy/70 hover:text-brand-orange p-2"
             >
               <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <>
-          {/* Backdrop */}
-          <div
-            className={`fixed inset-0 bg-[#2C2C2C]/50 z-40 ${isClosing ? "animate-fade-out-fast" : "animate-fade-in-fast"
-              }`}
-            onClick={handleCloseMobileMenu}
-          ></div>
-
-          {/* Sidebar */}
-          <div
-            className={`fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-linear-to-b from-[#0B5D4E] to-[#0B5D4E] text-[#E8F4F1] z-50 shadow-2xl overflow-y-auto ${isClosing ? "animate-slide-out-right" : "animate-slide-in-right"
-              }`}
-          >
-            <div className="flex justify-between items-center p-4 border-b border-[#E8F4F1]/20">
-              <h2 className="text-lg font-semibold">{t("mobileMenuTitle")}</h2>
-              <button
-                onClick={handleCloseMobileMenu}
-                className="p-2 rounded-lg hover:bg-[#E8F4F1]/10 transition"
-              >
-                <X className="w-6 h-6 text-[#E8F4F1]" />
-              </button>
-            </div>
-
-            <div className="flex flex-col space-y-1 p-4">
-              {navItems.map((item) => {
-                const isActive = pathname.includes(item.to);
-                return (
-                  <Link
-                    key={item.to}
-                    href={item.to}
-                    onClick={handleCloseMobileMenu}
-                    className={`px-3 py-3 rounded-lg transition-colors text-base font-medium ${isActive ? "bg-[#E8F4F1]/10 text-[#B6932F]" : "hover:bg-[#E8F4F1]/10"
-                      }`}
-                  >
-                    {item.label}
-                  </Link>
-                )
-              })}
-
-              <div className="border-t border-[#E8F4F1]/20 my-3"></div>
-
-              {/* Mobile Language Selector */}
-              <LanguageSwitcher variant="navbar" />
-
-              {/* Mobile Country Selector */}
-              <div className="mt-2">
-                <CountrySwitcher variant="navbar" />
-              </div>
-            </div>
-          </div>
-        </>
-      )}
       <style jsx>{`
         @keyframes fade-in {
           from {
@@ -160,23 +117,8 @@ const Navbar: React.FC = () => {
             transform: translateY(0);
           }
         }
-        @keyframes fade-in-fast {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-        .animate-fade-out-fast {
-          animation: fade-in-fast 0.3s reverse forwards;
-        }
-
         .animate-fade-in {
           animation: fade-in 0.25s ease-out;
-        }
-        .animate-fade-in-fast {
-          animation: fade-in-fast 0.3s ease-out;
         }
         @keyframes dropdown-fade {
           from {
@@ -191,34 +133,77 @@ const Navbar: React.FC = () => {
         .animate-dropdown-fade {
           animation: dropdown-fade 0.2s ease-out;
         }
-
-        @keyframes slide-in-right {
-          from {
-            transform: translateX(100%);
-          }
-          to {
-            transform: translateX(0);
-          }
-        }
-        .animate-slide-in-right {
-          animation: slide-in-right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-            forwards;
-        }
-
-        @keyframes slide-out-right {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(100%);
-          }
-        }
-        .animate-slide-out-right {
-          animation: slide-out-right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-            forwards;
-        }
       `}</style>
     </nav>
+
+    {/* Mobile Menu — rendered outside <nav> so the navbar's backdrop-blur
+        doesn't become the containing block for these fixed-position elements
+        (that reparenting is what made the menu appear squashed/hidden). */}
+    <AnimatePresence>
+      {isMobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 bg-[#2C2C2C]/50 z-40"
+            onClick={handleCloseMobileMenu}
+          />
+
+          {/* Sidebar */}
+          <motion.div
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="fixed top-0 right-0 h-full w-[80%] max-w-[300px] bg-navy text-white/90 z-50 shadow-2xl overflow-y-auto"
+          >
+            <div className="flex justify-between items-center p-4 border-b border-white/20">
+              <h2 className="text-lg font-semibold">{t("mobileMenuTitle")}</h2>
+              <button
+                onClick={handleCloseMobileMenu}
+                className="p-2 rounded-lg hover:bg-white/10 transition"
+              >
+                <X className="w-6 h-6 text-white/90" />
+              </button>
+            </div>
+
+            <div className="flex flex-col space-y-1 p-4">
+              {navItems.map((item) => {
+                const isActive = pathname.includes(item.to);
+                return (
+                  <Link
+                    key={item.to}
+                    href={item.to}
+                    onClick={handleCloseMobileMenu}
+                    className={`px-3 py-3 rounded-lg transition-colors text-base font-medium ${
+                      isActive
+                        ? "bg-white/10 text-secondary"
+                        : "hover:bg-white/10"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+
+              <div className="border-t border-white/20 my-3"></div>
+
+              {/* Mobile Language Selector */}
+              <LanguageSwitcher variant="navbar" />
+
+              {/* Mobile Country Selector */}
+              <div className="mt-2">
+                <CountrySwitcher variant="navbar" />
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+    </>
   );
 };
 

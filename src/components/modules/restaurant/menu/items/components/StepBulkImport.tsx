@@ -41,7 +41,7 @@ export const StepBulkImport: React.FC<StepBulkImportProps> = ({
 
         <Button
           variant="ghost"
-          className="text-emerald-bg hover:text-emerald-bg-hover gap-2 font-medium"
+          className="text-brand-orange hover:text-brand-orange/80 gap-2 font-medium"
           onClick={onDownloadTemplate}
         >
           <Download className="w-4 h-4" />
@@ -52,7 +52,7 @@ export const StepBulkImport: React.FC<StepBulkImportProps> = ({
       <div
         className={`
           border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center gap-4 transition-colors min-h-[300px] cursor-pointer
-          ${dragActive ? "border-emerald-bg bg-emerald-50/50" : "border-gray-200 bg-gray-50/50 hover:border-emerald-bg"}
+          ${dragActive ? "border-brand-orange bg-orange-50/50" : "border-gray-200 bg-gray-50/50 hover:border-brand-orange"}
         `}
         onDragEnter={onDrag}
         onDragLeave={onDrag}

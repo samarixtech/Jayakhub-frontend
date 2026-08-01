@@ -104,7 +104,7 @@ const OrderSummary = ({
     <div className="space-y-6">
       {/* Delivery Time Estimate */}
       <div className="bg-white p-4 rounded-xl border border-gray-100 flex items-center gap-4 shadow-sm">
-        <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-[#346853]">
+        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
           <Clock size={20} />
         </div>
         <div>
@@ -140,7 +140,7 @@ const OrderSummary = ({
                 className="flex justify-between items-start text-sm"
               >
                 <div className="flex gap-2">
-                  <span className="font-bold text-[#346853]">
+                  <span className="font-bold text-primary">
                     {item.quantity}x
                   </span>
                   <div>
@@ -244,7 +244,7 @@ const OrderSummary = ({
             </span>
           </div>
           {appliedCoupon && (
-            <div className="flex justify-between text-emerald-600 font-medium">
+            <div className="flex justify-between text-forest-green font-medium">
               <span>
                 {t("discountLabel", { code: appliedCoupon.couponCode })}
               </span>
@@ -266,7 +266,7 @@ const OrderSummary = ({
                 {total.toFixed(2)}
               </span>
             )}
-            <span className="font-bold text-2xl text-[#346853]">
+            <span className="font-bold text-2xl text-primary">
               {currency}
               {displayTotal.toFixed(2)}
             </span>
@@ -275,8 +275,8 @@ const OrderSummary = ({
 
         {/* Promo Code */}
         {appliedCoupon ? (
-          <div className="flex items-center justify-between mb-6 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-lg">
-            <div className="flex items-center gap-2 text-emerald-700 text-sm font-medium">
+          <div className="flex items-center justify-between mb-6 bg-forest-green/10 border border-forest-green/30 px-4 py-3 rounded-lg">
+            <div className="flex items-center gap-2 text-forest-green text-sm font-medium">
               <Tag size={16} />
               <span>
                 {t("couponApplied", { code: appliedCoupon.couponCode })}
@@ -307,7 +307,7 @@ const OrderSummary = ({
               type="button"
               onClick={handleApplyCoupon}
               disabled={isApplying}
-              className="text-xs font-bold text-[#346853] px-3 hover:underline disabled:opacity-50"
+              className="text-xs font-bold text-primary px-3 hover:underline disabled:opacity-50"
             >
               {isApplying ? (
                 <Loader2 size={14} className="animate-spin" />
@@ -321,7 +321,7 @@ const OrderSummary = ({
         <Button
           onClick={onPlaceOrder}
           disabled={isPlacingOrder}
-          className="w-full h-12 bg-[#346853] hover:bg-[#2a5443] text-white font-bold rounded-lg disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full h-12 bg-primary hover:bg-[#e85a2a] text-white font-bold rounded-lg disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isPlacingOrder ? (
             <Loader2 className="animate-spin" size={18} />

@@ -43,8 +43,8 @@ export default function PrivacyTabNav() {
                   href={`${base}/${tab.id}`}
                   className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                     isActive
-                      ? "border-[#0B5D4E] text-[#0B5D4E]"
-                      : "border-transparent text-[#6b6b6b] hover:text-[#0B5D4E] hover:border-[#0B5D4E]"
+                      ? "border-navy text-navy"
+                      : "border-transparent text-[#6b6b6b] hover:text-navy hover:border-navy"
                   }`}
                 >
                   {tab.label}

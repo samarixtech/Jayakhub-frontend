@@ -26,13 +26,13 @@ export const VariantGroupCard: React.FC<VariantGroupCardProps> = ({
     <Card className="p-0 border-none shadow-sm overflow-hidden animate-in slide-in-from-bottom-2 duration-300">
       <div className="p-4 flex items-center justify-between border-b border-gray-50 bg-white">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-[#1F4D36]">
+          <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center text-brand-orange">
             <Sliders className="w-5 h-5 rotate-90" />
           </div>
           <div>
             <Typography
               variant="h4"
-              className="text-sm font-bold text-gray-900 leading-none mb-1"
+              className="text-sm font-bold text-navy leading-none mb-1"
             >
               {group.name}
             </Typography>
@@ -70,7 +70,7 @@ export const VariantGroupCard: React.FC<VariantGroupCardProps> = ({
             className="flex items-center bg-gray-50 rounded-md px-3 py-2 text-sm font-medium text-gray-600 border border-gray-100"
           >
             <span className="mr-2">{opt.name}</span>
-            <span className="font-bold text-[#1F4D36]">
+            <span className="font-bold text-brand-orange">
               {opt.isFree ? t("free") : `+${formatPrice(opt.price)}`}
             </span>
           </div>

@@ -33,7 +33,7 @@ export const HeaderActions = ({
           </Link>
           <Link
             href="/register"
-            className="bg-white text-emerald-bg text-sm font-semibold border border-emerald-bg rounded-full px-4 py-1.5 hover:bg-white/90 transition-colors hidden md:inline-block"
+            className="bg-white text-primary text-sm font-semibold border border-primary rounded-full px-4 py-1.5 hover:bg-white/90 transition-colors hidden md:inline-block"
           >
             {t("signUp")}
           </Link>
@@ -80,7 +80,7 @@ export const HeaderActions = ({
           <FiShoppingBag className="w-6 h-6" />
         </Button>
         {totalItems > 0 && (
-          <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full bg-red-500 text-white pointer-events-none border-2 border-[#346853]">
+          <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-[10px] rounded-full bg-red-500 text-white pointer-events-none border-2 border-navy">
             {totalItems > 9 ? "9+" : totalItems}
           </Badge>
         )}

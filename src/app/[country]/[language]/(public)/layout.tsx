@@ -7,10 +7,10 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="landing-navy-theme">
       <Navbar />
-      <div>{children}</div>
+      <div className="pt-20">{children}</div>
       <Footer />
-    </>
+    </div>
   );
 }

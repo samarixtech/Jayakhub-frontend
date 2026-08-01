@@ -28,7 +28,7 @@ const SupportCenterView = () => {
       <div className="flex justify-end items-center mb-4">
         <button
           onClick={() => setTicketDialogOpen(true)}
-          className="flex items-center gap-1.5 bg-[#2E6B56] hover:bg-[#255745] text-white text-[12px] font-bold px-5 py-2 rounded-full transition-colors shadow-sm tracking-wide"
+          className="flex items-center gap-1.5 bg-navy hover:bg-navy/80 text-white text-[12px] font-bold px-5 py-2 rounded-lg transition-colors shadow-sm tracking-wide cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" strokeWidth={3} />
           {t("header.newTicket")}
@@ -63,4 +63,3 @@ const SupportCenterView = () => {
 };
 
 export default SupportCenterView;
-

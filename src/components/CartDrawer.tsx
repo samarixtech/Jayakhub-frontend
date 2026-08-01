@@ -154,7 +154,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                   <ArrowLeft size={20} className="text-gray-600" />
                 </button>
               ) : (
-                <ShoppingBag className="w-5 h-5 text-[#346853]" />
+                <ShoppingBag className="w-5 h-5 text-primary" />
               )}
               <h2 className="text-xl font-bold text-gray-900">
                 {viewMode === "grouped" ? t("title") : currentGroup?.name}
@@ -193,7 +193,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
               </div>
               <button
                 onClick={onClose}
-                className="mt-4 px-6 py-2.5 bg-[#346853] text-white text-sm font-bold rounded-lg hover:bg-[#2a5443] transition-colors"
+                className="mt-4 px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-lg hover:bg-[#e85a2a] transition-colors"
               >
                 {t("startBrowsing")}
               </button>
@@ -252,7 +252,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 {currency} {(item.originalPrice || 0).toFixed(2)}
                               </span>
                             )}
-                            <p className="font-bold text-[#346853] text-xs">
+                            <p className="font-bold text-primary text-xs">
                               {currency} {item.price.toFixed(2)}
                             </p>
                           </div>
@@ -265,7 +265,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                   <div className="p-3 bg-gray-50/30 border-t border-gray-50">
                     <button
                       onClick={() => selectRestaurant(id)}
-                      className="w-full bg-[#346853] text-white py-2.5 rounded-xl text-xs font-bold hover:bg-[#2a5443] transition-colors flex items-center justify-center gap-1 shadow-sm"
+                      className="w-full bg-primary text-white py-2.5 rounded-xl text-xs font-bold hover:bg-[#e85a2a] transition-colors flex items-center justify-center gap-1 shadow-sm"
                     >
                       {t("viewCartBtn")}
                       <ChevronRight size={14} />
@@ -309,7 +309,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             {currency} {(item.originalPrice || 0).toFixed(2)}
                           </span>
                         )}
-                        <p className="font-bold text-[#346853] text-sm">
+                        <p className="font-bold text-primary text-sm">
                           {currency} {item.price.toFixed(2)}
                         </p>
                       </div>
@@ -336,7 +336,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                             item.quantity + 1,
                           )
                         }
-                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#346853] text-white hover:bg-[#2a5443] transition-colors shadow-sm shadow-[#346853]/20"
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-primary text-white hover:bg-[#e85a2a] transition-colors shadow-sm shadow-primary/20"
                       >
                         <Plus size={14} strokeWidth={3} />
                       </button>
@@ -363,7 +363,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                   <span>{t("deliveryFee")}</span>
                   <Info size={12} className="text-gray-400" />
                 </div>
-                <span className="font-medium text-[#346853]">
+                <span className="font-medium text-primary">
                   {currency} {deliveryFee.toFixed(2)}
                 </span>
               </div>
@@ -377,7 +377,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
             <button
               onClick={handleCheckout}
-              className="w-full bg-[#346853] text-white py-4 px-6 rounded-xl font-bold flex justify-between items-center hover:bg-[#2a5443] active:scale-[0.99] transition-all duration-200 shadow-lg shadow-[#346853]/20"
+              className="w-full bg-primary text-white py-4 px-6 rounded-xl font-bold flex justify-between items-center hover:bg-[#e85a2a] active:scale-[0.99] transition-all duration-200 shadow-lg shadow-primary/20"
             >
               <span>{t("goToCheckout")}</span>
               <span>

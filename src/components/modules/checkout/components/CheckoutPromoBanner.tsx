@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 export const CheckoutPromoBanner = () => {
   const t = useTranslations("Checkout");
   return (
-    <div className="w-full bg-[#346853] rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between text-white shadow-lg relative overflow-hidden">
+    <div className="w-full bg-secondary rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between text-navy shadow-lg relative overflow-hidden">
       <div className="relative z-10">
         <h2 className="text-2xl font-bold mb-1">
           {t("promoHeading1")}

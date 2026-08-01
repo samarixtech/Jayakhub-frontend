@@ -80,7 +80,7 @@ export const GlobalPagination: React.FC<GlobalPaginationProps> = ({
               disabled={isLoading}
               className={`w-10 h-10 flex items-center justify-center rounded-full transition-all text-[15px] ${
                 currentPage === page
-                  ? "bg-[#2f6f52] text-white shadow-md font-medium"
+                  ? "bg-brand-orange text-white shadow-md font-medium"
                   : "bg-white border border-slate-50 shadow-[0_2px_10px_rgba(0,0,0,0.04)] text-gray-700 hover:bg-gray-50 hover:text-gray-900 font-medium"
               }`}
             >

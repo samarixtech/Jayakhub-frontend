@@ -131,8 +131,8 @@ export default function PosHistoryView() {
             key={label}
             className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-start gap-4"
           >
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-emerald-50">
-              <Icon className="w-5 h-5 text-[#357252]" />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-[#FFF8F0]">
+              <Icon className="w-5 h-5 text-[#FF6B35]" />
             </div>
             <div className="min-w-0">
               <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider mb-1">
@@ -240,7 +240,7 @@ export default function PosHistoryView() {
                     }}
                     className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50/50 cursor-pointer"
                   >
-                    <td className="px-5 py-3.5 text-[13px] font-bold text-[#357252] whitespace-nowrap">{order.id}</td>
+                    <td className="px-5 py-3.5 text-[13px] font-bold text-[#FF6B35] whitespace-nowrap">{order.id}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.orderType}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700 whitespace-nowrap">{order.userId}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.paymentMethod}</td>

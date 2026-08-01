@@ -1,7 +1,7 @@
 // app/layout.tsx
 import { ReactNode } from "react";
 import { NextIntlClientProvider } from "next-intl";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Cairo, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { cookies } from "next/headers";
@@ -10,7 +10,16 @@ import { CLCProvider } from "../context/CLCContext";
 import { Toaster } from "react-hot-toast";
 import { Metadata } from "next";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["arabic"],
+  weight: ["400", "600", "700"],
+});
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
@@ -61,7 +70,9 @@ export default async function RootLayout({
 
   return (
     <html lang={currentLocale} dir={dir}>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body
+        className={`${spaceGrotesk.variable} ${cairo.variable} ${geistMono.variable}`}
+      >
         <Toaster
           position="top-right"
           toastOptions={{

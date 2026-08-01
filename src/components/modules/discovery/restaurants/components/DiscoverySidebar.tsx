@@ -62,12 +62,12 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
               <span
                 className={`w-[18px] h-[18px] rounded-full border-2 flex items-center justify-center transition-all ${
                   selectedSort === opt.id
-                    ? "border-[#346853]"
+                    ? "border-primary"
                     : "border-gray-300 group-hover:border-gray-400"
                 }`}
               >
                 {selectedSort === opt.id && (
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#346853]" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-primary" />
                 )}
               </span>
               <span
@@ -123,7 +123,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
             onClick={onDiscountedToggle}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border text-[13px] font-medium transition-all ${
               discounted
-                ? "bg-[#346853] text-white border-[#346853]"
+                ? "bg-primary text-white border-primary"
                 : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
             }`}
           >
@@ -136,7 +136,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
             onClick={onWishlistToggle}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border text-[13px] font-medium transition-all ${
               isWishlist
-                ? "bg-[#346853] text-white border-[#346853]"
+                ? "bg-primary text-white border-primary"
                 : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
             }`}
           >
@@ -162,7 +162,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
                 <span
                   className={`w-[18px] h-[18px] rounded border-2 flex items-center justify-center transition-all ${
                     activeFilters.includes(cuisine.name)
-                      ? "border-[#346853] bg-[#346853]"
+                      ? "border-primary bg-primary"
                       : "border-gray-300 group-hover:border-gray-400"
                   }`}
                 >
@@ -196,7 +196,7 @@ const DiscoverySidebar: React.FC<DiscoverySidebarProps> = ({
         {cuisines.length > VISIBLE_CUISINES && (
           <button
             onClick={onToggleCuisines}
-            className="text-[#346853] text-[13px] font-medium mt-4 hover:underline flex items-center gap-1"
+            className="text-primary text-[13px] font-medium mt-4 hover:underline flex items-center gap-1"
           >
             {showAllCuisines ? (
               <>{t("showLess")} <ChevronUp className="w-3.5 h-3.5" /></>

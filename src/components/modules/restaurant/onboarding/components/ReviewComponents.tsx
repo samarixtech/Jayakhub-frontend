@@ -2,7 +2,6 @@ import React from "react";
 import { Edit, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Typography } from "@/components/ui/typography";
-import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -37,18 +36,18 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({
   return (
     <div className={cn("space-y-4", className)}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3 text-emerald-bg">
-          <div className="p-2 rounded-lg bg-emerald-50 text-emerald-600">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-orange-50 text-brand-orange">
             <Icon className="w-5 h-5" />
           </div>
-          <Typography className="font-bold text-lg text-gray-900">
+          <Typography className="font-bold text-lg text-navy">
             {title}
           </Typography>
         </div>
         <Button
           variant="ghost"
           size="sm"
-          className="text-xs text-gray-400 hover:text-emerald-bg hover:bg-transparent font-medium"
+          className="text-xs text-navy hover:text-brand-orange hover:bg-transparent font-bold cursor-pointer"
           onClick={() => router.push(stepPath)}
         >
           <Edit className="w-3.5 h-3.5 mr-1" />
@@ -81,7 +80,7 @@ export const ReviewField = ({
     <Typography className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
       {label}
     </Typography>
-    <Typography className="text-sm font-medium text-gray-900 break-all">
+    <Typography className="text-sm font-bold text-navy break-all">
       {value || "—"}
     </Typography>
   </div>
@@ -104,15 +103,15 @@ export const ReviewDocField = ({
         className,
       )}
     >
-      <Typography className="text-sm font-medium text-gray-700">
+      <Typography className="text-sm font-bold text-navy">
         {label}
       </Typography>
       <div
         className={cn(
           "px-3 py-1 rounded-full text-[10px] font-black tracking-wider flex items-center gap-1",
           status === "VERIFIED"
-            ? "bg-emerald-50 text-emerald-600"
-            : "bg-emerald-50/50 text-emerald-600/70",
+            ? "bg-orange-50 text-brand-orange"
+            : "bg-orange-50/60 text-brand-orange",
         )}
       >
         {status === "VERIFIED" && <Check className="w-3 h-3" />}

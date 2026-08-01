@@ -14,13 +14,13 @@ const OrderSources = ({
       id: "1",
       source: t("walkIn"),
       percentage: sources.walkInDineIn,
-      color: "bg-[#1B4332]", // Dark Green
+      color: "bg-brand-orange",
     },
     {
       id: "2",
       source: t("online"),
       percentage: sources.online,
-      color: "bg-[#3B82F6]", // Blue
+      color: "bg-navy",
     },
   ];
 
@@ -28,9 +28,7 @@ const OrderSources = ({
     <div className="w-full">
       <div className="mb-6">
         <h2 className="text-[16px] font-bold text-gray-900">{t("title")}</h2>
-        <p className="text-[12px] text-gray-500 mt-0.5">
-          {t("subtitle")}
-        </p>
+        <p className="text-[12px] text-gray-500 mt-0.5">{t("subtitle")}</p>
       </div>
 
       <div className="space-y-6">

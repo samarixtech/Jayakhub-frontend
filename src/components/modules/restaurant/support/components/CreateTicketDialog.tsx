@@ -73,9 +73,9 @@ const CreateTicketDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[420px] p-0 rounded-2xl gap-0">
+      <DialogContent className="sm:max-w-[420px] p-0 rounded-2xl gap-0 bg-white !bg-white">
         <DialogHeader className="px-6 pt-6 pb-2">
-          <DialogTitle className="text-[18px] font-bold text-[#1a1a1a]">
+          <DialogTitle className="text-[18px] font-bold text-navy">
             {t("title")}
           </DialogTitle>
           <DialogDescription className="sr-only">
@@ -85,7 +85,7 @@ const CreateTicketDialog = ({
 
         <div className="px-6 py-4 space-y-5">
           <div>
-            <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
+            <label className="text-[13px] font-bold text-navy block mb-1.5">
               {t("subjectLabel")}
             </label>
             <input
@@ -93,16 +93,16 @@ const CreateTicketDialog = ({
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder={t("subjectPlaceholder")}
-              className="w-full h-10 px-3 rounded-lg border border-gray-200 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20 transition-colors"
+              className="w-full h-10 px-3 rounded-lg border border-gray-200 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35]/20 transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
+            <label className="text-[13px] font-bold text-navy block mb-1.5">
               {t("priorityLabel")}
             </label>
             <Select value={priority} onValueChange={setPriority}>
-              <SelectTrigger className="w-full h-10 rounded-lg border border-gray-200 text-[13px] text-gray-700 focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20">
+              <SelectTrigger className="w-full h-10 rounded-lg border border-gray-200 text-[13px] text-gray-700 focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35]/20">
                 <SelectValue placeholder={t("prioritySelect")} />
               </SelectTrigger>
               <SelectContent className="bg-white">
@@ -114,11 +114,11 @@ const CreateTicketDialog = ({
           </div>
 
           <div>
-            <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
+            <label className="text-[13px] font-bold text-navy block mb-1.5">
               {t("categoryLabel")}
             </label>
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full h-10 rounded-lg border border-gray-200 text-[13px] text-gray-700 focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20">
+              <SelectTrigger className="w-full h-10 rounded-lg border border-gray-200 text-[13px] text-gray-700 focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35]/20">
                 <SelectValue placeholder={t("categorySelect")} />
               </SelectTrigger>
               <SelectContent className="bg-white">
@@ -131,7 +131,7 @@ const CreateTicketDialog = ({
           </div>
 
           <div>
-            <label className="text-[13px] font-semibold text-[#1a1a1a] block mb-1.5">
+            <label className="text-[13px] font-bold text-navy block mb-1.5">
               {t("descLabel")}
             </label>
             <textarea
@@ -139,7 +139,7 @@ const CreateTicketDialog = ({
               onChange={(e) => setDescription(e.target.value)}
               placeholder={t("descPlaceholder")}
               rows={4}
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#346853] focus:ring-1 focus:ring-[#346853]/20 transition-colors resize-none"
+              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-[13px] text-gray-700 placeholder:text-gray-400 outline-none focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35]/20 transition-colors resize-none"
             />
           </div>
         </div>
@@ -155,7 +155,7 @@ const CreateTicketDialog = ({
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="flex items-center gap-2 bg-[#346853] hover:bg-[#2a5644] text-white text-[13px] font-semibold px-5 py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-[#FF6B35] hover:bg-[#E85A2A] text-white text-[13px] font-semibold px-5 py-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />

@@ -81,8 +81,8 @@ export default function CustomerAddressView() {
     const lowerLabel = label.toLowerCase();
     if (lowerLabel.includes("home"))
       return {
-        icon: <Home className="h-5 w-5 text-emerald-600" />,
-        bg: "bg-emerald-50",
+        icon: <Home className="h-5 w-5 text-forest-green" />,
+        bg: "bg-forest-green/10",
       };
     if (lowerLabel.includes("work") || lowerLabel.includes("office"))
       return {
@@ -183,7 +183,7 @@ export default function CustomerAddressView() {
       header: t("status"),
       cell: (address) =>
         address.status && (
-          <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-lg">
+          <Badge className="bg-forest-green/15 text-forest-green hover:bg-forest-green/15 border-none px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-lg">
             {t("active")}
           </Badge>
         ),
@@ -232,7 +232,7 @@ export default function CustomerAddressView() {
           <div>
             <Typography
               variant="h2"
-              className="text-[#1F2937] font-black text-xl md:text-2xl tracking-tight"
+              className="text-black font-black text-xl md:text-2xl tracking-tight"
             >
               {t("title")}
             </Typography>
@@ -246,7 +246,7 @@ export default function CustomerAddressView() {
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <Button
               onClick={handleAddNew}
-              className="flex-1 sm:flex-none rounded-full bg-emerald-bg hover:bg-emerald-bg text-white h-10 md:h-11 px-6 shadow-sm transition-all text-xs md:text-sm font-bold"
+              className="flex-1 sm:flex-none rounded-full bg-primary hover:bg-[#e85a2a] text-white h-10 md:h-11 px-6 shadow-sm transition-all text-xs md:text-sm font-bold"
             >
               <Plus className="h-5 w-5 mr-1" /> {t("add_new")}
             </Button>

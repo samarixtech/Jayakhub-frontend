@@ -182,7 +182,7 @@ export default function StepRestaurantInfoView() {
           <div className="flex justify-end pt-4 border-t">
             <Button
               type="submit"
-              className="bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443]"
+              className="bg-[#FF6B35] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#E85A2A]"
             >
               {t("nextStep")}
             </Button>

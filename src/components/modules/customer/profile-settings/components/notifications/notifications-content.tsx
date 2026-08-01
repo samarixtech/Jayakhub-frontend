@@ -77,7 +77,7 @@ export function NotificationsContent({
           key={notification.id}
           onClick={() => handleNotificationClick(notification)}
           className={`px-5 py-3 flex gap-4 hover:bg-gray-50 transition-colors cursor-pointer ${
-            !notification.isRead ? "bg-emerald-50/30" : ""
+            !notification.isRead ? "bg-primary/5" : ""
           }`}
         >
           <div className="mt-0.5">{getNotificationIcon(notification)}</div>

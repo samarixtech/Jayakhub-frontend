@@ -26,7 +26,7 @@ export const CheckoutDeliveryAddress = ({
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
-        <MapPin className="text-[#346853]" size={20} />
+        <MapPin className="text-primary" size={20} />
         <h3 className="font-bold text-lg text-gray-900">
           {t("deliveryAddress")}
         </h3>
@@ -52,7 +52,7 @@ export const CheckoutDeliveryAddress = ({
       <GlobalModal
         trigger={
           <Button
-            className="w-full mt-4 bg-[#346853] hover:bg-[#2a5443] text-white"
+            className="w-full mt-4 bg-primary hover:bg-[#e85a2a] text-white"
             onClick={() => setIsAddressModalOpen(true)}
           >
             {t("changeBtn")}
@@ -69,7 +69,7 @@ export const CheckoutDeliveryAddress = ({
               key={addr.id}
               className={`p-4 rounded-xl border cursor-pointer flex items-start gap-3 transition-all ${
                 selectedAddress?.id === addr.id
-                  ? "border-[#346853] bg-[#346853]/5"
+                  ? "border-primary bg-primary/5"
                   : "border-gray-200 hover:border-gray-300"
               }`}
               onClick={() => {
@@ -80,12 +80,12 @@ export const CheckoutDeliveryAddress = ({
               <div
                 className={`mt-1 w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ${
                   selectedAddress?.id === addr.id
-                    ? "border-[#346853]"
+                    ? "border-primary"
                     : "border-gray-300"
                 }`}
               >
                 {selectedAddress?.id === addr.id && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#346853]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                 )}
               </div>
               <div>
@@ -108,7 +108,7 @@ export const CheckoutDeliveryAddress = ({
               setIsAddressModalOpen(false); // Close selection modal
               setIsAddNewAddressModalOpen(true); // Open add modal
             }}
-            className="w-full p-4 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center gap-2 text-gray-500 hover:text-[#346853] hover:border-[#346853] hover:bg-gray-50 transition-all group"
+            className="w-full p-4 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center gap-2 text-gray-500 hover:text-primary hover:border-primary hover:bg-gray-50 transition-all group"
           >
             <Plus className="w-5 h-5 group-hover:scale-110 transition-transform" />
             <span className="font-bold text-sm">{t("addNewAddress")}</span>

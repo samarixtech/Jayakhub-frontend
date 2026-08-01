@@ -81,7 +81,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           <Button
             onClick={() => handleUpdateClick("accepted")}
             disabled={!!updatingAction}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+            className="flex-1 bg-brand-orange hover:bg-[#e85a2a] text-white font-bold"
           >
             {updatingAction === "accepted" ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -92,13 +92,13 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
       );
     }
 
-    // ACCEPTED -> Prepare (Green)
+    // ACCEPTED -> Prepare
     if (currentStatus === "accepted") {
       return (
         <Button
           onClick={() => handleUpdateClick("prepare")}
           disabled={!!updatingAction}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+          className="w-full bg-brand-orange hover:bg-[#e85a2a] text-white font-bold"
         >
           {updatingAction === "prepare" ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -108,13 +108,13 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
       );
     }
 
-    // PREPARE -> Ready (Green)
+    // PREPARE -> Ready
     if (currentStatus === "prepare" || currentStatus === "preparing") {
       return (
         <Button
           onClick={() => handleUpdateClick("ready")}
           disabled={!!updatingAction}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+          className="w-full bg-brand-orange hover:bg-[#e85a2a] text-white font-bold"
         >
           {updatingAction === "ready" ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -124,13 +124,13 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
       );
     }
 
-    // READY -> Hand Off to Rider (Green)
+    // READY -> Hand Off to Rider
     if (currentStatus === "ready") {
       return (
         <Button
           onClick={handleHandoffClick}
           disabled={!!updatingAction}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+          className="w-full bg-brand-orange hover:bg-[#e85a2a] text-white font-bold"
         >
           {updatingAction === "handoff" ? (
             <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -148,7 +148,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full">
+      <SheetContent className="w-full sm:max-w-md p-0 flex flex-col h-full bg-white !bg-white">
         {/* Header */}
         <SheetHeader className="px-6 py-4 border-b border-gray-100 flex-none sticky top-0 bg-white z-10">
           <div className="flex items-center justify-between">
@@ -170,7 +170,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
           </div>
         </SheetHeader>
 
-        <div className="px-6 space-y-6 overflow-y-auto flex-1">
+        <div className="px-6 space-y-6 overflow-y-auto flex-1 bg-white">
           {/* Status */}
           <div className="flex items-start justify-between">
             <div>
@@ -199,7 +199,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
               {t("customer")}
             </h4>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-sm">
+              <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-brand-orange font-bold text-sm">
                 {order.customerName.charAt(0)}
               </div>
               <div>
@@ -207,7 +207,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                   {order.customerName}
                 </p>
                 {order.customerPhone && (
-                  <p className="text-xs text-emerald-600 font-medium">
+                  <p className="text-xs text-brand-orange font-medium">
                     {order.customerPhone}
                   </p>
                 )}
@@ -389,7 +389,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
 
               <div className="flex justify-between text-base font-bold mt-2 pt-2 border-t border-gray-100">
                 <span className="text-gray-900">{t("total")}</span>
-                <span className="text-emerald-600">
+                <span className="text-brand-orange">
                   {formatPrice(order.calculation?.total ?? order.total) ||
                     "N/A"}
                 </span>
@@ -400,7 +400,7 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
 
         {/* Footer Actions, Only render if there are actions */}
         {footerContent && (
-          <div className="p-6 border-t border-gray-100 bg-gray-50/50 sticky bottom-0 flex-none">
+          <div className="p-6 border-t border-gray-100 bg-white sticky bottom-0 flex-none">
             {footerContent}
           </div>
         )}

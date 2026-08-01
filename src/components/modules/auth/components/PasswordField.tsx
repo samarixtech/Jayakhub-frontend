@@ -28,7 +28,7 @@ export function PasswordField({
         type={showPassword ? "text" : "password"}
         placeholder={placeholder ?? t("defaultPlaceholder")}
         className={cn(
-          "pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-emerald-bg/10 focus-visible:border-emerald-bg transition-all",
+          "pr-12 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-primary/10 focus-visible:border-primary transition-all",
           compact ? "h-12" : "h-13",
           error &&
             "border-red-500 focus-visible:ring-red-500/10 focus-visible:border-red-500",
@@ -38,7 +38,7 @@ export function PasswordField({
       <button
         type="button"
         onClick={() => setShowPassword(!showPassword)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-bg"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary"
         tabIndex={-1}
       >
         {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}

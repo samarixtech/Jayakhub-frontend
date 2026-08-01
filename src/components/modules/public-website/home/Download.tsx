@@ -54,7 +54,7 @@ export default function DownloadApp() {
               }`}
           >
             {/* Decorative Pulse Elements */}
-            <div className="absolute top-10 left-10 w-16 h-16 md:w-20 md:h-20 bg-orange-400/20 rounded-full blur-xl animate-pulse" />
+            <div className="absolute top-10 left-10 w-16 h-16 md:w-20 md:h-20 bg-secondary/20 rounded-full blur-xl animate-pulse" />
             <div className="absolute bottom-20 right-20 w-24 h-24 md:w-32 md:h-32 bg-primary/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
 
             {/* Phone Container */}
@@ -75,8 +75,8 @@ export default function DownloadApp() {
                 style={{ animationDelay: '0.5s' }}
               >
                 <div className="flex items-center gap-2 md:gap-3">
-                  <div className="w-10 h-10 md:w-12 md:h-12 bg-orange-100 rounded-lg md:rounded-xl flex items-center justify-center">
-                    <Star className="w-5 h-5 md:w-6 md:h-6 text-orange-500 fill-orange-500" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-navy/10 rounded-lg md:rounded-xl flex items-center justify-center">
+                    <Star className="w-5 h-5 md:w-6 md:h-6 text-navy fill-navy" />
                   </div>
                   <div>
                     <div className="font-bold text-foreground text-sm md:text-base">4.9 {t('stats.rating_label')}</div>
@@ -177,8 +177,8 @@ export default function DownloadApp() {
             >
               <div className="text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-1 mb-1">
-                  <Star className="w-4 h-4 md:w-5 md:h-5 text-orange-400 fill-orange-400" />
-                  <span className="text-xl md:text-2xl font-black text-foreground">4.9</span>
+                  <Star className="w-4 h-4 md:w-5 md:h-5 text-navy fill-navy" />
+                  <span className="text-xl md:text-2xl font-black text-gold-deep">4.9</span>
                 </div>
                 <div className="text-[10px] md:text-sm font-bold text-[#94A3B8] uppercase">{t('buttons.app_store_main')}</div>
               </div>
@@ -187,8 +187,8 @@ export default function DownloadApp() {
 
               <div className="text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-1 mb-1">
-                  <Star className="w-4 h-4 md:w-5 md:h-5 text-orange-400 fill-orange-400" />
-                  <span className="text-xl md:text-2xl font-black text-foreground">4.8</span>
+                  <Star className="w-4 h-4 md:w-5 md:h-5 text-navy fill-navy" />
+                  <span className="text-xl md:text-2xl font-black text-gold-deep">4.8</span>
                 </div>
                 <div className="text-[10px] md:text-sm font-bold text-[#94A3B8] uppercase">{t('buttons.google_play_main')}</div>
               </div>
@@ -196,7 +196,7 @@ export default function DownloadApp() {
               <div className="hidden md:block w-px h-12 bg-[#E2E8F0]" />
 
               <div className="col-span-2 text-center md:text-left">
-                <div className="text-xl md:text-2xl font-black text-foreground mb-1">50K+</div>
+                <div className="text-xl md:text-2xl font-black text-gold-deep mb-1">50K+</div>
                 <div className="text-[10px] md:text-sm font-bold text-[#94A3B8] uppercase">{t('stats.active_downloads')}</div>
               </div>
             </div>

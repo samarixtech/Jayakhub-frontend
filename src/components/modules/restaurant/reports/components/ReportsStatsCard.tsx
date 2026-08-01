@@ -42,14 +42,14 @@ const ReportsStatsCard: React.FC<ReportsStatsCardProps> = ({
           </div>
         </div>
         <div className="flex flex-col gap-1.5 mt-2">
-          <h2 className="text-[28px] font-black text-[#1b2d22] leading-none">
+          <h2 className="text-[28px] font-black text-[#1B3A57] leading-none">
             {value}
           </h2>
           <div className="flex items-center gap-1.5 font-bold text-[11px]">
             <span
               className={cn(
                 "flex items-center",
-                isPositive ? "text-emerald-500" : "text-red-500",
+                isPositive ? "text-[#FF6B35]" : "text-red-500",
               )}
             >
               {isPositive ? (
@@ -59,7 +59,7 @@ const ReportsStatsCard: React.FC<ReportsStatsCardProps> = ({
               )}
               {trend}
             </span>
-            <span className="text-[#1eb589] font-bold">{t("vsLastPeriod")}</span>
+            <span className="text-[#2C5F2D] font-bold">{t("vsLastPeriod")}</span>
           </div>
         </div>
       </CardContent>

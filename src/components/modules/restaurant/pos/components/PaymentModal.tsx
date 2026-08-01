@@ -194,7 +194,7 @@ export default function PaymentModal({
               (v: any) =>
                 `<tr>
              <td style="color:#888;font-size:11px;padding:1px 0 0 8px;">${v.groupName}: <b>${v.optionName}</b></td>
-             <td style="color:#1eb589;font-size:11px;text-align:right;padding:1px 0 0;">${v.price > 0 ? `+${formatPrice(v.price)}` : ""}</td>
+              <td style="color:#FF6B35;font-size:11px;text-align:right;padding:1px 0 0;">${v.price > 0 ? `+${formatPrice(v.price)}` : ""}</td>
            </tr>`,
             )
             .join("");
@@ -222,7 +222,7 @@ export default function PaymentModal({
         <style>
           *{margin:0;padding:0;box-sizing:border-box;}
           body{font-family:'Courier New',Courier,monospace;font-size:13px;padding:24px 20px;max-width:340px;margin:0 auto;}
-          h1{text-align:center;font-size:20px;color:#357252;margin-bottom:2px;font-weight:900;}
+          h1{text-align:center;font-size:20px;color:#FF6B35;margin-bottom:2px;font-weight:900;}
           .sub{text-align:center;color:#999;font-size:12px;margin-bottom:14px;}
           .meta{display:flex;justify-content:space-between;font-size:11px;color:#666;margin-bottom:8px;}
           hr{border:none;border-top:1px dashed #ccc;margin:10px 0;}
@@ -269,18 +269,18 @@ export default function PaymentModal({
           {/* Fixed header: icon, title, order meta */}
           <div className="flex flex-col items-center w-full shrink-0">
             {/* Check icon */}
-            <div className="w-12 h-12 rounded-full bg-[#e6f4ef] flex items-center justify-center mb-3">
-              <Check className="w-6 h-6 text-[#357252] stroke-[3px]" />
+            <div className="w-12 h-12 rounded-full bg-[#FFF8F0] flex items-center justify-center mb-3">
+              <Check className="w-6 h-6 text-[#FF6B35] stroke-[3px]" />
             </div>
-            <h2 className="text-[20px] font-black text-[#1b2d22] tracking-tight mb-0.5">
+            <h2 className="text-[20px] font-black text-[#1B3A57] tracking-tight mb-0.5">
               {t("successTitle")}
             </h2>
-            <p className="text-[12px] text-[#8ea89a] font-medium mb-5">
+            <p className="text-[12px] text-[#8B7355] font-medium mb-5">
               {receiptOrderType}
             </p>
 
             {/* Order meta */}
-            <div className="flex justify-between w-full text-[12px] text-[#556977] font-semibold mb-4 border-b border-dashed border-gray-200 pb-4">
+            <div className="flex justify-between w-full text-[12px] text-[#8B7355] font-semibold mb-4 border-b border-dashed border-gray-200 pb-4">
               <span>{receiptOrderId}</span>
               <span>{receiptDate}</span>
             </div>
@@ -297,7 +297,7 @@ export default function PaymentModal({
                 return (
                   <div key={idx} className="w-full">
                     {/* Item name + total */}
-                    <div className="flex justify-between text-[13px] text-[#1b2d22] font-bold">
+                    <div className="flex justify-between text-[13px] text-[#1B3A57] font-bold">
                       <span>
                         {item.quantity}x {item.itemName}
                       </span>
@@ -314,7 +314,7 @@ export default function PaymentModal({
                             {formatPrice(item.basePrice)}
                           </span>
                         )}
-                        <span className="text-[#8ea89a]">
+                        <span className="text-[#8B7355]">
                           {formatPrice(
                             hasDiscount ? unitPrice : item.basePrice,
                           )}{" "}
@@ -332,16 +332,16 @@ export default function PaymentModal({
                     {item.variants?.map((v: any, vi: number) => (
                       <div
                         key={vi}
-                        className="flex justify-between text-[11px] text-[#8ea89a] mt-0.5"
+                        className="flex justify-between text-[11px] text-[#8B7355] mt-0.5"
                       >
                         <span>
                           {v.groupName}:{" "}
-                          <span className="font-semibold text-[#556977]">
+                          <span className="font-semibold text-[#8B7355]">
                             {v.optionName}
                           </span>
                         </span>
                         {v.price > 0 && (
-                          <span className="text-[#1eb589] font-semibold">
+                          <span className="text-[#FF6B35] font-semibold">
                             +{formatPrice(v.price)}
                           </span>
                         )}
@@ -351,7 +351,7 @@ export default function PaymentModal({
                 );
               })
             ) : (
-              <p className="text-[13px] text-[#8ea89a]">{t("noItems")}</p>
+              <p className="text-[13px] text-[#8B7355]">{t("noItems")}</p>
             )}
           </div>
 
@@ -359,12 +359,12 @@ export default function PaymentModal({
           <div className="w-full shrink-0">
             {/* Subtotal / delivery / total */}
             <div className="w-full space-y-1.5 mb-3">
-              <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
+              <div className="flex justify-between text-[13px] text-[#8B7355] font-medium">
                 <span>{t("subtotal")}</span>
                 <span>{formatPrice(receiptItemsTotal)}</span>
               </div>
               {receiptDeliveryFee > 0 && (
-                <div className="flex justify-between text-[13px] text-[#3e5648] font-medium">
+                <div className="flex justify-between text-[13px] text-[#8B7355] font-medium">
                   <span>{t("deliveryFee")}</span>
                   <span>{formatPrice(receiptDeliveryFee)}</span>
                 </div>
@@ -377,13 +377,13 @@ export default function PaymentModal({
             </div>
 
             <div className="text-center mb-5">
-              <p className="text-[13px] text-[#3e5648] font-medium mb-1">
+              <p className="text-[13px] text-[#8B7355] font-medium mb-1">
                 {t("paidVia")}{" "}
                 <span className="font-black text-[#111] capitalize">
                   {receiptPaymentMethod}
                 </span>
               </p>
-              <p className="text-[11px] text-[#8ea89a] font-medium">
+              <p className="text-[11px] text-[#8B7355] font-medium">
                 {t("thankYou")}
               </p>
             </div>
@@ -391,7 +391,7 @@ export default function PaymentModal({
             <div className="flex w-full gap-3">
               <button
                 onClick={handlePrint}
-                className="flex-1 bg-[#357252] hover:bg-[#2a5a41] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                  className="flex-1 bg-[#1B3A57] hover:bg-[#14283B] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
               >
                 <Printer className="w-4 h-4 stroke-[2.5px]" /> {t("print")}
               </button>
@@ -423,24 +423,24 @@ export default function PaymentModal({
 
       <div className="p-5">
         {/* Header Total */}
-        <div className="bg-[#f2fbf5] rounded-xl flex flex-col items-center justify-center py-4 mb-4">
-          <span className="text-[32px] font-black text-[#357252] leading-none mb-1">
+          <div className="bg-[#FFF8F0] rounded-xl flex flex-col items-center justify-center py-4 mb-4">
+            <span className="text-[32px] font-black text-[#FF6B35] leading-none mb-1">
             {formatPrice(roundedTotal, 0)}
           </span>
-          <span className="text-[12px] text-[#789684] font-semibold">
+          <span className="text-[12px] text-[#8B7355] font-semibold">
             {t("totalPayable")}
           </span>
         </div>
 
         {/* Breakdown */}
         <div className="space-y-1.5 mb-3">
-          <div className="flex justify-between text-[#556977] text-[13px] font-medium">
+          <div className="flex justify-between text-[#8B7355] text-[13px] font-medium">
             <span>{t("subtotal")}</span>
             <span>{formatPrice(displaySubtotal)}</span>
           </div>
           {orderType === "Delivery" && (
             <div>
-              <div className="flex justify-between text-[#556977] text-[13px] font-medium items-center">
+              <div className="flex justify-between text-[#8B7355] text-[13px] font-medium items-center">
                 <span>
                   {t("deliveryCharges")} <span className="text-red-500">*</span>
                 </span>
@@ -462,8 +462,8 @@ export default function PaymentModal({
                   }}
                   className={`w-24 border text-right rounded-md px-2 py-0.5 text-[13px] font-bold text-[#111] focus:outline-none ${
                     isDeliveryChargeInvalid
-                      ? "border-red-400 focus:border-red-400"
-                      : "border-gray-200 focus:border-[#357252]"
+                    ? "border-red-400 focus:border-red-400"
+                    : "border-gray-200 focus:border-[#FF6B35]"
                   }`}
                 />
               </div>
@@ -488,13 +488,13 @@ export default function PaymentModal({
         <div className="grid grid-cols-2 gap-3 mb-4">
           <button
             onClick={() => setMethod("cash")}
-            className={`relative flex flex-col items-center justify-center py-3 rounded-xl border ${method === "cash" ? "bg-[#357252] border-[#357252] text-white" : "bg-white border-gray-200 text-[#111] hover:border-gray-300"} transition-all`}
+            className={`relative flex flex-col items-center justify-center py-3 rounded-xl border ${method === "cash" ? "bg-[#FF6B35] border-[#FF6B35] text-white" : "bg-white border-gray-200 text-[#111] hover:border-gray-300"} transition-all`}
           >
             {method === "cash" && (
               <Check className="absolute top-1.5 right-1.5 w-3.5 h-3.5 text-white stroke-[3px]" />
             )}
             <Banknote
-              className={`w-5 h-5 mb-1.5 ${method === "cash" ? "text-white" : "text-[#2a3c30]"} stroke-[2px]`}
+              className={`w-5 h-5 mb-1.5 ${method === "cash" ? "text-white" : "text-[#1B3A57]"} stroke-[2px]`}
             />
             <span
               className={`text-[12px] font-bold ${method === "cash" ? "text-white" : "text-[#111]"}`}
@@ -505,13 +505,13 @@ export default function PaymentModal({
 
           <button
             onClick={() => setMethod("card")}
-            className={`relative flex flex-col items-center justify-center py-3 rounded-xl border ${method === "card" ? "bg-[#357252] border-[#357252] text-white" : "bg-white border-gray-200 text-[#111] hover:border-gray-300"} transition-all`}
+            className={`relative flex flex-col items-center justify-center py-3 rounded-xl border ${method === "card" ? "bg-[#FF6B35] border-[#FF6B35] text-white" : "bg-white border-gray-200 text-[#111] hover:border-gray-300"} transition-all`}
           >
             {method === "card" && (
               <Check className="absolute top-1.5 right-1.5 w-3.5 h-3.5 text-white stroke-[3px]" />
             )}
             <CreditCard
-              className={`w-5 h-5 mb-1.5 ${method === "card" ? "text-white" : "text-[#2a3c30]"} stroke-[2px]`}
+              className={`w-5 h-5 mb-1.5 ${method === "card" ? "text-white" : "text-[#1B3A57]"} stroke-[2px]`}
             />
             <span
               className={`text-[12px] font-bold ${method === "card" ? "text-white" : "text-[#111]"}`}
@@ -535,7 +535,7 @@ export default function PaymentModal({
             className={`w-full border-2 text-center rounded-lg py-1.5 text-[16px] outline-none font-black text-[#111] mb-2 ${
               isPaidAmountInvalid
                 ? "border-red-400 focus:border-red-400"
-                : "border-[#357252] focus:border-[#357252]"
+                : "border-[#FF6B35] focus:border-[#FF6B35]"
             }`}
           />
           {isPaidAmountInvalid ? (
@@ -543,7 +543,7 @@ export default function PaymentModal({
               {t("amountTooLow")}
             </span>
           ) : (
-            <span className="text-[14px] font-black text-[#1eb589]">
+            <span className="text-[14px] font-black text-[#2C5F2D]">
               {t("change")} {formatPrice(paidAmountNum - roundedTotal, 0)}
             </span>
           )}
@@ -562,8 +562,8 @@ export default function PaymentModal({
             isProcessing ||
             isPaidAmountInvalid ||
             isDeliveryChargeInvalid
-              ? "bg-[#8debb4] text-white cursor-not-allowed opacity-80"
-              : "bg-[#1eb589] hover:bg-[#159a72] text-white shadow-md"
+              ? "bg-[#FF6B35]/50 text-white cursor-not-allowed opacity-80"
+              : "bg-[#FF6B35] hover:bg-[#E85A2A] text-white shadow-md"
           }`}
         >
           {isProcessing ? (

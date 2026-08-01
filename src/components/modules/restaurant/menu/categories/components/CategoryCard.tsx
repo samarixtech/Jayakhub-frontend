@@ -44,7 +44,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
           />
           <Button
             size="icon"
-            className="h-9 w-9 bg-[#1F4D36] shrink-0"
+            className="h-9 w-9 bg-navy hover:bg-navy/90 shrink-0 text-white"
             onClick={onSaveEdit}
             disabled={isUpdating}
           >
@@ -67,10 +67,10 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
       ) : (
         <div className="flex flex-col w-full gap-0.5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#E2F1E8] rounded-lg flex items-center justify-center text-[#1F4D36] shrink-0">
+            <div className="w-10 h-10 bg-[#FFF8F0] rounded-lg flex items-center justify-center text-brand-orange shrink-0">
               <Shapes className="w-5 h-5" />
             </div>
-            <Typography className="font-bold text-gray-900 leading-tight truncate">
+            <Typography className="font-bold text-navy leading-tight truncate">
               {category.categoryName || category.name}
             </Typography>
           </div>

@@ -63,13 +63,13 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen flex flex-col justify-start pt-2 pb-16 lg:pt-4 lg:pb-10 overflow-hidden bg-primary"
+      className="relative min-h-screen flex flex-col justify-start pt-2 pb-16 lg:pt-4 lg:pb-10 overflow-hidden bg-hero-bg"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 start-10 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-primary/20 rounded-full blur-[80px] lg:blur-[120px] animate-pulse" />
-        <div className="absolute bottom-20 end-10 w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] bg-orange-500/10 rounded-full blur-[60px] lg:blur-[100px] animate-pulse delay-1000" />
-        <div className="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] [background-size:40px_40px] lg:[background-size:60px_60px]" />
+        <div className="absolute top-20 start-10 w-[300px] h-[300px] lg:w-[500px] lg:h-[500px] bg-brand-orange/10 rounded-full blur-[80px] lg:blur-[120px] animate-pulse" />
+        <div className="absolute bottom-20 end-10 w-[250px] h-[250px] lg:w-[400px] lg:h-[400px] bg-secondary/20 rounded-full blur-[60px] lg:blur-[100px] animate-pulse delay-1000" />
+        <div className="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(rgba(27,58,87,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(27,58,87,0.15)_1px,transparent_1px)] [background-size:40px_40px] lg:[background-size:60px_60px]" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-4 lg:pt-4 lg:pb-8 z-10">
@@ -78,24 +78,24 @@ export default function Hero() {
           <div className="space-y-4 lg:space-y-6 text-center lg:text-start">
             <div
               className={cn(
-                "inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10",
+                "inline-flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-brand-orange/20 shadow-sm",
                 entryTransition("delay-0"),
               )}
             >
-              <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-              <span className="text-xs font-medium text-white/90">
+              <Sparkles className="w-3.5 h-3.5 text-brand-orange" />
+              <span className="text-xs font-medium text-brand-orange">
                 {t("hero_badge")}
               </span>
             </div>
 
             <h1
               className={cn(
-                "text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.15] lg:leading-[1.1] tracking-tight",
+                "text-3xl sm:text-4xl lg:text-5xl font-bold text-navy leading-[1.15] lg:leading-[1.1] tracking-tight",
                 entryTransition("delay-100"),
               )}
             >
               {t("hero_title_p1")}
-              <span className="relative inline-block mx-2 lg:mx-3 text-[#FE8C34]">
+              <span className="relative inline-block mx-2 lg:mx-3 text-brand-orange">
                 {t("hero_title_highlight")}
                 <svg
                   className="absolute -bottom-1 lg:-bottom-2 start-0 w-full"
@@ -111,12 +111,12 @@ export default function Hero() {
                 </svg>
               </span>
               <br className="hidden lg:block" />
-              <span className="text-white/90">{t("hero_title_p2")}</span>
+              <span className="text-navy/90">{t("hero_title_p2")}</span>
             </h1>
 
             <p
               className={cn(
-                "text-sm sm:text-base text-white/60 max-w-xl mx-auto lg:ms-0 leading-relaxed",
+                "text-sm sm:text-base text-navy/60 max-w-xl mx-auto lg:ms-0 leading-relaxed",
                 entryTransition("delay-200"),
               )}
             >
@@ -127,17 +127,17 @@ export default function Hero() {
             <div className={entryTransition("delay-300")}>
               <div
                 onClick={handleSearch}
-                className="group relative bg-white rounded-2xl p-1.5 shadow-2xl flex items-center transition-all max-w-md mx-auto lg:max-w-none lg:mx-0 cursor-pointer hover:ring-4 hover:ring-primary/30"
+                className="group relative bg-white rounded-2xl p-1.5 shadow-2xl flex items-center transition-all max-w-md mx-auto lg:max-w-none lg:mx-0 cursor-pointer hover:ring-4 hover:ring-brand-orange/30"
               >
                 <div className="flex-1 flex items-center gap-2 sm:gap-3 px-3 sm:px-4">
-                  <MapPin className="w-4 h-4 text-primary shrink-0" />
+                  <MapPin className="w-4 h-4 text-brand-orange shrink-0" />
                   <span className="h-10 flex items-center text-xs sm:text-sm text-muted-foreground select-none">
                     {t("hero_search_placeholder")}
                   </span>
                 </div>
                 <Button
                   type="button"
-                  className="bg-primary hover:bg-primary-light text-white rounded-xl px-4 sm:px-6 py-2.5 font-semibold transition-transform hover:scale-105 shrink-0"
+                  className="bg-brand-orange hover:bg-[#e85a2a] text-white rounded-xl px-4 sm:px-6 py-2.5 font-semibold transition-transform hover:scale-105 shrink-0"
                 >
                   <Search className="w-4 h-4 sm:me-2" />
                   <span className="hidden sm:inline text-sm">
@@ -156,16 +156,16 @@ export default function Hero() {
             >
               {STATS.map((stat) => (
                 <div key={stat.label} className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/10">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white border border-brand-orange/10 rounded-xl flex items-center justify-center shadow-sm">
                     <stat.icon
                       className={cn("w-4 h-4 sm:w-5 sm:h-5", stat.color)}
                     />
                   </div>
                   <div className="text-start">
-                    <div className="text-lg sm:text-xl font-bold text-white">
+                    <div className="text-lg sm:text-xl font-bold text-gold-deep">
                       {stat.value}
                     </div>
-                    <div className="text-[11px] sm:text-xs text-white/50">
+                    <div className="text-[11px] sm:text-xs text-navy">
                       {stat.label}
                     </div>
                   </div>
@@ -184,7 +184,7 @@ export default function Hero() {
             {/* Main Image Container - Responsive sizes */}
             <div className="relative w-[240px] h-[240px] sm:w-[340px] sm:h-[340px] lg:w-[440px] lg:h-[440px]">
               <div className="relative w-full h-full">
-                <div className="absolute inset-0 bg-primary/30 rounded-full blur-[40px] lg:blur-[60px] animate-pulse" />
+                <div className="absolute inset-0 bg-brand-orange/30 rounded-full blur-[40px] lg:blur-[60px] animate-pulse" />
                 <div className="relative w-full h-full rounded-full overflow-hidden shadow-2xl animate-float">
                   <Image
                     src={deliciousFoodImg}
@@ -196,7 +196,7 @@ export default function Hero() {
                   />
                 </div>
                 {/* Ring adjusted to be tighter (-12px on mobile, -16px desktop) */}
-                <div className="absolute inset-[-12px] lg:inset-[-16px] border-2 border-dashed border-white/10 rounded-full animate-spin-slow" />
+                <div className="absolute inset-[-12px] lg:inset-[-16px] border-2 border-dashed border-brand-orange/20 rounded-full animate-spin-slow" />
               </div>
             </div>
 
@@ -229,7 +229,7 @@ export default function Hero() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-7 h-7 bg-gradient-to-br from-primary to-primary-light rounded-full border-2 border-white flex items-center justify-center text-white text-[10px] font-bold"
+                    className="w-7 h-7 bg-gradient-to-br from-brand-orange to-[#e85a2a] rounded-full border-2 border-white flex items-center justify-center text-white text-[10px] font-bold"
                   >
                     {String.fromCharCode(64 + i)}
                   </div>
@@ -237,7 +237,7 @@ export default function Hero() {
               </div>
               <div>
                 <div className="flex items-center gap-1">
-                  <Star className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
+                  <Star className="w-3.5 h-3.5 text-navy fill-navy" />
                   <span className="font-bold text-foreground text-xs">4.9</span>
                 </div>
                 <div className="text-[9px] text-muted-foreground">
@@ -250,7 +250,7 @@ export default function Hero() {
 
         {/* Delivery Route Animation */}
         <div className="mt-10 lg:mt-14">
-          <DeliveryRouteAnimation />
+          <DeliveryRouteAnimation labelColor="text-navy" />
         </div>
       </div>
 
@@ -293,7 +293,7 @@ function FloatingCard({
       />
       <div className="mt-2 text-center">
         <div className="text-xs font-bold text-foreground">{title}</div>
-        <div className="text-[10px] sm:text-xs text-primary font-semibold">
+        <div className="text-[10px] sm:text-xs text-brand-orange font-semibold">
           {price}
         </div>
       </div>

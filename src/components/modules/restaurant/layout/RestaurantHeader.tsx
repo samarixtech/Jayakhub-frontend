@@ -98,7 +98,7 @@ export default function RestaurantHeader() {
         <header className="flex items-center h-16 px-6 bg-white border-b border-gray-100 shrink-0 gap-4">
           <SidebarTrigger className="-ms-2 text-gray-500 hover:bg-gray-100" />
 
-          <Typography variant="h3" className="font-bold text-gray-900 text-lg">
+          <Typography variant="h3" className="font-bold text-navy text-lg">
             {pageTitle}
           </Typography>
 

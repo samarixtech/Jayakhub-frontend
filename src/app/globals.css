@@ -13,78 +13,98 @@
 :root {
   --radius: 0.8rem;
 
-  --background: #f6f7f8;
-  --emerald-bg: #346853;
-  --emerald-bg-hover: #094c40;
-  --foreground: #2c2c2c;
+  --background: #fff5e6; /* Gray 100 — warm page background */
+  --emerald-bg: #2c5f2d; /* repurposed to Forest Green — success surfaces only */
+  --emerald-bg-hover: #234a24; /* darker Forest Green for hover */
+  --foreground: #1b3a57; /* Navy — body text */
 
   --card: #ffffff;
-  --card-foreground: #2c2c2c;
+  --card-foreground: #1b3a57; /* Navy */
 
-  --primary: #0b5d4e;
+  --primary: #ff6b35; /* Primary Orange */
   --primary-foreground: #ffffff;
 
-  --secondary: #e8f4f1;
-  --secondary-foreground: #0b5d4e;
+  --secondary: #fdb833; /* Warm Gold */
+  --secondary-foreground: #1b3a57; /* Navy text on gold — needs contrast */
 
-  --accent: #fff9ee;
-  --accent-foreground: #6b5b3e;
+  --accent: #fff8f0; /* Gray 50 — soft gold-tinted cream */
+  --accent-foreground: #b8860b; /* Gold Deep — text-safe gold */
 
-  --border: #e6e6e6; /* Keeping global border for general use, close to gray-200 */
-  --input: #dcdcdc; /* Old input border var? kept for compat */
-  --input-bg: #f9fafb; /* Gray-50 from Auth pages */
-  --ring: rgba(
-    11,
-    93,
-    78,
-    0.15
-  ); /* Softened ring to match Auth feel (10-20%) */
+  --border: #ffe8d1; /* Gray 200 */
+  --input: #ffe8d1;
+  --input-bg: #fff8f0;
+  --ring: rgba(255, 107, 53, 0.18); /* Orange ring, replaces green */
+
+  /* Brand palette tokens */
+  --navy: #1b3a57;
+  --gold: #fdb833;
+  --gold-deep: #b8860b;
+  --forest-green: #2c5f2d;
+  --forest-green-light: #9be8a6;
+  --brand-orange: #ff6b35; /* always Orange, even where --primary is locally overridden (e.g. landing pages) */
+  --hero-bg: linear-gradient(329deg, #f7e7b6 100%, #fefaf0 0%);
+  --hero-accent: linear-gradient(328deg, #ff6b35 0%, #fdb833 100%);
 
   --soft-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
   --soft-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   --sidebar: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
   --sidebar-accent: hsl(240 4.8% 95.9%);
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --sidebar-primary: #1b3a57;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-ring: rgba(255, 107, 53, 0.4);
 }
 
 /* ---------------------------------------
    DARK MODE VARIABLES
 ----------------------------------------- */
 .dark {
-  --background: #0f0f0f;
-  --foreground: #f2f2f2;
+  --background: #14283b; /* Navy-black */
+  --foreground: #fff5e6; /* Warm cream text */
 
-  --card: #1a1a1a;
-  --card-foreground: #f2f2f2;
+  --card: #1b3a57; /* Navy card surface */
+  --card-foreground: #fff5e6;
 
-  --primary: #0b5d4e;
+  --primary: #ff6b35; /* Orange stays identical in dark mode */
   --primary-foreground: #ffffff;
 
-  --secondary: #1d2926;
-  --secondary-foreground: #cce6e1;
+  --secondary: #fdb833; /* Gold stays identical in dark mode */
+  --secondary-foreground: #1b3a57;
 
-  --accent: #2b2b2b;
-  --accent-foreground: #ffffff;
+  --accent: #22405c; /* Dark warm-navy accent surface */
+  --accent-foreground: #fdb833; /* Gold text on dark surfaces */
 
-  --border: rgba(255, 255, 255, 0.15);
-  --input: rgba(255, 255, 255, 0.1);
+  --border: rgba(253, 184, 51, 0.18); /* subtle gold-tinted border */
+  --input: rgba(253, 184, 51, 0.14);
   --input-bg: rgba(255, 255, 255, 0.05);
+
+  --forest-green-dark-mode: #9be8a6; /* use instead of #2C5F2D for success/motif on dark surfaces */
+  --brand-orange: #ff6b35;
 
   --soft-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   --soft-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   --sidebar: hsl(240 5.9% 10%);
   --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-primary: #1b3a57;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: hsl(240 3.7% 15.9%);
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --sidebar-ring: rgba(255, 107, 53, 0.4);
+}
+
+/* ---------------------------------------
+   LANDING / PUBLIC WEBSITE OVERRIDE
+   Marketing site uses Navy instead of Orange
+   as its primary accent — everything using
+   bg-primary/text-primary/border-primary/etc.
+   inside this wrapper picks up Navy instead.
+----------------------------------------- */
+.landing-navy-theme {
+  --primary: var(--navy);
+  --ring: rgba(27, 58, 87, 0.18);
 }
 
 /* ---------------------------------------
@@ -99,7 +119,7 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans, "Inter"), sans-serif;
+    font-family: var(--font-space-grotesk, "Space Grotesk"), sans-serif;
   }
 }
 
@@ -150,7 +170,7 @@
   transition: 0.25s ease;
 }
 .btn-primary:hover {
-  background: #094d40;
+  background: #e85a2a;
   box-shadow: var(--soft-hover-shadow);
 }
 
@@ -280,9 +300,14 @@ body {
    RTL / LTR SUPPORT
 ----------------------------------------- */
 body {
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-space-grotesk), sans-serif;
   margin: 0;
   padding: 0;
+}
+
+html[dir="rtl"] body,
+body.rtl {
+  font-family: var(--font-cairo), sans-serif;
 }
 
 html[dir="ltr"] {
@@ -362,6 +387,10 @@ body.rtl .sidebar {
 /* ... scroll down to your @theme section ... */
 
 @theme inline {
+  --font-sans: var(--font-space-grotesk), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  --font-cairo: var(--font-cairo), sans-serif;
+
   --color-background: var(--background);
   --color-emerald-bg: var(--emerald-bg);
   --color-emerald-bg-hover: var(--emerald-bg-hover);
@@ -375,6 +404,20 @@ body.rtl .sidebar {
 
   --color-hero-bg: var(--hero-bg);
   --color-hero-accent: var(--hero-accent);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-navy: var(--navy);
+  --color-gold: var(--gold);
+  --color-gold-deep: var(--gold-deep);
+  --color-forest-green: var(--forest-green);
+  --color-forest-green-light: var(--forest-green-light);
+  --color-brand-orange: var(--brand-orange);
 
   /* Critical Sidebar Mappings */
   --color-sidebar: var(--sidebar);

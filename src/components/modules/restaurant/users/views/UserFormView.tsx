@@ -119,7 +119,7 @@ export default function UserFormView({
               <ArrowLeft className="w-5 h-5" />
             </Button>
           </Link>
-          <Typography variant="h2" className="text-xl font-bold text-gray-800">
+          <Typography variant="h2" className="text-xl font-bold text-navy">
             {mode === "add" ? t("titleAdd") : t("titleEdit")}
           </Typography>
         </div>
@@ -132,7 +132,7 @@ export default function UserFormView({
           <Button
             onClick={handleSave}
             disabled={status.isCreating || status.isUpdating}
-            className="bg-[#1F4D36] hover:bg-[#183d2b] text-white font-medium min-w-[120px] cursor-pointer"
+            className="bg-brand-orange hover:bg-[#e85a2a] text-white font-medium min-w-[120px] cursor-pointer"
           >
             {status.isCreating || status.isUpdating ? (
               <LoaderIcon />
@@ -147,11 +147,8 @@ export default function UserFormView({
       <Card className="p-4!">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <User className="w-5 h-5 text-gray-500" />
-            <Typography
-              variant="h3"
-              className="text-lg font-semibold text-gray-900"
-            >
+            <User className="w-5 h-5 text-brand-orange" />
+            <Typography variant="h3" className="text-lg font-bold text-navy">
               {t("personalInfo")}
             </Typography>
           </div>
@@ -238,11 +235,8 @@ export default function UserFormView({
       {/* Access & Security */}
       <Card className="p-4">
         <div className="flex items-center gap-2">
-          <Lock className="w-5 h-5 text-gray-500" />
-          <Typography
-            variant="h3"
-            className="text-lg font-semibold text-gray-900"
-          >
+          <Lock className="w-5 h-5 text-brand-orange" />
+          <Typography variant="h3" className="text-lg font-bold text-navy">
             {t("accessSecurity")}
           </Typography>
         </div>
@@ -281,7 +275,10 @@ export default function UserFormView({
                   id="password"
                   type={showPassword ? "text" : "password"}
                   value={state.password}
-                  onChange={(e) => { actions.setPassword(e.target.value); setErrors((prev) => ({ ...prev, password: undefined })); }}
+                  onChange={(e) => {
+                    actions.setPassword(e.target.value);
+                    setErrors((prev) => ({ ...prev, password: undefined }));
+                  }}
                   className={`pl-9 pr-9 bg-gray-50/50 ${errors.password ? "border-red-400" : "border-gray-200"}`}
                   placeholder={
                     mode === "add" ? t("createPassword") : t("leaveBlank")
@@ -293,7 +290,11 @@ export default function UserFormView({
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   tabIndex={-1}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               {errors.password && (
@@ -314,7 +315,13 @@ export default function UserFormView({
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   value={state.confirmPassword}
-                  onChange={(e) => { actions.setConfirmPassword(e.target.value); setErrors((prev) => ({ ...prev, confirmPassword: undefined })); }}
+                  onChange={(e) => {
+                    actions.setConfirmPassword(e.target.value);
+                    setErrors((prev) => ({
+                      ...prev,
+                      confirmPassword: undefined,
+                    }));
+                  }}
                   className={`pl-9 pr-9 bg-gray-50/50 ${errors.confirmPassword ? "border-red-400" : "border-gray-200"}`}
                   placeholder={t("confirmPasswordPlaceholder")}
                 />
@@ -324,11 +331,17 @@ export default function UserFormView({
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   tabIndex={-1}
                 >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="text-xs text-red-500 mt-0.5">{errors.confirmPassword}</p>
+                <p className="text-xs text-red-500 mt-0.5">
+                  {errors.confirmPassword}
+                </p>
               )}
             </div>
           </div>

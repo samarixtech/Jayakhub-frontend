@@ -20,7 +20,7 @@ export const CloseRegisterMetrics = ({
           <p className="text-[10px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
             {t("totalSales")}
           </p>
-          <p className="text-[20px] font-black text-[#1b2d22] tracking-tight leading-none">
+          <p className="text-[20px] font-black text-[#1B3A57] tracking-tight leading-none">
             {formatPrice(metrics?.totalSales ?? 0)}
           </p>
         </div>
@@ -28,7 +28,7 @@ export const CloseRegisterMetrics = ({
           <p className="text-[10px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
             {t("transactions")}
           </p>
-          <p className="text-[20px] font-black text-[#1b2d22] tracking-tight leading-none">
+          <p className="text-[20px] font-black text-[#1B3A57] tracking-tight leading-none">
             {metrics?.transactions || 0}
           </p>
         </div>
@@ -36,7 +36,7 @@ export const CloseRegisterMetrics = ({
           <p className="text-[10px] font-bold text-[#657a8a] tracking-wide mb-1 uppercase">
             {t("avgOrder")}
           </p>
-          <p className="text-[20px] font-black text-[#1b2d22] tracking-tight leading-none">
+          <p className="text-[20px] font-black text-[#1B3A57] tracking-tight leading-none">
             {formatPrice(metrics?.averageOrder ?? 0)}
           </p>
         </div>

@@ -30,7 +30,7 @@ export default function RestaurantStatusView() {
         onClick={handleLogout}
         disabled={isLoggingOut}
         variant="ghost"
-        className="text-gray-600 hover:text-gray-900 font-medium transition-all"
+        className="text-navy hover:text-brand-orange font-bold transition-all cursor-pointer"
       >
         {isLoggingOut ? (
           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -45,7 +45,7 @@ export default function RestaurantStatusView() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-10 h-10 animate-spin text-[#346853]" />
+        <Loader2 className="w-10 h-10 animate-spin text-[#FF6B35]" />
       </div>
     );
   }
@@ -63,7 +63,7 @@ export default function RestaurantStatusView() {
           </div>
           <Typography
             variant="h2"
-            className="text-2xl font-bold text-gray-900 mb-4"
+            className="text-2xl font-bold text-navy mb-4"
           >
             {t("titleRejected")}
           </Typography>
@@ -83,12 +83,12 @@ export default function RestaurantStatusView() {
         <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white gap-0">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center animate-in zoom-in duration-500">
-              <Clock className="w-10 h-10 text-orange-500 stroke-[2px]" />
+              <Clock className="w-10 h-10 text-brand-orange stroke-[2px]" />
             </div>
           </div>
           <Typography
             variant="h2"
-            className="text-2xl font-bold text-gray-900 mb-3"
+            className="text-2xl font-bold text-navy mb-3"
           >
             {t("titlePending")}
           </Typography>
@@ -115,14 +115,14 @@ export default function RestaurantStatusView() {
       {LogoutButton}
       <Card className="w-full max-w-lg p-4 sm:p-8 lg:p-10 text-center rounded-3xl shadow-lg border-none bg-white text-balance gap-0">
         <div className="flex justify-center mb-6">
-          <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-200 animate-in zoom-in duration-500">
+          <div className="w-20 h-20 bg-[#FF6B35] rounded-full flex items-center justify-center shadow-lg shadow-orange-200 animate-in zoom-in duration-500">
             <Check className="w-10 h-10 text-white stroke-[3px]" />
           </div>
         </div>
 
         <Typography
           variant="h2"
-          className="text-2xl font-bold text-gray-900 mb-3"
+          className="text-2xl font-bold text-navy mb-3"
         >
           {t("titleSubmitted")}
         </Typography>

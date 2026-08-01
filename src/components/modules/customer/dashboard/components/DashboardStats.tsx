@@ -20,29 +20,29 @@ export const DashboardStats = ({ summary, loading }: DashboardStatsProps) => {
       label: t("total_spent"),
       value: formatPrice(summary.totalSpend),
       icon: DollarSign,
-      color: "text-emerald-600",
-      bg: "bg-emerald-50",
+      color: "text-forest-green",
+      bg: "bg-forest-green/10",
     },
     {
       label: t("total_orders"),
       value: summary.totalOrdersCount.toString(),
       icon: ShoppingBag,
-      color: "text-blue-600",
-      bg: "bg-blue-50",
+      color: "text-primary",
+      bg: "bg-primary/10",
     },
     {
       label: t("average_rating"),
       value: summary.averageRating?.toString() || "0.0",
       icon: Star,
-      color: "text-amber-500",
-      bg: "bg-amber-50",
+      color: "text-gold-deep",
+      bg: "bg-secondary/15",
     },
     {
       label: t("active_orders"),
       value: summary.totalPendingOrders.toString(),
       icon: Timer,
-      color: "text-purple-600",
-      bg: "bg-purple-50",
+      color: "text-navy",
+      bg: "bg-navy/10",
     },
   ];
 
@@ -66,7 +66,7 @@ export const DashboardStats = ({ summary, loading }: DashboardStatsProps) => {
               {loading ? (
                 <Skeleton className="h-7 w-24" />
               ) : (
-                <Typography className="text-xl font-black text-gray-900 leading-tight">
+                <Typography className="text-xl font-black text-navy leading-tight">
                   {stat.value}
                 </Typography>
               )}

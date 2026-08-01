@@ -47,7 +47,7 @@ const getStatusStyles = (status: string) => {
     case "complete":
     case "completed":
     case "paid":
-      return "bg-emerald-50 text-emerald-600";
+      return "bg-[#d1fae5] text-[#2C5F2D]";
     case "pending":
     case "preparing":
     case "prepare":
@@ -135,10 +135,10 @@ const RecentOrders = ({
       header: t("columns.order"),
       cell: (item) => (
         <div className="flex flex-col gap-1 py-1">
-          <span className="font-bold text-[#1b2d22] text-[13px]">
+          <span className="font-bold text-[#1B3A57] text-[13px]">
             {item.orderId}
           </span>
-          <span className="text-[11px] text-[#8ea89a]">
+          <span className="text-[11px] text-[#8B7355]">
             {item.date}, {item.time}
           </span>
         </div>
@@ -162,7 +162,7 @@ const RecentOrders = ({
     {
       header: t("columns.customer"),
       cell: (item) => (
-        <span className="text-[#1b2d22] font-medium text-[13px]">
+        <span className="text-[#1B3A57] font-medium text-[13px]">
           {item.customer}
         </span>
       ),
@@ -189,7 +189,7 @@ const RecentOrders = ({
     {
       header: t("columns.total"),
       cell: (item) => (
-        <span className="font-bold text-[#1b2d22] text-[13px]">
+        <span className="font-bold text-[#1B3A57] text-[13px]">
           {item.total}
         </span>
       ),
@@ -205,7 +205,7 @@ const RecentOrders = ({
         </div>
         <Link
           href={"/restaurant/orders"}
-          className="text-[12px] font-bold text-green-800 hover:underline transition-colors"
+          className="text-[12px] font-bold text-[#FF6B35] hover:underline transition-colors"
         >
           {t("allOrders")}
         </Link>

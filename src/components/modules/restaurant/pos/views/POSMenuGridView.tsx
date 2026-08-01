@@ -110,7 +110,7 @@ export default function POSMenuGrid() {
                   setIsCartOpen(true);
                 }
               }}
-              className="group bg-white rounded-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden cursor-pointer flex flex-col hover:shadow-md hover:border-[#357252]/30 transition-all active:scale-95 duration-200 relative"
+              className="group bg-white rounded-[10px] shadow-[0_1px_3px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden cursor-pointer flex flex-col hover:shadow-md hover:border-[#FF6B35]/30 transition-all active:scale-95 duration-200 relative"
             >
               {/* Discount badge */}
               {discountAmt > 0 && (
@@ -119,7 +119,7 @@ export default function POSMenuGrid() {
                 </div>
               )}
 
-              <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 text-[#357252] shadow-sm">
+              <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 text-[#FF6B35] shadow-sm">
                 <Plus className="w-3.5 h-3.5 stroke-[3px]" />
               </div>
 
@@ -133,12 +133,12 @@ export default function POSMenuGrid() {
                 />
               </div>
               <div className="p-2 sm:p-2.5 flex flex-col gap-0.5">
-                <h3 className="text-[11px] sm:text-[12px] font-extrabold text-[#333] leading-snug truncate group-hover:text-[#357252] transition-colors">
+                <h3 className="text-[11px] sm:text-[12px] font-extrabold text-[#333] leading-snug truncate group-hover:text-[#FF6B35] transition-colors">
                   {item.name}
                 </h3>
                 {discountAmt > 0 ? (
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[#357252] font-black text-[11px] sm:text-[12px]">
+                    <span className="text-[#FF6B35] font-black text-[11px] sm:text-[12px]">
                       {formatPrice(effectivePrice)}
                     </span>
                     <span className="text-gray-400 font-medium text-[10px] line-through">
@@ -146,7 +146,7 @@ export default function POSMenuGrid() {
                     </span>
                   </div>
                 ) : (
-                  <p className="text-[#357252] font-black text-[11px] sm:text-[12px]">
+                  <p className="text-[#FF6B35] font-black text-[11px] sm:text-[12px]">
                     {formatPrice(item.basePrice)}
                   </p>
                 )}

@@ -45,8 +45,8 @@ const getActivityIcon = (type: ActivityEvent["type"]) => {
   switch (type) {
     case "received":
       return (
-        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center z-10">
-          <Check className="w-3.5 h-3.5 text-emerald-600" />
+        <div className="w-6 h-6 rounded-full bg-[#d1fae5] flex items-center justify-center z-10">
+          <Check className="w-3.5 h-3.5 text-[#2C5F2D]" />
         </div>
       );
     case "prepared":
@@ -123,7 +123,7 @@ const TransactionDetailSidebar = ({
           {/* Header */}
           <div className="bg-white px-6 py-5 border-b border-gray-100 flex justify-between items-start shrink-0">
             <div>
-              <h2 className="text-[18px] font-bold text-[#1b2d22] leading-tight">
+              <h2 className="text-[18px] font-bold text-[#1B3A57] leading-tight">
                 {transaction.id}
               </h2>
               <p className="text-[12px] text-gray-400 font-medium mt-0.5">
@@ -148,7 +148,7 @@ const TransactionDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("orderTotal")}
                 </span>
-                <span className="text-[20px] font-bold text-[#1b2d22]">
+                <span className="text-[20px] font-bold text-[#1B3A57]">
                   {subtotal}
                 </span>
               </div>
@@ -168,7 +168,7 @@ const TransactionDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("dateTime")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1b2d22]">
+                <span className="text-[14px] font-bold text-[#1B3A57]">
                   {transaction.date}, {transaction.time || "3:15 PM"}
                 </span>
               </div>
@@ -176,7 +176,7 @@ const TransactionDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("paymentMethod")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1b2d22]">
+                <span className="text-[14px] font-bold text-[#1B3A57]">
                   {transaction.paymentMethod}
                 </span>
               </div>
@@ -186,7 +186,7 @@ const TransactionDetailSidebar = ({
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("customer")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1b2d22]">
+                <span className="text-[14px] font-bold text-[#1B3A57]">
                   {transaction.customer}
                 </span>
               </div>
@@ -194,21 +194,21 @@ const TransactionDetailSidebar = ({
 
             {/* Order Items */}
             <div>
-              <h3 className="text-[13px] font-bold text-[#1b2d22] mb-3">
+              <h3 className="text-[13px] font-bold text-[#1B3A57] mb-3">
                 {t("orderItems")}
               </h3>
               <div className="space-y-4">
                 {items.map((item, idx) => (
                   <div key={idx} className="flex justify-between items-start">
                     <div>
-                      <p className="text-[13px] font-bold text-[#1b2d22]">
+                      <p className="text-[13px] font-bold text-[#1B3A57]">
                         {item.name}
                       </p>
                       <p className="text-[11px] text-gray-400 mt-0.5">
                         {t("qty", { qty: item.qty })}
                       </p>
                     </div>
-                    <span className="text-[13px] font-bold text-[#1b2d22]">
+                    <span className="text-[13px] font-bold text-[#1B3A57]">
                       {formatPrice(item.total)}
                     </span>
                   </div>
@@ -222,7 +222,7 @@ const TransactionDetailSidebar = ({
                 <span className="text-[12px] text-gray-500">
                   {t("subtotal")}
                 </span>
-                <span className="text-[12px] font-bold text-[#1b2d22]">
+                <span className="text-[12px] font-bold text-[#1B3A57]">
                   {subtotal}
                 </span>
               </div>
@@ -238,15 +238,15 @@ const TransactionDetailSidebar = ({
                 <span className="text-[12px] text-gray-500">
                   Delivery Fee
                 </span>
-                <span className="text-[12px] font-bold text-[#1b2d22]">
+                <span className="text-[12px] font-bold text-[#1B3A57]">
                   {deliveryFeeFormatted}
                 </span>
               </div>
               <div className="flex justify-between items-center pt-2">
-                <span className="text-[13px] font-bold text-[#2d6a4f]">
+                <span className="text-[13px] font-bold text-[#2C5F2D]">
                   {t("netAmount")}
                 </span>
-                <span className="text-[15px] font-black text-[#2d6a4f]">
+                <span className="text-[15px] font-black text-[#2C5F2D]">
                   {netAmount}
                 </span>
               </div>
@@ -254,7 +254,7 @@ const TransactionDetailSidebar = ({
 
             {/* Activity Timeline */}
             <div>
-              <h3 className="text-[13px] font-bold text-[#1b2d22] mb-4">
+              <h3 className="text-[13px] font-bold text-[#1B3A57] mb-4">
                 {t("activity")}
               </h3>
               <div className="relative border-l border-gray-200 ml-3 pl-5 space-y-6">
@@ -267,7 +267,7 @@ const TransactionDetailSidebar = ({
 
                     {/* Activity Content */}
                     <div className="flex flex-col pt-0.5">
-                      <span className="text-[12px] font-bold text-[#1b2d22]">
+                      <span className="text-[12px] font-bold text-[#1B3A57]">
                         {act.title}
                       </span>
                       <span className="text-[11px] text-gray-400 mt-0.5">

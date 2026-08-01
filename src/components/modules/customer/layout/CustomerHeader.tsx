@@ -56,9 +56,9 @@ const CustomerHeader = () => {
 
   return (
     <header className="w-full z-50 shrink-0 relative">
-      <nav className="w-full md:bg-emerald-bg md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4 relative">
+      <nav className="w-full md:bg-navy md:px-12 md:h-20 md:flex md:items-center md:justify-between shadow-lg gap-4 relative">
         {/* ROW 1 Auth | Logo (Desktop) | Lang */}
-        <div className="bg-emerald-bg px-4 py-2 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4 shrink-0">
+        <div className="bg-navy px-4 py-2 md:bg-transparent md:p-0 flex items-center justify-between w-full md:w-auto md:justify-start gap-4 shrink-0">
           {/* MOBILE ROW 1: LOGO (LEFT) | PROFILE + LANG (RIGHT) */}
           <div className="flex items-center justify-between w-full md:hidden">
             <Link href="/restaurants" className="shrink-0">
@@ -129,8 +129,8 @@ const CustomerHeader = () => {
 
         {/* MOBILE ROW 2: SIDEBAR TRIGGER | LOCATION SWITCHER (MOBILE) | CART (MOBILE) */}
         <div className="bg-white px-2 py-2 md:hidden flex items-center gap-2 border-b">
-          <div className="text-emerald-bg">
-            <SidebarTrigger className="text-emerald-bg hover:bg-emerald-bg/10 h-9 w-9" />
+          <div className="text-navy">
+            <SidebarTrigger className="text-navy hover:bg-navy/10 h-9 w-9" />
           </div>
 
           <div className="flex-1 shrink-0 overflow-hidden">
@@ -153,7 +153,7 @@ const CustomerHeader = () => {
               onClick={() => setIsDrawerOpen(true)}
               variant="secondary"
               size="icon"
-              className="h-9 w-9 rounded-full bg-white text-emerald-900 hover:bg-gray-100 shadow-sm overflow-visible border border-gray-100"
+              className="h-9 w-9 rounded-full bg-white text-navy hover:bg-gray-100 shadow-sm overflow-visible border border-gray-100"
             >
               <FiShoppingBag className="w-4 h-4" />
             </Button>
@@ -176,7 +176,7 @@ const CustomerHeader = () => {
               onClick={() => setIsDrawerOpen(true)}
               variant="secondary"
               size="icon"
-              className="h-10 w-10 rounded-full bg-white text-emerald-900 hover:bg-gray-100 shadow-sm overflow-visible"
+              className="h-10 w-10 rounded-full bg-white text-navy hover:bg-gray-100 shadow-sm overflow-visible"
             >
               <FiShoppingBag className="w-5 h-5" />
             </Button>

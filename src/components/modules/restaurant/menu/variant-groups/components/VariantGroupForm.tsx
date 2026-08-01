@@ -35,10 +35,10 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
   const { currency } = useCLC();
 
   return (
-    <div className="border border-dashed border-[#1F4D36] rounded-xl p-6 bg-[#F9FAFB] relative animate-in fade-in zoom-in-95 duration-200">
+    <div className="border border-dashed border-navy rounded-xl p-6 bg-[#F9FAFB] relative animate-in fade-in zoom-in-95 duration-200">
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label className="text-gray-700 font-medium">{t("groupName")}</Label>
+          <Label className="text-navy font-bold">{t("groupName")}</Label>
           <Input
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
@@ -49,7 +49,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
         </div>
 
         <div className="space-y-2">
-          <Label className="text-gray-700 font-medium">{t("options")}</Label>
+          <Label className="text-navy font-bold">{t("options")}</Label>
           {options.map((opt, idx) => (
             <div key={idx} className="flex items-center gap-2 mb-2">
               <Input
@@ -87,7 +87,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
           <Button
             onClick={onAddOption}
             variant="outline"
-            className="mt-2 border-dashed border-[#1F4D36] text-[#1F4D36] hover:bg-[#1F4D36]/5 h-10 w-auto px-4 gap-2"
+            className="mt-2 border-dashed border-navy text-navy hover:bg-navy/5 h-10 w-auto px-4 gap-2 font-bold"
           >
             <Plus className="w-4 h-4" />
             {t("addOption")}
@@ -97,7 +97,7 @@ export const VariantGroupForm: React.FC<VariantGroupFormProps> = ({
         <div className="flex items-center gap-4 pt-4 border-t border-gray-100 mt-4">
           <Button
             onClick={onSave}
-            className="bg-[#1F4D36] hover:bg-[#183d2b] text-white px-6"
+            className="bg-brand-orange hover:bg-[#e85a2a] text-white px-6 font-bold"
             disabled={isSaving}
           >
             {isSaving ? (

@@ -48,10 +48,11 @@ export function UsersFilters({
             onClick={() => onFilterChange(filter.value)}
             className={`
                 rounded-full px-4 h-9 border
-                ${selectedFilter === filter.value
-                ? "bg-[#1F4D36] text-white border-[#1F4D36] hover:bg-[#183d2b] hover:text-white"
-                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
-              }
+                ${
+                  selectedFilter === filter.value
+                    ? "bg-navy text-white border-navy hover:bg-navy/90 hover:text-white"
+                    : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                }
               `}
           >
             {filter.label}
@@ -59,10 +60,11 @@ export function UsersFilters({
               variant="secondary"
               className={`
                   ml-2 px-1.5 py-0 text-[10px] h-5 min-w-[20px] flex items-center justify-center rounded-full
-                  ${selectedFilter === filter.value
-                  ? "bg-white/20 text-white"
-                  : "bg-gray-100 text-gray-500"
-                }
+                  ${
+                    selectedFilter === filter.value
+                      ? "bg-white/20 text-white"
+                      : "bg-gray-100 text-gray-500"
+                  }
                 `}
             >
               {filter.count}
@@ -75,7 +77,7 @@ export function UsersFilters({
       <div className="flex items-center gap-4 shrink-0">
         {canAddUser && (
           <Link href="/restaurant/users/new">
-            <Button className="bg-[#1F4D36] hover:bg-[#183d2b] text-white gap-2">
+            <Button className="bg-brand-orange hover:bg-brand-orange/80 text-white gap-2 cursor-pointer">
               <Plus className="w-4 h-4" />
               {t("addUser")}
             </Button>

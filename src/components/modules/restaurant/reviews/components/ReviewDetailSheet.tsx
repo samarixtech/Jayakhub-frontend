@@ -95,7 +95,7 @@ export default function ReviewDetailSheet({
         {/* Sticky Header */}
         <div className="sticky top-0 bg-white z-10 px-6 py-5 flex items-start justify-between border-b border-gray-100 shrink-0">
           <div className="flex flex-col gap-1">
-            <SheetTitle className="text-[18px] font-bold text-[#1b2d22] border-none m-0 leading-none">
+            <SheetTitle className="text-[18px] font-bold text-[#1B3A57] border-none m-0 leading-none">
               {t("title")}
             </SheetTitle>
             <span className="text-[12px] font-medium text-[#657a8a] mt-0.5">
@@ -130,11 +130,11 @@ export default function ReviewDetailSheet({
             {/* Reviewer Section */}
             <div className="flex flex-col">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-[#E2F1E8] text-[#1b2d22] flex shrink-0 items-center justify-center font-bold text-lg border border-gray-100 uppercase tracking-wide">
+                <div className="w-14 h-14 rounded-full bg-[#FFF8F0] text-[#1B3A57] flex shrink-0 items-center justify-center font-bold text-lg border border-gray-100 uppercase tracking-wide">
                   {getInitials(review.userName)}
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[16px] font-bold text-[#1b2d22] leading-none">
+                  <span className="text-[16px] font-bold text-[#1B3A57] leading-none">
                     {review.userName}
                   </span>
                   <div className="flex gap-1 mt-0.5">
@@ -154,18 +154,18 @@ export default function ReviewDetailSheet({
             {/* Stats Section */}
             <div className="flex items-center gap-12 mb-8">
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold text-[#8ea89a] uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-[#8B7355] uppercase tracking-wider">
                   {t("history")}
                 </span>
-                <span className="text-[13px] font-bold text-[#1b2d22]">
+                <span className="text-[13px] font-bold text-[#1B3A57]">
                   {historyText}
                 </span>
               </div>
               <div className="flex flex-col gap-2">
-                <span className="text-[10px] font-bold text-[#8ea89a] uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-[#8B7355] uppercase tracking-wider">
                   {t("avgSpend")}
                 </span>
-                <span className="text-[13px] font-bold text-[#1b2d22]">
+                <span className="text-[13px] font-bold text-[#1B3A57]">
                   {avgSpendText}
                 </span>
               </div>
@@ -173,7 +173,7 @@ export default function ReviewDetailSheet({
 
             {/* Review Bubble Section */}
             <div className="flex flex-col gap-3 mb-8">
-              <h3 className="text-[13px] font-bold text-[#1b2d22]">
+              <h3 className="text-[13px] font-bold text-[#1B3A57]">
                 {t("reviewLabel")}
               </h3>
               <div className="border border-gray-100 rounded-xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)]">
@@ -186,25 +186,25 @@ export default function ReviewDetailSheet({
             {/* Reply Section */}
             {isReplied && review.reply ? (
               <div className="flex flex-col gap-3">
-                <h3 className="text-[13px] font-bold text-[#1b2d22]">
+                <h3 className="text-[13px] font-bold text-[#1B3A57]">
                   {t("yourReply")}
                 </h3>
                 <div className="border border-gray-100 rounded-xl p-5 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.02)] flex flex-col gap-4">
                   <p className="text-[13px] text-[#657a8a] leading-relaxed">
                     {review.reply}
                   </p>
-                  <span className="text-[11px] font-medium text-[#8ea89a]">
+                  <span className="text-[11px] font-medium text-[#8B7355]">
                     {t("sentRecently")}
                   </span>
                 </div>
               </div>
             ) : can("reviews_manage") ? (
               <div className="flex flex-col gap-3">
-                <h3 className="text-[13px] font-bold text-[#1b2d22]">
+                <h3 className="text-[13px] font-bold text-[#1B3A57]">
                   {t("writeReply")}
                 </h3>
                 <textarea
-                  className="w-full border border-gray-300 rounded-xl p-4 text-[13px] font-medium text-[#1b2d22] placeholder:text-[#8ea89a] placeholder:font-normal outline-none focus:ring-2 focus:ring-[#357252]/20 focus:border-[#357252]/50 resize-none min-h-[100px]"
+                  className="w-full border border-gray-300 rounded-xl p-4 text-[13px] font-medium text-[#1B3A57] placeholder:text-[#8B7355] placeholder:font-normal outline-none focus:ring-2 focus:ring-[#FF6B35]/20 focus:border-[#FF6B35]/50 resize-none min-h-[100px]"
                   placeholder={t("placeholder")}
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
@@ -212,7 +212,7 @@ export default function ReviewDetailSheet({
                 ></textarea>
                 <div className="flex justify-end mt-2">
                   <button
-                    className="bg-[#357252] hover:bg-[#2e6b49] text-white font-bold text-[13px] px-6 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                    className="bg-[#FF6B35] hover:bg-[#E85A2A] text-white font-bold text-[13px] px-6 py-2.5 rounded-lg transition-colors disabled:opacity-50"
                     onClick={handleSendReply}
                     disabled={isPending}
                   >

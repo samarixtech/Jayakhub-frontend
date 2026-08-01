@@ -38,7 +38,7 @@ export const OrderPagination = ({
                 isActive={currentPage === page}
                 className={`w-8 h-8 rounded-full text-xs font-bold border-none cursor-pointer ${
                   currentPage === page
-                    ? "bg-emerald-bg text-white hover:bg-emerald-bg"
+                    ? "bg-primary text-white hover:bg-[#e85a2a]"
                     : "text-gray-500 hover:bg-gray-100"
                 }`}
               >

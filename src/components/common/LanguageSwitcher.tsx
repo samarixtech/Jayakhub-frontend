@@ -64,11 +64,6 @@ const LanguageSwitcher = ({
       targetPath = `/${activeLang.countryCode.toLowerCase()}/${newCode}/restaurants`;
     }
 
-    // Full reload (not router.push/refresh) so the root layout's <html dir>
-    // and NextIntlClientProvider locale are always re-rendered fresh on the
-    // server. A soft navigation can reuse a cached client-side render of the
-    // root layout in production, leaving RTL layout (sidebar, etc.) stuck on
-    // the old direction until a manual refresh.
     window.location.href = targetPath;
   };
 
@@ -90,7 +85,7 @@ const LanguageSwitcher = ({
                 isSidebar
                   ? "w-full justify-start hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground/80 h-11 px-4"
                   : isNavbar
-                    ? "flex h-auto w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-[#E8F4F1]/10 md:bg-white text-[#E8F4F1] md:text-[#2C2C2C] hover:bg-[#E8F4F1]/20 md:hover:bg-[#0B5D4E] md:hover:text-white transition-all md:shadow-sm"
+                    ? "flex h-auto w-full md:w-auto items-center justify-between gap-2 px-3 py-3 md:py-2 rounded-xl bg-white/10 md:bg-navy text-white hover:bg-white/20 md:hover:bg-[#14283B] transition-all md:shadow-sm"
                     : "bg-none border-none hover:bg-white/10 text-white px-4 py-5 rounded-full gap-2 h-10"
               }
               ${collapsed ? "size-11! p-0! justify-center" : ""}
@@ -135,7 +130,7 @@ const LanguageSwitcher = ({
               <ChevronDown
                 className={`w-3 h-3 transition-all duration-300 ${
                   isNavbar
-                    ? "text-[#E8F4F1] md:text-[#0B5D4E] md:group-hover:text-white"
+                    ? "text-white"
                     : "opacity-50 group-hover:opacity-100"
                 } group-data-[state=open]:rotate-180 ${isSidebar ? "ms-auto" : ""}`}
               />
@@ -149,7 +144,7 @@ const LanguageSwitcher = ({
         sideOffset={8}
         className={`w-48 p-2 ${
           isNavbar
-            ? "bg-[#E8F4F1] text-[#2C2C2C] border-[#0B5D4E] shadow-xl"
+            ? "bg-accent text-navy border-primary/30 shadow-xl"
             : "bg-white/95 backdrop-blur-xl border-[#E2E8F0] shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)]"
         } rounded-2xl animate-in fade-in zoom-in-95 duration-200 z-60`}
       >
@@ -164,9 +159,9 @@ const LanguageSwitcher = ({
               relative flex items-center justify-between px-3 py-2.5 mb-1 cursor-pointer rounded-lg transition-all duration-200
               ${
                 l.code === activeLang.code
-                  ? "bg-emerald-bg/10 text-[#0B5D4E] font-semibold"
+                  ? "bg-primary/10 text-primary font-semibold"
                   : isNavbar
-                    ? "hover:bg-[#0B5D4E] hover:text-white text-[#2C2C2C] font-medium"
+                    ? "hover:bg-primary hover:text-white text-navy font-medium"
                     : "hover:bg-gray-100 text-gray-600 font-medium"
               }
             `}

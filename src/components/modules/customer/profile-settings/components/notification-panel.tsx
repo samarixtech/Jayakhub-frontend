@@ -35,7 +35,7 @@ export default function NotificationPanel({
           <ArrowLeft className="h-4 w-4 text-gray-600" />
         </Button>
         <div className="text-sm font-bold text-gray-900 flex items-center gap-2">
-          <Bell className="h-4 w-4 text-emerald-600" />
+          <Bell className="h-4 w-4 text-navy" />
           {t("notifications")}
         </div>
       </div>

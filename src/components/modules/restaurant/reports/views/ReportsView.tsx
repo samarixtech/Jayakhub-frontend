@@ -60,7 +60,7 @@ const ReportsView = () => {
         <GlobalDateFilter />
         <Button
           variant="outline"
-          className="bg-[#346853] text-white hover:bg-[#2a5644] hover:text-white border-0 h-9 text-[13px]"
+          className="bg-[#FF6B35] text-white hover:bg-[#E85A2A] hover:text-white border-0 h-9 text-[13px]"
           onClick={onExport}
           disabled={isExporting}
         >
@@ -80,8 +80,8 @@ const ReportsView = () => {
           value={formatPrice(data.totalSales) || "N/A"}
           trend={`${data.lastPeriodSalesAverage}%`}
           isPositive={Number(data.lastPeriodSalesAverage) >= 0}
-          icon={<DollarSign className="w-4 h-4 text-emerald-600" />}
-          iconBgColor="bg-emerald-50"
+          icon={<DollarSign className="w-4 h-4 text-[#FF6B35]" />}
+          iconBgColor="bg-[#FFF8F0]"
         />
         <ReportsStatsCard
           label={t("stats.totalOrders")}

@@ -37,7 +37,7 @@ export const ItemBasicInfo: React.FC<ItemBasicInfoProps> = ({
     <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-4">
       {/* SECTION HEADER */}
       <div className="flex items-center gap-3 border-b border-gray-50">
-        <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+        <div className="p-2 rounded-xl bg-orange-50 text-brand-orange">
           <LayoutList className="w-5 h-5" />
         </div>
         <Typography className="font-semibold text-gray-900">

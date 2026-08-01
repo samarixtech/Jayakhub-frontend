@@ -104,7 +104,7 @@ export default function StepOwnerInfoView() {
           <div className="flex flex-col sm:flex-row justify-end items-center pt-4 border-t border-gray-50 gap-4 sm:gap-0">
             <Button
               type="submit"
-              className="w-full sm:w-auto bg-[#346853] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#2a5443] shadow-md shadow-emerald-900/10"
+              className="w-full sm:w-auto bg-[#FF6B35] text-white px-10 h-12 rounded-2xl font-bold hover:bg-[#E85A2A] shadow-md shadow-[#FF6B35]/10"
             >
               {t("nextStep")}
             </Button>

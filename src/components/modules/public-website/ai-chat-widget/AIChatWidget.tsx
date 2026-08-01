@@ -15,6 +15,7 @@ interface Message {
 export default function AIChatWidget() {
   const t = useTranslations("Home.ai_chat_widget");
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -54,6 +55,16 @@ export default function AIChatWidget() {
     };
   }, [isOpen]);
 
+  // Hide the widget while the navbar's mobile drawer is open (see Navbar.tsx).
+  useEffect(() => {
+    const handleMobileNavToggle = (e: Event) => {
+      setIsMobileNavOpen((e as CustomEvent<{ open: boolean }>).detail.open);
+    };
+    window.addEventListener("jayakhub:mobilenav", handleMobileNavToggle);
+    return () =>
+      window.removeEventListener("jayakhub:mobilenav", handleMobileNavToggle);
+  }, []);
+
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!inputValue.trim()) return;
@@ -80,6 +91,8 @@ export default function AIChatWidget() {
     }, 1000);
   };
 
+  if (isMobileNavOpen) return null;
+
   return (
     <div
       ref={widgetRef}
@@ -95,7 +108,7 @@ export default function AIChatWidget() {
             className="pointer-events-auto w-[350px] md:w-[380px] h-[500px] max-h-[80vh] bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col overflow-hidden mb-4"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-emerald-bg to-teal-600 p-4 flex items-center justify-between text-white shadow-md">
+            <div className="bg-gradient-to-r from-brand-orange to-[#e85a2a] p-4 flex items-center justify-between text-white shadow-md">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/20 rounded-full">
                   <Bot size={20} className="text-white" />
@@ -103,7 +116,7 @@ export default function AIChatWidget() {
                 <div>
                   <h3 className="font-bold text-sm">{t('bot_name')}</h3>
                   <div className="flex items-center gap-1.5 opacity-80">
-                    <span className="w-2 h-2 bg-emerald-300 rounded-full animate-pulse" />
+                    <span className="w-2 h-2 bg-forest-green-light rounded-full animate-pulse" />
                     <span className="text-xs">{t('status_online')}</span>
                   </div>
                 </div>
@@ -126,12 +139,12 @@ export default function AIChatWidget() {
                 >
                   <div
                     className={`max-w-[80%] rounded-2xl p-3 text-sm shadow-sm ${msg.sender === "user"
-                        ? "bg-emerald-bg text-white rounded-br-none"
+                        ? "bg-brand-orange text-white rounded-br-none"
                         : "bg-white text-gray-800 border border-gray-100 rounded-bl-none"
                       }`}
                   >
                     {msg.sender === "bot" && (
-                      <div className="flex items-center gap-1.5 mb-1 text-xs text-emerald-bg font-semibold">
+                      <div className="flex items-center gap-1.5 mb-1 text-xs text-brand-orange font-semibold">
                         <Sparkles size={10} />
                         {t('assistant_label')}
                       </div>
@@ -139,7 +152,7 @@ export default function AIChatWidget() {
                     {msg.text}
                     <div
                       className={`text-[10px] mt-1 ${msg.sender === "user"
-                          ? "text-emerald-100"
+                          ? "text-white/70"
                           : "text-gray-400"
                         }`}
                     >
@@ -159,7 +172,7 @@ export default function AIChatWidget() {
               onSubmit={handleSendMessage}
               className="p-3 bg-white border-t border-gray-100"
             >
-              <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all">
+              <div className="flex items-center gap-2 bg-gray-100 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-brand-orange/20 transition-all">
                 <input
                   type="text"
                   value={inputValue}
@@ -170,7 +183,7 @@ export default function AIChatWidget() {
                 <button
                   type="submit"
                   disabled={!inputValue.trim()}
-                  className="p-2 bg-emerald-bg text-white rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-95"
+                  className="p-2 bg-brand-orange text-white rounded-full hover:bg-[#e85a2a] disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-95"
                 >
                   <Send size={16} />
                 </button>
@@ -190,9 +203,9 @@ export default function AIChatWidget() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className={`pointer-events-auto p-4 rounded-full shadow-2xl transition-all duration-300 flex items-center justify-center ${isOpen
-            ? "bg-gray-800 text-white rotate-90"
-            : "bg-gradient-to-r from-emerald-bg to-teal-600 text-white animate-bounce-subtle"
+        className={`pointer-events-auto p-4 rounded-full shadow-2xl border border-gray-100 transition-all duration-300 flex items-center justify-center ${isOpen
+            ? "bg-white text-navy rotate-90"
+            : "bg-white text-brand-orange animate-bounce-subtle"
           }`}
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={28} />}

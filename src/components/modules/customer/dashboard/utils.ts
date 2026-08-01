@@ -4,7 +4,7 @@ export const getStatusColor = (status: string) => {
   const s = status?.toLowerCase();
   switch (s) {
     case OrderStatus.DELIVERED:
-      return { color: "text-emerald-600", bg: "bg-emerald-50" };
+      return { color: "text-forest-green", bg: "bg-forest-green/10" };
     case OrderStatus.REJECTED:
       return { color: "text-red-600", bg: "bg-red-50" };
     case OrderStatus.OUT_FOR_DELIVERY:
@@ -17,7 +17,7 @@ export const getStatusColor = (status: string) => {
       return { color: "text-blue-500", bg: "bg-blue-50" };
     case OrderStatus.PENDING:
     default:
-      return { color: "text-yellow-600", bg: "bg-yellow-50" };
+      return { color: "text-gold-deep", bg: "bg-secondary/15" };
   }
 };
 

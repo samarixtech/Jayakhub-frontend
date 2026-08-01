@@ -41,7 +41,7 @@ export default function PosOrderDetailSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-sm p-0 flex flex-col h-full">
+      <SheetContent className="w-full sm:max-w-sm p-0 flex flex-col h-full bg-white !bg-white">
         {/* Header */}
         <SheetHeader className="p-6 border-b border-gray-100 flex-none sticky top-0 bg-white z-10">
           <div className="flex items-center justify-between">
@@ -65,7 +65,7 @@ export default function PosOrderDetailSheet({
           </div>
         </SheetHeader>
 
-        <div className="p-6 space-y-6 overflow-y-auto flex-1">
+        <div className="p-6 space-y-6 overflow-y-auto flex-1 bg-white">
           {/* Status */}
           <div className="flex items-start justify-between">
             <div>
@@ -182,7 +182,7 @@ export default function PosOrderDetailSheet({
               )}
               <div className="flex justify-between text-base font-bold mt-2 pt-2 border-t border-gray-100">
                 <span className="text-gray-900">{t("grandTotal")}</span>
-                <span className="text-emerald-600">
+                <span className="text-brand-orange">
                   {formatPrice(order.grandTotal)}
                 </span>
               </div>

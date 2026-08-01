@@ -49,7 +49,7 @@ export default function OnlineOrdersView() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 flex items-center justify-center gap-2 py-3 sm:py-4 px-4 rounded-xl border-2 transition-colors ${
                   isActive
-                    ? "border-emerald-100 bg-emerald-50/50 text-[#357252]"
+                    ? "border-[#FF6B35]/20 bg-[#FFF8F0] text-[#FF6B35]"
                     : "border-gray-100 bg-white text-gray-500 hover:border-gray-200"
                 }`}
               >
@@ -58,7 +58,7 @@ export default function OnlineOrdersView() {
                 </span>
                 <Icon
                   className={`w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] ${
-                    isActive ? "text-[#357252]" : "text-gray-400"
+                    isActive ? "text-[#FF6B35]" : "text-gray-400"
                   }`}
                   strokeWidth={2.5}
                 />
@@ -85,7 +85,7 @@ export default function OnlineOrdersView() {
             {/* Order Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-black text-[#357252] bg-emerald-50 px-2 py-0.5 rounded text-[13px]">
+                <span className="font-black text-[#FF6B35] bg-[#FFF8F0] px-2 py-0.5 rounded text-[13px]">
                   {order.id}
                 </span>
                 <span className="font-bold text-[#111827] text-[15px]">
@@ -106,9 +106,9 @@ export default function OnlineOrdersView() {
 
               <div className="flex items-center gap-3 shrink-0">
                 {order.status === "preparing" && (
-                  <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
-                    <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
-                    <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
+                  <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 bg-[#d1fae5] rounded-full border border-[#a7f3d0]">
+                    <Check className="w-[14px] h-[14px] text-[#2C5F2D] stroke-[3px]" />
+                    <span className="text-[#2C5F2D] font-black text-[11px] tracking-wider uppercase">
                       {t("accepted")}
                     </span>
                   </div>
@@ -142,7 +142,7 @@ export default function OnlineOrdersView() {
                     <>
                       <button
                         onClick={() => handleAccept(order.id)}
-                        className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#10b981] hover:bg-[#059669] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
+                        className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#FF6B35] hover:bg-[#E85A2A] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
                       >
                         <Check className="w-[16px] h-[16px] stroke-[2.5px]" />
                         {t("accept")}
@@ -160,7 +160,7 @@ export default function OnlineOrdersView() {
                   {order.status === "preparing" && (
                     <button
                       onClick={() => handleMarkReady(order.id)}
-                      className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#357252] hover:bg-[#2a5a41] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
+                      className="flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-[#FF6B35] hover:bg-[#E85A2A] text-white rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors shadow-sm"
                     >
                       <CheckCircle2 className="w-[16px] h-[16px] stroke-[2.5px]" />
                       <span className="whitespace-nowrap">{t("markReady")}</span>
@@ -174,7 +174,7 @@ export default function OnlineOrdersView() {
                       title={!order.rider ? t("noRiderYet") : undefined}
                       className={`flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg font-bold text-[13px] sm:text-[14px] transition-colors ${
                         order.rider
-                          ? "bg-[#357252] hover:bg-[#2a5a41] text-white shadow-sm"
+                          ? "bg-[#FF6B35] hover:bg-[#E85A2A] text-white shadow-sm"
                           : "bg-gray-100 text-gray-400 cursor-not-allowed"
                       }`}
                     >
@@ -257,7 +257,7 @@ export default function OnlineOrdersView() {
                   </div>
                 </div>
                 <div className="ml-auto shrink-0">
-                  <Bike className="w-5 h-5 text-[#357252] stroke-[2px]" />
+                  <Bike className="w-5 h-5 text-[#FF6B35] stroke-[2px]" />
                 </div>
               </div>
             )}
@@ -309,9 +309,9 @@ export default function OnlineOrdersView() {
 
             {/* Mobile status badge */}
             {order.status === "preparing" && (
-              <div className="flex sm:hidden items-center justify-center gap-1.5 px-3 py-1 bg-emerald-50 rounded-full border border-emerald-100">
-                <Check className="w-[14px] h-[14px] text-[#357252] stroke-[3px]" />
-                <span className="text-[#357252] font-black text-[11px] tracking-wider uppercase">
+              <div className="flex sm:hidden items-center justify-center gap-1.5 px-3 py-1 bg-[#d1fae5] rounded-full border border-[#a7f3d0]">
+                <Check className="w-[14px] h-[14px] text-[#2C5F2D] stroke-[3px]" />
+                <span className="text-[#2C5F2D] font-black text-[11px] tracking-wider uppercase">
                   {t("accepted")}
                 </span>
               </div>

@@ -27,7 +27,7 @@ export const ItemLivePreview: React.FC<ItemLivePreviewProps> = ({
         <Typography className="font-bold text-gray-400 uppercase tracking-widest text-xs">
           {t("title")}
         </Typography>
-        <div className="ml-auto w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
+        <div className="ml-auto w-2.5 h-2.5 rounded-full bg-brand-orange shadow-[0_0_10px_rgba(255,107,53,0.5)] animate-pulse" />
       </div>
 
       <Card className="overflow-hidden border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.04)] bg-white rounded-2xl">
@@ -56,7 +56,7 @@ export const ItemLivePreview: React.FC<ItemLivePreviewProps> = ({
         <div className="p-6 pt-2 space-y-4">
           <Badge
             variant="secondary"
-            className="bg-emerald-50 text-emerald-700 border-none text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg"
+            className="bg-orange-50 text-brand-orange border-none text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-lg"
           >
             {formData.category || t("defaultCategory")}
           </Badge>
@@ -65,7 +65,7 @@ export const ItemLivePreview: React.FC<ItemLivePreviewProps> = ({
             <Typography className="font-bold text-2xl text-gray-900 leading-tight">
               {formData.name || t("defaultName")}
             </Typography>
-            <Typography className="text-3xl font-bold text-[#2D5A43]">
+            <Typography className="text-3xl font-bold text-navy">
               {currency} {formData.basePrice || "0.00"}
             </Typography>
           </div>
@@ -73,8 +73,8 @@ export const ItemLivePreview: React.FC<ItemLivePreviewProps> = ({
       </Card>
 
       {/* PRO TIP */}
-      <div className="p-6 bg-emerald-50/30 rounded-[24px] border border-emerald-100/30">
-        <Typography className="text-xs text-emerald-800 leading-relaxed font-bold">
+      <div className="p-6 bg-orange-50/50 rounded-[24px] border border-orange-100/50">
+        <Typography className="text-xs text-brand-orange leading-relaxed font-bold">
           {t("proTip")}
         </Typography>
       </div>

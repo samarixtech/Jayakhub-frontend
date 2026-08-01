@@ -38,7 +38,7 @@ export default function VerifyOtpView() {
   return (
     <Card className="border-none shadow-none bg-transparent m-0 py-2">
       <CardHeader className="px-0 pt-0 text-center">
-        <Typography variant="h2" className="text-emerald-bg">
+        <Typography variant="h2" className="text-primary">
           {t("title")}
         </Typography>
         <Typography variant="muted" className="mb-4">
@@ -67,8 +67,8 @@ export default function VerifyOtpView() {
                   key={index}
                   index={index}
                   className="w-10 h-12 sm:w-12 sm:h-14 rounded-xl! border! bg-gray-50 text-xl shadow-sm transition-all
-        ring-offset-background focus:ring-2 focus:ring-emerald-bg focus:ring-offset-2
-        data-[active=true]:border-emerald-bg data-[active=true]:ring-4 data-[active=true]:ring-emerald-bg/10 data-[active=true]:z-20"
+        ring-offset-background focus:ring-2 focus:ring-primary focus:ring-offset-2
+        data-[active=true]:border-primary data-[active=true]:ring-4 data-[active=true]:ring-primary/10 data-[active=true]:z-20"
                 />
               ))}
             </InputOTPGroup>
@@ -77,7 +77,7 @@ export default function VerifyOtpView() {
           <Button
             onClick={handleVerify}
             disabled={isVerifying || otpValue.length < 6}
-            className="w-full h-14 text-white bg-emerald-bg hover:bg-emerald-bg-hover rounded-xl text-lg font-bold shadow-lg transition-all active:scale-[0.98] mb-4"
+            className="w-full h-14 text-white bg-primary hover:[#e85a2a] rounded-xl text-lg font-bold shadow-lg transition-all active:scale-[0.98] mb-4"
           >
             {isVerifying ? (
               <Loader2 className="mr-2 h-6 w-6 animate-spin" />
@@ -91,7 +91,7 @@ export default function VerifyOtpView() {
             <button
               onClick={handleResend}
               disabled={timer > 0 || isResending}
-              className="font-bold text-emerald-bg hover:underline disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              className="font-bold text-primary hover:underline disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {isResending
                 ? t("resending")
@@ -107,7 +107,7 @@ export default function VerifyOtpView() {
             <Link href="/login" className="inline-block">
               <Typography
                 variant="small"
-                className="text-emerald-bg font-bold transition-colors hover:opacity-80"
+                className="text-primary font-bold transition-colors hover:opacity-80"
               >
                 {t("login")}
               </Typography>

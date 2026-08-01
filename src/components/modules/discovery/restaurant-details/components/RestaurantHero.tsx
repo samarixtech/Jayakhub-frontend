@@ -59,7 +59,7 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
                   </Badge>
                 ) : (
                   deliveryFee === 0 && (
-                    <Badge className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-none w-fit mx-auto md:mx-0 text-[10px] md:text-xs">
+                    <Badge className="bg-forest-green/10 text-forest-green hover:bg-forest-green/15 border-none w-fit mx-auto md:mx-0 text-[10px] md:text-xs">
                       {t("freeDelivery")}
                     </Badge>
                   )
@@ -87,7 +87,7 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
                     ? `(${reviewsData.totalRatingCount})`
                     : ""}{" "}
                   <span className="hidden md:inline px-1 text-gray-300">•</span>{" "}
-                  <span className="text-[#346853] font-bold group-hover:underline hidden md:inline">
+                  <span className="text-primary font-bold group-hover:underline hidden md:inline">
                     {t("readReviews")}
                   </span>
                 </span>
@@ -104,7 +104,7 @@ export const RestaurantHero: React.FC<RestaurantHeroProps> = ({
               )}
               {deliveryFee != null ? (
                 deliveryFee === 0 ? (
-                  <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full md:bg-transparent md:p-0 md:rounded-none text-emerald-600 font-bold">
+                  <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full md:bg-transparent md:p-0 md:rounded-none text-forest-green font-bold">
                     <Bike className="w-4 h-4 md:w-5 md:h-5" />
                     <span>{t("freeDeliveryLabel")}</span>
                   </div>

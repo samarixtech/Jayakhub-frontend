@@ -29,12 +29,12 @@ export const RecentActivity = ({
   return (
     <Card className="lg:col-span-2 border-none shadow-sm rounded-4xl bg-white overflow-hidden">
       <CardHeader className="px-8 pt-8 flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-black text-gray-900">
+        <CardTitle className="text-lg font-black text-navy">
           {t("recent_activity")}
         </CardTitle>
         <Button
           variant="link"
-          className="text-emerald-600 font-bold text-xs p-0 h-auto"
+          className="text-primary font-bold text-xs p-0 h-auto"
           asChild
         >
           <Link href={"/customer/order-history"}>{t("view_all")}</Link>
@@ -97,7 +97,7 @@ export const RecentActivity = ({
                     )}
                   </div>
                   <div>
-                    <Typography className="font-bold text-gray-900 text-sm">
+                    <Typography className="font-bold text-navy text-sm">
                       {orderName}
                     </Typography>
                     <Typography className="text-xs text-gray-400 font-medium">

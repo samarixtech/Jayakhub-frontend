@@ -44,7 +44,7 @@ const RestaurantHeader = () => {
         <TopBar isScrolled={isScrolled} />
 
         {/* ===== MAIN HEADER BAR ===== */}
-        <nav className="w-full bg-[#346853] shadow-md">
+        <nav className="w-full bg-navy shadow-md">
           <div className="flex items-center justify-between px-4 md:px-6 h-14 md:h-14">
             {/* LEFT: Logo */}
             <div className="flex items-center gap-4 shrink-0">

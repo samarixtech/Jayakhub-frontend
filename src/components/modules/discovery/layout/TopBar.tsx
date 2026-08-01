@@ -19,8 +19,9 @@ const TopBar = ({ isScrolled }: TopBarProps) => {
 
   return (
     <div
-      className={`flex items-center justify-start md:justify-center bg-[#3C8C64] px-4 md:px-6 overflow-x-auto scrollbar-hide transition-all duration-300 h-12 md:h-10 ${isScrolled ? "-mt-12 md:-mt-10" : "mt-0"
-        }`}
+      className={`flex items-center justify-start md:justify-center bg-primary t px-4 md:px-6 overflow-x-auto scrollbar-hide transition-all duration-300 h-12 md:h-10 ${
+        isScrolled ? "-mt-12 md:-mt-10" : "mt-0"
+      }`}
     >
       <div className="flex flex-row items-center gap-3 w-max md:w-auto pr-4 md:pr-0">
         {links.map((link) => (

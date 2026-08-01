@@ -10,7 +10,7 @@ export default function MarketingView() {
   return (
     <div className="w-full max-w-6xl mx-auto p-6 flex flex-col gap-6">
       {/* Hero Banner */}
-      <div className="w-full rounded-2xl bg-linear-to-r from-[#1E9E74] to-[#38C894] p-10 flex flex-col items-center justify-center text-center text-white relative overflow-hidden">
+      <div className="w-full rounded-2xl bg-linear-to-r from-[#FF6B35] to-[#FDB833] p-10 flex flex-col items-center justify-center text-center text-white relative overflow-hidden">
         {/* Decorative background circles/shapes to match the subtle background shapes in the image */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
@@ -63,7 +63,7 @@ export default function MarketingView() {
               {[0, 1, 2, 3].map((idx) => (
                 <li key={idx} className="flex items-start gap-2.5">
                   <CheckCircle2
-                    className="w-4 h-4 mt-0.5 text-[#346853] shrink-0 fill-white"
+                    className="w-4 h-4 mt-0.5 text-[#FF6B35] shrink-0 fill-white"
                     strokeWidth={1.5}
                   />
                   <span className="text-[12px] md:text-[13px] text-gray-700 font-medium">
@@ -74,15 +74,15 @@ export default function MarketingView() {
             </ul>
           </div>
 
-          <button className="w-full py-2.5 px-4 rounded-xl border border-[#346853] text-[#346853] font-semibold text-sm hover:bg-[#346853]/5 transition-colors">
+          <button className="w-full py-2.5 px-4 rounded-xl border border-[#FF6B35] text-[#FF6B35] font-semibold text-sm hover:bg-[#FF6B35]/5 transition-colors">
             {t("storefrontVisibility.button")}
           </button>
         </div>
 
         {/* Plan 2: Growth Partner */}
-        <div className="bg-white rounded-xl border-2 border-[#346853] p-5 md:p-6 flex flex-col h-full relative overflow-hidden shadow-lg shadow-[#346853]/5">
+        <div className="bg-white rounded-xl border-2 border-[#FDB833] p-5 md:p-6 flex flex-col h-full relative overflow-hidden shadow-lg shadow-[#FDB833]/5">
           {/* Recommended Button */}
-          <div className="absolute top-5 -right-12 bg-[#346853] text-white text-[10px] font-black uppercase tracking-widest py-1.5 px-12 rotate-45 transform origin-center shadow-sm">
+          <div className="absolute top-5 -right-12 bg-[#FDB833] text-[#1B3A57] text-[10px] font-black uppercase tracking-widest py-1.5 px-12 rotate-45 transform origin-center shadow-sm">
             {t("growthPartner.badge")}
           </div>
 
@@ -111,7 +111,7 @@ export default function MarketingView() {
               {[0, 1, 2, 3, 4].map((idx) => (
                 <li key={idx} className="flex items-start gap-2.5">
                   <CheckCircle2
-                    className="w-4 h-4 mt-0.5 text-[#346853] shrink-0 fill-white"
+                    className="w-4 h-4 mt-0.5 text-[#FDB833] shrink-0 fill-white"
                     strokeWidth={1.5}
                   />
                   <span className="text-[12px] md:text-[13px] text-gray-700 font-medium">
@@ -122,7 +122,7 @@ export default function MarketingView() {
             </ul>
           </div>
 
-          <button className="w-full py-2.5 px-4 rounded-xl bg-[#346853] text-white font-semibold text-sm hover:bg-[#2a5443] transition-colors shadow-sm">
+          <button className="w-full py-2.5 px-4 rounded-xl bg-[#FF6B35] text-white font-semibold text-sm hover:bg-[#E85A2A] transition-colors shadow-sm">
             {t("growthPartner.button")}
           </button>
         </div>

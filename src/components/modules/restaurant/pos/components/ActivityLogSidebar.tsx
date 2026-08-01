@@ -71,7 +71,7 @@ export default function ActivityLogSidebar({
       case "order_rejected":
         return { icon: XCircle, bg: "bg-red-50", color: "text-red-500" };
       case "rider_arrived":
-        return { icon: MapPin, bg: "bg-emerald-50", color: "text-[#357252]" };
+        return { icon: MapPin, bg: "bg-[#FFF8F0]", color: "text-[#FF6B35]" };
       case "rider_arriving":
         return { icon: MapPin, bg: "bg-[#fff1d6]", color: "text-[#c97a22]" };
       case "rider_en_route":
@@ -121,7 +121,7 @@ export default function ActivityLogSidebar({
                       <Icon className={`w-4 h-4 ${color}`} />
                     </div>
                     <div className="flex flex-col pt-1">
-                      <span className="text-[13px] font-bold text-[#1f2937] leading-tight group-hover:text-[#357252] transition-colors cursor-pointer">
+                      <span className="text-[13px] font-bold text-[#1B3A57] leading-tight group-hover:text-[#FF6B35] transition-colors cursor-pointer">
                         {log.body || log.title}
                       </span>
                       <span className="text-[11px] font-semibold text-gray-400 mt-1">

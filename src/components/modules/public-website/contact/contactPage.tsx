@@ -48,7 +48,7 @@ export default function Contact() {
                                 <div className="space-y-8">
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center shrink-0 border border-gray-100 shadow-sm">
-                                            <Mail className="w-5 h-5 text-[#0B5D4E]" />
+                                            <Mail className="w-5 h-5 text-navy" />
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-slate-900 mb-1">{t('info.chat.title')}</h3>
@@ -59,7 +59,7 @@ export default function Contact() {
 
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center shrink-0 border border-gray-100 shadow-sm">
-                                            <MapPin className="w-5 h-5 text-[#0B5D4E]" />
+                                            <MapPin className="w-5 h-5 text-navy" />
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-slate-900 mb-1">{t('info.visit.title')}</h3>
@@ -74,7 +74,7 @@ export default function Contact() {
 
                                     <div className="flex items-start gap-4">
                                         <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center shrink-0 border border-gray-100 shadow-sm">
-                                            <Phone className="w-5 h-5 text-[#0B5D4E]" />
+                                            <Phone className="w-5 h-5 text-navy" />
                                         </div>
                                         <div>
                                             <h3 className="font-bold text-slate-900 mb-1">{t('info.call.title')}</h3>
@@ -112,7 +112,7 @@ export default function Contact() {
                                             placeholder={t('form.placeholders.name')}
                                             value={formData.name}
                                             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0B5D4E]/20 focus:border-[#0B5D4E] transition-all bg-white text-sm placeholder:text-gray-400"
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all bg-white text-sm placeholder:text-gray-400"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -123,7 +123,7 @@ export default function Contact() {
                                             placeholder={t('form.placeholders.email')}
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0B5D4E]/20 focus:border-[#0B5D4E] transition-all bg-white text-sm placeholder:text-gray-400"
+                                            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all bg-white text-sm placeholder:text-gray-400"
                                         />
                                     </div>
                                 </div>
@@ -136,13 +136,13 @@ export default function Contact() {
                                         placeholder={t('form.placeholders.message')}
                                         value={formData.message}
                                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0B5D4E]/20 focus:border-[#0B5D4E] transition-all resize-none bg-white text-sm placeholder:text-gray-400"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all resize-none bg-white text-sm placeholder:text-gray-400"
                                     />
                                 </div>
 
                                 <Button
                                     type="submit"
-                                    className="w-full bg-[#1A4D2E] hover:bg-[#143d24] text-white py-6 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#1A4D2E]/20"
+                                    className="w-full bg-navy hover:bg-[#14283B] text-white py-6 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-lg shadow-navy/20"
                                 >
                                     <Send className={`w-4 h-4 ${locale === "ar" ? "scale-x-[-1]" : ""}`} />
                                     {t('form.submit_button')}

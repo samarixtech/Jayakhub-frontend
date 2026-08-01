@@ -74,18 +74,18 @@ export default function ReviewList({
             <div
               key={review.id}
               onClick={() => onOrderClick(review)}
-              className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm flex flex-col gap-4 cursor-pointer hover:border-[#357252]/30 transition-colors"
+              className="bg-white rounded-[16px] p-6 border border-gray-100 shadow-sm flex flex-col gap-4 cursor-pointer hover:border-[#FF6B35]/30 transition-colors"
             >
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E2F1E8] text-[#1b2d22] flex shrink-0 items-center justify-center font-bold text-[13px] border border-gray-100 uppercase tracking-wide">
+                  <div className="w-10 h-10 rounded-full bg-[#FFF8F0] text-[#1B3A57] flex shrink-0 items-center justify-center font-bold text-[13px] border border-gray-100 uppercase tracking-wide">
                     {getInitials(review.userName)}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[14px] font-bold text-[#1b2d22]">
+                    <span className="text-[14px] font-bold text-[#1B3A57]">
                       {review.userName}
                     </span>
-                    <span className="text-[11px] font-medium text-[#8ea89a]">
+                    <span className="text-[11px] font-medium text-[#8B7355]">
                       {displayDate} • {t("order")} {review.orderId}
                     </span>
                   </div>
@@ -99,14 +99,14 @@ export default function ReviewList({
                   ))}
                 </div>
               </div>
-              <p className="text-[13px] text-[#1b2d22] font-medium leading-relaxed">
+              <p className="text-[13px] text-[#1B3A57] font-medium leading-relaxed">
                 {review.comment}
               </p>
 
               {!isReplied && can("reviews_manage") && (
                 <div className="flex mt-2">
                   <button
-                    className="flex items-center gap-2 text-[#357252] text-[12px] font-bold hover:underline"
+                    className="flex items-center gap-2 text-[#FF6B35] text-[12px] font-bold hover:underline"
                     onClick={(e) => {
                       e.stopPropagation();
                       onOrderClick(review);
@@ -122,15 +122,15 @@ export default function ReviewList({
               {isReplied && review.reply && (
                 <div className="mt-3 border border-gray-100 rounded-xl p-4 flex flex-col gap-2.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-[#357252] text-[12px] font-bold">
+                    <div className="flex items-center gap-1.5 text-[#FF6B35] text-[12px] font-bold">
                       <Reply className="w-3.5 h-3.5 scale-x-[-1]" />
                       {t("restaurantReply")}
                     </div>
-                    <span className="text-[11px] font-medium text-[#8ea89a]">
+                    <span className="text-[11px] font-medium text-[#8B7355]">
                       {t("recently")}
                     </span>
                   </div>
-                  <p className="text-[13px] text-[#8ea89a] leading-relaxed">
+                  <p className="text-[13px] text-[#8B7355] leading-relaxed">
                     {review.reply}
                   </p>
                 </div>

@@ -39,7 +39,6 @@ export default function AddNewItemView() {
     );
   }
 
-
   return (
     <div className="w-full max-w-[1400px] mx-auto p-4 md:p-4 pb-32 animate-in fade-in duration-700">
       <form onSubmit={handleSubmit}>
@@ -85,7 +84,7 @@ export default function AddNewItemView() {
             <Button
               type="submit"
               disabled={isSaving}
-              className="bg-[#2D5A43] hover:bg-[#234735] text-white font-black h-14 px-12 rounded-2xl shadow-xl shadow-emerald-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
+              className="bg-brand-orange hover:bg-[#234735] text-white font-black h-14 px-12 rounded-2xl shadow-xl shadow-emerald-900/10 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 cursor-pointer"
             >
               {isSaving ? (
                 t("processing")

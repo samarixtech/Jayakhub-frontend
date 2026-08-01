@@ -67,10 +67,10 @@ export default function Driver() {
   return (
     <main dir={dir} className="text-[#1a1a1a] bg-white font-sans overflow-x-hidden">
       {/* HERO SECTION */}
-      <section className="bg-[#0B5D4E] pt-28 pb-40 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="bg-navy pt-28 pb-40 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         {/* Background Decorative Circles */}
         <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-[#FE8C34]/10 rounded-full blur-[80px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[80px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -87,10 +87,10 @@ export default function Driver() {
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-6">
                 {t('hero.title_line1')} {t('hero.title_line2')}{" "}
-                <span className="text-[#FE8C34] block sm:inline-block relative">
+                <span className="text-secondary block sm:inline-block relative">
                   {t('hero.title_highlight')}
                   <svg
-                    className={`absolute w-full h-3 -bottom-2 left-0 text-[#FE8C34] ${isRtl ? "scale-x-[-1]" : ""}`}
+                    className={`absolute w-full h-3 -bottom-2 left-0 text-secondary ${isRtl ? "scale-x-[-1]" : ""}`}
                     viewBox="0 0 200 9"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +107,7 @@ export default function Driver() {
 
               <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button
-                  className="bg-[#FE8C34] hover:bg-[#e0751f] text-white py-4 px-8 rounded-full font-bold text-base transition-all hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+                  className="bg-secondary hover:bg-[#E8A61F] text-navy py-4 px-8 rounded-full font-bold text-base transition-all hover:scale-105 shadow-lg flex items-center justify-center gap-2"
                 >
                   {t('hero.buttons.partner')}
                   <ArrowRight className={`w-5 h-5 ${isRtl ? "rotate-180" : ""}`} />
@@ -145,7 +145,7 @@ export default function Driver() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, i) => (
               <div key={i} className="text-center space-y-1">
-                <div className="text-3xl lg:text-4xl font-extrabold text-[#0B5D4E]">
+                <div className="text-3xl lg:text-4xl font-extrabold text-navy">
                   {stat.value}
                 </div>
                 <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
@@ -173,7 +173,7 @@ export default function Driver() {
                   key={key}
                   className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group"
                 >
-                  <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#0B5D4E] group-hover:text-white transition-colors text-[#0B5D4E]">
+                  <div className="w-12 h-12 bg-navy/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-navy group-hover:text-white transition-colors text-navy">
                     <Icon className="w-6 h-6" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-3">{t(`benefits.items.${key}.title`)}</h3>
@@ -203,7 +203,7 @@ export default function Driver() {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 left-4 w-10 h-10 bg-white/95 backdrop-blur rounded-full flex items-center justify-center shadow-md font-bold text-[#0B5D4E]">
+                  <div className="absolute top-4 left-4 w-10 h-10 bg-white/95 backdrop-blur rounded-full flex items-center justify-center shadow-md font-bold text-navy">
                     {i + 1}
                   </div>
                 </div>
@@ -220,17 +220,17 @@ export default function Driver() {
       {/* REQUIREMENTS SECTION */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-[#0B5D4E] rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-xl">
+          <div className="bg-navy rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-xl">
             <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-white/5 rounded-full blur-[80px] pointer-events-none" />
 
             <div className="relative z-10 grid lg:grid-cols-12 gap-10 items-center">
               {/* Info columns */}
               <div className="lg:col-span-5 space-y-4">
                 <h2 className="text-3xl md:text-4xl font-bold leading-tight">{t('requirements.title')}</h2>
-                <p className="text-emerald-100/80 leading-relaxed text-sm md:text-base">{t('requirements.subtitle')}</p>
+                <p className="text-white/80 leading-relaxed text-sm md:text-base">{t('requirements.subtitle')}</p>
                 <div className="pt-4">
                   <button
-                    className="bg-white hover:bg-emerald-50 text-[#0B5D4E] font-bold px-8 py-3.5 rounded-full inline-flex items-center justify-center transition-all hover:scale-105 text-sm"
+                    className="bg-white hover:bg-secondary/10 text-navy font-bold px-8 py-3.5 rounded-full inline-flex items-center justify-center transition-all hover:scale-105 text-sm"
                   >
                     {t('cta.button')}
                   </button>
@@ -243,11 +243,11 @@ export default function Driver() {
                   const Icon = reqIcons[key as keyof typeof reqIcons];
                   return (
                     <div key={key} className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/10 hover:bg-white/15 transition-colors">
-                      <div className="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center mb-4 text-[#FE8C34]">
+                      <div className="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center mb-4 text-secondary">
                         <Icon className="w-5 h-5" />
                       </div>
                       <h3 className="text-lg font-bold mb-1.5">{t(`requirements.items.${key}.title`)}</h3>
-                      <p className="text-emerald-100/70 text-sm leading-relaxed">{t(`requirements.items.${key}.desc`)}</p>
+                      <p className="text-white/70 text-sm leading-relaxed">{t(`requirements.items.${key}.desc`)}</p>
                     </div>
                   );
                 })}
@@ -269,13 +269,13 @@ export default function Driver() {
             {testimonialKeys.map((key, i) => (
               <div key={key} className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm flex flex-col justify-between">
                 <div>
-                  <div className="text-[#FE8C34] text-5xl font-serif leading-none mb-4">“</div>
+                  <div className="text-navy text-5xl font-serif leading-none mb-4">&ldquo;</div>
                   <p className="text-slate-600 italic text-base leading-relaxed mb-8">
                     {t(`testimonials.items.${key}.quote`)}
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-emerald-50 rounded-full flex items-center justify-center text-[#0B5D4E] font-bold text-sm shrink-0 border border-emerald-100">
+                  <div className="w-12 h-12 bg-navy/10 rounded-full flex items-center justify-center text-navy font-bold text-sm shrink-0 border border-navy/15">
                     {testimonialAvatars[i]}
                   </div>
                   <div>
@@ -292,21 +292,21 @@ export default function Driver() {
       {/* BOTTOM CTA SECTION */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-[#0B5D4E] rounded-3xl p-12 text-center relative overflow-hidden shadow-xl">
+          <div className="bg-navy rounded-3xl p-12 text-center relative overflow-hidden shadow-xl">
             <div className="absolute inset-0">
               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/5 rounded-full blur-[100px] pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-[#FE8C34]/10 rounded-full blur-[80px] pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-secondary/10 rounded-full blur-[80px] pointer-events-none" />
             </div>
 
             <div className="relative z-10 max-w-2xl mx-auto space-y-6">
               <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">{t('cta.title')}</h2>
-              <p className="text-emerald-100/80 text-lg max-w-lg mx-auto">{t('cta.subtitle')}</p>
+              <p className="text-white/80 text-lg max-w-lg mx-auto">{t('cta.subtitle')}</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
                 <a
                   href="https://apps.apple.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 bg-white hover:bg-emerald-50 text-[#0B5D4E] px-6 py-3.5 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto text-start"
+                  className="flex items-center gap-3 bg-white hover:bg-secondary/10 text-navy px-6 py-3.5 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto text-start"
                 >
                   <FaApple className="w-8 h-8 shrink-0" />
                   <div>
@@ -318,7 +318,7 @@ export default function Driver() {
                   href="https://play.google.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 bg-white hover:bg-emerald-50 text-[#0B5D4E] px-6 py-3.5 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto text-start"
+                  className="flex items-center gap-3 bg-white hover:bg-secondary/10 text-navy px-6 py-3.5 rounded-2xl transition-all hover:scale-105 active:scale-95 hover:shadow-xl w-full sm:w-auto text-start"
                 >
                   <FaGooglePlay className="w-7 h-7 shrink-0" />
                   <div>

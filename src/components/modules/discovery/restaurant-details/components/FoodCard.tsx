@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import { Plus, UtensilsCrossed } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   FoodCardProps,
@@ -15,7 +15,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   restaurantIsOpen = true,
 }) => {
   const t = useTranslations("Discovery.foodCard");
-  const imageUrl = item.image || "/pizza-palace.jpg";
+  const hasImage = Boolean(item.image);
 
   const itemUnavailable = item.isAvailable === false;
   const isDisabled = itemUnavailable || !restaurantIsOpen;
@@ -35,14 +35,18 @@ export const FoodCard: React.FC<FoodCardProps> = ({
       }`}
     >
       {/* Image */}
-      <div className="relative w-32 h-32 shrink-0">
-        <Image
-          width={250}
-          height={250}
-          src={imageUrl}
-          alt={item.name}
-          className="w-full h-full object-cover"
-        />
+      <div className="relative w-32 h-32 shrink-0 bg-gray-100 flex items-center justify-center">
+        {hasImage ? (
+          <Image
+            width={250}
+            height={250}
+            src={item.image}
+            alt={item.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <UtensilsCrossed className="w-9 h-9 text-gray-300" />
+        )}
         {hasDiscount && !isDisabled && (
           <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-sm z-10">
             {currency} {discountAmount.toFixed(0)} {t("off")}
@@ -54,7 +58,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
               e.stopPropagation();
               onAddItem(item);
             }}
-            className="absolute bottom-2 right-2 bg-[#346853] hover:bg-[#2c5846] text-white rounded-lg p-1.5 shadow-sm transition-colors"
+            className="absolute bottom-2 right-2 bg-primary hover:bg-[#e85a2a] text-white rounded-lg p-1.5 shadow-sm transition-colors"
           >
             <Plus size={18} />
           </button>
@@ -91,7 +95,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                   {currency} {item.basePrice.toFixed(2)}
                 </span>
               )}
-              <p className="text-[#346853] font-bold text-sm md:text-base">
+              <p className="text-primary font-bold text-sm md:text-base">
                 {currency} {discountedPrice.toFixed(2)}
               </p>
             </div>

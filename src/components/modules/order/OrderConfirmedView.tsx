@@ -22,8 +22,8 @@ export default function OrderConfirmedView() {
     <div className="w-full flex items-center justify-center p-4 py-12 md:py-20">
       <div className="flex flex-col items-center text-center max-w-md w-full">
         {/* Success Icon */}
-        <div className="w-24 h-24 bg-[#346853]/10 rounded-full flex items-center justify-center mb-6">
-          <div className="w-12 h-12 bg-[#346853] rounded-full flex items-center justify-center">
+        <div className="w-24 h-24 bg-forest-green/10 rounded-full flex items-center justify-center mb-6">
+          <div className="w-12 h-12 bg-forest-green rounded-full flex items-center justify-center">
             <Check className="text-white w-8 h-8 stroke-3" />
           </div>
         </div>
@@ -43,7 +43,7 @@ export default function OrderConfirmedView() {
         <div className="space-y-4 w-full px-8">
           <Button
             onClick={() => router.push(`/order/${id}`)}
-            className="w-full h-12 bg-[#346853] hover:bg-[#2a5443] text-white font-bold rounded-lg shadow-lg shadow-[#346853]/20"
+            className="w-full h-12 bg-primary hover:bg-[#e85a2a] text-white font-bold rounded-lg shadow-lg shadow-primary/20"
           >
             {t("trackOrderBtn")}
           </Button>

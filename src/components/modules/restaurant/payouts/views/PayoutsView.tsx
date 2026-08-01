@@ -51,7 +51,7 @@ const PayoutsView = () => {
         <GlobalDateFilter />
         <Button
           variant="outline"
-          className="bg-[#346853] text-white hover:bg-[#2a5644] hover:text-white border-0 h-9 text-[13px]"
+          className="bg-[#FF6B35] text-white hover:bg-[#E85A2A] hover:text-white border-0 h-9 text-[13px]"
           onClick={onExport}
           disabled={isExporting}
         >
@@ -79,7 +79,7 @@ const PayoutsView = () => {
           {can("instant_payouts") && (
             <Button
               onClick={() => setIsRequestModalOpen(true)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2"
+              className="bg-[#FF6B35] hover:bg-[#E85A2A] text-white gap-2"
               size="sm"
             >
               <Plus className="w-4 h-4" />
