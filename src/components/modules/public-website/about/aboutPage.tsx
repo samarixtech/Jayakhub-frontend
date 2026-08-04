@@ -1,18 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useTranslations, useLocale } from 'next-intl';
-import Image from 'next/image';
-import PublicHeroSection from '@/components/common/public-website/publicHeroSection';
-import engineImg from '../../../../../public/engine.png';
-import burgerImg from '../../../../../public/burger.jpg';
-import forRestaurantsImg from '../../../../../public/For-restaurants.png';
-import forRidersImg from '../../../../../public/For-riders.png';
+import { useState, useEffect, useRef } from "react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTranslations, useLocale } from "next-intl";
+import Image from "next/image";
+import Link from "next/link";
+import PublicHeroSection from "@/components/common/public-website/publicHeroSection";
+import engineImg from "../../../../../public/engine.png";
+import burgerImg from "../../../../../public/burger.jpg";
+import forRestaurantsImg from "../../../../../public/For-restaurants.png";
+import forRidersImg from "../../../../../public/For-riders.png";
 
 export default function About() {
-  const t = useTranslations('About');
+  const t = useTranslations("About");
   const locale = useLocale();
-  const isRTL = locale === 'ar';
+  const isRTL = locale === "ar";
   const Arrow = isRTL ? ArrowLeft : ArrowRight;
   const [isVisible, setIsVisible] = useState(false);
   const [statsVisible, setStatsVisible] = useState(false);
@@ -26,7 +27,7 @@ export default function About() {
       ([entry]) => {
         if (entry.isIntersecting) setStatsVisible(true);
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     if (statsRef.current) observer.observe(statsRef.current);
@@ -37,9 +38,9 @@ export default function About() {
     <div className="bg-white">
       {/* ===== HERO SECTION ===== */}
       <PublicHeroSection
-        badge={t('hero.badge')}
-        title_p1={t('hero.title_p1')}
-        title_highlight={t('hero.title_highlight')}
+        badge={t("hero.badge")}
+        title_p1={t("hero.title_p1")}
+        title_highlight={t("hero.title_highlight")}
       />
 
       {/* ===== FULL WIDTH IMAGE ===== */}
@@ -63,33 +64,34 @@ export default function About() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
-                {t('story.badge')}
+                {t("story.badge")}
               </span>
               <h2 className="text-4xl sm:text-5xl font-bold text-foreground leading-tight">
-                {t.rich('story.title', {
-                  br: () => <br />
+                {t.rich("story.title", {
+                  br: () => <br />,
                 })}
               </h2>
             </div>
             <div className="space-y-6 text-lg text-[#64748B] leading-relaxed">
               <p>
-                {t.rich('story.p1', {
-                  strong: (chunks) => <strong className="text-foreground">{chunks}</strong>
+                {t.rich("story.p1", {
+                  strong: (chunks) => (
+                    <strong className="text-foreground">{chunks}</strong>
+                  ),
                 })}
               </p>
-              <p>
-                {t('story.p2')}
-              </p>
-              <p>
-                {t('story.p3')}
-              </p>
+              <p>{t("story.p2")}</p>
+              <p>{t("story.p3")}</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* ===== STATS ===== */}
-      <section ref={statsRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-primary relative overflow-hidden">
+      <section
+        ref={statsRef}
+        className="py-24 px-4 sm:px-6 lg:px-8 bg-primary relative overflow-hidden"
+      >
         <div className="absolute inset-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-[150px]" />
         </div>
@@ -97,14 +99,14 @@ export default function About() {
         <div className="max-w-6xl mx-auto relative">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {[
-              { value: '2025', label: t('stats.founded') },
-              { value: '500', label: t('stats.partners') },
-              { value: '1M', label: t('stats.orders') },
-              { value: '8', label: t('stats.cities') },
+              { value: "2025", label: t("stats.founded") },
+              { value: "50", label: t("stats.partners") },
+              { value: "2k+", label: t("stats.orders") },
+              { value: "4", label: t("stats.cities") },
             ].map((stat, index) => (
               <div
                 key={stat.label}
-                className={`text-center transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                className={`text-center transition-all duration-700 ${statsVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <div className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-3">
@@ -122,35 +124,42 @@ export default function About() {
         <div className="max-w-6xl mx-auto">
           <div className="max-w-2xl mb-16">
             <span className="inline-block bg-accent-yellow/20 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
-              {t('values.badge')}
+              {t("values.badge")}
             </span>
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground">
-              {t('values.title')}
+              {t("values.title")}
             </h2>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-x-16 gap-y-12">
             {[
               {
-                title: t('values.items.make_it_happen.title'),
-                description: t('values.items.make_it_happen.desc'),
+                title: t("values.items.make_it_happen.title"),
+                description: t("values.items.make_it_happen.desc"),
               },
               {
-                title: t('values.items.be_open.title'),
-                description: t('values.items.be_open.desc'),
+                title: t("values.items.be_open.title"),
+                description: t("values.items.be_open.desc"),
               },
               {
-                title: t('values.items.think_big.title'),
-                description: t('values.items.think_big.desc'),
+                title: t("values.items.think_big.title"),
+                description: t("values.items.think_big.desc"),
               },
               {
-                title: t('values.items.care_deeply.title'),
-                description: t('values.items.care_deeply.desc'),
+                title: t("values.items.care_deeply.title"),
+                description: t("values.items.care_deeply.desc"),
               },
             ].map((value) => (
-              <div key={value.title} className="border-t-2 border-accent-yellow pt-6">
-                <h3 className="text-xl font-bold text-foreground mb-3">{value.title}</h3>
-                <p className="text-[#64748B] leading-relaxed">{value.description}</p>
+              <div
+                key={value.title}
+                className="border-t-2 border-accent-yellow pt-6"
+              >
+                <h3 className="text-xl font-bold text-foreground mb-3">
+                  {value.title}
+                </h3>
+                <p className="text-[#64748B] leading-relaxed">
+                  {value.description}
+                </p>
               </div>
             ))}
           </div>
@@ -162,32 +171,35 @@ export default function About() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-2 rounded-full mb-6">
-              {t('ecosystem.badge')}
+              {t("ecosystem.badge")}
             </span>
             <h2 className="text-4xl sm:text-5xl font-bold text-foreground">
-              {t('ecosystem.title')}
+              {t("ecosystem.title")}
             </h2>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
             {[
               {
-                title: t('ecosystem.items.customers.title'),
-                description: t('ecosystem.items.customers.desc'),
-                cta: t('ecosystem.items.customers.cta'),
+                title: t("ecosystem.items.customers.title"),
+                description: t("ecosystem.items.customers.desc"),
+                cta: t("ecosystem.items.customers.cta"),
                 image: burgerImg,
+                href: "https://apps.apple.com/us/app/jayakhub-food-delivery-app/id6791949249",
               },
               {
-                title: t('ecosystem.items.restaurants.title'),
-                description: t('ecosystem.items.restaurants.desc'),
-                cta: t('ecosystem.items.restaurants.cta'),
+                title: t("ecosystem.items.restaurants.title"),
+                description: t("ecosystem.items.restaurants.desc"),
+                cta: t("ecosystem.items.restaurants.cta"),
                 image: forRestaurantsImg,
+                href: "/partners",
               },
               {
-                title: t('ecosystem.items.riders.title'),
-                description: t('ecosystem.items.riders.desc'),
-                cta: t('ecosystem.items.riders.cta'),
+                title: t("ecosystem.items.riders.title"),
+                description: t("ecosystem.items.riders.desc"),
+                cta: t("ecosystem.items.riders.cta"),
                 image: forRidersImg,
+                href: "/drivers",
               },
             ].map((item) => (
               <div key={item.title} className="group">
@@ -200,18 +212,30 @@ export default function About() {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">{item.title}</h3>
-                <p className="text-[#64748B] mb-4 leading-relaxed">{item.description}</p>
-                <a href="#" className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all">
+                <h3 className="text-2xl font-bold text-foreground mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-[#64748B] mb-4 leading-relaxed">
+                  {item.description}
+                </p>
+                <Link
+                  href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={
+                    item.href.startsWith("http")
+                      ? "noopener noreferrer"
+                      : undefined
+                  }
+                  className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
+                >
                   {item.cta}
                   <Arrow className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
-
     </div>
   );
 }

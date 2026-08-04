@@ -311,10 +311,10 @@
     },
     "story": {
       "badge": "Our Story",
-      "title": "From baghdad to the world",
-      "p1": "Founded in 2025, JayakHub was born from a simple idea: <strong>food delivery should be seamless, reliable, and accessible to everyone.</strong>",
-      "p2": "We don't just deliver meals. We connect communities, support local restaurants, and bring people together through the food they love.",
-      "p3": "Today, we're trusted by thousands of restaurants and have delivered millions of orders across Iraq."
+      "title": "Built in Iraq, for Iraq",
+      "p1": "Founded in 2025, JayakHub was born from a simple idea: <strong>food delivery should be seamless, reliable, and fair — for customers, restaurants, and drivers alike.</strong>",
+      "p2": "We don't just deliver meals. We connect communities, support local restaurants, and give drivers a better way to earn.",
+      "p3": "We're launching in Nasiriyah and rolling out across Iraq — partnering with local restaurants to bring each city a delivery platform built for it."
     },
     "stats": {
       "founded": "Founded",
@@ -572,7 +572,7 @@
       "visit": {
         "title": "Visit us",
         "desc": "Come say hello at our HQ.",
-        "address": "320 Decker Suite 100, Irving Texas 75062"
+        "address": "Baghdad, Iraq"
       },
       "call": {
         "title": "Call us",
@@ -3234,7 +3234,7 @@
         },
         "s9": {
           "title": "9. Contact",
-          "content": "Privacy questions: privacy@jayakhub.com · JayakHub, 320 Decker Suite 100, Irving Texas 75062."
+          "content": "Privacy questions: info@jayakhub.com · JayakHub, Baghdad, Iraq."
         }
       }
     },
@@ -3365,7 +3365,7 @@
         },
         "s5": {
           "title": "5. How to request",
-          "content": "In-app: Settings → Privacy → Delete Account. Web: jayakhub.com/delete-account. Questions: privacy@jayakhub.com."
+          "content": "In-app: Settings → Privacy → Delete Account. Web: jayakhub.com/delete-account. Questions: info@jayakhub.com."
         }
       }
     }

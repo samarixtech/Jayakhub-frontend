@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function PrivacyPolicy() {
-  const t = useTranslations('LegalPolicies');
-  const [activeTab, setActiveTab] = useState('privacy');
+  const t = useTranslations("LegalPolicies");
+  const [activeTab, setActiveTab] = useState("privacy");
 
   const TABS = [
-    { id: 'privacy', label: t('tabs.privacy') },
-    { id: 'terms', label: t('tabs.terms') },
-    { id: 'refund', label: t('tabs.refund') },
-    { id: 'delivery', label: t('tabs.delivery') },
-    { id: 'deletion', label: t('tabs.deletion') },
+    { id: "privacy", label: t("tabs.privacy") },
+    { id: "terms", label: t("tabs.terms") },
+    { id: "refund", label: t("tabs.refund") },
+    { id: "delivery", label: t("tabs.delivery") },
+    { id: "deletion", label: t("tabs.deletion") },
   ];
 
   const sectionList = (items: string[]) => (
@@ -30,7 +30,7 @@ export default function PrivacyPolicy() {
         <div className="bg-[#FFF8E1] border border-[#FFB300] rounded-lg p-4 mb-8 flex gap-3 shadow-sm">
           <span className="text-[#F57C00] font-bold">⚠️</span>
           <p className="text-sm text-[#5D4037] leading-relaxed">
-            <strong>{t('alert.title')}</strong> {t('alert.description')}
+            <strong>{t("alert.title")}</strong> {t("alert.description")}
           </p>
         </div>
 
@@ -45,9 +45,10 @@ export default function PrivacyPolicy() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`
                     whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
-                    ${isActive
-                      ? 'border-[#FF6B35] text-[#FF6B35]'
-                      : 'border-transparent text-[#6b6b6b] hover:text-[#1B3A57] hover:border-[#1B3A57]'
+                    ${
+                      isActive
+                        ? "border-[#FF6B35] text-[#FF6B35]"
+                        : "border-transparent text-[#6b6b6b] hover:text-[#1B3A57] hover:border-[#1B3A57]"
                     }
                   `}
                 >
@@ -60,102 +61,187 @@ export default function PrivacyPolicy() {
 
         {/* Content Card */}
         <div className="bg-white rounded-[16px] p-8 md:p-12 shadow-[0_4px_24px_rgba(0,0,0,0.04)] border border-[#e5e0d8]">
-          {activeTab === 'privacy' && (
+          {activeTab === "privacy" && (
             <>
-              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">{t('privacy.title')}</h1>
-              <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t('privacy.intro')}</p>
-              {['s1','s2','s3','s4','s5','s6','s7','s8','s9'].map((s) => (
-                <div key={s}>
-                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">{t(`privacy.sections.${s}.title`)}</h2>
-                  {['s1','s2'].includes(s) ? (
-                    sectionList(t.raw(`privacy.sections.${s}.items`))
-                  ) : s === 's9' ? (
-                    <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
-                      Privacy questions:{" "}
-                      <a href="mailto:privacy@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">privacy@jayakhub.com</a>
-                      {" · "}JayakHub, 320 Decker Suite 100, Irving Texas 75062.
-                    </p>
-                  ) : (
-                    <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`privacy.sections.${s}.content`)}</p>
-                  )}
-                </div>
-              ))}
+              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">
+                {t("privacy.title")}
+              </h1>
+              <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                {t("privacy.intro")}
+              </p>
+              {["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9"].map(
+                (s) => (
+                  <div key={s}>
+                    <h2 className="text-lg font-bold text-[#1B3A57] mb-3">
+                      {t(`privacy.sections.${s}.title`)}
+                    </h2>
+                    {["s1", "s2"].includes(s) ? (
+                      sectionList(t.raw(`privacy.sections.${s}.items`))
+                    ) : s === "s9" ? (
+                      <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                        Privacy questions:{" "}
+                        <a
+                          href="mailto:info@jayakhub.com"
+                          className="text-primary underline hover:opacity-75 transition-opacity"
+                        >
+                          info@jayakhub.com
+                        </a>
+                        {" · "}JayakHub, Baghdad, Iraq.
+                      </p>
+                    ) : (
+                      <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                        {t(`privacy.sections.${s}.content`)}
+                      </p>
+                    )}
+                  </div>
+                ),
+              )}
             </>
           )}
 
-          {activeTab === 'terms' && (
+          {activeTab === "terms" && (
             <>
-              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">{t('terms.title')}</h1>
-              <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t('terms.intro')}</p>
-              {['s1','s2','s3','s4','s5','s6','s7'].map((s) => (
+              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">
+                {t("terms.title")}
+              </h1>
+              <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                {t("terms.intro")}
+              </p>
+              {["s1", "s2", "s3", "s4", "s5", "s6", "s7"].map((s) => (
                 <div key={s}>
-                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">{t(`terms.sections.${s}.title`)}</h2>
-                  {['s1','s2','s3'].includes(s) ? (
+                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">
+                    {t(`terms.sections.${s}.title`)}
+                  </h2>
+                  {["s1", "s2", "s3"].includes(s) ? (
                     sectionList(t.raw(`terms.sections.${s}.items`))
-                  ) : s === 's7' ? (
+                  ) : s === "s7" ? (
                     <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
-                      We may update these terms with notice. These terms are governed by the laws of Iraq. Contact:{" "}
-                      <a href="mailto:legal@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">legal@jayakhub.com</a>.
+                      We may update these terms with notice. These terms are
+                      governed by the laws of Iraq. Contact:{" "}
+                      <a
+                        href="mailto:legal@jayakhub.com"
+                        className="text-primary underline hover:opacity-75 transition-opacity"
+                      >
+                        legal@jayakhub.com
+                      </a>
+                      .
                     </p>
                   ) : (
-                    <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`terms.sections.${s}.content`)}</p>
+                    <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                      {t(`terms.sections.${s}.content`)}
+                    </p>
                   )}
                 </div>
               ))}
             </>
           )}
 
-          {activeTab === 'refund' && (
+          {activeTab === "refund" && (
             <>
-              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">{t('refund.title')}</h1>
-              {['s1','s2','s3','s4'].map((s) => (
+              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">
+                {t("refund.title")}
+              </h1>
+              {["s1", "s2", "s3", "s4"].map((s) => (
                 <div key={s}>
-                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">{t(`refund.sections.${s}.title`)}</h2>
-                  <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`refund.sections.${s}.content`)}</p>
+                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">
+                    {t(`refund.sections.${s}.title`)}
+                  </h2>
+                  <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                    {t(`refund.sections.${s}.content`)}
+                  </p>
                 </div>
               ))}
-              <h2 className="text-lg font-bold text-[#1B3A57] mb-3">{t('refund.sections.s5.title')}</h2>
-              {sectionList(t.raw('refund.sections.s5.items'))}
+              <h2 className="text-lg font-bold text-[#1B3A57] mb-3">
+                {t("refund.sections.s5.title")}
+              </h2>
+              {sectionList(t.raw("refund.sections.s5.items"))}
               <p className="text-[15px] leading-relaxed text-[#1a1a1a]">
                 Contact:{" "}
-                <a href="mailto:support@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">support@jayakhub.com</a>.
+                <a
+                  href="mailto:support@jayakhub.com"
+                  className="text-primary underline hover:opacity-75 transition-opacity"
+                >
+                  support@jayakhub.com
+                </a>
+                .
               </p>
             </>
           )}
 
-          {activeTab === 'delivery' && (
+          {activeTab === "delivery" && (
             <>
-              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">{t('delivery_policy.title')}</h1>
-              {['s1','s2','s3','s4'].map((s) => (
+              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">
+                {t("delivery_policy.title")}
+              </h1>
+              {["s1", "s2", "s3", "s4"].map((s) => (
                 <div key={s}>
-                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">{t(`delivery_policy.sections.${s}.title`)}</h2>
-                  <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`delivery_policy.sections.${s}.content`)}</p>
+                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">
+                    {t(`delivery_policy.sections.${s}.title`)}
+                  </h2>
+                  <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                    {t(`delivery_policy.sections.${s}.content`)}
+                  </p>
                 </div>
               ))}
               <p className="text-[15px] leading-relaxed text-[#1a1a1a]">
                 Questions? Contact{" "}
-                <a href="mailto:support@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">support@jayakhub.com</a>.
+                <a
+                  href="mailto:support@jayakhub.com"
+                  className="text-primary underline hover:opacity-75 transition-opacity"
+                >
+                  support@jayakhub.com
+                </a>
+                .
               </p>
             </>
           )}
 
-          {activeTab === 'deletion' && (
+          {activeTab === "deletion" && (
             <>
-              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">{t('deletion.title')}</h1>
-              <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t('deletion.intro')}</p>
-              {['s1','s2','s3','s4','s5'].map((s) => (
+              <h1 className="text-[28px] font-bold text-[#1B3A57] mb-2">
+                {t("deletion.title")}
+              </h1>
+              <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                {t("deletion.intro")}
+              </p>
+              {["s1", "s2", "s3", "s4", "s5"].map((s) => (
                 <div key={s}>
-                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">{t(`deletion.sections.${s}.title`)}</h2>
-                  {s === 's4' ? (
-                    sectionList(t.raw('deletion.sections.s4.items'))
-                  ) : s === 's5' ? (
+                  <h2 className="text-lg font-bold text-[#1B3A57] mb-3">
+                    {t(`deletion.sections.${s}.title`)}
+                  </h2>
+                  {s === "s4" ? (
+                    sectionList(t.raw("deletion.sections.s4.items"))
+                  ) : s === "s5" ? (
                     <ul className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6 space-y-2 list-none ps-0">
-                      <li><span className="font-semibold">In-app:</span> Settings → Privacy → Delete Account</li>
-                      <li><span className="font-semibold">Web:</span> <a href="https://jayakhub.com/delete-account" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:opacity-75 transition-opacity">jayakhub.com/delete-account</a></li>
-                      <li><span className="font-semibold">Questions:</span> <a href="mailto:privacy@jayakhub.com" className="text-primary underline hover:opacity-75 transition-opacity">privacy@jayakhub.com</a></li>
+                      <li>
+                        <span className="font-semibold">In-app:</span> Settings
+                        → Privacy → Delete Account
+                      </li>
+                      <li>
+                        <span className="font-semibold">Web:</span>{" "}
+                        <a
+                          href="https://jayakhub.com/delete-account"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary underline hover:opacity-75 transition-opacity"
+                        >
+                          jayakhub.com/delete-account
+                        </a>
+                      </li>
+                      <li>
+                        <span className="font-semibold">Questions:</span>{" "}
+                        <a
+                          href="mailto:info@jayakhub.com"
+                          className="text-primary underline hover:opacity-75 transition-opacity"
+                        >
+                          info@jayakhub.com
+                        </a>
+                      </li>
                     </ul>
                   ) : (
-                    <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">{t(`deletion.sections.${s}.content`)}</p>
+                    <p className="text-[15px] leading-relaxed text-[#1a1a1a] mb-6">
+                      {t(`deletion.sections.${s}.content`)}
+                    </p>
                   )}
                 </div>
               ))}
