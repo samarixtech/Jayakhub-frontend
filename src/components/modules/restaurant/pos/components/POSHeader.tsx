@@ -12,6 +12,8 @@ import {
   ChevronDown,
   Home,
   Loader2,
+  Menu,
+  X,
 } from "lucide-react";
 import { usePathname, useRouter, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -57,6 +59,8 @@ export default function POSNavbar() {
   const [isCloseRegisterOpen, setIsCloseRegisterOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const pendingOrdersCount = useSelector(
     (state: RootState) => state.cart.pendingOrders.length,
   );
@@ -87,22 +91,22 @@ export default function POSNavbar() {
   }, []);
 
   return (
-    <nav className="h-[64px] shrink-0 bg-[#1B3A57] text-white flex items-center justify-between px-3 sm:px-6 z-20 relative">
-      <div className="flex items-center gap-4 sm:gap-6 w-full lg:w-auto">
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+    <nav className="min-h-[64px] py-2 shrink-0 bg-[#1B3A57] text-white flex items-center justify-between px-3 sm:px-6 z-20 relative">
+      <div className="flex items-center gap-2 sm:gap-4 flex-1 max-w-full lg:max-w-xl">
+        <div className="hidden sm:flex items-center gap-2 shrink-0">
           <Image
             src={logo}
             alt={t("logoAlt")}
             width={120}
             height={40}
-            className="h-[30px] sm:h-[36px] w-auto object-contain"
+            className="h-[28px] sm:h-[36px] w-auto object-contain"
           />
         </div>
 
         {userRole !== "kitchen" && (
-          <div className="relative flex-1 max-w-xl">
-            <div className="absolute inset-y-0 left-3 sm:left-4 flex items-center pointer-events-none">
-              <Search className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] text-gray-400" />
+          <div className="relative flex-1 min-w-[120px]">
+            <div className="absolute inset-y-0 left-2.5 sm:left-4 flex items-center pointer-events-none">
+              <Search className="w-[14px] h-[14px] sm:w-[18px] sm:h-[18px] text-gray-400" />
             </div>
             <input
               ref={searchInputRef}
@@ -110,14 +114,12 @@ export default function POSNavbar() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={t("searchPlaceholder")}
-              className="w-full bg-white text-gray-900 rounded-full pl-9 sm:pl-11 pr-4 py-1.5 sm:py-2 outline-none focus:ring-2 focus:ring-[#FF6B35]/50 text-[12px] sm:text-[13px] font-semibold placeholder:text-gray-400 placeholder:font-normal"
+              className="w-full bg-white text-gray-900 rounded-full pl-8 sm:pl-11 pr-3 sm:pr-4 py-1.5 outline-none focus:ring-2 focus:ring-[#FF6B35]/50 text-[11px] sm:text-[13px] font-semibold placeholder:text-gray-400 placeholder:font-normal"
             />
           </div>
         )}
 
-        {/* Category dropdown — hidden on orders page. Not gated on
-        isPosLoading: that flag also flips true on every search/category
-        refetch, which was hiding this dropdown while the cashier typed. */}
+        {/* Category dropdown — Desktop */}
         {!isOrdersPage && (
           <div className="hidden lg:block">
             <DropdownMenu>
@@ -127,7 +129,7 @@ export default function POSNavbar() {
                   <ChevronDown className="w-3.5 h-3.5 text-gray-500" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">
+              <DropdownMenuContent align="start" className="bg-white max-h-72 overflow-y-auto">
                 <DropdownMenuRadioGroup
                   value={activeCategory}
                   onValueChange={setActiveCategory}
@@ -147,12 +149,13 @@ export default function POSNavbar() {
         )}
       </div>
 
-      <div className="flex items-center gap-3 sm:gap-5">
+      <div className="flex items-center gap-2 sm:gap-3 lg:gap-5 ml-3 sm:ml-5">
         {/* BACK TO POS */}
         {userRole !== "kitchen" && (
           <Link
             href={"/restaurant/pos"}
-            className={`relative flex items-center gap-2 p-2.5 rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer bg-white text-gray-800 hover:bg-gray-100`}
+            title="POS Main"
+            className={`relative flex items-center justify-center p-2 rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer bg-white text-gray-800 hover:bg-gray-100 ml-1 sm:ml-2`}
           >
             <Home className="w-[15px] h-[15px] stroke-[2.5px]" />
           </Link>
@@ -161,35 +164,36 @@ export default function POSNavbar() {
         {/* Online Orders button */}
         <Link
           href={"/restaurant/pos/orders"}
-          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
+          className={`relative flex items-center gap-1.5 px-2.5 sm:px-4 py-[6px] rounded-full text-[12px] sm:text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
             isOnlineOrdersPage
               ? "bg-[#FF6B35] text-white"
               : "bg-white text-gray-800 hover:bg-gray-100"
           }`}
         >
-          <Globe className="w-[15px] h-[15px] stroke-[2.5px]" />
-          {t("online")}
+          <Globe className="w-[14px] h-[14px] sm:w-[15px] sm:h-[15px] stroke-[2.5px] shrink-0" />
+          <span className="hidden sm:inline">{t("online")}</span>
         </Link>
 
         {/* POS Orders button */}
         <Link
           href={"/restaurant/pos/orders/pos"}
-          className={`relative flex items-center gap-2 px-4 py-[6px] rounded-full text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
+          className={`relative flex items-center gap-1.5 px-2.5 sm:px-4 py-[6px] rounded-full text-[12px] sm:text-[13px] font-bold shadow-sm transition-colors cursor-pointer ${
             isPosOrdersPage
               ? "bg-[#FF6B35] text-white"
               : "bg-white text-gray-800 hover:bg-gray-100"
           }`}
         >
-          <ShoppingCart className="w-[15px] h-[15px] stroke-[2.5px]" />
-          {t("posOrders")}
+          <ShoppingCart className="w-[14px] h-[14px] sm:w-[15px] sm:h-[15px] stroke-[2.5px] shrink-0" />
+          <span className="hidden sm:inline">{t("posOrders")}</span>
         </Link>
 
         {/* Mobile Cart Toggle */}
         <button
           onClick={() => setIsCartOpen(true)}
-          className="lg:hidden relative p-2 bg-[#FF6B35] rounded-full text-white flex items-center justify-center shadow-sm"
+          className="lg:hidden relative p-2 bg-[#FF6B35] rounded-full text-white flex items-center justify-center shadow-sm cursor-pointer"
+          aria-label="View Cart"
         >
-          <ShoppingCart className="w-[18px] h-[18px] stroke-[2.5px]" />
+          <ShoppingCart className="w-[16px] h-[16px] stroke-[2.5px]" />
           {totalItems > 0 && (
             <div className="absolute -top-1 -right-1 bg-red-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold border border-white">
               {totalItems}
@@ -197,11 +201,29 @@ export default function POSNavbar() {
           )}
         </button>
 
+        {/* Mobile Menu Toggle Button */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden relative p-2 bg-white/10 hover:bg-white/20 rounded-full text-white flex items-center justify-center transition-colors cursor-pointer"
+          aria-label="Toggle Navigation Menu"
+        >
+          {isMobileMenuOpen ? (
+            <X className="w-[18px] h-[18px]" />
+          ) : (
+            <Menu className="w-[18px] h-[18px]" />
+          )}
+          {pendingOrdersCount > 0 && !isMobileMenuOpen && (
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border border-white" />
+          )}
+        </button>
+
+        {/* Desktop Quick Tools */}
         <div className="hidden lg:flex items-center gap-4">
           {userRole !== "kitchen" && (
             <button
               onClick={() => setIsPendingOrdersOpen(true)}
               className="relative p-1 hover:bg-white/10 rounded-full transition-colors cursor-pointer text-left"
+              title="Pending Orders"
             >
               <Clock className="w-[20px] h-[20px] text-white" />
               {pendingOrdersCount > 0 && (
@@ -215,7 +237,8 @@ export default function POSNavbar() {
           {userRole !== "kitchen" && (
             <button
               onClick={() => setIsKeyboardOpen(true)}
-              className="p-1 hover:bg-white/10 rounded-full transition-colors relative group"
+              className="p-1 hover:bg-white/10 rounded-full transition-colors relative group cursor-pointer"
+              title="Keyboard Shortcuts"
             >
               <Keyboard className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
             </button>
@@ -224,7 +247,8 @@ export default function POSNavbar() {
           {userRole !== "cashier" && userRole !== "kitchen" && (
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="p-1 hover:bg-white/10 rounded-full transition-colors relative group"
+              className="p-1 hover:bg-white/10 rounded-full transition-colors relative group cursor-pointer"
+              title="POS Settings"
             >
               <Settings className="w-[20px] h-[20px] text-white stroke-[2.5px]" />
             </button>
@@ -247,13 +271,15 @@ export default function POSNavbar() {
               <Link
                 href="/restaurant/dashboard"
                 className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block"
+                title="Dashboard"
               >
                 <LogOut className="w-[20px] h-[20px]" />
               </Link>
             ) : (
               <button
                 onClick={() => setIsCloseRegisterOpen(true)}
-                className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block"
+                className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block cursor-pointer"
+                title="Close Register"
               >
                 <LogOut className="w-[20px] h-[20px]" />
               </button>
@@ -272,13 +298,147 @@ export default function POSNavbar() {
                   setIsLoggingOut(false);
                 }
               }}
-              className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block"
+              className="p-1 hover:bg-white/10 rounded-full transition-colors text-white ml-2 block cursor-pointer"
+              title="Logout"
             >
               <LogOut className="w-[20px] h-[20px]" />
             </button>
           )}
         </div>
       </div>
+
+      {/* Mobile Menu Slide-down Drawer */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-[#152E48] border-t border-white/10 shadow-xl p-4 flex flex-col gap-4 z-40 animate-in slide-in-from-top-2">
+          {/* Category Dropdown on Mobile */}
+          {!isOrdersPage && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-300">
+                {t("allCategories")}
+              </label>
+              <select
+                value={activeCategory}
+                onChange={(e) => {
+                  setActiveCategory(e.target.value);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full bg-white text-gray-900 rounded-lg px-3 py-2 text-sm font-semibold outline-none focus:ring-2 focus:ring-[#FF6B35]"
+              >
+                <option value="all">{t("allCategories")}</option>
+                {(globalCategories || []).map((cat: string) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 border-t border-white/10">
+            {userRole !== "kitchen" && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsPendingOrdersOpen(true);
+                }}
+                className="flex items-center gap-2 p-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer"
+              >
+                <Clock className="w-4 h-4 text-[#FF6B35]" />
+                <span>Pending Orders</span>
+                {pendingOrdersCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                    {pendingOrdersCount}
+                  </span>
+                )}
+              </button>
+            )}
+
+            {userRole !== "kitchen" && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsKeyboardOpen(true);
+                }}
+                className="flex items-center gap-2 p-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer"
+              >
+                <Keyboard className="w-4 h-4 text-[#FF6B35]" />
+                <span>Shortcuts</span>
+              </button>
+            )}
+
+            {userRole !== "cashier" && userRole !== "kitchen" && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsSettingsOpen(true);
+                }}
+                className="flex items-center gap-2 p-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer"
+              >
+                <Settings className="w-4 h-4 text-[#FF6B35]" />
+                <span>Settings</span>
+              </button>
+            )}
+
+            {userRole !== "kitchen" && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsCloseRegisterOpen(true);
+                }}
+                className="flex items-center gap-2 p-2.5 rounded-lg bg-[#f9e9cc] text-[#d68b20] text-xs font-bold cursor-pointer"
+              >
+                <User className="w-4 h-4" />
+                <span>{t("register")}</span>
+              </button>
+            )}
+
+            {userRole !== "kitchen" &&
+              (userRole === "restaurant_owner" ||
+              userRole === "admin" ||
+              userRole === "manager" ? (
+                <Link
+                  href="/restaurant/dashboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 p-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4 text-red-400" />
+                  <span>Dashboard</span>
+                </Link>
+              ) : (
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsCloseRegisterOpen(true);
+                  }}
+                  className="flex items-center gap-2 p-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4 text-red-400" />
+                  <span>Close Till</span>
+                </button>
+              ))}
+
+            {userRole === "kitchen" && (
+              <button
+                onClick={async () => {
+                  setIsMobileMenuOpen(false);
+                  setIsLoggingOut(true);
+                  try {
+                    await logoutAction();
+                    window.location.href = "/login";
+                  } catch (err) {
+                    console.error("Logout failed", err);
+                    setIsLoggingOut(false);
+                  }
+                }}
+                className="flex items-center gap-2 p-2.5 rounded-lg bg-red-600/80 hover:bg-red-600 text-white text-xs font-semibold cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <KeyboardShortcutsModal
         open={isKeyboardOpen}

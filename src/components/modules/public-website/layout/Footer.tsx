@@ -1,4 +1,5 @@
 "use client";
+import React, { useEffect, useState } from "react";
 import {
   MapPin,
   Phone,
@@ -7,25 +8,52 @@ import {
   Instagram,
   Twitter,
   Linkedin,
+  Youtube,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import image2 from "../../../../../public/EngLogo (2).png";
+import { getSocialLinksAction } from "@/app/actions/public/social-links";
 
 const Footer = () => {
   const t = useTranslations("Footer");
 
-  const socialLinks = [
-    { icon: Facebook, href: "https://www.facebook.com", target: "_blank" },
-    { icon: Instagram, href: "https://www.instagram.com", target: "_blank" },
-    { icon: Twitter, href: "https://twitter.com", target: "_blank" },
-    {
-      icon: Linkedin,
-      href: "https://www.linkedin.com/company",
-      target: "_blank",
-    },
+  const defaultSocialLinks = [
+    { icon: Facebook, href: "https://www.facebook.com/jayakhubllc", target: "_blank", key: "facebook" },
+    { icon: Instagram, href: "https://www.instagram.com/jayakhubllc/", target: "_blank", key: "instagram" },
+    { icon: Twitter, href: "https://x.com/jayakhubllc", target: "_blank", key: "twitter" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/jayakhubllc/", target: "_blank", key: "linkedin" },
+    { icon: Youtube, href: "https://www.youtube.com/@JayakHub", target: "_blank", key: "youtube" },
   ];
+
+  const [socialLinks, setSocialLinks] = useState(defaultSocialLinks);
+
+  useEffect(() => {
+    async function fetchSocialLinks() {
+      try {
+        const res = await getSocialLinksAction();
+        if (res.success && res.data) {
+          const item = Array.isArray(res.data) ? res.data[0] : res.data;
+          if (item) {
+            const updated = [];
+            if (item.facebook) updated.push({ icon: Facebook, href: item.facebook, target: "_blank", key: "facebook" });
+            if (item.instagram) updated.push({ icon: Instagram, href: item.instagram, target: "_blank", key: "instagram" });
+            if (item.twitter) updated.push({ icon: Twitter, href: item.twitter, target: "_blank", key: "twitter" });
+            if (item.linkedin) updated.push({ icon: Linkedin, href: item.linkedin, target: "_blank", key: "linkedin" });
+            if (item.youtube) updated.push({ icon: Youtube, href: item.youtube, target: "_blank", key: "youtube" });
+
+            if (updated.length > 0) {
+              setSocialLinks(updated);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch social links", err);
+      }
+    }
+    fetchSocialLinks();
+  }, []);
 
   const companyLinks = [
     { label: t("company.about"), href: "/about-us" },
@@ -92,7 +120,7 @@ const Footer = () => {
             <div className="flex space-x-3 pt-2">
               {socialLinks.map((social, index) => (
                 <a
-                  key={index}
+                  key={social.key || index}
                   href={social.href}
                   target={social.target}
                   rel="noopener noreferrer"
