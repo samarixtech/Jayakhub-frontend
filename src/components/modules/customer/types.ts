@@ -31,6 +31,27 @@ export interface PaymentDetails {
   ownerName: string;
 }
 
+export interface OrderDealItem {
+  itemId: string;
+  name: string;
+  image?: string | null;
+  quantity: number;
+  price: number;
+}
+
+export interface OrderDeal {
+  dealId: string;
+  title: string;
+  discountType?: string;
+  discountValue?: number;
+  quantity: number;
+  discountAmount?: number;
+  originalPrice?: number;
+  price?: number;
+  dealPrice?: number;
+  items?: OrderDealItem[];
+}
+
 export interface Order {
   orderId: string;
   totalAmount: string;
@@ -40,6 +61,7 @@ export interface Order {
   orderTime: string;
   paymentDetails: PaymentDetails;
   items: OrderItem[];
+  deals?: OrderDeal[];
   restaurantId?: string;
   restaurantName?: string;
 }

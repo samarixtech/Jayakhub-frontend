@@ -27,6 +27,19 @@ export interface OrderRider {
   vehicleType: string;
 }
 
+export interface OrderDealItem {
+  itemId: string;
+  name: string;
+  quantity: number;
+}
+
+export interface OrderDeal {
+  dealId: string;
+  title: string;
+  quantity: number;
+  items: OrderDealItem[];
+}
+
 export interface Order {
   id: string;
   customerName: string;
@@ -34,6 +47,7 @@ export interface Order {
   timeAgo: string;
   items: string[];
   itemDetail: OrderItem[];
+  deals: OrderDeal[];
   total: number;
   status: OrderStatus;
   originalStatus: string;
@@ -102,6 +116,16 @@ export const useOnlineOrders = () => {
                 ? o.summary.split(",").map((i: string) => i.trim())
                 : [],
               itemDetail: o.itemDetail || [],
+              deals: (o.deals || []).map((d: any) => ({
+                dealId: d.dealId,
+                title: d.title,
+                quantity: d.quantity,
+                items: (d.items || []).map((di: any) => ({
+                  itemId: di.itemId,
+                  name: di.name,
+                  quantity: di.quantity,
+                })),
+              })),
               total: o.totalPrice || 0,
               status: tabStatus,
               originalStatus: o.status,

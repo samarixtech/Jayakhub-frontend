@@ -13,6 +13,13 @@ interface CreateOrderPayload {
     variantGroupIds?: string[];
     variantOptionNames?: string[];
   }[];
+  // Deal/combo entries in the cart — sent separately from regular `items`
+  // per the /create-checkout-session contract (each references a dealId,
+  // not a menu itemId).
+  deals?: {
+    dealId: string;
+    quantity: number;
+  }[];
   fullAddress: string;
   discount: number;
   totalAmount: number;

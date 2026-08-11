@@ -28,16 +28,18 @@ import PricingPlansSection from "@/components/common/public-website/PricingPlans
 import DeliveryRouteAnimation from "@/components/modules/public-website/home/DeliveryRouteAnimation";
 import PartnerNetwork from "@/components/modules/public-website/services/PartnerNetwork";
 import type { ApiPlan } from "@/app/actions/public/plans";
+import { getCurrencySymbolByCode } from "@/lib/utils/country";
 
 type Props = {
   plans?: ApiPlan[];
 };
 
-function formatPrice(price: string): string {
-  const num = parseFloat(price);
-  if (isNaN(num)) return price;
-  const decimalMatch = price.match(/\.(\d+)/);
-  const decimals = decimalMatch ? decimalMatch[1].length : 0;
+function formatPrice(price: number | string): string {
+  const priceStr = typeof price === "number" ? price.toString() : price;
+  const num = parseFloat(priceStr);
+  if (isNaN(num)) return priceStr;
+  const decimalMatch = priceStr.match(/\.(\d+)/);
+  const decimals = decimalMatch ? Math.max(decimalMatch[1].length, 2) : 2;
   return num.toLocaleString("en-US", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
@@ -155,7 +157,11 @@ export default function Services({ plans = [] }: Props) {
   ];
 
   const apiPlans = plans.map((plan) => {
-    const rawPrice = (plan.monthlyPrice || "").replace(/[$€£¥₹]/g, "").trim();
+    const priceStr =
+      typeof plan.monthlyPrice === "number"
+        ? plan.monthlyPrice.toString()
+        : plan.monthlyPrice || "";
+    const rawPrice = priceStr.replace(/[$€£¥₹]/g, "").trim();
     const isNumeric =
       rawPrice !== "Free" &&
       rawPrice !== "Custom" &&
@@ -171,7 +177,7 @@ export default function Services({ plans = [] }: Props) {
     return {
       id: plan.id,
       name: plan.name,
-      price: isNumeric ? formatPrice(rawPrice) : plan.monthlyPrice,
+      price: isNumeric ? formatPrice(rawPrice) : priceStr,
       period: plan.billingCycle
         ? `/ ${plan.billingCycle}`
         : t.has("pricing.per_month")
@@ -184,7 +190,7 @@ export default function Services({ plans = [] }: Props) {
         plan.planType === "premium",
       freeTrialDays: plan.freeTrialDays ?? null,
       numericPrice: isNumeric,
-      currency: plan.currency || "USD",
+      currencySymbol: getCurrencySymbolByCode(plan.currency),
     };
   });
 

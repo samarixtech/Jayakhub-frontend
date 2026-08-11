@@ -65,7 +65,10 @@ const OrdersTable: React.FC<OrdersTableProps> = ({
       header: t("summary"),
       cell: (order) => (
         <span className="text-gray-500 text-sm truncate max-w-[200px] block">
-          {order.items.map((i) => `${i.quantity}x ${i.name}`).join(", ")}
+          {[
+            ...order.items.map((i) => `${i.quantity}x ${i.name}`),
+            ...(order.deals || []).map((d) => `${d.quantity}x ${d.title}`),
+          ].join(", ")}
         </span>
       ),
     },

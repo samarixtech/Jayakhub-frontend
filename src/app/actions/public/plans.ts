@@ -1,4 +1,5 @@
 "use server";
+import { cookies } from "next/headers";
 import { serverApi } from "@/components/services/api";
 import { responseHandler, ActionResponse } from "@/lib/utils/response-handler";
 
@@ -7,7 +8,7 @@ export type ApiPlan = {
   name: string;
   description?: string | null;
   billingCycle: string;
-  monthlyPrice: string;
+  monthlyPrice: number;
   currency?: string;
   status: string;
   type?: string;
@@ -24,7 +25,7 @@ export type RestaurantPlan = {
   name: string;
   description: string;
   billingCycle: string;
-  monthlyPrice: string;
+  monthlyPrice: number;
   status: string;
   type: string;
   features: string[];
@@ -34,9 +35,14 @@ export type RestaurantPlan = {
 };
 
 export async function getPublicPlansAction(): Promise<ActionResponse<ApiPlan[]>> {
+  const countryCode = (await cookies()).get("USER_COUNTRY")?.value;
+  const url = countryCode
+    ? `/plans/public?countryCode=${countryCode}`
+    : "/plans/public";
+
   const api = await serverApi();
   return responseHandler(
-    async () => api.get("/plans/public"),
+    async () => api.get(url),
     undefined,
     async (data: ApiPlan[]) => data,
   );

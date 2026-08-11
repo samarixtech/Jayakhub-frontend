@@ -40,7 +40,7 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
     refetch,
   } = useOrderTracking(orderId);
 
-  const t = useTranslations("CustomerDashboard.OrderHistory");
+  const t = useTranslations("OrderTracking");
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [canceling, setCanceling] = useState(false);
 
@@ -167,7 +167,8 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
             <OrderMap address={order.address} />
             <OrderTimeline
               placedAt={placedAt}
-              orderStatus={order.orderStatus}
+              orderStatus={order.orderStatus || order.status}
+              expectedPrepareTime={order.expetedprepqaretime || order.expectedPrepareTime}
             />
           </div>
 
@@ -176,6 +177,7 @@ export default function OrderTrackingView({ orderId }: { orderId: string }) {
             <RiderCard rider={rider} />
             <OrderSummaryTable
               items={order.items || []}
+              deals={order.deals || []}
               subtotal={subtotal}
               deliveryFee={deliveryFee}
               total={total}

@@ -42,6 +42,7 @@ export default function RestaurantHeader() {
     items: t("items"),
     categories: t("categories"),
     variants: t("variants"),
+    deals: "Combo / Deal Builder",
     settings: t("settings"),
     marketing: t("marketing"),
     reviews: t("reviews"),
@@ -71,10 +72,6 @@ export default function RestaurantHeader() {
 
   const pageTitle = PAGE_NAMES[activeSegment] || t("dashboard");
   const isExpiredOrCancelled = isExpired || isCancelled;
-  // Header (title + profile dropdown) is hidden on every restaurant page —
-  // including Subscription itself — whenever the plan is expired/cancelled.
-  // Only the sidebar trigger stays, so mobile users can still open the
-  // sidebar (and its always-enabled Subscription link) to navigate.
   const isBlocked = isExpiredOrCancelled;
 
   return (

@@ -45,6 +45,7 @@ export default function RestaurantDetailsView() {
         menuByCategories={state.menuByCategories}
         currency={state.currency}
         restaurantIsOpen={state.restaurant.isOpen !== false}
+        deals={state.deals}
         onCategoryClick={actions.scrollToCategory}
         onAddItem={actions.handleAddToCart}
         onItemClick={actions.setSelectedItem}

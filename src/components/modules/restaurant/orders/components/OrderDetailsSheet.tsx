@@ -35,6 +35,35 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
 
   if (!order) return null;
 
+  // The backend currently folds a deal's own discount into `couponDiscount`
+  // whenever the order includes a deal (no separate coupon-code field is
+  // ever present in that case) — so that figure isn't a real applied coupon.
+  // Split it: whatever the deals already account for is labeled as deal
+  // discount, and only a genuine leftover amount (a real coupon on top of
+  // a deal, or a standalone coupon) is labeled as coupon discount.
+  const dealsDiscountTotal = (order.deals || []).reduce(
+    (sum, d) => sum + (d.discountAmount || 0),
+    0,
+  );
+  const rawCouponDiscount =
+    order.calculation?.couponDiscount ?? order.couponDiscount ?? 0;
+  const dealPortionOfDiscount = Math.min(dealsDiscountTotal, rawCouponDiscount);
+  const genuineCouponDiscount = Math.max(
+    0,
+    rawCouponDiscount - dealsDiscountTotal,
+  );
+
+  // `subtotal` only covers standalone (non-deal) items — the deal's own
+  // (already-discounted) combo price is a separate additive component of
+  // the total, not a discount. Prefer the backend's aggregate when present,
+  // falling back to summing each deal's price.
+  const dealsPriceTotal =
+    order.calculation?.dealPrice ??
+    (order.deals || []).reduce(
+      (sum, d) => sum + (d.dealPrice ?? d.price ?? 0),
+      0,
+    );
+
   const handleUpdateClick = async (newStatus: string) => {
     setUpdatingAction(newStatus);
     try {
@@ -331,6 +360,55 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
             </div>
           </div>
 
+          {/* Deals Included */}
+          {order.deals && order.deals.length > 0 && (
+            <>
+              <Separator />
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    {t("dealsIncluded")}
+                  </h4>
+                  <span className="text-[11px] font-bold text-brand-orange bg-orange-50 px-2 py-0.5 rounded-full">
+                    {order.deals.length}
+                  </span>
+                </div>
+                <div className="space-y-3">
+                  {order.deals.map((deal) => (
+                    <div
+                      key={deal.dealId}
+                      className="bg-orange-50/60 border border-orange-100 rounded-xl p-3.5"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <span className="text-sm font-bold text-gray-900">
+                            {deal.quantity}x {deal.title}
+                          </span>
+                          {deal.items && deal.items.length > 0 && (
+                            <p className="text-[11px] text-gray-500 mt-0.5">
+                              {deal.items
+                                .map((di) => `${di.quantity}x ${di.name}`)
+                                .join(", ")}
+                            </p>
+                          )}
+                        </div>
+                        <span className="text-sm font-medium text-gray-900">
+                          {formatPrice(deal.dealPrice ?? deal.price ?? 0) ||
+                            "N/A"}
+                        </span>
+                      </div>
+                      {!!deal.discountAmount && deal.discountAmount > 0 && (
+                        <span className="inline-block mt-2 text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
+                          -{formatPrice(deal.discountAmount)} {t("itemOff")}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
+
           <Separator />
 
           {/* Payment Summary */}
@@ -347,18 +425,29 @@ const OrderDetailsSheet: React.FC<OrderDetailsSheetProps> = ({
                 </span>
               </div>
 
-              {(order.calculation?.couponDiscount ??
-                order.couponDiscount ??
-                0) > 0 && (
+              {dealsPriceTotal > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">{t("dealsTotal")}</span>
+                  <span className="text-gray-900 font-medium">
+                    +{formatPrice(dealsPriceTotal) || "N/A"}
+                  </span>
+                </div>
+              )}
+
+              {dealPortionOfDiscount > 0 && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">{t("dealDiscount")}</span>
+                  <span className="text-red-500 font-medium">
+                    -{formatPrice(dealPortionOfDiscount) || "N/A"}
+                  </span>
+                </div>
+              )}
+
+              {genuineCouponDiscount > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-500">{t("couponDiscount")}</span>
                   <span className="text-red-500 font-medium">
-                    -
-                    {formatPrice(
-                      order.calculation?.couponDiscount ??
-                        order.couponDiscount ??
-                        0,
-                    ) || "N/A"}
+                    -{formatPrice(genuineCouponDiscount) || "N/A"}
                   </span>
                 </div>
               )}

@@ -47,6 +47,18 @@ export const countryCurrencyMap: { [key: string]: CurrencyInfo } = {
   AF: { symbol: "؋", code: "AFN" },
 };
 
+// Looks up a display symbol for an ISO currency code (e.g. "PKR" -> "Rs"),
+// searching countryCurrencyMap by its `code` field rather than by country.
+// Falls back to "$" when the code is missing or not in the map.
+export const getCurrencySymbolByCode = (currencyCode?: string | null): string => {
+  if (!currencyCode) return "$";
+  const code = currencyCode.toUpperCase();
+  const match = Object.values(countryCurrencyMap).find(
+    (info) => info.code === code,
+  );
+  return match?.symbol || "$";
+};
+
 export const getDefaultCountryData = (countryCode: string) => {
   const code = countryCode.toUpperCase();
   const countryName = getNames().find((name) => getCode(name) === code) || "Unknown Country";

@@ -7,6 +7,7 @@ import {
   CreditCard,
   Wallet,
   ReceiptText,
+  LifeBuoy,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,11 +32,12 @@ const navItems = [
   { key: "profile", href: "/customer/profile-settings", icon: User },
   { key: "my_address", href: "/customer/address", icon: MapPin },
   { key: "Billing", href: "/customer/payment-history", icon: CreditCard },
-  { key: "wallet", href: "/customer/wallet", icon: Wallet },
+  { key: "support", href: "/customer/support", icon: LifeBuoy },
+  // { key: "wallet", href: "/customer/wallet", icon: Wallet },
 ];
 
 export function AppSidebar() {
-  const t = useTranslations('CustomerDashboard.Sidebar');
+  const t = useTranslations("CustomerDashboard.Sidebar");
   const pathname = usePathname();
   const { state, isMobile, setOpenMobile } = useSidebar();
   const { dir } = useLocale();
@@ -50,22 +52,23 @@ export function AppSidebar() {
         isMobile
           ? "border-none bg-white h-full"
           : cn(
-            "border-none bg-transparent h-fit transition-all duration-300 top-[120px]",
-            isRtl ? "pr-4" : "pl-4"
-          )
+              "border-none bg-transparent h-fit transition-all duration-300 top-[120px]",
+              isRtl ? "pr-4" : "pl-4",
+            )
       }
     >
       <div
-        className={`flex flex-col h-full ${isMobile
-          ? "bg-white p-4"
-          : "bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100/50 p-6"
-          }`}
+        className={`flex flex-col h-full ${
+          isMobile
+            ? "bg-white p-4"
+            : "bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100/50 p-6"
+        }`}
       >
         {/* HEADER: LOGO + CLOSE BUTTON (MOBILE ONLY) */}
         {isMobile && (
           <div className="flex items-center justify-between mb-6 px-2">
             <Typography className="text-lg font-black text-navy">
-              {t('menu')}
+              {t("menu")}
             </Typography>
             <Button
               variant="ghost"
@@ -81,7 +84,7 @@ export function AppSidebar() {
         {/* SECTION LABEL (DESKTOP ONLY) */}
         {!isCollapsed && !isMobile && (
           <Typography className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400 mb-6 px-4">
-            {t('account')}
+            {t("account")}
           </Typography>
         )}
 
@@ -95,10 +98,11 @@ export function AppSidebar() {
                     asChild
                     tooltip={t(item.key)}
                     isActive={isActive}
-                    className={`h-14 transition-all duration-200 rounded-2xl px-4 ${isActive
-                      ? "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                      }`}
+                    className={`h-14 transition-all duration-200 rounded-2xl px-4 ${
+                      isActive
+                        ? "bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                    }`}
                     onClick={() => isMobile && setOpenMobile(false)}
                   >
                     <Link href={item.href} className="flex items-center">

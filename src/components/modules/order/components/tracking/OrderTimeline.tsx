@@ -6,11 +6,13 @@ import { useTranslations } from "next-intl";
 interface OrderTimelineProps {
   placedAt: string;
   orderStatus: string;
+  expectedPrepareTime?: string;
 }
 
 export const OrderTimeline: React.FC<OrderTimelineProps> = ({
   placedAt,
   orderStatus,
+  expectedPrepareTime,
 }) => {
   const t = useTranslations("OrderTracking");
   const isRejected = orderStatus === "rejected";
@@ -129,6 +131,7 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({
           icon={Utensils}
           title={t("preparingTitle")}
           description={t("preparingDesc")}
+          time={expectedPrepareTime}
           status={
             ["prepare", "preparing"].includes(orderStatus)
               ? "active"

@@ -10,6 +10,7 @@ export interface PartnersPlan {
   billingCycle?: string | null;
   features: string[];
   freeTrialDays?: number | null;
+  currencySymbol?: string;
 }
 
 interface PartnersPricingTableProps {
@@ -71,7 +72,8 @@ export default function PartnersPricingTable({
                     ) : null}
                   </div>
                   <div className="mt-1 text-[10px] sm:text-xs font-semibold text-[#0F2942]/70 whitespace-nowrap">
-                    {priceLabel}: ${plan.price} {plan.period}
+                    {priceLabel}: {plan.currencySymbol || "$"}
+                    {plan.price} {plan.period}
                   </div>
                 </th>
               ))}

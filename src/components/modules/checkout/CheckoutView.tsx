@@ -18,7 +18,11 @@ import { CheckoutPaymentMethod } from "./components/CheckoutPaymentMethod";
 import CheckoutSkeleton from "@/components/skeletons/CheckoutSkeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/redux/store/store";
-import { clearCart, clearRestaurantCart, clearUnavailableItems } from "@/redux/slices/cartSlice";
+import {
+  clearCart,
+  clearRestaurantCart,
+  clearUnavailableItems,
+} from "@/redux/slices/cartSlice";
 import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
 import { createOrderAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
@@ -40,7 +44,9 @@ const CheckoutView = () => {
   const unavailableItems = useSelector(
     (state: RootState) => state.cart.unavailableItems,
   );
-  const selectedRestaurantMeta = useSelector((state: RootState) => state.discovery.selectedRestaurantMeta);
+  const selectedRestaurantMeta = useSelector(
+    (state: RootState) => state.discovery.selectedRestaurantMeta,
+  );
   const router = useRouter();
   const searchParams = useSearchParams();
   const restaurantIdParam = searchParams.get("restaurantId");
@@ -74,7 +80,9 @@ const CheckoutView = () => {
   );
   const [couponCode, setCouponCode] = useState("");
   const [couponFinalTotal, setCouponFinalTotal] = useState<number | null>(null);
-  const [estimatedDeliveryCharge, setEstimatedDeliveryCharge] = useState<number | null>(null);
+  const [estimatedDeliveryCharge, setEstimatedDeliveryCharge] = useState<
+    number | null
+  >(null);
   const [isEstimatingDelivery, setIsEstimatingDelivery] = useState(false);
 
   const { country, currencyCode } = useCLC();
@@ -103,33 +111,50 @@ const CheckoutView = () => {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
-    const deliveryFee = estimatedDeliveryCharge ?? (selectedRestaurantMeta?.deliveryFee ?? 0);
-    const totalAmount = couponFinalTotal ?? (subtotal + deliveryFee);
+    const deliveryFee =
+      estimatedDeliveryCharge ?? selectedRestaurantMeta?.deliveryFee ?? 0;
+    const totalAmount = couponFinalTotal ?? subtotal + deliveryFee;
+
+    const cartArray = Array.isArray(activeCart) ? activeCart : [];
+    const regularCartItems = cartArray.filter((item: any) => !item.isDeal);
+    const dealCartItems = cartArray.filter((item: any) => item.isDeal);
+
+    const regularItemsPayload = regularCartItems.map((item) => {
+      const variantGroupIds = (
+        Array.isArray(item.selectedVariations) ? item.selectedVariations : []
+      )
+        .map((v: any) => v.groupId)
+        .filter(Boolean);
+      const variantOptionNames = (
+        Array.isArray(item.selectedVariations) ? item.selectedVariations : []
+      )
+        .map((v: any) => v.name)
+        .filter(Boolean);
+
+      const itemPayload: any = {
+        itemId: item.id,
+        itemName: item.name,
+        itemPrice: item.price,
+        quantity: item.quantity,
+        imageUrl: item.imageUrl,
+      };
+
+      if (variantGroupIds.length > 0) {
+        itemPayload.variantGroupIds = variantGroupIds;
+        itemPayload.variantOptionNames = variantOptionNames;
+      }
+
+      return itemPayload;
+    });
 
     const payload = {
       paymentMethod: paymentMethod as any,
       restaurantId: targetRestaurantId,
-      items: (Array.isArray(activeCart) ? activeCart : []).map((item) => {
-        const variantGroupIds =
-          (Array.isArray(item.selectedVariations) ? item.selectedVariations : []).map((v: any) => v.groupId).filter(Boolean);
-        const variantOptionNames =
-          (Array.isArray(item.selectedVariations) ? item.selectedVariations : []).map((v: any) => v.name).filter(Boolean);
-
-        const itemPayload: any = {
-          itemId: item.id,
-          itemName: item.name,
-          itemPrice: item.price,
-          quantity: item.quantity,
-          imageUrl: item.imageUrl,
-        };
-
-        if (variantGroupIds.length > 0) {
-          itemPayload.variantGroupIds = variantGroupIds;
-          itemPayload.variantOptionNames = variantOptionNames;
-        }
-
-        return itemPayload;
-      }),
+      items: regularItemsPayload,
+      deals: dealCartItems.map((item: any) => ({
+        dealId: item.dealData?.id || item.id,
+        quantity: item.quantity,
+      })),
       fullAddress,
       discount: 0.0,
       totalAmount,
@@ -152,7 +177,9 @@ const CheckoutView = () => {
       const res: any = await createOrderAction(payload);
 
       const isSuccess =
-        (res?.meta?.status === 200 || res?.meta?.status === 201 || res?.success === true) &&
+        (res?.meta?.status === 200 ||
+          res?.meta?.status === 201 ||
+          res?.success === true) &&
         res?.meta?.status !== 400 &&
         res?.meta?.status !== 422 &&
         res?.meta?.status !== 500;
@@ -207,13 +234,16 @@ const CheckoutView = () => {
         setSavedAddresses(addressRes.data);
 
         if (autoSelectLatest && addressRes.data.length > 0) {
-          const latest = addressRes.data[addressRes.data.length - 1] || addressRes.data[0];
+          const latest =
+            addressRes.data[addressRes.data.length - 1] || addressRes.data[0];
           setSelectedAddress(latest);
         } else if (!selectedAddress && addressRes.data.length > 0) {
           const defaultAddr = addressRes.data.find((addr: any) => addr.status);
           setSelectedAddress(defaultAddr || addressRes.data[0]);
         } else if (selectedAddress) {
-          const updated = addressRes.data.find((addr: any) => addr.id === selectedAddress.id);
+          const updated = addressRes.data.find(
+            (addr: any) => addr.id === selectedAddress.id,
+          );
           if (updated) {
             setSelectedAddress(updated);
           }
@@ -243,7 +273,7 @@ const CheckoutView = () => {
       try {
         const saved = localStorage.getItem("selectedRestaurantMeta");
         if (saved) dispatch(setSelectedRestaurantMeta(JSON.parse(saved)));
-      } catch { }
+      } catch {}
     }
   }, []);
 
@@ -251,8 +281,14 @@ const CheckoutView = () => {
   useEffect(() => {
     if (!selectedAddress) return;
 
-    const latRaw = selectedAddress.latitude ?? selectedAddress.lat ?? selectedAddress.location?.lat;
-    const lngRaw = selectedAddress.longitude ?? selectedAddress.lng ?? selectedAddress.location?.lng;
+    const latRaw =
+      selectedAddress.latitude ??
+      selectedAddress.lat ??
+      selectedAddress.location?.lat;
+    const lngRaw =
+      selectedAddress.longitude ??
+      selectedAddress.lng ??
+      selectedAddress.location?.lng;
 
     if (latRaw == null || lngRaw == null) return;
 
@@ -345,7 +381,9 @@ const CheckoutView = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbLink href="/restaurants">{t("breadcrumbRestaurants")}</BreadcrumbLink>
+                <BreadcrumbLink href="/restaurants">
+                  {t("breadcrumbRestaurants")}
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
@@ -410,7 +448,9 @@ const CheckoutView = () => {
                     0,
                   );
                   const currentDeliveryFee =
-                    estimatedDeliveryCharge ?? (selectedRestaurantMeta?.deliveryFee ?? 0);
+                    estimatedDeliveryCharge ??
+                    selectedRestaurantMeta?.deliveryFee ??
+                    0;
                   return (
                     <OrderSummary
                       subtotal={currentSubtotal}
@@ -423,7 +463,9 @@ const CheckoutView = () => {
                       isEstimatingDelivery={isEstimatingDelivery}
                       couponCode={couponCode}
                       setCouponCode={setCouponCode}
-                      onCouponApplied={(finalTotal) => setCouponFinalTotal(finalTotal)}
+                      onCouponApplied={(finalTotal) =>
+                        setCouponFinalTotal(finalTotal)
+                      }
                     />
                   );
                 })()}

@@ -1,4 +1,4 @@
-import { Banknote, CreditCard, CheckCircle2, Circle } from "lucide-react";
+import { Banknote, CheckCircle2, Circle } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 interface CheckoutPaymentMethodProps {
@@ -10,6 +10,8 @@ interface CheckoutPaymentMethodProps {
 export const CheckoutPaymentMethod = ({
   paymentMethod,
   setPaymentMethod,
+  // savedCards is only used by the commented-out Stripe block below.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   savedCards,
 }: CheckoutPaymentMethodProps) => {
   const t = useTranslations("Checkout");
@@ -20,7 +22,11 @@ export const CheckoutPaymentMethod = ({
         <h3 className="font-bold text-lg text-gray-900">{t("paymentMethod")}</h3>
       </div>
       <div className="space-y-3">
-        {/* Stripe Option */}
+        {/*
+        Card payment (Stripe) temporarily disabled until the payment provider
+        integration is fully approved for launch -- see LAUNCH_READINESS_TASKS.csv #23.
+
+        Stripe Option
         <div
           onClick={() => setPaymentMethod("stripe")}
           className={`border p-4 rounded-lg cursor-pointer transition-all ${
@@ -53,10 +59,10 @@ export const CheckoutPaymentMethod = ({
             )}
           </div>
 
-          {/* Saved Cards & New Card Options */}
+          Saved Cards & New Card Options
           {(paymentMethod === "stripe" || paymentMethod.startsWith("pm_")) && (
             <div className="mt-4 pt-4 border-t border-primary/10 animate-in fade-in slide-in-from-top-2 space-y-3">
-              {/* Option: Pay with New Card */}
+              Option: Pay with New Card
               <div
                 onClick={(e) => {
                   e.stopPropagation(); // Prevent parent click
@@ -84,7 +90,7 @@ export const CheckoutPaymentMethod = ({
                 </span>
               </div>
 
-              {/* Saved Cards List */}
+              Saved Cards List
               {(Array.isArray(savedCards) ? savedCards : []).map((card: any) => (
                 <div
                   key={card.id}
@@ -125,6 +131,7 @@ export const CheckoutPaymentMethod = ({
             </div>
           )}
         </div>
+        */}
 
         {/* COD Option */}
         <div

@@ -246,7 +246,24 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                           <h5 className="font-medium text-gray-900 text-xs line-clamp-1">
                             {item.quantity}x {item.name}
                           </h5>
-                          <div className="flex items-center gap-2">
+                          {item.dealItems && item.dealItems.length > 0 && (
+                            <div className="mt-1 flex flex-wrap gap-1">
+                              {item.dealItems.map((di: any, idx: number) => (
+                                <span
+                                  key={idx}
+                                  className="inline-flex items-center gap-1 bg-orange-50 border border-orange-100 px-1.5 py-0.5 rounded-md text-[10px] font-medium text-gray-700"
+                                >
+                                  {di.image && (
+                                    <span className="relative w-3.5 h-3.5 rounded-full overflow-hidden shrink-0 inline-block border border-orange-200">
+                                      <Image src={di.image} alt={di.name} fill className="object-cover" />
+                                    </span>
+                                  )}
+                                  <span className="truncate max-w-[90px]">{di.name}</span>
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <div className="flex items-center gap-2 mt-0.5">
                             {item.discount && (
                               <span className="text-gray-400 line-through text-[10px]">
                                 {currency} {(item.originalPrice || 0).toFixed(2)}
@@ -302,6 +319,28 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                                 .join(", ")}
                             </p>
                           )}
+                        {item.dealItems && item.dealItems.length > 0 && (
+                          <div className="mt-1 space-y-1">
+                            <span className="text-[10px] font-bold text-orange-600 uppercase tracking-wider block">
+                              Includes:
+                            </span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {item.dealItems.map((di: any, idx: number) => (
+                                <span
+                                  key={idx}
+                                  className="inline-flex items-center gap-1.5 bg-orange-50 border border-orange-100 px-2 py-0.5 rounded-full text-[11px] font-medium text-gray-700 shadow-2xs"
+                                >
+                                  {di.image ? (
+                                    <span className="relative w-3.5 h-3.5 rounded-full overflow-hidden shrink-0 inline-block border border-orange-200">
+                                      <Image src={di.image} alt={di.name} fill className="object-cover" />
+                                    </span>
+                                  ) : null}
+                                  <span>{di.name}</span>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
                         {item.discount && (

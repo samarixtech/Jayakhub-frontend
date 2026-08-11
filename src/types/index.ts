@@ -244,6 +244,9 @@ export interface CartItem extends MenuItem {
   tableName?: string;
   orderType?: string;
   paymentMethod?: string;
+  isDeal?: boolean;
+  dealItems?: any[];
+  dealData?: any;
 }
 
 // Summary snippet object highlighting a restaurant, usually used in recommendation rails.

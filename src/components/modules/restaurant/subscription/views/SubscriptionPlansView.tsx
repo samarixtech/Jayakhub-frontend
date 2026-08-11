@@ -18,8 +18,8 @@ function getPlanAction(
   if (!subscription?.plan) return "upgrade";
   if (plan.id === subscription.plan.id) return "current";
   if (plan.type === "custom") return "contact";
-  const planPrice = parseFloat(plan.monthlyPrice);
-  const currentPrice = parseFloat(subscription.plan.monthlyPrice);
+  const planPrice = Number(plan.monthlyPrice);
+  const currentPrice = Number(subscription.plan.monthlyPrice);
   return planPrice < currentPrice ? "downgrade" : "upgrade";
 }
 

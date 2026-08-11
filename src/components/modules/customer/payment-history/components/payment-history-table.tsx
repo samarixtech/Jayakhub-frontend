@@ -55,9 +55,25 @@ export function PaymentHistoryTable({
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[200px]",
       className: "py-4",
       cell: (order) => {
+        const firstDeal =
+          order.deals && order.deals.length > 0 ? order.deals[0] : null;
         const firstItem =
           order.items && order.items.length > 0 ? order.items[0] : null;
-        const imageUrl = firstItem?.image || null;
+
+        const title =
+          firstDeal?.title ||
+          firstDeal?.name ||
+          firstItem?.name ||
+          t("order_component");
+
+        const imageUrl =
+          firstItem?.image ||
+          firstDeal?.items?.[0]?.image ||
+          firstDeal?.image ||
+          null;
+
+        const totalEntries =
+          (order.deals?.length || 0) + (order.items?.length || 0);
 
         return (
           <div className="flex items-center gap-3">
@@ -67,18 +83,23 @@ export function PaymentHistoryTable({
                   width={36}
                   height={36}
                   src={imageUrl}
-                  alt={firstItem?.name || t("item_fallback")}
+                  alt={title}
                   className="w-full h-full object-cover"
                 />
               </div>
             ) : (
-              <div className="w-9 h-9 rounded-lg bg-gray-100 shrink-0" />
+              <div className="w-9 h-9 rounded-lg bg-gray-100 shrink-0 flex items-center justify-center text-xs font-bold text-gray-400">
+                #{order.orderId?.slice(-3) || "ord"}
+              </div>
             )}
             <div className="flex flex-col">
               <span className="font-bold text-[#1E293B] text-[15px] line-clamp-1">
-                {firstItem?.name || t("order_component")}
-                {order.items?.length > 1 &&
-                  ` +${order.items.length - 1} ${t("more")}`}
+                {title}
+                {totalEntries > 1 &&
+                  ` +${totalEntries - 1} ${t("more")}`}
+              </span>
+              <span className="text-xs text-gray-400 font-mono">
+                #{order.orderId}
               </span>
             </div>
           </div>
@@ -101,13 +122,16 @@ export function PaymentHistoryTable({
       header: t("table_status"),
       headerClassName:
         "text-[10px] font-bold tracking-wider text-[#64748B] uppercase min-w-[120px]",
-      cell: (order) => (
-        <span
-          className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(order.OrderStatus)}`}
-        >
-          {getStatusLabel(order.OrderStatus, t)}
-        </span>
-      ),
+      cell: (order) => {
+        const statusValue = order.orderStatus || order.OrderStatus || order.status;
+        return (
+          <span
+            className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(statusValue)}`}
+          >
+            {getStatusLabel(statusValue, t)}
+          </span>
+        );
+      },
     },
     {
       header: t("table_method"),

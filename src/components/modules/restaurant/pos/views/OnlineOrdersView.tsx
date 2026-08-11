@@ -198,11 +198,29 @@ export default function OnlineOrdersView() {
                   </span>
                 ),
               )}
-              {order.itemDetail.length === 0 && (
-                <p className="font-medium text-gray-500 text-[13px]">
-                  {order.items.join(", ")}
-                </p>
-              )}
+              {(order.deals || []).map((deal) => (
+                <div
+                  key={deal.dealId}
+                  className="text-[12px] font-semibold text-[#FF6B35] bg-[#FFF8F0] border border-[#FFE4D6] px-2.5 py-1.5 rounded-lg"
+                >
+                  <span>
+                    {deal.quantity}x {deal.title}
+                  </span>
+                  {deal.items && deal.items.length > 0 && (
+                    <span className="block text-[10px] font-medium text-[#FF6B35]/70 mt-0.5">
+                      {deal.items
+                        .map((di) => `${di.quantity}x ${di.name}`)
+                        .join(", ")}
+                    </span>
+                  )}
+                </div>
+              ))}
+              {order.itemDetail.length === 0 &&
+                (order.deals || []).length === 0 && (
+                  <p className="font-medium text-gray-500 text-[13px]">
+                    {order.items.join(", ")}
+                  </p>
+                )}
             </div>
 
             {/* Meta row: rider order ID + prepare time */}

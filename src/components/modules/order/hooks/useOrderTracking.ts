@@ -40,15 +40,35 @@ export function useOrderTracking(orderIdFromUrl: string | undefined) {
   let coupon: any = null;
   let rider: any = null;
 
-  if (order && order.items) {
-    subtotal = order.items.reduce(
-      (sum: number, item: any) => sum + Number(item.price) * item.quantity,
-      0,
-    );
-    total = Number(order.totalAmount);
-    deliveryFee = order.deliveryFee ?? 0;
+  if (order) {
+    total = Number(order.totalAmount || 0);
+    deliveryFee = Number(order.deliveryFee ?? 0);
     coupon = order.coupon ?? null;
     rider = order.rider ?? null;
+
+    if (order.subtotal != null) {
+      subtotal = Number(order.subtotal);
+    } else {
+      const itemsSubtotal = (order.items || []).reduce(
+        (sum: number, item: any) =>
+          sum + Number(item.price || 0) * (item.quantity || 1),
+        0,
+      );
+      const dealsSubtotal = (order.deals || []).reduce(
+        (sum: number, deal: any) =>
+          sum +
+          Number(deal.price || deal.dealPrice || deal.totalPrice || 0) *
+            (deal.quantity || 1),
+        0,
+      );
+      subtotal = itemsSubtotal + dealsSubtotal;
+      if (subtotal === 0 && total > 0) {
+        subtotal = Math.max(
+          0,
+          total - deliveryFee + (coupon?.discountAmount || 0),
+        );
+      }
+    }
   }
 
   return {

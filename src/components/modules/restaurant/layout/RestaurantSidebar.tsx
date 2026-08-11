@@ -72,6 +72,7 @@ const NAV_SECTIONS = [
           { nameKey: "items", href: "/restaurant/menu/items" },
           { nameKey: "categories", href: "/restaurant/menu/categories" },
           { nameKey: "variants", href: "/restaurant/menu/variants" },
+          { nameKey: "deals", href: "/restaurant/menu/deals" },
         ],
       },
     ],

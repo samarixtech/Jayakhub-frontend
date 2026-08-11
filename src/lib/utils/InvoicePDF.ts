@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { formatOrderDateTime, formatOrderDateTimeFromISO } from "@/lib/utils/date";
 
 export const generateInvoicePDF = (
   order: any,
@@ -33,23 +34,29 @@ export const generateInvoicePDF = (
 
   doc.setFontSize(11);
   doc.setTextColor(0);
-  // Priority: profile name -> order customer name -> payment owner name
+  // Priority: profile name -> order user name -> customer name -> payment owner name
   const finalCustomerName = String(
     userName ||
+      order.userName ||
       order.customerName ||
       order.paymentDetails?.ownerName ||
-      "Guest User",
+      "Valued Customer",
   );
   doc.text(finalCustomerName, 15, 52);
 
   doc.setFontSize(10);
   doc.setTextColor(100);
 
-  // Use actual address from order with fallback check
-  const rawAddress = String(
-    order.address || order.fullAddress || order.shippingAddress || "N/A",
-  );
-  const addressLines = rawAddress.split(",");
+  // Robust address extraction
+  const rawAddress =
+    typeof order.address === "string"
+      ? order.address
+      : order.address?.fullAddress ||
+        order.fullAddress ||
+        order.shippingAddress ||
+        "N/A";
+
+  const addressLines = String(rawAddress).split(",");
   let addrY = 57;
   addressLines.slice(0, 3).forEach((line: string) => {
     doc.text(line.trim(), 15, addrY);
@@ -57,7 +64,7 @@ export const generateInvoicePDF = (
   });
 
   // User email
-  doc.text(String(userEmail || order.customerEmail || "N/A"), 15, addrY + 2);
+  doc.text(String(userEmail || order.customerEmail || order.email || "N/A"), 15, addrY + 2);
 
   // Invoice Details
   doc.setFontSize(9);
@@ -71,10 +78,9 @@ export const generateInvoicePDF = (
 
   doc.setFontSize(10);
   doc.setTextColor(100);
-  // Invoice Number label and show Order ID there
   doc.text("Invoice Number", detailsX, currentY);
   doc.setTextColor(0);
-  doc.text(String(order.orderId || "N/A"), valuesX, currentY, {
+  doc.text(String(order.orderId || order._id || "N/A"), valuesX, currentY, {
     align: "right",
   });
 
@@ -82,7 +88,9 @@ export const generateInvoicePDF = (
   doc.setTextColor(100);
   doc.text("Date Issued", detailsX, currentY);
   doc.setTextColor(0);
-  const timing = `${order.orderDate || ""} ${order.orderTime || ""}`.trim();
+  const timing = order.rawTimestamp
+    ? formatOrderDateTimeFromISO(order.rawTimestamp)
+    : `${order.orderDate || ""} ${order.orderTime || ""}`.trim();
   doc.text(timing || "N/A", valuesX, currentY, { align: "right" });
 
   currentY += lineHeight;
@@ -96,29 +104,69 @@ export const generateInvoicePDF = (
   doc.setTextColor(100);
   doc.text("Transaction ID", detailsX, currentY);
   doc.setTextColor(0);
-
-  // Very robust transaction ID check
-  doc.text(
-    String(order.transactionId || "N/A").substring(0, 20),
-    valuesX,
-    currentY,
-    { align: "right" },
+  const transactionId = String(
+    order.transactionId || order.riderOrderId || order.paymentDetails?.transactionId || order.orderId || "N/A"
   );
+  doc.text(transactionId.substring(0, 20), valuesX, currentY, {
+    align: "right",
+  });
 
-  // Table
+  // Table Setup
   const tableStartY = Math.max(addrY + 15, 85);
 
+  const dealsArr = Array.isArray(order.deals) ? order.deals : [];
   const allItems = Array.isArray(order.items) ? order.items : [];
-  // Exclude any "Delivery Fee" line item — it's shown separately in the totals
-  const itemsArr = allItems.filter(
-    (item: any) => item.name?.toLowerCase() !== "delivery fee",
-  );
-  const tableData = itemsArr.map((item: any) => [
-    item.name || "Item",
-    item.quantity || 0,
-    formatPrice(Number(item.price || 0)),
-    formatPrice(Number(item.price || 0) * (item.quantity || 0)),
-  ]);
+
+  // Collect deal item IDs
+  const dealItemIds = new Set<string>();
+  dealsArr.forEach((deal: any) => {
+    if (Array.isArray(deal.items)) {
+      deal.items.forEach((di: any) => {
+        if (di.itemId) dealItemIds.add(String(di.itemId));
+        if (di.id) dealItemIds.add(String(di.id));
+      });
+    }
+  });
+
+  // Filter standalone items
+  const standaloneItems = allItems.filter((item: any) => {
+    if (item.name?.toLowerCase() === "delivery fee") return false;
+    if (item.dealId || item.isDealItem || item.parentDealId) return false;
+    const idToCheck = String(item.itemId || item.id || item.orderItemId || "");
+    if ((!item.price || Number(item.price) === 0) && idToCheck && dealItemIds.has(idToCheck)) {
+      return false;
+    }
+    return true;
+  });
+
+  const tableData: any[] = [];
+  let calculatedSubtotal = 0;
+
+  // Add Deals to PDF Table
+  dealsArr.forEach((deal: any) => {
+    const qty = Number(deal.quantity || 1);
+    const unitPrice = Number(deal.price ?? deal.dealPrice ?? deal.totalPrice ?? deal.amount ?? 0);
+    const totalPrice = unitPrice * qty;
+    calculatedSubtotal += totalPrice;
+
+    let title = `${deal.title || deal.name || "Deal"} (Combo Deal)`;
+    if (deal.items && Array.isArray(deal.items) && deal.items.length > 0) {
+      const itemNames = deal.items.map((i: any) => `${i.quantity || 1}x ${i.name}`).join(", ");
+      title += `\nIncluded: ${itemNames}`;
+    }
+
+    tableData.push([title, qty, formatPrice(unitPrice), formatPrice(totalPrice)]);
+  });
+
+  // Add Standalone Items to PDF Table
+  standaloneItems.forEach((item: any) => {
+    const qty = Number(item.quantity || 1);
+    const unitPrice = Number(item.price || 0);
+    const totalPrice = unitPrice * qty;
+    calculatedSubtotal += totalPrice;
+
+    tableData.push([item.name || "Item", qty, formatPrice(unitPrice), formatPrice(totalPrice)]);
+  });
 
   autoTable(doc, {
     startY: tableStartY,
@@ -149,16 +197,19 @@ export const generateInvoicePDF = (
   const bottomY = lastTableBottom + 10;
 
   // Totals Section
-  const subTotalAmount = itemsArr.reduce(
-    (acc: number, item: any) =>
-      acc + Number(item.price || 0) * (item.quantity || 0),
-    0,
-  );
+  const subTotalAmount =
+    order.subtotal != null ? Number(order.subtotal) : calculatedSubtotal;
   const deliveryFee = Number(order.deliveryFee || 0);
-  const finalTotalAmount = Number(order.totalAmount || subTotalAmount + deliveryFee);
+  const couponDiscount = order.coupon?.discountAmount
+    ? Number(order.coupon.discountAmount)
+    : 0;
+
+  const finalTotalAmount = Number(
+    order.totalAmount || Math.max(0, subTotalAmount + deliveryFee - couponDiscount)
+  );
 
   // Right align totals
-  const rightColLabelX = 140;
+  const rightColLabelX = 130;
   const rightColValueX = 195;
   let summaryLineY = bottomY;
 
@@ -170,20 +221,33 @@ export const generateInvoicePDF = (
     align: "right",
   });
 
-  summaryLineY += 8;
+  summaryLineY += 7;
   doc.setTextColor(100);
   doc.text("Delivery Fee", rightColLabelX, summaryLineY);
   doc.setTextColor(0);
-  doc.text(formatPrice(deliveryFee), rightColValueX, summaryLineY, {
-    align: "right",
-  });
+  doc.text(
+    deliveryFee === 0 ? "Free" : formatPrice(deliveryFee),
+    rightColValueX,
+    summaryLineY,
+    { align: "right" }
+  );
+
+  if (couponDiscount > 0) {
+    summaryLineY += 7;
+    doc.setTextColor(100);
+    doc.text(`Coupon (${order.coupon?.code || ""})`, rightColLabelX, summaryLineY);
+    doc.setTextColor(52, 104, 83);
+    doc.text(`-${formatPrice(couponDiscount)}`, rightColValueX, summaryLineY, {
+      align: "right",
+    });
+  }
 
   // Divider
   doc.setDrawColor(230);
   doc.line(rightColLabelX, summaryLineY + 5, 195, summaryLineY + 5);
 
   // Grand Total
-  summaryLineY += 15;
+  summaryLineY += 14;
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(52, 104, 83); // Emerald

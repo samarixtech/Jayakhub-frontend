@@ -125,6 +125,14 @@ const ProductModal: React.FC<ProductModalProps> = ({
               alt={item.name}
               className="max-h-full max-w-full h-auto w-auto object-contain mx-auto"
             />
+          ) : item.itemImages && item.itemImages.length > 0 ? (
+            <div className="flex items-center justify-center gap-3">
+              {item.itemImages.slice(0, 3).map((imgUrl: string, idx: number) => (
+                <div key={idx} className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-sm border-2 border-white bg-gray-50">
+                  <Image src={imgUrl} alt={item.name} fill className="object-cover" />
+                </div>
+              ))}
+            </div>
           ) : (
             <UtensilsCrossed className="w-14 h-14 text-gray-300" />
           )}
@@ -165,9 +173,71 @@ const ProductModal: React.FC<ProductModalProps> = ({
               </span>
             </div>
           </div>
-          <p className="text-gray-500 text-sm leading-relaxed mb-6">
+          <p className="text-gray-500 text-sm leading-relaxed mb-5">
             {item.description}
           </p>
+
+          {/* Included Items Section for Deals */}
+          {((item.dealItems && item.dealItems.length > 0) || (item.dealData?.items && item.dealData.items.length > 0)) && (() => {
+            const list = item.dealItems || (item.dealData?.items || []).map((di: any) => ({
+              id: di.itemId || di.id,
+              name: di.item?.name || di.name || "Item",
+              image: di.item?.image || di.image || "",
+              basePrice: Number(di.item?.basePrice || di.basePrice || 0),
+              description: di.item?.description || di.description || "",
+            }));
+
+            return (
+              <div className="mb-6 bg-orange-50/70 border border-orange-100 rounded-2xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-gray-900 text-sm sm:text-base flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-brand-orange"></span>
+                    Items Included in this Deal
+                  </h3>
+                  <span className="text-xs font-bold text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
+                    {list.length} Items
+                  </span>
+                </div>
+
+                <div className="space-y-2.5">
+                  {list.map((dealItem: any, index: number) => (
+                    <div
+                      key={dealItem.id || index}
+                      className="flex items-center gap-3 bg-white p-2.5 rounded-xl border border-gray-100 shadow-2xs"
+                    >
+                      <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-gray-100 flex items-center justify-center border border-gray-100">
+                        {dealItem.image ? (
+                          <Image
+                            src={dealItem.image}
+                            alt={dealItem.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <UtensilsCrossed className="w-5 h-5 text-gray-300" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-bold text-sm text-gray-900 truncate">
+                          {dealItem.name}
+                        </h4>
+                        {dealItem.description && (
+                          <p className="text-xs text-gray-500 truncate mt-0.5">
+                            {dealItem.description}
+                          </p>
+                        )}
+                      </div>
+                      {dealItem.basePrice > 0 && (
+                        <span className="text-xs font-semibold text-gray-500 shrink-0">
+                          {currency} {dealItem.basePrice.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Add Extra Section */}
           {item.variantGroups && item.variantGroups.length > 0 && (
@@ -245,18 +315,20 @@ const ProductModal: React.FC<ProductModalProps> = ({
             </div>
           )}
 
-          {/* Special Instructions */}
-          <div className="mb-6">
-            <h3 className="font-bold text-gray-900 mb-3">
-              {t("specialInstructions")}
-            </h3>
-            <textarea
-              value={specialInstructions}
-              onChange={(e) => setSpecialInstructions(e.target.value)}
-              placeholder={t("specialInstructionsPlaceholder")}
-              className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none bg-gray-50/50"
-            />
-          </div>
+          {/* Special Instructions (Hidden for Deals) */}
+          {!item.isDeal && !(item.dealItems && item.dealItems.length > 0) && !item.dealData && (
+            <div className="mb-6">
+              <h3 className="font-bold text-gray-900 mb-3">
+                {t("specialInstructions")}
+              </h3>
+              <textarea
+                value={specialInstructions}
+                onChange={(e) => setSpecialInstructions(e.target.value)}
+                placeholder={t("specialInstructionsPlaceholder")}
+                className="w-full min-h-[100px] p-4 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none bg-gray-50/50"
+              />
+            </div>
+          )}
         </div>
 
         {/* Footer */}

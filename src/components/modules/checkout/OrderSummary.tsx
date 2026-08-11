@@ -153,6 +153,23 @@ const OrderSummary = ({
                             .join(", ")}
                         </p>
                       )}
+                    {(item as any).dealItems && (item as any).dealItems.length > 0 && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {(item as any).dealItems.map((di: any, idx: number) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1 bg-orange-50 border border-orange-100 px-1.5 py-0.5 rounded-full text-[10px] font-medium text-gray-700"
+                          >
+                            {di.image && (
+                              <span className="relative w-3.5 h-3.5 rounded-full overflow-hidden shrink-0 inline-block border border-orange-200">
+                                <img src={di.image} alt={di.name} className="w-full h-full object-cover" />
+                              </span>
+                            )}
+                            <span>{di.name}</span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
                       {hasDiscount && (
                         <span className="text-xs text-gray-400 line-through">

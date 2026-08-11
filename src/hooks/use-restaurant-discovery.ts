@@ -10,7 +10,11 @@ import {
   getPreviousOrderRestaurantsAction,
 } from "@/app/actions/public/restaurants";
 import { getCuisineTypesAction } from "@/app/actions/public/cuisines";
-import { RestaurantProps } from "@/components/modules/discovery/discovery.types";
+import { getPublicDealsAction } from "@/app/actions/public/deals";
+import {
+  RestaurantProps,
+  PublicDeal,
+} from "@/components/modules/discovery/discovery.types";
 
 export function useRestaurantDiscovery() {
   const params = useParams();
@@ -24,6 +28,8 @@ export function useRestaurantDiscovery() {
   const [isPending, setIsPending] = useState(true);
   const [cuisineTypes, setCuisineTypes] = useState<any[]>([]);
   const [isCuisinesLoading, setIsCuisinesLoading] = useState(true);
+  const [deals, setDeals] = useState<PublicDeal[]>([]);
+  const [isDealsLoading, setIsDealsLoading] = useState(true);
   const [previousOrders, setPreviousOrders] = useState<RestaurantProps[]>([]);
   const [isPreviousOrdersLoading, setIsPreviousOrdersLoading] = useState(true);
 
@@ -209,6 +215,21 @@ export function useRestaurantDiscovery() {
       }
     };
     fetchCuisines();
+  }, []);
+
+  // 2b. Fetch Public Deals (shown above the Cuisines section)
+  useEffect(() => {
+    const fetchDeals = async () => {
+      try {
+        const res = await getPublicDealsAction({ limit: 10 });
+        if (res?.success && Array.isArray(res.data)) setDeals(res.data);
+      } catch (error) {
+        console.error("Failed to fetch deals:", error);
+      } finally {
+        setIsDealsLoading(false);
+      }
+    };
+    fetchDeals();
   }, []);
 
   // 3. Authenticate User Session & Fetch Rate-able Orders
@@ -447,6 +468,8 @@ export function useRestaurantDiscovery() {
       isPending,
       cuisineTypes,
       isCuisinesLoading,
+      deals,
+      isDealsLoading,
       previousOrders,
       isPreviousOrdersLoading,
       isLoggedIn,

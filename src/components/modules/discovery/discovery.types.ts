@@ -27,6 +27,11 @@ export interface APIMnuItem {
   category: string | null;
   categoryData?: string;
   isAvailable: boolean;
+  isDeal?: boolean;
+  badge?: string;
+  dealData?: any;
+  dealItems?: any[];
+  itemImages?: string[];
 }
 
 export interface RestaurantMenuProps {
@@ -37,6 +42,7 @@ export interface RestaurantMenuProps {
   menuByCategories: Record<string, APIMnuItem[]>;
   currency: string;
   restaurantIsOpen?: boolean;
+  deals?: any[];
   onCategoryClick: (category: string) => void;
   onAddItem: (item: APIMnuItem) => void;
   onItemClick: (item: APIMnuItem) => void;
@@ -129,6 +135,52 @@ export interface CuisinesSectionProps {
   cuisineTypes: any[];
   activeFilters: string[];
   onCuisineClick: (id: string) => void;
+}
+
+export interface PublicDealItem {
+  id: string;
+  itemId: string;
+  item?: {
+    id: string;
+    name: string;
+    image?: string | null;
+    basePrice: number;
+    discount?: string;
+  };
+}
+
+export interface PublicDeal {
+  id: string;
+  restaurantId: string;
+  restaurant?: {
+    id: string;
+    name: string;
+    slug: string;
+    profileImage?: string;
+    bannerImage?: string;
+    isOnline?: boolean;
+  };
+  title: string;
+  description?: string;
+  image?: string | null;
+  dealType?: string;
+  badge?: string;
+  discountType?: "percentage" | "fixed";
+  discountValue?: string | number;
+  startDate?: string;
+  endDate?: string;
+  isActive?: boolean;
+  items?: PublicDealItem[];
+  // Not always present at the top level — the public API only guarantees
+  // the slug nested under `restaurant.slug`. Kept optional here so callers
+  // fall back to `restaurant?.slug` (see RestaurantsPageView.handleDealClick).
+  restaurantSlug?: string;
+}
+
+export interface DealsSectionProps {
+  isDealsLoading: boolean;
+  deals: PublicDeal[];
+  onDealClick: (deal: PublicDeal) => void;
 }
 
 export interface AllRestaurantsSectionProps {

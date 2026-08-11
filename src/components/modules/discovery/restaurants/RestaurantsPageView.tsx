@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import { useTranslations } from "next-intl";
 import HeroBanner from "@/components/modules/discovery/restaurants/components/HeroBanner";
 import DiscoverySidebar from "@/components/modules/discovery/restaurants/components/DiscoverySidebar";
@@ -14,15 +15,20 @@ import {
 } from "@/components/ui/sheet";
 import { useRestaurantDiscovery } from "@/hooks/use-restaurant-discovery";
 import { PopularRestaurantsSection } from "./sections/PopularRestaurantsSection";
+import { DealsSection } from "./sections/DealsSection";
 import { CuisinesSection } from "./sections/CuisinesSection";
 import { AllRestaurantsSection } from "./sections/AllRestaurantsSection";
 import { PreviousOrdersSection } from "./sections/PreviousOrdersSection";
 import { PromotionsModal, Campaign } from "./components/PromotionsModal";
 import { getWebappCampaignsAction } from "@/app/actions/public/marketing";
+import { setSelectedRestaurantMeta } from "@/redux/slices/discoverySlice";
+import { AppDispatch } from "@/redux/store/store";
+import { PublicDeal } from "@/components/modules/discovery/discovery.types";
 
 const AllRestaurantsPage: React.FC = () => {
   const t = useTranslations("Discovery");
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
   const { isFilterOpen, setIsFilterOpen } = useDiscoveryUI();
   const { state, actions } = useRestaurantDiscovery();
 
@@ -46,6 +52,19 @@ const AllRestaurantsPage: React.FC = () => {
     };
     fetchCampaigns();
   }, []);
+
+  const handleDealClick = (deal: PublicDeal) => {
+    const slug = deal.restaurantSlug || deal.restaurant?.slug;
+    if (!slug) return;
+    const meta = {
+      id: deal.restaurantId || deal.restaurant?.id || "",
+      deliveryFee: 0,
+      distance: undefined,
+    };
+    dispatch(setSelectedRestaurantMeta(meta));
+    localStorage.setItem("selectedRestaurantMeta", JSON.stringify(meta));
+    router.push(`/restaurants/${slug}`);
+  };
 
   const handlePromotionsModalChange = (open: boolean) => {
     setIsPromotionsModalOpen(open);
@@ -94,6 +113,12 @@ const AllRestaurantsPage: React.FC = () => {
             restaurants={state.restaurants}
             isLoggedIn={state.isLoggedIn}
             onAction={() => router.push("/all-restaurants")}
+          />
+
+          <DealsSection
+            isDealsLoading={state.isDealsLoading}
+            deals={state.deals}
+            onDealClick={handleDealClick}
           />
 
           <CuisinesSection

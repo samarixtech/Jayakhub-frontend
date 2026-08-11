@@ -12,6 +12,7 @@ export interface PricingPlan {
   billingCycle?: string | null;
   features: string[];
   numericPrice?: boolean;
+  currencySymbol?: string;
 }
 
 interface PricingPlansSectionProps {
@@ -109,15 +110,15 @@ export default function PricingPlansSection({
                   >
                     {plan.numericPrice !== false && (
                       <span
-                        className={`text-5xl font-extrabold leading-none ${
+                        className={`text-4xl font-extrabold leading-none ${
                           isLight ? "text-primary" : "text-white"
                         }`}
                       >
-                        $
+                        {plan.currencySymbol || "$"}
                       </span>
                     )}
                     <span
-                      className={`text-5xl font-extrabold leading-none ${
+                      className={`text-4xl font-extrabold leading-none ${
                         isLight ? "text-primary" : "text-white"
                       }`}
                     >

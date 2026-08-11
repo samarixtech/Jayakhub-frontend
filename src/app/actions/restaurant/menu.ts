@@ -300,3 +300,147 @@ export async function updateMenuItemStatusAction(payload: {
     "/restaurant/menu/items",
   );
 }
+
+// ==================== DEALS ACTIONS ====================
+
+export interface CreateDealPayload {
+  title: string;
+  description?: string;
+  dealType: string;
+  badge?: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  startDate: string;
+  endDate: string;
+  isActive?: boolean;
+  itemIds: string[];
+  dealImage?: string;
+}
+
+async function buildDealFormData(
+  payload: CreateDealPayload,
+  restaurantId: string,
+) {
+  const { default: NodeFormData } = await import("form-data");
+  const sendData = new NodeFormData();
+
+  sendData.append("restaurantId", restaurantId);
+  sendData.append("title", payload.title);
+  if (payload.description) sendData.append("description", payload.description);
+  sendData.append("dealType", payload.dealType);
+  if (payload.badge) sendData.append("badge", payload.badge);
+  sendData.append("discountType", payload.discountType);
+  sendData.append("discountValue", payload.discountValue.toString());
+  sendData.append("startDate", payload.startDate);
+  sendData.append("endDate", payload.endDate);
+  sendData.append("isActive", String(payload.isActive ?? true));
+
+  if (Array.isArray(payload.itemIds)) {
+    payload.itemIds.forEach((id) => {
+      sendData.append("itemIds", id);
+    });
+  }
+
+  if (payload.dealImage && payload.dealImage.startsWith("data:image/")) {
+    const match = payload.dealImage.match(
+      /^data:(image\/[a-zA-Z+]+);base64,(.+)$/,
+    );
+    if (match) {
+      const contentType = match[1];
+      const base64Data = match[2];
+      const buffer = Buffer.from(base64Data, "base64");
+      const ext = contentType.split("/")[1] || "jpg";
+      sendData.append("dealImage", buffer, {
+        filename: `deal_${Date.now()}.${ext}`,
+        contentType: contentType,
+        knownLength: buffer.length,
+      });
+    } else {
+      sendData.append("dealImage", payload.dealImage);
+    }
+  } else if (payload.dealImage) {
+    sendData.append("dealImage", payload.dealImage);
+  }
+
+  return sendData;
+}
+
+export async function createDealAction(
+  payload: CreateDealPayload,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    async (api, restaurantId) => {
+      const sendData = await buildDealFormData(payload, restaurantId);
+      return api.post("/deals", sendData, {
+        headers: sendData.getHeaders(),
+      });
+    },
+    "Deal created successfully",
+    "/restaurant/menu/deals",
+  );
+}
+
+export async function getDealsAction({
+  page = 1,
+  limit = 10,
+  search = "",
+  dealType = "",
+  status = "",
+}: {
+  page?: number;
+  limit?: number;
+  search?: string;
+  dealType?: string;
+  status?: string;
+} = {}): Promise<ActionResponse> {
+  return executeRestaurantAction((api, restaurantId) => {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      ...(search && { search }),
+      ...(dealType && dealType !== "all" && { dealType }),
+      ...(status && status !== "all" && { status }),
+    });
+    return api.get(`/deals?${queryParams.toString()}`);
+  }, "Deals fetched successfully");
+}
+
+export async function deleteDealAction(id: string): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.delete(`/deals/${id}`),
+    "Deal deleted successfully",
+    "/restaurant/menu/deals",
+  );
+}
+
+export async function getDealStatsAction(): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.get("/deals/details/stats"),
+    "Deal stats fetched successfully",
+  );
+}
+
+export async function getDealDetailsAction(
+  id: string,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    (api) => api.get(`/deals/details/${id}`),
+    "Deal details fetched successfully",
+  );
+}
+
+export async function updateDealAction(
+  id: string,
+  payload: CreateDealPayload,
+): Promise<ActionResponse> {
+  return executeRestaurantAction(
+    async (api, restaurantId) => {
+      const sendData = await buildDealFormData(payload, restaurantId);
+      return api.put(`/deals/${id}`, sendData, {
+        headers: sendData.getHeaders(),
+      });
+    },
+    "Deal updated successfully",
+    "/restaurant/menu/deals",
+  );
+}

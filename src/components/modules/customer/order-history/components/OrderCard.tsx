@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Search, RefreshCw, Star, Navigation, Loader2 } from "lucide-react";
+import { Search, RefreshCw, Star, Navigation, Loader2, Tag } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Order, OrderStatus } from "../../types";
@@ -33,10 +33,15 @@ export const OrderCard = ({
     order.OrderStatus.toLowerCase() === OrderStatus.RIDER_NOT_ASSIGNED;
   const isDelivered = order.OrderStatus.toLowerCase() === OrderStatus.DELIVERED;
   const firstItem = order.items?.[0];
-  const itemNames = order.items
-    ?.map((i) => `${i.quantity}x ${i.name}`)
-    .join(", ");
-  const displayTitle = firstItem?.name || t("order_default");
+  const firstDeal = order.deals?.[0];
+  const dealNames =
+    order.deals?.map((d) => `${d.quantity}x ${d.title}`) || [];
+  const itemNames = [
+    ...(order.items?.map((i) => `${i.quantity}x ${i.name}`) || []),
+    ...dealNames,
+  ].join(", ");
+  const displayTitle = firstItem?.name || firstDeal?.title || t("order_default");
+  const displayImage = firstItem?.image || firstDeal?.items?.[0]?.image;
 
   const { formatPrice } = useCLC();
 
@@ -52,10 +57,10 @@ export const OrderCard = ({
           {/* Left Image & Info */}
           <div className="flex items-center gap-4 w-full md:w-[35%] min-w-0">
             <div className="h-16 w-16 shrink-0 rounded-2xl bg-gray-100 overflow-hidden relative">
-              {firstItem?.image ? (
+              {displayImage ? (
                 <Image
-                  src={getImageUrl(firstItem.image)}
-                  alt={firstItem.name}
+                  src={getImageUrl(displayImage)}
+                  alt={displayTitle}
                   fill
                   className="object-cover"
                 />
@@ -140,6 +145,40 @@ export const OrderCard = ({
             )}
           </div>
         </div>
+
+        {/* Deals Included in this Order */}
+        {Array.isArray(order.deals) && order.deals.length > 0 && (
+          <div className="bg-orange-50/60 border border-orange-100 mx-5 mb-5 rounded-2xl p-4 space-y-2.5">
+            <div className="flex items-center gap-1.5">
+              <Tag className="w-3.5 h-3.5 text-brand-orange" />
+              <span className="text-[11px] font-bold text-brand-orange uppercase tracking-wider">
+                {t("deals_included")}
+              </span>
+            </div>
+            {order.deals.map((deal, idx) => (
+              <div
+                key={deal.dealId || idx}
+                className="flex items-center justify-between gap-3 bg-white rounded-xl px-3.5 py-2.5 border border-orange-100/80"
+              >
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-navy truncate">
+                    {deal.quantity}x {deal.title}
+                  </p>
+                  {Array.isArray(deal.items) && deal.items.length > 0 && (
+                    <p className="text-[11px] text-gray-500 truncate mt-0.5">
+                      {deal.items
+                        .map((di) => `${di.quantity}x ${di.name}`)
+                        .join(", ")}
+                    </p>
+                  )}
+                </div>
+                <span className="text-xs font-semibold text-navy whitespace-nowrap">
+                  {formatPrice(deal.dealPrice ?? deal.price ?? 0, 0)}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Rating and Review Block for Delivered Orders */}
         {isDelivered &&

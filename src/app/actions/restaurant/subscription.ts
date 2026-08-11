@@ -15,7 +15,7 @@ export type SubscriptionPlan = {
   id: string;
   name: string;
   type: string;
-  monthlyPrice: string;
+  monthlyPrice: number;
   billingCycle: string;
   keywords: string[];
   description: string;

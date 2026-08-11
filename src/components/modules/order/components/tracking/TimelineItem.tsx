@@ -26,7 +26,7 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
       {!isLast && (
         <div
           className={`absolute left-[19px] top-10 bottom-[-24px] w-0.5 ${
-            isCompleted ? "bg-forest-green" : "bg-gray-200"
+            isCompleted ? "bg-brand-orange" : "bg-gray-200"
           }`}
         />
       )}
@@ -35,9 +35,9 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
       <div
         className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${
           isCompleted
-            ? "bg-forest-green text-white"
+            ? "bg-brand-orange text-white"
             : status === "active"
-              ? "bg-primary text-white"
+              ? "bg-brand-orange text-white"
               : "bg-gray-100 text-gray-400"
         }`}
       >
@@ -58,9 +58,9 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
           <p
             className={`text-xs font-bold mt-2 ${
               isCompleted
-                ? "text-forest-green"
+                ? "text-brand-orange"
                 : status === "active"
-                  ? "text-primary"
+                  ? "text-brand-orange"
                   : "text-gray-400"
             }`}
           >

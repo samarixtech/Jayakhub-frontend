@@ -53,8 +53,33 @@ export interface ApiOrderCalculation {
   itemDiscount: number;
   couponDiscount: number;
   afterCoupon: number;
+  // Combined (already-discounted) price of any deals in the order — this is
+  // ADDED on top of `subtotal`, not a discount, since `subtotal` only covers
+  // standalone (non-deal) items.
+  dealPrice?: number;
   deliveryFee: number;
   total: number;
+}
+
+export interface ApiOrderDealItem {
+  itemId: string;
+  name: string;
+  image?: string | null;
+  quantity: number;
+  price: number;
+}
+
+export interface ApiOrderDeal {
+  dealId: string;
+  title: string;
+  discountType?: string;
+  discountValue?: number;
+  quantity: number;
+  discountAmount?: number;
+  originalPrice?: number;
+  price?: number;
+  dealPrice?: number;
+  items?: ApiOrderDealItem[];
 }
 
 export interface ApiOrder {
@@ -83,6 +108,10 @@ export interface ApiOrder {
   handoff?: boolean;
   isCritical?: boolean;
   paymentMethod?: string;
+  // "deals" is the source of truth (always an array, possibly empty); the
+  // API also echoes the first one back as a singular "deal" field, which
+  // we ignore to avoid rendering it twice.
+  deals?: ApiOrderDeal[];
 }
 
 export interface OrderStats {
@@ -106,6 +135,7 @@ export interface UIOrderCalculation {
   itemDiscount: number;
   couponDiscount: number;
   afterCoupon: number;
+  dealPrice?: number;
   deliveryFee: number;
   total: number;
 }
@@ -131,6 +161,7 @@ export interface UIOrder {
   handoff?: boolean;
   isCritical?: boolean;
   paymentMethod?: string;
+  deals?: ApiOrderDeal[];
 }
 
 import { usePagination } from "@/hooks/usePagination";
@@ -138,8 +169,14 @@ import { usePagination } from "@/hooks/usePagination";
 export const useOrders = () => {
   const t = useTranslations("POS.ordersHook");
   const { startDate, endDate } = useDateFilter();
-  const { page, limit, totalPages, totalCount, handlePageChange, updatePaginationMeta } =
-    usePagination({ initialLimit: 10 });
+  const {
+    page,
+    limit,
+    totalPages,
+    totalCount,
+    handlePageChange,
+    updatePaginationMeta,
+  } = usePagination({ initialLimit: 10 });
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
@@ -242,8 +279,8 @@ export const useOrders = () => {
                 item.itemDiscount !== undefined
                   ? item.itemDiscount
                   : typeof item.discount === "string"
-                  ? parseFloat(item.discount)
-                  : item.discount || 0;
+                    ? parseFloat(item.discount)
+                    : item.discount || 0;
               const discount =
                 explicitDiscount ||
                 (o.itemDetail!.length === 1
@@ -256,7 +293,8 @@ export const useOrders = () => {
               const unitBasePrice =
                 item.basePrice !== undefined
                   ? item.basePrice
-                  : unitPrice + (item.quantity > 0 ? discount / item.quantity : 0);
+                  : unitPrice +
+                    (item.quantity > 0 ? discount / item.quantity : 0);
 
               return {
                 id: `item-${idx}`,
@@ -272,7 +310,8 @@ export const useOrders = () => {
           }
 
           const calc = o.calculation;
-          const itemDiscountVal = calc?.itemDiscount ?? o.totalItemDiscount ?? 0;
+          const itemDiscountVal =
+            calc?.itemDiscount ?? o.totalItemDiscount ?? 0;
           const couponDiscountVal =
             calc?.couponDiscount ?? o.couponDiscount ?? o.discount ?? 0;
           const totalDiscountVal = itemDiscountVal + couponDiscountVal;
@@ -299,6 +338,7 @@ export const useOrders = () => {
                   itemDiscount: calc.itemDiscount,
                   couponDiscount: calc.couponDiscount,
                   afterCoupon: calc.afterCoupon,
+                  dealPrice: calc.dealPrice,
                   deliveryFee: calc.deliveryFee,
                   total: calc.total,
                 }
@@ -310,6 +350,7 @@ export const useOrders = () => {
             handoff: !!o.handoff,
             isCritical: !!o.isCritical,
             paymentMethod: o.paymentMethod,
+            deals: o.deals || [],
           };
         });
         setOrders(mappedOrders);
@@ -319,7 +360,15 @@ export const useOrders = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, limit, selectedStatus, debouncedSearchQuery, updatePaginationMeta, startDate, endDate]);
+  }, [
+    page,
+    limit,
+    selectedStatus,
+    debouncedSearchQuery,
+    updatePaginationMeta,
+    startDate,
+    endDate,
+  ]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

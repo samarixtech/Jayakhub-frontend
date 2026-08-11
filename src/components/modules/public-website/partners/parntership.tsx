@@ -475,6 +475,7 @@ import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import { useState, useEffect } from "react";
 import { getPublicPlansAction, ApiPlan } from "@/app/actions/public/plans";
+import { getCurrencySymbolByCode } from "@/lib/utils/country";
 import { ChevronRight, Percent, Smartphone, Users, Zap } from "lucide-react";
 import { FaApple, FaGooglePlay } from "react-icons/fa";
 import DeliveryRouteAnimation from "@/components/modules/public-website/home/DeliveryRouteAnimation";
@@ -499,11 +500,12 @@ export default function Home() {
     });
   }, []);
 
-  const formatPrice = (price: string) => {
-    const num = parseFloat(price);
-    if (isNaN(num)) return price;
-    const decimalMatch = price.match(/\.(\d+)/);
-    const decimals = decimalMatch ? decimalMatch[1].length : 0;
+  const formatPrice = (price: number | string) => {
+    const priceStr = typeof price === "number" ? price.toString() : price;
+    const num = parseFloat(priceStr);
+    if (isNaN(num)) return priceStr;
+    const decimalMatch = priceStr.match(/\.(\d+)/);
+    const decimals = decimalMatch ? Math.max(decimalMatch[1].length, 2) : 2;
     return num.toLocaleString("en-US", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
@@ -527,6 +529,7 @@ export default function Home() {
         (plan.name && plan.name.toLowerCase().includes("family")) ||
         plan.planType === "premium",
       freeTrialDays: plan.freeTrialDays,
+      currencySymbol: getCurrencySymbolByCode(plan.currency),
     }),
   );
 

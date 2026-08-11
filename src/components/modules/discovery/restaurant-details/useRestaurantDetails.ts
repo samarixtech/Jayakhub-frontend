@@ -30,6 +30,7 @@ export function useRestaurantDetails() {
   const [restaurant, setRestaurant] = useState<RestaurantDetails | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
   const [menuItems, setMenuItems] = useState<APIMnuItem[]>([]);
+  const [rawDeals, setRawDeals] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("Popular");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
@@ -48,7 +49,16 @@ export function useRestaurantDetails() {
       onSuccess: (data: any) => {
         if (data) {
           setRestaurant(data.restaurant);
-          setCategories(data.categories || []);
+          const fetchedDeals = data.deals || [];
+          setRawDeals(fetchedDeals);
+
+          const baseCategories = data.categories || [];
+          const hasDeals = fetchedDeals.length > 0;
+          const finalCategories = hasDeals
+            ? ["Deals", ...baseCategories.filter((c: string) => c !== "Deals")]
+            : baseCategories.filter((c: string) => c !== "Deals");
+
+          setCategories(finalCategories);
           setMenuItems(data.menu || []);
 
           if (data.ratingSummary) {
@@ -59,8 +69,8 @@ export function useRestaurantDetails() {
             });
           }
 
-          if (data.categories && data.categories.length > 0) {
-            setActiveTab(data.categories[0]);
+          if (finalCategories.length > 0) {
+            setActiveTab(finalCategories[0]);
           }
         }
         setIsLoading(false);
@@ -144,6 +154,9 @@ export function useRestaurantDetails() {
       restaurantName: restaurant?.name,
       restaurantId: restaurant?.id,
       restaurantImage: restaurant?.profileImage,
+      isDeal: item.isDeal,
+      dealItems: item.dealItems,
+      dealData: item.dealData,
     };
     dispatch(addToCart(cartItem));
   };
@@ -164,6 +177,9 @@ export function useRestaurantDetails() {
         restaurantName: restaurant?.name,
         restaurantId: restaurant?.id,
         restaurantImage: restaurant?.profileImage,
+        isDeal: item.isDeal,
+        dealItems: item.dealItems,
+        dealData: item.dealData,
       }),
     );
     setSelectedItem(null);
@@ -171,20 +187,87 @@ export function useRestaurantDetails() {
 
   const menuByCategories = useMemo(() => {
     const grouped: Record<string, APIMnuItem[]> = {};
+
+    if (rawDeals && rawDeals.length > 0) {
+      const dealItems: APIMnuItem[] = rawDeals.map((deal: any) => {
+        const extractedItems = (deal.items || []).map((di: any) => ({
+          id: di.itemId || di.id,
+          name: di.item?.name || di.name || "Item",
+          image: di.item?.image || di.image || "",
+          basePrice: Number(di.item?.basePrice || di.basePrice || 0),
+        }));
+
+        const itemImagesList = extractedItems
+          .map((i: any) => i.image)
+          .filter((img: string) => Boolean(img));
+
+        const origPrice = extractedItems.reduce((sum: number, i: any) => sum + i.basePrice, 0);
+
+        const discVal = Number(deal.discountValue || 0);
+        const discType =
+          deal.discountType === "percentage" ? "percentage" : "fixed";
+        const discountAmount =
+          discType === "fixed"
+            ? discVal
+            : origPrice > 0
+              ? (origPrice * discVal) / 100
+              : 0;
+
+        const finalPrice = Math.max(0, origPrice - discountAmount);
+        const mainImage = deal.image || itemImagesList[0] || "";
+
+        return {
+          id: deal.id,
+          restaurantId: deal.restaurantId,
+          name: deal.title,
+          description:
+            deal.description ||
+            extractedItems
+              .map((i: any) => i.name)
+              .join(" + "),
+          basePrice: origPrice > 0 ? origPrice : finalPrice,
+          discount: discountAmount > 0 ? discountAmount.toFixed(2) : null,
+          dietaryType: "NON_VEG",
+          image: mainImage,
+          variations: [],
+          category: "Deals",
+          categoryData: "Deals",
+          isAvailable: deal.isActive !== false,
+          isDeal: true,
+          badge: deal.badge,
+          dealItems: extractedItems,
+          itemImages: itemImagesList,
+          dealData: deal,
+        };
+      });
+
+      grouped["Deals"] = dealItems;
+    }
+
     categories.forEach((cat) => {
-      grouped[cat] = menuItems.filter((item) => (item as any).categoryData === cat || item.category === cat);
+      if (cat !== "Deals") {
+        grouped[cat] = menuItems.filter(
+          (item) => (item as any).categoryData === cat || item.category === cat,
+        );
+      }
     });
+
     return grouped;
-  }, [categories, menuItems]);
+  }, [categories, menuItems, rawDeals]);
+
+  const allSearchableItems = useMemo(() => {
+    const dealsItems = menuByCategories["Deals"] || [];
+    return [...dealsItems, ...menuItems];
+  }, [menuByCategories, menuItems]);
 
   const filteredItems = useMemo(() => {
     if (!searchTerm) return null;
-    return menuItems.filter(
+    return allSearchableItems.filter(
       (i) =>
         i.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         i.description.toLowerCase().includes(searchTerm.toLowerCase()),
     );
-  }, [menuItems, searchTerm]);
+  }, [allSearchableItems, searchTerm]);
 
   const scrollToCategory = (category: string) => {
     setActiveTab(category);
@@ -217,6 +300,7 @@ export function useRestaurantDetails() {
       restaurant,
       categories,
       menuItems,
+      deals: rawDeals,
       activeTab,
       searchTerm,
       selectedItem,
