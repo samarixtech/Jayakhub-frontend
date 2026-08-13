@@ -4843,6 +4843,10 @@
     },
     "dealsSection": {
       "title": "Deals & Combos",
+      "seeAll": "See All",
+      "allDealsTitle": "All Deals & Combos",
+      "noDealsFound": "No deals available at the moment",
+      "noMoreDeals": "You've reached the end of all deals",
       "percentOff": "{value}% OFF",
       "saveAmount": "SAVE {amount}",
       "itemsIncluded": "{count} items included"
@@ -5037,6 +5041,8 @@
       "subtotal": "Subtotal",
       "deliveryCharges": "Delivery Charges",
       "deliveryFee": "Delivery Fee",
+      "dealDiscount": "Deal Discount",
+      "deals": "Deals",
       "total": "Total",
       "grandTotal": "Grand Total",
       "cash": "Cash",

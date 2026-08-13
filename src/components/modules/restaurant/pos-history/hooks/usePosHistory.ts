@@ -29,16 +29,43 @@ export interface PosOrderItem {
   totalAmount: number;
 }
 
+export interface PosOrderDealItem {
+  itemId?: string;
+  name: string;
+  price?: number;
+  quantity?: number;
+}
+
+export interface PosOrderDeal {
+  title: string;
+  dealId?: string;
+  quantity?: number;
+  discountType?: string;
+  discountValue?: number;
+  discountAmount?: number;
+  items?: PosOrderDealItem[];
+  originalPrice?: number;
+  price?: number;
+  discountedPrice?: number;
+  dealPrice?: number;
+  totalOriginalPrice?: number;
+  totalAmount?: number;
+  totalPrice?: number;
+}
+
 export interface PosOrderRow {
   id: string;
   restaurantId: string;
   userId: string;
+  userName?: string;
   tableName?: string | null;
   orderType: string;
   paymentMethod: string;
   orderStatus: string;
   notes?: string | null;
   items: PosOrderItem[];
+  deals?: PosOrderDeal[] | null;
+  dealDiscount?: number | string;
   itemsTotal: number;
   deliveryFee: number;
   grandTotal: number;

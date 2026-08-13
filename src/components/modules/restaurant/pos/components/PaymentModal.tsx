@@ -95,10 +95,13 @@ export default function PaymentModal({
     if (method && cartItems.length > 0) {
       setIsProcessing(true);
 
+      const regularItems = cartItems.filter((item) => !item.isDeal);
+      const dealItems = cartItems.filter((item) => item.isDeal);
+
       const payload: Record<string, any> = {
         paymentMethod: method.charAt(0).toUpperCase() + method.slice(1),
         orderType,
-        items: cartItems.map((item) => {
+        items: regularItems.map((item) => {
           const entry: Record<string, any> = {
             itemId: item.cashierItemId || item.id,
             quantity: item.quantity,
@@ -121,6 +124,14 @@ export default function PaymentModal({
           return entry;
         }),
       };
+
+      if (dealItems.length > 0) {
+        payload.deals = dealItems.map((deal) => ({
+          dealId: deal.cashierItemId || deal.id,
+          quantity: deal.quantity,
+        }));
+      }
+
       if (selectedTable?.name) payload.tableName = selectedTable.name;
       if (orderType === "Delivery" && deliveryChargesNum > 0)
         payload.deliveryFee = deliveryChargesNum;
@@ -150,6 +161,7 @@ export default function PaymentModal({
 
   if (step === "receipt") {
     const receiptItems: any[] = receiptData?.items || [];
+    const receiptDeals: any[] = receiptData?.deals || [];
     const receiptOrderId = receiptData?.id || "——";
     const receiptDate = receiptData?.createdAt
       ? new Date(receiptData.createdAt).toLocaleString("en-GB", {
@@ -164,9 +176,10 @@ export default function PaymentModal({
       receiptData?.tableName || selectedTable?.name || "——";
     const receiptPaymentMethod = receiptData?.paymentMethod || method || "——";
     const receiptOrderType = receiptData?.orderType || orderType;
-    const receiptItemsTotal: number = receiptData?.itemsTotal ?? 0;
-    const receiptDeliveryFee: number = receiptData?.deliveryFee ?? 0;
-    const receiptGrandTotal: number = receiptData?.grandTotal ?? 0;
+    const receiptItemsTotal: number = parseFloat(receiptData?.itemsTotal || 0);
+    const receiptDealDiscount: number = parseFloat(receiptData?.dealDiscount || 0);
+    const receiptDeliveryFee: number = parseFloat(receiptData?.deliveryFee || 0);
+    const receiptGrandTotal: number = parseFloat(receiptData?.grandTotal || 0);
 
     const handlePrint = () => {
       const printWindow = window.open("", "_blank", "width=420,height=700");
@@ -209,6 +222,57 @@ export default function PaymentModal({
         })
         .join("");
 
+      const dealsHtml = receiptDeals
+        .map((deal: any) => {
+          const dealPrice = parseFloat(deal.finalAmount ?? deal.price ?? 0);
+          const dealOrig = parseFloat(deal.originalAmount ?? 0);
+          const qty = deal.quantity || 1;
+          const totalDealPrice = dealPrice * qty;
+          const dealItemsList: any[] = deal.items || [];
+
+          const bundledRows = dealItemsList
+            .map(
+              (di: any) => `
+              <tr>
+                <td style="color:#777;font-size:11px;padding:1px 0 0 12px;">
+                  &bull; ${di.quantity || 1}x ${di.name || di.itemName}
+                </td>
+                <td style="color:#aaa;font-size:10px;text-align:right;padding:1px 0 0;">
+                  ${parseFloat(di.price || 0) > 0 ? formatPrice(parseFloat(di.price)) : ""}
+                </td>
+              </tr>`,
+            )
+            .join("");
+
+          return `
+          <tr>
+            <td style="font-weight:700;padding:6px 0 0;font-size:13px;color:#111;">
+              <span style="font-size:9px;background:#FF6B35;color:#fff;padding:1px 4px;border-radius:4px;vertical-align:middle;margin-right:4px;">DEAL</span>
+              ${qty}x ${deal.title}
+            </td>
+            <td style="font-weight:700;text-align:right;padding:6px 0 0;font-size:13px;">
+              ${formatPrice(totalDealPrice)}
+            </td>
+          </tr>
+          <tr>
+            <td style="font-size:11px;padding:1px 0 0 8px;" colspan="2">
+              ${dealOrig > dealPrice ? `<s style="color:#bbb;">${formatPrice(dealOrig)}</s> ` : ""}
+              <span style="color:#666;">${formatPrice(dealPrice)} x ${qty}</span>
+              ${deal.discountAmount > 0 ? `<span style="background:#ffedd5;color:#c2410c;font-weight:700;padding:1px 4px;border-radius:4px;margin-left:4px;font-size:10px;">-${formatPrice(deal.discountAmount)} OFF</span>` : ""}
+            </td>
+          </tr>
+          ${bundledRows}`;
+        })
+        .join("");
+
+      const dealDiscountRow =
+        receiptDealDiscount > 0
+          ? `<tr>
+             <td style="color:#c2410c;padding:3px 0;font-weight:600;">Deal Discount</td>
+             <td style="text-align:right;padding:3px 0;color:#c2410c;font-weight:600;">-${formatPrice(receiptDealDiscount)}</td>
+           </tr>`
+          : "";
+
       const deliveryRow =
         receiptDeliveryFee > 0
           ? `<tr>
@@ -235,10 +299,11 @@ export default function PaymentModal({
         <p class="sub">${receiptOrderType} &middot; ${receiptTableName}</p>
         <div class="meta"><span>${receiptOrderId}</span><span>${receiptDate}</span></div>
         <hr>
-        <table>${itemsHtml}</table>
+        <table>${itemsHtml}${dealsHtml}</table>
         <hr>
         <table>
           <tr><td style="color:#666;padding:3px 0;">${t("subtotal")}</td><td style="text-align:right;padding:3px 0;">${formatPrice(receiptItemsTotal)}</td></tr>
+          ${dealDiscountRow}
           ${deliveryRow}
         </table>
         <hr>
@@ -287,69 +352,132 @@ export default function PaymentModal({
           </div>
 
           {/* Line items — scrolls internally instead of growing the modal */}
-          <div className="w-full space-y-3 mb-4 flex-1 min-h-0 overflow-y-auto pr-1 -mr-1">
-            {receiptItems.length > 0 ? (
-              receiptItems.map((item: any, idx: number) => {
-                const discountAmt = parseFloat(item.discount) || 0;
-                const hasDiscount = discountAmt > 0;
-                const unitPrice = item.basePrice - discountAmt;
-                const totalAmt = parseFloat(item.totalAmount) || 0;
-                return (
-                  <div key={idx} className="w-full">
-                    {/* Item name + total */}
-                    <div className="flex justify-between text-[13px] text-[#1B3A57] font-bold">
-                      <span>
-                        {item.quantity}x {item.itemName}
-                      </span>
-                      <span className="shrink-0 ml-2">
-                        {formatPrice(totalAmt)}
-                      </span>
-                    </div>
-
-                    {/* Unit price x qty, with discount if present */}
-                    <div className="flex items-center justify-between text-[11px] mt-0.5 flex-wrap gap-1.5">
-                      <div className="flex items-center gap-1.5">
-                        {hasDiscount && (
-                          <span className="text-gray-400 line-through">
-                            {formatPrice(item.basePrice)}
-                          </span>
-                        )}
-                        <span className="text-[#8B7355]">
-                          {formatPrice(
-                            hasDiscount ? unitPrice : item.basePrice,
-                          )}{" "}
-                          x {item.quantity}
+          <div className="w-full space-y-3 mb-4 flex-1 min-h-0 overflow-y-auto pr-1 -mr-1 text-left">
+            {receiptItems.length > 0 || receiptDeals.length > 0 ? (
+              <>
+                {/* Regular Items */}
+                {receiptItems.map((item: any, idx: number) => {
+                  const discountAmt = parseFloat(item.discount) || 0;
+                  const hasDiscount = discountAmt > 0;
+                  const unitPrice = item.basePrice - discountAmt;
+                  const totalAmt = parseFloat(item.totalAmount) || 0;
+                  return (
+                    <div key={`item-${idx}`} className="w-full">
+                      {/* Item name + total */}
+                      <div className="flex justify-between text-[13px] text-[#1B3A57] font-bold">
+                        <span>
+                          {item.quantity}x {item.itemName}
+                        </span>
+                        <span className="shrink-0 ml-2">
+                          {formatPrice(totalAmt)}
                         </span>
                       </div>
-                      {hasDiscount && (
-                        <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
-                          -{formatPrice(discountAmt)} {t("itemOff")}
+
+                      {/* Unit price x qty, with discount if present */}
+                      <div className="flex items-center justify-between text-[11px] mt-0.5 flex-wrap gap-1.5">
+                        <div className="flex items-center gap-1.5">
+                          {hasDiscount && (
+                            <span className="text-gray-400 line-through">
+                              {formatPrice(item.basePrice)}
+                            </span>
+                          )}
+                          <span className="text-[#8B7355]">
+                            {formatPrice(
+                              hasDiscount ? unitPrice : item.basePrice,
+                            )}{" "}
+                            x {item.quantity}
+                          </span>
+                        </div>
+                        {hasDiscount && (
+                          <span className="text-[10px] font-bold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md">
+                            -{formatPrice(discountAmt)} {t("itemOff")}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Variant details */}
+                      {item.variants?.map((v: any, vi: number) => (
+                        <div
+                          key={vi}
+                          className="flex justify-between text-[11px] text-[#8B7355] mt-0.5"
+                        >
+                          <span>
+                            {v.groupName}:{" "}
+                            <span className="font-semibold text-[#8B7355]">
+                              {v.optionName}
+                            </span>
+                          </span>
+                          {v.price > 0 && (
+                            <span className="text-[#FF6B35] font-semibold">
+                              +{formatPrice(v.price)}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+
+                {/* Deals */}
+                {receiptDeals.map((deal: any, idx: number) => {
+                  const dealPrice = parseFloat(deal.finalAmount ?? deal.price ?? 0);
+                  const dealOrig = parseFloat(deal.originalAmount ?? 0);
+                  const qty = deal.quantity || 1;
+                  const totalDealPrice = dealPrice * qty;
+                  const dealItemsList: any[] = deal.items || [];
+
+                  return (
+                    <div key={`deal-${idx}`} className="w-full pt-1.5">
+                      <div className="flex justify-between text-[13px] text-[#1B3A57] font-bold items-center">
+                        <span className="flex items-center gap-1.5 min-w-0">
+                          <span className="bg-[#FF6B35] text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full shrink-0">
+                            DEAL
+                          </span>
+                          <span className="truncate">{qty}x {deal.title}</span>
                         </span>
+                        <span className="shrink-0 ml-2 font-extrabold text-[#111]">
+                          {formatPrice(totalDealPrice)}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] mt-0.5">
+                        <div className="flex items-center gap-1.5">
+                          {dealOrig > dealPrice && (
+                            <span className="text-gray-400 line-through">
+                              {formatPrice(dealOrig)}
+                            </span>
+                          )}
+                          <span className="text-[#8B7355]">
+                            {formatPrice(dealPrice)} x {qty}
+                          </span>
+                        </div>
+                        {deal.discountAmount > 0 && (
+                          <span className="text-[10px] font-bold bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded-md">
+                            -{formatPrice(deal.discountAmount)} OFF
+                          </span>
+                        )}
+                      </div>
+
+                      {dealItemsList.length > 0 && (
+                        <div className="mt-1 pl-3 border-l-2 border-orange-200 space-y-0.5">
+                          {dealItemsList.map((di: any, diIdx: number) => (
+                            <div key={diIdx} className="flex justify-between text-[11px] text-gray-500">
+                              <span>
+                                • {di.quantity || 1}x {di.name || di.itemName}
+                              </span>
+                              {parseFloat(di.price || 0) > 0 && (
+                                <span className="text-gray-400 font-mono text-[10px]">
+                                  {formatPrice(parseFloat(di.price))}
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       )}
                     </div>
-
-                    {/* Variant details */}
-                    {item.variants?.map((v: any, vi: number) => (
-                      <div
-                        key={vi}
-                        className="flex justify-between text-[11px] text-[#8B7355] mt-0.5"
-                      >
-                        <span>
-                          {v.groupName}:{" "}
-                          <span className="font-semibold text-[#8B7355]">
-                            {v.optionName}
-                          </span>
-                        </span>
-                        {v.price > 0 && (
-                          <span className="text-[#FF6B35] font-semibold">
-                            +{formatPrice(v.price)}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                );
-              })
+                  );
+                })}
+              </>
             ) : (
               <p className="text-[13px] text-[#8B7355]">{t("noItems")}</p>
             )}
@@ -357,12 +485,20 @@ export default function PaymentModal({
 
           {/* Fixed footer: subtotal, total, payment method, actions */}
           <div className="w-full shrink-0">
-            {/* Subtotal / delivery / total */}
+            {/* Subtotal / deal discount / delivery / total */}
             <div className="w-full space-y-1.5 mb-3">
               <div className="flex justify-between text-[13px] text-[#8B7355] font-medium">
                 <span>{t("subtotal")}</span>
                 <span>{formatPrice(receiptItemsTotal)}</span>
               </div>
+
+              {receiptDealDiscount > 0 && (
+                <div className="flex justify-between text-[13px] text-orange-600 font-semibold">
+                  <span>Deal Discount</span>
+                  <span>-{formatPrice(receiptDealDiscount)}</span>
+                </div>
+              )}
+
               {receiptDeliveryFee > 0 && (
                 <div className="flex justify-between text-[13px] text-[#8B7355] font-medium">
                   <span>{t("deliveryFee")}</span>
@@ -391,13 +527,13 @@ export default function PaymentModal({
             <div className="flex w-full gap-3">
               <button
                 onClick={handlePrint}
-                  className="flex-1 bg-[#1B3A57] hover:bg-[#14283B] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                className="flex-1 bg-[#1B3A57] hover:bg-[#14283B] text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
                 <Printer className="w-4 h-4 stroke-[2.5px]" /> {t("print")}
               </button>
               <button
                 onClick={handleNewOrder}
-                className="flex-1 bg-[#f4f6f8] hover:bg-[#e9ecef] text-[#111] font-bold py-3 rounded-lg flex items-center justify-center transition-colors"
+                className="flex-1 bg-[#f4f6f8] hover:bg-[#e9ecef] text-[#111] font-bold py-3 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
               >
                 {t("newOrder")}
               </button>

@@ -6,6 +6,8 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useTranslations } from "next-intl";
 import { useCLC } from "@/context/CLCContext";
 
+import { FinanceOrderDeal } from "../hooks/useTransactions";
+
 interface OrderItem {
   name: string;
   qty: number;
@@ -32,6 +34,7 @@ export interface TransactionDetail {
   commission?: string;
   deliveryFee?: string;
   items?: OrderItem[];
+  deals?: FinanceOrderDeal[];
   activities?: ActivityEvent[];
 }
 
@@ -74,44 +77,34 @@ const TransactionDetailSidebar = ({
 
   if (!transaction) return null;
 
-  // Use dummy data if detailed items are missing
-  const items = transaction.items || [
-    { name: "Grilled Chicken Plate", qty: 2, price: 18.0, total: 36.0 },
-    { name: "Mixed Salad", qty: 1, price: 8.0, total: 8.0 },
-    { name: "Fresh Juice", qty: 2, price: 4.0, total: 8.0 },
-  ];
-
   const activities = transaction.activities || [
     {
       id: "1",
       type: "received",
       title: `Payment received via ${transaction.paymentMethod}`,
-      time: `${transaction.date}, ${transaction.time || "3:15 PM"}`,
+      time: `${transaction.date}, ${transaction.time || ""}`,
     },
     {
       id: "2",
       type: "prepared",
-      title: "Order prepared and delivered",
-      time: `${transaction.date}, ${transaction.time || "3:15 PM"}`,
+      title: "Order processed",
+      time: `${transaction.date}, ${transaction.time || ""}`,
     },
     {
       id: "3",
       type: "placed",
       title: `Order placed by ${transaction.customer}`,
-      time: `${transaction.date}, ${transaction.time || "3:15 PM"}`,
+      time: `${transaction.date}, ${transaction.time || ""}`,
     },
   ];
 
-  const subtotal = transaction.total;
-  const commissionFormatted = transaction.commission
-    ? `-${Math.abs(parseFloat(transaction.commission)).toFixed(2)}`
-    : "—";
-  const deliveryFeeFormatted = transaction.deliveryFee
-    ? parseFloat(transaction.deliveryFee).toFixed(2)
-    : "—";
-  const netAmount = transaction.netAmount
-    ? Math.abs(parseFloat(transaction.netAmount)).toFixed(2)
-    : "—";
+  const subtotalNum = parseFloat(transaction.total) || 0;
+  const commissionNum = transaction.commission ? parseFloat(transaction.commission) : 0;
+  const deliveryFeeNum = transaction.deliveryFee ? parseFloat(transaction.deliveryFee) : 0;
+  const netAmountNum = transaction.netAmount ? parseFloat(transaction.netAmount) : 0;
+
+  const hasItems = transaction.items && transaction.items.length > 0;
+  const hasDeals = transaction.deals && transaction.deals.length > 0;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -127,8 +120,8 @@ const TransactionDetailSidebar = ({
                 {transaction.id}
               </h2>
               <p className="text-[12px] text-gray-400 font-medium mt-0.5">
-                {transaction.type} · {transaction.date},{" "}
-                {transaction.time || "3:15 PM"}
+                {transaction.type} · {transaction.date}
+                {transaction.time ? `, ${transaction.time}` : ""}
               </p>
             </div>
             <button
@@ -149,7 +142,7 @@ const TransactionDetailSidebar = ({
                   {t("orderTotal")}
                 </span>
                 <span className="text-[20px] font-bold text-[#1B3A57]">
-                  {subtotal}
+                  {formatPrice(subtotalNum)}
                 </span>
               </div>
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center items-start">
@@ -169,20 +162,21 @@ const TransactionDetailSidebar = ({
                   {t("dateTime")}
                 </span>
                 <span className="text-[14px] font-bold text-[#1B3A57]">
-                  {transaction.date}, {transaction.time || "3:15 PM"}
+                  {transaction.date}
+                  {transaction.time ? `, ${transaction.time}` : ""}
                 </span>
               </div>
               <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("paymentMethod")}
                 </span>
-                <span className="text-[14px] font-bold text-[#1B3A57]">
+                <span className="text-[14px] font-bold text-[#1B3A57] uppercase">
                   {transaction.paymentMethod}
                 </span>
               </div>
 
-              {/* Customer (Full Width if needed, but mockup shows it taking a slot) */}
-              <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center col-span-1">
+              {/* Customer */}
+              <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm flex flex-col justify-center col-span-2">
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                   {t("customer")}
                 </span>
@@ -192,27 +186,89 @@ const TransactionDetailSidebar = ({
               </div>
             </div>
 
-            {/* Order Items */}
+            {/* Order Items & Deals */}
             <div>
               <h3 className="text-[13px] font-bold text-[#1B3A57] mb-3">
                 {t("orderItems")}
               </h3>
+
               <div className="space-y-4">
-                {items.map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-start">
-                    <div>
-                      <p className="text-[13px] font-bold text-[#1B3A57]">
-                        {item.name}
-                      </p>
-                      <p className="text-[11px] text-gray-400 mt-0.5">
-                        {t("qty", { qty: item.qty })}
-                      </p>
-                    </div>
-                    <span className="text-[13px] font-bold text-[#1B3A57]">
-                      {formatPrice(item.total)}
-                    </span>
+                {/* Regular Items */}
+                {hasItems && (
+                  <div className="space-y-3">
+                    {transaction.items!.map((item, idx) => (
+                      <div key={idx} className="flex justify-between items-start">
+                        <div>
+                          <p className="text-[13px] font-bold text-[#1B3A57]">
+                            {item.name}
+                          </p>
+                          <p className="text-[11px] text-gray-400 mt-0.5">
+                            {t("qty", { qty: item.qty })}
+                          </p>
+                        </div>
+                        <span className="text-[13px] font-bold text-[#1B3A57]">
+                          {formatPrice(item.total)}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
+
+                {/* Deals */}
+                {hasDeals && (
+                  <div className="space-y-3 pt-2 border-t border-gray-100">
+                    <h4 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                      Deals
+                    </h4>
+                    {transaction.deals!.map((deal, idx) => {
+                      const dealQty = deal.quantity || 1;
+                      const unitPrice = Number(deal.price) || 0;
+                      const dealTotal = unitPrice * dealQty;
+                      return (
+                        <div key={deal.dealId || idx} className="space-y-1">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[13px] font-bold text-[#1B3A57]">
+                                  {deal.title}
+                                </span>
+                                <span className="bg-[#FF6B35] text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full">
+                                  DEAL
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-gray-400 mt-0.5">
+                                {t("qty", { qty: dealQty })}
+                              </p>
+                            </div>
+                            {dealTotal > 0 && (
+                              <span className="text-[13px] font-bold text-[#1B3A57]">
+                                {formatPrice(dealTotal)}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Inner Deal Items */}
+                          {deal.items && deal.items.length > 0 && (
+                            <div className="pl-2 border-l-2 border-orange-200 space-y-0.5 mt-1">
+                              {deal.items.map((di, diIdx) => (
+                                <p key={diIdx} className="text-[12px] text-gray-600 font-medium">
+                                  • {di.name}{" "}
+                                  <span className="font-bold text-gray-900">
+                                    x{di.quantity || 1}
+                                  </span>
+                                </p>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {!hasItems && !hasDeals && (
+                  <p className="text-[12px] text-gray-400 italic">No items found for this transaction.</p>
+                )}
               </div>
             </div>
 
@@ -223,7 +279,7 @@ const TransactionDetailSidebar = ({
                   {t("subtotal")}
                 </span>
                 <span className="text-[12px] font-bold text-[#1B3A57]">
-                  {subtotal}
+                  {formatPrice(subtotalNum)}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -231,7 +287,7 @@ const TransactionDetailSidebar = ({
                   Commission
                 </span>
                 <span className="text-[12px] font-bold text-red-500">
-                  {commissionFormatted}
+                  -{formatPrice(Math.abs(commissionNum))}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -239,15 +295,15 @@ const TransactionDetailSidebar = ({
                   Delivery Fee
                 </span>
                 <span className="text-[12px] font-bold text-[#1B3A57]">
-                  {deliveryFeeFormatted}
+                  {formatPrice(deliveryFeeNum)}
                 </span>
               </div>
-              <div className="flex justify-between items-center pt-2">
+              <div className="flex justify-between items-center pt-2 border-t border-gray-100">
                 <span className="text-[13px] font-bold text-[#2C5F2D]">
                   {t("netAmount")}
                 </span>
                 <span className="text-[15px] font-black text-[#2C5F2D]">
-                  {netAmount}
+                  {formatPrice(netAmountNum)}
                 </span>
               </div>
             </div>

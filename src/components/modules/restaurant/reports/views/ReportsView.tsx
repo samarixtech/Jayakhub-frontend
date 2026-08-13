@@ -5,7 +5,7 @@ import TopProductsList from "../components/TopProductsList";
 import OrderSources from "../components/OrderSources";
 import PeakHours from "../components/PeakHours";
 import RecentOrders from "../components/RecentOrders";
-import { DollarSign, ShoppingBag, TrendingUp, Award, Download, Loader2 } from "lucide-react";
+import { DollarSign, ShoppingBag, TrendingUp, Award, Download, Loader2, Truck } from "lucide-react";
 import { useReports } from "../hooks/useReports";
 import { useTranslations } from "next-intl";
 import { useCLC } from "@/context/CLCContext";
@@ -53,6 +53,8 @@ const ReportsView = () => {
     );
   }
 
+  const hasDeliveryFees = data.totalDeliveryFees !== undefined;
+
   return (
     <div className="w-full max-w-[1200px] mx-auto space-y-6">
       {/* Header */}
@@ -74,7 +76,11 @@ const ReportsView = () => {
       </div>
 
       {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 ${
+          hasDeliveryFees ? "lg:grid-cols-5 gap-4" : "lg:grid-cols-4 gap-6"
+        }`}
+      >
         <ReportsStatsCard
           label={t("stats.totalSales")}
           value={formatPrice(data.totalSales) || "N/A"}
@@ -91,6 +97,16 @@ const ReportsView = () => {
           icon={<ShoppingBag className="w-4 h-4 text-blue-600" />}
           iconBgColor="bg-blue-50"
         />
+        {hasDeliveryFees && (
+          <ReportsStatsCard
+            label="Total Delivery Fees"
+            value={formatPrice(data.totalDeliveryFees) || "N/A"}
+            trend="0%"
+            isPositive={true}
+            icon={<Truck className="w-4 h-4 text-emerald-600" />}
+            iconBgColor="bg-emerald-50"
+          />
+        )}
         <ReportsStatsCard
           label={t("stats.avgOrderValue")}
           value={formatPrice(data.averageOrderValue) || "N/A"}

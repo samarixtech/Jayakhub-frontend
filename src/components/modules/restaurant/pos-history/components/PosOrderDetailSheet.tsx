@@ -146,6 +146,79 @@ export default function PosOrderDetailSheet({
             </div>
           </div>
 
+          {/* Deals */}
+          {order.deals && order.deals.length > 0 && (
+            <>
+              <Separator />
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                  Deals
+                </h4>
+                <div className="space-y-4">
+                  {order.deals.map((deal, idx) => {
+                    const dealQty = deal.quantity || 1;
+                    const discountAmt = Number(deal.discountAmount) || 0;
+                    const unitDealPrice =
+                      Number(
+                        deal.dealPrice ??
+                          deal.discountedPrice ??
+                          deal.price ??
+                          deal.totalAmount,
+                      ) || 0;
+                    const totalDealPrice = unitDealPrice * dealQty;
+                    return (
+                      <div
+                        key={`${deal.dealId || idx}`}
+                        className="flex justify-between items-start"
+                      >
+                        <div className="flex gap-3">
+                          <span className="text-sm font-bold text-[#FF6B35] w-6">
+                            {dealQty}x
+                          </span>
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-sm font-bold text-gray-900">
+                                {deal.title}
+                              </span>
+                              <span className="bg-orange-100 text-[#FF6B35] text-[10px] font-black uppercase px-1.5 py-0.5 rounded-full">
+                                DEAL
+                              </span>
+                            </div>
+                            {deal.items && deal.items.length > 0 && (
+                              <div className="mt-1 space-y-0.5 pl-2 border-l-2 border-orange-200">
+                                {deal.items.map((di, diIdx) => {
+                                  const itemQty = di.quantity || 1;
+                                  return (
+                                    <p
+                                      key={diIdx}
+                                      className="text-[12px] text-gray-600 font-medium"
+                                    >
+                                      • {di.name}{" "}
+                                      <span className="font-bold text-gray-900">
+                                        x{itemQty}
+                                      </span>
+                                    </p>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0 ml-2">
+                          {totalDealPrice > 0 && (
+                            <span className="text-sm font-bold text-gray-900 block">
+                              {formatPrice(totalDealPrice)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+
           {order.notes && (
             <>
               <Separator />

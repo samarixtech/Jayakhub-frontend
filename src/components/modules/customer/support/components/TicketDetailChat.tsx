@@ -63,6 +63,9 @@ export function TicketDetailChat({ initialTicket, onBack }: TicketDetailChatProp
   const statusLabel = t(STATUS_LABEL_KEY[ticket.status] || STATUS_LABEL_KEY.OPEN);
   const priorityLabel = t(PRIORITY_LABEL_KEY[ticket.priority] || PRIORITY_LABEL_KEY.MEDIUM);
 
+  const normalizedStatus = (ticket.status || "").toUpperCase();
+  const isTicketResolvedOrClosed = normalizedStatus === "RESOLVED" || normalizedStatus === "CLOSED";
+
   const scrollToBottom = (smooth = true) => {
     setTimeout(() => {
       messagesEndRef.current?.scrollIntoView({
@@ -365,6 +368,18 @@ export function TicketDetailChat({ initialTicket, onBack }: TicketDetailChatProp
 
       {/* Input Bar */}
       <div className="bg-white p-4 border-t border-slate-100 shrink-0">
+        {/* Resolved/Closed Banner */}
+        {isTicketResolvedOrClosed && (
+          <div className="mb-3 p-3 bg-slate-100 border border-slate-200 text-slate-600 rounded-xl text-xs font-medium flex items-center justify-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-slate-400" />
+            <span>
+              {normalizedStatus === "RESOLVED"
+                ? "This ticket has been resolved. Further replies are disabled."
+                : "This ticket is closed. Further replies are disabled."}
+            </span>
+          </div>
+        )}
+
         {/* Selected File Attachment Preview */}
         {filePreview && (
           <div className="mb-3 flex items-center gap-3 p-2 bg-slate-50 rounded-2xl border border-slate-200 w-fit">
@@ -401,6 +416,7 @@ export function TicketDetailChat({ initialTicket, onBack }: TicketDetailChatProp
             onChange={handleFileChange}
             accept="image/*"
             className="hidden"
+            disabled={isTicketResolvedOrClosed}
           />
 
           <Button
@@ -408,11 +424,12 @@ export function TicketDetailChat({ initialTicket, onBack }: TicketDetailChatProp
             variant="outline"
             size="icon"
             onClick={() => fileInputRef.current?.click()}
+            disabled={isTicketResolvedOrClosed}
             className={`h-11 w-11 rounded-xl shrink-0 border-slate-200 ${
               selectedFile
                 ? "bg-primary/10 text-primary border-primary/30"
                 : "text-slate-500 hover:bg-slate-50"
-            }`}
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
             title={t("attachImageTooltip")}
           >
             <Paperclip className="w-5 h-5" />
@@ -422,15 +439,20 @@ export function TicketDetailChat({ initialTicket, onBack }: TicketDetailChatProp
           <Input
             value={textInput}
             onChange={(e) => setTextInput(e.target.value)}
-            placeholder={t("messagePlaceholder")}
-            className="flex-1 h-11 rounded-xl border-slate-200 focus:border-primary text-sm"
+            disabled={isTicketResolvedOrClosed}
+            placeholder={
+              isTicketResolvedOrClosed
+                ? "This ticket is resolved / closed"
+                : t("messagePlaceholder")
+            }
+            className="flex-1 h-11 rounded-xl border-slate-200 focus:border-primary text-sm disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed"
           />
 
           {/* Send Button */}
           <Button
             type="submit"
-            disabled={sending || !textInput.trim()}
-            className="h-11 px-5 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium shadow-sm"
+            disabled={sending || !textInput.trim() || isTicketResolvedOrClosed}
+            className="h-11 px-5 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {sending ? (
               <Loader2 className="w-5 h-5 animate-spin" />

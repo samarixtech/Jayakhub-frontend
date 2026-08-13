@@ -106,6 +106,13 @@ export default function TransactionsTable() {
       netAmount: t.netAmount,
       commission: t.commission,
       deliveryFee: t.deliveryFee,
+      items: t.items?.map((item) => ({
+        name: item.name,
+        qty: item.quantity,
+        price: parseFloat(String(item.price)),
+        total: parseFloat(String(item.price)) * item.quantity,
+      })),
+      deals: t.deals,
     });
     setSidebarOpen(true);
   };

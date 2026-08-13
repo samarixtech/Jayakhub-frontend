@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Check,
   X,
+  Tag,
 } from "lucide-react";
 import { useCLC } from "@/context/CLCContext";
 import { usePosOrders } from "../hooks/usePosOrders";
@@ -91,6 +92,37 @@ export default function PosOrdersView() {
               <p className="font-medium text-gray-500 text-[13px] leading-relaxed line-clamp-2">
                 {(order.items || []).join(", ")}
               </p>
+              {order.deals && order.deals.length > 0 && (
+                <div className="flex flex-col gap-1.5 mt-1.5">
+                  {order.deals.map((d, di) => {
+                    const dealItemNames = (d.items || [])
+                      .map((di: any) => {
+                        const name = di.name || di.itemName;
+                        if (!name) return "";
+                        const itemQty = di.quantity || 1;
+                        return `${name} x${itemQty}`;
+                      })
+                      .filter(Boolean);
+                    const dealQty = d.quantity || 1;
+                    return (
+                      <div key={di} className="flex flex-col gap-0.5">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="inline-flex items-center gap-1 bg-orange-100 text-[#FF6B35] font-extrabold text-[12px] px-2.5 py-0.5 rounded-full border border-orange-200">
+                            <Tag className="w-3.5 h-3.5" />
+                            {dealQty}x {d.title}
+                          </span>
+                        </div>
+                        {dealItemNames.length > 0 && (
+                          <p className="text-[12px] text-gray-500 font-medium pl-1">
+                            <span className="font-semibold text-gray-700">Includes:</span>{" "}
+                            {dealItemNames.join(", ")}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-6 justify-between md:justify-end shrink-0 w-full md:w-auto mt-2 md:mt-0 pt-3 md:pt-0 border-t border-gray-100 md:border-t-0">

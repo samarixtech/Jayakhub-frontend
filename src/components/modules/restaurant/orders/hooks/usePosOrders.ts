@@ -15,11 +15,22 @@ export enum PosOrderStatus {
 
 export type OrderStatus = "incoming" | "preparing" | "ready";
 
+export interface OrderDeal {
+  dealId?: string;
+  title: string;
+  quantity: number;
+  discountType?: string;
+  discountValue?: number;
+  discountAmount?: number;
+  items?: any[];
+}
+
 export interface Order {
   id: string;
   customerName: string;
   timeAgo: string;
   items: string[];
+  deals?: OrderDeal[];
   total: number;
   status: OrderStatus;
   handoffStage?: "rider_assigned" | "handoff_code";
@@ -70,22 +81,57 @@ export const usePosOrders = () => {
         res.data.forEach((order: any) => {
           const tabStatus = mapApiStatusToTabStatus(order.orderStatus || PosOrderStatus.PENDING);
           if (tabStatus) {
-            const formattedItems = (order.items || []).map((it: any) => {
+            const formattedItems: string[] = [];
+
+            // Regular items
+            (order.items || []).forEach((it: any) => {
               const variantNames = (it.variants || []).map((v: any) => v.optionName);
-              const nameWithOptions = it.itemName + (variantNames.length > 0 ? ` (${variantNames.join(", ")})` : "");
-              return it.quantity > 1 ? `${nameWithOptions} x${it.quantity}` : nameWithOptions;
+              const nameWithOptions =
+                it.itemName + (variantNames.length > 0 ? ` (${variantNames.join(", ")})` : "");
+              formattedItems.push(
+                it.quantity > 1 ? `${nameWithOptions} x${it.quantity}` : nameWithOptions,
+              );
+            });
+
+            // Deals mapping
+            const mappedDeals: OrderDeal[] = (order.deals || []).map((d: any) => ({
+              dealId: d.dealId,
+              title: d.title || "Deal",
+              quantity: d.quantity || 1,
+              discountType: d.discountType,
+              discountValue: d.discountValue,
+              discountAmount: d.discountAmount,
+              items: (d.items || []).map((di: any) => ({
+                itemId: di.itemId,
+                name: di.name || di.itemName,
+                price: di.price,
+                quantity: di.quantity || 1,
+              })),
+            }));
+
+            mappedDeals.forEach((d) => {
+              const qtyStr = ` x${d.quantity || 1}`;
+              const dealItemNames = (d.items || [])
+                .map((di: any) => {
+                  const itemName = di.name || di.itemName;
+                  if (!itemName) return "";
+                  const itemQty = di.quantity || 1;
+                  return `${itemName} x${itemQty}`;
+                })
+                .filter(Boolean);
+              const itemsStr =
+                dealItemNames.length > 0 ? ` (${dealItemNames.join(", ")})` : "";
+              formattedItems.push(`🔥 ${d.title}${qtyStr}${itemsStr}`);
             });
             
             mapped.push({
               id: order.id,
-              // Only Dine-In orders are tied to a physical table; TakeAway/
-              // Delivery/Walk-in orders sometimes carry a placeholder
-              // tableName (e.g. "Walk in") that shouldn't be shown as one.
               customerName: order.orderType === "Dine-In" && order.tableName
                 ? t("table", { name: order.tableName })
                 : order.orderType || t("walkIn"),
               timeAgo: calculateTimeAgo(order.createdAt),
               items: formattedItems,
+              deals: mappedDeals,
               total: parseFloat(order.grandTotal || "0"),
               status: tabStatus,
               originalStatus: order.orderStatus || PosOrderStatus.PENDING,

@@ -4830,6 +4830,10 @@
     },
     "dealsSection": {
       "title": "العروض والكومبو",
+      "seeAll": "عرض الكل",
+      "allDealsTitle": "جميع العروض والكومبو",
+      "noDealsFound": "لا توجد عروض متاحة حالياً",
+      "noMoreDeals": "لقد وصلت إلى نهاية جميع العروض",
       "percentOff": "خصم {value}%",
       "saveAmount": "توفير {amount}",
       "itemsIncluded": "{count} أصناف مشمولة"
@@ -5024,6 +5028,8 @@
       "subtotal": "المجموع الفرعي",
       "deliveryCharges": "رسوم التوصيل",
       "deliveryFee": "رسوم التوصيل",
+      "dealDiscount": "خصم العروض",
+      "deals": "العروض",
       "total": "الإجمالي",
       "grandTotal": "الإجمالي الكلي",
       "cash": "نقدًا",

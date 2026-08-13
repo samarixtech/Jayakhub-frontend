@@ -78,22 +78,34 @@ export function useDeals() {
               }),
             );
 
-            const origPrice = items.reduce(
+            const apiOrig = Number(deal.originalAmount || 0);
+            const apiFinal = Number(deal.finalAmount || 0);
+            const apiDiscAmt = Number(deal.discountAmount || 0);
+
+            const itemsOrig = items.reduce(
               (sum, i) => sum + i.unitPrice * i.quantity,
               0,
             );
+
+            const origPrice = apiOrig > 0 ? apiOrig : itemsOrig;
             const discountVal = Number(deal.discountValue || 0);
             const discType: "percentage" | "fixed" =
               deal.discountType === "percentage" ? "percentage" : "fixed";
 
-            const discAmt =
-              discType === "fixed"
-                ? discountVal
-                : origPrice > 0
-                  ? (origPrice * discountVal) / 100
-                  : 0;
+            let discAmt = apiDiscAmt > 0 ? apiDiscAmt : 0;
+            if (discAmt <= 0) {
+              discAmt =
+                discType === "fixed"
+                  ? discountVal
+                  : origPrice > 0
+                    ? (origPrice * discountVal) / 100
+                    : 0;
+            }
 
-            const cbPrice = Math.max(0, origPrice - discAmt);
+            let cbPrice = apiFinal > 0 ? apiFinal : Math.max(0, origPrice - discAmt);
+            if (cbPrice <= 0 && origPrice > 0 && discAmt > 0) {
+              cbPrice = Math.max(0, origPrice - discAmt);
+            }
 
             const discPct =
               discType === "percentage"

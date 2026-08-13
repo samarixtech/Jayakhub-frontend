@@ -46,6 +46,7 @@ interface POSContextType {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   posItems: any[];
+  posDeals: any[];
   globalCategories: string[];
   isPosLoading: boolean;
   selectedTable: { id: string; name: string; status: string } | null;
@@ -70,6 +71,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
 
   // Server API State
   const [posItems, setPosItems] = useState<any[]>([]);
+  const [posDeals, setPosDeals] = useState<any[]>([]);
   const [globalCategories, setGlobalCategories] = useState<string[]>([]);
   const [isPosLoading, setIsPosLoading] = useState(false);
 
@@ -126,16 +128,31 @@ export function POSProvider({ children }: { children: ReactNode }) {
       setIsPosLoading(true);
       try {
         // Determine whether to fetch "all" or filtered subset
-        const params = activeCategory === "all" ? undefined : activeCategory;
+        const params =
+          activeCategory === "all" || activeCategory === "Deals"
+            ? undefined
+            : activeCategory;
         const result = await getPosItems(params, debouncedSearch || undefined);
 
         if (result.success && result.data?.data) {
           if (isMounted) {
-            setPosItems((result.data.data.items || []).filter((item: any) => item.isAvailable !== false));
+            setPosItems(
+              (result.data.data.items || []).filter(
+                (item: any) => item.isAvailable !== false,
+              ),
+            );
 
-            // Categories from API to dynamically build sidebar (only pull "categories" array from response root if present)
-            if (result.data.data.categories) {
-              setGlobalCategories(result.data.data.categories);
+            const fetchedDeals = (result.data.data.deals || []).filter(
+              (deal: any) => deal.isActive !== false,
+            );
+            setPosDeals(fetchedDeals);
+
+            // Categories from API to dynamically build sidebar
+            const apiCategories = result.data.data.categories || [];
+            if (fetchedDeals.length > 0 && !apiCategories.includes("Deals")) {
+              setGlobalCategories(["Deals", ...apiCategories]);
+            } else {
+              setGlobalCategories(apiCategories);
             }
           }
         }
@@ -231,6 +248,7 @@ export function POSProvider({ children }: { children: ReactNode }) {
         searchTerm,
         setSearchTerm,
         posItems,
+        posDeals,
         globalCategories,
         isPosLoading,
         selectedTable,

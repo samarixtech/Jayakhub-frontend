@@ -3,6 +3,29 @@ import { getFinanceOrdersAction } from "@/app/actions/restaurant/finance";
 import { useDateFilter } from "@/components/providers/DateFilterProvider";
 import { format } from "date-fns";
 
+export interface FinanceOrderItem {
+    itemId?: string;
+    name: string;
+    price: string | number;
+    quantity: number;
+}
+
+export interface FinanceOrderDealItem {
+    itemId?: string;
+    name: string;
+    image?: string | null;
+    quantity?: number;
+    price?: number;
+}
+
+export interface FinanceOrderDeal {
+    dealId?: string;
+    title: string;
+    price?: number;
+    quantity?: number;
+    items?: FinanceOrderDealItem[];
+}
+
 export interface TransactionItem {
     orderId: string;
     customerName: string;
@@ -13,6 +36,8 @@ export interface TransactionItem {
     deliveryFee: string;
     commission: string;
     netAmount: string;
+    items?: FinanceOrderItem[];
+    deals?: FinanceOrderDeal[];
 }
 
 export interface TransactionsData {

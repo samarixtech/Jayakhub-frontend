@@ -201,19 +201,33 @@ export function useRestaurantDetails() {
           .map((i: any) => i.image)
           .filter((img: string) => Boolean(img));
 
-        const origPrice = extractedItems.reduce((sum: number, i: any) => sum + i.basePrice, 0);
+        const apiOrig = Number(deal.originalAmount || 0);
+        const apiFinal = Number(deal.finalAmount || 0);
+        const apiDiscAmt = Number(deal.discountAmount || 0);
+
+        const itemsOrig = extractedItems.reduce((sum: number, i: any) => sum + i.basePrice, 0);
+
+        const origPrice = apiOrig > 0 ? apiOrig : itemsOrig;
 
         const discVal = Number(deal.discountValue || 0);
         const discType =
           deal.discountType === "percentage" ? "percentage" : "fixed";
-        const discountAmount =
-          discType === "fixed"
-            ? discVal
-            : origPrice > 0
-              ? (origPrice * discVal) / 100
-              : 0;
 
-        const finalPrice = Math.max(0, origPrice - discountAmount);
+        let discountAmount = apiDiscAmt > 0 ? apiDiscAmt : 0;
+        if (discountAmount <= 0) {
+          discountAmount =
+            discType === "fixed"
+              ? discVal
+              : origPrice > 0
+                ? (origPrice * discVal) / 100
+                : 0;
+        }
+
+        let finalPrice = apiFinal > 0 ? apiFinal : Math.max(0, origPrice - discountAmount);
+        if (finalPrice <= 0 && origPrice > 0 && discountAmount > 0) {
+          finalPrice = Math.max(0, origPrice - discountAmount);
+        }
+
         const mainImage = deal.image || itemImagesList[0] || "";
 
         return {
@@ -292,7 +306,17 @@ export function useRestaurantDetails() {
 
   const profileUrl = restaurant?.profileImage || "/pizza-palace.jpg";
 
-  const deliveryFee = selectedRestaurantMeta?.deliveryFee;
+  const apiDeliveryFee = useMemo(() => {
+    if (!restaurant) return undefined;
+    const fee =
+      (restaurant as any).deliveryFee ?? (restaurant as any).deliveryCharge;
+    if (typeof fee === "number") return fee;
+    if (fee && typeof fee === "object" && "deliveryCharge" in fee)
+      return Number(fee.deliveryCharge) || 0;
+    return undefined;
+  }, [restaurant]);
+
+  const deliveryFee = selectedRestaurantMeta?.deliveryFee ?? apiDeliveryFee;
   const distance = selectedRestaurantMeta?.distance;
 
   return {

@@ -40,8 +40,28 @@ export function StatusPill({ status }: { status: string }) {
 }
 
 function itemsSummary(order: PosOrderRow) {
-  if (!order.items || order.items.length === 0) return "—";
-  return order.items.map((i) => `${i.quantity}x ${i.itemName}`).join(", ");
+  const parts: string[] = [];
+
+  if (order.items && order.items.length > 0) {
+    parts.push(...order.items.map((i) => `${i.quantity}x ${i.itemName}`));
+  }
+
+  if (order.deals && order.deals.length > 0) {
+    order.deals.forEach((d) => {
+      const dealQty = d.quantity || 1;
+      const dealItemNames = (d.items || [])
+        .map((di) => {
+          const itemQty = di.quantity || 1;
+          return `${di.name} x${itemQty}`;
+        })
+        .filter(Boolean);
+      const innerStr =
+        dealItemNames.length > 0 ? ` (${dealItemNames.join(", ")})` : "";
+      parts.push(`🔥 ${dealQty}x ${d.title}${innerStr}`);
+    });
+  }
+
+  return parts.length > 0 ? parts.join(", ") : "—";
 }
 
 export default function PosHistoryView() {
@@ -242,7 +262,7 @@ export default function PosHistoryView() {
                   >
                     <td className="px-5 py-3.5 text-[13px] font-bold text-[#FF6B35] whitespace-nowrap">{order.id}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.orderType}</td>
-                    <td className="px-5 py-3.5 text-[13px] text-gray-700 whitespace-nowrap">{order.userId}</td>
+                    <td className="px-5 py-3.5 text-[13px] text-gray-700 whitespace-nowrap">{order.userName || order.userId}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-700">{order.paymentMethod}</td>
                     <td className="px-5 py-3.5 text-[13px] text-gray-500 max-w-[260px] truncate">
                       {itemsSummary(order)}

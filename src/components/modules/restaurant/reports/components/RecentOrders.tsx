@@ -85,6 +85,24 @@ const RecentOrders = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
 
+  const getOrderSummary = (o: any) => {
+    if (o.summary && o.summary.trim() !== "") {
+      return o.summary;
+    }
+    const summaryParts: string[] = [];
+    if (o.items && o.items.length > 0) {
+      o.items.forEach((item: any) => {
+        summaryParts.push(`${item.quantity || 1}x ${item.name}`);
+      });
+    }
+    if (o.deals && o.deals.length > 0) {
+      o.deals.forEach((deal: any) => {
+        summaryParts.push(`${deal.quantity || 1}x ${deal.title}`);
+      });
+    }
+    return summaryParts.length > 0 ? summaryParts.join(", ") : t("noDetails");
+  };
+
   const formattedOrders: Order[] = orders.map((o: any) => {
     const { date, time } = isoToOrderDateTime(o.createdAt);
     return {
@@ -94,7 +112,7 @@ const RecentOrders = ({
       time,
       status: o.status.charAt(0).toUpperCase() + o.status.slice(1),
       customer: o.customerName || t("guest"),
-      items: o.summary || t("noDetails"),
+      items: getOrderSummary(o),
       source: o.source || "N/A",
       total: formatPrice(o.totalPrice) || "N/A",
       rawData: o,
@@ -103,6 +121,9 @@ const RecentOrders = ({
 
   const handleOrderClick = (order: Order) => {
     const raw = order.rawData;
+    const fee = Number(raw?.deliveryFee) || 0;
+    const itemSubtotal = Math.max(0, Number(raw?.totalPrice || 0) - fee);
+
     setSelectedOrder({
       id: order.id,
       orderId: order.orderId,
@@ -114,13 +135,26 @@ const RecentOrders = ({
       total: order.total,
       paymentMethod: raw?.paymentMethod || "N/A",
       prepDuration: raw?.prepareTime ? `${raw.prepareTime} min` : "N/A",
-      subtotal: order.total,
+      subtotal: formatPrice(itemSubtotal) || order.total,
+      deliveryFee: fee > 0 ? formatPrice(fee) : undefined,
       tax: formatPrice(0) || "N/A",
       itemsList: raw?.items?.map((item: any) => ({
         name: item.name,
         qty: item.quantity,
         price: Number(item.price),
         total: Number(item.price) * Number(item.quantity),
+      })),
+      dealsList: raw?.deals?.map((deal: any) => ({
+        dealId: deal.dealId,
+        title: deal.title,
+        qty: deal.quantity || 1,
+        price: Number(deal.price),
+        total: Number(deal.price) * Number(deal.quantity || 1),
+        items: deal.items?.map((di: any) => ({
+          name: di.name,
+          quantity: di.quantity || 1,
+          price: Number(di.price || 0),
+        })),
       })),
     });
     setSidebarOpen(true);

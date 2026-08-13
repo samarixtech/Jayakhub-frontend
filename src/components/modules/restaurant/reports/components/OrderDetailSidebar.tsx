@@ -11,20 +11,37 @@ interface OrderItem {
   total: number;
 }
 
+export interface DealItem {
+  name: string;
+  quantity?: number;
+  price?: number;
+}
+
+export interface OrderDeal {
+  dealId?: string;
+  title: string;
+  qty: number;
+  price: number;
+  total: number;
+  items?: DealItem[];
+}
+
 export interface OrderDetail {
   id: string;
   orderId: string;
   date: string;
   time: string;
-  status: "Completed" | "Preparing" | "Cancelled";
+  status: "Completed" | "Preparing" | "Cancelled" | string;
   customer: string;
   source: string;
   total: string;
   paymentMethod?: string;
   prepDuration?: string;
   subtotal?: string;
+  deliveryFee?: string;
   tax?: string;
   itemsList?: OrderItem[];
+  dealsList?: OrderDeal[];
 }
 
 interface OrderDetailSidebarProps {
@@ -75,6 +92,7 @@ const OrderDetailSidebar = ({
   if (!order) return null;
 
   const items = order.itemsList || [];
+  const deals = order.dealsList || [];
   const paymentMethod = order.paymentMethod || "N/A";
   const prepDuration = order.prepDuration || "N/A";
   const subtotal = order.subtotal || "$0.00";
@@ -165,28 +183,70 @@ const OrderDetailSidebar = ({
             </div>
 
             {/* Order Items */}
-            <div>
-              <h3 className="text-[13px] font-bold text-[#1B3A57] mb-3">
-                {t("orderItems")}
-              </h3>
-              <div className="space-y-4">
-                {items.map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-start">
-                    <div>
-                      <p className="text-[13px] font-bold text-[#1B3A57]">
-                        {item.name}
-                      </p>
-                      <p className="text-[11px] text-gray-400 mt-0.5">
-                        {t("qty")} {item.qty} × {formatPrice(item.price)}
-                      </p>
+            {items.length > 0 && (
+              <div>
+                <h3 className="text-[13px] font-bold text-[#1B3A57] mb-3">
+                  {t("orderItems")}
+                </h3>
+                <div className="space-y-4">
+                  {items.map((item, idx) => (
+                    <div key={idx} className="flex justify-between items-start">
+                      <div>
+                        <p className="text-[13px] font-bold text-[#1B3A57]">
+                          {item.name}
+                        </p>
+                        <p className="text-[11px] text-gray-400 mt-0.5">
+                          {t("qty")} {item.qty} × {formatPrice(item.price)}
+                        </p>
+                      </div>
+                      <span className="text-[13px] font-bold text-[#1B3A57]">
+                        {formatPrice(item.total)}
+                      </span>
                     </div>
-                    <span className="text-[13px] font-bold text-[#1B3A57]">
-                      {formatPrice(item.total)}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Deals */}
+            {deals.length > 0 && (
+              <div>
+                <h3 className="text-[13px] font-bold text-[#1B3A57] mb-3">
+                  Deals
+                </h3>
+                <div className="space-y-4">
+                  {deals.map((deal, idx) => (
+                    <div key={idx} className="flex justify-between items-start">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-[13px] font-bold text-[#1B3A57]">
+                            {deal.title}
+                          </p>
+                          <span className="bg-orange-100 text-[#FF6B35] text-[10px] font-black uppercase px-1.5 py-0.5 rounded-full">
+                            DEAL
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-gray-400 mt-0.5">
+                          {t("qty")} {deal.qty} × {formatPrice(deal.price)}
+                        </p>
+                        {deal.items && deal.items.length > 0 && (
+                          <div className="mt-1.5 space-y-1 pl-2 border-l-2 border-orange-200">
+                            {deal.items.map((di, diIdx) => (
+                              <p key={diIdx} className="text-[11px] text-gray-500">
+                                {di.quantity || 1}x {di.name}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-[13px] font-bold text-[#1B3A57]">
+                        {formatPrice(deal.total)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Summary */}
             <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm space-y-3 mt-auto">
@@ -198,7 +258,17 @@ const OrderDetailSidebar = ({
                   {subtotal}
                 </span>
               </div>
-              <div className="flex justify-between items-center pt-2">
+              {order.deliveryFee && (
+                <div className="flex justify-between items-center">
+                  <span className="text-[12px] text-gray-500">
+                    Delivery Fee
+                  </span>
+                  <span className="text-[12px] font-bold text-[#1B3A57]">
+                    {order.deliveryFee}
+                  </span>
+                </div>
+              )}
+              <div className="flex justify-between items-center pt-2 border-t border-gray-50">
                 <span className="text-[13px] font-bold text-brand-orange">
                   {t("total")}
                 </span>

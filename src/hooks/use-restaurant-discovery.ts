@@ -221,7 +221,29 @@ export function useRestaurantDiscovery() {
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const res = await getPublicDealsAction({ limit: 10 });
+        let lat: number | undefined;
+        let lng: number | undefined;
+
+        const urlLat = searchParams.get("lat");
+        const urlLng = searchParams.get("lng");
+
+        if (urlLat && urlLng) {
+          lat = parseFloat(urlLat);
+          lng = parseFloat(urlLng);
+        } else {
+          try {
+            const cachedLoc = localStorage.getItem("userLocation");
+            if (cachedLoc) {
+              const parsed = JSON.parse(cachedLoc);
+              if (parsed.lat && parsed.lng) {
+                lat = parsed.lat;
+                lng = parsed.lng;
+              }
+            }
+          } catch (e) {}
+        }
+
+        const res = await getPublicDealsAction({ limit: 10, lat, lng });
         if (res?.success && Array.isArray(res.data)) setDeals(res.data);
       } catch (error) {
         console.error("Failed to fetch deals:", error);
@@ -230,7 +252,7 @@ export function useRestaurantDiscovery() {
       }
     };
     fetchDeals();
-  }, []);
+  }, [searchParams]);
 
   // 3. Authenticate User Session & Fetch Rate-able Orders
   useEffect(() => {
@@ -259,6 +281,17 @@ export function useRestaurantDiscovery() {
                   price: parseFloat(item.price),
                   quantity: item.quantity,
                   image: item.image || null,
+                })),
+                deals: (orderData.deals || []).map((deal: any, idx: number) => ({
+                  id: deal.dealId ? `deal-${deal.dealId}` : `deal-${idx}`,
+                  dealId: deal.dealId,
+                  title: deal.title || "Deal",
+                  quantity: deal.quantity || 1,
+                  price: parseFloat(deal.totalAmount || deal.dealPrice || deal.price || "0"),
+                  items: (deal.items || []).map((di: any) => ({
+                    name: di.name || di.itemName,
+                    quantity: di.quantity || 1,
+                  })),
                 })),
                 delivery: {
                   driverName: orderData.rider?.name || "Your Rider",

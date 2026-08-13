@@ -177,9 +177,20 @@ export function useOrderHistoryActions({
         originalId: item.id || item.originalId || item.orderItemId || null,
         orderItemId: item.orderItemId || null,
         name: item.name,
-        price: parseFloat(item.price),
+        price: parseFloat(item.price || "0"),
         quantity: item.quantity,
         image: getImageUrl(item.image),
+      })),
+      deals: (order.deals || []).map((deal: any, idx: number) => ({
+        id: deal.dealId ? `deal-${deal.dealId}` : `deal-${idx}`,
+        dealId: deal.dealId,
+        title: deal.title || "Deal",
+        quantity: deal.quantity || 1,
+        price: parseFloat(deal.totalAmount || deal.dealPrice || deal.price || "0"),
+        items: (deal.items || []).map((di: any) => ({
+          name: di.name || di.itemName,
+          quantity: di.quantity || 1,
+        })),
       })),
       delivery: {
         driverName: (order as any).rider?.name || t("your_rider_fallback"),

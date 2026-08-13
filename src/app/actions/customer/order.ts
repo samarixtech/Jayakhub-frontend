@@ -114,6 +114,7 @@ export async function submitRatingAction(payload: {
   restaurantId: string;
   itemId?: string;
   orderItemId?: string;
+  dealId?: string;
   rating: number;
   isRecommended: boolean;
   comment: string;

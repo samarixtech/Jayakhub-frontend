@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { Star, X, Utensils, Bike } from "lucide-react";
+import { Star, X, Utensils, Bike, Tag } from "lucide-react";
 import { GlobalModal } from "./GlobalModal";
 import { submitRatingAction } from "@/app/actions/customer/order";
 import { toast } from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import { useCLC } from "@/context/CLCContext";
 
 interface RatingModalProps {
   open: boolean;
@@ -23,6 +24,17 @@ interface RatingModalProps {
       options?: string;
       image: string;
     }[];
+    deals?: {
+      id: string;
+      dealId?: string;
+      title: string;
+      price: number;
+      quantity: number;
+      items?: {
+        name: string;
+        quantity: number;
+      }[];
+    }[];
     delivery: {
       driverName: string;
       vehicle: string;
@@ -39,6 +51,7 @@ export function RatingModal({
   orderInfo,
 }: RatingModalProps) {
   const t = useTranslations("RatingModal");
+  const { formatPrice } = useCLC();
   const [overallRating, setOverallRating] = useState(0);
   const [itemRatings, setItemRatings] = useState<Record<string, number>>({});
   const [comment, setComment] = useState("");
@@ -65,6 +78,25 @@ export function RatingModal({
           ...(item.orderItemId ? { orderItemId: item.orderItemId } : {}),
           rating: itemRating,
           isRecommended: itemRating >= 4,
+          comment: comment,
+        };
+        const res = await submitRatingAction(payload);
+        if (res.success) {
+          successCount++;
+        }
+      }
+    }
+
+    // Submit rating for each rated deal
+    for (const deal of orderInfo.deals || []) {
+      const dealRating = itemRatings[deal.id] || overallRating;
+      if (dealRating > 0) {
+        const payload = {
+          orderId: orderInfo.rawOrder.orderId,
+          restaurantId: orderInfo.rawOrder.restaurantId,
+          ...(deal.dealId ? { dealId: deal.dealId } : {}),
+          rating: dealRating,
+          isRecommended: dealRating >= 4,
           comment: comment,
         };
         const res = await submitRatingAction(payload);
@@ -150,7 +182,7 @@ export function RatingModal({
           </div>
         </div>
 
-        {/* Rate Each Item */}
+        {/* Rate Each Item / Deal */}
         <div className="bg-gray-50 rounded-2xl p-5">
           <h4 className="font-bold text-gray-900 mb-4">{t("rateEachItem")}</h4>
           <div className="space-y-6">
@@ -174,7 +206,7 @@ export function RatingModal({
                       {item.name}
                     </h5>
                     <span className="font-semibold text-primary text-sm shrink-0">
-                      ${item.price.toFixed(2)}
+                      {formatPrice(item.price)}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 mt-0.5">
@@ -190,6 +222,55 @@ export function RatingModal({
                 </div>
               </div>
             ))}
+
+            {(orderInfo.deals || []).map((deal) => {
+              const dealItemNames = (deal.items || [])
+                .map((di) => (di.quantity > 1 ? `${di.name} x${di.quantity}` : di.name))
+                .filter(Boolean);
+              return (
+                <div
+                  key={deal.id}
+                  className="flex gap-4 items-start pt-3 border-t border-gray-200/60 first:border-t-0 first:pt-0"
+                >
+                  <div className="w-16 h-16 rounded-xl bg-orange-100/80 shrink-0 flex items-center justify-center text-[#FF6B35]">
+                    <Tag className="w-7 h-7" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start gap-2">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <h5 className="font-bold text-gray-900 text-sm">
+                          {deal.title}
+                        </h5>
+                        <span className="bg-[#FF6B35] text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded-full">
+                          DEAL
+                        </span>
+                      </div>
+                      {deal.price > 0 && (
+                        <span className="font-semibold text-primary text-sm shrink-0">
+                          {formatPrice(deal.price)}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5 font-medium">
+                      ×{deal.quantity}
+                    </p>
+                    {dealItemNames.length > 0 && (
+                      <p className="text-[11px] text-gray-500 mt-1 pl-1.5 border-l-2 border-orange-300">
+                        <span className="font-semibold text-gray-700">Includes:</span>{" "}
+                        {dealItemNames.join(", ")}
+                      </p>
+                    )}
+                    <div className="mt-1">
+                      {renderStars(
+                        itemRatings[deal.id] || 0,
+                        (rating) => handleItemRating(deal.id, rating),
+                        "sm",
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 

@@ -171,16 +171,27 @@ export interface PublicDeal {
   endDate?: string;
   isActive?: boolean;
   items?: PublicDealItem[];
-  // Not always present at the top level — the public API only guarantees
-  // the slug nested under `restaurant.slug`. Kept optional here so callers
-  // fall back to `restaurant?.slug` (see RestaurantsPageView.handleDealClick).
+  originalAmount?: number;
+  finalAmount?: number;
+  discountAmount?: number;
+  price?: number;
+  dealPrice?: number;
   restaurantSlug?: string;
+  deliveryFee?:
+    | number
+    | {
+        deliveryCharge: number;
+        currency?: string;
+        zoneName?: string;
+      }
+    | null;
 }
 
 export interface DealsSectionProps {
   isDealsLoading: boolean;
   deals: PublicDeal[];
   onDealClick: (deal: PublicDeal) => void;
+  onSeeAll?: () => void;
 }
 
 export interface AllRestaurantsSectionProps {

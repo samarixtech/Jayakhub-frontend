@@ -56,9 +56,21 @@ const AllRestaurantsPage: React.FC = () => {
   const handleDealClick = (deal: PublicDeal) => {
     const slug = deal.restaurantSlug || deal.restaurant?.slug;
     if (!slug) return;
+
+    let fee = 0;
+    if (typeof deal.deliveryFee === "number") {
+      fee = deal.deliveryFee;
+    } else if (
+      deal.deliveryFee &&
+      typeof deal.deliveryFee === "object" &&
+      "deliveryCharge" in deal.deliveryFee
+    ) {
+      fee = Number(deal.deliveryFee.deliveryCharge) || 0;
+    }
+
     const meta = {
       id: deal.restaurantId || deal.restaurant?.id || "",
-      deliveryFee: 0,
+      deliveryFee: fee,
       distance: undefined,
     };
     dispatch(setSelectedRestaurantMeta(meta));
@@ -119,6 +131,7 @@ const AllRestaurantsPage: React.FC = () => {
             isDealsLoading={state.isDealsLoading}
             deals={state.deals}
             onDealClick={handleDealClick}
+            onSeeAll={() => router.push("/all-deals")}
           />
 
           <CuisinesSection

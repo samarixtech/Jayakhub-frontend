@@ -9,12 +9,13 @@ import {
   PublicDeal,
 } from "@/components/modules/discovery/discovery.types";
 
-interface DealCardProps {
+export interface DealCardProps {
   deal: PublicDeal;
   onClick: () => void;
+  className?: string;
 }
 
-const DealCard: React.FC<DealCardProps> = ({ deal, onClick }) => {
+export const DealCard: React.FC<DealCardProps> = ({ deal, onClick, className }) => {
   const t = useTranslations("Discovery.dealsSection");
   const { formatPrice } = useCLC();
   const [imgError, setImgError] = React.useState(false);
@@ -28,10 +29,27 @@ const DealCard: React.FC<DealCardProps> = ({ deal, onClick }) => {
 
   const itemCount = deal.items?.length || 0;
 
+  const rawFinal = Number(deal.finalAmount ?? deal.dealPrice ?? deal.price ?? 0);
+  const rawOrig = Number(deal.originalAmount ?? 0);
+  let finalPrice = rawFinal;
+  let origPrice = rawOrig;
+
+  if (finalPrice <= 0 && origPrice > 0 && discountValue > 0) {
+    if (deal.discountType === "percentage") {
+      finalPrice = Math.max(0, origPrice * (1 - discountValue / 100));
+    } else {
+      finalPrice = Math.max(0, origPrice - discountValue);
+    }
+  }
+
+  const hasPrice = finalPrice > 0;
+
   return (
     <div
       onClick={onClick}
-      className="group cursor-pointer min-w-[260px] w-[260px] rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300"
+      className={`group cursor-pointer rounded-2xl overflow-hidden border border-gray-100 bg-white shadow-sm hover:shadow-md transition-all duration-300 ${
+        className || "min-w-[260px] w-[260px]"
+      }`}
     >
       <div className="relative h-32 w-full bg-gray-100 overflow-hidden">
         {hasValidImage ? (
@@ -87,11 +105,33 @@ const DealCard: React.FC<DealCardProps> = ({ deal, onClick }) => {
           {deal.description}
         </p>
 
-        {itemCount > 0 && (
-          <p className="text-[11px] text-orange-600 font-semibold mt-1.5">
-            {t("itemsIncluded", { count: itemCount })}
-          </p>
-        )}
+        {/* Price & Items Footer */}
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
+          {hasPrice ? (
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-sm font-extrabold text-brand-orange">
+                {formatPrice(finalPrice)}
+              </span>
+              {origPrice > finalPrice && (
+                <span className="text-[11px] text-gray-400 line-through">
+                  {formatPrice(origPrice)}
+                </span>
+              )}
+            </div>
+          ) : (
+            <span className="text-xs font-bold text-brand-orange">
+              {deal.discountType === "percentage"
+                ? `${discountValue}% OFF`
+                : `${formatPrice(discountValue)} OFF`}
+            </span>
+          )}
+
+          {itemCount > 0 && (
+            <span className="text-[10px] font-semibold text-gray-500 bg-gray-50 px-2 py-0.5 rounded-full border border-gray-100">
+              {t("itemsIncluded", { count: itemCount })}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -101,6 +141,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
   isDealsLoading,
   deals,
   onDealClick,
+  onSeeAll,
 }) => {
   const t = useTranslations("Discovery.dealsSection");
 
@@ -110,7 +151,11 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
 
   return (
     <section className="mb-4">
-      <SectionHeader title={t("title")} />
+      <SectionHeader
+        title={t("title")}
+        actionText={t("seeAll")}
+        onAction={onSeeAll}
+      />
       {isDealsLoading ? (
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
           {[1, 2, 3, 4].map((i) => (
