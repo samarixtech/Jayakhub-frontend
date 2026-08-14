@@ -82,6 +82,8 @@ export function usePosHistory() {
   const [orderType, setOrderType] = useState("all");
   const [paymentMethod, setPaymentMethod] = useState("all");
   const [status, setStatus] = useState("all");
+  const [source, setSource] = useState("all");
+  const [cashier, setCashier] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
@@ -118,7 +120,7 @@ export function usePosHistory() {
   useEffect(() => {
     handlePageChange(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderType, paymentMethod, status, debouncedSearch]);
+  }, [orderType, paymentMethod, status, source, cashier, debouncedSearch]);
 
   const fetchOrders = useCallback(async () => {
     setOrdersLoading(true);
@@ -129,6 +131,8 @@ export function usePosHistory() {
         orderType: orderType === "all" ? undefined : orderType,
         paymentMethod: paymentMethod === "all" ? undefined : paymentMethod,
         orderStatus: status === "all" ? undefined : status,
+        source: source === "all" ? undefined : source,
+        cashier: cashier || undefined,
         search: debouncedSearch || undefined,
       });
       if (res.success) {
@@ -140,7 +144,7 @@ export function usePosHistory() {
     } finally {
       setOrdersLoading(false);
     }
-  }, [page, limit, orderType, paymentMethod, status, debouncedSearch, updatePaginationMeta]);
+  }, [page, limit, orderType, paymentMethod, status, source, cashier, debouncedSearch, updatePaginationMeta]);
 
   useEffect(() => {
     fetchOrders();
@@ -161,6 +165,10 @@ export function usePosHistory() {
     setPaymentMethod,
     status,
     setStatus,
+    source,
+    setSource,
+    cashier,
+    setCashier,
     searchQuery,
     setSearchQuery,
   };

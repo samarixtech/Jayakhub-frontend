@@ -1033,9 +1033,9 @@
     "login": {
       "title": "تسجيل الدخول إلى الحساب",
       "subtitle": "أدخل بياناتك للمتابعة",
-      "orContinueWithEmail": "أو تابع عبر البريد الإلكتروني",
-      "emailSrLabel": "البريد الإلكتروني",
-      "emailPlaceholder": "البريد الإلكتروني",
+      "orContinueWithEmail": "أو تابع عبر البريد الإلكتروني أو رقم الهاتف",
+      "emailSrLabel": "البريد الإلكتروني أو رقم الهاتف",
+      "emailPlaceholder": "البريد الإلكتروني أو رقم الهاتف",
       "forgotPassword": "هل نسيت كلمة المرور؟",
       "submit": "تسجيل الدخول",
       "noAccount": "ليس لديك حساب؟",

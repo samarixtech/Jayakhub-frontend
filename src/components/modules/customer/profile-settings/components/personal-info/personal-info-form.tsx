@@ -93,7 +93,7 @@ export function PersonalInfoForm({
             </div>
           </FormItem>
 
-          {/* PHONE NUMBER */}
+          {/* PHONE NUMBER (DISABLED / READONLY) */}
           <FormField
             control={form.control}
             name="phone"
@@ -104,9 +104,10 @@ export function PersonalInfoForm({
                 </FormLabel>
                 <FormControl>
                   <PhoneInput
+                    disabled
                     defaultCountry="PK"
                     placeholder={t("phone_placeholder")}
-                    className="rounded-2xl border-gray-100 bg-gray-100/50 h-12 focus-visible:ring-primary"
+                    className="rounded-2xl border-gray-100 bg-gray-100/50 h-12 cursor-not-allowed text-gray-500"
                     value={field.value}
                     onChange={field.onChange}
                   />

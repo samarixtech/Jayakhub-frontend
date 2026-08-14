@@ -14,6 +14,9 @@ import {
   Loader2,
   Menu,
   X,
+  Download,
+  FileText,
+  FileSpreadsheet,
 } from "lucide-react";
 import { usePathname, useRouter, useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -23,6 +26,7 @@ import { RootState } from "@/redux/store/store";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
@@ -35,6 +39,8 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../../../../public/EngLogo (2).png";
 import { logoutAction } from "@/app/actions/auth/auth";
+import { exportPosOrdersAction } from "@/app/actions/restaurant/pos";
+import toast from "react-hot-toast";
 
 export default function POSNavbar() {
   const t = useTranslations("POS.header");
@@ -60,6 +66,52 @@ export default function POSNavbar() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = async (filters: Record<string, string> = { format: "csv" }) => {
+    setIsExporting(true);
+    try {
+      toast.loading("Exporting POS orders CSV...", { id: "pos-export" });
+      const format = (filters.format || "csv") as "xlsx" | "csv" | "csv-items" | "json";
+      const res = await exportPosOrdersAction({
+        format,
+        startDate: filters.startDate,
+        endDate: filters.endDate,
+        orderStatus: filters.orderStatus,
+        orderType: filters.orderType,
+        paymentMethod: filters.paymentMethod,
+        source: filters.source,
+        search: filters.search,
+      });
+
+      if (res.success && res.data) {
+        const byteCharacters = atob(res.data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: res.contentType || "text/csv" });
+        const ext = format === "json" ? "json" : format.startsWith("csv") ? "csv" : "xlsx";
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `pos-export-${new Date().toISOString().split("T")[0]}.${ext}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        toast.success("POS orders exported successfully!", { id: "pos-export" });
+      } else {
+        toast.error(res.message || "Failed to export POS orders", { id: "pos-export" });
+      }
+    } catch (err: any) {
+      console.error("Export error:", err);
+      toast.error("Failed to export POS orders", { id: "pos-export" });
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const pendingOrdersCount = useSelector(
     (state: RootState) => state.cart.pendingOrders.length,
@@ -256,6 +308,22 @@ export default function POSNavbar() {
 
           {userRole !== "kitchen" && (
             <button
+              onClick={() => handleExport({ format: "csv" })}
+              disabled={isExporting}
+              className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-md cursor-pointer text-[12px] sm:text-[13px] font-bold shadow-sm transition-colors disabled:opacity-50"
+              title="Export POS Orders to CSV"
+            >
+              {isExporting ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Download className="w-3.5 h-3.5 stroke-[2.5px]" />
+              )}
+              <span>Export CSV</span>
+            </button>
+          )}
+
+          {userRole !== "kitchen" && (
+            <button
               onClick={() => setIsCloseRegisterOpen(true)}
               className="flex items-center gap-2 bg-[#f9e9cc] text-[#d68b20] px-3.5 py-1.5 rounded-md cursor-pointer text-[13px] font-bold ml-1 hover:bg-[#ffe3b5]"
             >
@@ -335,6 +403,24 @@ export default function POSNavbar() {
           )}
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 border-t border-white/10">
+            {userRole !== "kitchen" && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleExport({ format: "csv" });
+                }}
+                disabled={isExporting}
+                className="flex items-center gap-2 p-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold cursor-pointer disabled:opacity-50"
+              >
+                {isExporting ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4" />
+                )}
+                <span>Export CSV</span>
+              </button>
+            )}
+
             {userRole !== "kitchen" && (
               <button
                 onClick={() => {

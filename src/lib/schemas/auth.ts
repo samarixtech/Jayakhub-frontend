@@ -1,9 +1,24 @@
 import { z } from "zod";
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^\+?[0-9]{10,14}$/;
+
 // ========== LOGIN SCHEMA ==========
 export const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email or phone number is required")
+    .refine(
+      (val) => {
+        const cleaned = val.replace(/[\s-]/g, "");
+        return emailRegex.test(val) || phoneRegex.test(cleaned);
+      },
+      {
+        message: "Please enter a valid email address or phone number",
+      }
+    ),
+  password: z.string().min(1, "Password is required"),
 });
 
 // ========== REGISTER SCHEMA ==========

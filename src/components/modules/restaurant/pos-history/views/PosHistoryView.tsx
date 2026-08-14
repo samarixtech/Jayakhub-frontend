@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ClipboardList, DollarSign, TrendingUp, Award, Loader2, Search } from "lucide-react";
+import { ClipboardList, DollarSign, TrendingUp, Award, Loader2, Search, UploadCloud } from "lucide-react";
 import { format } from "date-fns";
 import { useCLC } from "@/context/CLCContext";
 import { GlobalPagination } from "@/components/common/GlobalPagination";
@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import GlobalSelect from "@/components/common/GlobalSelect";
 import { usePosHistory, PosOrderRow } from "../hooks/usePosHistory";
 import PosOrderDetailSheet from "../components/PosOrderDetailSheet";
+import PosImportModal from "../components/PosImportModal";
 import { useTranslations } from "next-intl";
 
 const STATUS_STYLES: Record<string, string> = {
@@ -69,6 +70,7 @@ export default function PosHistoryView() {
   const { formatPrice } = useCLC();
   const [selectedOrder, setSelectedOrder] = useState<PosOrderRow | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   const TABLE_COLUMNS = [
     t("columns.orderId"),
@@ -81,11 +83,18 @@ export default function PosHistoryView() {
     t("columns.time"),
   ];
 
+  const SOURCE_OPTIONS = [
+    { value: "all", label: "All Sources" },
+    { value: "pos", label: "Live POS Orders" },
+    { value: "imported", label: "Imported History" },
+  ];
+
   const ORDER_TYPE_OPTIONS = [
     { value: "all", label: t("filters.allOrderTypes") },
     { value: "Dine-In", label: t("filters.dineIn") },
     { value: "TakeAway", label: t("filters.takeAway") },
     { value: "Delivery", label: t("filters.delivery") },
+    { value: "Walk-in", label: "Walk-in" },
   ];
 
   const PAYMENT_METHOD_OPTIONS = [
@@ -101,6 +110,7 @@ export default function PosHistoryView() {
     { value: "complete", label: t("filters.completed") },
     { value: "cancelled", label: t("filters.cancelled") },
   ];
+
   const {
     stats,
     statsLoading,
@@ -115,6 +125,8 @@ export default function PosHistoryView() {
     setPaymentMethod,
     status,
     setStatus,
+    source,
+    setSource,
     searchQuery,
     setSearchQuery,
   } = usePosHistory();
@@ -169,44 +181,64 @@ export default function PosHistoryView() {
       {/* Orders Table */}
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <h3 className="font-bold text-[15px] text-[#1a1a1a] shrink-0">
-            {t("ordersTitle")}
-          </h3>
-          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <div className="relative w-full sm:w-[220px]">
+          <div className="flex items-center gap-3 shrink-0">
+            <h3 className="font-bold text-[15px] text-[#1a1a1a]">
+              {t("ordersTitle")}
+            </h3>
+            <button
+              onClick={() => setIsImportOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
+            >
+              <UploadCloud className="w-4 h-4" />
+              <span>Import Orders</span>
+            </button>
+          </div>
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            <div className="relative w-full sm:w-[180px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t("searchPlaceholder")}
-                className="pl-9 h-10 bg-white border-gray-200 focus:ring-[#1F4D36] focus:border-[#1F4D36]"
+                className="pl-9 h-9 text-xs bg-white border-gray-200 focus:ring-[#FF6B35] focus:border-[#FF6B35]"
               />
             </div>
-            <div className="w-full sm:w-[170px]">
+
+            <div className="w-[140px]">
+              <GlobalSelect
+                value={source}
+                onChange={setSource}
+                options={SOURCE_OPTIONS}
+                placeholder="Source"
+                className="h-9 text-xs"
+              />
+            </div>
+
+            <div className="w-[140px]">
               <GlobalSelect
                 value={orderType}
                 onChange={setOrderType}
                 options={ORDER_TYPE_OPTIONS}
                 placeholder={t("orderTypePlaceholder")}
-                className="h-10"
+                className="h-9 text-xs"
               />
             </div>
-            <div className="w-full sm:w-[170px]">
+
+            <div className="w-[140px]">
               <GlobalSelect
                 value={paymentMethod}
                 onChange={setPaymentMethod}
                 options={PAYMENT_METHOD_OPTIONS}
                 placeholder={t("paymentMethodPlaceholder")}
-                className="h-10"
+                className="h-9 text-xs"
               />
             </div>
-            <div className="w-full sm:w-[170px]">
+
+            <div className="w-[140px]">
               <GlobalSelect
                 value={status}
                 onChange={setStatus}
                 options={STATUS_OPTIONS}
-                placeholder={t("statusPlaceholder")}
-                className="h-10"
               />
             </div>
           </div>
@@ -297,6 +329,12 @@ export default function PosHistoryView() {
         open={detailOpen}
         onOpenChange={setDetailOpen}
         order={selectedOrder}
+      />
+
+      <PosImportModal
+        open={isImportOpen}
+        onOpenChange={setIsImportOpen}
+        onImportSuccess={() => handlePageChange(1)}
       />
     </div>
   );

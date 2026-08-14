@@ -1039,9 +1039,9 @@
     "login": {
       "title": "Login to Account",
       "subtitle": "Enter your details to continue",
-      "orContinueWithEmail": "Or continue with email",
-      "emailSrLabel": "Email",
-      "emailPlaceholder": "Email Address",
+      "orContinueWithEmail": "Or continue with email or phone number",
+      "emailSrLabel": "Email or Phone Number",
+      "emailPlaceholder": "Email Address or Phone Number",
       "forgotPassword": "Forgot Password?",
       "submit": "Login",
       "noAccount": "Don't have an account?",

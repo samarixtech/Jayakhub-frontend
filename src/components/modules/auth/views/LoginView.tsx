@@ -69,6 +69,7 @@ export default function LoginView() {
                   <FormLabel className="sr-only">{t("emailSrLabel")}</FormLabel>
                   <FormControl>
                     <Input
+                      type="text"
                       placeholder={t("emailPlaceholder")}
                       className="h-13 rounded-xl border-gray-100 bg-gray-50 focus-visible:ring-primary/10 focus-visible:border-primary"
                       {...field}
